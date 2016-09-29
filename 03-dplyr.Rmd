@@ -1,0 +1,606 @@
+# Manipuler les données avec `dplyr`
+
+# Préparation
+
+On commence par charger les extensions nécessaires et les données du jeu de données `nycflights13`.
+
+```{r, eval=FALSE}
+library(dplyr)
+library(nycflights13)
+data(flights)
+data(airports)
+data(airlines)
+```
+
+# %>% : ceci est bien un *pipe*
+
+Le *pipe* est un opérateur introduit à l'origine par l'extension `magrittr`, et repris par `dplyr`. Son but est de permettre l'écriture d'un code plus simple et plus lisible.
+
+Imaginons qu'on souhaite introduire une série de fonctions à une variable. Par exemple, on souhaite effectuer un *barplot* d'une variable qualitative avec la fonction `barplot()` de R. Pour cela on doit effectuer plusieurs opérations :
+
+- Faire le tri à plat avec `table()`
+- Le trier avec `sort()`
+- Le représenter avec `barplot()`
+
+On peut faire ceci de deux manières différentes. D'abord en enchaînant toutes les fonctions :
+
+```{r, eval=FALSE}
+barplot(sort(table(flights$month)), xlab="Mois")
+```
+
+Cette syntaxe est compacte, mais pas forcément très lisible, notamment parce que l'ordre d'apparition des fonctions est l'inverse de celui de leur application. On applique d'abord `table` puis `sort` puis `barplot`, mais elles apparaissent dans l'ordre inverse à la lecture.
+
+On peut aussi utiliser une approche itérative, en appliquant chaque fonction à tour de rôle et en conservant des objets intermédiaires :
+
+```{r, eval=FALSE}
+tab <- table(flights$month)
+tab <- sort(tab)
+barplot(tab, xlab="Mois")
+```
+
+Cette fois les fonctions apparaissent bien dans l'ordre de leur application, mais la présence d'objets intermédiaires ne facilite pas la lecture.
+
+Le *pipe* est un opérateur, qui se note `%>%`, et dont le fonctionnement est le suivant. Si j'exécute : `expr %>% f`, alors le résultat de l'expression `expr`, à gauche du *pipe*, sera passé comme premier argument à la fonction `f`, à droite du *pipe*. Ainsi les deux expressions suivantes sont rigoureusement équivalentes :
+
+```{r, eval=FALSE}
+table(flights$month)
+flights$month %>% table
+```
+Ce qui est intéressant dans l'histoire, c'est qu'on va pouvoir enchaîner les *pipes*. Plutôt que d'écrire :
+
+```{r, eval=FALSE}
+sort(table(flights$month))
+```
+On pourra faire :
+
+```{r, eval=FALSE}
+flights$month %>% table %>% sort
+```
+
+Le résultat est le même, mais l'ordre des opérations correspond à l'ordre naturel de leur exécution, et on n'a pas eu besoin de créer d'objets intermédiaires.
+
+Pour créer notre graphique de départ, on pourra donc faire :
+
+```{r}
+flights$month %>% table %>% sort %>% barplot(xlab="Mois")
+```
+
+Si la liste des fonctions enchaînées est longue, on peut les répartir sur plusieurs lignes à condition que l'opérateur `%>%` en fin de ligne :
+
+```{r, eval=FALSE}
+flights$month %>% 
+  table %>% 
+  sort %>% 
+  barplot(xlab="Mois")
+```
+
+Enfin, à noter qu'on peut récupérer le résultat de l'ensemble de la chaîne de fonctions pour, par exemple, le stocker dans un objet. On peut donc faire quelque chose comme ça :
+
+```{r}
+tab <- flights$month %>% table %>% sort
+```
+
+Et dans ce cas `tab` contient bien le tri à plat trié.
+
+# Les verbes de `dplyr`
+
+La manipulation de données avec `dplyr` se fait en utilisant un nombre réduit de verbes, qui correspondent chacun à une action différente appliquée à un tableau de données. Ces verbes peuvent s'utiliser avec ou sans le *pipe*, même si ce dernier est employé le plus fréquemment. Par exemple on pourra indifféremment faire :
+
+```{r, eval = FALSE}
+slice(airports, 5)
+airports %>% slice(5)
+```
+
+
+## slice
+
+Le verbe `slice` sélectionne des lignes du tableau selon leur position. On lui passe un chiffre ou un vecteur de chiffres.
+
+Si on souhaite sélectionner la 345e ligne du tableau `airports` :
+
+```{r}
+airports %>% slice(345)
+```
+
+Si on veut sélectionner les 5 premières lignes :
+
+```{r}
+airports %>% slice(1:5)
+```
+
+
+## sample_n, sample_frac
+
+Ces verbes permettent de sélectionner un nombre de lignes ou une fraction des lignes d'un tableau aléatoirement. Ainsi si on veut choisir 5 lignes au hasard dans le tableau `airports` :
+
+```{r}
+airports %>% sample_n(5)
+```
+
+Si on veut tirer au hasard 10% des lignes de `flights` :
+
+```{r}
+flights %>% sample_frac(0.1)
+```
+
+## filter
+
+`filter` sélectionne également des lignes d'un tableau de données, mais cette fois selon une condition. 
+
+Si on veut choisir les vols du mois de janvier :
+
+```{r}
+flights %>% filter(month == 1)
+```
+Si on veut les vols avec un retard au départ compris entre 10 et 15 minutes :
+
+```{r}
+flights %>% filter(dep_delay >= 10 & dep_delay <= 15)
+```
+
+Si on passe plusieurs arguments à `filter`, celui-ci rajoute automatiquement une condition *et*. La ligne ci-dessus peut donc également être écrite :
+
+```{r}
+flights %>% filter(dep_delay >= 10, dep_delay <= 15)
+```
+
+## arrange
+
+`arrange` réordonne les lignes d'un tableau selon une ou plusieurs colonnes.
+
+Ainsi, si on veut trier le tableau flights selon le retard au départ croissant :
+
+```{r}
+flights %>% arrange(dep_delay)
+```
+
+On peut trier selon plusieurs colonnes. Par exemple selon le mois, puis selon le retard au départ :
+
+```{r}
+flights %>% arrange(month, dep_delay)
+```
+
+Si on veut trier selon une colonne par ordre décroissant, on lui applique la fonction `desc()` :
+
+```{r}
+flights %>% arrange(desc(dep_delay))
+```
+
+Combiné avec `slice`, `arrange` permet par exemples de sélectionner les trois vols ayant eu le plus de retard :
+
+```{r}
+flights %>% arrange(desc(dep_delay)) %>% slice(1:3)
+```
+
+## select
+
+`select` permet de sélectionner des colonnes d'un tableau de données. Ainsi, si on veut extraire les colonnes `lat`et `lon` du tableau airports :
+
+```{r}
+airports %>% select(lat, lon)
+```
+Si on fait précéder le nom d'un `-`, la colonne est éliminée plutôt que sélectionnée :
+
+```{r}
+airports %>% select(-lat, -lon)
+```
+
+`select` comprend toute une série de fonctions facilitant la sélection de multiples colonnes. Par exemple, `starts_with`, `ends_width`, `contains` ou `matches` permettent d'exprimer des conditions sur les noms de variables :
+
+```{r}
+flights %>% select(starts_with("dep_"))
+```
+
+## rename
+
+`rename` permet de renommer facilement des colonnes. On l'utilise en lui passant des paramètres de la forme `nouveau_nom = ancien_nom` :
+
+```{r}
+airports %>% rename(longitude=lon, latitude=lat)
+```
+Si les noms de colonnes comportent des espaces ou des caractères spéciaux, on peut les entourer de guillemets (`"`) ou de quotes inverses (`` ` ``).
+
+## mutate
+
+`mutate` permet de créer de nouvelles colonnes dans le tableau de données à partir des variables existantes.
+
+Par exemple, la table `airports` contient l'altitude de l'aéroport en pieds. Si on veut créer une nouvelle variable avec l'altitude en mètres :
+
+```{r}
+airports %>% mutate(alt_m = alt / 3.2808)
+```
+
+On peut indiquer plusieurs nouvelles colonnes en une seule fois, et les expressions successives peuvent prendre en compte les résultats des calculs précédents.
+
+
+```{r}
+flights %>% 
+  select(distance, air_time) %>%
+  mutate(distance_km = distance / 0.62137,
+        vitesse = distance_km / air_time * 60)
+```
+
+
+## summarise
+
+`summarise` permet d'agréger les lignes du tableau en effectuant une opération "résumée" sur une ou plusieurs colonnes. Par exemple, si on souhaite connaître les retards moyens au départ et à l'arrivée pour l'ensemble des vols du tableau `flights` :
+
+```{r}
+flights %>% 
+  summarise(retard_dep=mean(dep_delay, na.rm=TRUE),
+                      retard_arr=mean(arr_delay, na.rm=TRUE))
+```
+
+
+# group_by
+
+Un élément très important de `dplyr` est la fonction `group_by`. Elle permet de définir des groupes de lignes à partir des valeurs d'une ou plusieurs colonnes. Par exemple, on peut grouper les vols selon leur mois :
+
+```{r}
+flights %>% group_by(month)
+```
+
+Par défaut ceci ne fait rien de visible, à part l'apparition d'une mention `Groups` lors de l'affichage. Ce qui est intéressant c'est qu'à partir du moment où des groupes ont été définis, les verbes comme `slice`, `arrange`, `mutate` ou `summarise` vont en tenir compte lors de leurs calculs.
+
+Par exemple, si on applique `slice` à u tableau préalablement groupé, il va sélectionner les lignes aux positions iniquées *pour chaque groupe* :
+
+```{r}
+flights %>% group_by(month) %>% slice(1)
+```
+
+De même, si on utilise `arrange`, les lignes seront ordonnées à l'intérieur de chaque groupe. Du coup, en combinant `slice` et `arrange`, on peut sélectionner quel est le vol qui a eu le retard au départ le plus important pour chaque mois de l'année :
+
+```{r}
+flights %>% group_by(month) %>% arrange(desc(dep_delay)) %>% slice(1)
+```
+
+Idem pour `mutate` : les opérations appliquées lors du calcul des valeurs des nouvelles colonnes sont aplliquée groupes de ligne par groupe de ligne. 
+
+```{r}
+flights %>% 
+  group_by(month) %>% 
+  mutate(max_delay_month = max(dep_delay, na.rm=TRUE)) %>% 
+  select(dep_delay, month, max_delay_month)
+```
+
+Mais la fonction la plus utile avec `group_by` est sans doute `summarise`, puisqu'elle permet du coup d'aggréger et résumer les lignes du tableau groupe par groupe. Si on souhaite calculer le délai maximum, le délai minimum et le délai moyen au départ par mois, on pourra faire :
+
+```{r}
+flights %>%
+  group_by(month) %>%
+  summarise(max_delay = max(dep_delay, na.rm=TRUE),
+            min_delay = min(dep_delay, na.rm=TRUE),
+            mean_delay = mean(dep_delay, na.rm=TRUE))
+```
+
+`summarise` dispose d'un opérateur spéciale, `n()`, qui retourne le nombre de lignes du groupe. Ainsi si on veut le nombre de vols par destination :
+
+```{r}
+flights %>%
+  group_by(dest) %>%
+  summarise(nb = n()) %>%
+  arrange(desc(nb))
+```
+
+`n()` peut aussi être utilisée avec `filter` et `mutate`.
+
+On peut grouper selon plusieurs variables à la fois, il suffit de les indiquer dans la clause du `group_by` :
+
+```{r}
+flights %>%
+  group_by(month, dest) %>%
+  summarise(nb = n()) %>%
+  arrange(desc(nb))
+```
+
+On peut utiliser plusieurs opérations de groupage dans la même série de fonctions. Ainsi, si on souhaite calculer le couple origine/destination avec le nombre maximum de vols selon le mois de l'année, on devra procéder en deux étapes : d'abord grouper selon mois et destination pour calculer le nombre de vols, puis grouper uniquement selon le mois pour sélectionner la ligne avec la valeur maximale.
+
+```{r}
+flights %>%
+  group_by(month, origin, dest) %>%
+  summarise(nb = n()) %>%
+  group_by(month) %>%
+  filter(nb == max(nb))
+```
+
+Pour dégrouper un tableau, on peut utiliser `ungroup`. À noter qu'à chaque fois qu'un `summarise` est utilisé, le tableau est automatiquement dégroupé de la dernière variable de groupage. Ce qu'on peut voir si regarde le champ `Groups` du tableau suivant :
+
+```{r}
+flights %>%
+  group_by(month, dest) %>%
+  summarise(nb = n())
+```
+
+Ce qui permet notamment d'enchaîner les `summarise` :
+
+```{r}
+flights %>%
+  group_by(month, dest) %>%
+  summarise(nb = n()) %>%
+  summarise(nb = max(nb))
+```
+
+# Autres fonctions utiles
+
+`dplyr` contient beaucoup d'autres fonctions utiles pour la manipulation de données.
+
+## lead et lag
+
+`lead` et `lag` permettent de décaler les observations d'une variable d'un cran vers l'arrière (pour `lead`) ou vers l'avant (pour `lag`). 
+
+```{r}
+lead(1:5)
+lag(1:5)
+```
+
+Ceci peut être utile pour des données de type "séries temporelles". Par exemple, on peut facilement calculer l'écart entre chaque le retard au départ de chaque vol et celui du vol précédent :
+
+```{r}
+flights %>%
+  mutate(dep_delay_prev = lead(dep_delay),
+         dep_delay_diff = dep_delay - dep_delay_prev) %>%
+  select(dep_delay_prev, dep_delay, dep_delay_diff)
+```
+
+## tally
+
+`tally` est une fonction qui permet de compter le nombre d'observations d'un groupe :
+
+```{r}
+flights %>% 
+  group_by(month, origin, dest) %>% 
+  tally
+```
+
+Lors de son premier appel, elle sera équivalente à un `summarise(n = n())`. Là où la fonction est intelligente, c'est que si on l'appelle plusieurs fois successivement, elle prendra en compte l'existence d'un `n` déjà calculé et effectuera automatiquement un `summarise(n = sum(n))` :
+
+```{r}
+flights %>% 
+  group_by(month, origin, dest) %>% 
+  tally %>%
+  tally
+
+```
+
+## distinct
+
+`distinct` filtre les lignes du tableau pour ne conserver que les lignes distinctes, en supprimant toutes les lignes en double.
+
+```{r}
+flights %>%
+  select(day, month) %>%
+  distinct
+```
+
+## do
+
+`do` est un verbe supplémentaire générique qui permet d'appliquer des opérations complexes aux lignes d'un tableau. 
+
+# Tables multiples
+
+## bind
+
+Les fonctions `bind_rows` et `bind_cols` permettent d'ajouter des lignes (respectivement des colonnes) à une table à partir d'une ou plusieurs autres tables.
+
+L'exemple suivant (certes très artificiel) montre l'utilisation de `bind_rows` :
+
+```{r}
+t1 <- airports %>% slice(1:2)
+t2 <- airports %>% slice(5:6)
+t3 <- airports %>% slice(100:101) %>% select(-tz, -dst)
+bind_rows(t1, t2, t3, .id = "source")
+```
+
+On remarquera que si des colonnes sont manquantes pour certaines tables, comme les colonnes `tz` et `dst` de `t3`, des `NA` sont automatiquement insérées. Le paramètre optionnel `.id` permet d'ajouter une colonne (ici nommée `source`) qui indique la table source des différentes lignes du tableau final.
+
+`bind_cols` fonctionne de manière similaire :
+
+```{r}
+t1 <- flights %>% slice(1:5) %>% select(dep_delay, dep_time)
+t2 <- flights %>% slice(1:5) %>% select(origin, dest)
+t3 <- flights %>% slice(1:5) %>% select(arr_delay, arr_time)
+bind_cols(t1, t2, t3)
+```
+
+À noter que `bind_cols` associe les lignes uniquement *par position*. Les lignes des différents tableaux associés doivent donc correspondre (et leur nombre doit donc être identique). Pour associer des tables *par valeur*, on doit utiliser les jointures.
+
+## Jointures
+
+Très souvent, les données relatives à une analyse sont réparties dans plusieurs tables différentes. Dans notre exemple, on peut voir que la table `flights` contient uniquement les codes des aéroports de départ et d'arrivée :
+
+```{r}
+flights %>% select(origin, dest)
+```
+
+Et que par ailleurs la table `airports` contient des informations supplémentaires relatives à ces aéroports, dont le nom complet, les coordonnées géographiques, etc.
+
+```{r}
+airports
+```
+
+Il est donc naturel de vouloir associer les deux. On peut par exemple vouloir ajouter les noms complets des aéroports à la table `flights`. Dans ce cas on va faire une jointure : les lignes d'une table seront associées à une autre en se basant non pas sur leur position, mais sur les valeurs d'une ou plusieurs colonnes. Ces colonnes sont appelées des *clés*.
+
+Commençons par créer une sous-table d'aéroports en ne conservant que la colonne `name` et en la renommant. On conserve également la colonne `faa`, qui est la clé nous permettant de faire le lien avec `flights` :
+
+```{r}
+airports_dep <- airports %>% select(faa, dest_name = name)
+airports_dep
+```
+
+Et une sous-table de vols ne conservant que les colonnes `year`, `month` et `day`, et la clé `dest :
+
+```{r}
+flights_dep <- flights %>% select(year, month, day, dest)
+flights_dep
+```
+
+On peut alors joindre les deux tables en utilisant la fonction `left_join` :
+
+```{r}
+left_join(flights_dep, airports_dep, by=c("dest"="faa"))
+```
+
+On voit que la table résultat a bien fusionné les deux tables selon les valeurs des deux colonnes clés `dest` et `faa`. On est parti de la table `flights_dep`, et pour chaque ligne on a ajouté les colonnes de `airports_dep` pour lesquelles la valeur de `faa` est égale à celle de `dest`.
+
+L'argument `by` permet de spécifier les noms des clés si elles ne portent pas le même nom dans les deux tables. On peut l'omettre si c'est le cas. Dans ce cas `left_join` utilisera comme clés toutes les colonnes présentes dans les deux tables à la fois :
+
+```{r}
+airports_dep <- airports %>% select(dest = faa, dest_name = name)
+flights_dep <- flights %>% select(year, month, day, dest)
+left_join(flights_dep, airports_dep)
+```
+
+À noter qu'on peut continuer à utiliser le *pipe* avec les fonctions de jointure :
+
+```{r}
+flights_dep %>% left_join(airports_dep)
+```
+
+## Types de jointures
+
+Jusqu'à présent nous avons utilisé la fonction `left_join`, mais il existe plusieurs types de jointures.
+
+Partons de deux tables d'exemple, `personnes` et `voitures` :
+
+```{r}
+personnes <- data_frame(nom = c("Sylvie", "Sylvie", "Monique", "Gunter", "Rayan", "Rayan"),
+                        voiture = c("Twingo", "Ferrari", "Scenic", "Lada", "Twingo", "Clio"))
+```
+
+```{r, echo=FALSE, eval=TRUE}
+kable(personnes)
+```
+
+
+```{r}
+voitures <- data_frame(voiture = c("Twingo", "Ferrari", "Clio", "Lada", "208"),
+                       vitesse = c(140, 280, 160, 85, 160))
+```
+
+```{r, echo=FALSE, eval=TRUE}
+kable(voitures)
+```
+
+
+### left_join
+
+Si on fait un `left_join` de voitures sur personnes :
+
+```{r, echo=TRUE, eval=FALSE}
+left_join(personnes, voitures)
+```
+
+```{r, echo=FALSE, eval=TRUE}
+kable(left_join(personnes, voitures))
+```
+
+On voit que chaque ligne de `personnes` est bien présente, et qu'on lui a ajouté une ligne de `voitures` correspondante si elle existe. Dans le cas du `Scenic`, il n'y a avait pas de ligne dans `voitures`, donc `vitesse` a été mis à `NA`. Dans le cas de `208`, présente dans `voitures` mais pas dans `personnes`, la ligne n'apparaît pas.
+
+Si on fait un `left_join` cette fois de personnes sur voitures, c'est l'inverse :
+
+```{r, echo=TRUE, eval=FALSE}
+left_join(voitures, personnes)
+```
+
+```{r, echo=FALSE, eval=TRUE}
+kable(left_join(voitures, personnes))
+```
+
+Cette fois c'est l'inverse. La ligne `208` est là, mais `nom` est à `NA`. Par contre `Monique` est absente. Et on remarquera que la ligne `Twingo`, présente deux fois dans `personnes`, a été dupliquée pour être associée aux deux lignes de données de `Sylvie` et `Rayan`.
+
+En résumé, quand on fait un `left_join(x, y)`, toutes les lignes de `x` sont présentes, dupliquées si nécessaire quand elles apparaissent plusieurs fois dans `y`. Les lignes de `y` non présentes dans `x` disparaissent. Les lignes de `x` non présentes dans `y` se voient attribuer des `NA`.
+
+Intuitivement, on pourrait considérer que `left_join(x, y)` signifie "ramener l'information de la table `y` sur la table `x`".
+
+En général, `left_join` sera le type de jointures le plus fréquemment utilisé.
+
+### right_join
+
+La jointure `right_join` est l'exacte symétrique de `left_join`, c'est-à dire que `right_join(x, y)` est équivalent à `left_join(x,y)` :
+
+```{r, echo=TRUE, eval=FALSE}
+right_join(personnes, voitures)
+```
+
+
+```{r, echo=FALSE, eval=TRUE}
+kable(right_join(personnes, voitures))
+```
+
+
+### inner_join
+
+Dans le cas de `inner_join(x, y)`, seules les lignes présentes à la fois dans `x` et `y` sont présentes (et si nécessaire dupliquées) dans la table résultat :
+
+```{r, echo=TRUE, eval=FALSE}
+inner_join(personnes, voitures)
+```
+
+
+```{r, echo=FALSE, eval=TRUE}
+kable(inner_join(personnes, voitures))
+```
+
+Ici la ligne `208` est absente, ainsi que le aligne `Monique`, qui dans le cas d'un `left_join` avait été conservée et s'était vue attribuer une `vitesse` à `NA`.
+
+### full_join
+
+Dans le cas de `full_join(x, y)`, toutes les lignes de `x` et toutes les lignes de `y` sont conservées (avec des `NA` ajoutés si nécessaire) même si elles sont absentes de l'autre table :
+
+```{r, echo=TRUE, eval=FALSE}
+full_join(personnes, voitures)
+```
+
+```{r, echo=FALSE, eval=TRUE}
+kable(full_join(personnes, voitures))
+```
+
+
+### semi_join et anti_join
+
+`semi_join` et `anti_join` sont des jointures *filtrantes*, c'est-à-dire qu'elles sélectionnent les lignes de `x` sans ajouter les colonnes de `y`.
+
+Ainsi, `semi_join` ne conservera que les lignes de `x` pour lesquelles une ligne de `y` existe également, et supprimera les autres. Dans notre exemple, la ligne `Monique` est donc supprimée :
+
+```{r, echo=TRUE, eval=FALSE}
+semi_join(personnes, voitures)
+```
+
+```{r, echo=FALSE, eval=TRUE}
+kable(semi_join(personnes, voitures))
+```
+
+
+Un `anti_join` fait l'inverse, il ne conserve que les lignes de `x` absentes de `y`. Dans notre exemple, on ne garde donc que la ligne `Monique` :
+
+```{r, echo=TRUE, eval=FALSE}
+anti_join(personnes, voitures)
+```
+
+```{r, echo=FALSE, eval=TRUE}
+kable(anti_join(personnes, voitures))
+```
+
+
+# Ressources
+
+Toutes les ressources ci-dessous sont en anglais...
+
+Le livre *R for data science*, en cours d'écriture par Hadley Wickham, contient plusieurs chapitres très complets sur la manipulation des données : http://r4ds.had.co.nz/
+
+
+La page de `dplyr` sur le CRAN donne l'accès à plusieurs *vignettes* présentant certaines fonctionnalités de l'extension : https://cran.r-project.org/web/packages/dplyr/index.html
+
+Les vignettes [Introduction to dplyr](https://cran.r-project.org/web/packages/dplyr/vignettes/introduction.html) et [Two-table verbs](https://cran.r-project.org/web/packages/dplyr/vignettes/two-table.html), notamment, reprennent une bonne partie de ce qui est présenté dans ce document, tandis que les autres permettent d'aller plus loin.
+
+
+
+
+
+
+
+
+
+
+
+
