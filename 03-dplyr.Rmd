@@ -1,10 +1,10 @@
-# Manipuler les données avec `dplyr`
+# Manipuler les données avec `dplyr` {#dplyr}
 
-# Préparation
+## Préparation
 
 On commence par charger les extensions nécessaires et les données du jeu de données `nycflights13`.
 
-```{r, eval=FALSE}
+```{r}
 library(dplyr)
 library(nycflights13)
 data(flights)
@@ -12,7 +12,7 @@ data(airports)
 data(airlines)
 ```
 
-# %>% : ceci est bien un *pipe*
+## `%>%` : ceci est bien un *pipe*
 
 Le *pipe* est un opérateur introduit à l'origine par l'extension `magrittr`, et repris par `dplyr`. Son but est de permettre l'écriture d'un code plus simple et plus lisible.
 
@@ -82,7 +82,7 @@ tab <- flights$month %>% table %>% sort
 
 Et dans ce cas `tab` contient bien le tri à plat trié.
 
-# Les verbes de `dplyr`
+## Les verbes de `dplyr`
 
 La manipulation de données avec `dplyr` se fait en utilisant un nombre réduit de verbes, qui correspondent chacun à une action différente appliquée à un tableau de données. Ces verbes peuvent s'utiliser avec ou sans le *pipe*, même si ce dernier est employé le plus fréquemment. Par exemple on pourra indifféremment faire :
 
@@ -92,7 +92,7 @@ airports %>% slice(5)
 ```
 
 
-## slice
+### slice
 
 Le verbe `slice` sélectionne des lignes du tableau selon leur position. On lui passe un chiffre ou un vecteur de chiffres.
 
@@ -109,7 +109,7 @@ airports %>% slice(1:5)
 ```
 
 
-## sample_n, sample_frac
+### sample_n, sample_frac
 
 Ces verbes permettent de sélectionner un nombre de lignes ou une fraction des lignes d'un tableau aléatoirement. Ainsi si on veut choisir 5 lignes au hasard dans le tableau `airports` :
 
@@ -123,7 +123,7 @@ Si on veut tirer au hasard 10% des lignes de `flights` :
 flights %>% sample_frac(0.1)
 ```
 
-## filter
+### filter
 
 `filter` sélectionne également des lignes d'un tableau de données, mais cette fois selon une condition. 
 
@@ -144,7 +144,7 @@ Si on passe plusieurs arguments à `filter`, celui-ci rajoute automatiquement un
 flights %>% filter(dep_delay >= 10, dep_delay <= 15)
 ```
 
-## arrange
+### arrange
 
 `arrange` réordonne les lignes d'un tableau selon une ou plusieurs colonnes.
 
@@ -172,7 +172,7 @@ Combiné avec `slice`, `arrange` permet par exemples de sélectionner les trois 
 flights %>% arrange(desc(dep_delay)) %>% slice(1:3)
 ```
 
-## select
+### select
 
 `select` permet de sélectionner des colonnes d'un tableau de données. Ainsi, si on veut extraire les colonnes `lat`et `lon` du tableau airports :
 
@@ -191,7 +191,7 @@ airports %>% select(-lat, -lon)
 flights %>% select(starts_with("dep_"))
 ```
 
-## rename
+### rename
 
 `rename` permet de renommer facilement des colonnes. On l'utilise en lui passant des paramètres de la forme `nouveau_nom = ancien_nom` :
 
@@ -200,7 +200,7 @@ airports %>% rename(longitude=lon, latitude=lat)
 ```
 Si les noms de colonnes comportent des espaces ou des caractères spéciaux, on peut les entourer de guillemets (`"`) ou de quotes inverses (`` ` ``).
 
-## mutate
+### mutate
 
 `mutate` permet de créer de nouvelles colonnes dans le tableau de données à partir des variables existantes.
 
@@ -221,7 +221,7 @@ flights %>%
 ```
 
 
-## summarise
+### summarise
 
 `summarise` permet d'agréger les lignes du tableau en effectuant une opération "résumée" sur une ou plusieurs colonnes. Par exemple, si on souhaite connaître les retards moyens au départ et à l'arrivée pour l'ensemble des vols du tableau `flights` :
 
@@ -232,7 +232,7 @@ flights %>%
 ```
 
 
-# group_by
+## group_by
 
 Un élément très important de `dplyr` est la fonction `group_by`. Elle permet de définir des groupes de lignes à partir des valeurs d'une ou plusieurs colonnes. Par exemple, on peut grouper les vols selon leur mois :
 
@@ -320,11 +320,11 @@ flights %>%
   summarise(nb = max(nb))
 ```
 
-# Autres fonctions utiles
+## Autres fonctions utiles
 
 `dplyr` contient beaucoup d'autres fonctions utiles pour la manipulation de données.
 
-## lead et lag
+### lead et lag
 
 `lead` et `lag` permettent de décaler les observations d'une variable d'un cran vers l'arrière (pour `lead`) ou vers l'avant (pour `lag`). 
 
@@ -342,7 +342,7 @@ flights %>%
   select(dep_delay_prev, dep_delay, dep_delay_diff)
 ```
 
-## tally
+### tally
 
 `tally` est une fonction qui permet de compter le nombre d'observations d'un groupe :
 
@@ -362,7 +362,7 @@ flights %>%
 
 ```
 
-## distinct
+### distinct
 
 `distinct` filtre les lignes du tableau pour ne conserver que les lignes distinctes, en supprimant toutes les lignes en double.
 
@@ -372,13 +372,13 @@ flights %>%
   distinct
 ```
 
-## do
+### do
 
 `do` est un verbe supplémentaire générique qui permet d'appliquer des opérations complexes aux lignes d'un tableau. 
 
-# Tables multiples
+## Tables multiples
 
-## bind
+### bind
 
 Les fonctions `bind_rows` et `bind_cols` permettent d'ajouter des lignes (respectivement des colonnes) à une table à partir d'une ou plusieurs autres tables.
 
@@ -404,7 +404,7 @@ bind_cols(t1, t2, t3)
 
 À noter que `bind_cols` associe les lignes uniquement *par position*. Les lignes des différents tableaux associés doivent donc correspondre (et leur nombre doit donc être identique). Pour associer des tables *par valeur*, on doit utiliser les jointures.
 
-## Jointures
+### Jointures
 
 Très souvent, les données relatives à une analyse sont réparties dans plusieurs tables différentes. Dans notre exemple, on peut voir que la table `flights` contient uniquement les codes des aéroports de départ et d'arrivée :
 
@@ -456,7 +456,7 @@ left_join(flights_dep, airports_dep)
 flights_dep %>% left_join(airports_dep)
 ```
 
-## Types de jointures
+### Types de jointures
 
 Jusqu'à présent nous avons utilisé la fonction `left_join`, mais il existe plusieurs types de jointures.
 
@@ -482,7 +482,7 @@ kable(voitures)
 ```
 
 
-### left_join
+#### left_join
 
 Si on fait un `left_join` de voitures sur personnes :
 
@@ -514,7 +514,7 @@ Intuitivement, on pourrait considérer que `left_join(x, y)` signifie "ramener l
 
 En général, `left_join` sera le type de jointures le plus fréquemment utilisé.
 
-### right_join
+#### right_join
 
 La jointure `right_join` est l'exacte symétrique de `left_join`, c'est-à dire que `right_join(x, y)` est équivalent à `left_join(x,y)` :
 
@@ -528,7 +528,7 @@ kable(right_join(personnes, voitures))
 ```
 
 
-### inner_join
+#### inner_join
 
 Dans le cas de `inner_join(x, y)`, seules les lignes présentes à la fois dans `x` et `y` sont présentes (et si nécessaire dupliquées) dans la table résultat :
 
@@ -543,7 +543,7 @@ kable(inner_join(personnes, voitures))
 
 Ici la ligne `208` est absente, ainsi que le aligne `Monique`, qui dans le cas d'un `left_join` avait été conservée et s'était vue attribuer une `vitesse` à `NA`.
 
-### full_join
+#### full_join
 
 Dans le cas de `full_join(x, y)`, toutes les lignes de `x` et toutes les lignes de `y` sont conservées (avec des `NA` ajoutés si nécessaire) même si elles sont absentes de l'autre table :
 
@@ -556,7 +556,7 @@ kable(full_join(personnes, voitures))
 ```
 
 
-### semi_join et anti_join
+#### semi_join et anti_join
 
 `semi_join` et `anti_join` sont des jointures *filtrantes*, c'est-à-dire qu'elles sélectionnent les lignes de `x` sans ajouter les colonnes de `y`.
 
@@ -582,7 +582,7 @@ kable(anti_join(personnes, voitures))
 ```
 
 
-# Ressources
+## Ressources
 
 Toutes les ressources ci-dessous sont en anglais...
 

@@ -1,18 +1,18 @@
 # Représentations graphiques avec `ggplot2`
 
-# Préparation
+## Préparation
 
 On commence par charger les extensions nécessaires et les données du jeu de données `rp_nat_2012`.
 
 ```{r, echo = TRUE}
 library(ggplot2)
 rp <- read.csv("rp_nat_2012.csv", stringsAsFactors = FALSE)
-## Réordonnancement de rp$pop_cl
+### Réordonnancement de rp$pop_cl
 rp$pop_cl <- factor(rp$pop_cl, levels=c("200-1000", "1000-5000", "5000-10000", "10000+"))
 ```
 
 
-# Initialisation
+## Initialisation
 
 Un graphique `ggplot2` s'initialise à l'aide de la fonction `ggplot()`. Les données représentées graphiquement sont toujours issues d'un *data frame*, qu'on peut passer en argument `data` à la fonction :
 
@@ -51,11 +51,11 @@ Certains `geom` prennent plusieurs paramètres. Ainsi, si on veut représenter u
 ggplot(rp) + geom_point(aes(x = dipl_sup, y = cadres))
 ```
 
-# Exemples de `geom`
+## Exemples de `geom`
 
 Il existe un grand nombre de `geom`, décrits en détail dans la [documentation officielle](http://docs.ggplot2.org/current/). Outre `geom_histogram` et `geom_point`, on pourra noter les `geom` suivants.
 
-## `geom_boxplot`
+### `geom_boxplot`
 
 Permet de représenter des boîtes à moustaches. On lui passe en `y` la variable dont on veut étudier la répartition, et en `x` la variable contenant les classes qu'on souhaite comparer.
 
@@ -63,7 +63,7 @@ Permet de représenter des boîtes à moustaches. On lui passe en `y` la variabl
 ggplot(rp) + geom_boxplot(aes(x = departement, y = maison))
 ```
 
-## `geom_violin`
+### `geom_violin`
 
 Très semblable à `geom_boxplot`, mais utilise des graphes en violon.
 
@@ -71,7 +71,7 @@ Très semblable à `geom_boxplot`, mais utilise des graphes en violon.
 ggplot(rp) + geom_violin(aes(x = departement, y = maison))
 ```
 
-## `geom_bar`
+### `geom_bar`
 
 Graphique en bâtons. On lui passe en `x` la variable qualitative dont on souhaite représenter l'effectif de chaque modalité.
 
@@ -96,7 +96,7 @@ ggplot(df) + geom_bar(aes(x=departement, y=n), stat="identity")
 ```
 
 
-## `geom_text`
+### `geom_text`
 
 Représente des points identifiés par des labels. On doit lui passer `x` et `y` pour la position des points, et `label` pour le contenu des étiquettes.
 
@@ -104,7 +104,7 @@ Représente des points identifiés par des labels. On doit lui passer `x` et `y`
 ggplot(rp) + geom_text(aes(x = dipl_sup, y = cadres, label = commune))
 ```
 
-## `geom_label`
+### `geom_label`
 
 Identique à `geom_text`, mais avec une présentation différente.
 
@@ -112,7 +112,7 @@ Identique à `geom_text`, mais avec une présentation différente.
 ggplot(rp) + geom_label(aes(x = dipl_sup, y = cadres, label = commune))
 ```
 
-## `geom_density`
+### `geom_density`
 
 Estimation de densité d'une variable numérique. Usage similaire à `geom_histogram`.
 
@@ -120,7 +120,7 @@ Estimation de densité d'une variable numérique. Usage similaire à `geom_histo
 ggplot(rp) + geom_density(aes(x = cadres))
 ```
 
-## `geom_line`, `geom_path`
+### `geom_line`, `geom_path`
 
 Tracent des lignes connectant les différentes observations.
 
@@ -137,7 +137,7 @@ ggplot(economics) + geom_line(aes(x = date, y = unemploy))
 ggplot(economics) + geom_path(aes(x = pce/pop, y = unemploy/pop))
 ```
 
-# Plusieurs `geom`
+## Plusieurs `geom`
 
 On peut tout à fait représenter plusieurs `geom` simultanément sur un même graphique. Par exemple, on peut superposer la position des points au-dessus des boîtes à moustaches (ici plutôt que `geom_point`, on va utiliser `geom_jitter` qui disperse les points horizontalement et facilite leur visualisation) :
 
@@ -172,11 +172,11 @@ ggplot(data = rp, aes(x = dipl_sup, y = cadres)) +
 ```
 
 
-# Mappages (*aesthetics*)
+## Mappages (*aesthetics*)
 
 Les paramètres passés jusque là aux `geom` le sont via la fonction `aes()` (abbréviation d'`aesthetic`). Une `aesthetic` est un *mappage*, une mise en relation entre un attribut graphique du `geom` (position, couleur, taille...) et une variable du tableau de données.
 
-## Exemples de mappages
+### Exemples de mappages
 
 On a déjà vu les mappages `x` et `y` pour un nuage de points :
 
@@ -205,7 +205,7 @@ ggplot(rp) + geom_point(aes(x = dipl_sup, y = cadres, color = departement, size 
 Chaque `geom` possède sa propre liste de mappages.
 
 
-## *aesthetic* or not *aesthetic* ?
+### *aesthetic* or not *aesthetic* ?
 
 Parfois on souhaite changer un attribut sans le relier à une variable. Par exemple, on veut représenter tous les points en rouge. Dans ce cas on utilise toujours l'attribut `color`, mais comme il ne s'agit pas d'un mappage, on le définit **à l'extérieur** de la fonction `aes()` :
 
@@ -221,7 +221,7 @@ ggplot(rp) + geom_point(aes(x = dipl_sup, y = cadres, size = pop_tot), color = "
 
 La règle est simple mais très importante : si on établit un lien entre les valeurs d'une variable et un attribut graphique, on définit un mappage, et on le déclare dans `aes()`. Sinon, on modifie l'attribut de la même manière pour tous les points, et on le définit donc en-dehors de la fonction `aes()`.
 
-## `geom_bar` et `position`
+### `geom_bar` et `position`
 
 Un des mappages possibles de `geom_bar` est l'attribut `fill`, qui permet de tracer des barres de couleur différentes selon les modalités d'une variable :
 
@@ -242,14 +242,14 @@ ggplot(rp) + geom_bar(aes(x = departement, fill = pop_cl), position = "fill")
 ```
 
 
-# *scales*
+## *scales*
 
 Dans `ggplot2`, on appelle *scales* la manière dont un attribut graphique va être relié aux valeurs d'une variable et celle dont la légende correspondante va être affichée. Par exemple, pour `color`, on définira la palette de couleur utilisée. Pour `size`, les tailles minimales et maximales, etc.
 
 Pour modifier une *scale* existante, on ajoute un nouvel élément à notre objet `ggplot2`, qui prendra la forme `scale_<attribut>_<type>`.
 
 
-## `scale_size`
+### `scale_size`
 
 Par exemple, si on souhaite modifier les tailles minimales et maximales des objets quand on a effectué un mappage de type `size`, on peut utiliser :
 
@@ -272,7 +272,7 @@ ggplot(rp) + geom_point(aes(x = dipl_sup, y = cadres, size = pop_tot)) +
   scale_size("Population", range = c(0,15), breaks=c(1000,5000,10000,50000))
 ```
 
-## `scale_x_*`, `scale_y_*`
+### `scale_x_*`, `scale_y_*`
 
 Les *scales* `scale_x` et `scale_y` modifient les axes `x` et `y` du graphique.
 
@@ -305,7 +305,7 @@ ggplot(rp) + geom_bar(aes(x = departement)) +
 ```
 
 
-## `scale_color_*`, `scale_fill_*`
+### `scale_color_*`, `scale_fill_*`
 
 Ces *scales* permettent entre autre de modifier les palettes de couleur utilisées pour le dessin (`color`) ou le remplissage (`fill`).
 
@@ -344,7 +344,7 @@ Il existe de nombreuses autres méthodes pour définir les couleurs, se reporter
 
 
 
-# *facets*
+## *facets*
 
 Le *faceting* permet d'effectuer plusieurs fois le même graphique selon les valeurs d'une ou plusieurs variables qualitatives.
 
@@ -373,7 +373,7 @@ ggplot(data = rp) + geom_histogram(aes(x = cadres)) + facet_grid(pop_cl~departem
 ```
 
 
-# Thèmes
+## Thèmes
 
 Les thèmes permettent de contrôler l'affichage de tous les éléments du graphique qui ne sont pas reliés aux données : titres, grilles, fonds, etc.
 
@@ -415,7 +415,7 @@ ggplot(data = rp) + geom_histogram(aes(x = cadres)) +
   ylab("Effectif")
 ```
 
-# Ressources
+## Ressources
 
 La documentation officielle (en anglais) de `ggplot2` est très complète et accessible en ligne : http://docs.ggplot2.org/current/
 
