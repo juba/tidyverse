@@ -1,22 +1,44 @@
 # Manipuler les données avec `dplyr` {#dplyr}
 
+```{r setup_dplyr, echo = FALSE}
+library(knitr)
+opts_chunk$set(echo = TRUE,
+               cache = TRUE)
+```
+
+`dplyr` est une extension facilitant le traitement et la manipulation de données contenues dans une ou plusiers tables (qu'il s'agisse de *data frame* ou de *tibble*). Elle propose une syntaxe claire et cohérente, sous formes de verbes, pour la plupart des opérations de ce type.
+
+
 ## Préparation
 
-On commence par charger les extensions nécessaires et les données du jeu de données `nycflights13`.
+`dplyr` fait partie du *tidyverse*, elle est donc chargée automatiquement avec :
+
+```{r message=FALSE, warning=FALSE, cache = FALSE}
+library(tidyverse)
+```
+
+On peut également la charger explicitement avec :
 
 ```{r}
 library(dplyr)
+```
+
+Dans ce qui suit on utilisera les données du jeu de données `nycflights13`.
+
+```{r cache = FALSE}
 library(nycflights13)
+## Chargement des trois tables du jeu de données
 data(flights)
 data(airports)
 data(airlines)
 ```
 
+
 ## `%>%` : ceci est bien un *pipe*
 
 Le *pipe* est un opérateur introduit à l'origine par l'extension `magrittr`, et repris par `dplyr`. Son but est de permettre l'écriture d'un code plus simple et plus lisible.
 
-Imaginons qu'on souhaite introduire une série de fonctions à une variable. Par exemple, on souhaite effectuer un *barplot* d'une variable qualitative avec la fonction `barplot()` de R. Pour cela on doit effectuer plusieurs opérations :
+Imaginons qu'on souhaite appliquer une série de fonctions à une variable. Par exemple, on souhaite effectuer un *barplot* d'une variable qualitative avec la fonction `barplot()` de R. Pour cela on doit effectuer plusieurs opérations :
 
 - Faire le tri à plat avec `table()`
 - Le trier avec `sort()`
@@ -24,7 +46,7 @@ Imaginons qu'on souhaite introduire une série de fonctions à une variable. Par
 
 On peut faire ceci de deux manières différentes. D'abord en enchaînant toutes les fonctions :
 
-```{r, eval=FALSE}
+```{r}
 barplot(sort(table(flights$month)), xlab="Mois")
 ```
 
@@ -40,7 +62,7 @@ barplot(tab, xlab="Mois")
 
 Cette fois les fonctions apparaissent bien dans l'ordre de leur application, mais la présence d'objets intermédiaires ne facilite pas la lecture.
 
-Le *pipe* est un opérateur, qui se note `%>%`, et dont le fonctionnement est le suivant. Si j'exécute : `expr %>% f`, alors le résultat de l'expression `expr`, à gauche du *pipe*, sera passé comme premier argument à la fonction `f`, à droite du *pipe*. Ainsi les deux expressions suivantes sont rigoureusement équivalentes :
+Le *pipe* est un opérateur, qui se note `%>%`, et dont le fonctionnement est le suivant. Si j'exécute : `expr %>% f`, alors le résultat de l'expression `expr`, à gauche du *pipe*, sera passé comme premier argument à la fonction `f`, à droite du *pipe*, ce qui revient à exécuter `f(expr)`. Ainsi les deux expressions suivantes sont rigoureusement équivalentes :
 
 ```{r, eval=FALSE}
 table(flights$month)
@@ -62,7 +84,7 @@ Le résultat est le même, mais l'ordre des opérations correspond à l'ordre na
 Pour créer notre graphique de départ, on pourra donc faire :
 
 ```{r}
-flights$month %>% table %>% sort %>% barplot(xlab="Mois")
+flights$month %>% table %>% sort %>% barplot(xlab = "Mois")
 ```
 
 Si la liste des fonctions enchaînées est longue, on peut les répartir sur plusieurs lignes à condition que l'opérateur `%>%` soit en fin de ligne :
@@ -71,7 +93,7 @@ Si la liste des fonctions enchaînées est longue, on peut les répartir sur plu
 flights$month %>% 
   table %>% 
   sort %>% 
-  barplot(xlab="Mois")
+  barplot(xlab = "Mois")
 ```
 
 Enfin, à noter qu'on peut récupérer le résultat de l'ensemble de la chaîne de fonctions pour, par exemple, le stocker dans un objet. On peut donc faire quelque chose comme ça :
@@ -109,23 +131,9 @@ airports %>% slice(1:5)
 ```
 
 
-### sample_n, sample_frac
-
-Ces verbes permettent de sélectionner un nombre de lignes ou une fraction des lignes d'un tableau aléatoirement. Ainsi si on veut choisir 5 lignes au hasard dans le tableau `airports` :
-
-```{r}
-airports %>% sample_n(5)
-```
-
-Si on veut tirer au hasard 10% des lignes de `flights` :
-
-```{r}
-flights %>% sample_frac(0.1)
-```
-
 ### filter
 
-`filter` sélectionne également des lignes d'un tableau de données, mais cette fois selon une condition. 
+`filter` sélectionne des lignes d'un tableau de données selon une condition. On lui passe en paramètre un test, et seules les lignes pour lesquelles ce test renvoie vrai sont conservées.
 
 Si on veut choisir les vols du mois de janvier :
 
@@ -138,11 +146,46 @@ Si on veut les vols avec un retard au départ compris entre 10 et 15 minutes :
 flights %>% filter(dep_delay >= 10 & dep_delay <= 15)
 ```
 
-Si on passe plusieurs arguments à `filter`, celui-ci rajoute automatiquement une condition *et*. La ligne ci-dessus peut donc également être écrite :
+Si on passe plusieurs arguments à `filter`, celui-ci rajoute automatiquement une condition *et*. La ligne ci-dessus peut donc également être écrite de la manière suivante, avec le même résultat :
 
-```{r}
+```{r eval = FALSE}
 flights %>% filter(dep_delay >= 10, dep_delay <= 15)
 ```
+
+### select et rename
+
+`select` permet de sélectionner des colonnes d'un tableau de données. Ainsi, si on veut extraire les colonnes `lat`et `lon` du tableau airports :
+
+```{r}
+airports %>% select(lat, lon)
+```
+Si on fait précéder le nom d'un `-`, la colonne est éliminée plutôt que sélectionnée :
+
+```{r}
+airports %>% select(-lat, -lon)
+```
+
+`select` comprend toute une série de fonctions facilitant la sélection de multiples colonnes. Par exemple, `starts_with`, `ends_width`, `contains` ou `matches` permettent d'exprimer des conditions sur les noms de variables :
+
+```{r}
+flights %>% select(starts_with("dep_"))
+```
+
+`select` peut être utilisée pour réordonner les colonnes d'une table. Par exemple, si on souhaite faire passer la colonne `name` en première position de la table `airports`, on peut faire :
+
+```{r}
+airports %>% select(name, everything())
+```
+
+
+Une variante de `select` est `rename`, qui permet de renommer facilement des colonnes. On l'utilise en lui passant des paramètres de la forme `nouveau_nom = ancien_nom` :
+
+```{r}
+airports %>% rename(longitude = lon, latitude = lat)
+```
+
+Si les noms de colonnes comportent des espaces ou des caractères spéciaux, on peut les entourer de guillemets (`"`) ou de quotes inverses (`` ` ``).
+
 
 ### arrange
 
@@ -172,33 +215,6 @@ Combiné avec `slice`, `arrange` permet par exemples de sélectionner les trois 
 flights %>% arrange(desc(dep_delay)) %>% slice(1:3)
 ```
 
-### select
-
-`select` permet de sélectionner des colonnes d'un tableau de données. Ainsi, si on veut extraire les colonnes `lat`et `lon` du tableau airports :
-
-```{r}
-airports %>% select(lat, lon)
-```
-Si on fait précéder le nom d'un `-`, la colonne est éliminée plutôt que sélectionnée :
-
-```{r}
-airports %>% select(-lat, -lon)
-```
-
-`select` comprend toute une série de fonctions facilitant la sélection de multiples colonnes. Par exemple, `starts_with`, `ends_width`, `contains` ou `matches` permettent d'exprimer des conditions sur les noms de variables :
-
-```{r}
-flights %>% select(starts_with("dep_"))
-```
-
-### rename
-
-`rename` permet de renommer facilement des colonnes. On l'utilise en lui passant des paramètres de la forme `nouveau_nom = ancien_nom` :
-
-```{r}
-airports %>% rename(longitude=lon, latitude=lat)
-```
-Si les noms de colonnes comportent des espaces ou des caractères spéciaux, on peut les entourer de guillemets (`"`) ou de quotes inverses (`` ` ``).
 
 ### mutate
 
@@ -207,7 +223,9 @@ Si les noms de colonnes comportent des espaces ou des caractères spéciaux, on 
 Par exemple, la table `airports` contient l'altitude de l'aéroport en pieds. Si on veut créer une nouvelle variable avec l'altitude en mètres :
 
 ```{r}
-airports %>% mutate(alt_m = alt / 3.2808)
+airports %>% 
+  mutate(alt_m = alt / 3.2808) %>% 
+  select(name, alt, alt_m)
 ```
 
 On peut indiquer plusieurs nouvelles colonnes en une seule fois, et les expressions successives peuvent prendre en compte les résultats des calculs précédents.
@@ -221,18 +239,9 @@ flights %>%
 ```
 
 
-### summarise
+## Opérations groupées
 
-`summarise` permet d'agréger les lignes du tableau en effectuant une opération "résumée" sur une ou plusieurs colonnes. Par exemple, si on souhaite connaître les retards moyens au départ et à l'arrivée pour l'ensemble des vols du tableau `flights` :
-
-```{r}
-flights %>% 
-  summarise(retard_dep=mean(dep_delay, na.rm=TRUE),
-                      retard_arr=mean(arr_delay, na.rm=TRUE))
-```
-
-
-## group_by
+### group_by
 
 Un élément très important de `dplyr` est la fonction `group_by`. Elle permet de définir des groupes de lignes à partir des valeurs d'une ou plusieurs colonnes. Par exemple, on peut grouper les vols selon leur mois :
 
@@ -240,21 +249,15 @@ Un élément très important de `dplyr` est la fonction `group_by`. Elle permet 
 flights %>% group_by(month)
 ```
 
-Par défaut ceci ne fait rien de visible, à part l'apparition d'une mention `Groups` lors de l'affichage. Ce qui est intéressant c'est qu'à partir du moment où des groupes ont été définis, les verbes comme `slice`, `arrange`, `mutate` ou `summarise` vont en tenir compte lors de leurs calculs.
+Par défaut ceci ne fait rien de visible, à part l'apparition d'une mention `Groups` lors de l'affichage. Mais à partir du moment où des groupes ont été définis, les verbes comme `slice`, `mutate` ou `summarise` vont en tenir compte lors de leurs calculs.
 
-Par exemple, si on applique `slice` à u tableau préalablement groupé, il va sélectionner les lignes aux positions iniquées *pour chaque groupe* :
+Par exemple, si on applique `slice` à un tableau préalablement groupé, il va sélectionner les lignes aux positions indiquées *pour chaque groupe* :
 
 ```{r}
 flights %>% group_by(month) %>% slice(1)
 ```
 
-De même, si on utilise `arrange`, les lignes seront ordonnées à l'intérieur de chaque groupe. Du coup, en combinant `slice` et `arrange`, on peut sélectionner quel est le vol qui a eu le retard au départ le plus important pour chaque mois de l'année :
-
-```{r}
-flights %>% group_by(month) %>% arrange(desc(dep_delay)) %>% slice(1)
-```
-
-Idem pour `mutate` : les opérations appliquées lors du calcul des valeurs des nouvelles colonnes sont aplliquée groupes de ligne par groupe de ligne. 
+Idem pour `mutate` : les opérations appliquées lors du calcul des valeurs des nouvelles colonnes sont aplliquée groupe de lignes par groupe de lignes. Dans l'exemple suivant, on ajoute une nouvelle colonne qui contient le retard maximum *du mois correspondant* :
 
 ```{r}
 flights %>% 
@@ -263,7 +266,17 @@ flights %>%
   select(dep_delay, month, max_delay_month)
 ```
 
-Mais la fonction la plus utile avec `group_by` est sans doute `summarise`, puisqu'elle permet du coup d'aggréger et résumer les lignes du tableau groupe par groupe. Si on souhaite calculer le délai maximum, le délai minimum et le délai moyen au départ par mois, on pourra faire :
+### summarise
+
+`summarise` permet d'agréger les lignes du tableau en effectuant une opération "résumée" sur une ou plusieurs colonnes. Par exemple, si on souhaite connaître les retards moyens au départ et à l'arrivée pour l'ensemble des vols du tableau `flights` :
+
+```{r}
+flights %>% 
+  summarise(retard_dep=mean(dep_delay, na.rm=TRUE),
+            retard_arr=mean(arr_delay, na.rm=TRUE))
+```
+
+Cette fonction est en général utilisée avec `group_by`, puisqu'elle permet du coup d'agréger et résumer les lignes du tableau groupe par groupe. Si on souhaite calculer le délai maximum, le délai minimum et le délai moyen au départ par mois, on pourra faire :
 
 ```{r}
 flights %>%
@@ -273,7 +286,7 @@ flights %>%
             mean_delay = mean(dep_delay, na.rm=TRUE))
 ```
 
-`summarise` dispose d'un opérateur spéciale, `n()`, qui retourne le nombre de lignes du groupe. Ainsi si on veut le nombre de vols par destination :
+`summarise` dispose d'un opérateur spécial, `n()`, qui retourne le nombre de lignes du groupe. Ainsi si on veut le nombre de vols par destination :
 
 ```{r}
 flights %>%
@@ -283,6 +296,16 @@ flights %>%
 ```
 
 `n()` peut aussi être utilisée avec `filter` et `mutate`.
+
+À noter que quand on veut compter le nombre de lignes par groupe, on peut utiliser directement la fonction `count`. Ainsi le code suivant est identique au précédent :
+
+```{r}
+flights %>%
+  count(dest) %>%
+  arrange(desc(n))
+
+```
+
 
 On peut grouper selon plusieurs variables à la fois, il suffit de les indiquer dans la clause du `group_by` :
 
@@ -303,26 +326,26 @@ flights %>%
   filter(nb == max(nb))
 ```
 
-Pour dégrouper un tableau, on peut utiliser `ungroup`. À noter qu'à chaque fois qu'un `summarise` est utilisé, le tableau est automatiquement dégroupé de la dernière variable de groupage. Ce qu'on peut voir si regarde le champ `Groups` du tableau suivant :
 
-```{r}
-flights %>%
-  group_by(month, dest) %>%
-  summarise(nb = n())
-```
-
-Ce qui permet notamment d'enchaîner les `summarise` :
-
-```{r}
-flights %>%
-  group_by(month, dest) %>%
-  summarise(nb = n()) %>%
-  summarise(nb = max(nb))
-```
 
 ## Autres fonctions utiles
 
 `dplyr` contient beaucoup d'autres fonctions utiles pour la manipulation de données.
+
+### sample_n, sample_frac
+
+Ces verbes permettent de sélectionner un nombre de lignes ou une fraction des lignes d'un tableau aléatoirement. Ainsi si on veut choisir 5 lignes au hasard dans le tableau `airports` :
+
+```{r}
+airports %>% sample_n(5)
+```
+
+Si on veut tirer au hasard 10% des lignes de `flights` :
+
+```{r}
+flights %>% sample_frac(0.1)
+```
+
 
 ### lead et lag
 
@@ -593,6 +616,314 @@ Le livre *R for data science*, en cours d'écriture par Hadley Wickham, contient
 La page de `dplyr` sur le CRAN donne l'accès à plusieurs *vignettes* présentant certaines fonctionnalités de l'extension : https://cran.r-project.org/web/packages/dplyr/index.html
 
 Les vignettes [Introduction to dplyr](https://cran.r-project.org/web/packages/dplyr/vignettes/introduction.html) et [Two-table verbs](https://cran.r-project.org/web/packages/dplyr/vignettes/two-table.html), notamment, reprennent une bonne partie de ce qui est présenté dans ce document, tandis que les autres permettent d'aller plus loin.
+
+
+## Exercices
+
+
+On commence par charger les extensions et les données nécessaires.
+
+```{r echo=TRUE, cache = FALSE}
+library(tidyverse)
+load("data/velov_2011.Rdata")
+```
+
+### Pipe
+
+**Exercice 1.1**
+
+Transformer le code suivant, qui affiche le nombre maximal de trajets à l'arrivée pour une seule station, en utilisant des *pipes* :
+
+```{r, echo=TRUE}
+max(table(mouvements$station_in))
+```
+
+```{r, echo=FALSE, eval = FALSE}
+mouvements$station_in %>% 
+  table %>%
+  max
+```
+
+
+
+**Exercice 1.2**
+
+Transformer le code suivant, qui affiche les 5 stations avec le plus grand nombre de trajets au départ, en utilisant des *pipes* :
+
+```{r, echo=TRUE}
+head(sort(table(mouvements$station_out), decreasing=TRUE), 5)
+```
+
+```{r, echo=FALSE, eval=FALSE}
+mouvements$station_out %>% 
+  table %>%
+  sort(decreasing = TRUE) %>%
+  head(5)
+```
+
+### Les verbes de base de `dplyr`
+
+**Exercice 2.1**
+
+Sélectionner les lignes 100 à 105 du tableau des mouvements.
+
+```{r echo=FALSE}
+mouvements %>% slice(100:105)
+```
+
+
+**Exercice 2.2**
+
+Créer une table contenant la sous-population des mouvements réalisés par des personnes entre 40 et 45 ans.
+
+```{r echo=FALSE}
+mouvements %>%
+  filter(age >= 40, age <= 45)
+```
+
+**Exercice 2.3**
+
+Sélectionnez les lignes correspondant à des trajets effectués par des femmes, et triez les selon la durée du trajet décroissante.
+
+```{r echo=FALSE}
+mouvements %>%
+  filter(sexe == "Femme") %>%
+  arrange(desc(duree))
+```
+
+**Exercice 2.4**
+
+Sélectionnez les mouvements effectués par des hommes, conservez uniquement les colonnes jour, heure et duree, triez selon la durée décroissante et affichez les 3 premières lignes.
+
+```{r echo=FALSE}
+mouvements %>%
+  filter(sexe == "Homme") %>%
+  select(jour, heure, duree) %>%
+  arrange(desc(duree)) %>%
+  slice(1:3)
+```
+
+**Exercice 2.5**
+
+Dans la table `mouvements`, sélectionnez uniquement les colonnes `heure`, `station_out` et `station_in`, puis renommez ces deux dernières colonnes en `station_depart` et `station_arrivee` :
+
+```{r echo=FALSE}
+mouvements %>%
+  select(heure, station_in, station_out) %>%
+  rename(station_depart = station_in, station_arrivee = station_out)
+```
+
+
+### mutate et summarise
+
+**Exercice 3.1**
+
+Dans la table `mouvements`, créez deux nouvelles variables `duree_m` et `duree_h`, qui sont la durée du trajet en minutes et en heures. Sélectionnez uniquement les colonnes `duree`, `duree_m` et `duree_h`.
+
+```{r echo=FALSE, cache=FALSE}
+mouvements %>% 
+  mutate(duree_m = duree / 60, 
+         duree_h = duree_m / 60) %>% 
+  select(duree, duree_m, duree_h)
+```
+
+**Exercice 3.2**
+
+Dans la table `mouvements`, créez une nouvelle variable `weekend` qui indique si le trajet a été effectué un jour de week-end.
+
+```{r echo=FALSE}
+mouvements %>% 
+  mutate(weekend = jour %in% c("Samedi", "Dimanche")) %>% 
+  select(jour, weekend)
+```
+
+**Exercice 3.3**
+
+À l'aide de la fonction `summarise`, indiquez les durées en minutes minimum, moyenne et maximum des trajets pour l'ensemble de la table `mouvements`.
+
+```{r echo=FALSE}
+mouvements %>% 
+  mutate(duree_m = duree / 60) %>%
+  summarise(min = min(duree_m), moyenne = mean(duree_m), max = max(duree_m))
+```
+
+### group_by
+
+
+**Exercice 4.1**
+
+Affichez le nombre de déplacements selon le jour de la semaine.
+
+```{r echo=FALSE}
+mouvements %>%
+  group_by(jour) %>%
+  summarise(n = n())
+```
+
+Triez cette table selon le nombre de déplacements croissant.
+
+```{r echo=FALSE}
+mouvements %>%
+  group_by(jour) %>%
+  summarise(n = n()) %>%
+  arrange(n)
+```
+
+**Exercice 4.3**
+
+Calculez l'âge moyen des personnes ayant effectué des mouvements selon l'heure.
+
+```{r echo=FALSE}
+tmp <- mouvements %>%
+  group_by(heure) %>%
+  summarise(age_moyen = mean(age))
+tmp
+```
+
+Faire une représentation graphique du résultat avec `ggplot2` (en utilisant `geom_line`).
+
+```{r echo=FALSE}
+ggplot(tmp) + 
+  geom_line(aes(x=heure, y=age_moyen)) + 
+  scale_y_continuous(limits = c(0,50))
+```
+
+**Exercice 4.4**
+
+Calculez la durée minimale et maximale et le nombre de mouvements selon le jour et l'heure.
+
+```{r echo=FALSE}
+mouvements %>%
+  group_by(jour, heure) %>%
+  summarise(min_duree = min(duree), max_duree = max(duree), n = n())
+```
+
+**Exercice 4.5**
+
+Calculez le nombre de déplacements selon le sexe et l'heure. À partir de ce résultat, calculez la proportion des trajets effectués par chaque sexe selon l'heure.
+
+```{r echo=FALSE}
+tmp <- mouvements %>%
+  group_by(heure, sexe) %>%
+  summarise(n = n()) %>%
+  mutate(prop = n / sum(n) * 100)
+tmp
+```
+
+Représenter cette répartition graphiquement avec `ggplot2` et `geom_bar`.
+
+```{r echo=FALSE}
+ggplot(tmp) +
+  geom_bar(aes(x=heure, y=prop, fill=sexe), stat="identity")
+```
+
+
+### Jointures
+
+
+**Exercice 5.1**
+
+À partir de la table `mouvements`, Renommer `station_out` en `station_id`. Faire une jointure de la table `stations` sur la table `mouvements` à l'aide de `left_join`.
+
+```{r echo=FALSE}
+mouvements %>% 
+  rename(station_id = station_out) %>%
+  left_join(stations)
+```
+
+**Exercice 5.2**
+
+Affichez le nom de chaque station et le nombre total de mouvements au départ correspondant.
+
+```{r echo=FALSE}
+mouvements %>% 
+  rename(station_id = station_out) %>%
+  left_join(stations) %>%
+  group_by(nom) %>%
+  summarise(n = n())
+```
+
+**Exercice 5.3**
+
+Indiquez le nom des stations au départ des mouvements effectués en janvier à 2h du matin.
+
+```{r echo=FALSE}
+mouvements %>% 
+  filter(mois == "Janvier" & heure == 2) %>%
+  left_join(stations, by = c("station_out"="station_id")) %>%
+  select(age, mois, heure, nom)
+```
+
+
+**Exercice 5.4**
+
+Indiquez le nom de la station ayant eu le plus de mouvements au départ par mois de l'année.
+
+```{r echo=FALSE}
+mouvements %>% 
+  select(mois, station_id = station_out) %>%
+  left_join(stations) %>%
+  group_by(mois, nom) %>%
+  summarise(n = n()) %>%
+  filter(n == max(n))
+```
+
+
+**Exercice 5.5**
+
+Créer une table indiquant, pour chaque trajet, le nom de la station de départ et celui de la station d'arrivée.
+
+```{r echo=FALSE}
+mouvements %>%
+  select(station_in, station_out) %>%
+  left_join(stations, by = c("station_in" = "station_id")) %>%
+  select(station_in, station_out, nom_in = nom) %>%
+  left_join(stations, by = c("station_out" = "station_id")) %>%
+  select(nom_in, nom_out = nom)
+```
+
+### Bonus
+
+**Exercice 6.1**
+
+Créez une table `nb_out` et une table `nb_in` avec le nombre de mouvements au départ pour chaque station. Fusionnez les coordonnées géographiques des stations sur cette table résultat.
+
+```{r echo=FALSE}
+tmp <- mouvements %>% 
+  group_by(station_out) %>%
+  summarise(n = n()) %>%
+  left_join(stations, by=c("station_out"="station_id"))
+tmp
+```
+
+Représentez graphiquement ce résultat avec `ggmap`.
+
+```{r echo=FALSE, warning=FALSE, message=FALSE}
+library(ggmap)
+map <- get_map("Lyon", zoom=12, color="bw")
+
+ggmap(map, extent = "device") + 
+  geom_point(data=tmp, aes(x=lon, y=lat, size=n), col="red", alpha=0.4)
+```
+
+Créez une carte interactive des résultats avec `leaflet`.
+
+```{r echo=FALSE}
+library(leaflet)
+leaflet() %>%
+  addTiles %>%
+  addCircles(lng=tmp$lon, lat=tmp$lat, radius=tmp$n, popup=tmp$nom)
+```
+
+
+
+
+
+
+
+
+
+
 
 
 
