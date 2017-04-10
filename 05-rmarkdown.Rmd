@@ -1,4 +1,78 @@
-# Rmarkdown {#rmarkdown}
+# Générer des documents avec RMarkdown {#rmarkdown}
 
-TODO
+L'extension `rmarkdown` permet de générer des documents de manière dynamique en mélangeant texte mis en forme et résultats produits par du code R. Les documents générés peuvent être au format HTML, PDF ou Word.
+
+## Préparation
+
+`rmarkdown` ne fait pas partie du *tidyverse*, elle doit donc être installée à part avec :
+
+```{r message=FALSE, warning=FALSE, eval = FALSE}
+install.packages("rmarkdown")
+```
+
+Et chargée explicitement avec :
+
+```{r message=FALSE, warning=FALSE, cache = FALSE}
+library(rmarkdown)
+```
+
+
+## Élements d'un document `rmarkdown`
+
+Un document `rmarkdown` est un fichier texte qui ressemble à quelque chose comme ça :
+
+```{r echo = FALSE, comment = ""}
+cat(htmltools::includeText("resources/sample_Rmd.Rmd"))
+```
+
+
+La première partie du document est son *en-tête*. Il se situe en tout début de document, et est délimité par trois tirets (`---`) :
+
+    ---
+    title: "Titre"
+    author: "Prénom Nom"
+    date: "10 avril 2017"
+    output: html_document
+    ---
+
+Cet en-tête contient les métadonnées du document, comme son titre, son auteur, sa date, plus tout un tas d'options possibles qui vont permettre de configurer ou personnaliser l'ensemble du document. Ici, par exemple, la ligne `output: html_document` indique que le document généré doit être au format HTML.
+
+
+Le corps du document est constitué de texte suivant la syntaxe Markdown. Un fichier Markdown est un fichier texte contenant un balisage léger qui permet de définir des niveaux de titres ou de mettre en forme le texte. Par exemple, le texte suivant :
+
+    Ceci est du texte avec de l'*italique* et du **gras**.
+    
+    On peut définir des listes à puces :
+    
+    - premier élément
+    - deuxième élément
+    
+Génèrera le texte mis en forme suivant :    
+    
+> Ceci est du texte avec de l'*italique* et du **gras**.
+>
+> On peut définir des listes à puces :
+>  
+> - premier élément
+> - deuxième élément
+
+On voit que des mots placés entre des astérisques sont mis en italique, des lignes qui commencent par un tiret transformés en liste à puce, etc.
+
+On peut définir des titres de différents niveaux en les faisant débuter la ligne par un ou plusieurs caractères "dièse" :
+
+```
+# Titre de niveau 1
+
+## Titre de niveau 2
+
+### Titre de niveau 3
+```
+
+De nombreux autres possibilités de formatage sont possibles, notamment la possibilité d'insérer des liens ou des images. Dans RStudio, le menu *Help* puis *Markdown quick reference* donne un aperçu plus complet de la syntaxe.
+
+
+## Code R
+
+
+
 
