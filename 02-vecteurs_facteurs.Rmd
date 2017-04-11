@@ -1,4 +1,507 @@
 # Vecteurs et facteurs {#vector_factor}
 
-TODO
+```{r setup_vec,echo=FALSE, cache=FALSE}
+library(knitr)
+library(questionr)
+data(hdv2003)
+```
+
+
+
+## Vecteurs
+
+Les vecteurs sont un des types d'objet les plus courants dans R. Il s'agit d'un ensemble d'éléments, tous du même type. Ce sont eux qui représentent les variables, ou colonnes, d'un tableau de données.
+
+On peut construire un vecteur manuellement à l'aide de la fonction `c` :
+
+```{r}
+vec <- c("Jaune", "Jaune", "Rouge", "Vert")
+```
+
+Mais le plus souvent on manipulera des vecteurs faisant partie d'une table importée dans R :
+
+```{r, eval=FALSE}
+library(questionr)
+data(hdv2003)
+hdv2003$qualif
+```
+
+
+### Classes de vecteurs
+
+Les vecteurs peuvent être de classes différentes, selon le type de données qu'ils contiennent.
+
+On a ainsi des vecteurs de classe `numeric` ou `integer`, qui contiennent des nombres :
+
+```{r}
+x <- 1:10
+class(x)
+```
+
+```{r}
+x <- c(1, 3, 4.5, 12568)
+class(x)
+```
+
+Des vecteurs de classe `character`, qui contiennent des chaînes de caractères :
+
+```{r}
+vec <- c("Jaune", "Jaune", "Rouge", "Vert")
+class(vec)
+```
+
+Et des vecteurs de classe `logical`, qui ne peuvent contenir que les valeurs vraie (`TRUE`) ou fausse (`FALSE`).
+
+```{r}
+vec <- c(TRUE, FALSE, FALSE, TRUE)
+class(vec)
+```
+
+On peut convertir un vecteur d'une classe en une autre en utilisant les fonctions `as.numeric`, `as.character` ou `as.logical`. Les valeurs qui n'ont pas pu être converties sont automatiquement transformées en `NA`.
+
+```{r}
+x <- c("1", "2.35", "8.2e+03", "foo")
+as.numeric(x)
+
+y <- 2:6
+as.character(y)
+
+```
+
+Enfin, les éléments d'un vecteur peuvent être nommés :
+
+```{r}
+vec <- c(x = 1, y = 5, z = 12)
+vec
+```
+
+
+
+### Tests et comparaison
+
+Un test est une opération logique de comparaison qui renvoie vrai (`TRUE`) ou faux (`FALSE`) pour chacun des éléments d'un vecteur.
+
+Parmi les tests disponibles, on trouve :
+
+- `==` (teste l'égalité)
+- `!=` (teste la différence)
+- `>`, `<`, `<=`, `>=` teste la supériorité ou l'infériorité.
+
+Exemple le plus simple :
+
+```{r}
+2 == 3
+```
+
+Exemple appliqué à un vecteur :
+
+```{r}
+x <- 1:10
+x
+x < 5
+```
+
+On peut combiner plusieurs tests avec les opérateurs logiques *et* (`&`) et *ou* (`|`).
+Ainsi, si on veut tester qu'une valeur est comprise entre 3 et 6, on peut faire :
+
+```{r}
+x >= 3 & x <= 6
+```
+
+Si on veut tester qu'une valeur est égale à "Bleu" ou à "Vert", on peut faire :
+
+```{r}
+vec <- c("Jaune", "Jaune", "Rouge", "Vert")
+vec == "Jaune" | vec == "Vert"
+```
+
+À noter que dans ce cas, on peut utiliser l'opérateur `%in%`, qui teste si une valeur fait partie des éléments d'un vecteur :
+
+```{r}
+vec %in% c("Jaune", "Vert")
+```
+
+
+### Indexation
+
+L'indexation consiste à extraire une partie des éléments d'un vecteur. L'opérateur d'indexation est le crochet `[]`. Il existe trois types d'indexation.
+
+#### Indexation par position
+
+L'indexation par position consiste à passer entre crochets les positions des éléments qu'on souhaite conserver.
+
+Ainsi, si on ne veut que le premier élément d'un vecteur :
+
+```{r}
+vec <- c("Jaune", "Jaune", "Rouge", "Vert")
+vec[1]
+```
+
+Si on veut le premier et le troisième élément :
+
+```{r}
+vec[c(1, 3)]
+```
+
+Si on veut le dernier élément, on peut utiliser la fonction `length` pour trouver sa position :
+
+```{r}
+vec[length(vec)]
+```
+
+#### Indexation par nom
+
+Si le vecteur est nommé, on peut sélectionner des éléments en indiquant leur nom entre les crochets :
+
+```{r}
+vec <- c(x = 1, y = 5, z = 12)
+vec[c("y", "z")]
+```
+
+
+#### Indexation par test
+
+L'indexation par test consiste à passer un test de comparaison entre les crochets. Dans ce cas, seuls les éléments pour lesquels le test renvoie `TRUE` sont conservés.
+
+Ainsi, si on veut extraire du vecteur suivant les éléments inférieurs à 4 :
+
+```{r}
+x <- c(1, 5, 9, 8, 12, 3)
+x[x < 4]
+```
+
+### Indexation et assignation
+
+En combinant indexation et assignation, on peut modifier uniquement certaines valeurs d'un vecteur :
+
+```{r}
+x <- 1:5
+x[1] <- 8
+x
+```
+
+```{r}
+x[c(2, 5)] <- c(0, 1)
+x
+```
+
+Cette possibilité est intéressante notamment en la combinant avec l'indexation par test :
+
+```{r}
+vec <- c("Jaune", "Jaune", "Rouge", "Vert")
+vec[vec == "Jaune"] <- "Bleu"
+vec
+```
+
+
+### Découper une variable numérique en classes
+
+Une opération relativement courante consiste à découper une variable numérique en classes. Par exemple, on voudra transformer une variable *revenu* contenant le revenu mensuel en une variable avec des catégorie *Moins de 500 euros*, *500-1000 euros*, etc.
+
+Pour cela on peut utiliser la fonction `cut()` :
+
+```{r}
+hdv2003$agecl <- cut(hdv2003$age, breaks = 5)
+freq(hdv2003$agecl)
+```
+
+Si on donne un nombre entier à l'argument `breaks`, un nombre correspondant de classes d'amplitudes égales sont automatiquement calculées. Il est souvent préférable cependant d'avoir des limites "rondes", on peut alors spécifier ces dernières manuellement en passant un vecteur à `breaks` :
+
+```{r}
+hdv2003$agecl <- cut(hdv2003$age, breaks = c(18, 25, 35, 45, 55, 65, 97), include.lowest = TRUE)
+freq(hdv2003$agecl)
+```
+Ici on a été obligé d'ajouter l'argument `include.lowest = TRUE` car sinon la valeur 18 n'aurait pas été incluse, et on aurait eu des valeurs manquantes.
+
+Comme l'utilisation des arguments de `cut` n'est pas toujours très intuitive, l'extension `questionr` propose une interface graphique facilitant cette opếration de découpage en classes d'une variable numérique. 
+
+Pour lancer cette interface, sous RStudio ouvrir le menu *Addins* et sélectionner *Variable cutting*, ou exécuter la fonction `icut()` dans la console en lui passant comme argument la variable numériqueà découper.
+
+![](resources/screenshots/icut.png)
+
+Vous pouvez alors choisir la variable à découper dans l’onglet *Variable et paramètres*, indiquer les
+limites de vos classes ainsi que quelques options complémentaires dans l’onglet *Découpage en classes*, et vérifier le résultat dans l’onglet *Code et résultat*. Une fois le résultat satisfaisant, cliquez sur Done : si vous êtes sous RStudio le code généré sera directement inséré dans votre script actuel à l’emplacement du curseur. Sinon, ce code sera affiché dans la console et vous pourrez le copier/coller pour l’inclure dans votre script.
+
+**Attention**, cette interface est prévue pour ne pas modifier vos données. C'est donc à vous d'exécuter le code généré pour que le découpage soit réellement effectif.
+
+
+## Facteurs
+
+Les facteurs sont un type particulier de vecteur utilisés pour représenter les variables qualitatives. La différence entre un facteur (de classe `factor`) et un vecteur de classe `character` est que les premiers ne peuvent prendre qu'un nombre limité de valeurs appelées `levels`.
+
+Un facteur peut se construire à partir d'un vecteur de type `character` avec la fonction `factor` :
+
+```{r}
+factor(c("Pomme", "Poire", "Pomme", "Cerise"))
+```
+
+Les variables qualitatives sont souvent importées par R sous forme de facteurs, notemment si on utilise les fonctions de la famille `read.csv`.
+
+```{r}
+library(questionr)
+data(hdv2003)
+class(hdv2003$sexe)
+```
+
+Essayer d'assigner une valeur à un facteur ne faisant pas partie de ses `levels` génère un avertissement et remplace les valeurs d'origine par `NA` :
+
+```{r}
+hdv2003$sexe[1] <- "pouet" 
+hdv2003$sexe[1:5]
+```
+
+### L'extension `forcats`
+
+`forcats` est une extension facilitant la manipulation des facteurs. Elle ne fait pas à proprement parler partie du *tidyverse*, il faut donc la charger explicitement avec :
+
+```{r}
+library(forcats)
+```
+
+
+### Recoder un facteur
+
+Une opération courante consiste à recoder un facteur, c'est-à-dire à modifier ses valeurs. C'est l'opération classique de recodage des modalités d'une variable qualitative.
+
+Il existe plusieurs possibilités pour effectuer ce type de recodage, mais ici on va utiliser la fonction `fct_recode` de l'extension `forcats`. Celle-ci prend en argument une liste de recodages sous la forme `"Nouvelle valeur" = "Ancienne valeur"`. 
+
+Par exemple :
+
+```{r}
+f <- factor(c("Pomme", "Poire", "Pomme", "Cerise"))
+f <- fct_recode(f,
+           "Fraise" = "Pomme",
+           "Ananas" = "Poire")
+f
+```
+
+Autre exemple sur une "vraie" variable :
+
+```{r}
+table(hdv2003$qualif)
+hdv2003$qualif5 <- fct_recode(hdv2003$qualif,
+               "Ouvrier" = "Ouvrier specialise",
+               "Ouvrier" = "Ouvrier qualifie",
+               "Interm" = "Technicien",
+               "Interm" = "Profession intermediaire")
+table(hdv2003$qualif5)
+```
+
+Attention, les anciennes valeurs saisies doivent être exactement égales aux valeurs des modalités du facteur : toute différence d'accent ou d'espaces fera que ce recodage ne sera pas pris en compte :
+
+```{r}
+hdv2003$qualif_test <- fct_recode(hdv2003$qualif,
+               "Ouvrier" = "Ouvrier spécialisé",
+               "Ouvrier" = "Ouvrier qualifié")
+
+```
+
+D'autres fonctions sont proposées pour faciliter le recodage, dont `fct_collapse`, qui propose une autre syntaxe pratique quand on doit regrouper ensemble des modalités :
+
+```{r}
+hdv2003$qualif_rec <- fct_collapse(hdv2003$qualif,
+               "Ouvrier" = c("Ouvrier specialise", "Ouvrier qualifie"),
+               "Interm" = c("Technicien", "Profession intermediaire"))
+table(hdv2003$qualif_rec)
+```
+
+`fct_other`, qui regroupe une liste de modalités en une seule modalité "Other" :
+
+```{r}
+hdv2003$qualif_rec <- fct_other(hdv2003$qualif,
+               drop = c("Ouvrier specialise", "Ouvrier qualifie", "Cadre", "Autre"))
+table(hdv2003$qualif_rec)
+
+```
+
+
+`fct_lump`, qui regroupe les modalités les moins fréquentes en une seule modalité "Other" (avec possibilité d'indiquer des seuils de regroupement) :
+
+```{r}
+hdv2003$qualif_rec <- fct_lump(hdv2003$qualif)
+table(hdv2003$qualif_rec)
+```
+
+`fct_explicit_na` qui convertit toutes les valeurs manquantes (`NA`) d'un facteur en une modalité spécifique :
+
+```{r}
+hdv2003$qualif_rec <- fct_explicit_na(hdv2003$qualif, na_level = "(Manquant)")
+table(hdv2003$qualif_rec)
+```
+
+### Interface graphique de recodage {#irec}
+
+L'extension `questionr` propose une interface graphique facilitant le recodage des niveaux d'un facteur. L'objectif est de permettre à l'utilisateur de saisir les nouvelles valeurs dans un formulaire, et de générer ensuite le code R correspondant au recodage indiqué.
+
+Pour utiliser cette interface, sous RStudio vous pouvez aller dans le menu *Addins* puis choisir *Levels recoding*. Sinon, vous pouvez lancer dans la console la fonction `irec()` en lui passant comme paramètre la variable à recoder.
+
+![](resources/screenshots/irec.png)
+
+L'interface se compose de trois onglets : l'onglet *Variable et paramètres* vous permet de sélectionner la variable à recoder, le nom de la nouvelle variable et d'autres paramètres, l'onglet *Recodages* vous permet de saisir les nouvelles valeurs des modalités, et l'onglet *Code et résultat* affiche le code R correspondant ainsi qu'un tableau permettant de vérifier les résultats.
+
+Une fois votre recodage terminé, cliquez sur le bouton *Done* et le code R sera inséré dans votre script R ou affiché dans la console. 
+
+**Attention**, cette interface est prévue pour ne pas modifier vos données. C'est donc à vous d'exécuter le code généré pour que le recodage soit réellement effectif.
+
+
+
+### Ordonner les modalités d'un facteur
+
+L'avantage des facteurs est que leurs modalités peuvent être ordonnées, ce qui peut faciliter la lecture de tableaux ou graphiques. 
+
+On peut ordonner les modalités d'un facteur manuellement, par exemple avec la fonction `fct_relevel()` de l'extension `forcats` :
+
+```{r}
+hdv2003$qualif_rec <- fct_relevel(hdv2003$qualif,
+                               "Cadre", "Profession intermediaire", "Technicien", 
+                               "Employe", "Ouvrier qualifie", "Ouvrier specialise",
+                               "Autre")
+table(hdv2003$qualif_rec)
+```
+
+
+On peut aussi utiliser l'interface graphique proposée par l'extension `questionr` afin de faciliter cette opération. Pour la lancer, sélectionner le menu *Addins* puis *Levels ordering*, ou exécuter la fonction `iorder()` en lui passant comme paramètre le facteur à réordonner.
+
+![](resources/screenshots/irec.png)
+
+Le fonctionnement de l'interface est similaire à celui de [l'interface de recodage](#irec). Vous pouvez réordonner les modalités en les faisant glisser avec la souris, puis récupérer et exécuter le code R généré.
+
+Une autre possibilité est d'ordonner les modalités d'un facteur selon les valeurs d'une autre variable. Par exemple, si on représente le boxplot de la répartition de l'âge selon le statut d'occupation :
+
+```{r warning=FALSE}
+library(ggplot2)
+ggplot(hdv2003) + 
+  geom_boxplot(aes(x=occup, y=age))
+```
+
+Le graphique pourrait être plus lisible si les modalités étaient triées par âge median croissant. Ceci est possible en utilisant `fct_reorder` de la manière suivante :
+
+```{r warning=FALSE} 
+hdv2003$occup_age <- fct_reorder(hdv2003$occup, hdv2003$age, median)
+
+ggplot(hdv2003) + 
+  geom_boxplot(aes(x=occup_age, y=age))
+```
+
+## Exercices
+
+
+### Préparation
+
+Pour ces exercices, on a besoin des extensions `forcats` et `questionr`, et du jeu de données d'exemple `hdv2003`.
+
+```{r}
+library(forcats)
+library(questionr)
+data(hdv2003)
+```
+
+
+### Vecteurs
+
+**Exercice 1.1**
+
+Construire le vecteur suivant :
+
+```{r}
+x <- c("12", "3.5", "421", "2,4")
+```
+
+Et le convertir en vecteur numérique. Que remarquez-vous ?
+
+```{r, eval = FALSE}
+as.numeric(x)
+```
+
+
+**Exercice 1.2**
+
+Construire le vecteur suivant :
+
+```{r}
+x <- c(1, 20, 21, 15.5, 14, 12, 8, 16, 1)
+```
+
+- Écrire le test qui indique si les éléments du vecteur sont strictement supérieurs à 15. 
+- Utiliser ce test pour extraire du vecteur les éléments correspondants.
+- Remplacer le troisième élément du vecteur par 0.
+
+**Exercice 1.3**
+
+Le code suivant génère un vecteur de 1000 nombres aléatoires compris entre 0 et 10 :
+
+```{r}
+x <- runif(1000, 0, 10)
+```
+
+Combien d'éléments de ce vecteur sont supérieurs ou égal à 8 ?
+
+
+**Exercice 1.4**
+
+Dans le jeu de données `hdv2003`, découper la variable `heures.tv` en classes de manière à obtenir au final le tri à plat suivant :
+
+```{r, echo=FALSE}
+tmp <- cut(hdv2003$heures.tv, include.lowest=FALSE,  right=TRUE,
+                             breaks=c(0, 1, 2, 4, 6, 12))
+freq(tmp)
+```
+
+
+
+### Facteurs
+
+**Exercice 2.1**
+
+Construire un facteur `f` à l'aide du code suivant :
+
+```{r}
+f <- factor(c("Jan", "Jan", "Fev", "Juil"))
+```
+
+Recoder le facteur à l'aide de la fonction `fct_recode` pour obtenir le résultat suivant :
+
+```{r, echo=FALSE}
+fct_recode(f,
+          "Janvier" = "Jan",
+          "Février" = "Fev",
+          "Juillet" = "Juil")
+```
+
+**Exercice 2.2**
+
+À l'aide de l'interface graphique de `questionr`, recoder la variable `relig` du jeu de données `hdv2003` pour obtenir le tri à plat suivant :
+
+```{r, echo = FALSE}
+hdv2003$relig_rec <- fct_recode(hdv2003$relig,
+               "Pratiquant" = "Pratiquant regulier",
+               "Pratiquant" = "Pratiquant occasionnel",
+               "Appartenance" = "Appartenance sans pratique",
+               "NSP" = "NSP ou NVPR")
+freq(hdv2003$relig_rec)
+```
+
+**Exercice 2.3**
+
+À l'aide de l'interface graphique de `questionr`, réordonner les modalités de la variable `qualif` pour obtenir le tri à plat suivant :
+
+```{r, echo=FALSE}
+hdv2003$qualif <- factor(hdv2003$qualif, levels=c("Autre", "Ouvrier specialise", "Ouvrier qualifie", "Employe", "Profession intermediaire", "Technicien", "Cadre"))
+freq(hdv2003$qualif)
+```
+
+
+**Exercice 2.4**
+
+À l'aide de la fonction `fct_reorder`, trier les modalités de la variable `relig` du jeu de données `hdv2003` selon leur âge médian.
+
+```{r}
+hdv2003$relig <- fct_reorder(hdv2003$relig, hdv2003$age, median)
+```
+
+Vérifier en générant le boxplot suivant :
+
+```{r}
+boxplot(age~relig, data = hdv2003)
+```
 
