@@ -1,0 +1,33 @@
+## Importer des données
+
+Pour importer des données, la première étape est de placer le fichier dans le dossier du projet (ou dans un sous-dossier). 
+
+La fonction à utiliser va alors dépendre de la provenance des données. 
+
+|Source | Package | Fonction|
+|-------|---------|---------|
+|Fichier CSV en provenance d'Excel |  |  `read.csv2`|
+|Fichier CSV en provenance de LibreOffice |  |  `read.csv`|
+|Fichier au format Excel (`.xls`, `.xlsx`) | `readxl` |  `read_excel`|
+|Fichier au format dBase (`.dbf`) | `foreign` | `read.dbf`|
+
+Pour les fichiers en provenance d'un autre logiciel d'analyse de données (SAS, SPSS, Stata...), voir les fonctions des extensions `foreign` et `haven`.
+
+Ici on va importer un jeu de données d'exemple provenant d'un fichier CSV. On va donc utiliser la fonction `read.csv` :
+
+```{r eval=FALSE}
+read.csv("data/oscars.csv")
+```
+
+Par défaut, si on ne lui dit rien de plus, R se contente d'afficher un aperçu du contenu du fichier dans la console, ce qui représente un intérêt pour le moins limité. On va donc stocker les données importées dans un objet pour pouvoir les utiliser par la suite :
+
+```{r}
+d <- read.csv("data/oscars.csv")
+```
+
+À partir de là, notre objet `d` contient l'intégralité de notre tableau de données. On peut dès lors accéder aux colonnes du tableau (c'est-à-dire aux variables de notre jeu de données) en utilisant l'opérateur `$` déjà vu précédemment :
+
+```{r}
+mean(d$note_spectateurs)
+```
+

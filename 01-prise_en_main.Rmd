@@ -1,0 +1,368 @@
+# Introduction à R : prise en main
+
+
+*Prérequis :* avoir installé les dernières versions de R et RStudio. Tous deux sont téléchargeables gratuitement pour Wnidows, Mac OS et Linux aux adresses suivantes :
+
+- https://cran.r-project.org/banner.shtml
+- https://www.rstudio.com/products/rstudio/download/
+
+RStudio n'est pas à proprement parler une interface graphique qui permettrait d'utiliser R de manière "classique" via la souris, des menus et des boîtes de dialogue. Il s'agit plutôt de ce qu'on appelle un *Environnement de développement intégré* (IDE) qui facilite l'utilisation de R et le développement de scripts.
+
+## La console
+
+### L'invite de commandes
+
+Au premier lancement de RStudio, l'écran principal est découpé en trois grandes zones :
+
+![Démarrage de Rstudio](resources/screenshots/rstudio_start.png)
+
+La zone de gauche se nomme *Console* et doit normalement afficher un texte ressemblant à ceci :
+
+```
+R version 3.4.1 (2017-06-30) -- "Single Candle"
+Copyright (C) 2017 The R Foundation for Statistical Computing
+Platform: x86_64-pc-linux-gnu (64-bit)
+
+R est un logiciel libre livré sans AUCUNE GARANTIE.
+Vous pouvez le redistribuer sous certaines conditions.
+Tapez 'license()' ou 'licence()' pour plus de détails.
+
+R est un projet collaboratif avec de nombreux contributeurs.
+Tapez 'contributors()' pour plus d'information et
+'citation()' pour la façon de le citer dans les publications.
+
+Tapez 'demo()' pour des démonstrations, 'help()' pour l'aide
+en ligne ou 'help.start()' pour obtenir l'aide au format HTML.
+Tapez 'q()' pour quitter R.
+```
+
+suivi d'une ligne commençant par le caractère `>` et sur laquelle
+devrait se trouver votre curseur. Cette ligne est appelée
+l'*invite de commande* (ou *prompt* en anglais). Elle
+signifie que R est disponible et en attente de votre prochaine
+commande.
+
+Nous pouvons tout de suite lui fournir une première commande, en saisissant le texte suivant puis en appuyant sur `Entrée` :
+
+```{r}
+2 + 2
+```
+
+R nous répond immédiatement, et nous pouvons constater avec soulagement qu'il sait faire des additions simples. On peut donc continuer avec d'autres opérations :
+
+
+```{r}
+5 - 7
+4 * 12
+-10 / 3
+5^2
+```
+
+Remarque : les espaces autour des opérateurs n'ont pas d'importance. Les opérations suivantes sont équivalentes. En général on met un espace de chaque côté d'un opérateur pour faciliter la lecture.
+
+```{r, eval = FALSE}
+10+2
+10 + 2
+10   +          2
+```
+
+### Précisions et astuces concernant la saisie des commandes
+
+Lorsqu'on saisit une commande, les espaces autour des opérateurs n'ont pas d'importance.  Les trois commandes
+suivantes sont donc équivalentes, mais on privilégie en général la
+deuxième pour des raisons de lisibilité du code.
+
+```{r}
+10+2
+10 + 2
+10       +       2
+```
+
+
+Quand vous êtes dans la console, vous pouvez utiliser les flèches vers le haut et vers le bas pour naviguer dans l'historique des commandes que vous avez tapées précédemment. Vous pouvez à tout moment modifier la commande affichée, et l'exécuter en appuyant sur `Entrée`.
+
+Enfin, lorsqu'une commande a été saisie de manière incomplète, R remplace l'invite de commande habituel par un signe `+`. On peut alors compléter la commande sur cette nouvelle ligne, ou tout annuler en appuyant sur `Esc` ou `Échap`.
+
+
+## Objets
+
+### Objets simples
+
+Faire des calculs c'est bien, mais il serait intéressant de pouvoir stocker un résultat quelque part pour pouvoir le réutiliser ultérieurement.
+
+Pour conserver le résultat d'une opération, on peut le stocker dans un *objet* à l'aide de l'opérateur d'assignation `<-`. Cette "flèche" stocke ce qu'il y a à sa droite dans un objet dont le nom est indiqué à sa gauche.
+
+```{r}
+x <- 2
+```
+
+Si on exécute une commande comportant juste le nom d'un objet, R affiche son contenu :
+
+```{r}
+x
+```
+
+
+
+On peut créer autant d'objets qu'on le souhaite.
+
+```{r}
+x <- 2
+y <- 5
+resultat <- x + y
+```
+
+Quand on assigne une nouvelle valeur à un objet déjà existant, la valeur précédente est perdue. Les objets n'ont pas de mémoire.
+
+```{r}
+x <- 2
+x <- 5
+x
+```
+
+De la même manière, assigner un objet à un autre ne crée pas de "lien" entre les deux. Cela copie juste la valeur de l'objet de droite dans celui de gauche :
+
+```{r}
+x <- 1
+y <- 3
+x <- y
+x
+y <- 4
+x
+```
+
+Les objets peuvent contenir tout un tas d'informations. Des nombres, mais aussi des chaînes de caractères, qu'on délimite avec des guillemets simples ou doubles (`'` ou `"`") :
+
+```{r}
+chien <- "Chihuahua"
+chien
+```
+
+### Nommage des objets
+
+Les noms d'objets peuvent contenir des lettres, des chiffres, les symboles `.` et `_`. Ils ne peuvent pas commencer par un chiffre. Attention, R fait la différence entre minuscules et majuscules dans les noms d'objets, ce qui signifie que `x` et `X` seront deux objets différents. 
+
+De manière générale, il est préférable d'éviter les majuscules (pour les risques d'erreur) et les caractères accentués (pour des questions d'encodage) dans les noms d'objets. 
+
+De même, il faut essayer de trouver un équilibre entre clarté du nom (comprendre à quoi sert l'objet, ce qu'il contient), et sa longueur. Par exemple, on préfèrera un nom d'objet `taille_conj1` à `taille_du_conjoint_numero_1` ou à `t1`.
+
+
+### Vecteurs
+
+Imaginons qu'on a demandé la taille en centimètres de 5 personnes et qu'on souhaite calculer leur taille moyenne. On pourrait créer autant d'objets que de tailles et faire l'opération mathématique qui va bien :
+
+```{r}
+taille1 <- 156
+taille2 <- 164
+taille3 <- 197
+taille4 <- 147
+taille5 <- 173
+(taille1 + taille2 + taille3 + taille4 + taille5) / 5
+```
+
+Cette manière de faire n'est évidemment pas pratique du tout. On va plutôt stocker l'ensemble de nos tailles dans un seul objet, de type *vecteur* :
+
+```{r}
+tailles <- c(156, 164, 197, 147, 173)
+```
+
+Si on affiche le contenu de cet objet, on voit qu'il contient bien l'ensemble des tailles saisies :
+
+```{r}
+tailles
+```
+
+Un *vecteur* dans R est donc un objet qui peut contenir plusieurs informations du même type, potentiellement en très grand nombre.
+
+L'avantage d'un vecteur est que lorsqu'on lui applique une opération, celle-ci s'applique à toutes les valeurs qu'il contient. Ainsi, si on veut la taille en mètres plutôt qu'en centimètres, on peut faire :
+
+```{r}
+tailles_m <- tailles / 100
+tailles_m
+```
+
+Imaginons qu'on ait aussi demandé aux cinq mêmes personnes leur poids en kilos. On peut alors créer un deuxième vecteur :
+
+```{r}
+poids <- c(45, 59, 110, 44, 88)
+```
+
+On peut effectuer des calculs utilisant nos deux vecteurs `tailles` et `poids`. On peut par exemple calculer l'indice de masse corporelle (IMC) de chacun de nos enquêtés en divisant leur poids en kilo par leur taille en mètre au carré :
+
+```{r}
+imc <- poids / (tailles / 100) ^ 2
+imc
+```
+
+
+
+
+Notons au passage l'existence de l'opérateur `:`, qui permet de générer rapidement un vecteur de tous les nombres entre deux valeurs :
+
+```{r}
+x <- 1:10
+x
+```
+
+
+Un vecteur peut contenir des nombres, mais il peut aussi contenir des chaînes de caractères. Imaginons qu'on a demandé aux 5 mêmes personnes leur niveau de diplôme : on peut regrouper l'information dans un vecteur de chaînes, toujours délimitées par des guillemets :
+
+```{r}
+diplome <- c("CAP", "Bac", "Bac+2", "CAP", "Bac+3")
+diplome
+```
+
+Enfin, notons qu'on peut accéder à un élément particulier d'un vecteur en faisant suivre le nom du vecteur de crochets contenant le numéro de l'élément désiré. Par exemple :
+
+```{r}
+diplome[2]
+```
+
+
+## Fonctions
+
+### Principe
+
+Après les objets, les fonctions sont un deuxième concept de base de R. On va les utiliser pour effectuer des calculs, obtenir des résultats et accomplir des actions. 
+
+Une fonction a un *nom*, elle prend en entrée un ou plusieurs *arguments* (ou *paramètres*) entre parenthèses, et retourne un *résultat*.
+
+Par exemple, si on veut connaître le nombre d'éléments d'un vecteur, on peut utiliser la fonction `length`, de cette manière :
+
+```{r}
+length(tailles)
+```
+
+Ici, `length` est le nom de la fonction, on l'appelle en lui passant un argument entre parenthèses (en l'occurrence notre vecteur `tailles`), et elle nous renvoie un résultat, à savoir le nombre d'éléments du vecteur passé en paramètre.
+
+Autre exemple, la fonction `mean` calcule et retourne la moyenne d'un vecteur de nombres :
+
+```{r}
+mean(tailles)
+```
+
+Les fonctions `min`, `max` et `range` retournent respectivement les valeurs minimales, maximales et l'étendue d'un vecteur de nombres :
+
+```{r}
+min(tailles)
+max(tailles)
+range(tailles)
+```
+
+### Arguments
+
+
+
+Une fonction peut prendre plusieurs arguments, séparés par des virgules. C'est le cas par exmeple de la fonction `c`, déjà vue précédemment (dont le nom très court est l'abbréviation de `combine`), qui combine l'ensemble des arguments en un vecteur :
+
+```{r}
+tailles <- c(156, 164, 197, 181, 173)
+```
+
+Autre exemple : supposons que dans notre vecteur `tailles` nous avons une valeur manquante (une personne a refusé de répondre, ou notre mètre mesureur était en panne). On symbolise celle-ci dans R avec le code interne `NA` (abbréviation de *Not Available*, non disponible) :
+
+```{r}
+tailles <- c(156, 164, 197, NA, 173)
+```
+
+Si je calcule maintenant la taille moyenne à l'aide de la fonction `mean`, j'obtiens :
+
+```{r}
+mean(tailles)
+```
+
+En effet, R par défaut considère qu'il ne peut calculer la moyenne si une des valeurs n'est pas disponible. On peut cependant indiquer à `mean` d'effectuer le calcul en ignorant les valeurs manquantes. Ceci se fait en ajoutant un argument supplémentaire, nommé `na.rm` (abbréviation de *NA remove*), et de lui attribuer la valeur `TRUE` (code interne de R signifiant *vrai*) :
+
+```{r}
+mean(tailles, na.rm = TRUE)
+```
+
+Positionner le paramètre `na.rm` à `TRUE`  indique à la fonction `mean` de ne pas tenir compte des valeurs
+manquantes dans le calcul.
+
+Si on ne dit rien à la fonction `mean`, cet argument a une valeur par défaut, en l'occurrence `FALSE` (faux), qui fait qu'il ne supprime pas les valeurs manquantes. Les deux commandes sont suivantes sont donc rigoureusement équivalentes :
+
+```{r}
+mean(tailles)
+mean(tailles, na.rm = FALSE)
+```
+
+Lorsqu'on passe un argument à une fonction de cette manière, c'est-à-dire sous la forme `nom = valeur`, on parle d'*argument nommé*.
+
+
+
+### Aide sur une fonction
+
+Il est fréquent de ne pas savoir (ou d'avoir oublié) quels sont les arguments d'une fonction, ou comment ils se nomment. On peut à tout moment faire appel à l'aide intégrée à R en passant le nom de la fonction (entre guillemets) à la fonction `help` :
+
+```{r, eval = FALSE}
+help("mean")
+```
+
+On peut aussi utiliser le raccourci `?mean`.
+
+Ces deux commandes affichent une page (en anglais) décrivant la
+fonction, ses paramètres, son résultat, le tout accompagné de diverses
+notes, références et exemples. Ces pages d'aide contiennent à peu près
+tout ce que vous pourrez chercher à savoir, mais elles ne sont pas
+toujours d'une lecture aisée.
+
+Dans RStudio, les pages d'aide en ligne s'ouvriront par défaut dans la zone en bas à droite,
+sous l'onglet *Help*. Un clic sur l'icône en forme de maison vous affichera la page d'accueil de l'aide.
+
+
+
+
+
+## Exercices
+
+### Exercice 1
+
+Construire le vecteur suivant :
+
+```{r echo=FALSE}
+c(120, 134, 256, 12)
+```
+
+Stocker ce vecteur dans un objet `x` et utilisez `x` pour générer les deux
+vecteurs suivants :
+
+```{r echo=FALSE}
+x <- c(120, 134, 256, 12)
+x + 100
+x * 2
+```
+
+
+### Exercice 2
+
+On a demandé à 4 ménages le revenu des deux conjoints, et le nombre de personnes du ménage :
+
+```{r eval=FALSE}
+conjoint1 <- c(1200, 1180, 1750, 2100)
+conjoint2 <- c(1450, 1870, 1690, 0)
+nb_personnes <- c(4, 2, 3, 2)
+```
+
+Calculer le revenu total par personne de chaque ménage.
+
+
+### Exercice 3
+
+Dans l'exercice précédent, calculer le revenu minimum et maximum parmi ceux du premier conjoint. 
+
+```{r eval=FALSE}
+conjoint1 <- c(1200, 1180, 1750, 2100)
+```
+
+Recommencer avec les revenus suivants, parmi lesquels l'un des enquetés n'a pas voulu répondre :
+
+```{r eval=FALSE}
+conjoint1 <- c(1200, 1180, 1750, NA)
+```
+
+
+
+
+
+

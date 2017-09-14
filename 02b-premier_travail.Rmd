@@ -1,0 +1,608 @@
+# Introduction à R : premier travail avec des données
+
+
+## Jeux de données d'exemple
+
+Dans cette partie nous allons travailler sur des "vraies" données, et utiliser un jeu de données présent dans le package `questionr`. Si cette extension n'est pas installée, suivez les instructions de la section [packages].
+
+Le jeu de données en question est un extrait de l'enquête
+*Histoire de vie* réalisée par l'INSEE en 2003. Il contient
+2000 individus et 20 variables.
+
+Pour pouvoir utiliser ces données, il faut d'abord charger l'extension
+`questionr` (après l'avoir installée, bien entendu) :
+
+```{r}
+library(questionr)
+```
+
+Puis indiquer à R que nous souhaitons accéder au jeu de données à
+l'aide de la commande `data` :
+
+```{r}
+data(hdv2003)
+```
+
+Vous devriez alors voir apparaître dans l'onglet *Environment* de RStudio un nouvel objet nommé `hdv2003` :
+
+![Environment](resources/screenshots/rstudio_environment.png)
+
+Cet objet est d'un type particulier, il s'agit d'un tableau de données.
+
+
+## Tableau de données (*data frame*)
+
+
+Le *data.frame* (ou tableau de données) est un type d'objet dans RStudio qui contient des données au format tabulaire, contenant les observations en ligne et les variables en colonnes, comme dans une feuille de tableur de type LibreOffice ou Excel.
+
+Si on se contente d'exécuter le nom de notre tableau de données :
+
+```{r, eval=FALSE}
+hdv2003
+```
+
+R va, comme à son habitude, nous l'afficher dans la console, ce qui est tout sauf utile.
+
+Une autre manière d'afficher le contenu du tableau est soit de cliquer sur l'icône en forme de tableau à droite du nom de l'objet dans l'onglet *Environment* :
+
+![View icon](resources/screenshots/rstudio_view_icon.png)
+
+Soit d'utiliser la fonction `View` :
+
+```{r, eval = FALSE}
+View(hdv2003)
+```
+
+Votre tableau devrait alors s'afficher dans RStudio avec une interface de type tableur.
+
+L'objet `hdv2003` contient donc *l'intégralité* des données du tableau. On voit donc que :
+
+- Un objet peut contenir des données de types très différents, et être de très grandes tailles.
+- Sous R, on peut importer ou créer autant de tableaux de données qu'on le souhaite, dans les limites des capacités de sa machine.
+
+Un *data frame* peut être manipulé comme les autres objets vus précédemment. On peut par exemple faire :
+
+```{r}
+d <- hdv2003
+```
+
+ce qui va entraîner la copie de l'ensemble de nos données dans un nouvel
+objet nommé `d`. Ceci qui peut paraître parfaitement inutile mais
+a en fait l'avantage de fournir un objet avec un nom beaucoup plus
+court, ce qui diminuera la quantité de texte à saisir par la suite.
+
+**Pour résumer**, comme nous avons désormais décidé de saisir nos
+commandes dans un script et non plus directement dans la console, les
+premières lignes de notre fichier de travail sur les données de
+l'enquête *Histoire de vie* pourraient donc ressembler à ceci~:
+
+
+```{r, eval = FALSE}
+## Chargement des extensions nécessaires
+library(questionr)
+
+## Jeu de données hdv2003
+data(hdv2003)
+d <- hdv2003
+```
+
+
+
+
+Un tableau est un objet comme un autre, on peut lui appliquer des fonctions. 
+
+```{r}
+nrow(hdv2003)
+ncol(d)
+dim(d)
+names(d)
+```
+
+On peut accéder aux colonnes de ce tableau avec l'opérateur `$` :
+
+```{r}
+d$tailles
+d$poids
+```
+
+À chaque fois, le résultat est un vecteur absolument identique à nos vecteurs `tailles` et `poids` précédents. On peut donc leur appliquer des fonctions déjà connues :
+
+```{r}
+mean(d$tailles)
+```
+
+Si on affecte quelque chose à une colonne d'un tableau, cela crée une nouvelle colonne (ou la remplace si elle existe déjà). Par exemple, si on veut créer une nouvelle colonne nommée `taille_m` contenant la taille en mètres, on peut faire :
+
+```{r}
+d$tailles_m <- d$tailles / 100
+```
+
+On peut voir qu'une nouvelle colonne a bien été ajoutée :
+
+```{r, eval = FALSE}
+View(d)
+```
+
+Petit exercice : si on veut calculer l'indice de masse corporelle (IMC), dont la formule est $\frac{\text{poids en kilos}}{(\text{taille en mètres})^2}$, on peut faire :
+
+```{r}
+d$poids / (d$tailles_m ^ 2)
+```
+
+On peut aussi créer une nouvelle variable `imc` dans notre tableau avec :
+
+```{r}
+d$imc <- d$poids / (d$tailles_m ^ 2)
+```
+
+
+
+# Analyse univariée
+
+On a donc désormais accès à un tableau de données `d`, dont les lignes sont des observations (des films), et les colonnes des variables (des caractéristiques de chacun de ces films). 
+
+On peut lister les noms des variables en utilisant l'interface de RStudio, ou avec la fonction `names` :
+
+```{r}
+names(d)
+```
+
+On peut accéder à l'une de ces variables avec l'opérateur `$`, par exemple :
+
+```{r}
+d$titre
+```
+
+## Variable quantitative
+
+Une variable quantitative est une variable de type numérique (un nombre) qui peut prendre un grand nombre de valeurs. On en a plusieurs dans notre jeu de données : la durée, les recettes, le nombre d'entrées, etc.
+
+### Indicateurs de centralité
+
+Caractériser une variable quantitative, c'est essayer de décrire la manière dont ses valeurs se répartissent, ou se distribuent.
+
+Pour cela on peut commencer par regarder les valeurs extrêmes :
+
+```{r}
+min(d$duree)
+max(d$duree)
+range(d$duree)
+```
+
+On peut calculer des indicateurs de *centralité* : ceux-ci indiquent autour de quel nombre se répartissent les valeurs de la variable. Il y en a plusieurs, le plus connu étant la moyenne, qu'on peut calculer avec la fonction `mean` :
+
+```{r}
+mean(d$duree)
+```
+
+Il existe aussi la médiane, qui est la valeur pour laquelle on a la moitié de nos observations au-dessous, et la moitié au-dessus. Elle se calcule avec la fonction `median` :
+
+```{r}
+median(d$duree)
+```
+
+La différence entre les deux est que la médiane est beaucoup moins sensible aux valeurs "extrêmes" : on dit qu'elle est plus *robuste*. Ainsi, en 2013, le salaire net moyen des salariés en France était de 2202 euros, tandis que le salaire net médian n'était que de 1772 euros. La différence étant due à des très hauts salaires qui "tirent" la moyenne vers le haut.
+
+### Indicateurs de dispersion
+
+Les indicateurs de dispersion permettent de mesurer si les valeurs sont plutôt regroupées ou au contraire plutôt dispersées.
+
+L'indicateur le plus simple est l'étendue de la distribution, qui décrit l'écart maximal observé entre les observations :
+
+```{r}
+max(d$duree) - min(d$duree)
+```
+
+Les indicateurs les plus utilisés sont la variance ou, de manière équivalente, l'écart-type (qui est égal à la racine carrée de la variance). On obtient la première avec la fonction `var`, et le second avec `sd` :
+
+```{r}
+var(d$duree)
+sd(d$duree)
+```
+
+Plus la variance ou l'écart-type sont élevés, plus les valeurs sont dispersées autour de la moyenne. À l'inverse, plus ils sont bas et plus les valeurs sont regroupées.
+
+Une autre manière de mesurer la dispersion est de calculer les quartiles :
+
+- le premier quartile est la valeur pour laquelle on a 25% des observations en dessous et 75% au dessus
+- le deuxième quartile est la valeur pour laquelle on a 50% des observations en dessous et 50% au dessus (c'est donc la médiane)
+- le troisième quartile est la valeur pour laquelle on a 75% des observations en dessous et 25% au dessus
+
+On peut les calculer avec la fonction `quantile` :
+
+```{r}
+## Premier quartile
+quantile(d$duree, prob = 0.25)
+## Troisième quartile
+quantile(d$duree, prob = 0.75)
+```
+
+
+La plupart des indicateurs de dispersion auront du sens lorsqu'on effectue des comparaisons, par exemple en comparant les dispersions d'une variable pour deux populations différentes. La comparaison de la dispersion de deux variables décrivant une même population nécessite plus de précautions : il faut notamment vérifier que les ordres de grandeur sont comparables (taille en cm *vs* taille en m, etc.).
+
+
+Notons enfin que la fonction `summary` permet d'obtenir d'un coup plusieurs indicateurs classiques :
+
+```{r}
+summary(d$duree)
+```
+
+### Représentation graphique
+
+L'outil le plus utile pour étudier la distribution des valeurs d'une variable quantitative reste la représentation graphique, en général sous forme d'histogramme. On peut l'obtenir avec la fonction `hist` :
+
+```{r}
+hist(d$duree)
+```
+
+On peut personnaliser l'apparence de l'histogramme en ajoutant des arguments supplémentaires à la fonction `hist`. L'argument le plus important est `breaks`, qui permet d'indiquer le nombre de classes que l'on souhaite. 
+
+```{r}
+hist(d$duree, breaks = 20)
+```
+
+```{r}
+hist(d$duree, breaks = 70)
+```
+
+
+Selon le nombre de classes choisi, on pourra soit effacer quasiment toutes les variations si on en a trop peu, soit avoir trop de détails et masquer les grandes tendances si on en a trop.
+
+On peut également changer la couleur des barres avec `col`, le titre avec `main`, les étiquettes des axes avec `xlab` et `ylab`, etc. :
+
+```{r}
+hist(d$duree, col = "skyblue",
+     main = "Nombre d'entrées en France",
+     xlab = "Nombre d'entrées",
+     ylab = "Effectif")
+```
+
+
+## Variable qualitative
+
+Une variable qualitative est une variable qui ne peut prendre qu'un nombre limité de valeurs, appelées modalités. Dans notre jeu de données on trouvera par exemple le nom du réalisateur, son sexe, son pays de naissance...
+
+À noter qu'une variable qualitative peut tout-à-fait être numérique, et que parfois une variable peut être traitée soit comme quantitative, soit comme qualitative : par exemple le nombre d'enfants ou le nombre de frères et soeurs.
+
+### Tri à plat
+
+L'outil le plus utilisé pour représenter la répartition des valeurs d'une variable qualitative est le *tri à plat* : il s'agit simplement de compter, pour chacune des valeurs possibles de la variable, le nombre d'observations ayant cette valeur. Un tri à plat s'obtient sous R à l'aide de la fonction `table` :
+
+```{r}
+table(d$sexe)
+```
+
+```{r}
+table(d$continent_naissance)
+```
+
+Ces tris à plat en effectifs ne sont pas toujours très lisibles, notamment quand on a des effectifs importants. On leur rajoute donc en général les tris à plat en pourcentage. Pour cela, nous allons utiliser la fonction `freq` de l'extension `questionr`, qui devra donc avoir précédemment été chargée avec `library(questionr)` :
+
+```{r}
+library(questionr)
+freq(d$continent_naissance)
+```
+
+
+### Représentation graphique
+
+On peut représenter graphiquement le tri à plat d'une variable qualitative avec un diagramme en barres, obtenu avec la fonction `barplot`. Attention, cette fonction ne s'applique pas directement à la variable mais au résultat du tri à plat de cette variable, calculé avec `table` :
+
+```{r}
+tab <- table(d$continent_naissance)
+barplot(tab)
+```
+
+
+On peut aussi trier le tri à plat avec la fonction `sort` avant de le représenter graphiquement, ce qui peut faciliter la lecture du graphique :
+
+```{r}
+barplot(sort(tab))
+```
+
+
+
+# Analyse bivariée
+
+Faire une analyse bivariée, c'est étudier la relation entre deux variables : sont-elles liées ? les valeurs de l'une influencent-elles les valeurs de l'autre ? ou sont-elles au contraire indépendantes ?
+
+À noter qu'on va parler ici d'influence ou de lien, mais pas de relation de cause à effet : les outils présentés permettent de visualiser ou de déterminer une relation, mais des liens de causalité proprement dit sont plus difficiles à mettre en évidence. Il faut en effet vérifier que c'est bien telle variable qui influence telle autre et pas l'inverse, qu'il n'y a pas de "variable cachée", etc.
+
+Le type d'analyse ou de visualisation est déterminé par la nature qualitative ou quantitative des deux variables.
+
+
+## Croisement de deux variables qualitatives
+
+### Tableaux croisés
+
+Quand on veut croiser deux variables qualitatives, on fait un *tableau croisé*. Ceci s'obtient avec la fonction `table` de R, auquel on passe cette fois deux variables. Par exemple, si on veut croiser le genre principal du film et le sexe du réalisateur :
+
+```{r}
+table(d$continent_naissance, d$periode)
+```
+
+Pour pouvoir interpréter ce tableau on doit passer du tableau en effectifs au tableau en pourcentages ligne ou colonne. Pour cela, on peut utiliser les fonction `lprop` et `cprop` de l'extension `questionr`, qu'on applique au tableau croisé précédent :
+
+```{r}
+tab <- table(d$continent_naissance, d$periode)
+cprop(tab)
+```
+
+Pour savoir si on doit faire des pourcentages ligne ou colonne, on pourra se référer à l'article suivant :
+
+http://alain-leger.lescigales.org/textes/lignecolonne.pdf
+
+En résumé, quand on fait un tableau croisé, si celui-ci est parfaitement symétrique (on peut inverser les lignes et les colonnes, ça ne change pas son interprétation), on a par contre toujours en tête un "sens" de la lecture dans le sens où on considère que l'une des variables *dépend* de l'autre. Si on croise sexe et type de profession, on dira alors que le type de profession dépend du sexe, et non l'inverse : le type de profession est alors la variable dépendante (à expliquer), et le sexe la variable indépendante (explicative).
+
+Dans notre tableau précédent, on imagine que c'est le continent qui dépend de la période, et non l'inverse. Le continent est donc la variable dépendante, et la période la variable indépendante.
+
+Pour faciliter la lecture d'un tableau croisé, il est recommandé de *faire les pourcentages sur la variable indépendante*. Dans notre exemple, la variable indépendante est la période, elle est en colonne, on calcule donc les pourcentages colonnes qui permettent de comparer directement, pour chaque période, la répartition des continents de naissance du réalisateur.
+
+
+À noter que si on travaille sur un échantillon et non sur une population entière, on peut effectuer un test du $\chi^2$ à l'aide de la fonction `chisq.test`.
+
+
+### Représentation graphique
+
+Il est possible de faire une représentation graphique d'un tableau croisé, par exemple avec la fonction `mosaicplot` :
+
+```{r fig.height=6, fig.width=6}
+mosaicplot(tab, shade=TRUE)
+```
+
+
+## Croisement de deux variables quantitatives
+
+### Représentation graphique
+
+Quand on croise deux variables quantitatives, l'idéal est de faire une représentation graphique sous forme de nuage de points à l'aide de la fonction `plot`.
+
+```{r}
+plot(d$note_spectateurs, d$entrees_france)
+```
+
+Une représentation graphique est l'idéal pour visualiser l'existence d'un lien entre les deux variables. Voici quelques exemples d'interprétation :
+
+```{r, echo = FALSE, fig.height=10, fig.width=6}
+par(mfrow=c(3,2))
+
+x <- rnorm(100)
+y <- 2*x + 1 + rnorm(100, 0, 0.4)
+plot(x, y, main = "Dépendance linéaire positive", 
+     xlab = "", ylab = "", col="red")
+
+x <- rnorm(100)
+y <- -3*x + 15 + rnorm(100, 0, 0.4)
+plot(x, y, main = "Dépendance linéaire négative", 
+     xlab = "", ylab = "", col="red")
+
+x <- rnorm(100)
+y <- exp(x) + 1 + rnorm(100, 0, 0.4)
+plot(x, y, main = "Dépendance non-linéaire monotone", 
+     xlab = "", ylab = "", col="red")
+
+x <- rnorm(100)
+y <- 2*x^2 + 1 + rnorm(100, 0, 0.4)
+plot(x, y, main = "Dépendance non-linéaire non monotone", 
+     xlab = "", ylab = "", col="red")
+
+x <- rnorm(100)
+y <- rnorm(100)
+plot(x, y, main = "Indépendance", 
+     xlab = "", ylab = "", col="red")
+
+x <- rnorm(100)
+y <- rnorm(100, 0, 0.03)
+plot(x, y, main = "Indépendance", 
+     xlab = "", ylab = "", col="red", ylim = c(-2,2))
+
+
+
+```
+
+Dans le premier graphique généré sur nos données, il semble difficile de mettre en évidence une relation de dépendance. Si par contre on croise l'année du prix et l'année de naissance du réalisateur, on obtient une belle relation de dépendance linéaire.
+
+```{r}
+plot(d$annee, d$annee_naissance)
+```
+
+De la même manière si on croise le nombre d'entrées réalisées en Province (en soustrayant les entrées parisiennes des entrées françaises) et le nombre réalisé à Paris.
+
+```{r}
+d$entrees_province <- d$entrees_france - d$entrees_paris
+plot(d$entrees_paris, d$entrees_province)
+```
+
+Par contre, y'a-t-il un lien entre les notes données par la presse et le nombre d'entrées en France ? A priori pas vraiment :
+
+```{r}
+plot(d$note_presse, d$entrees_france)
+```
+
+
+### Corrélation linéaire (Pearson)
+
+La corrélation est une mesure du lien d'association linéaire entre deux variables quantitatives. Sa valeur varie entre -1 et 1. Si la corrélation vaut -1, il s'agit d'une association linéaire négative parfaite. Si elle vaut 1, il s'agit d'une association linéaire positive parfaite. Si elle vaut 0, il n'y a aucune association linéaire entre les variables.
+
+On la calcule dans R à l'aide de la fonction `cor`.
+
+Ainsi la corrélation entre le nombre d'entrées en province et à Paris vaut :
+
+```{r}
+cor(d$entrees_province, d$entrees_paris, use = "complete.obs")
+```
+
+Ce qui est extrêmement fort. Il y a donc un lien linéaire et positif entre les deux variables (quand la valeur de l'une augmente, la valeur de l'autre augmente également).
+
+À l'inverse, la corrélation entre les notes données par la presse et le nombre d'entrées en France vaut :
+
+```{r}
+cor(d$note_presse, d$entrees_france, use = "complete.obs")
+```
+
+Ce qui indique, pour nos données, une absence de liaison linéaire entre les deux variables.
+
+
+Quand on observe une corrélation linéaire, il peut être tentant de tracer la droite qui passe le plus près possible des points du nuage. Faire cela c'est faire une régression linéaire d'une des deux variables sur l'autre.
+
+Par exemple, comme on a observé un lien entre les entrées Province et les entrées à Paris, on peut faire une régression de la deuxième variable sur la première et la représenter sur le nuage de points.
+
+
+```{r}
+reg <- lm(d$entrees_province ~ d$entrees_paris)
+plot(d$entrees_paris, d$entrees_province)
+abline(reg, col="red")
+
+```
+
+L'étape d'après est de regarder les résultats numériques de la régression, qui permettent d'estimer la manière dont la variable dépendante varie en fonction de la variable indépendante.
+
+```{r}
+summary(reg)
+```
+
+À noter qu'il est possible d'introduire plusieurs variables indépendantes dans le modèle, on parle alors de régression multiple.
+
+
+### Corrélation des rangs (Spearman)
+
+Le coefficient de corrélation de Pearson fait une hypothèse forte sur les données : elles doivent être liées par une association linéaire. Quand ça n'est pas le cas mais qu'on est en présence d'une association monotone, on peut utiliser un autre coefficient, le coefficient de corrélation des rangs de Spearman.
+
+Plutôt que de se baser sur les valeurs des variables, cette corrélation va se baser sur leurs rangs, c'est-à-dire sur leur position parmi les différentes valeurs prises par les variables.
+
+Ainsi, si la valeur la plus basse de la première variable est associée à la valeur la plus basse de la deuxième, et ainsi de suite jusqu'à la valeur la plus haute, on obtiendra une corrélation de 1. Si la valeur la plus forte de la première variable est associée à la valeur la plus faible de la seconde, et ainsi de suite, et que la valeur la plus faible de la première est associée à la plus forte de la deuxième, on obtiendra une corrélation de -1. Si les rangs sont "mélangés", sans rapports entre eux, on obtiendra une corrélation autour de 0.
+
+
+```{r, echo = FALSE, fig.height=10, fig.width=6}
+par(mfrow=c(3,2))
+
+x <- rnorm(100)
+y <- 2*x + 1 + rnorm(100, 0, 0.4)
+p <- round(cor(x, y), 2)
+s <- round(cor(x, y, method = "spearman"), 2)
+title <- paste0("Pearson : ", p, " - Spearman : ", s)  
+plot(x, y, main = title, 
+     xlab = "", ylab = "", col="red")
+
+x <- rnorm(100)
+y <- -3*x + 15 + rnorm(100, 0, 0.4)
+p <- round(cor(x, y), 2)
+s <- round(cor(x, y, method = "spearman"), 2)
+title <- paste0("Pearson : ", p, " - Spearman : ", s)  
+plot(x, y, main = title, 
+     xlab = "", ylab = "", col="red")
+
+x <- rnorm(100)
+y <- exp(x) + 1 + rnorm(100, 0, 0.4)
+p <- round(cor(x, y), 2)
+s <- round(cor(x, y, method = "spearman"), 2)
+title <- paste0("Pearson : ", p, " - Spearman : ", s)  
+plot(x, y, main = title, 
+     xlab = "", ylab = "", col="red")
+
+x <- rnorm(100)
+y <- 2*x^2 + 1 + rnorm(100, 0, 0.4)
+p <- round(cor(x, y), 2)
+s <- round(cor(x, y, method = "spearman"), 2)
+title <- paste0("Pearson : ", p, " - Spearman : ", s)  
+plot(x, y, main = title, 
+     xlab = "", ylab = "", col="red")
+
+x <- rnorm(100)
+y <- rnorm(100)
+p <- round(cor(x, y), 2)
+s <- round(cor(x, y, method = "spearman"), 2)
+title <- paste0("Pearson : ", p, " - Spearman : ", s)  
+plot(x, y, main = title, 
+     xlab = "", ylab = "", col="red")
+
+x <- rnorm(20)
+y <- x + 1 + rnorm(20, 0, 0.4)
+x <- c(x, 2, 1.8)
+y <- c(y, -2, -1.9)
+p <- round(cor(x, y), 2)
+s <- round(cor(x, y, method = "spearman"), 2)
+title <- paste0("Pearson : ", p, " - Spearman : ", s)  
+plot(x, y, main = title, 
+     xlab = "", ylab = "", col="red", ylim = c(-2,2))
+
+
+
+```
+
+La corrélation des rangs a aussi pour avantage d'être moins sensibles aux valeurs extrêmes ou aux points isolés. On dit qu'elle est plus "robuste".
+
+Pour calculer une corrélation de Spearman, on utilise la fonction `cor` mais avec l'argument `method = "spearman"` :
+
+```{r}
+cor(d$entrees_province, d$entrees_paris, use = "complete.obs", method = "spearman")
+```
+
+```{r}
+cor(d$note_presse, d$entrees_france, use = "complete.obs", method = "spearman")
+```
+
+
+
+## Croisement d'une variable quantitative et d'une variable qualitative
+
+### Représentation graphique
+
+Croiser une variable quantitative et une variable qualitative, c'est essayer de voir si les valeurs de la variable quanti se répartissent différemment selon la catégorie d'appartenance de la variable quali.
+
+Pour cela, l'idéal est de faire un graphique de type "boîte à moustache" à l'aide de la fonction `boxplot`. Par exemple, si on veut visualiser si les notes des spectateurs varient selon la période de réalisation du film :
+
+```{r}
+boxplot(d$note_spectateurs ~ d$periode)
+```
+
+
+On constate que les notes des spectateurs ont tendance à être plus élevées quand les films sont plus récents.
+
+Autre exemple : croisement entre les notes des spectateurs et le genre principal du film.
+
+```{r}
+boxplot(d$note_spectateurs ~ d$genre_principal, las = 2)
+```
+
+On constate des variations, mais elle sont à prendre avec beaucoup de prudence, notamment pour les genres qui ne contiennent que très peu de films :
+
+```{r}
+freq(d$genre_principal)
+```
+
+
+### Calculs d'indicateurs
+
+On peut aussi vouloir comparer certains indicateurs (moyenne, médiane) d'une variable quantitative selon les niveaux d'une variable quali. Si on reprend l'exemple précédent, on peut calculer la moyenne des notes des spectateurs selon la période du film.
+
+Une première méthode pour cela est d'extraire de notre population autant de sous-populations qu'il y a de modalités dans la variable quali. On peut le faire notamment avec la fonction `subset`.
+
+On commence par créer une sous-population `d_2939` ne contenant que les films réalisés entre 1929 et 1939 :
+
+```{r}
+d_2939 <- subset(d, periode == "1929-1939")
+```
+
+Puis la même chose pour les films réalisés entre 2000 et 2017 :
+
+```{r}
+d_0017 <- subset(d, periode == "2000-2017")
+```
+
+On peut ensuite utiliser ces deux nouveaux tableaux de données comme on en a l'habitude, et calculer le nombre moyen d'entrées selon la période :
+
+```{r}
+mean(d_2939$note_spectateurs)
+```
+```{r}
+mean(d_0017$note_spectateurs)
+```
+
+
+Une autre possibilité est d'utiliser `tapply`, qui prend en paramètre une variable quanti, une variable quali et une fonction, puis applique automatiquement la fonction aux valeurs de la variables quanti pour chaque niveau de la variable quali :
+
+```{r}
+tapply(d$note_spectateurs, d$periode, mean)
+```
+
