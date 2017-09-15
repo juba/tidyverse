@@ -1,26 +1,202 @@
-## Importer des données
+# Importer et exporter des données (`readr`, `readxl`, `haven`)
 
-Pour importer des données, la première étape est de placer le fichier dans le dossier du projet (ou dans un sous-dossier). 
+R n'est pas prévu pour la saisie de données, mais il bénéficie de nombreuses fonctions et packages permettant l'import de données depuis un grand nombre de formats. Seuls les plus courants seront abordés ici.
 
-La fonction à utiliser va alors dépendre de la provenance des données. 
+Il est très vivement conseillé de travailler avec les projets de RStudio pour faciliter l'accès aux fichiers et pouvoir regrouper l'ensemble des éléments d'une analyse dans un dossier (voir partie [projets]).
 
-|Source | Package | Fonction|
-|-------|---------|---------|
-|Fichier CSV en provenance d'Excel |  |  `read.csv2`|
-|Fichier CSV en provenance de LibreOffice |  |  `read.csv`|
-|Fichier au format Excel (`.xls`, `.xlsx`) | `readxl` |  `read_excel`|
-|Fichier au format dBase (`.dbf`) | `foreign` | `read.dbf`|
+## Import de fichiers textes
 
-Pour les fichiers en provenance d'un autre logiciel d'analyse de données (SAS, SPSS, Stata...), voir les fonctions des extensions `foreign` et `haven`.
+L'extension `readr`, qui fait partie du *tidyverse*, permet l'importation de fichiers texte, notamment au format CSV (*Comma separated values*).
 
-Ici on va importer un jeu de données d'exemple provenant d'un fichier CSV. On va donc utiliser la fonction `read.csv` :
+Si votre fichier CSV suit un format CSV standard (c'est le cas s'il a été exporté depuis LibreOffice par exemple), avec des champs séparés par des virgules, vous pouvez utiliser la fonction `read_csv` en lui passant en argument le nom du fichier :
+
+```{r, eval=FALSE}
+d <- read_csv("fichier.csv")
+```
+
+Si votre fichier vient d'Excel, avec des valeurs séparées par des points virgule, utilisez la fonction `read_csv2` :
+
+```{r, eval=FALSE}
+d <- read_csv2("fichier.csv")
+```
+
+Dans les mêmes familles de fonction, `read_tsv` permet d'importer des fichiers dont les valeurs sont séparées par des tabulations, et `read_delim` des fichiers délimités par un séparateur indiqué en argument.
+
+Chaque fonction dispose de plusieurs arguments, parmi lesquels :
+
+- `col_names` indique si la première ligne contient le nom des colonnes (`TRUE` par défaut)
+- `col_types` permet de spécifier manuellement le type des colonnes si `readr` ne les identifie pas correctement
+- `na` est un vecteur de chaînes de caractères indiquant les valeurs devant être considérées comme manquantes. Ce vecteur vaut `c("", "NA")` par défaut
+
+Il peut arriver, notamment sous Windows, que l'encodage des caractères accentués ne soit pas correct au moment de l'importation. On peut spécifier manuellement l'encodage du fichier importé à l'aide de l'option `locale`. Par exemple, si l'on est sous Mac ou Linux et que le fichier a été créé sous Windows, il est possible qu'il soit encodé au format iso-8859-1. On peut alors l'importer avec :
+
+```{r, eval = FALSE}
+d <- read_csv("fichier.csv", locale = locale(encoding = "ISO-8859-1"))
+```
+
+À l'inverse, si vous importez un fichier sous Windows et que les accents ne sont pas affichés correctement, il est sans doute encodé en UTF-8 :
+
+```{r, eval = FALSE}
+d <- read_csv("fichier.csv", locale = locale(encoding = "UTF-8"))
+```
+
+Pour plus d'informations, voir le site de l'extension : http://readr.tidyverse.org/
+
+
+```{block, type='rmdtip'}
+À noter que si vous souhaitez importer des fichiers textes très volumineux le plus rapidement possible, la fonction `fread` de l'extension `data.table` est plus rapide que `read_csv`.
+```
+
+### Interface interactive d'import de fichiers
+
+RStudio propose une interface permettant d'importer un fichier de données de manière interactive. Pour cela, dans l'onglet *Environment*, cliquer sur le bouton *Import Dataset* :
+
+![Import Dataset](resources/screenshots/import_dataset.png)
+
+Sélectionner *From Text (readr)...*. Une fenêtre s'affiche :
+
+![Import Dialog](resources/screenshots/import_dialog.png)
+
+Il vous suffit d'indiquer le fichier à importer dans le champ *File/URL* tout en haut (vous pouvez même indiquer un lien vers un fichier distant via HTTP). Un aperçu s'ouvre dans la partie *Data Preview* et vous permet de vérifier si l'import est correct :
+
+![Import Dialog](resources/screenshots/import_dialog_example.png)
+
+
+Vous pouvez modifier les options d'importation, changer le type des colonnes, etc. et l'aperçu se met à jour. De même, le code correspondant à l'importation du fichier avec les options sélectionnées est affiché dans la partie *Code Preview*.
+
+```{block, type='rmdimportant'}
+**Important** : une fois que l'import semble correct, ne cliquez pas sur le bouton *Import*. À la place, sélectionnez le code généré et copiez-le (ou cliquez sur l'icône en forme de presse papier) et choisissez *Cancel*. Ensuite, collez le code dans votre script et exécutez-le (vous pouvez supprimer la ligne commençant par `View`).
+
+Cette manière de faire permet "d'automatiser" l'importation des données, puisqu'à la prochaine ouverture du script vous aurez juste à exécuter le code en question, et pas à repasser par l'interface d'import.
+```
+
+
+## Import depuis un fichier Excel
+
+L'extension `readxl`, qui ait également partie du *tidyverse*, permet d'importer des données directement depuis un fichier au format `xls`ou `xlsx`.
+
+Pour cela on peut utiliser la fonction `read_excel` en lui spécifiant le nom du fichier :
+
+```{r, eval = FALSE}
+d <- read_excel("fichier.xls")
+```
+
+Il est possible de spécifier la feuille que l'on souhaite importer et la plage de cellules avec les arguments `sheet` et `range` :
+
+```{r, eval = FALSE}
+d <- read_excel("fichier.xls", sheet = "Feuille2", range = "C1:F124")
+```
+
+Comme pour l'import de fichiers texte, une interface interactive d'import est disponible dans RStudio dans l'onglet *Environment*. Cliquer sur *Import Dataset* puis *From Excel...*. 
+
+![Import Excel](resources/screenshots/import_excel.png)
+
+Spécifiez le chemin ou l'URL du fichier dans le premier champ, vérifiez l'import dans la partie *Data Preview*, modifiez si besoin les options d'importation, copiez le code d'importation généré dans la partie *Code Preview* et collez le dans votre script.
+
+
+Pour plus d'informations, voir le site de l'extension : http://readxl.tidyverse.org/
+
+
+## Import de fichiers SAS, SPSS et Stata
+
+L'import de fichiers de données au format SAS, SPSS ou Stata se fait via les fonctions de l'extension `haven`.
+
+- Pour les fichiers provenant de SAS, vous pouvez utiliser les fonctions `read_sas` ou `read_xpt`
+- Pour les fichiers provenant de SPSS, vous pouvez utiliser `read_sav` ou `read_por`
+- Pour les fichiers provenant de Stata, utilisez `read_dta`
+
+Chaque fonction dispose de plusieurs options. Le plus simple est d'utiliser, là aussi l'interface interactive d'importation de données de RStudio : dans l'onglet *Environment*, sélectionnez *Import Dataset* puis *From SPSS*, *From SAS* ou *From Stata*. Indiquez le chemin ou l'url du fichier, réglez les options d'importation, puis copiez le code d'importation généré et collez le dans votre script.
+
+
+Pour plus d'informations, voir le site de l'extension : http://haven.tidyverse.org/
+
+
+## Import de fichiers dBase
+
+Le format dBase est encore utilisé, notamment par l'INSEE, pour la diffusion de données volumineuses.
+
+Les fichiers au format `dbf` peuvent être importées à l'aide de la fonction `read.dbf` de l'extension `foreign` ^[`foreign` est une extension installée de base avec R, vous n'avez pas besoin de l'installer, il vous suffit de la charger avec `library`] :
+
+```{r, eval = FALSE}
+library(foregin)
+d <- read.dbf("fichier.dbf")
+```
+
+La fonction `read.dbf` n'admet qu'un seul argument, `as.is`. Si `as.is = FALSE` (valeur par défaut), les chaînes de caractères sont automatiquement converties en `factor` à l'importation. Si `as.is = TRUE`, elles sont conservées telles quelles. 
+
+
+## Connexion à des bases de données
+
+R est capable de s'interfacer avec différents systèmes de bases de données relationnelles, dont `sqlite`, `MS SQL Server`, `PostgreSQL`, `MariaDB`, etc.
+
+L'extension `dplyr` (voir section [dplyr]), via le package `dbplyr`, peut être utilisé pour interroger directement ces bases de données avec la syntaxe de `dplyr` et récupérer les résultats dans R sous forme de tableaux de données. Il est également possible d'interagir directement avec les bases de données en leur envoyant des requêtes SQL.
+
+À titre d'illustration, le code suivant permet de se connecter à une base de données SQLite et de l'interroger via `dplyr` :
+
+```{r, eval = FALSE}
+library(dplyr)
+con <- DBI::dbConnect(RSQLite::SQLite(), path = "bdd.sqlite")
+
+villes_db <- tbl(con, "villes")
+
+villes %>%
+  filter(population > 10000) %>% 
+  select(nom, departement, population)
+```
 
 
 
-Par défaut, si on ne lui dit rien de plus, R se contente d'afficher un aperçu du contenu du fichier dans la console, ce qui représente un intérêt pour le moins limité. On va donc stocker les données importées dans un objet pour pouvoir les utiliser par la suite :
+Pour plus d'informations, voir la documentation très complète (en anglais) sur : https://db.rstudio.com/
 
 
-À partir de là, notre objet `d` contient l'intégralité de notre tableau de données. On peut dès lors accéder aux colonnes du tableau (c'est-à-dire aux variables de notre jeu de données) en utilisant l'opérateur `$` déjà vu précédemment :
+
+## Export de données
+
+### Export de tableaux de données
+
+On peut avoir besoin d'exporter un tableau de données dans R vers un fichier dans différents formats. La plupart des fonctions d'import disposent d'un équivalent permettant l'export de données. On citera notamment :
+
+- `write_csv`, `write_csv2`, `read_tsv` permettent d'enregistrer un *data frame* dans un fichier au format texte délimité
+- `write_sas` permet d'exporter au format SAS
+- `write_sav` permet d'exporter au format SPSS
+- `write_dta` permet d'exporter au format Stata
+
+Il n'existe par contre pas de fonctions permettant d'enregistrer directement au format `xls` ou `xlsx`. On peut dans ce cas passer par un fichier CSV.
+
+Ces fonctions sont utiles si on souhaite diffuser des données à quelqu'un d'autre, ou entre deux logiciels.
+
+Si vous travaillez sur des données de grandes dimensions, les formats texte peuvent être lents à exporter et importer. Dans ce cas, l'extension `feather` peut être utile : elle permet d'enregistrer un *data frame* au format feather, qui n'est pas le plus compact mais qui est extrêmement rapide à lire et écrire ^[`feather` est un format compatible avec Python, R et Julia. Pour plus d'informations voir https://github.com/wesm/feather].
+
+Les fonctions `read_feather` et `write_feather` permettent d'importer et exporter des tableaux de données dans ce format.
+
+### Sauvegarder des objets
+
+Une autre manière de sauvegarder des données est de les enregistrer au format `Rdata`. Ce format est compact, rapide, et permet d'enregistrer plusieurs objets R, quel que soit leur type, dans un même fichier.
+
+Pour enregistrer des objets, il suffit d'utiliser la fonction `save` et de lui fournit la liste des objets à sauvegarder et le nom du fichier :
+
+```{r, eval = FALSE}
+save(d, rp2012, tab, file = "fichier.Rdata")
+```
+
+Pour charger des objets préalablement enregistrés, utiliser `load` :
+
+```{r, eval = FALSE}
+load("fichier.Rdata")
+```
+
+```{block, type='rmdwarning'}
+Attention, quand on utilises `load`, les objets chargés sont importés directement dans l'environnement en cours avec leur nom d'origine. Si d'autres objets du même nom existaient déjà, ils sont écrasés sans avertissement.
+```
+
+
+
+
+
+
+
+
+
 
 
 
