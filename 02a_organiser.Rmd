@@ -1,54 +1,6 @@
 # Introduction à R : Travailler avec R et RStudio
 
 
-## Regrouper ses commandes dans des scripts
-
-Jusqu'ici on a utilisé R de manière "interactive", en saisissant des commandes directement dans la console. Ça n'est cependant pas de cette manière qu'on va utiliser R au quotidien, pour une raison simple : lorsque R redémarre, tout ce qui a été effectué dans la console est perdu.
-
-Plutôt que de saisir nos commandes dans la console, on va donc les regrouper dans des scripts (de simples fichiers texte), qui vont garder une trace de toutes les opérations effectuées, et ce sont ces scripts, sauvegardés régulièrement, qui seront le "coeur" de notre travail. C'est en rouvrant les scripts et en réexécutant les commandes qu'ils contiennent qu'on pourra "reproduire" les données, leur traitement, les analyses et leurs résultats, etc.
-
-Pour créer un script, il suffit de sélectionner le menu *File*, puis *New file* et *R script*. Une quatrième zone apparaît alors en haut à gauche de l'interface de RStudio. On peut enregistrer notre script à tout moment dans un fichier avec l'extension `.R`, en cliquant sur l'icône de disquette ou en choissant *File* puis *Save*.
-
-Un script est un fichier texte brut, qui s'édite de la manière habituelle. À la différence de la console, quand on appuie sur `Entrée`, cela n'exécute pas la commande en cours mais insère un saut de ligne (comme on pouvait s'y attendre).
-
-Pour exécuter une commande saisie dans un script, il suffit de positionner le curseur sur la ligne de la commande en question, et de cliquer sur le bouton *Run* dans la barre d'outils juste au-dessus de la zone d'édition du script. On peut aussi utiliser le raccourci clavier `Ctrl + Entrée` (`Cmd + Entrée` sous Mac). On peut aussi sélectionner plusieurs lignes avec la souris ou le clavier et cliquer sur *Run* (ou utiliser le raccourci clavier), et l'ensemble des lignes est exécuté d'un coup.
-
-Au final, un script pourra ressembler à quelque chose comme ça :
-
-```
-tailles <- c(156, 164, 197, 147, 173)
-poids <- c(45, 59, 110, 44, 88)
-
-mean(tailles)
-mean(poids)
-
-imc <- poids / (tailles / 100) ^ 2
-imc
-```
-
-
-### Commentaires
-
-Les commentaires sont un élément très important d'un script. Il s'agit de texte libre, ignoré par R, et qui permet de décrire les étapes du script, sa logique, les raisons pour lesquelles on a procédé de telle ou telle manière... Il est primordial de documenter ses scripts à l'aide de commentaires, car il est très facile de ne plus se retrouver dans un programme qu'on a produit soi-même, même après une courte interruption.
-
-Pour ajouter un commentaire, il suffit de le faire précéder d'un ou plusieurs symboles `#`. En effet, dès que R rencontre ce caractère, il ignore tout ce qui se trouve derrière.
-
-On peut donc documenter le script précédent.
-
-```
-## Saisie des tailles et poids des enquêtés
-tailles <- c(156, 164, 197, 147, 173)
-poids <- c(45, 59, 110, 44, 88)
-
-## Calcul des tailles et poids moyens
-mean(tailles)
-mean(poids)
-
-## Calcul de l'IMC (poids en kilo divisé par les tailles en mètre au carré)
-imc <- poids / (tailles / 100) ^ 2
-imc
-```
-
 
 ## Les projets dans RStudio
 
@@ -73,48 +25,3 @@ Une fois le projet créé, son nom est affiché dans un petit menu déroulant en
 
 
 Autres conséquences : dans la fenêtre *Console*, une nouvelle session R a été lancée dans le dossier du projet, et l'onglet *Files* affiche les fichiers contenus dans ce dossier.
-
-
-## Installer et charger des extensions (*packages*) {#packages}
-
-R étant un logiciel libre, il bénéficie d'un développement communautaire riche et dynamique. L'installation de base de R permet de faire énormément de choses, mais le langage dispose en plus d'un système d'extensions permettant d'ajouter facilement de nouvelles fonctionnalités. La plupart des extensions sont développées et maintenues par la communauté des utilisateurs de R, et diffusées via un réseau de serveurs nommé CRAN (*Comprhensive R Archive Network*).
-
-Pour installer une extension, on peut utiliser le bouton *Install* de l'onglet *Packages* de RStudio. 
-
-![Install package](resources/screenshots/rstudio_package_install.png)
-
-
-Il suffit alors d'indiquer le nom de l'extension dans le champ *Package* et de cliquer sur *Install*.
-
-![Install package dialog](resources/screenshots/rstudio_package_install2.png)
-
-On peut aussi installer des extensions en utilisant la fonction `install.packages()` directement dans la console. Par exemple, pour installer le *package* `questionr` on peut exécuter la commande :
-
-```{r, eval = FALSE}
-install.packages("questionr")
-```
-
-Installer une extension via l'une des deux méthodes précédentes va télécharger l'ensemble des fichiers nécessaires depuis l'une des machines du CRAN, puis installer tout ça sur le disque dur de votre ordinateur. Vous n'avez besoin de le faire qu'une fois, comme vous le faites pour installer un programme sur votre Mac ou PC.
-
-Une fois l'extension installée, il faut la "charger" avant de pouvoir utiliser les fonctions qu'elle propose. Ceci se fait avec la fonction `library`. Par exemple, pour pouvoir utiliser les fonctions de `questionr`, vous devrez exécuter la commande suivante :
-
-```{r eval = FALSE}
-library(questionr)
-```
-
-Ainsi, bien souvent, on regroupe en début de script toute une série d'appels à `library` qui permettent de charger tous les packages utilisés dans le script. Quelque chose comme :
-
-```{r, eval = FALSE}
-library(readxl)
-library(ggplot2)
-library(questionr)
-```
-
-Si vous essayez d'exécuter une fonction d'une extension et que vous obtenez le message d'erreur `impossible de trouver la fonction`, c'est certainement parce que vous n'avez pas exécuté la commande `library` correspondante :
-
-```{r}
-wtd.mean(tailles)
-```
-
-
-
