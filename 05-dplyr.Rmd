@@ -63,9 +63,9 @@ slice(airports, 1:5)
 ```
 
 
-### `filter`
+### `filter` {#filter}
 
-`filter` sélectionne des lignes d'un tableau de données selon une condition. On lui passe en paramètre un test, et seules les lignes pour lesquelles ce test renvoie vrai sont conservées.
+`filter` sélectionne des lignes d'un tableau de données selon une condition. On lui passe en paramètre un test, et seules les lignes pour lesquelles ce test renvoie vrai sont conservées ^[Pour plus d'informations sur les tests et leur syntaxe, voir la section \@ref(tests) ].
 
 Si on veut choisir les vols du mois de janvier :
 
@@ -935,35 +935,23 @@ flights_dest
 
 Créez une carte interactive des résultats avec `leaflet` et le code suivant :
 
-```{r echo=FALSE}
+```{r message=FALSE, warning=FALSE}
 library(leaflet)
 leaflet(data = flights_dest) %>%
   addTiles %>%
   addCircles(lng=~lon, lat=~lat, radius=~n * 10, popup=~name)
 ```
 
+Créez une carte statique des résultats avec `ggmap` et le code suivant :
 
-**Exercice 6.2**
-
-Calculer le nombre de vols selon l'aéroport de destination et le mois, et fusionnez la table `airports` sur le résultat avec `left_join`. Stocker le résultat final dans un objet nommé `flights_dest`. 
-
-```{r echo = FALSE}
-flights_dest <- flights %>% 
-  count(dest, month) %>% 
-  left_join(airports, by = c("dest"="faa"))
-flights_dest
-```
-
-
-Créez une carte interactive des résultats avec `ggmap` et le code suivant :
-
-```{r echo=FALSE}
+```{r message=FALSE, warning=FALSE}
 library(ggmap)
-map <- get_map(location = "USA", source="osm", zoom=7)
-ggmap(map) +
-  geom_point(data = flights_dest, aes(x=lon, y=lat, size=n))
-
+map <- get_map(location = "Kansas", zoom=4, color="bw")
+ggmap(map, extent = "device") +
+  geom_point(data = flights_dest, aes(x=lon, y=lat, size=n), 
+             color = "red", alpha = 0.2)
 ```
+
 
 
 
