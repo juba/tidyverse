@@ -1,4 +1,4 @@
-# Vecteurs et facteurs {#vector_factor}
+# Recoder et calculer des variables {#vector_factor}
 
 ```{r setup_vec,echo=FALSE, cache=FALSE}
 library(knitr)
@@ -7,41 +7,56 @@ library(forcats)
 data(hdv2003)
 ```
 
+ 
+## Rappel sur les variables et les vecteurs
 
+Dans R, une variable, en général une colonne d'un tableau de données, est un objet de type *vecteur*. Un vecteur ensemble d'éléments, tous du même type.
 
-## Vecteurs
-
-Les vecteurs sont un des types d'objet les plus courants dans R. Il s'agit d'un ensemble d'éléments, tous du même type. Ce sont eux qui représentent les variables, ou colonnes, d'un tableau de données.
-
-On peut construire un vecteur manuellement à l'aide de la fonction `c` :
+On a vu qu'on peut construire un vecteur manuellement de différentes manières :
 
 ```{r}
-vec <- c("Jaune", "Jaune", "Rouge", "Vert")
+couleur <- c("Jaune", "Jaune", "Rouge", "Vert")
+nombres <- 1:10
 ```
 
-Mais le plus souvent on manipulera des vecteurs faisant partie d'une table importée dans R :
+Mais le plus souvent on manipule des vecteurs faisant partie d'une table importée dans R. Dans ce qui suit on va utiliser le jeu de données d'exemple `hdv2003` de l'extension `questionr`.
 
-```{r, eval=FALSE}
+```{r}
 library(questionr)
 data(hdv2003)
+```
+
+Quand on veut accéder à un vecteur d'un tableau de données, on peut utiliser l'opérateur `$` :
+
+```{r eval=FALSE}
 hdv2003$qualif
 ```
 
+Quand on utilise `dplyr`, on a vu qu'on peut utiliser `select` ^[À la différence de `$`, `select` ne renvoie cependant pas un vecteur mais à un tableau à une seule colonne. Si on veut extraire le vecteur on peut utiliser la fonction `pull` :
+`{r eval=FALSE} hdv2003 %>% pull(qualif)`] :
 
-### Classes de vecteurs
+```{r eval=FALSE}
+hdv2003 %>% select(qualif)
+```
+
+On peut facilement créer de nouvelles variables (ou colonnes) dans un tableau de données en utilisant le `$` :
+
+```{r}
+hdv2003$minutes.tv <- hdv2003$heures.tv * 60
+```
+
+Ou à l'aide de la fonction `mutate` de `dplyr` :
+
+```{r}
+hdv2003 <- hdv2003 %>% mutate(minutes.tv = heures.tv * 60)
+```
 
 Les vecteurs peuvent être de classes différentes, selon le type de données qu'ils contiennent.
 
 On a ainsi des vecteurs de classe `numeric` ou `integer`, qui contiennent des nombres :
 
 ```{r}
-x <- 1:10
-class(x)
-```
-
-```{r}
-x <- c(1, 3, 4.5, 12568)
-class(x)
+class(hdv2003$heures.tv)
 ```
 
 Des vecteurs de classe `character`, qui contiennent des chaînes de caractères :
@@ -69,24 +84,25 @@ as.character(y)
 
 ```
 
-Enfin, les éléments d'un vecteur peuvent être nommés :
+On peut sélectionner certains éléments d'un vecteur à l'aide de l'opérateur `[]`. La manière la plus simple est d'indiquer la position des éléments qu'on veut sélectionner :
 
 ```{r}
-vec <- c(x = 1, y = 5, z = 12)
-vec
+vec <- c("Jaune", "Jaune", "Rouge", "Vert")
+vec[c(1,3)]
 ```
 
 
 
-### Tests et comparaison
+## Tests et comparaison {#tests}
 
-Un test est une opération logique de comparaison qui renvoie vrai (`TRUE`) ou faux (`FALSE`) pour chacun des éléments d'un vecteur.
+Un test est une opération logique de comparaison qui renvoit vrai (`TRUE`) ou faux (`FALSE`) pour chacun des éléments d'un vecteur.
 
-Parmi les tests disponibles, on trouve :
+Parmi les opérateurs tests disponibles, on trouve notamment :
 
-- `==` (teste l'égalité)
-- `!=` (teste la différence)
-- `>`, `<`, `<=`, `>=` teste la supériorité ou l'infériorité.
+- `==` qui teste l'égalité
+- `!=` qui teste la différence
+- `>`, `<`, `<=`, `>=` qui testent la supériorité ou l'infériorité.
+- `%in%` qui teste l'appartenance à un ensemble de valeurs
 
 Exemple le plus simple :
 
@@ -122,80 +138,268 @@ vec == "Jaune" | vec == "Vert"
 vec %in% c("Jaune", "Vert")
 ```
 
-
-### Indexation
-
-L'indexation consiste à extraire une partie des éléments d'un vecteur. L'opérateur d'indexation est le crochet `[]`. Il existe trois types d'indexation.
-
-#### Indexation par position
-
-L'indexation par position consiste à passer entre crochets les positions des éléments qu'on souhaite conserver.
-
-Ainsi, si on ne veut que le premier élément d'un vecteur :
+Enfin, on peut inverser un test avec l'opérateur *non* (`!`) :
 
 ```{r}
-vec <- c("Jaune", "Jaune", "Rouge", "Vert")
-vec[1]
+!(vec %in% c("Jaune", "Vert"))
 ```
 
-Si on veut le premier et le troisième élément :
+Les tests sont notamment utilisés par le verbe `filter` de `dplyr` (voir section \@ref(filter)) qui permet de sélectionner certaines lignes d'un tableau de données :
 
 ```{r}
-vec[c(1, 3)]
-```
-
-Si on veut le dernier élément, on peut utiliser la fonction `length` pour trouver sa position :
-
-```{r}
-vec[length(vec)]
-```
-
-#### Indexation par nom
-
-Si le vecteur est nommé, on peut sélectionner des éléments en indiquant leur nom entre les crochets :
-
-```{r}
-vec <- c(x = 1, y = 5, z = 12)
-vec[c("y", "z")]
-```
-
-
-#### Indexation par test
-
-L'indexation par test consiste à passer un test de comparaison entre les crochets. Dans ce cas, seuls les éléments pour lesquels le test renvoie `TRUE` sont conservés.
-
-Ainsi, si on veut extraire du vecteur suivant les éléments inférieurs à 4 :
-
-```{r}
-x <- c(1, 5, 9, 8, 12, 3)
-x[x < 4]
-```
-
-### Indexation et assignation
-
-En combinant indexation et assignation, on peut modifier uniquement certaines valeurs d'un vecteur :
-
-```{r}
-x <- 1:5
-x[1] <- 8
-x
+hdv2003 %>% 
+  filter(age >= 20 & age <= 40)
 ```
 
 ```{r}
-x[c(2, 5)] <- c(0, 1)
-x
+hdv2003 %>% 
+  filter(qualif %in% c("Ouvrier specialise", "Ouvrier qualifie"))
 ```
 
-Cette possibilité est intéressante notamment en la combinant avec l'indexation par test :
+On peut utiliser les tests pour sélectionner certains éléments d'un vecteur : si on passeun test à l'opérateur de sélection `[]`, seuls les éléments pour lesquels ce test est vrai seront conservés :
 
 ```{r}
-vec <- c("Jaune", "Jaune", "Rouge", "Vert")
-vec[vec == "Jaune"] <- "Bleu"
-vec
+x <- c(12, 8, 14, 7, 6, 18)
+x[x > 10]
 ```
 
 
-### Découper une variable numérique en classes
+## Recoder une variable qualitative
+
+Pour rappel, on appelle variable qualitative une variable pouvant prendre un nombre limité de modalités (de valeurs possibles). 
+
+### L'extension `forcats`
+
+Dans R, les variables qualitatives peuvent être de deux types : ou bien des vecteurs de type `character` (des chaînes de caractères), ou bien des `factor` (facteurs). Si vous utilisez les fonctions des extensions du *tidyverse* comme `readr`, `readxl` ou `haven` pour importer vos données, vos variables qualitatives seront importées sous forme de `character`. Mais dans les autres cas elles se retrouveront souvent sous forme de `factor`. C'est le cas dans notre jeu de données d'exemple :
+
+```{r}
+class(hdv2003$qualif)
+```
+
+`forcats` est une extension facilitant la manipulation des variables qualitatives, qu'elles soient sous forme de vecteurs `character` ou de facteurs. Elle ne fait pas à proprement parler partie du *tidyverse*, il faut donc la charger explicitement avec :
+
+```{r}
+library(forcats)
+```
+
+
+### Modifier les modalités d'une variable qualitative
+
+Une opération courante consiste à modifier les valeurs d'une variable qualitative, que ce soit pour avoir des intitulés plus courts ou plus clairs ou pour regrouper des modalités entre elles.
+
+Il existe plusieurs possibilités pour effectuer ce type de recodage, mais ici on va utiliser la fonction `fct_recode` de l'extension `forcats`. Celle-ci prend en argument une liste de recodages sous la forme `"Nouvelle valeur" = "Ancienne valeur"`. 
+
+Un exemple :
+
+```{r}
+f <- c("Pomme", "Poire", "Pomme", "Cerise")
+f <- fct_recode(f,
+           "Fraise" = "Pomme",
+           "Ananas" = "Poire")
+f
+```
+
+Autre exemple sur une "vraie" variable :
+
+```{r}
+freq(hdv2003$qualif)
+```
+
+```{r}
+hdv2003 <- hdv2003 %>% 
+  mutate(qualif5 = fct_recode(qualif,
+                              "Ouvrier" = "Ouvrier specialise",
+                              "Ouvrier" = "Ouvrier qualifie",
+                              "Interm" = "Technicien",
+                              "Interm" = "Profession intermediaire"))
+         
+freq(hdv2003$qualif5)
+```
+
+Attention, les anciennes valeurs saisies doivent être exactement égales aux valeurs des modalités du facteur : toute différence d'accent ou d'espaces fera que ce recodage ne sera pas pris en compte. Dans ce cas, `forcats` affiche un avertissement nous indiquant qu'une valeur saisie n'a pas été trouvée dans les modalités de la variable :
+
+```{r}
+hdv2003 <- hdv2003 %>% 
+  mutate(qualif_test = fct_recode(qualif,
+                                  "Ouvrier" = "Ouvrier spécialisé",
+                                  "Ouvrier" = "Ouvrier qualifié"))
+```
+
+
+D'autres fonctions sont proposées par `forcats` pour faciliter ces recodage, dont `fct_collapse`, qui propose une autre syntaxe pratique quand on doit regrouper ensemble des modalités :
+
+```{r}
+hdv2003 <- hdv2003 %>% 
+  mutate(qualif_rec = fct_collapse(qualif,
+                                   "Ouvrier" = c("Ouvrier specialise", "Ouvrier qualifie"),
+                                   "Interm" = c("Technicien", "Profession intermediaire")))
+
+freq(hdv2003$qualif_rec)
+```
+
+`fct_other`, qui regroupe une liste de modalités en une seule modalité "Other" :
+
+```{r}
+hdv2003 <- hdv2003 %>% 
+  mutate(qualif_rec = fct_other(qualif,
+               drop = c("Ouvrier specialise", "Ouvrier qualifie", "Cadre", "Autre")))
+
+freq(hdv2003$qualif_rec)
+```
+
+`fct_lump`, qui regroupe automatiquement les modalités les moins fréquentes en une seule modalité "Other" (avec possibilité d'indiquer des seuils de regroupement) :
+
+```{r}
+hdv2003 <- hdv2003 %>% 
+  mutate(qualif_rec = fct_lump(qualif))
+
+freq(hdv2003$qualif_rec)
+```
+
+`fct_explicit_na` qui convertit toutes les valeurs manquantes (`NA`) d'un facteur en une modalité spécifique :
+
+```{r}
+hdv2003 <- hdv2003 %>% 
+  mutate(qualif_rec = fct_explicit_na(qualif, na_level = "(Manquant)"))
+
+freq(hdv2003$qualif_rec)
+```
+
+#### Interface graphique de recodage {#irec}
+
+L'extension `questionr` propose une interface graphique facilitant le recodage des valeurs d'une variable qualitative. L'objectif est de permettre à l'utilisateur de saisir les nouvelles valeurs dans un formulaire, et de générer ensuite le code R correspondant au recodage indiqué.
+
+Pour utiliser cette interface, sous RStudio vous pouvez aller dans le menu *Addins* puis choisir *Levels recoding*. Sinon, vous pouvez lancer dans la console la fonction `irec()` en lui passant comme paramètre la variable à recoder.
+
+![Interface graphique de `irec`](resources/screenshots/irec.png)
+
+L'interface se compose de trois onglets : l'onglet *Variable et paramètres* vous permet de sélectionner la variable à recoder, le nom de la nouvelle variable et d'autres paramètres, l'onglet *Recodages* vous permet de saisir les nouvelles valeurs des modalités, et l'onglet *Code et résultat* affiche le code R correspondant ainsi qu'un tableau permettant de vérifier les résultats.
+
+Une fois votre recodage terminé, cliquez sur le bouton *Done* et le code R sera inséré dans votre script R ou affiché dans la console. 
+
+**Attention**, cette interface est prévue pour ne pas modifier vos données. C'est donc à vous d'exécuter le code généré pour que le recodage soit réellement effectif.
+
+
+
+### Ordonner les modalités d'une variable qualitative
+
+L'avantage des facteurs (par rapport aux vecteurs de type `character`) est que leurs modalités peuvent être ordonnées, ce qui peut faciliter la lecture de tableaux ou graphiques. 
+
+On peut ordonner les modalités d'un facteur manuellement, par exemple avec la fonction `fct_relevel()` de l'extension `forcats` :
+
+```{r}
+hdv2003 <- hdv2003 %>% 
+  mutate(qualif_rec = fct_relevel(qualif,
+                                  "Cadre", "Profession intermediaire", "Technicien", 
+                                  "Employe", "Ouvrier qualifie", "Ouvrier specialise",
+                                  "Autre"))
+freq(hdv2003$qualif_rec)
+```
+
+Une autre possibilité est d'ordonner les modalités d'un facteur selon les valeurs d'une autre variable. Par exemple, si on représente le boxplot de la répartition de l'âge selon le statut d'occupation :
+
+```{r warning=FALSE}
+library(ggplot2)
+ggplot(hdv2003) + 
+  geom_boxplot(aes(x=occup, y=age))
+```
+
+Le graphique pourrait être plus lisible si les modalités étaient triées par âge median croissant. Ceci est possible en utilisant `fct_reorder`. Celle-ci prend 3 arguments : le facteur à réordonner, la variable dont les valeurs doivent être utilisées pour ce réordonnancement, et enfin une fonction à appliquer à cette deuxième variable.
+
+```{r warning=FALSE} 
+hdv2003 <- hdv2003 %>% 
+  mutate(occup_age = fct_reorder(occup, age, median))
+
+ggplot(hdv2003) + 
+  geom_boxplot(aes(x = occup_age, y = age))
+```
+
+#### Interface graphique {#iorder}
+
+On peut aussi utiliser l'interface graphique proposée par l'extension `questionr` afin de faciliter cette opération. Pour la lancer, sélectionner le menu *Addins* puis *Levels ordering*, ou exécuter la fonction `iorder()` en lui passant comme paramètre le facteur à réordonner.
+
+![Interface graphique de `iorder`](resources/screenshots/irec.png)
+
+Le fonctionnement de l'interface est similaire à celui de [l'interface de recodage](#irec). Vous pouvez réordonner les modalités en les faisant glisser avec la souris, puis récupérer et exécuter le code R généré.
+
+
+## Combiner une ou plusieurs variables
+
+Parfois, on veut créer une nouvelle variable en partant des valeurs d'une ou plusieurs autres variables. Dans ce cas on peut utiliser les fonctions `if_else` pour les cas les plus simples, ou `case_when` pour les cas plus complexes.
+
+### `if_else`
+
+`if_else` prend trois arguments : un test, une valeur à renvoyer si le test est vrai, et une valeur à renvoyer si le test est faux.
+
+Voici un exemple simple :
+
+```{r}
+v <- c(12, 14, 8, 16)
+if_else(v > 10, "Supérieur à 10", "Inférieur à 10")
+```
+
+La fonction devient plus intéressante avec des tests combinant plusieurs variables. Par exemple, imaginons qu'on souhaite créer une nouvelle variable indiquant les hommes de plus de 60 ans :
+
+```{r}
+hdv2003 <- hdv2003 %>% 
+  mutate(statut = if_else(sexe == "Homme" & age > 60,
+                          "Homme de plus de 60 ans",
+                          "Autre"))
+
+freq(hdv2003$statut)
+```
+
+
+### `case_when`
+
+`case_when` est une génération du `if_else` qui permet d'indiquer plusieurs tests et leurs valeurs associées.
+
+Imaginons qu'on souhaite créer une nouvelle variable permettant d'identifier les hommes de plus de 60 ans, les femmes de plus de 60 ans, et les autres. On peut utiliser la syntaxe suivante :
+
+```{r}
+hdv2003 <- hdv2003 %>% 
+  mutate(statut = case_when(
+    age > 60 & sexe == "Homme" ~ "Homme de plus de 60 ans",
+    age > 60 & sexe == "Femme" ~ "Femme de plus de 60 ans",
+    TRUE ~ "Autre"))
+
+freq(hdv2003$statut)
+```
+
+`case_when` prend en arguments une série d'instructions sous la forme `condition ~ valeur`. Il les exécute une par une, et dès qu'une `condition` est vraie, il renvoit la `valeur` associée.
+
+La clause `TRUE ~ "Autre"` permet d'assigner une valeur à toutes les lignes pour lesquelles aucune des conditions précédentes n'est vraie.
+
+**Attention :** comme les conditions sont testées l'une après l'autre et que la valeur renvoyée est celle correspondant à la première condition vraie, l'ordre de ces conditions est très important. Il faut absolument aller du plus spécifique au plus général.
+
+Par exemple le recodage suivant ne fonctionne pas :
+
+```{r}
+hdv2003 <- hdv2003 %>% 
+  mutate(statut = case_when(
+    sexe == "Homme" ~ "Homme",
+    sexe == "Homme" & age > 60 ~ "Homme de plus de 60 ans",
+    TRUE ~ "Autre"))
+
+freq(hdv2003$statut)
+```
+
+Comme la condition `sexe == "Homme"` est plus générale que `sexe == "Homme" & age > 60`, cette deuxième condition n'est jamais testée ! On n'obtiendra jamais la valeur correspondante.
+
+Pour que ce recodage fonctionne il faut donc changer l'ordre des conditions pour aller du plus spécifique au plus général :
+
+```{r}
+hdv2003 <- hdv2003 %>% 
+  mutate(statut = case_when(
+    sexe == "Homme" & age > 60 ~ "Homme de plus de 60 ans",
+    sexe == "Homme" ~ "Homme",
+    TRUE ~ "Autre"))
+
+freq(hdv2003$statut)
+```
+
+
+## Découper une variable numérique en classes
 
 Une opération relativement courante consiste à découper une variable numérique en classes. Par exemple, on voudra transformer une variable *revenu* contenant le revenu mensuel en une variable avec des catégorie *Moins de 500 euros*, *500-1000 euros*, etc.
 
@@ -214,11 +418,13 @@ freq(hdv2003$agecl)
 ```
 Ici on a été obligé d'ajouter l'argument `include.lowest = TRUE` car sinon la valeur 18 n'aurait pas été incluse, et on aurait eu des valeurs manquantes.
 
+### Interface graphique
+
 Comme l'utilisation des arguments de `cut` n'est pas toujours très intuitive, l'extension `questionr` propose une interface graphique facilitant cette opếration de découpage en classes d'une variable numérique. 
 
 Pour lancer cette interface, sous RStudio ouvrir le menu *Addins* et sélectionner *Variable cutting*, ou exécuter la fonction `icut()` dans la console en lui passant comme argument la variable numériqueà découper.
 
-![](resources/screenshots/icut.png)
+![Interface graphique de `icut`](resources/screenshots/icut.png)
 
 Vous pouvez alors choisir la variable à découper dans l’onglet *Variable et paramètres*, indiquer les
 limites de vos classes ainsi que quelques options complémentaires dans l’onglet *Découpage en classes*, et vérifier le résultat dans l’onglet *Code et résultat*. Une fois le résultat satisfaisant, cliquez sur Done : si vous êtes sous RStudio le code généré sera directement inséré dans votre script actuel à l’emplacement du curseur. Sinon, ce code sera affiché dans la console et vous pourrez le copier/coller pour l’inclure dans votre script.
@@ -226,163 +432,6 @@ limites de vos classes ainsi que quelques options complémentaires dans l’ongl
 **Attention**, cette interface est prévue pour ne pas modifier vos données. C'est donc à vous d'exécuter le code généré pour que le découpage soit réellement effectif.
 
 
-## Facteurs
-
-Les facteurs sont un type particulier de vecteur utilisés pour représenter les variables qualitatives. La différence entre un facteur (de classe `factor`) et un vecteur de classe `character` est que les premiers ne peuvent prendre qu'un nombre limité de valeurs appelées `levels`.
-
-Un facteur peut se construire à partir d'un vecteur de type `character` avec la fonction `factor` :
-
-```{r}
-factor(c("Pomme", "Poire", "Pomme", "Cerise"))
-```
-
-Les variables qualitatives sont souvent importées par R sous forme de facteurs, notemment si on utilise les fonctions de la famille `read.csv`.
-
-```{r}
-library(questionr)
-data(hdv2003)
-class(hdv2003$sexe)
-```
-
-Essayer d'assigner une valeur à un facteur ne faisant pas partie de ses `levels` génère un avertissement et remplace les valeurs d'origine par `NA` :
-
-```{r}
-hdv2003$sexe[1] <- "pouet" 
-hdv2003$sexe[1:5]
-```
-
-### L'extension `forcats`
-
-`forcats` est une extension facilitant la manipulation des facteurs. Elle ne fait pas à proprement parler partie du *tidyverse*, il faut donc la charger explicitement avec :
-
-```{r}
-library(forcats)
-```
-
-
-### Recoder un facteur
-
-Une opération courante consiste à recoder un facteur, c'est-à-dire à modifier ses valeurs. C'est l'opération classique de recodage des modalités d'une variable qualitative.
-
-Il existe plusieurs possibilités pour effectuer ce type de recodage, mais ici on va utiliser la fonction `fct_recode` de l'extension `forcats`. Celle-ci prend en argument une liste de recodages sous la forme `"Nouvelle valeur" = "Ancienne valeur"`. 
-
-Par exemple :
-
-```{r}
-f <- factor(c("Pomme", "Poire", "Pomme", "Cerise"))
-f <- fct_recode(f,
-           "Fraise" = "Pomme",
-           "Ananas" = "Poire")
-f
-```
-
-Autre exemple sur une "vraie" variable :
-
-```{r}
-table(hdv2003$qualif)
-hdv2003$qualif5 <- fct_recode(hdv2003$qualif,
-               "Ouvrier" = "Ouvrier specialise",
-               "Ouvrier" = "Ouvrier qualifie",
-               "Interm" = "Technicien",
-               "Interm" = "Profession intermediaire")
-table(hdv2003$qualif5)
-```
-
-Attention, les anciennes valeurs saisies doivent être exactement égales aux valeurs des modalités du facteur : toute différence d'accent ou d'espaces fera que ce recodage ne sera pas pris en compte :
-
-```{r}
-hdv2003$qualif_test <- fct_recode(hdv2003$qualif,
-               "Ouvrier" = "Ouvrier spécialisé",
-               "Ouvrier" = "Ouvrier qualifié")
-
-```
-
-D'autres fonctions sont proposées pour faciliter le recodage, dont `fct_collapse`, qui propose une autre syntaxe pratique quand on doit regrouper ensemble des modalités :
-
-```{r}
-hdv2003$qualif_rec <- fct_collapse(hdv2003$qualif,
-               "Ouvrier" = c("Ouvrier specialise", "Ouvrier qualifie"),
-               "Interm" = c("Technicien", "Profession intermediaire"))
-table(hdv2003$qualif_rec)
-```
-
-`fct_other`, qui regroupe une liste de modalités en une seule modalité "Other" :
-
-```{r}
-hdv2003$qualif_rec <- fct_other(hdv2003$qualif,
-               drop = c("Ouvrier specialise", "Ouvrier qualifie", "Cadre", "Autre"))
-table(hdv2003$qualif_rec)
-
-```
-
-
-`fct_lump`, qui regroupe les modalités les moins fréquentes en une seule modalité "Other" (avec possibilité d'indiquer des seuils de regroupement) :
-
-```{r}
-hdv2003$qualif_rec <- fct_lump(hdv2003$qualif)
-table(hdv2003$qualif_rec)
-```
-
-`fct_explicit_na` qui convertit toutes les valeurs manquantes (`NA`) d'un facteur en une modalité spécifique :
-
-```{r}
-hdv2003$qualif_rec <- fct_explicit_na(hdv2003$qualif, na_level = "(Manquant)")
-table(hdv2003$qualif_rec)
-```
-
-### Interface graphique de recodage {#irec}
-
-L'extension `questionr` propose une interface graphique facilitant le recodage des niveaux d'un facteur. L'objectif est de permettre à l'utilisateur de saisir les nouvelles valeurs dans un formulaire, et de générer ensuite le code R correspondant au recodage indiqué.
-
-Pour utiliser cette interface, sous RStudio vous pouvez aller dans le menu *Addins* puis choisir *Levels recoding*. Sinon, vous pouvez lancer dans la console la fonction `irec()` en lui passant comme paramètre la variable à recoder.
-
-![](resources/screenshots/irec.png)
-
-L'interface se compose de trois onglets : l'onglet *Variable et paramètres* vous permet de sélectionner la variable à recoder, le nom de la nouvelle variable et d'autres paramètres, l'onglet *Recodages* vous permet de saisir les nouvelles valeurs des modalités, et l'onglet *Code et résultat* affiche le code R correspondant ainsi qu'un tableau permettant de vérifier les résultats.
-
-Une fois votre recodage terminé, cliquez sur le bouton *Done* et le code R sera inséré dans votre script R ou affiché dans la console. 
-
-**Attention**, cette interface est prévue pour ne pas modifier vos données. C'est donc à vous d'exécuter le code généré pour que le recodage soit réellement effectif.
-
-
-
-### Ordonner les modalités d'un facteur
-
-L'avantage des facteurs est que leurs modalités peuvent être ordonnées, ce qui peut faciliter la lecture de tableaux ou graphiques. 
-
-On peut ordonner les modalités d'un facteur manuellement, par exemple avec la fonction `fct_relevel()` de l'extension `forcats` :
-
-```{r}
-hdv2003$qualif_rec <- fct_relevel(hdv2003$qualif,
-                               "Cadre", "Profession intermediaire", "Technicien", 
-                               "Employe", "Ouvrier qualifie", "Ouvrier specialise",
-                               "Autre")
-table(hdv2003$qualif_rec)
-```
-
-
-On peut aussi utiliser l'interface graphique proposée par l'extension `questionr` afin de faciliter cette opération. Pour la lancer, sélectionner le menu *Addins* puis *Levels ordering*, ou exécuter la fonction `iorder()` en lui passant comme paramètre le facteur à réordonner.
-
-![](resources/screenshots/irec.png)
-
-Le fonctionnement de l'interface est similaire à celui de [l'interface de recodage](#irec). Vous pouvez réordonner les modalités en les faisant glisser avec la souris, puis récupérer et exécuter le code R généré.
-
-Une autre possibilité est d'ordonner les modalités d'un facteur selon les valeurs d'une autre variable. Par exemple, si on représente le boxplot de la répartition de l'âge selon le statut d'occupation :
-
-```{r warning=FALSE}
-library(ggplot2)
-ggplot(hdv2003) + 
-  geom_boxplot(aes(x=occup, y=age))
-```
-
-Le graphique pourrait être plus lisible si les modalités étaient triées par âge median croissant. Ceci est possible en utilisant `fct_reorder` de la manière suivante :
-
-```{r warning=FALSE} 
-hdv2003$occup_age <- fct_reorder(hdv2003$occup, hdv2003$age, median)
-
-ggplot(hdv2003) + 
-  geom_boxplot(aes(x=occup_age, y=age))
-```
 
 ## Exercices
 
@@ -398,7 +447,7 @@ data(hdv2003)
 ```
 
 
-### Vecteurs
+### Vecteurs et tests
 
 **Exercice 1.1**
 
@@ -425,7 +474,6 @@ x <- c(1, 20, 21, 15.5, 14, 12, 8, 16, 1)
 
 - Écrire le test qui indique si les éléments du vecteur sont strictement supérieurs à 15. 
 - Utiliser ce test pour extraire du vecteur les éléments correspondants.
-- Remplacer le troisième élément du vecteur par 0.
 
 **Exercice 1.3**
 
@@ -435,32 +483,33 @@ Le code suivant génère un vecteur de 1000 nombres aléatoires compris entre 0 
 x <- runif(1000, 0, 10)
 ```
 
-Combien d'éléments de ce vecteur sont supérieurs ou égal à 8 ?
+Combien d'éléments de ce vecteur sont compris entre 2 et 4 ?
 
 
-**Exercice 1.4**
+### Recodages de variable qualitative
+
+**Exercice 2.1**
 
 Dans le jeu de données `hdv2003`, découper la variable `heures.tv` en classes de manière à obtenir au final le tri à plat suivant :
 
 ```{r, echo=FALSE}
-tmp <- cut(hdv2003$heures.tv, include.lowest=FALSE,  right=TRUE,
+tmp <- cut(hdv2003$heures.tv, include.lowest=TRUE,  right=TRUE,
                              breaks=c(0, 1, 2, 4, 6, 12))
 freq(tmp)
 ```
 
 
 
-### Facteurs
 
-**Exercice 2.1**
+**Exercice 2.2**
 
-Construire un facteur `f` à l'aide du code suivant :
+Construire un vecteur `f` à l'aide du code suivant :
 
 ```{r}
-f <- factor(c("Jan", "Jan", "Fev", "Juil"))
+f <- c("Jan", "Jan", "Fev", "Juil")
 ```
 
-Recoder le facteur à l'aide de la fonction `fct_recode` pour obtenir le résultat suivant :
+Recoder le vecteur à l'aide de la fonction `fct_recode` pour obtenir le résultat suivant :
 
 ```{r, echo=FALSE}
 fct_recode(f,
@@ -469,9 +518,10 @@ fct_recode(f,
           "Juillet" = "Juil")
 ```
 
-**Exercice 2.2**
 
-À l'aide de l'interface graphique de `questionr`, recoder la variable `relig` du jeu de données `hdv2003` pour obtenir le tri à plat suivant :
+**Exercice 2.3**
+
+À l'aide de l'interface graphique `irec` de `questionr`, recoder la variable `relig` du jeu de données `hdv2003` pour obtenir le tri à plat suivant :
 
 ```{r, echo = FALSE}
 hdv2003$relig_rec <- fct_recode(hdv2003$relig,
@@ -479,30 +529,110 @@ hdv2003$relig_rec <- fct_recode(hdv2003$relig,
                "Pratiquant" = "Pratiquant occasionnel",
                "Appartenance" = "Appartenance sans pratique",
                "NSP" = "NSP ou NVPR")
+
 freq(hdv2003$relig_rec)
 ```
 
-**Exercice 2.3**
+**Exercice 2.4**
 
-À l'aide de l'interface graphique de `questionr`, réordonner les modalités de la variable `qualif` pour obtenir le tri à plat suivant :
+À l'aide de l'interface graphique de `questionr`, recoder la variable `nivetud` pour obtenir le tri à plat suivant :
 
 ```{r, echo=FALSE}
-hdv2003$qualif <- factor(hdv2003$qualif, levels=c("Autre", "Ouvrier specialise", "Ouvrier qualifie", "Employe", "Profession intermediaire", "Technicien", "Cadre"))
-freq(hdv2003$qualif)
+hdv2003$nivetud_rec <- fct_recode(hdv2003$nivetud,
+               "Études primaires" = "A arrete ses etudes, avant la derniere annee d'etudes primaires",
+               "Études primaires" = "Derniere annee d'etudes primaires",
+               "Enseignement technique ou professionnel" = "Enseignement technique ou professionnel court",
+               "Enseignement technique ou professionnel" = "Enseignement technique ou professionnel long",
+               "Enseignement superieur" = "Enseignement superieur y compris technique superieur")
+
+freq(hdv2003$nivetud_rec)
+```
+
+Toujours à l'aide de l'interface graphique, réordonner les modalités de cette variable recodée pour obtenir le tri à plat suivant :
+
+```{r echo=FALSE}
+hdv2003$nivetud_rec <- factor(hdv2003$nivetud_rec, levels=c("Enseignement superieur", "Enseignement technique ou professionnel", "2eme cycle", "1er cycle", "Études primaires", "N'a jamais fait d'etudes"))
+
+freq(hdv2003$nivetud_rec)
 ```
 
 
-**Exercice 2.4**
+**Exercice 2.5**
 
 À l'aide de la fonction `fct_reorder`, trier les modalités de la variable `relig` du jeu de données `hdv2003` selon leur âge médian.
 
 ```{r, echo=FALSE}
-hdv2003$relig <- fct_reorder(hdv2003$relig, hdv2003$age, median)
+hdv2003 <- hdv2003 %>% 
+  mutate(relig = fct_reorder(relig, age, median))
 ```
 
 Vérifier en générant le boxplot suivant :
 
-```{r}
-boxplot(age~relig, data = hdv2003)
+```{r echo=FALSE}
+ggplot(hdv2003) + geom_boxplot(aes(x = relig, y = age))
 ```
+
+### Combiner plusieurs variables
+
+**Exercice 3.1**
+
+À l'aide de la fonction `if_else`, créer une nouvelle variable `cinema_bd` permettant d'identifier les personnes qui vont au cinéma et déclarent lire des bandes dessinées.
+
+Vous devriez obtenir le tri à plat suivant pour cette nouvelle variable :
+
+```{r echo=FALSE}
+hdv2003 <- hdv2003 %>% 
+  mutate(cinema_bd = if_else(cinema == "Oui" & lecture.bd == "Oui", "Cinéma et BD", "Autre"))
+
+freq(hdv2003$cinema_bd)
+```
+
+
+**Exercice 3.2**
+
+À l'aide de la fonction `case_when`, créer une nouvelle variable ayant les modalités suivantes :
+
+- Homme ayant plus de 2 frères et soeurs
+- Femme ayant plus de 2 frères et soeurs
+- Autre
+
+Vous devriez obtenir le tri à plat suivant :
+
+
+```{r echo=FALSE}
+hdv2003 <- hdv2003 %>% 
+  mutate(groupe = case_when(
+    sexe == "Homme" & freres.soeurs > 2 ~ "Homme ayant plus de 2 frères et soeurs",
+    sexe == "Femme" & freres.soeurs > 2 ~ "Femme ayant plus de 2 frères et soeurs",
+    TRUE ~ "Autre"
+  ))
+
+freq(hdv2003$groupe)
+```
+
+
+
+**Exercice 3.3**
+
+À l'aide de la fonction `case_when`, créer une nouvelle variable ayant les modalités suivantes :
+
+- Homme de plus de 30 ans
+- Homme de plus de 40 ans satisfait par son travail
+- Femme pratiquant le sport ou le bricolage
+- Autre
+
+Vous devriez obtenir le tri à plat suivant :
+
+```{r echo=FALSE}
+hdv2003 <- hdv2003 %>% 
+  mutate(groupe = case_when(
+    sexe == "Homme" & age > 40 & trav.satisf == "Satisfaction" ~ "Homme de plus de 40 ans satisfait par son travail",
+    sexe == "Homme" & age > 30 ~ "Homme de plus de 30 ans",
+    sexe == "Femme" & (sport == "Oui" | bricol == "Oui") ~ "Femme pratiquant le sport ou le bricolage",
+    TRUE ~ "Autre"
+  ))
+
+freq(hdv2003$groupe)
+```
+
 
