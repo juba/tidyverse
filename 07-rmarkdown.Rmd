@@ -1,6 +1,6 @@
 # Générer des documents avec R Markdown {#rmarkdown}
 
-L'extension `rmarkdown` permet de générer des documents de manière dynamique en mélangeant texte mis en forme et résultats produits par du code R. Les documents générés peuvent être au format HTML, PDF ou Word.
+L'extension `rmarkdown` permet de générer des documents de manière dynamique en mélangeant texte mis en forme et résultats produits par du code R. Les documents générés peuvent être au format HTML, PDF, Word, et bien d'autres ^[On peut citer les formats `odt`, `rtf`, Markdown, etc.].
 
 Le présent document a lui-même été généré à partir de fichiers R Markdown ^[Plus précisément grâce à l'extension `bookdown` qui permet de générer des documents de type livre.]
 
@@ -166,10 +166,134 @@ Un onglet *R Markdown* s'ouvre dans la même zone que l'onglet *Console* et indi
 
 ## Personnaliser le document généré
 
+La personnalisation du document généré se fait en modifiant des options dans le préambule du document. RStudio propose néanmoins une petite interface graphique permettant de changer ces options plus facilement. Pour cela, cliquez sur l'icône en forme d'engrenage à droite du bouton *Knit* et choisissez *Output Options...*
 
+![Options de sortie R Markdown](resources/screenshots/rstudio_rmd_output_options.png)
+
+Une boîte de dialogue s'affiche vous permettant de sélectionner le format de sortie souhaité et, selon le format, différentes options :
+
+![Dialogue d'options de sortie R Markdown](resources/screenshots/rstudio_rmd_output_dialog.png)
+
+Pour le format HTML par exemple, l'onglet *General* vous permet de spécifier si vous voulez une table des matières, sa profondeur, les thèmes à appliquer pour le document et la coloration syntaxique des blocs R, etc. L'onglet *Figures* vous permet de changer les dimensions par défaut des graphiques générés.
+
+Une option très intéressante pour les fichiers HTML, accessible via l'onglet *Advanced*, est l'entrée *Create standalone HTML document*. Si elle est cochée (ce qui est le cas par défaut), le document HTML généré contiendra en un seul fichier le code HTML mais aussi les images et toutes les autres ressources nécessaires à son affichage. Ceci permet de générer des fichiers assez volumineux, mais que vous pouvez transférer très facilement à quelqu'un par mail ou en le mettant en ligne quelque part. Si la case n'est pas cochée, les images et autres ressources sont placées dans un dossier à part.
+
+Lorsque vous changez des options, RStudio va en fait modifier le préambule de votre document. Ainsi, si vous choisissez d'afficher une table des matières et de modifier le thème de coloration syntaxique, votre en-tête va devenir quelque chose comme :
+
+    ---
+    title: "Test R Markdown"
+    output:
+       html_document: 
+         highlight: kate
+         toc: yes
+    ---
+
+Vous pouvez modifier les options directement en éditant le préambule. Il est possible de spécifier des options différentes selon les formats, par exemple :
+
+    ---
+    title: "Test R Markdown"
+    output:
+      html_document: 
+        highlight: kate
+        toc: yes
+      pdf_document: 
+        fig_caption: yes
+        highlight: kate
+    ---
+
+La liste complète des options possibles est présente sur [le site de la documentation officielle](http://rmarkdown.rstudio.com/formats.html) (très complet et bien fait) et sur l'antisèche et le guide de référence, accessible depuis RStudio via le menu *Help* puis *Cheatsheets*.
 
 
 ## Options des blocs de code R
+
+Il est également possible de passer des options à chaque bloc de code R pour modifier son comportement.
+
+On rappelle qu'on bloc de code se présente de la manière suivante :
+
+```{r echo = FALSE, comment = ""}
+cat(htmltools::includeText("resources/rmarkdown/code_chunk.Rmd"))
+```
+
+### Nom du bloc
+
+Les options d'un bloc de code sont à placer à l'intérieur des accolades `{r}`.
+
+La première possibilité est de donner un *nom* au bloc celui-ci est passé directement après le `r` :
+
+`{r nom_du_bloc}`
+
+Il n'est pas obligatoire de donner un nom à un bloc, mais cela peut être utile en cas d'erreur à la compilation, pour identifier le bloc ayant causé le problème. Attention, on ne peut pas avoir deux blocs avec le même nom.
+
+### Options
+
+En plus d'un nom, on peut passer à un bloc une série d'options sous la forme `option = valeur`. Voici un exemple de bloc avec un nom et des options :
+
+```{r echo = FALSE, comment = ""}
+cat(htmltools::includeText("resources/rmarkdown/code_chunk_name_options.Rmd"))
+```
+
+Et un exemple de bloc non nommé avec des options :
+
+```{r echo = FALSE, comment = ""}
+cat(htmltools::includeText("resources/rmarkdown/code_chunk_noname_options.Rmd"))
+```
+
+Une des options la plus utile est l'option `echo`. Par défaut `echo` vaut `TRUE`, et le bloc de code R est inséré dans le document généré, de cette manière : 
+
+```{r}
+x <- 1:5
+print(x)
+```
+
+Mais si on positionne l'option `echo=FALSE`, alors le code R n'est plus inséré dans le document :
+
+```{r echo=FALSE}
+x <- 1:5
+print(x)
+```
+
+Option   |    Valeurs    |  Description
+---------|---------------|-------------------------------------------
+echo     | TRUE/FALSE    | Afficher ou non le code R dans le document
+eval     | TRUE/FALSE    | Exécuter ou non le code R à la compilation
+include  | TRUE/FALSE    | Inclure ou non le code R et ses résultats dans le document
+results  | "hide"/"asis"/"markup"/"hold" | Type de résultats renvoyés par le bloc de code
+warning  | TRUE/FALSE    | Afficher ou non les avertissements générés par le bloc
+message  | TRUE/FALSE    | Afficher ou non les messages générés par le bloc
+
+Il existe de nombreuses autres options décrites notamment dans [guide de référence R Markdown](https://www.rstudio.com/wp-content/uploads/2015/03/rmarkdown-reference.pdf) (PDF en anglais).
+
+
+### Modifier les options
+
+Il est possible de modifier les options manuellement en éditant l'en-tête du bloc de code, mais on peut aussi utiliser une petite interface graphique proposée par RStudio. Pour cela, il suffit de cliquer sur l'icône d'engrenage situé à droite sur la ligne de l'en-tête de chaque bloc :
+
+![Menu d'options de bloc de code](resources/screenshots/rstudio_chunk_options.png)
+
+Vous pouvez ensuite modifier les options les plus courantes, et cliquer sur *Apply* pour les appliquer.
+
+
+### Options globales
+
+On peut vouloir appliquer une option à l'ensemble des blocs d'un document. Par exemple, on peut souhaiter par défaut ne pas afficher le code R de chaque bloc dans le document final.
+
+On peut positionner une option globalement en utilisant la fonction `knitr::opts_chunk$set()`.
+
+Par exemple, insérer `knitr::opts_chunk$set(echo = FALSE)` dans un bloc de code positionnera l'option `echo=FALSE` par défaut pour tous les blocs suivants.
+
+En général, on place toutes ces modifications globales dans un bloc spécial nommé `setup` et qui est le premier bloc du document :
+
+```{r echo = FALSE, comment = ""}
+cat(htmltools::includeText("resources/rmarkdown/setup_chunk.Rmd"))
+```
+
+Par défaut RStudio exécute systématiquement le contenu du bloc `setup` avant d'exécuter celui d'un autre bloc.
+
+
+
+
+
+
 
 
 ## Rendu des tableaux
@@ -180,6 +304,8 @@ Un onglet *R Markdown* s'ouvre dans la même zone que l'onglet *Console* et indi
 Slides
 
 `rmdformats`
+
+Citer gallery
 
 ## Ressources
 
