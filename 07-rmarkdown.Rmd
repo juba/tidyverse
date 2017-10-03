@@ -1,27 +1,13 @@
----
-output:
-  pdf_document: default
-  html_document: default
-  word_document: default
----
+# (PART) Exporter les résultats {-}
+
 # Générer des documents avec R Markdown {#rmarkdown}
 
 L'extension `rmarkdown` permet de générer des documents de manière dynamique en mélangeant texte mis en forme et résultats produits par du code R. Les documents générés peuvent être au format HTML, PDF, Word, et bien d'autres ^[On peut citer les formats `odt`, `rtf`, Markdown, etc.].
 
 Le présent document a lui-même été généré à partir de fichiers R Markdown ^[Plus précisément grâce à l'extension `bookdown` qui permet de générer des documents de type livre.]
 
-`rmarkdown` ne fait pas partie du *tidyverse*, mais elle est installée et chargée par défaut par RStudio ^[Si vous n'utilisez pas ce dernier, l'extension peut être installée à part avec :
-
-```{r message=FALSE, warning=FALSE, eval = FALSE}
-install.packages("rmarkdown")
-```
-
-Et chargée explicitement avec :
-
-```{r message=FALSE, warning=FALSE, cache = FALSE}
-library(rmarkdown)
-```
-].
+`rmarkdown` ne fait pas partie du *tidyverse*, mais elle est installée et chargée par défaut par RStudio ^[Si vous n'utilisez pas ce dernier, l'extension peut être installée à part avec `install.packages("rmarkdown")` et chargée explicitement avec 
+`library(rmarkdown)`].
 
 Voici un exemple de document R Markdown minimal :
 
@@ -320,20 +306,23 @@ kable(tab)
 
 ### Tableaux de données et tris à plat
 
-En ce qui concerne les tableaux de données, l'affichage HTML par défaut permet une visualisation paginée, permettant de naviguer un peu plus facilement dans les tableaux de grande dimension
+En ce qui concerne les tableaux de données, l'affichage HTML par défaut se contente d'un affichage texte comme dans la console, très peu lisible dès que le tableau dépasse une certaine dimension.
 
+Une alternative est d'utiliser la fonction `paged_table`, qui affiche une représentation HTML paginée du tableau :
 
 ```{r}
-hdv2003
+rmarkdown::paged_table(hdv2003)
 ```
 
-Une alternative est d'utiliser `kable`, ou encore la fonction `datatable` de l'extension `DT`, qui propose encore davantage d'interactivité ^[Il est déconseillé d'afficher de cette manière un tableau de données de très grandes dimensions, car le fichier HTML résultatn serait très volumineux.] :
+Une autre alternative est d'utiliser `kable`, ou encore la fonction `datatable` de l'extension `DT`, qui propose encore davantage d'interactivité :
 
 ```{r}
 DT::datatable(hdv2003)
 ```
 
-On peut définir un mode d'affichage par défaut pour tous les tableaux de données en modifiant les *Output options* du format HTML (onglet *General*, *Print dataframes as*).
+Dans tous les cas il est déconseillé d'afficher de cette manière un tableau de données de très grandes dimensions, car le fichier HTML résultant serait très volumineux.
+
+On peut définir un mode d'affichage par défaut pour tous les tableaux de données en modifiant les *Output options* du format HTML (onglet *General*, *Print dataframes as*), ou en modifiant manuellement l'option `df_print` de l'entrée `html_document` dans le préambule.
 
 À noter que les tableaux issus de la fonction `freq` de `questionr` s'affichent comme des tableaux de données (et non comme des tableaux croisés).
 
@@ -382,7 +371,11 @@ On notera notamment :
 Enfin, l'extension [rmdformats](https://github.com/juba/rmdformats) propose plusieurs modèles HTML adaptés notamment pour des documents longs :
 
 ![Modèle `readthedown`](resources/rmdformats_templates/readthedown.png)
+
+
 ![Modèle `html_clean`](resources/rmdformats_templates/html_clean.png)
+
+
 
 ![Modèle `material`](resources/rmdformats_templates/material.png)
 
