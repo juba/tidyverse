@@ -1,3 +1,9 @@
+---
+output:
+  pdf_document: default
+  html_document: default
+  word_document: default
+---
 # Générer des documents avec R Markdown {#rmarkdown}
 
 L'extension `rmarkdown` permet de générer des documents de manière dynamique en mélangeant texte mis en forme et résultats produits par du code R. Les documents générés peuvent être au format HTML, PDF, Word, et bien d'autres ^[On peut citer les formats `odt`, `rtf`, Markdown, etc.].
@@ -146,6 +152,8 @@ Dans RStudio les blocs de code R sont en général affichés avec une couleur de
 
 Quand votre curseur se trouve dans cette zone, vous pouvez saisir le code R que vous souhaitez, l'exécuter, utiliser l'autocomplétion, exactement comme si vous vous trouviez dans un script R. Vous pouvez également exécuter l'ensemble du code contenu dans un bloc à l'aide du raccourci clavier `Ctrl+Shift+Entrée`.
 
+Dans RStudio, par défaut, les résultats d'un bloc de code (texte, tableau ou graphique) s'affichent directement *dans* le document, permettant de les visualiser directement et de les conserver le temps de la session ^[Ce comportement peut être modifié en cliquant sur l'icône d'engrenage de la barre d'outils et en choisissant *Chunk Output in Console*].
+
 Lorsque le document sera "compilé" au format HTML, PDF ou docx, chaque bloc est exécuté tour à tour, et le résultat inclus dans le document final, qu'il s'agisse de texte, d'un tableau ou d'un graphique. Les blocs sont liés entre eux, dans le sens où les données importées ou calculées dans un bloc sont accessibles aux blocs suivants. On peut donc aussi voir un document R Markdown comme un scipt R dans lequel on aurait intercalé du texte libre au format Markdown.
 
 À noter qu'avant chaque compilation, une nouvelle session R est lancée, ne contenant aucun objet. Les premiers blocs de code d'un document sont donc souvent utilisés pour importer des données, exécuter des recodages, etc.
@@ -283,36 +291,115 @@ Par exemple, insérer `knitr::opts_chunk$set(echo = FALSE)` dans un bloc de code
 
 En général, on place toutes ces modifications globales dans un bloc spécial nommé `setup` et qui est le premier bloc du document :
 
-```{r echo = FALSE, comment = ""}
+```{r echo=FALSE, comment=""}
 cat(htmltools::includeText("resources/rmarkdown/setup_chunk.Rmd"))
 ```
 
 Par défaut RStudio exécute systématiquement le contenu du bloc `setup` avant d'exécuter celui d'un autre bloc.
 
 
-
-
-
-
-
-
 ## Rendu des tableaux
+
+### Tableaux croisés
+
+Par défaut, les tableaux issus de la fonction `table` sont affichés comme ils apparaissent dans la console de R, en texte brut :
+
+```{r}
+library(questionr)
+data(hdv2003)
+tab <- lprop(table(hdv2003$qualif, hdv2003$sexe))
+tab
+```
+
+On peut améliorer leur présentation en utilisant la fonction `kable` de l'extension `knitr`. Celle-ci fournit un formatage adapté en fonction du format de sortie. On aura donc des tableaux "propres" que ce soit en HTML, PDF ouformats traitements de texte :
+
+```{r}
+library(knitr)
+kable(tab)
+```
+
+### Tableaux de données et tris à plat
+
+En ce qui concerne les tableaux de données, l'affichage HTML par défaut permet une visualisation paginée, permettant de naviguer un peu plus facilement dans les tableaux de grande dimension
+
+
+```{r}
+hdv2003
+```
+
+Une alternative est d'utiliser `kable`, ou encore la fonction `datatable` de l'extension `DT`, qui propose encore davantage d'interactivité ^[Il est déconseillé d'afficher de cette manière un tableau de données de très grandes dimensions, car le fichier HTML résultatn serait très volumineux.] :
+
+```{r}
+DT::datatable(hdv2003)
+```
+
+On peut définir un mode d'affichage par défaut pour tous les tableaux de données en modifiant les *Output options* du format HTML (onglet *General*, *Print dataframes as*).
+
+À noter que les tableaux issus de la fonction `freq` de `questionr` s'affichent comme des tableaux de données (et non comme des tableaux croisés).
 
 
 ## Modèles de documents
 
-Slides
+On a vu ici la production de documents "classiques", mais R Markdown permet de créer bien d'autres choses. 
 
-`rmdformats`
+Le site de documentation de l'extension propose [une galerie](http://rmarkdown.rstudio.com/gallery.html) des différentes sorties possibles. R Markdown et les extensions qui l'utilisent permettent de créer des slides, des sites Web ou même des livres entiers, comme le présent document.
 
-Citer gallery
+
+### Slides
+
+Un usage intéressant est la création de diaporamas pour des présentations sous forme de slides. Le principe reste toujours le même : on mélange texte au format Markdown et code R, et R Markdown transforme le tout en présentations au format HTML ou PDF. En général les différents slides sont séparés en fonction de certains niveaux de titre.
+
+Certains modèles de slides sont inclus avec R Markdown, notamment :
+
+- `ioslides` et `Slidy` pour des présentations HTML
+- `beamer` pour des présentations en PDF via LaTeX
+
+Quand vous créez un nouveau document dans RStudio, ces modèles sont accessibles via l'entrée *Presentation* :
+
+![Créer une présentation R Markdown](resources/screenshots/rstudio_rmd_presentation.png)
+
+D'autres extensions, qui doivent être installées séparément, permettent aussi des diaporamas dans des formats variés. On citera notamment :
+
+- [revealjs](https://github.com/rstudio/revealjs) pour des présentations HTLM basées sur le *framework* [reveal.js](http://lab.hakim.se/reveal-js/#/)
+- [rmdshower](https://github.com/mangothecat/rmdshower) pour des diaporamas HTML basés sur [shower](https://github.com/shower/shower)
+
+Une fois l'extension installée, elle propose en général un *template* de départ lorsqu'on crée un nouveau document dans RStudio. Ceux-ci sont accessibles depuis l'entrée *From Template*.
+
+![Créer une présentation à partir d'un template](resources/screenshots/rstudio_rmd_templates.png)
+
+
+### Templates
+
+
+Il existe également différents templates permettant de changer le format et la présentation des documents générés.
+Une liste de ces formats et leur documentation associées est accessible depuis la page [formats](http://rmarkdown.rstudio.com/formats.html) de la documentation.
+
+On notera notamment :
+
+- des formats d'article correspondant à des publications dans différentes revues : `jss_article`, `elsevier_article`, etc.
+- le format [Tufte Handouts](http://rmarkdown.rstudio.com/tufte_handout_format.html) qui permet de produire des documents PDF ou HTML dans un format proche de celui utilisé par Edward Tufte pour certaines de ses publications
+
+Enfin, l'extension [rmdformats](https://github.com/juba/rmdformats) propose plusieurs modèles HTML adaptés notamment pour des documents longs :
+
+![Modèle `readthedown`](resources/rmdformats_templates/readthedown.png)
+![Modèle `html_clean`](resources/rmdformats_templates/html_clean.png)
+
+![Modèle `material`](resources/rmdformats_templates/material.png)
+
+
+
+
+Là encore, la plupart du temps, ces modèles de documents proposent un *template* de départ lorsqu'on crée un nouveau document dans RStudio (entrée *From Template*) :
+
+![Créer un document à partir d'un template](resources/screenshots/rstudio_rmd_templates.png)
+
 
 ## Ressources
 
 Les ressources suivantes sont toutes en anglais...
 
-L'ouvrage *R for data science*, accessible en ligne, contient un chapitre dédié à l'adresse http://r4ds.had.co.nz/r-markdown.html.
+L'ouvrage *R for data science*, accessible en ligne, contient [un chapitre dédié à R Markdown](http://r4ds.had.co.nz/r-markdown.html).
 
-Le site officiel de l'extension est accessible à l'adresse : http://rmarkdown.rstudio.com/. Il contient une documentation très complète, tant pour les débutants que pour un usage avancé.
+Le [site officiel de l'extension](http://rmarkdown.rstudio.com/) contient une documentation très complète, tant pour les débutants que pour un usage avancé.
 
 Enfin, l'aide de RStudio (menu *Help* puis *Cheatsheets*) permet d'accéder à deux documents de synthèse : une "antisèche" synthétique (*R Markdown Cheat Sheet*) et un "guide de référence" plus complet (*R Markdown Reference Guide*).
