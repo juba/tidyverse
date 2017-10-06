@@ -1,1 +1,185 @@
-# Ranger ses données {#tidyr}
+# Arranger ses données {#tidyr}
+
+```{r include=FALSE}
+library(tidyverse)
+```
+
+## *Tidy data*
+
+Comme indiqué dans la section \@ref(tidy-data), les extensions du *tidyverse* comme `dplyr` ou `ggplot2` partent du principe que les données sont "bien rangées" sous forme de *tidy data*.
+
+Prenons un exemple avec les données suivantes :
+
+
+```{r echo=FALSE, paged.print=FALSE, warning=FALSE}
+library(gapminder)
+data(gapminder)
+d <- gapminder
+dm <- d %>% 
+  filter(country %in% c("France", "Germany", "Belgium"),
+         year >= 1992) %>%
+  select(country, year, pop) %>% 
+  spread(year, pop)
+dm
+```
+
+Imaginons qu'on souhaite représenter avec `ggplot2` l'évolution de la population pour chaque pays sous forme de lignes : c'est impossible avec les données sous ce format. On a besoin d'arranger le tableau de la manière suivante :
+
+```{r echo=FALSE, warning=FALSE, paged.print=FALSE}
+d <- dm %>% 
+  gather(annee, population, -country) %>% 
+  mutate(annee = as.numeric(annee))
+d
+```
+
+Il est alors possible de réaliser le graphique :
+
+```{r}
+ggplot(d) + 
+  geom_line(aes(x = annee, y = population, color = country)) +
+  scale_x_continuous(breaks = unique(d$annee))
+```
+
+C'est la même chose pour `dplyr`, si on voulait calculer la population minimale pour chaque pays avec `summarise` :
+
+```{r warning=FALSE, paged.print=FALSE}
+d %>% 
+  group_by(country) %>%  
+  summarise(pop_min = min(population))
+```
+
+## Trois règles pour des données bien rangées
+
+Le concept de *tidy data* repose sur trois règles interdépendantes. Des données sont considérées comme *tidy* si :
+
+1. chaque ligne correspond à une observation
+2. chaque colonne correspond à une variable
+3. chaque valeur est présente dans une unique case de la table ou, de manière équivalente, si des unités d'observations différentes sont présentes dans des tables différentes
+
+Ces règles ne sont pas forcément très intuitives. De plus, il y a une infinité de manières pour un tableau de données de ne pas être *tidy*.
+
+Prenons par exemple les règles 1 et 2 et le tableau de notre premier exemple :
+
+```{r warning=FALSE, paged.print=FALSE}
+dm
+```
+
+Pourquoi ce tableau n'est pas *tidy* ? Parce que si on essaie d'identifier les variables mesurées dans le tableau, il y en a trois : le pays, l'année et la population. Or elles ne correspondant pas aux colonnes de la table. C'est le cas par contre pour la table transformée :
+
+```{r warning=FALSE, paged.print=FALSE}
+ dm %>% 
+  gather(annee, population, -country)
+```
+
+Et on peut remarquer qu'en modifiant notre table pour satisfaire à la deuxième règle, on a aussi réglé la première : chaque ligne correspond désormais à une observation, qui est en l'occurrence l'observation de pays à plusieurs moments dans le temps. Dans notre table d'origine, chaque ligne comportait en réalité quatre observations différentes. Cela permet aussi d'illustrer que les règles sont interdépendantes.
+
+Un autre exemple, tiré du jeu de données `nycflights13`, permettant cette fois d'illustrer la troisième règle :
+
+```{r echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE}
+library(nycflights13)
+data(flights)
+data(airlines)
+
+df <- flights %>% 
+  filter(carrier %in% c("AA", "UA")) %>% 
+  slice(1:8) %>% 
+  select(year, month, day, dep_time, carrier) %>% 
+  left_join(airlines)
+df
+```
+
+Dans ce tableau on a bien une observation par ligne (un vol), et une variable par colonne. Mais on a une "infraction" à la troisième règle, qui est que chaque valeur doit être présente dans une unique case de la table avec la colonne `name`. On a en effet une duplication de l'information concernant le nom des compagnies aériennes. Notre tableau mêle en fait deux types d'observations différents : des observations sur les vols, et des observations sur les compagnies aériennes.
+
+Pour "arranger" ce tableau, il faut séparer les deux types d'observations en deux tables différentes :
+
+```{r echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE}
+df %>% select(-name)
+```
+
+```{r echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE}
+df %>% select(carrier, name) %>%  distinct
+```
+
+On a désormais deux tables distinctes, l'information n'est pas dupliquée, et on peut facilement faire une jointure si on a besoin de récupérer l'information d'une table dans une autre.
+
+
+## Les verbes de `tidyr`
+
+L'objectif de `tidyr` est de fournir des fonctions pour arranger ses données et les convertir dans un format *tidy*. Ces fonctions prennent la forme de verbes qui viennent compléter ceux de `dplyr` et s'intègrent parfaitement dans les séries de *pipes* (`%>%`) permettant d'enchaîner les opérations.
+
+
+
+### `gather` : rassembler des colonnes
+
+Prenons le tableau `d` suivant, qui liste la population de 6 pays en 2002 et 2007 :
+
+```{r message=FALSE, warning=FALSE, paged.print=FALSE}
+library(gapminder)
+data(gapminder)
+d <- gapminder
+d <- d %>% 
+  filter(country %in% c("France", "Germany", "Belgium", "Switzerland", "Spain", "Italy"),
+         year >= 2002) %>%
+  select(country, year, pop) %>% 
+  spread(year, pop)
+d
+```
+
+Dans ce tableau, une même variable (la population) est répartie sur plusieurs colonnes, chacune représentant une observation à un moment différent. On souhaite que la variable ne représente plus qu'une seule colonne, et que les observations soient réparties sur plusieurs lignes. 
+
+Pour cela on va utiliser la fonction `gather` (rassembler) : 
+
+```{r warning=FALSE, paged.print=FALSE}
+d %>% gather(`2002`, `2007`, key = annee, value = population)
+```
+
+La fonction `gather` prend comme arguments la liste des colonnes à rassembler (ici on a mis `2002` et `2007` entre *backticks* (```2002```) pour indiquer à `gather` qu'il s'agit d'un nom de colonne et pas d'un nombre), ainsi que deux arguments `key` et `value` :
+
+- `key` est le nom de la colonne qui va contenir les "clés", c'est-à-dire les identifiants des différentes observations
+- `value` est le nom de la colonne qui va contenir la valeur des observations
+
+Parfois il est plus rapide d'indiquer à `gather` les colonnes qu'on ne souhaite pas rassembler. On peut le faire avec la syntaxe suivante :
+
+```{r warning=FALSE, paged.print=FALSE}
+d %>% gather(-country, key = annee, value = population)
+```
+
+
+
+
+### `spread` : disperser des lignes
+
+La fonction `spread` est l'inverse de `gather`.
+
+Soit le tableau `d` suivant :
+
+```{r warning=FALSE, paged.print=FALSE}
+library(gapminder)
+data(gapminder)
+d <- gapminder
+d <- d %>% 
+  filter(country %in% c("France", "Germany", "Belgium"),
+         year >= 2002) %>% 
+  select(-gdpPercap) %>% 
+  gather(lifeExp, pop, key = variable, value = value)
+d
+```
+
+Ce tableau a le problème inverse du précédent : on a deux variables, `lifeExp` et `pop` qui, plutôt que d'être réparties en deux colonnes, sont réparties entre plusieurs lignes.
+
+On va donc utiliser `spread` pour "disperser" ces lignes dans deux colonnes différentes :
+
+```{r warning=FALSE, paged.print=FALSE}
+d %>% 
+  spread(key = variable, value = value)
+```
+
+TODO : expliquer
+TODO : argument fill
+
+
+
+## Ressources
+
+Article tidy data
+r4ds
