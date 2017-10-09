@@ -2,7 +2,7 @@
 
 
 - URLs présentation
-- Environnements rmdimportant et autres
+- Environnements rmdimportant rmdnote et rmdwarning
 - Caching dans rmarkdown
 - htmlwidgets
 - Exercices manquants
