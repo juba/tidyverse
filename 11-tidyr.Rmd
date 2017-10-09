@@ -156,13 +156,13 @@ Soit le tableau `d` suivant :
 ```{r warning=FALSE, paged.print=FALSE}
 library(gapminder)
 data(gapminder)
-d <- gapminder
-d <- d %>% 
+dm <- gapminder
+dm <- dm %>% 
   filter(country %in% c("France", "Germany", "Belgium"),
          year >= 2002) %>% 
   select(-gdpPercap) %>% 
   gather(lifeExp, pop, key = variable, value = value)
-d
+dm
 ```
 
 Ce tableau a le problème inverse du précédent : on a deux variables, `lifeExp` et `pop` qui, plutôt que d'être réparties en deux colonnes, sont réparties entre plusieurs lignes.
@@ -170,16 +170,88 @@ Ce tableau a le problème inverse du précédent : on a deux variables, `lifeExp
 On va donc utiliser `spread` pour "disperser" ces lignes dans deux colonnes différentes :
 
 ```{r warning=FALSE, paged.print=FALSE}
-d %>% 
+dm %>% 
   spread(key = variable, value = value)
 ```
 
-TODO : expliquer
-TODO : argument fill
+`spread` prend deux arguments principaux :
+
+- `key` indique la colonne contenant les noms des nouvelles variables à créer
+- `value` indique la colonne contenant les valeurs de ces variables
+
+Il peut arriver que certaines variables soient absentes pour certaines observations. Dans ce cas l'argument `fill` permet de spécifier la valeur à utiliser pour ces données manquantes (par défaut `fill` vaut, logiquement, `NA`) :
+
+```{r warning=FALSE, paged.print=FALSE, echo = FALSE}
+dm <- dm %>% bind_rows(list(country = "France", continent = "Europe", year = 2002, variable = "density", value = 94))
+dm
+```
+
+```{r warning=FALSE, paged.print=FALSE}
+dm %>% 
+  spread(key = variable, value = value, fill = "-")
+```
+
+### `separate` : séparer une colonne en plusieurs
+
+Parfois on a plusieurs informations réunies en une seule colonne et on souhaite les séparer. Soit le tableau d'exemple caricatural suivant, nommé `df` :
+
+
+```{r echo=FALSE, warning=FALSE, paged.print=FALSE}
+df <- tibble(eleve = c("Félicien Machin", "Raymonde Bidule", "Martial Truc"),
+             note = c("5/20", "6/10", "87/100"))
+df
+```
+
+`separate` permet de séprer la colonne `note` en deux nouvelles colonnes `note` et `note_sur` :
+
+```{r warning=FALSE, paged.print=FALSE}
+df %>% separate(note, c("note", "note_sur"))
+```
+
+`separate` prend deux arguments principaux, le nom de la colonne à séparer et un vecteur indiquant les noms des nouvelles variables à créer. Par défaut `separate` "sépare" au niveau des caractères non-alphanumérique (espace, symbole, etc.). On peut lui indiquer explicitement le caractère sur lequel séparer avec l'argument `sep` :
+
+```{r warning=FALSE, paged.print=FALSE}
+df %>% separate(eleve, c("prenom", "nom"), sep = " ")
+```
+
+
+### `unite` : regrouper plusieurs colonnes en une seule
+
+`unite` est l'opération inverse de `separate`. Elle permet de regrouper plusieurs colonnes en une seule. Imaginons qu'on obtient le tableau `d` suivant :
+
+```{r echo=FALSE, warning=FALSE, paged.print=FALSE}
+library(questionr)
+data(rp2012)
+d <- rp2012 %>% 
+  slice(1:6) %>% 
+  select(code_insee, commune, pop_tot) %>% 
+  extract(code_insee, c("code_departement", "code_commune"), regex = "(..)(...)")
+d
+```
+
+On souhaite reconstruire une colonne `code_insee` qui indique le code INSEE de la commune, et qui s'obtient en concaténant le code du département et celui de la commune. On peut alors utiliser `unite` :
+
+```{r warning=FALSE, paged.print=FALSE}
+d %>% unite(code_insee, code_departement, code_commune)
+```
+
+Le résultat n'est pas idéal : par défaut `unite` ajoute un caractère `_` entre les deux valeurs concaténer, alors qu'on ne veut aucun séparateur. De plus, on souhaite conserver nos deux colonnes d'origine, qui peuvent nous être utiles. On peut résoudre ces deux problèmes à l'aide des arguments `sep` et `remove` :
+
+```{r warning=FALSE, paged.print=FALSE}
+d %>% 
+  unite(code_insee, code_departement, code_commune, sep = "", remove = FALSE)
+```
 
 
 
 ## Ressources
 
-Article tidy data
-r4ds
+Chaque jeu de données est différent, et le travail de remise en forme est souvent long et plus ou moins compliqué. On n'a donné ici que les exemples les plus simples, et c'est souvent en combinant différentes opérations qu'on finit par obtenir le résultat souhaité.
+
+Le livre *R for data science*, librement accessibles en ligne, contient [un chapitre complet](http://r4ds.had.co.nz/tidy-data.html) sur la remise en forme des données. 
+
+L'article [Tidy data](https://www.jstatsoft.org/article/view/v059i10), publié en 2014 dans le *Journal of Statistical Software*, présente de manière détaillée le concept éponyme (mais il utilise par contre des extensions désormais obsolètes qui ont été remplacées par `dplyr` et`tidyr`).
+
+Le site de l'extension est accessible à l'adresse : http://tidyr.tidyverse.org/ et contient une liste des fonctions et les pages d'aide associées.
+
+
