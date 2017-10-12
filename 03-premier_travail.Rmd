@@ -1,39 +1,46 @@
 # Premier travail avec des données
 
 
-## Jeux de données d'exemple
+## Jeu de données d'exemple
 
-Dans cette partie nous allons travailler sur des "vraies" données, et utiliser un jeu de données présent dans le package `questionr`. Si cette extension n'est pas installée, suivez les instructions de la section \@ref(packages).
+Dans cette partie nous allons (enfin) travailler sur des "vraies" données, et utiliser un jeu de données présent dans l'extension `questionr`. Nous devons donc avant toute chose installer cette extension.
 
-Le jeu de données en question est un extrait de l'enquête
-*Histoire de vie* réalisée par l'INSEE en 2003. Il contient
-2000 individus et 20 variables. Pour une description plus complète et une liste des variables, voir section \@ref(hdv2003).
+Pour installer ce package, deux possibilités :
 
-Pour pouvoir utiliser ces données, il faut d'abord charger l'extension
-`questionr` (après l'avoir installée, bien entendu) :
+- Dans l'onglet *Packages* de la zone de l'écran en bas à droite, cliquez sur le bouton *Install*. Dans le dialogue qui s'ouvre, entrez "questionr" dans le champ *Packages* puis cliquez sur *Install*.
+- Saisissez directement la commande suivante dans la console : `install.packages("questionr")`
+
+Dans les deux cas, tout un tas de messages devraient s'afficher dans la console. Attendez que l'invite de commandes `>` apparaisse à nouveau.
+
+Pour plus d'informations sur les extensions et leur installation, voir la section \@ref(packages).
+
+Le jeu de données que nous allons utiliser est un extrait de l'enquête *Histoire de vie* réalisée par l'INSEE en 2003. Il contient 2000 individus et 20 variables. Pour une description plus complète et une liste des variables, voir la section \@ref(hdv2003).
+
+Pour pouvoir utiliser ces données, il faut d'abord charger l'extension `questionr` (après l'avoir installée, bien entendu) :
 
 ```{r}
 library(questionr)
 ```
 
-Puis indiquer à R que nous souhaitons accéder au jeu de données à
-l'aide de la commande `data` :
+L'utilisation de `library` permet de rendre "disponibles", dans notre session R, les fonctions et jeux de données inclus dans l'extension.
+
+Nous devons ensuite indiquer à R que nous souhaitons accéder au jeu de données à l'aide de la commande `data` :
 
 ```{r}
 data(hdv2003)
 ```
 
-Vous devriez alors voir apparaître dans l'onglet *Environment* de RStudio un nouvel objet nommé `hdv2003` :
+Cette commande ne renvoit aucun résultat particulier (sauf en cas d'erreur), mais vous devriez voir apparaître dans l'onglet *Environment* de RStudio un nouvel objet nommé `hdv2003` :
 
 ![Onglet *Environment*](resources/screenshots/rstudio_environment.png)
 
-Cet objet est d'un type particulier, il s'agit d'un tableau de données.
+Cet objet est d'un type nouveau : il s'agit d'un tableau de données.
 
 
 ## Tableau de données (*data frame*)
 
 
-Un *data frame* (ou tableau de données) est un type d'objet dans R qui contient des données au format tabulaire, avec les observations en ligne et les variables en colonnes, comme dans une feuille de tableur de type LibreOffice ou Excel.
+Un *data frame* (ou tableau de données, ou table) est un type d'objet dans R qui contient des données au format tabulaire, avec les observations en ligne et les variables en colonnes, comme dans une feuille de tableur de type LibreOffice ou Excel.
 
 Si on se contente d'exécuter le nom de notre tableau de données :
 
@@ -43,22 +50,26 @@ hdv2003
 
 R va, comme à son habitude, nous l'afficher dans la console, ce qui est tout sauf utile.
 
-Une autre manière d'afficher le contenu du tableau est soit de cliquer sur l'icône en forme de tableau à droite du nom de l'objet dans l'onglet *Environment* :
+Une autre manière d'afficher le contenu du tableau est de cliquer sur l'icône en forme de tableau à droite du nom de l'objet dans l'onglet *Environment* :
 
 ![View icon](resources/screenshots/rstudio_view_icon.png)
 
-Soit d'utiliser la fonction `View` :
+Ou d'utiliser la fonction `View` :
 
 ```{r, eval = FALSE}
 View(hdv2003)
 ```
 
-Votre tableau devrait alors s'afficher dans RStudio avec une interface de type tableur.
+Dans les deux cas votre tableau devrait s'afficher dans RStudio avec une interface de type tableur :
 
-L'objet `hdv2003` contient donc *l'intégralité* des données du tableau. On voit donc que :
+![Interface "View"](resources/screenshots/rstudio_view.png)
 
-- Un objet peut contenir des données de types très différents, et être de très grandes tailles.
-- Sous R, on peut importer ou créer autant de tableaux de données qu'on le souhaite, dans les limites des capacités de sa machine.
+Il est important de comprendre que l'objet `hdv2003` contient *l'intégralité* des données du tableau. 
+On voit donc qu'un objet peut contenir des données de types très différents (simple nombre, texte, vecteur, tableau de données entier), et être potentiellement de très grande taille^[La seule limite pour la taille d'un objet étant la mémoire vive (RAM) de la machine sur laquelle tourne la session R.].
+
+```{block, type='rmdnote'}
+Sous R, on peut importer ou créer autant de tableaux de données qu'on le souhaite, dans les limites des capacités de sa machine.
+```
 
 Un *data frame* peut être manipulé comme les autres objets vus précédemment. On peut par exemple faire :
 
@@ -66,15 +77,9 @@ Un *data frame* peut être manipulé comme les autres objets vus précédemment.
 d <- hdv2003
 ```
 
-ce qui va entraîner la copie de l'ensemble de nos données dans un nouvel
-objet nommé `d`. Ceci qui peut paraître parfaitement inutile mais
-a en fait l'avantage de fournir un objet avec un nom beaucoup plus
-court, ce qui diminuera la quantité de texte à saisir par la suite.
+ce qui va entraîner la copie de l'ensemble de nos données dans un nouvel objet nommé `d`. Ceci peut paraître parfaitement inutile mais a en fait l'avantage de fournir un objet avec un nom beaucoup plus court, ce qui diminuera la quantité de texte à saisir par la suite.
 
-**Pour résumer**, comme nous avons désormais décidé de saisir nos
-commandes dans un script et non plus directement dans la console, les
-premières lignes de notre fichier de travail sur les données de
-l'enquête *Histoire de vie* pourraient donc ressembler à ceci~:
+**Pour résumer**, comme nous avons désormais décidé de saisir nos commandes dans un script et non plus directement dans la console, les premières lignes de notre fichier de travail sur les données de l'enquête *Histoire de vie* pourraient donc ressembler à ceci :
 
 
 ```{r, eval = FALSE}
@@ -87,7 +92,9 @@ d <- hdv2003
 ```
 
 
-Un tableau est un objet comme un autre, on peut lui appliquer des fonctions. Par exemple, `nrow` et `ncol` retournent le nombre de lignes et de colonnes du tableau :
+### Structure du tableau
+
+Un tableau étant un objet comme un autre, on peut lui appliquer des fonctions. Par exemple, `nrow` et `ncol` retournent le nombre de lignes et de colonnes du tableau :
 
 ```{r}
 nrow(d)
@@ -103,15 +110,27 @@ La fonction `dim` renvoit ses dimensions, donc les deux nombres précédents :
 dim(d)
 ```
 
-Enfin, la fonction `names` retourne les noms des colonnes du tableau, c'est-à-dire la liste de nos *variables* :
+La fonction `names` retourne les noms des colonnes du tableau, c'est-à-dire la liste de nos *variables* :
 
 ```{r}
 names(d)
 ```
 
+Enfin, la fonction `str` renvoit un descriptif plus détaillé de la structure du tableau. Elle liste les différentes variables, indique leur type ^[Les types de variables seront décrits plus en détail dans le chapitre sur les recodages.] et liste les premières valeurs :
+
+```{r}
+str(d)
+```
+
+
+Sous RStudio, on peut afficher à tout moment la structure d'un objet en cliquant sur l'icône de triangle sur fond bleu à gauche du nom de l'objet dans l'onglet *Environment* :
+
+![Structure d'un objet](resources/screenshots/rstudio_environment_str.png)
+
+
 ### Accéder aux variables d'un tableau
 
-Une opération très importante est de pouvoir accéder à ces variables pour pouvoir les manipuler, effectuer des calculs, etc. On va pour cela utiliser l'opérateur `$`, qui permet d'accéder aux colonnes du tableau. Ainsi, si l'on tape :
+Une opération très importante est l'accès aux variables du tableau (à ses colonnes) pour pouvoir les manipuler, effectuer des calculs, etc. On va pour cela utiliser l'opérateur `$`, qui permet d'accéder aux colonnes du tableau. Ainsi, si l'on tape :
 
 ```{r include=FALSE}
 options(max.print=200)
@@ -122,7 +141,9 @@ options(max.print=200)
 d$sexe
 ```
 
-R va nous afficher l'ensemble des valeurs de notre variables `sexe` dans la console. Il s'agit d'un vecteur de chaînes de caractères tels qu'on en a déjà rencontré précédemment.
+R va nous afficher l'ensemble des valeurs de notre variables `sexe` dans la console, ce qui est à nouveau fort peu utile. Mais cela nous permet de constater que `d$sexe` est un vecteur de chaînes de caractères tels qu'on en a déjà rencontré précédemment.
+
+La fonction `table$colonne` renvoit donc la colonne nommée `colonne` du tableau `table`, c'est-à-dire un vecteur, en général de nombres ou de chaînes de caractères.
 
 Si on souhaite afficher seulement les premières ou dernières valeurs d'une variable, on peut utiliser les fonctions `head` et `tail` :
 
@@ -135,9 +156,13 @@ head(d$age)
 tail(d$age, 10)
 ```
 
+Le deuxième argument numérique permet d'indiquer le nombre de valeurs à afficher.
+
+### Créer une nouvelle variable
+
 On peut aussi utiliser l'opérateur `$` pour créer une nouvelle variable dans notre tableau : pour cela, il suffit de lui assigner une valeur.
 
-Par exemple, la variable `heures.tv` contient le nombre d'heures passé quotidiennement devant la télé :
+Par exemple, la variable `heures.tv` contient le nombre d'heures passées quotidiennement devant la télé :
 
 ```{r}
 head(d$heures.tv, 10)
@@ -149,25 +174,19 @@ On peut vouloir créer une nouvelle variable dans notre tableau qui contienne la
 d$minutes.tv <- d$heures.tv * 60
 ```
 
-On peut constater, soit visuellement soit dans la console, qu'une nouvelle variable (une nouvelle colonne) a bien été ajoutée au tableau :
+On peut alors constater, soit visuellement soit dans la console, qu'une nouvelle variable (une nouvelle colonne) a bien été ajoutée au tableau :
 
 ```{r}
 head(d$minutes.tv)
 ```
 
-```{r, eval=FALSE}
-View(d)
-```
-
-
-
-
-On a donc désormais accès à un tableau de données `d`, dont les lignes sont des observations (des individus enquêtés), et les colonnes des variables (des caractéristiques de chacun de ces individues), et on sait accéeder aux différentes variables grâce à l'opérateur `$`. 
-
-Si on souhaite analyser ces variables, les méthodes et fonctions utilisées seront différentes selon qu'il s'agit d'une variable quantitative (variable numérique pouvant prendre un grand nombre de valeurs comme l'âge, le revenu, un pourcentage...) ou une variable qualitative (variable pouvant prendre un nombre limité de valeurs appelées modalités comme le sexe, la profession, etc.).
 
 
 ## Analyse univariée
+
+On a donc désormais accès à un tableau de données `d`, dont les lignes sont des observations (des individus enquêtés), et les colonnes des variables (des caractéristiques de chacun de ces individus), et on sait accéder à ces variables grâce à l'opérateur `$`. 
+
+Si on souhaite analyser ces variables, les méthodes et fonctions utilisées seront différentes selon qu'il s'agit d'une variable *quantitative* (variable numérique pouvant prendre un grand nombre de valeurs comme l'âge, le revenu, un pourcentage...) ou d'une variable *qualitative* (variable pouvant prendre un nombre limité de valeurs appelées modalités comme le sexe, la profession, etc.).
 
 ### Analyser une variable quantitative
 
@@ -178,7 +197,7 @@ Une variable quantitative est une variable de type numérique (un nombre) qui pe
 
 Caractériser une variable quantitative, c'est essayer de décrire la manière dont ses valeurs se répartissent, ou se distribuent.
 
-Pour cela on peut commencer par regarder les valeurs extrêmes, avec les fonctions `min`, `max` ou `range :
+Pour cela on peut commencer par regarder les valeurs extrêmes, avec les fonctions `min`, `max` ou `range` :
 
 ```{r}
 min(d$age)
@@ -192,13 +211,14 @@ On peut aussi calculer des indicateurs de *centralité* : ceux-ci indiquent auto
 mean(d$age)
 ```
 
-Il existe aussi la médiane, qui est la valeur pour laquelle on a la moitié de nos observations au-dessous, et la moitié au-dessus. Elle se calcule avec la fonction `median` :
+Il existe aussi la médiane, qui est la valeur qui sépare notre population en deux : on a la moitié de nos observations en-dessous, et la moitié au-dessus. Elle se calcule avec la fonction `median` :
 
 ```{r}
 median(d$age)
 ```
 
-La différence entre les deux est que la médiane est beaucoup moins sensible aux valeurs "extrêmes" : on dit qu'elle est plus *robuste*. Ainsi, en 2013, le salaire net moyen des salariés en France était de 2202 euros, tandis que le salaire net médian n'était que de 1772 euros. La différence étant due à des très hauts salaires qui "tirent" la moyenne vers le haut.
+Une différence entre les deux indicateurs est que la médiane est beaucoup moins sensible aux valeurs "extrêmes" : on dit qu'elle est plus *robuste*. Ainsi, en 2013, le salaire net *moyen* des salariés à temps plein en France était de 2202 euros, tandis que le salaire net *médian* n'était que de 1772 euros. La différence étant due à des très hauts salaires qui "tirent" la moyenne vers le haut.
+
 
 #### Indicateurs de dispersion
 
@@ -210,7 +230,7 @@ L'indicateur le plus simple est l'étendue de la distribution, qui décrit l'éc
 max(d$age) - min(d$age)
 ```
 
-Les indicateurs de dispersion les plus utilisés sont la variance ou, de manière équivalente, l'écart-type (qui est égal à la racine carrée de la variance). On obtient la première avec la fonction `var`, et le second avec `sd` :
+Les indicateurs de dispersion les plus utilisés sont la variance ou, de manière équivalente, l'écart-type (qui est égal à la racine carrée de la variance). On obtient la première avec la fonction `var`, et le second avec `sd` (abbréviation de *standard deviation*) :
 
 ```{r}
 var(d$age)
@@ -220,7 +240,7 @@ var(d$age)
 sd(d$age)
 ```
 
-Plus la variance ou l'écart-type sont élevés, plus les valeurs sont dispersées autour de la moyenne. À l'inverse, plus ils sont bas et plus les valeurs sont regroupées.
+Plus la variance ou l'écart-type sont élevés, plus les valeurs sont dispersées autour de la moyenne. À l'inverse, plus ils sont faibles et plus les valeurs sont regroupées.
 
 Une autre manière de mesurer la dispersion est de calculer les quartiles :
 
@@ -240,6 +260,8 @@ quantile(d$age, prob = 0.25)
 quantile(d$age, prob = 0.75)
 ```
 
+`quantile` prend deux arguments principaux : le vecteur dont on veut calculer le quantile, et un argument `prob` qui indique quel quantile on souhaite obtenir. `prob` prend une valeur entre 0 et 1 : 0.5 est la médiane, 0.25 le premier quartile, 0.1 le premier décile, etc.
+
 Notons enfin que la fonction `summary` permet d'obtenir d'un coup plusieurs indicateurs classiques :
 
 ```{r}
@@ -248,11 +270,15 @@ summary(d$age)
 
 #### Représentation graphique
 
-L'outil le plus utile pour étudier la distribution des valeurs d'une variable quantitative reste la représentation graphique, en général sous forme d'histogramme. On peut l'obtenir avec la fonction `hist` :
+L'outil le plus utile pour étudier la distribution des valeurs d'une variable quantitative reste la représentation graphique. 
+
+La représentation la plus courante est sans doute l'histogramme. On peut l'obtenir avec la fonction `hist` :
 
 ```{r}
 hist(d$age)
 ```
+
+Cette fonction n'a pas pour effet direct d'effectuer un calcul ou de nous renvoyer un résultat : elle génère un graphique qui va s'afficher dans l'onglet *Plots* de RStudio.
 
 On peut personnaliser l'apparence de l'histogramme en ajoutant des arguments supplémentaires à la fonction `hist`. L'argument le plus important est `breaks`, qui permet d'indiquer le nombre de classes que l'on souhaite. 
 
@@ -265,9 +291,9 @@ hist(d$age, breaks = 70)
 ```
 
 
-Le choix d'un "bon" nombre de classes pour un histogramme n'est pas un problème simple : selon le nombre choisi, on pourra soit effacer quasiment toutes les variations si on en a trop peu, soit avoir trop de détails et masquer les grandes tendances si on en a trop.
+Le choix d'un "bon" nombre de classes pour un histogramme n'est pas un problème simple : si on a trop peu de classes, on risque d'effacer quasiment toutes les variations, et si on en a trop on risque d'avoir trop de détails et de masquer les grandes tendances.
 
-On peut également changer la couleur des barres avec `col`, le titre avec `main`, les étiquettes des axes avec `xlab` et `ylab`, etc. :
+Les arguments de `hist` permettent également de modifier la présentation du graphique. On peut ainsi changer la couleur des barres avec `col`, le titre avec `main`, les étiquettes des axes avec `xlab` et `ylab`, etc. :
 
 ```{r}
 hist(d$age, col = "skyblue",
@@ -276,14 +302,14 @@ hist(d$age, col = "skyblue",
      ylab = "Effectif")
 ```
 
-La fonction `hist` fait partie des fonctions graphique de base de R. La partie [ggplot2] est consacrée au *package* `ggplot2` qui permet la production et la personnalisation de graphiques complexes sous R.
+La fonction `hist` fait partie des fonctions graphique de base de R. La partie \@ref(ggplot2) de ce document est consacrée à l'extension `ggplot2`, qui fait partie du *tidyverse* et qui permet la production et la personnalisation de graphiques complexes sous R.
 
 
 ### Analyser une variable qualitative
 
 Une variable qualitative est une variable qui ne peut prendre qu'un nombre limité de valeurs, appelées modalités. Dans notre jeu de données on trouvera par exemple le sexe (`sexe`), le niveau d'études (`nivetud`), la catégorie socio-professionnelle (`qualif`)...
 
-À noter qu'une variable qualitative peut tout-à-fait être numérique, et que parfois une variable peut être traitée soit comme quantitative, soit comme qualitative : par exemple le nombre d'enfants ou le nombre de frères et soeurs.
+À noter qu'une variable qualitative peut tout-à-fait être numérique, et que certaines variables peuvent être traitées soit comme quantitatives, soit comme qualitatives : c'est le cas par exemple du nombre d'enfants ou du nombre de frères et soeurs.
 
 #### Tri à plat
 
@@ -311,25 +337,47 @@ Attention, par défaut la fonction `table` n'affiche pas les valeurs manquantes 
 ```
 
 
-Par défaut ces tris à plat sont en effectifs et ne sont pas toujours très lisibles, notamment quand on a des effectifs importants. On leur rajoute donc en général la répartition en pourcentage. Pour cela, nous allons utiliser la fonction `freq` de l'extension `questionr`, qui devra donc avoir précédemment été chargée avec `library(questionr)` :
+Par défaut ces tris à plat sont en effectifs et ne sont donc pas toujours très lisibles, notamment quand on a des effectifs importants. On leur rajoute donc en général la répartition en pourcentages. Pour cela, nous allons utiliser la fonction `freq` de l'extension `questionr`, qui devra donc avoir précédemment été chargée avec `library(questionr)` :
 
-```{r, comment=TRUE}
+```{r}
 ## À rajouter en haut de script et à exécuter
 library(questionr)
 ```
 
 On peut alors utiliser la fonction :
 
-```{r, results='markup'}
+```{r eval=FALSE}
 freq(d$qualif)
 ```
 
+```{r echo=FALSE}
+tab <- freq(d$qualif)
+print.data.frame(tab)
+```
+
+
 La colonne `n` représente les effectifs de chaque catégorie, la colonne `%` le pourcentage, et la colonne `val%` le pourcentage calculé sur les valeurs valides, donc en excluant les `NA`. Une ligne a également été rajoutée pour indiquer le nombre et la proportion de `NA`.
+
+`freq` accepte un certain nombre d'arguments pour personnaliser son affichage. Par exemple :
+
+- `valid` indique si on souhaite ou non afficher les pourcentages sur les valeurs valides
+- `cum` indique si on souhaite ou non afficher les pourcentages cumulés
+- `total` permet d'ajouter une ligne avec les effectifs totaux
+- `sort` permet de trier le tableau par fréquence croissante (`sort="inc"`) ou décroissante (`sort="dec"`).
+
+```{r eval=FALSE}
+freq(d$qualif, valid= FALSE, total = TRUE, sort = "dec")
+```
+
+```{r echo=FALSE}
+tab <- freq(d$qualif, valid= FALSE, total = TRUE, sort = "dec")
+print.data.frame(tab)
+```
 
 
 #### Représentations graphiques
 
-On peut représenter graphiquement le tri à plat d'une variable qualitative avec un diagramme en barres, obtenu avec la fonction `barplot`. Attention, cette fonction ne s'applique pas directement à la variable mais au résultat du tri à plat de cette variable, calculé avec `table` :
+On peut représenter graphiquement le tri à plat d'une variable qualitative avec un diagramme en barres, obtenu avec la fonction `barplot`. Attention, contrairement à `hist` cette fonction ne s'applique pas directement à la variable mais au résultat du tri à plat de cette variable, calculé avec `table`. Il faut donc procéder en deux étapes :
 
 ```{r}
 tab <- table(d$clso)
@@ -343,17 +391,22 @@ On peut aussi trier le tri à plat avec la fonction `sort` avant de le représen
 barplot(sort(tab))
 ```
 
-Une alternative au graphique en barres est le *diagramme de Cleveland*, qu'on peut obtenir avec la fonction `dotchart`. Celle-ci s'applique elle aussi au tri à plat de la variable calculé avec `table` :
+Une alternative au graphique en barres est le *diagramme de Cleveland*, qu'on peut obtenir avec la fonction `dotchart`. Celle-ci s'applique elle aussi au tri à plat de la variable calculé avec `table`.
 
-```{r}
+```{r warning = FALSE}
+dotchart(table(d$qualif))
+```
+Là aussi, pour améliorer la lisibilité du graphique il est préférable de trier le tri à plat de la variable avant de le représenter :
+
+```{r warning = FALSE}
 dotchart(sort(table(d$qualif)))
 ```
 
-### Exercices
+## Exercices
 
 **Exercice 1**
 
-Créer un nouveau script qui effectue les actions suvantes :
+Créer un nouveau script qui effectue les actions suivantes :
 
 - charger l'extension `questionr`
 - charger le jeu de données nommé `hdv2003`
@@ -362,7 +415,7 @@ Créer un nouveau script qui effectue les actions suvantes :
 
 **Exercice 2**
 
-Nous souhaitons étudier la répartition du temps passé devant la télévision par les enquêtés (variable `heures.tv`). Pour cela, affichez les principaux indicateurs de cette variable : valeur minimale, maximale, moyenne, médiane et écart-type. Représentez ensuite sa distribution par un histogramme en 10 classes.
+On souhaite étudier la répartition du temps passé devant la télévision par les enquêtés (variable `heures.tv`). Pour cela, affichez les principaux indicateurs de cette variable : valeur minimale, maximale, moyenne, médiane et écart-type. Représentez ensuite sa distribution par un histogramme en 10 classes.
 
 **Exercice 3**
 
