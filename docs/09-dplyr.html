@@ -47,7 +47,7 @@
 
 
 
-<script src="libs/htmlwidgets-0.9/htmlwidgets.js"></script>
+<script src="libs/htmlwidgets-0.8/htmlwidgets.js"></script>
 <link href="libs/leaflet-0.7.7/leaflet.css" rel="stylesheet" />
 <script src="libs/leaflet-0.7.7/leaflet.js"></script>
 <link href="libs/leafletfix-1.0.0/leafletfix.css" rel="stylesheet" />
@@ -152,15 +152,17 @@ code > span. { color: #1f1c1b; } /* Normal */
 <li class="chapter" data-level="2.6" data-path="02-prise_en_main.html"><a href="02-prise_en_main.html#exercices"><i class="fa fa-check"></i><b>2.6</b> Exercices</a></li>
 </ul></li>
 <li class="chapter" data-level="3" data-path="03-premier_travail.html"><a href="03-premier_travail.html"><i class="fa fa-check"></i><b>3</b> Premier travail avec des données</a><ul>
-<li class="chapter" data-level="3.1" data-path="03-premier_travail.html"><a href="03-premier_travail.html#jeux-de-donnees-dexemple"><i class="fa fa-check"></i><b>3.1</b> Jeux de données d’exemple</a></li>
+<li class="chapter" data-level="3.1" data-path="03-premier_travail.html"><a href="03-premier_travail.html#jeu-de-donnees-dexemple"><i class="fa fa-check"></i><b>3.1</b> Jeu de données d’exemple</a></li>
 <li class="chapter" data-level="3.2" data-path="03-premier_travail.html"><a href="03-premier_travail.html#tableau-de-donnees-data-frame"><i class="fa fa-check"></i><b>3.2</b> Tableau de données (<em>data frame</em>)</a><ul>
-<li class="chapter" data-level="3.2.1" data-path="03-premier_travail.html"><a href="03-premier_travail.html#acceder-aux-variables-dun-tableau"><i class="fa fa-check"></i><b>3.2.1</b> Accéder aux variables d’un tableau</a></li>
+<li class="chapter" data-level="3.2.1" data-path="03-premier_travail.html"><a href="03-premier_travail.html#structure-du-tableau"><i class="fa fa-check"></i><b>3.2.1</b> Structure du tableau</a></li>
+<li class="chapter" data-level="3.2.2" data-path="03-premier_travail.html"><a href="03-premier_travail.html#acceder-aux-variables-dun-tableau"><i class="fa fa-check"></i><b>3.2.2</b> Accéder aux variables d’un tableau</a></li>
+<li class="chapter" data-level="3.2.3" data-path="03-premier_travail.html"><a href="03-premier_travail.html#creer-une-nouvelle-variable"><i class="fa fa-check"></i><b>3.2.3</b> Créer une nouvelle variable</a></li>
 </ul></li>
 <li class="chapter" data-level="3.3" data-path="03-premier_travail.html"><a href="03-premier_travail.html#analyse-univariee"><i class="fa fa-check"></i><b>3.3</b> Analyse univariée</a><ul>
 <li class="chapter" data-level="3.3.1" data-path="03-premier_travail.html"><a href="03-premier_travail.html#analyser-une-variable-quantitative"><i class="fa fa-check"></i><b>3.3.1</b> Analyser une variable quantitative</a></li>
 <li class="chapter" data-level="3.3.2" data-path="03-premier_travail.html"><a href="03-premier_travail.html#analyser-une-variable-qualitative"><i class="fa fa-check"></i><b>3.3.2</b> Analyser une variable qualitative</a></li>
-<li class="chapter" data-level="3.3.3" data-path="03-premier_travail.html"><a href="03-premier_travail.html#exercices-1"><i class="fa fa-check"></i><b>3.3.3</b> Exercices</a></li>
 </ul></li>
+<li class="chapter" data-level="3.4" data-path="03-premier_travail.html"><a href="03-premier_travail.html#exercices-1"><i class="fa fa-check"></i><b>3.4</b> Exercices</a></li>
 </ul></li>
 <li class="chapter" data-level="4" data-path="04-bivarie.html"><a href="04-bivarie.html"><i class="fa fa-check"></i><b>4</b> Analyse bivariée</a><ul>
 <li class="chapter" data-level="4.1" data-path="04-bivarie.html"><a href="04-bivarie.html#croisement-de-deux-variables-qualitatives"><i class="fa fa-check"></i><b>4.1</b> Croisement de deux variables qualitatives</a><ul>
@@ -412,7 +414,7 @@ code > span. { color: #1f1c1b; } /* Normal */
 </div>
 <div id="filter" class="section level3">
 <h3><span class="header-section-number">9.2.2</span> <code>filter</code></h3>
-<p><code>filter</code> sélectionne des lignes d’un tableau de données selon une condition. On lui passe en paramètre un test, et seules les lignes pour lesquelles ce test renvoie vrai sont conservées.<a href="#fn10" class="footnoteRef" id="fnref10"><sup>10</sup></a></p>
+<p><code>filter</code> sélectionne des lignes d’un tableau de données selon une condition. On lui passe en paramètre un test, et seules les lignes pour lesquelles ce test renvoie vrai sont conservées.<a href="#fn12" class="footnoteRef" id="fnref12"><sup>12</sup></a></p>
 <p>Si on veut choisir les vols du mois de janvier :</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">filter</span>(flights, month <span class="op">==</span><span class="st"> </span><span class="dv">1</span>)</code></pre></div>
 <pre><code># A tibble: 27,004 x 19
@@ -684,7 +686,7 @@ tmp &lt;-<span class="st"> </span><span class="kw">select</span>(tmp, dep_delay,
 10       -15        -7
 # ... with 16,164 more rows</code></pre>
 <p>C’est nettement plus lisible, l’ordre des opérations est le bon, et les paramètres sont bien rattachés à leur fonction. Par contre, ça reste un peu “verbeux”, et on crée un objet temporaire dont on n’a pas réellement besoin.</p>
-<p>Pour simplifier et améliorer encore la lisibilité du code, on va utiliser un nouvel opérateur, baptisé <em>pipe</em>.<a href="#fn11" class="footnoteRef" id="fnref11"><sup>11</sup></a> Le <em>pipe</em> se note <code>%&gt;%</code>, et son fonctionnement est le suivant : si j’exécute <code>expr %&gt;% f</code>, alors le résultat de l’expression <code>expr</code>, à gauche du <em>pipe</em>, sera passé comme premier argument à la fonction <code>f</code>, à droite du <em>pipe</em>, ce qui revient à exécuter <code>f(expr)</code>.</p>
+<p>Pour simplifier et améliorer encore la lisibilité du code, on va utiliser un nouvel opérateur, baptisé <em>pipe</em>.<a href="#fn13" class="footnoteRef" id="fnref13"><sup>13</sup></a> Le <em>pipe</em> se note <code>%&gt;%</code>, et son fonctionnement est le suivant : si j’exécute <code>expr %&gt;% f</code>, alors le résultat de l’expression <code>expr</code>, à gauche du <em>pipe</em>, sera passé comme premier argument à la fonction <code>f</code>, à droite du <em>pipe</em>, ce qui revient à exécuter <code>f(expr)</code>.</p>
 <p>Ainsi les deux expressions suivantes sont rigoureusement équivalentes :</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">filter</span>(flights, dest <span class="op">==</span><span class="st"> &quot;LAX&quot;</span>)</code></pre></div>
 <pre><code># A tibble: 16,174 x 21
@@ -1022,29 +1024,29 @@ tmp &lt;-<span class="st"> </span><span class="kw">select</span>(tmp, dep_delay,
 <p>Ces verbes permettent de sélectionner un nombre de lignes ou une fraction des lignes d’un tableau aléatoirement. Ainsi si on veut choisir 5 lignes au hasard dans le tableau <code>airports</code> :</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">airports <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">sample_n</span>(<span class="dv">5</span>)</code></pre></div>
 <pre><code># A tibble: 5 x 9
-    faa                              name      lat        lon   alt    tz
-  &lt;chr&gt;                             &lt;chr&gt;    &lt;dbl&gt;      &lt;dbl&gt; &lt;int&gt; &lt;dbl&gt;
-1   DKX Knoxville Downtown Island Airport 35.96383  -83.87367   833    -5
-2   BAF                  Barnes Municipal 42.15795  -72.71587   270    -5
-3   ATT            Camp Mabry Austin City 30.31666  -97.76660     0    -6
-4   DUC         Halliburton Field Airport 34.47131  -97.95986  1114    -6
-5   KVC                 King Cove Airport 55.11630 -162.26600   155    -9
-# ... with 3 more variables: dst &lt;chr&gt;, tzone &lt;chr&gt;, alt_m &lt;dbl&gt;</code></pre>
+    faa                                name      lat        lon   alt
+  &lt;chr&gt;                               &lt;chr&gt;    &lt;dbl&gt;      &lt;dbl&gt; &lt;int&gt;
+1   LGU                         Logan-Cache 41.79100 -111.85200  4457
+2   FWA                          Fort Wayne 40.97847  -85.19514   815
+3   BIF                           Biggs Aaf 31.84953 -106.38004  3948
+4   ROC              Greater Rochester Intl 43.11887  -77.67239   559
+5   TRM Jacqueline Cochran Regional Airport 33.62667 -116.15967     0
+# ... with 4 more variables: tz &lt;dbl&gt;, dst &lt;chr&gt;, tzone &lt;chr&gt;, alt_m &lt;dbl&gt;</code></pre>
 <p>Si on veut tirer au hasard 10% des lignes de <code>flights</code> :</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">flights <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">sample_frac</span>(<span class="fl">0.1</span>)</code></pre></div>
 <pre><code># A tibble: 33,678 x 21
     year month   day dep_time sched_dep_time dep_delay arr_time
    &lt;int&gt; &lt;int&gt; &lt;int&gt;    &lt;int&gt;          &lt;int&gt;     &lt;dbl&gt;    &lt;int&gt;
- 1  2013    12    14     1909           1840        29     2121
- 2  2013    11    24     1502           1500         2     1648
- 3  2013     3     3     1525           1535       -10     1723
- 4  2013    12     3     1412           1415        -3     1645
- 5  2013     1    16     1550           1555        -5     1758
- 6  2013     7     6     1035           1030         5       NA
- 7  2013     1    30     1801           1708        53     2104
- 8  2013    11    28      736            745        -9     1035
- 9  2013     6    20     1206           1208        -2     1448
-10  2013     7     9     1757           1630        87     2056
+ 1  2013    11    11     1156           1200        -4     1427
+ 2  2013    10    21     1859           1907        -8     2103
+ 3  2013     6     8     1310           1210        60     1627
+ 4  2013    11     7     1735           1646        49     1907
+ 5  2013    12     8     2058           2018        40       33
+ 6  2013     3     8     2122           2015        67     2242
+ 7  2013     2    10      732            732         0     1034
+ 8  2013     3    13     1851           1855        -4     2029
+ 9  2013     8     9       NA           2140        NA       NA
+10  2013    11    14      825            836       -11      932
 # ... with 33,668 more rows, and 14 more variables: sched_arr_time &lt;int&gt;,
 #   arr_delay &lt;dbl&gt;, carrier &lt;chr&gt;, flight &lt;int&gt;, tailnum &lt;chr&gt;,
 #   origin &lt;chr&gt;, dest &lt;chr&gt;, air_time &lt;dbl&gt;, distance &lt;dbl&gt;, hour &lt;dbl&gt;,
@@ -1635,20 +1637,20 @@ flights_dep &lt;-<span class="st"> </span>flights <span class="op">%&gt;%</span>
 <td align="left">Twingo</td>
 </tr>
 <tr class="even">
-<td align="left">Sylvie</td>
-<td align="left">Ferrari</td>
-</tr>
-<tr class="odd">
-<td align="left">Gunter</td>
-<td align="left">Lada</td>
-</tr>
-<tr class="even">
 <td align="left">Rayan</td>
 <td align="left">Twingo</td>
 </tr>
 <tr class="odd">
+<td align="left">Sylvie</td>
+<td align="left">Ferrari</td>
+</tr>
+<tr class="even">
 <td align="left">Rayan</td>
 <td align="left">Clio</td>
+</tr>
+<tr class="odd">
+<td align="left">Gunter</td>
+<td align="left">Lada</td>
 </tr>
 </tbody>
 </table>
@@ -2138,8 +2140,8 @@ flights_dep &lt;-<span class="st"> </span>flights <span class="op">%&gt;%</span>
 <span class="kw">leaflet</span>(<span class="dt">data =</span> flights_dest) <span class="op">%&gt;%</span>
 <span class="st">  </span>addTiles <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">addCircles</span>(<span class="dt">lng=</span><span class="op">~</span>lon, <span class="dt">lat=</span><span class="op">~</span>lat, <span class="dt">radius=</span><span class="op">~</span>n <span class="op">*</span><span class="st"> </span><span class="dv">10</span>, <span class="dt">popup=</span><span class="op">~</span>name)</code></pre></div>
-<div id="htmlwidget-639517421394979818f6" style="width:672px;height:480px;" class="leaflet html-widget"></div>
-<script type="application/json" data-for="htmlwidget-639517421394979818f6">{"x":{"options":{"crs":{"crsClass":"L.CRS.EPSG3857","code":null,"proj4def":null,"projectedBounds":null,"options":{}}},"calls":[{"method":"addTiles","args":["//{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",null,null,{"minZoom":0,"maxZoom":18,"maxNativeZoom":null,"tileSize":256,"subdomains":"abc","errorTileUrl":"","tms":false,"continuousWorld":false,"noWrap":false,"zoomOffset":0,"zoomReverse":false,"opacity":1,"zIndex":null,"unloadInvisibleTiles":null,"updateWhenIdle":null,"detectRetina":false,"reuseTiles":false,"attribution":"&copy; <a href=\"http://openstreetmap.org\">OpenStreetMap<\/a> contributors, <a href=\"http://creativecommons.org/licenses/by-sa/2.0/\">CC-BY-SA<\/a>"}]},{"method":"addCircles","args":[[35.0402222,41.253053,42.748267,61.174361,33.636719,30.194528,35.436194,41.938889,44.807444,33.562942,36.124472,42.364347,null,44.471861,42.940525,34.200667,39.175361,45.777643,33.938833,40.9160833,38.138639,32.898647,41.411689,35.214,39.997972,38.373147,39.048836,39.902375,38.852083,39.861656,32.896828,41.533972,42.212444,39.642556,24.556111,26.072583,42.880833,36.09775,34.895556,40.481181,21.318681,29.645419,38.944533,29.984433,34.270615,39.717331,43.607333333,30.494056,36.080056,33.942536,38.0365,40.777245,33.817722,39.297606,28.429394,41.785972,35.042417,42.932556,25.79325,42.947222,43.139858,44.881956,29.993389,38.509794,41.391667,33.67975,37.721278,35.393089,41.303167,41.978603,36.894611,26.683161,45.588722,39.871944,33.434278,40.491467,null,33.829667,41.732581,43.646161,35.877639,37.505167,43.118866,26.536167,32.733556,29.533694,32.127583,41.708661,38.1740858,47.449,37.618972,37.3626,null,40.788389,38.695417,33.675667,27.395444,38.748697,null,43.111187,27.975472,36.198389,44.741445,35.810972,36.2818694],[-106.6091944,-70.060181,-73.801692,-149.996361,-84.428067,-97.669889,-82.541806,-72.683222,-68.828139,-86.75355,-86.678194,-71.005181,null,-73.153278,-78.732167,-118.358667,-76.668333,-111.160151,-81.119528,-81.4421944,-78.452861,-80.040528,-81.849794,-80.943139,-82.891889,-81.593189,-84.667822,-84.219375,-77.037722,-104.673178,-97.037997,-93.663083,-83.353389,-106.917694,-81.759556,-80.15275,-85.522806,-79.937306,-82.218889,-107.21766,-157.922428,-95.278889,-77.455811,-95.341442,-77.902569,-86.294383,-110.73775,-81.687861,-115.15225,-118.408075,-84.605889,-73.872608,-118.151611,-94.713905,-81.308994,-87.752417,-89.976667,-71.435667,-80.290556,-87.896583,-89.337514,-93.221767,-90.258028,-107.894242,-70.615278,-78.928333,-122.220722,-97.600733,-95.894069,-87.904842,-76.201222,-80.095589,-122.5975,-75.241139,-112.011583,-80.232872,null,-116.506694,-71.420383,-70.309281,-78.787472,-77.319667,-77.672389,-81.755167,-117.189667,-98.469778,-81.202139,-86.31725,-85.7364989,-122.309306,-122.374889,-121.929022,null,-111.977772,-121.590778,-117.868222,-82.554389,-90.370028,null,-76.106311,-82.53325,-95.888111,-85.582235,-83.994028,-94.3068111],[2540,2650,4390,80,172150,24390,2750,4430,3750,2970,63330,155080,8960,25890,46810,3710,17810,360,1160,8640,520,28840,45730,140640,35240,1380,39410,15250,97050,72660,87380,5690,93840,2130,170,120550,7650,16060,8490,150,7070,21150,57000,71980,1100,20770,250,27200,59970,161740,10,10,6680,20080,140820,41130,17890,10090,117280,28020,5720,71850,37990,150,2210,590,3120,3460,8490,172830,15360,65540,13540,16320,46560,28750,3650,190,3760,23520,81630,24540,24160,35370,27370,6860,8040,100,11570,39230,133310,3290,58190,24670,2840,8250,12110,43390,5220,17610,74660,3150,1010,6310,10360],null,null,{"lineCap":null,"lineJoin":null,"clickable":true,"pointerEvents":null,"className":"","stroke":true,"color":"#03F","weight":5,"opacity":0.5,"fill":true,"fillColor":"#03F","fillOpacity":0.2,"dashArray":null},["Albuquerque International Sunport","Nantucket Mem","Albany Intl","Ted Stevens Anchorage Intl","Hartsfield Jackson Atlanta Intl","Austin Bergstrom Intl","Asheville Regional Airport","Bradley Intl","Bangor Intl","Birmingham Intl","Nashville Intl","General Edward Lawrence Logan Intl",null,"Burlington Intl","Buffalo Niagara Intl","Bob Hope","Baltimore Washington Intl","Gallatin Field","Columbia Metropolitan","Akron Canton Regional Airport","Charlottesville-Albemarle","Charleston Afb Intl","Cleveland Hopkins Intl","Charlotte Douglas Intl","Port Columbus Intl","Yeager","Cincinnati Northern Kentucky Intl","James M Cox Dayton Intl","Ronald Reagan Washington Natl","Denver Intl","Dallas Fort Worth Intl","Des Moines Intl","Detroit Metro Wayne Co","Eagle Co Rgnl","Key West Intl","Fort Lauderdale Hollywood Intl","Gerald R Ford Intl","Piedmont Triad","Greenville-Spartanburg International","Yampa Valley","Honolulu Intl","William P Hobby","Washington Dulles Intl","George Bush Intercontinental","Wilmington Intl","Indianapolis Intl","Jackson Hole Airport","Jacksonville Intl","Mc Carran Intl","Los Angeles Intl","Blue Grass","La Guardia","Long Beach","Kansas City Intl","Orlando Intl","Chicago Midway Intl","Memphis Intl","Manchester Regional Airport","Miami Intl","General Mitchell Intl","Dane Co Rgnl Truax Fld","Minneapolis St Paul Intl","Louis Armstrong New Orleans Intl","Montrose Regional Airport","Martha\\\\'s Vineyard","Myrtle Beach Intl","Metropolitan Oakland Intl","Will Rogers World","Eppley Afld","Chicago Ohare Intl","Norfolk Intl","Palm Beach Intl","Portland Intl","Philadelphia Intl","Phoenix Sky Harbor Intl","Pittsburgh Intl",null,"Palm Springs Intl","Theodore Francis Green State","Portland Intl Jetport","Raleigh Durham Intl","Richmond Intl","Greater Rochester Intl","Southwest Florida Intl","San Diego Intl","San Antonio Intl","Savannah Hilton Head Intl","South Bend Rgnl","Louisville International Airport","Seattle Tacoma Intl","San Francisco Intl","Norman Y Mineta San Jose Intl",null,"Salt Lake City Intl","Sacramento Intl","John Wayne Arpt Orange Co","Sarasota Bradenton Intl","Lambert St Louis Intl",null,"Syracuse Hancock Intl","Tampa Intl","Tulsa Intl","Cherry Capital Airport","Mc Ghee Tyson","NW Arkansas Regional"],null,null,null,null,null]}],"limits":{"lat":[21.318681,61.174361],"lng":[-157.922428,-68.828139]}},"evals":[],"jsHooks":[]}</script>
+<div id="htmlwidget-a181dbdc9040be8031cf" style="width:672px;height:480px;" class="leaflet html-widget"></div>
+<script type="application/json" data-for="htmlwidget-a181dbdc9040be8031cf">{"x":{"options":{"crs":{"crsClass":"L.CRS.EPSG3857","code":null,"proj4def":null,"projectedBounds":null,"options":{}}},"calls":[{"method":"addTiles","args":["//{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",null,null,{"minZoom":0,"maxZoom":18,"maxNativeZoom":null,"tileSize":256,"subdomains":"abc","errorTileUrl":"","tms":false,"continuousWorld":false,"noWrap":false,"zoomOffset":0,"zoomReverse":false,"opacity":1,"zIndex":null,"unloadInvisibleTiles":null,"updateWhenIdle":null,"detectRetina":false,"reuseTiles":false,"attribution":"&copy; <a href=\"http://openstreetmap.org\">OpenStreetMap<\/a> contributors, <a href=\"http://creativecommons.org/licenses/by-sa/2.0/\">CC-BY-SA<\/a>"}]},{"method":"addCircles","args":[[35.0402222,41.253053,42.748267,61.174361,33.636719,30.194528,35.436194,41.938889,44.807444,33.562942,36.124472,42.364347,null,44.471861,42.940525,34.200667,39.175361,45.777643,33.938833,40.9160833,38.138639,32.898647,41.411689,35.214,39.997972,38.373147,39.048836,39.902375,38.852083,39.861656,32.896828,41.533972,42.212444,39.642556,24.556111,26.072583,42.880833,36.09775,34.895556,40.481181,21.318681,29.645419,38.944533,29.984433,34.270615,39.717331,43.607333333,30.494056,36.080056,33.942536,38.0365,40.777245,33.817722,39.297606,28.429394,41.785972,35.042417,42.932556,25.79325,42.947222,43.139858,44.881956,29.993389,38.509794,41.391667,33.67975,37.721278,35.393089,41.303167,41.978603,36.894611,26.683161,45.588722,39.871944,33.434278,40.491467,null,33.829667,41.732581,43.646161,35.877639,37.505167,43.118866,26.536167,32.733556,29.533694,32.127583,41.708661,38.1740858,47.449,37.618972,37.3626,null,40.788389,38.695417,33.675667,27.395444,38.748697,null,43.111187,27.975472,36.198389,44.741445,35.810972,36.2818694],[-106.6091944,-70.060181,-73.801692,-149.996361,-84.428067,-97.669889,-82.541806,-72.683222,-68.828139,-86.75355,-86.678194,-71.005181,null,-73.153278,-78.732167,-118.358667,-76.668333,-111.160151,-81.119528,-81.4421944,-78.452861,-80.040528,-81.849794,-80.943139,-82.891889,-81.593189,-84.667822,-84.219375,-77.037722,-104.673178,-97.037997,-93.663083,-83.353389,-106.917694,-81.759556,-80.15275,-85.522806,-79.937306,-82.218889,-107.21766,-157.922428,-95.278889,-77.455811,-95.341442,-77.902569,-86.294383,-110.73775,-81.687861,-115.15225,-118.408075,-84.605889,-73.872608,-118.151611,-94.713905,-81.308994,-87.752417,-89.976667,-71.435667,-80.290556,-87.896583,-89.337514,-93.221767,-90.258028,-107.894242,-70.615278,-78.928333,-122.220722,-97.600733,-95.894069,-87.904842,-76.201222,-80.095589,-122.5975,-75.241139,-112.011583,-80.232872,null,-116.506694,-71.420383,-70.309281,-78.787472,-77.319667,-77.672389,-81.755167,-117.189667,-98.469778,-81.202139,-86.31725,-85.7364989,-122.309306,-122.374889,-121.929022,null,-111.977772,-121.590778,-117.868222,-82.554389,-90.370028,null,-76.106311,-82.53325,-95.888111,-85.582235,-83.994028,-94.3068111],[2540,2650,4390,80,172150,24390,2750,4430,3750,2970,63330,155080,8960,25890,46810,3710,17810,360,1160,8640,520,28840,45730,140640,35240,1380,39410,15250,97050,72660,87380,5690,93840,2130,170,120550,7650,16060,8490,150,7070,21150,57000,71980,1100,20770,250,27200,59970,161740,10,10,6680,20080,140820,41130,17890,10090,117280,28020,5720,71850,37990,150,2210,590,3120,3460,8490,172830,15360,65540,13540,16320,46560,28750,3650,190,3760,23520,81630,24540,24160,35370,27370,6860,8040,100,11570,39230,133310,3290,58190,24670,2840,8250,12110,43390,5220,17610,74660,3150,1010,6310,10360],null,null,{"lineCap":null,"lineJoin":null,"clickable":true,"pointerEvents":null,"className":"","stroke":true,"color":"#03F","weight":5,"opacity":0.5,"fill":true,"fillColor":"#03F","fillOpacity":0.2,"dashArray":null},["Albuquerque International Sunport","Nantucket Mem","Albany Intl","Ted Stevens Anchorage Intl","Hartsfield Jackson Atlanta Intl","Austin Bergstrom Intl","Asheville Regional Airport","Bradley Intl","Bangor Intl","Birmingham Intl","Nashville Intl","General Edward Lawrence Logan Intl",null,"Burlington Intl","Buffalo Niagara Intl","Bob Hope","Baltimore Washington Intl","Gallatin Field","Columbia Metropolitan","Akron Canton Regional Airport","Charlottesville-Albemarle","Charleston Afb Intl","Cleveland Hopkins Intl","Charlotte Douglas Intl","Port Columbus Intl","Yeager","Cincinnati Northern Kentucky Intl","James M Cox Dayton Intl","Ronald Reagan Washington Natl","Denver Intl","Dallas Fort Worth Intl","Des Moines Intl","Detroit Metro Wayne Co","Eagle Co Rgnl","Key West Intl","Fort Lauderdale Hollywood Intl","Gerald R Ford Intl","Piedmont Triad","Greenville-Spartanburg International","Yampa Valley","Honolulu Intl","William P Hobby","Washington Dulles Intl","George Bush Intercontinental","Wilmington Intl","Indianapolis Intl","Jackson Hole Airport","Jacksonville Intl","Mc Carran Intl","Los Angeles Intl","Blue Grass","La Guardia","Long Beach","Kansas City Intl","Orlando Intl","Chicago Midway Intl","Memphis Intl","Manchester Regional Airport","Miami Intl","General Mitchell Intl","Dane Co Rgnl Truax Fld","Minneapolis St Paul Intl","Louis Armstrong New Orleans Intl","Montrose Regional Airport","Martha\\\\'s Vineyard","Myrtle Beach Intl","Metropolitan Oakland Intl","Will Rogers World","Eppley Afld","Chicago Ohare Intl","Norfolk Intl","Palm Beach Intl","Portland Intl","Philadelphia Intl","Phoenix Sky Harbor Intl","Pittsburgh Intl",null,"Palm Springs Intl","Theodore Francis Green State","Portland Intl Jetport","Raleigh Durham Intl","Richmond Intl","Greater Rochester Intl","Southwest Florida Intl","San Diego Intl","San Antonio Intl","Savannah Hilton Head Intl","South Bend Rgnl","Louisville International Airport","Seattle Tacoma Intl","San Francisco Intl","Norman Y Mineta San Jose Intl",null,"Salt Lake City Intl","Sacramento Intl","John Wayne Arpt Orange Co","Sarasota Bradenton Intl","Lambert St Louis Intl",null,"Syracuse Hancock Intl","Tampa Intl","Tulsa Intl","Cherry Capital Airport","Mc Ghee Tyson","NW Arkansas Regional"],null,null,null,null,null]}],"limits":{"lat":[21.318681,61.174361],"lng":[-157.922428,-68.828139]}},"evals":[],"jsHooks":[]}</script>
 <p>Créez une carte statique des résultats avec <code>ggmap</code> et le code suivant :</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(ggmap)
 map &lt;-<span class="st"> </span><span class="kw">get_map</span>(<span class="dt">location =</span> <span class="st">&quot;Kansas&quot;</span>, <span class="dt">zoom=</span><span class="dv">4</span>, <span class="dt">color=</span><span class="st">&quot;bw&quot;</span>)
@@ -2152,9 +2154,9 @@ map &lt;-<span class="st"> </span><span class="kw">get_map</span>(<span class="d
 </div>
 <div class="footnotes">
 <hr />
-<ol start="10">
-<li id="fn10"><p>Pour plus d’informations sur les tests et leur syntaxe, voir la section <a href="10-recodages.html#tests">10.2</a><a href="09-dplyr.html#fnref10">↩</a></p></li>
-<li id="fn11"><p>Le <em>pipe</em> a été introduit à l’origine par l’extension <code>magrittr</code>, et repris par <code>dplyr</code><a href="09-dplyr.html#fnref11">↩</a></p></li>
+<ol start="12">
+<li id="fn12"><p>Pour plus d’informations sur les tests et leur syntaxe, voir la section <a href="10-recodages.html#tests">10.2</a><a href="09-dplyr.html#fnref12">↩</a></p></li>
+<li id="fn13"><p>Le <em>pipe</em> a été introduit à l’origine par l’extension <code>magrittr</code>, et repris par <code>dplyr</code><a href="09-dplyr.html#fnref13">↩</a></p></li>
 </ol>
 </div>
             </section>
@@ -2203,17 +2205,6 @@ gitbook.start({
 });
 </script>
 
-<!-- dynamically load mathjax for compatibility with self-contained -->
-<script>
-  (function () {
-    var script = document.createElement("script");
-    script.type = "text/javascript";
-    script.src  = "https://cdn.bootcss.com/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML";
-    if (location.protocol !== "file:" && /^https?:/.test(script.src))
-      script.src  = script.src.replace(/^https?:/, '');
-    document.getElementsByTagName("head")[0].appendChild(script);
-  })();
-</script>
 </body>
 
 </html>

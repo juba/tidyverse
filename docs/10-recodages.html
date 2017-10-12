@@ -47,7 +47,7 @@
 
 
 
-<script src="libs/htmlwidgets-0.9/htmlwidgets.js"></script>
+<script src="libs/htmlwidgets-0.8/htmlwidgets.js"></script>
 <link href="libs/leaflet-0.7.7/leaflet.css" rel="stylesheet" />
 <script src="libs/leaflet-0.7.7/leaflet.js"></script>
 <link href="libs/leafletfix-1.0.0/leafletfix.css" rel="stylesheet" />
@@ -152,15 +152,17 @@ code > span. { color: #1f1c1b; } /* Normal */
 <li class="chapter" data-level="2.6" data-path="02-prise_en_main.html"><a href="02-prise_en_main.html#exercices"><i class="fa fa-check"></i><b>2.6</b> Exercices</a></li>
 </ul></li>
 <li class="chapter" data-level="3" data-path="03-premier_travail.html"><a href="03-premier_travail.html"><i class="fa fa-check"></i><b>3</b> Premier travail avec des données</a><ul>
-<li class="chapter" data-level="3.1" data-path="03-premier_travail.html"><a href="03-premier_travail.html#jeux-de-donnees-dexemple"><i class="fa fa-check"></i><b>3.1</b> Jeux de données d’exemple</a></li>
+<li class="chapter" data-level="3.1" data-path="03-premier_travail.html"><a href="03-premier_travail.html#jeu-de-donnees-dexemple"><i class="fa fa-check"></i><b>3.1</b> Jeu de données d’exemple</a></li>
 <li class="chapter" data-level="3.2" data-path="03-premier_travail.html"><a href="03-premier_travail.html#tableau-de-donnees-data-frame"><i class="fa fa-check"></i><b>3.2</b> Tableau de données (<em>data frame</em>)</a><ul>
-<li class="chapter" data-level="3.2.1" data-path="03-premier_travail.html"><a href="03-premier_travail.html#acceder-aux-variables-dun-tableau"><i class="fa fa-check"></i><b>3.2.1</b> Accéder aux variables d’un tableau</a></li>
+<li class="chapter" data-level="3.2.1" data-path="03-premier_travail.html"><a href="03-premier_travail.html#structure-du-tableau"><i class="fa fa-check"></i><b>3.2.1</b> Structure du tableau</a></li>
+<li class="chapter" data-level="3.2.2" data-path="03-premier_travail.html"><a href="03-premier_travail.html#acceder-aux-variables-dun-tableau"><i class="fa fa-check"></i><b>3.2.2</b> Accéder aux variables d’un tableau</a></li>
+<li class="chapter" data-level="3.2.3" data-path="03-premier_travail.html"><a href="03-premier_travail.html#creer-une-nouvelle-variable"><i class="fa fa-check"></i><b>3.2.3</b> Créer une nouvelle variable</a></li>
 </ul></li>
 <li class="chapter" data-level="3.3" data-path="03-premier_travail.html"><a href="03-premier_travail.html#analyse-univariee"><i class="fa fa-check"></i><b>3.3</b> Analyse univariée</a><ul>
 <li class="chapter" data-level="3.3.1" data-path="03-premier_travail.html"><a href="03-premier_travail.html#analyser-une-variable-quantitative"><i class="fa fa-check"></i><b>3.3.1</b> Analyser une variable quantitative</a></li>
 <li class="chapter" data-level="3.3.2" data-path="03-premier_travail.html"><a href="03-premier_travail.html#analyser-une-variable-qualitative"><i class="fa fa-check"></i><b>3.3.2</b> Analyser une variable qualitative</a></li>
-<li class="chapter" data-level="3.3.3" data-path="03-premier_travail.html"><a href="03-premier_travail.html#exercices-1"><i class="fa fa-check"></i><b>3.3.3</b> Exercices</a></li>
 </ul></li>
+<li class="chapter" data-level="3.4" data-path="03-premier_travail.html"><a href="03-premier_travail.html#exercices-1"><i class="fa fa-check"></i><b>3.4</b> Exercices</a></li>
 </ul></li>
 <li class="chapter" data-level="4" data-path="04-bivarie.html"><a href="04-bivarie.html"><i class="fa fa-check"></i><b>4</b> Analyse bivariée</a><ul>
 <li class="chapter" data-level="4.1" data-path="04-bivarie.html"><a href="04-bivarie.html#croisement-de-deux-variables-qualitatives"><i class="fa fa-check"></i><b>4.1</b> Croisement de deux variables qualitatives</a><ul>
@@ -376,7 +378,7 @@ nombres &lt;-<span class="st"> </span><span class="dv">1</span><span class="op">
 <span class="kw">data</span>(hdv2003)</code></pre></div>
 <p>Quand on veut accéder à un vecteur d’un tableau de données, on peut utiliser l’opérateur <code>$</code> :</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">hdv2003<span class="op">$</span>qualif</code></pre></div>
-<p>Quand on utilise <code>dplyr</code>, on a vu qu’on peut utiliser <code>select</code><a href="#fn12" class="footnoteRef" id="fnref12"><sup>12</sup></a> :</p>
+<p>Quand on utilise <code>dplyr</code>, on a vu qu’on peut utiliser <code>select</code><a href="#fn14" class="footnoteRef" id="fnref14"><sup>14</sup></a> :</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">hdv2003 <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(qualif)</code></pre></div>
 <p>On peut facilement créer de nouvelles variables (ou colonnes) dans un tableau de données en utilisant le <code>$</code> :</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">hdv2003<span class="op">$</span>minutes.tv &lt;-<span class="st"> </span>hdv2003<span class="op">$</span>heures.tv <span class="op">*</span><span class="st"> </span><span class="dv">60</span></code></pre></div>
@@ -446,12 +448,12 @@ vec <span class="op">==</span><span class="st"> &quot;Jaune&quot;</span> <span c
       id   age   sexe                                              nivetud
    &lt;int&gt; &lt;int&gt; &lt;fctr&gt;                                               &lt;fctr&gt;
  1     1    28  Femme Enseignement superieur y compris technique superieur
- 2     2    23  Femme                                                 &lt;NA&gt;
+ 2     2    23  Femme                                                   NA
  3     4    34  Homme Enseignement superieur y compris technique superieur
  4     6    35  Femme        Enseignement technique ou professionnel court
- 5     9    20  Femme                                                 &lt;NA&gt;
+ 5     9    20  Femme                                                   NA
  6    10    28  Homme         Enseignement technique ou professionnel long
- 7    18    20  Femme                                                 &lt;NA&gt;
+ 7    18    20  Femme                                                   NA
  8    20    39  Femme        Enseignement technique ou professionnel court
  9    21    30  Femme        Enseignement technique ou professionnel court
 10    22    30  Homme        Enseignement technique ou professionnel court
@@ -470,7 +472,7 @@ vec <span class="op">==</span><span class="st"> &quot;Jaune&quot;</span> <span c
  3    12    47  Homme                                    2eme cycle
  4    19    70  Homme             Derniere annee d&#39;etudes primaires
  5    20    39  Femme Enseignement technique ou professionnel court
- 6    25    20  Femme                                          &lt;NA&gt;
+ 6    25    20  Femme                                            NA
  7    27    31  Femme  Enseignement technique ou professionnel long
  8    28    35  Homme                                     1er cycle
  9    29    35  Homme Enseignement technique ou professionnel court
@@ -643,14 +645,14 @@ Levels: Cerise Ananas Fraise</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(ggplot2)
 <span class="kw">ggplot</span>(hdv2003) <span class="op">+</span><span class="st"> </span>
 <span class="st">  </span><span class="kw">geom_boxplot</span>(<span class="kw">aes</span>(<span class="dt">x=</span>occup, <span class="dt">y=</span>age))</code></pre></div>
-<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-339-1.svg" width="672" /></p>
+<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-346-1.svg" width="672" /></p>
 <p>Le graphique pourrait être plus lisible si les modalités étaient triées par âge median croissant. Ceci est possible en utilisant <code>fct_reorder</code>. Celle-ci prend 3 arguments : le facteur à réordonner, la variable dont les valeurs doivent être utilisées pour ce réordonnancement, et enfin une fonction à appliquer à cette deuxième variable.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">hdv2003 &lt;-<span class="st"> </span>hdv2003 <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st">  </span><span class="kw">mutate</span>(<span class="dt">occup_age =</span> <span class="kw">fct_reorder</span>(occup, age, median))
 
 <span class="kw">ggplot</span>(hdv2003) <span class="op">+</span><span class="st"> </span>
 <span class="st">  </span><span class="kw">geom_boxplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> occup_age, <span class="dt">y =</span> age))</code></pre></div>
-<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-340-1.svg" width="672" /></p>
+<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-347-1.svg" width="672" /></p>
 <div id="iorder" class="section level4">
 <h4><span class="header-section-number">10.3.3.1</span> Interface graphique</h4>
 <p>On peut aussi utiliser l’interface graphique proposée par l’extension <code>questionr</code> afin de faciliter cette opération. Pour la lancer, sélectionner le menu <em>Addins</em> puis <em>Levels ordering</em>, ou exécuter la fonction <code>iorder()</code> en lui passant comme paramètre le facteur à réordonner.</p>
@@ -856,7 +858,7 @@ Levels: Février Janvier Juillet</code></pre>
 <p><strong>Exercice 2.5</strong></p>
 <p>À l’aide de la fonction <code>fct_reorder</code>, trier les modalités de la variable <code>relig</code> du jeu de données <code>hdv2003</code> selon leur âge médian.</p>
 <p>Vérifier en générant le boxplot suivant :</p>
-<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-360-1.svg" width="672" /></p>
+<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-367-1.svg" width="672" /></p>
 </div>
 <div id="combiner-plusieurs-variables" class="section level3">
 <h3><span class="header-section-number">10.6.4</span> Combiner plusieurs variables</h3>
@@ -904,8 +906,8 @@ Levels: Février Janvier Juillet</code></pre>
 </div>
 <div class="footnotes">
 <hr />
-<ol start="12">
-<li id="fn12"><p>À la différence de <code>$</code>, <code>select</code> ne renvoie cependant pas un vecteur mais à un tableau à une seule colonne. Si on veut extraire le vecteur on peut utiliser la fonction <code>pull</code> : <code>{r eval=FALSE} hdv2003 %&gt;% pull(qualif)</code><a href="10-recodages.html#fnref12">↩</a></p></li>
+<ol start="14">
+<li id="fn14"><p>À la différence de <code>$</code>, <code>select</code> ne renvoie cependant pas un vecteur mais à un tableau à une seule colonne. Si on veut extraire le vecteur on peut utiliser la fonction <code>pull</code> : <code>{r eval=FALSE} hdv2003 %&gt;% pull(qualif)</code><a href="10-recodages.html#fnref14">↩</a></p></li>
 </ol>
 </div>
             </section>
@@ -954,17 +956,6 @@ gitbook.start({
 });
 </script>
 
-<!-- dynamically load mathjax for compatibility with self-contained -->
-<script>
-  (function () {
-    var script = document.createElement("script");
-    script.type = "text/javascript";
-    script.src  = "https://cdn.bootcss.com/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML";
-    if (location.protocol !== "file:" && /^https?:/.test(script.src))
-      script.src  = script.src.replace(/^https?:/, '');
-    document.getElementsByTagName("head")[0].appendChild(script);
-  })();
-</script>
 </body>
 
 </html>
