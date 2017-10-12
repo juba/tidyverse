@@ -1,0 +1,818 @@
+<!DOCTYPE html>
+<html >
+
+<head>
+
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>Introduction à R et au tidyverse</title>
+  <meta name="description" content="Une introduction à R et aux extensions du <em>tidyverse</em>">
+  <meta name="generator" content="bookdown 0.5 and GitBook 2.6.7">
+
+  <meta property="og:title" content="Introduction à R et au tidyverse" />
+  <meta property="og:type" content="book" />
+  
+  
+  <meta property="og:description" content="Une introduction à R et aux extensions du <em>tidyverse</em>" />
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Introduction à R et au tidyverse" />
+  
+  <meta name="twitter:description" content="Une introduction à R et aux extensions du <em>tidyverse</em>" />
+  
+
+<meta name="author" content="Julien Barnier">
+
+
+<meta name="date" content="2017-10-12">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  
+  
+<link rel="prev" href="07-import.html">
+<link rel="next" href="09-dplyr.html">
+<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+
+
+
+
+
+
+
+<link href="libs/pagedtable-1.1/css/pagedtable.css" rel="stylesheet" />
+<script src="libs/pagedtable-1.1/js/pagedtable.js"></script>
+<script src="libs/htmlwidgets-0.9/htmlwidgets.js"></script>
+<link href="libs/leaflet-0.7.7/leaflet.css" rel="stylesheet" />
+<script src="libs/leaflet-0.7.7/leaflet.js"></script>
+<link href="libs/leafletfix-1.0.0/leafletfix.css" rel="stylesheet" />
+<link href="libs/leaflet-label-0.2.2/leaflet.label.css" rel="stylesheet" />
+<script src="libs/leaflet-label-0.2.2/leaflet.label.js"></script>
+<script src="libs/Proj4Leaflet-0.7.2/proj4-compressed.js"></script>
+<script src="libs/Proj4Leaflet-0.7.2/proj4leaflet.js"></script>
+<script src="libs/leaflet-binding-1.1.0/leaflet.js"></script>
+<script src="libs/datatables-binding-0.2/datatables.js"></script>
+<link href="libs/dt-core-1.10.12/css/jquery.dataTables.min.css" rel="stylesheet" />
+<link href="libs/dt-core-1.10.12/css/jquery.dataTables.extra.css" rel="stylesheet" />
+<script src="libs/dt-core-1.10.12/js/jquery.dataTables.min.js"></script>
+
+
+<style type="text/css">
+div.sourceCode { overflow-x: auto; }
+table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
+  margin: 0; padding: 0; vertical-align: baseline; border: none; }
+table.sourceCode { width: 100%; line-height: 100%; background-color: #ffffff; color: #1f1c1b; }
+td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; background-color: #ffffff; color: #a0a0a0; border-right: 1px solid #a0a0a0; }
+td.sourceCode { padding-left: 5px; }
+pre, code { color: #1f1c1b; background-color: #ffffff; }
+code > span.kw { color: #1f1c1b; font-weight: bold; } /* Keyword */
+code > span.dt { color: #0057ae; } /* DataType */
+code > span.dv { color: #b08000; } /* DecVal */
+code > span.bn { color: #b08000; } /* BaseN */
+code > span.fl { color: #b08000; } /* Float */
+code > span.cn { color: #aa5500; } /* Constant */
+code > span.ch { color: #924c9d; } /* Char */
+code > span.sc { color: #3daee9; } /* SpecialChar */
+code > span.st { color: #bf0303; } /* String */
+code > span.vs { color: #bf0303; } /* VerbatimString */
+code > span.ss { color: #ff5500; } /* SpecialString */
+code > span.im { color: #ff5500; } /* Import */
+code > span.co { color: #898887; } /* Comment */
+code > span.do { color: #607880; } /* Documentation */
+code > span.an { color: #ca60ca; } /* Annotation */
+code > span.cv { color: #0095ff; } /* CommentVar */
+code > span.ot { color: #006e28; } /* Other */
+code > span.fu { color: #644a9b; } /* Function */
+code > span.va { color: #0057ae; } /* Variable */
+code > span.cf { color: #1f1c1b; font-weight: bold; } /* ControlFlow */
+code > span.op { color: #1f1c1b; } /* Operator */
+code > span.bu { color: #644a9b; font-weight: bold; } /* BuiltIn */
+code > span.ex { color: #0095ff; font-weight: bold; } /* Extension */
+code > span.pp { color: #006e28; } /* Preprocessor */
+code > span.at { color: #0057ae; } /* Attribute */
+code > span.re { color: #0057ae; } /* RegionMarker */
+code > span.in { color: #b08000; } /* Information */
+code > span.wa { color: #bf0303; } /* Warning */
+code > span.al { color: #bf0303; font-weight: bold; } /* Alert */
+code > span.er { color: #bf0303; text-decoration: underline; } /* Error */
+code > span. { color: #1f1c1b; } /* Normal */
+</style>
+
+<link rel="stylesheet" href="tidyverse.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./index.html">Introduction à R et au <em>tidyverse</em></a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>À propos de ce document</a><ul>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html#remerciements"><i class="fa fa-check"></i>Remerciements</a></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html#licence"><i class="fa fa-check"></i>Licence</a></li>
+</ul></li>
+<li class="chapter" data-level="1" data-path="01-presentation.html"><a href="01-presentation.html"><i class="fa fa-check"></i><b>1</b> Présentation</a><ul>
+<li class="chapter" data-level="1.1" data-path="01-presentation.html"><a href="01-presentation.html#a-propos-de-r"><i class="fa fa-check"></i><b>1.1</b> À propos de R</a></li>
+<li class="chapter" data-level="1.2" data-path="01-presentation.html"><a href="01-presentation.html#a-propos-du-tidyverse"><i class="fa fa-check"></i><b>1.2</b> À propos du <em>tidyverse</em></a></li>
+<li class="chapter" data-level="1.3" data-path="01-presentation.html"><a href="01-presentation.html#structure-du-document"><i class="fa fa-check"></i><b>1.3</b> Structure du document</a></li>
+<li class="chapter" data-level="1.4" data-path="01-presentation.html"><a href="01-presentation.html#prerequis"><i class="fa fa-check"></i><b>1.4</b> Prérequis</a></li>
+</ul></li>
+<li class="part"><span><b>I Introduction à R</b></span></li>
+<li class="chapter" data-level="2" data-path="02-prise_en_main.html"><a href="02-prise_en_main.html"><i class="fa fa-check"></i><b>2</b> Prise en main</a><ul>
+<li class="chapter" data-level="2.1" data-path="02-prise_en_main.html"><a href="02-prise_en_main.html#la-console"><i class="fa fa-check"></i><b>2.1</b> La console</a><ul>
+<li class="chapter" data-level="2.1.1" data-path="02-prise_en_main.html"><a href="02-prise_en_main.html#linvite-de-commandes"><i class="fa fa-check"></i><b>2.1.1</b> L’invite de commandes</a></li>
+<li class="chapter" data-level="2.1.2" data-path="02-prise_en_main.html"><a href="02-prise_en_main.html#precisions-et-astuces-concernant-la-saisie-des-commandes"><i class="fa fa-check"></i><b>2.1.2</b> Précisions et astuces concernant la saisie des commandes</a></li>
+</ul></li>
+<li class="chapter" data-level="2.2" data-path="02-prise_en_main.html"><a href="02-prise_en_main.html#objets"><i class="fa fa-check"></i><b>2.2</b> Objets</a><ul>
+<li class="chapter" data-level="2.2.1" data-path="02-prise_en_main.html"><a href="02-prise_en_main.html#objets-simples"><i class="fa fa-check"></i><b>2.2.1</b> Objets simples</a></li>
+<li class="chapter" data-level="2.2.2" data-path="02-prise_en_main.html"><a href="02-prise_en_main.html#nommage-des-objets"><i class="fa fa-check"></i><b>2.2.2</b> Nommage des objets</a></li>
+<li class="chapter" data-level="2.2.3" data-path="02-prise_en_main.html"><a href="02-prise_en_main.html#vecteurs"><i class="fa fa-check"></i><b>2.2.3</b> Vecteurs</a></li>
+</ul></li>
+<li class="chapter" data-level="2.3" data-path="02-prise_en_main.html"><a href="02-prise_en_main.html#fonctions"><i class="fa fa-check"></i><b>2.3</b> Fonctions</a><ul>
+<li class="chapter" data-level="2.3.1" data-path="02-prise_en_main.html"><a href="02-prise_en_main.html#principe"><i class="fa fa-check"></i><b>2.3.1</b> Principe</a></li>
+<li class="chapter" data-level="2.3.2" data-path="02-prise_en_main.html"><a href="02-prise_en_main.html#arguments"><i class="fa fa-check"></i><b>2.3.2</b> Arguments</a></li>
+<li class="chapter" data-level="2.3.3" data-path="02-prise_en_main.html"><a href="02-prise_en_main.html#aide-sur-une-fonction"><i class="fa fa-check"></i><b>2.3.3</b> Aide sur une fonction</a></li>
+</ul></li>
+<li class="chapter" data-level="2.4" data-path="02-prise_en_main.html"><a href="02-prise_en_main.html#regrouper-ses-commandes-dans-des-scripts"><i class="fa fa-check"></i><b>2.4</b> Regrouper ses commandes dans des scripts</a><ul>
+<li class="chapter" data-level="2.4.1" data-path="02-prise_en_main.html"><a href="02-prise_en_main.html#commentaires"><i class="fa fa-check"></i><b>2.4.1</b> Commentaires</a></li>
+</ul></li>
+<li class="chapter" data-level="2.5" data-path="02-prise_en_main.html"><a href="02-prise_en_main.html#packages"><i class="fa fa-check"></i><b>2.5</b> Installer et charger des extensions (<em>packages</em>)</a></li>
+<li class="chapter" data-level="2.6" data-path="02-prise_en_main.html"><a href="02-prise_en_main.html#exercices"><i class="fa fa-check"></i><b>2.6</b> Exercices</a></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="03-premier_travail.html"><a href="03-premier_travail.html"><i class="fa fa-check"></i><b>3</b> Premier travail avec des données</a><ul>
+<li class="chapter" data-level="3.1" data-path="03-premier_travail.html"><a href="03-premier_travail.html#jeux-de-donnees-dexemple"><i class="fa fa-check"></i><b>3.1</b> Jeux de données d’exemple</a></li>
+<li class="chapter" data-level="3.2" data-path="03-premier_travail.html"><a href="03-premier_travail.html#tableau-de-donnees-data-frame"><i class="fa fa-check"></i><b>3.2</b> Tableau de données (<em>data frame</em>)</a><ul>
+<li class="chapter" data-level="3.2.1" data-path="03-premier_travail.html"><a href="03-premier_travail.html#acceder-aux-variables-dun-tableau"><i class="fa fa-check"></i><b>3.2.1</b> Accéder aux variables d’un tableau</a></li>
+</ul></li>
+<li class="chapter" data-level="3.3" data-path="03-premier_travail.html"><a href="03-premier_travail.html#analyse-univariee"><i class="fa fa-check"></i><b>3.3</b> Analyse univariée</a><ul>
+<li class="chapter" data-level="3.3.1" data-path="03-premier_travail.html"><a href="03-premier_travail.html#analyser-une-variable-quantitative"><i class="fa fa-check"></i><b>3.3.1</b> Analyser une variable quantitative</a></li>
+<li class="chapter" data-level="3.3.2" data-path="03-premier_travail.html"><a href="03-premier_travail.html#analyser-une-variable-qualitative"><i class="fa fa-check"></i><b>3.3.2</b> Analyser une variable qualitative</a></li>
+<li class="chapter" data-level="3.3.3" data-path="03-premier_travail.html"><a href="03-premier_travail.html#exercices-1"><i class="fa fa-check"></i><b>3.3.3</b> Exercices</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="04-bivarie.html"><a href="04-bivarie.html"><i class="fa fa-check"></i><b>4</b> Analyse bivariée</a><ul>
+<li class="chapter" data-level="4.1" data-path="04-bivarie.html"><a href="04-bivarie.html#croisement-de-deux-variables-qualitatives"><i class="fa fa-check"></i><b>4.1</b> Croisement de deux variables qualitatives</a><ul>
+<li class="chapter" data-level="4.1.1" data-path="04-bivarie.html"><a href="04-bivarie.html#tableaux-croises"><i class="fa fa-check"></i><b>4.1.1</b> Tableaux croisés</a></li>
+<li class="chapter" data-level="4.1.2" data-path="04-bivarie.html"><a href="04-bivarie.html#test-du-"><i class="fa fa-check"></i><b>4.1.2</b> Test du χ²</a></li>
+<li class="chapter" data-level="4.1.3" data-path="04-bivarie.html"><a href="04-bivarie.html#representation-graphique-1"><i class="fa fa-check"></i><b>4.1.3</b> Représentation graphique</a></li>
+</ul></li>
+<li class="chapter" data-level="4.2" data-path="04-bivarie.html"><a href="04-bivarie.html#croisement-dune-variable-quantitative-et-dune-variable-qualitative"><i class="fa fa-check"></i><b>4.2</b> Croisement d’une variable quantitative et d’une variable qualitative</a><ul>
+<li class="chapter" data-level="4.2.1" data-path="04-bivarie.html"><a href="04-bivarie.html#representation-graphique-2"><i class="fa fa-check"></i><b>4.2.1</b> Représentation graphique</a></li>
+<li class="chapter" data-level="4.2.2" data-path="04-bivarie.html"><a href="04-bivarie.html#calculs-dindicateurs"><i class="fa fa-check"></i><b>4.2.2</b> Calculs d’indicateurs</a></li>
+<li class="chapter" data-level="4.2.3" data-path="04-bivarie.html"><a href="04-bivarie.html#tests-statistiques"><i class="fa fa-check"></i><b>4.2.3</b> Tests statistiques</a></li>
+</ul></li>
+<li class="chapter" data-level="4.3" data-path="04-bivarie.html"><a href="04-bivarie.html#croisement-de-deux-variables-quantitatives"><i class="fa fa-check"></i><b>4.3</b> Croisement de deux variables quantitatives</a><ul>
+<li class="chapter" data-level="4.3.1" data-path="04-bivarie.html"><a href="04-bivarie.html#representation-graphique-3"><i class="fa fa-check"></i><b>4.3.1</b> Représentation graphique</a></li>
+<li class="chapter" data-level="4.3.2" data-path="04-bivarie.html"><a href="04-bivarie.html#calcul-dindicateurs"><i class="fa fa-check"></i><b>4.3.2</b> Calcul d’indicateurs</a></li>
+<li class="chapter" data-level="4.3.3" data-path="04-bivarie.html"><a href="04-bivarie.html#regression-lineaire"><i class="fa fa-check"></i><b>4.3.3</b> Régression linéaire</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="05-organiser.html"><a href="05-organiser.html"><i class="fa fa-check"></i><b>5</b> Organiser ses scripts</a><ul>
+<li class="chapter" data-level="5.1" data-path="05-organiser.html"><a href="05-organiser.html#projets"><i class="fa fa-check"></i><b>5.1</b> Les projets dans RStudio</a></li>
+<li class="chapter" data-level="5.2" data-path="05-organiser.html"><a href="05-organiser.html#creer-des-sections"><i class="fa fa-check"></i><b>5.2</b> Créer des sections</a></li>
+<li class="chapter" data-level="5.3" data-path="05-organiser.html"><a href="05-organiser.html#repartir-son-travail-entre-plusieurs-scripts"><i class="fa fa-check"></i><b>5.3</b> Répartir son travail entre plusieurs scripts</a></li>
+<li class="chapter" data-level="5.4" data-path="05-organiser.html"><a href="05-organiser.html#desactiver-la-sauvegarde-et-le-chargement-automatique-de-lenvironnement-par-rstudio"><i class="fa fa-check"></i><b>5.4</b> Désactiver la sauvegarde et le chargement automatique de l’environnement par RStudio</a></li>
+</ul></li>
+<li class="part"><span><b>II Introduction au <em>tidyverse</em></b></span></li>
+<li class="chapter" data-level="6" data-path="06-tidyverse.html"><a href="06-tidyverse.html"><i class="fa fa-check"></i><b>6</b> Le tidyverse</a><ul>
+<li class="chapter" data-level="6.1" data-path="06-tidyverse.html"><a href="06-tidyverse.html#extensions"><i class="fa fa-check"></i><b>6.1</b> Extensions</a></li>
+<li class="chapter" data-level="6.2" data-path="06-tidyverse.html"><a href="06-tidyverse.html#installation"><i class="fa fa-check"></i><b>6.2</b> Installation</a></li>
+<li class="chapter" data-level="6.3" data-path="06-tidyverse.html"><a href="06-tidyverse.html#tidy-data"><i class="fa fa-check"></i><b>6.3</b> <em>tidy data</em></a></li>
+<li class="chapter" data-level="6.4" data-path="06-tidyverse.html"><a href="06-tidyverse.html#tibbles-et-data-frames"><i class="fa fa-check"></i><b>6.4</b> tibbles et <em>data frames</em></a></li>
+</ul></li>
+<li class="chapter" data-level="7" data-path="07-import.html"><a href="07-import.html"><i class="fa fa-check"></i><b>7</b> Importer et exporter des données</a><ul>
+<li class="chapter" data-level="7.1" data-path="07-import.html"><a href="07-import.html#import-de-fichiers-textes"><i class="fa fa-check"></i><b>7.1</b> Import de fichiers textes</a><ul>
+<li class="chapter" data-level="7.1.1" data-path="07-import.html"><a href="07-import.html#interface-interactive-dimport-de-fichiers"><i class="fa fa-check"></i><b>7.1.1</b> Interface interactive d’import de fichiers</a></li>
+</ul></li>
+<li class="chapter" data-level="7.2" data-path="07-import.html"><a href="07-import.html#import-depuis-un-fichier-excel"><i class="fa fa-check"></i><b>7.2</b> Import depuis un fichier Excel</a></li>
+<li class="chapter" data-level="7.3" data-path="07-import.html"><a href="07-import.html#import-de-fichiers-sas-spss-et-stata"><i class="fa fa-check"></i><b>7.3</b> Import de fichiers SAS, SPSS et Stata</a></li>
+<li class="chapter" data-level="7.4" data-path="07-import.html"><a href="07-import.html#import-de-fichiers-dbase"><i class="fa fa-check"></i><b>7.4</b> Import de fichiers dBase</a></li>
+<li class="chapter" data-level="7.5" data-path="07-import.html"><a href="07-import.html#connexion-a-des-bases-de-donnees"><i class="fa fa-check"></i><b>7.5</b> Connexion à des bases de données</a></li>
+<li class="chapter" data-level="7.6" data-path="07-import.html"><a href="07-import.html#export-de-donnees"><i class="fa fa-check"></i><b>7.6</b> Export de données</a><ul>
+<li class="chapter" data-level="7.6.1" data-path="07-import.html"><a href="07-import.html#export-de-tableaux-de-donnees"><i class="fa fa-check"></i><b>7.6.1</b> Export de tableaux de données</a></li>
+<li class="chapter" data-level="7.6.2" data-path="07-import.html"><a href="07-import.html#sauvegarder-des-objets"><i class="fa fa-check"></i><b>7.6.2</b> Sauvegarder des objets</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="8" data-path="08-ggplot2.html"><a href="08-ggplot2.html"><i class="fa fa-check"></i><b>8</b> Représentations graphiques</a><ul>
+<li class="chapter" data-level="8.1" data-path="08-ggplot2.html"><a href="08-ggplot2.html#preparation"><i class="fa fa-check"></i><b>8.1</b> Préparation</a></li>
+<li class="chapter" data-level="8.2" data-path="08-ggplot2.html"><a href="08-ggplot2.html#initialisation"><i class="fa fa-check"></i><b>8.2</b> Initialisation</a></li>
+<li class="chapter" data-level="8.3" data-path="08-ggplot2.html"><a href="08-ggplot2.html#exemples-de-geom"><i class="fa fa-check"></i><b>8.3</b> Exemples de <code>geom</code></a><ul>
+<li class="chapter" data-level="8.3.1" data-path="08-ggplot2.html"><a href="08-ggplot2.html#geom_boxplot"><i class="fa fa-check"></i><b>8.3.1</b> <code>geom_boxplot</code></a></li>
+<li class="chapter" data-level="8.3.2" data-path="08-ggplot2.html"><a href="08-ggplot2.html#geom_violin"><i class="fa fa-check"></i><b>8.3.2</b> <code>geom_violin</code></a></li>
+<li class="chapter" data-level="8.3.3" data-path="08-ggplot2.html"><a href="08-ggplot2.html#geom_bar"><i class="fa fa-check"></i><b>8.3.3</b> <code>geom_bar</code></a></li>
+<li class="chapter" data-level="8.3.4" data-path="08-ggplot2.html"><a href="08-ggplot2.html#geom_text"><i class="fa fa-check"></i><b>8.3.4</b> <code>geom_text</code></a></li>
+<li class="chapter" data-level="8.3.5" data-path="08-ggplot2.html"><a href="08-ggplot2.html#geom_label"><i class="fa fa-check"></i><b>8.3.5</b> <code>geom_label</code></a></li>
+<li class="chapter" data-level="8.3.6" data-path="08-ggplot2.html"><a href="08-ggplot2.html#geom_density"><i class="fa fa-check"></i><b>8.3.6</b> <code>geom_density</code></a></li>
+<li class="chapter" data-level="8.3.7" data-path="08-ggplot2.html"><a href="08-ggplot2.html#geom_line"><i class="fa fa-check"></i><b>8.3.7</b> <code>geom_line</code></a></li>
+</ul></li>
+<li class="chapter" data-level="8.4" data-path="08-ggplot2.html"><a href="08-ggplot2.html#representation-de-plusieurs-geom"><i class="fa fa-check"></i><b>8.4</b> Représentation de plusieurs <code>geom</code></a><ul>
+<li class="chapter" data-level="8.4.1" data-path="08-ggplot2.html"><a href="08-ggplot2.html#plusieurs-sources-de-donnees"><i class="fa fa-check"></i><b>8.4.1</b> Plusieurs sources de données</a></li>
+</ul></li>
+<li class="chapter" data-level="8.5" data-path="08-ggplot2.html"><a href="08-ggplot2.html#mappages-aesthetics"><i class="fa fa-check"></i><b>8.5</b> Mappages (<em>aesthetics</em>)</a><ul>
+<li class="chapter" data-level="8.5.1" data-path="08-ggplot2.html"><a href="08-ggplot2.html#exemples-de-mappages"><i class="fa fa-check"></i><b>8.5.1</b> Exemples de mappages</a></li>
+<li class="chapter" data-level="8.5.2" data-path="08-ggplot2.html"><a href="08-ggplot2.html#aesthetic-or-not-aesthetic"><i class="fa fa-check"></i><b>8.5.2</b> <em>aesthetic</em> or not <em>aesthetic</em> ?</a></li>
+<li class="chapter" data-level="8.5.3" data-path="08-ggplot2.html"><a href="08-ggplot2.html#geom_bar-et-position"><i class="fa fa-check"></i><b>8.5.3</b> <code>geom_bar</code> et <code>position</code></a></li>
+</ul></li>
+<li class="chapter" data-level="8.6" data-path="08-ggplot2.html"><a href="08-ggplot2.html#facets"><i class="fa fa-check"></i><b>8.6</b> <em>facets</em></a></li>
+<li class="chapter" data-level="8.7" data-path="08-ggplot2.html"><a href="08-ggplot2.html#scales"><i class="fa fa-check"></i><b>8.7</b> <em>scales</em></a><ul>
+<li class="chapter" data-level="8.7.1" data-path="08-ggplot2.html"><a href="08-ggplot2.html#scale_size"><i class="fa fa-check"></i><b>8.7.1</b> <code>scale_size</code></a></li>
+<li class="chapter" data-level="8.7.2" data-path="08-ggplot2.html"><a href="08-ggplot2.html#scale_x_-scale_y_"><i class="fa fa-check"></i><b>8.7.2</b> <code>scale_x_*</code>, <code>scale_y_*</code></a></li>
+<li class="chapter" data-level="8.7.3" data-path="08-ggplot2.html"><a href="08-ggplot2.html#scale_color_-scale_fill_"><i class="fa fa-check"></i><b>8.7.3</b> <code>scale_color_*</code>, <code>scale_fill_*</code></a></li>
+</ul></li>
+<li class="chapter" data-level="8.8" data-path="08-ggplot2.html"><a href="08-ggplot2.html#themes"><i class="fa fa-check"></i><b>8.8</b> Thèmes</a></li>
+<li class="chapter" data-level="8.9" data-path="08-ggplot2.html"><a href="08-ggplot2.html#ressources"><i class="fa fa-check"></i><b>8.9</b> Ressources</a></li>
+<li class="chapter" data-level="8.10" data-path="08-ggplot2.html"><a href="08-ggplot2.html#exercices-2"><i class="fa fa-check"></i><b>8.10</b> Exercices</a></li>
+</ul></li>
+<li class="chapter" data-level="9" data-path="09-dplyr.html"><a href="09-dplyr.html"><i class="fa fa-check"></i><b>9</b> Manipuler les données</a><ul>
+<li class="chapter" data-level="9.1" data-path="09-dplyr.html"><a href="09-dplyr.html#preparation-1"><i class="fa fa-check"></i><b>9.1</b> Préparation</a></li>
+<li class="chapter" data-level="9.2" data-path="09-dplyr.html"><a href="09-dplyr.html#les-verbes-de-dplyr"><i class="fa fa-check"></i><b>9.2</b> Les verbes de <code>dplyr</code></a><ul>
+<li class="chapter" data-level="9.2.1" data-path="09-dplyr.html"><a href="09-dplyr.html#slice"><i class="fa fa-check"></i><b>9.2.1</b> <code>slice</code></a></li>
+<li class="chapter" data-level="9.2.2" data-path="09-dplyr.html"><a href="09-dplyr.html#filter"><i class="fa fa-check"></i><b>9.2.2</b> <code>filter</code></a></li>
+<li class="chapter" data-level="9.2.3" data-path="09-dplyr.html"><a href="09-dplyr.html#select-et-rename"><i class="fa fa-check"></i><b>9.2.3</b> <code>select</code> et <code>rename</code></a></li>
+<li class="chapter" data-level="9.2.4" data-path="09-dplyr.html"><a href="09-dplyr.html#arrange"><i class="fa fa-check"></i><b>9.2.4</b> <code>arrange</code></a></li>
+<li class="chapter" data-level="9.2.5" data-path="09-dplyr.html"><a href="09-dplyr.html#mutate"><i class="fa fa-check"></i><b>9.2.5</b> mutate</a></li>
+</ul></li>
+<li class="chapter" data-level="9.3" data-path="09-dplyr.html"><a href="09-dplyr.html#enchainer-les-operations-avec-le-pipe"><i class="fa fa-check"></i><b>9.3</b> Enchaîner les opérations avec le <em>pipe</em> : <code>%&gt;%</code></a></li>
+<li class="chapter" data-level="9.4" data-path="09-dplyr.html"><a href="09-dplyr.html#operations-groupees"><i class="fa fa-check"></i><b>9.4</b> Opérations groupées</a><ul>
+<li class="chapter" data-level="9.4.1" data-path="09-dplyr.html"><a href="09-dplyr.html#group_by"><i class="fa fa-check"></i><b>9.4.1</b> <code>group_by</code></a></li>
+<li class="chapter" data-level="9.4.2" data-path="09-dplyr.html"><a href="09-dplyr.html#summarise-et-count"><i class="fa fa-check"></i><b>9.4.2</b> <code>summarise</code> et <code>count</code></a></li>
+<li class="chapter" data-level="9.4.3" data-path="09-dplyr.html"><a href="09-dplyr.html#grouper-selon-plusieurs-variables"><i class="fa fa-check"></i><b>9.4.3</b> Grouper selon plusieurs variables</a></li>
+</ul></li>
+<li class="chapter" data-level="9.5" data-path="09-dplyr.html"><a href="09-dplyr.html#autres-fonctions-utiles"><i class="fa fa-check"></i><b>9.5</b> Autres fonctions utiles</a><ul>
+<li class="chapter" data-level="9.5.1" data-path="09-dplyr.html"><a href="09-dplyr.html#sample_n-sample_frac"><i class="fa fa-check"></i><b>9.5.1</b> <code>sample_n</code>, <code>sample_frac</code></a></li>
+<li class="chapter" data-level="9.5.2" data-path="09-dplyr.html"><a href="09-dplyr.html#lead-et-lag"><i class="fa fa-check"></i><b>9.5.2</b> <code>lead</code> et <code>lag</code></a></li>
+<li class="chapter" data-level="9.5.3" data-path="09-dplyr.html"><a href="09-dplyr.html#tally"><i class="fa fa-check"></i><b>9.5.3</b> <code>tally</code></a></li>
+<li class="chapter" data-level="9.5.4" data-path="09-dplyr.html"><a href="09-dplyr.html#distinct"><i class="fa fa-check"></i><b>9.5.4</b> <code>distinct</code></a></li>
+<li class="chapter" data-level="9.5.5" data-path="09-dplyr.html"><a href="09-dplyr.html#do"><i class="fa fa-check"></i><b>9.5.5</b> <code>do</code></a></li>
+</ul></li>
+<li class="chapter" data-level="9.6" data-path="09-dplyr.html"><a href="09-dplyr.html#tables-multiples"><i class="fa fa-check"></i><b>9.6</b> Tables multiples</a><ul>
+<li class="chapter" data-level="9.6.1" data-path="09-dplyr.html"><a href="09-dplyr.html#concatenation-bind_rows-et-bind_cols"><i class="fa fa-check"></i><b>9.6.1</b> Concaténation : <code>bind_rows</code> et <code>bind_cols</code></a></li>
+<li class="chapter" data-level="9.6.2" data-path="09-dplyr.html"><a href="09-dplyr.html#jointures"><i class="fa fa-check"></i><b>9.6.2</b> Jointures</a></li>
+<li class="chapter" data-level="9.6.3" data-path="09-dplyr.html"><a href="09-dplyr.html#types-de-jointures"><i class="fa fa-check"></i><b>9.6.3</b> Types de jointures</a></li>
+</ul></li>
+<li class="chapter" data-level="9.7" data-path="09-dplyr.html"><a href="09-dplyr.html#ressources-1"><i class="fa fa-check"></i><b>9.7</b> Ressources</a></li>
+<li class="chapter" data-level="9.8" data-path="09-dplyr.html"><a href="09-dplyr.html#exercices-3"><i class="fa fa-check"></i><b>9.8</b> Exercices</a><ul>
+<li class="chapter" data-level="9.8.1" data-path="09-dplyr.html"><a href="09-dplyr.html#les-verbes-de-base-de-dplyr"><i class="fa fa-check"></i><b>9.8.1</b> Les verbes de base de <code>dplyr</code></a></li>
+<li class="chapter" data-level="9.8.2" data-path="09-dplyr.html"><a href="09-dplyr.html#enchainer-des-operations"><i class="fa fa-check"></i><b>9.8.2</b> Enchaîner des opérations</a></li>
+<li class="chapter" data-level="9.8.3" data-path="09-dplyr.html"><a href="09-dplyr.html#group_by-et-summarise"><i class="fa fa-check"></i><b>9.8.3</b> <code>group_by</code> et <code>summarise</code></a></li>
+<li class="chapter" data-level="9.8.4" data-path="09-dplyr.html"><a href="09-dplyr.html#jointures-1"><i class="fa fa-check"></i><b>9.8.4</b> Jointures</a></li>
+<li class="chapter" data-level="9.8.5" data-path="09-dplyr.html"><a href="09-dplyr.html#bonus"><i class="fa fa-check"></i><b>9.8.5</b> Bonus</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="10" data-path="10-recodages.html"><a href="10-recodages.html"><i class="fa fa-check"></i><b>10</b> Recoder et calculer des variables</a><ul>
+<li class="chapter" data-level="10.1" data-path="10-recodages.html"><a href="10-recodages.html#rappel-sur-les-variables-et-les-vecteurs"><i class="fa fa-check"></i><b>10.1</b> Rappel sur les variables et les vecteurs</a></li>
+<li class="chapter" data-level="10.2" data-path="10-recodages.html"><a href="10-recodages.html#tests"><i class="fa fa-check"></i><b>10.2</b> Tests et comparaison</a></li>
+<li class="chapter" data-level="10.3" data-path="10-recodages.html"><a href="10-recodages.html#recoder-une-variable-qualitative"><i class="fa fa-check"></i><b>10.3</b> Recoder une variable qualitative</a><ul>
+<li class="chapter" data-level="10.3.1" data-path="10-recodages.html"><a href="10-recodages.html#lextension-forcats"><i class="fa fa-check"></i><b>10.3.1</b> L’extension <code>forcats</code></a></li>
+<li class="chapter" data-level="10.3.2" data-path="10-recodages.html"><a href="10-recodages.html#modifier-les-modalites-dune-variable-qualitative"><i class="fa fa-check"></i><b>10.3.2</b> Modifier les modalités d’une variable qualitative</a></li>
+<li class="chapter" data-level="10.3.3" data-path="10-recodages.html"><a href="10-recodages.html#ordonner-les-modalites-dune-variable-qualitative"><i class="fa fa-check"></i><b>10.3.3</b> Ordonner les modalités d’une variable qualitative</a></li>
+</ul></li>
+<li class="chapter" data-level="10.4" data-path="10-recodages.html"><a href="10-recodages.html#combiner-une-ou-plusieurs-variables"><i class="fa fa-check"></i><b>10.4</b> Combiner une ou plusieurs variables</a><ul>
+<li class="chapter" data-level="10.4.1" data-path="10-recodages.html"><a href="10-recodages.html#if_else"><i class="fa fa-check"></i><b>10.4.1</b> <code>if_else</code></a></li>
+<li class="chapter" data-level="10.4.2" data-path="10-recodages.html"><a href="10-recodages.html#case_when"><i class="fa fa-check"></i><b>10.4.2</b> <code>case_when</code></a></li>
+</ul></li>
+<li class="chapter" data-level="10.5" data-path="10-recodages.html"><a href="10-recodages.html#decouper-une-variable-numerique-en-classes"><i class="fa fa-check"></i><b>10.5</b> Découper une variable numérique en classes</a><ul>
+<li class="chapter" data-level="10.5.1" data-path="10-recodages.html"><a href="10-recodages.html#interface-graphique"><i class="fa fa-check"></i><b>10.5.1</b> Interface graphique</a></li>
+</ul></li>
+<li class="chapter" data-level="10.6" data-path="10-recodages.html"><a href="10-recodages.html#exercices-4"><i class="fa fa-check"></i><b>10.6</b> Exercices</a><ul>
+<li class="chapter" data-level="10.6.1" data-path="10-recodages.html"><a href="10-recodages.html#preparation-2"><i class="fa fa-check"></i><b>10.6.1</b> Préparation</a></li>
+<li class="chapter" data-level="10.6.2" data-path="10-recodages.html"><a href="10-recodages.html#vecteurs-et-tests"><i class="fa fa-check"></i><b>10.6.2</b> Vecteurs et tests</a></li>
+<li class="chapter" data-level="10.6.3" data-path="10-recodages.html"><a href="10-recodages.html#recodages-de-variable-qualitative"><i class="fa fa-check"></i><b>10.6.3</b> Recodages de variable qualitative</a></li>
+<li class="chapter" data-level="10.6.4" data-path="10-recodages.html"><a href="10-recodages.html#combiner-plusieurs-variables"><i class="fa fa-check"></i><b>10.6.4</b> Combiner plusieurs variables</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="11" data-path="11-tidyr.html"><a href="11-tidyr.html"><i class="fa fa-check"></i><b>11</b> Arranger ses données</a><ul>
+<li class="chapter" data-level="11.1" data-path="06-tidyverse.html"><a href="06-tidyverse.html#tidy-data"><i class="fa fa-check"></i><b>11.1</b> <em>Tidy data</em></a></li>
+<li class="chapter" data-level="11.2" data-path="11-tidyr.html"><a href="11-tidyr.html#trois-regles-pour-des-donnees-bien-rangees"><i class="fa fa-check"></i><b>11.2</b> Trois règles pour des données bien rangées</a></li>
+<li class="chapter" data-level="11.3" data-path="11-tidyr.html"><a href="11-tidyr.html#les-verbes-de-tidyr"><i class="fa fa-check"></i><b>11.3</b> Les verbes de <code>tidyr</code></a><ul>
+<li class="chapter" data-level="11.3.1" data-path="11-tidyr.html"><a href="11-tidyr.html#gather-rassembler-des-colonnes"><i class="fa fa-check"></i><b>11.3.1</b> <code>gather</code> : rassembler des colonnes</a></li>
+<li class="chapter" data-level="11.3.2" data-path="11-tidyr.html"><a href="11-tidyr.html#spread-disperser-des-lignes"><i class="fa fa-check"></i><b>11.3.2</b> <code>spread</code> : disperser des lignes</a></li>
+<li class="chapter" data-level="11.3.3" data-path="11-tidyr.html"><a href="11-tidyr.html#separate-separer-une-colonne-en-plusieurs"><i class="fa fa-check"></i><b>11.3.3</b> <code>separate</code> : séparer une colonne en plusieurs</a></li>
+<li class="chapter" data-level="11.3.4" data-path="11-tidyr.html"><a href="11-tidyr.html#unite-regrouper-plusieurs-colonnes-en-une-seule"><i class="fa fa-check"></i><b>11.3.4</b> <code>unite</code> : regrouper plusieurs colonnes en une seule</a></li>
+</ul></li>
+<li class="chapter" data-level="11.4" data-path="11-tidyr.html"><a href="11-tidyr.html#ressources-2"><i class="fa fa-check"></i><b>11.4</b> Ressources</a></li>
+</ul></li>
+<li class="chapter" data-level="12" data-path="12-rmarkdown.html"><a href="12-rmarkdown.html"><i class="fa fa-check"></i><b>12</b> Exporter les résultats</a><ul>
+<li class="chapter" data-level="12.1" data-path="12-rmarkdown.html"><a href="12-rmarkdown.html#creer-un-nouveau-document"><i class="fa fa-check"></i><b>12.1</b> Créer un nouveau document</a></li>
+<li class="chapter" data-level="12.2" data-path="12-rmarkdown.html"><a href="12-rmarkdown.html#elements-dun-document-r-markdown"><i class="fa fa-check"></i><b>12.2</b> Élements d’un document R Markdown</a><ul>
+<li class="chapter" data-level="12.2.1" data-path="12-rmarkdown.html"><a href="12-rmarkdown.html#en-tete-preambule"><i class="fa fa-check"></i><b>12.2.1</b> En-tête (préambule)</a></li>
+<li class="chapter" data-level="12.2.2" data-path="12-rmarkdown.html"><a href="12-rmarkdown.html#texte-du-document"><i class="fa fa-check"></i><b>12.2.2</b> Texte du document</a></li>
+<li class="chapter" data-level="12.2.3" data-path="12-rmarkdown.html"><a href="12-rmarkdown.html#blocs-de-code-r"><i class="fa fa-check"></i><b>12.2.3</b> Blocs de code R</a></li>
+<li class="chapter" data-level="12.2.4" data-path="12-rmarkdown.html"><a href="12-rmarkdown.html#compiler-un-document-knit"><i class="fa fa-check"></i><b>12.2.4</b> Compiler un document (<em>Knit</em>)</a></li>
+</ul></li>
+<li class="chapter" data-level="12.3" data-path="12-rmarkdown.html"><a href="12-rmarkdown.html#personnaliser-le-document-genere"><i class="fa fa-check"></i><b>12.3</b> Personnaliser le document généré</a></li>
+<li class="chapter" data-level="12.4" data-path="12-rmarkdown.html"><a href="12-rmarkdown.html#options-des-blocs-de-code-r"><i class="fa fa-check"></i><b>12.4</b> Options des blocs de code R</a><ul>
+<li class="chapter" data-level="12.4.1" data-path="12-rmarkdown.html"><a href="12-rmarkdown.html#nom-du-bloc"><i class="fa fa-check"></i><b>12.4.1</b> Nom du bloc</a></li>
+<li class="chapter" data-level="12.4.2" data-path="12-rmarkdown.html"><a href="12-rmarkdown.html#options"><i class="fa fa-check"></i><b>12.4.2</b> Options</a></li>
+<li class="chapter" data-level="12.4.3" data-path="12-rmarkdown.html"><a href="12-rmarkdown.html#modifier-les-options"><i class="fa fa-check"></i><b>12.4.3</b> Modifier les options</a></li>
+<li class="chapter" data-level="12.4.4" data-path="12-rmarkdown.html"><a href="12-rmarkdown.html#options-globales"><i class="fa fa-check"></i><b>12.4.4</b> Options globales</a></li>
+</ul></li>
+<li class="chapter" data-level="12.5" data-path="12-rmarkdown.html"><a href="12-rmarkdown.html#rendu-des-tableaux"><i class="fa fa-check"></i><b>12.5</b> Rendu des tableaux</a><ul>
+<li class="chapter" data-level="12.5.1" data-path="12-rmarkdown.html"><a href="12-rmarkdown.html#tableaux-croises-1"><i class="fa fa-check"></i><b>12.5.1</b> Tableaux croisés</a></li>
+<li class="chapter" data-level="12.5.2" data-path="12-rmarkdown.html"><a href="12-rmarkdown.html#tableaux-de-donnees-et-tris-a-plat"><i class="fa fa-check"></i><b>12.5.2</b> Tableaux de données et tris à plat</a></li>
+</ul></li>
+<li class="chapter" data-level="12.6" data-path="12-rmarkdown.html"><a href="12-rmarkdown.html#modeles-de-documents"><i class="fa fa-check"></i><b>12.6</b> Modèles de documents</a><ul>
+<li class="chapter" data-level="12.6.1" data-path="12-rmarkdown.html"><a href="12-rmarkdown.html#slides"><i class="fa fa-check"></i><b>12.6.1</b> Slides</a></li>
+<li class="chapter" data-level="12.6.2" data-path="12-rmarkdown.html"><a href="12-rmarkdown.html#templates"><i class="fa fa-check"></i><b>12.6.2</b> Templates</a></li>
+</ul></li>
+<li class="chapter" data-level="12.7" data-path="12-rmarkdown.html"><a href="12-rmarkdown.html#ressources-3"><i class="fa fa-check"></i><b>12.7</b> Ressources</a></li>
+</ul></li>
+<li class="appendix"><span><b>Annexes</b></span></li>
+<li class="chapter" data-level="A" data-path="13-ressources.html"><a href="13-ressources.html"><i class="fa fa-check"></i><b>A</b> Ressources</a><ul>
+<li class="chapter" data-level="A.1" data-path="13-ressources.html"><a href="13-ressources.html#aide"><i class="fa fa-check"></i><b>A.1</b> Aide</a><ul>
+<li class="chapter" data-level="A.1.1" data-path="13-ressources.html"><a href="13-ressources.html#aide-de-r-et-rstudio"><i class="fa fa-check"></i><b>A.1.1</b> Aide de R et RStudio</a></li>
+<li class="chapter" data-level="A.1.2" data-path="13-ressources.html"><a href="13-ressources.html#aide-en-ligne"><i class="fa fa-check"></i><b>A.1.2</b> Aide en ligne</a></li>
+<li class="chapter" data-level="A.1.3" data-path="13-ressources.html"><a href="13-ressources.html#ou-poser-des-questions"><i class="fa fa-check"></i><b>A.1.3</b> Où poser des questions</a></li>
+</ul></li>
+<li class="chapter" data-level="A.2" data-path="13-ressources.html"><a href="13-ressources.html#ouvrages-blogs-moocs"><i class="fa fa-check"></i><b>A.2</b> Ouvrages, blogs, MOOCs…</a><ul>
+<li class="chapter" data-level="A.2.1" data-path="13-ressources.html"><a href="13-ressources.html#francophones"><i class="fa fa-check"></i><b>A.2.1</b> Francophones</a></li>
+<li class="chapter" data-level="A.2.2" data-path="13-ressources.html"><a href="13-ressources.html#anglophones"><i class="fa fa-check"></i><b>A.2.2</b> Anglophones</a></li>
+</ul></li>
+<li class="chapter" data-level="A.3" data-path="13-ressources.html"><a href="13-ressources.html#extensions-1"><i class="fa fa-check"></i><b>A.3</b> Extensions</a><ul>
+<li class="chapter" data-level="A.3.1" data-path="13-ressources.html"><a href="13-ressources.html#ou-trouver-des-extensions-interessantes"><i class="fa fa-check"></i><b>A.3.1</b> Où trouver des extensions intéressantes ?</a></li>
+<li class="chapter" data-level="A.3.2" data-path="13-ressources.html"><a href="13-ressources.html#lextension-questionr"><i class="fa fa-check"></i><b>A.3.2</b> L’extension <code>questionr</code></a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="B" data-path="14-references.html"><a href="14-references.html"><i class="fa fa-check"></i><b>B</b> References</a></li>
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Introduction à R et au tidyverse</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="ggplot2" class="section level1">
+<h1><span class="header-section-number">Partie 8</span> Représentations graphiques</h1>
+<p><code>ggplot2</code> est une extension du <em>tidyverse</em> qui permet de générer des graphiques avec une syntaxe cohérente et puissante. Elle nécessite l’apprentissage d’un “mini-langage” supplémentaire, mais permet la construction de graphiques complexes de manière efficace.</p>
+<p>Une des particularités de <code>ggplot2</code> est qu’elle part du principe que les données relatives à un graphique sont stockées dans un tableau de données (<em>data frame</em>, <em>tibble</em> ou autre).</p>
+<div id="preparation" class="section level2">
+<h2><span class="header-section-number">8.1</span> Préparation</h2>
+<p><code>ggplot2</code> fait partie du <em>tidyverse</em>, elle est donc chargée automatiquement avec :</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(tidyverse)</code></pre></div>
+<p>On peut également la charger explicitement avec :</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(ggplot2)</code></pre></div>
+<p>Dans ce qui suit on utilisera le jeu de données issu du recensement de la population de 2012 inclus dans l’extension <code>questionr</code> (résultats partiels concernant les communes de plus de 2000 habitants de France métropolitaine). On charge ces données et on en extrait les données de 5 départements (l’utilisation de la fonction <code>filter</code> sera expliquée dans la section <a href="09-dplyr.html#filter">9.2.2</a> de la <a href="09-dplyr.html#dplyr">partie sur <code>dplyr</code></a> :</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(questionr)
+<span class="kw">data</span>(rp2012)
+
+rp &lt;-<span class="st"> </span><span class="kw">filter</span>(rp2012, departement <span class="op">%in%</span><span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;Oise&quot;</span>, <span class="st">&quot;Rhône&quot;</span>, <span class="st">&quot;Hauts-de-Seine&quot;</span>, <span class="st">&quot;Lozère&quot;</span>, <span class="st">&quot;Bouches-du-Rhône&quot;</span>))</code></pre></div>
+</div>
+<div id="initialisation" class="section level2">
+<h2><span class="header-section-number">8.2</span> Initialisation</h2>
+<p>Un graphique <code>ggplot2</code> s’initialise à l’aide de la fonction <code>ggplot()</code>. Les données représentées graphiquement sont toujours issues d’un tableau de données (<em>data frame</em> ou <em>tibble</em>), qu’on passe en argument <code>data</code> à la fonction :</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(<span class="dt">data =</span> rp)
+## Ou, équivalent
+<span class="kw">ggplot</span>(rp)</code></pre></div>
+<p>On a défini la source de données, il faut maintenant ajouter des éléments de représentation graphique. On parle de <code>geom</code>, qui s’ajoute à l’objet graphique de base avec l’opérateur <code>+</code>.</p>
+<p>Un des <code>geom</code> les plus simples est <code>geom_histogram</code>. On peut l’ajouter de la manière suivante :</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(rp) <span class="op">+</span><span class="st"> </span><span class="kw">geom_histogram</span>()</code></pre></div>
+<p>Reste à indiquer quelle donnée nous voulons représenter sous forme d’histogramme. Cela se fait à l’aide d’arguments passés via la fonction <code>aes()</code>. Ici nous avons un paramètre à renseigner, <code>x</code>, qui indique la variable à représenter (sur l’axe des x). Par exemple :</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(rp) <span class="op">+</span><span class="st"> </span><span class="kw">geom_histogram</span>(<span class="kw">aes</span>(<span class="dt">x =</span> cadres))</code></pre></div>
+<pre><code>## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.</code></pre>
+<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-135-1.svg" width="672" /></p>
+<p>Si on veut représenter une autre variable, il suffit de changer la valeur de <code>x</code> :</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(rp) <span class="op">+</span><span class="st"> </span><span class="kw">geom_histogram</span>(<span class="kw">aes</span>(<span class="dt">x =</span> ouvr))</code></pre></div>
+<pre><code>## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.</code></pre>
+<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-136-1.svg" width="672" /></p>
+<p>Inutile d’indiquer le nom du <em>data frame</em> sous la forme <code>rp$ouvr</code>, car <code>ggplot2</code> recherche automatiquement la variable dans le tableau de données indiqué <em>via</em> le paramètre <code>data</code>.</p>
+<p>Certains <code>geom</code> prennent plusieurs paramètres. Ainsi, si on veut représenter un nuage de points avec <code>geom_point</code>, il faut indiquer à la fois la position en <code>x</code> et en <code>y</code> de ces points. On passe alors ces deux arguments à <code>aes()</code> :</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(rp) <span class="op">+</span><span class="st"> </span><span class="kw">geom_point</span>(<span class="kw">aes</span>(<span class="dt">x =</span> dipl_sup, <span class="dt">y =</span> cadres))</code></pre></div>
+<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-137-1.svg" width="672" /></p>
+<p>On peut modifier certains attributs graphiques d’un <code>geom</code> en lui passant des arguments supplémentaires. Par exemple, pour un nuage de points, on peut modifier la couleur des points avec l’argument <code>color</code>, leur taille avec l’argument <code>size</code>, et leur transparence avec l’argument <code>alpha</code> :</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(rp) <span class="op">+</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">geom_point</span>(<span class="kw">aes</span>(<span class="dt">x =</span> dipl_sup, <span class="dt">y =</span> cadres), 
+             <span class="dt">color =</span> <span class="st">&quot;darkgreen&quot;</span>, <span class="dt">size =</span> <span class="dv">3</span>, <span class="dt">alpha =</span> <span class="fl">0.3</span>)</code></pre></div>
+<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-138-1.svg" width="672" /></p>
+</div>
+<div id="exemples-de-geom" class="section level2">
+<h2><span class="header-section-number">8.3</span> Exemples de <code>geom</code></h2>
+<p>Il existe un grand nombre de <code>geom</code>, décrits en détail dans la <a href="http://ggplot2.tidyverse.org/reference/">documentation officielle</a>. Outre <code>geom_histogram</code> et <code>geom_point</code>, on pourra noter les <code>geom</code> suivants.</p>
+<div id="geom_boxplot" class="section level3">
+<h3><span class="header-section-number">8.3.1</span> <code>geom_boxplot</code></h3>
+<p>Permet de représenter des boîtes à moustaches. On lui passe en <code>y</code> la variable dont on veut étudier la répartition, et en <code>x</code> la variable contenant les classes qu’on souhaite comparer.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(rp) <span class="op">+</span><span class="st"> </span><span class="kw">geom_boxplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> departement, <span class="dt">y =</span> maison))</code></pre></div>
+<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-139-1.svg" width="672" /></p>
+<p>À noter que dans ce cas, <code>x</code> doit être une variable qualitative, et <code>y</code> une variable numérique.</p>
+<p>On peut personnaliser la présentation avec différents argument supplémentaires :</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(rp) <span class="op">+</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">geom_boxplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> departement, <span class="dt">y =</span> maison), <span class="dt">fill =</span> <span class="st">&quot;wheat&quot;</span>, <span class="dt">color =</span> <span class="st">&quot;tomato4&quot;</span>)</code></pre></div>
+<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-140-1.svg" width="672" /></p>
+</div>
+<div id="geom_violin" class="section level3">
+<h3><span class="header-section-number">8.3.2</span> <code>geom_violin</code></h3>
+<p>Très semblable à <code>geom_boxplot</code>, mais utilise des graphes en violon.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(rp) <span class="op">+</span><span class="st"> </span><span class="kw">geom_violin</span>(<span class="kw">aes</span>(<span class="dt">x =</span> departement, <span class="dt">y =</span> maison))</code></pre></div>
+<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-141-1.svg" width="672" /></p>
+</div>
+<div id="geom_bar" class="section level3">
+<h3><span class="header-section-number">8.3.3</span> <code>geom_bar</code></h3>
+<p>Graphique en bâtons (<em>barplot</em>). On lui passe en <code>x</code> la variable qualitative dont on souhaite représenter l’effectif de chaque modalité.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(rp) <span class="op">+</span><span class="st"> </span><span class="kw">geom_bar</span>(<span class="kw">aes</span>(<span class="dt">x =</span> departement))</code></pre></div>
+<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-142-1.svg" width="672" /></p>
+<p>Un cas assez fréquent mais un peu plus complexe survient quand on a déjà calculé le tri à plat de la variable à représenter auparavant. Dans ce cas on souhaite que <code>geom_bar</code> représente les effectifs sans les calculer : cela se fait en indiquant un mappage <code>y</code> pour le variable contenant les effectifs, et en ajoutant l’argument <code>stat=&quot;identity&quot;</code>.</p>
+<p>Ainsi si on a les données sous cette forme :</p>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":["departement"],"name":[1],"type":["fctr"],"align":["left"]},{"label":["n"],"name":[2],"type":["int"],"align":["right"]}],"data":[{"1":"Bouches-du-Rhône","2":"98"},{"1":"Hauts-de-Seine","2":"35"},{"1":"Lozère","2":"5"},{"1":"Oise","2":"75"},{"1":"Rhône","2":"119"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+<p>On peut obtenir le graphique souhaité ainsi :</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(df) <span class="op">+</span><span class="st"> </span><span class="kw">geom_bar</span>(<span class="kw">aes</span>(<span class="dt">x =</span> departement, <span class="dt">y =</span> n), <span class="dt">stat=</span><span class="st">&quot;identity&quot;</span>)</code></pre></div>
+<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-144-1.svg" width="672" /></p>
+<p>On peut également modifier l’apparence du graphique avec des argument supplémentaires comme <code>fill</code> ou <code>width</code> :</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(rp) <span class="op">+</span><span class="st"> </span><span class="kw">geom_bar</span>(<span class="kw">aes</span>(<span class="dt">x =</span> departement), <span class="dt">fill =</span> <span class="st">&quot;darkblue&quot;</span>, <span class="dt">width =</span> .<span class="dv">5</span>)</code></pre></div>
+<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-145-1.svg" width="672" /></p>
+</div>
+<div id="geom_text" class="section level3">
+<h3><span class="header-section-number">8.3.4</span> <code>geom_text</code></h3>
+<p>Représente des points identifiés par des labels. On doit lui passer <code>x</code> et <code>y</code> pour la position des points, et <code>label</code> pour le contenu des étiquettes.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(rp) <span class="op">+</span><span class="st"> </span><span class="kw">geom_text</span>(<span class="kw">aes</span>(<span class="dt">x =</span> dipl_sup, <span class="dt">y =</span> cadres, <span class="dt">label =</span> commune))</code></pre></div>
+<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-146-1.svg" width="672" /></p>
+<p>On peut personnaliser l’apparence et la position du texte avec des arguments comme <code>size</code>, <code>color</code>, etc.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(rp) <span class="op">+</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">geom_text</span>(<span class="kw">aes</span>(<span class="dt">x =</span> dipl_sup, <span class="dt">y =</span> cadres, <span class="dt">label =</span> commune), 
+            <span class="dt">color =</span> <span class="st">&quot;darkred&quot;</span>, <span class="dt">size =</span> <span class="dv">2</span>)</code></pre></div>
+<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-147-1.svg" width="672" /></p>
+</div>
+<div id="geom_label" class="section level3">
+<h3><span class="header-section-number">8.3.5</span> <code>geom_label</code></h3>
+<p>Identique à <code>geom_text</code>, mais avec une présentation différente.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(rp) <span class="op">+</span><span class="st"> </span><span class="kw">geom_label</span>(<span class="kw">aes</span>(<span class="dt">x =</span> dipl_sup, <span class="dt">y =</span> cadres, <span class="dt">label =</span> commune))</code></pre></div>
+<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-148-1.svg" width="672" /></p>
+</div>
+<div id="geom_density" class="section level3">
+<h3><span class="header-section-number">8.3.6</span> <code>geom_density</code></h3>
+<p>Estimation de densité d’une variable numérique. Usage similaire à <code>geom_histogram</code>.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(rp) <span class="op">+</span><span class="st"> </span><span class="kw">geom_density</span>(<span class="kw">aes</span>(<span class="dt">x =</span> cadres))</code></pre></div>
+<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-149-1.svg" width="672" /></p>
+</div>
+<div id="geom_line" class="section level3">
+<h3><span class="header-section-number">8.3.7</span> <code>geom_line</code></h3>
+<p>Trace des lignes connectant les différentes observations.</p>
+<p><code>geom_line</code> connecte les observations selon l’ordre de la variable passée en <code>x</code>.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">data</span>(<span class="st">&quot;economics&quot;</span>)
+<span class="kw">ggplot</span>(economics) <span class="op">+</span><span class="st"> </span><span class="kw">geom_line</span>(<span class="kw">aes</span>(<span class="dt">x =</span> date, <span class="dt">y =</span> unemploy))</code></pre></div>
+<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-150-1.svg" width="672" /></p>
+</div>
+</div>
+<div id="representation-de-plusieurs-geom" class="section level2">
+<h2><span class="header-section-number">8.4</span> Représentation de plusieurs <code>geom</code></h2>
+<p>On peut représenter plusieurs <code>geom</code> simultanément sur un même graphique. Par exemple, on peut superposer la position des points au-dessus des boîtes à moustaches :</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(rp) <span class="op">+</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">geom_boxplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> departement, <span class="dt">y =</span> maison)) <span class="op">+</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">geom_point</span>(<span class="kw">aes</span>(<span class="dt">x =</span> departement, <span class="dt">y =</span> maison), <span class="dt">col =</span> <span class="st">&quot;red&quot;</span>, <span class="dt">alpha =</span> <span class="fl">0.2</span>)</code></pre></div>
+<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-151-1.svg" width="672" /></p>
+<p>Pour un résultat un peu plus lisible, on peut remplacer <code>geom_point</code> par <code>geom_jitter</code>, qui disperse les points horizontalement et facilite leur visualisation :</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(rp) <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_boxplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> departement, <span class="dt">y =</span> maison)) <span class="op">+</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">geom_jitter</span>(<span class="kw">aes</span>(<span class="dt">x =</span> departement, <span class="dt">y =</span> maison), <span class="dt">col =</span> <span class="st">&quot;red&quot;</span>, <span class="dt">alpha =</span> <span class="fl">0.2</span>)</code></pre></div>
+<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-152-1.svg" width="672" /></p>
+<p>Dans ce cas, plutôt que de déclarer les mappages dans chaque <code>geom</code>, on peut les déclarer dans l’appel à <code>ggplot()</code>. Ils seront automatiquement “hérités” par les <code>geom</code> ajoutés (sauf s’ils redéfinissent les mêmes mappages) :</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(rp, <span class="kw">aes</span>(<span class="dt">x =</span> departement, <span class="dt">y =</span> maison)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_boxplot</span>() <span class="op">+</span><span class="st"> </span><span class="kw">geom_jitter</span>(<span class="dt">color =</span> <span class="st">&quot;red&quot;</span>, <span class="dt">alpha =</span> <span class="fl">0.2</span>)</code></pre></div>
+<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-153-1.svg" width="672" /></p>
+<p>Autre exemple, on peut vouloir ajouter à un nuage de points une ligne de régression linéaire à l’aide de <code>geom_smooth</code> :</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(rp, <span class="kw">aes</span>(<span class="dt">x =</span> dipl_sup, <span class="dt">y =</span> cadres)) <span class="op">+</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">geom_point</span>(<span class="dt">alpha =</span> <span class="fl">0.2</span>) <span class="op">+</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">geom_smooth</span>(<span class="dt">method =</span> <span class="st">&quot;lm&quot;</span>)</code></pre></div>
+<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-154-1.svg" width="672" /></p>
+<p>Et on peut même superposer une troisième visualisation de la répartition des points dans l’espace avec <code>geom_density2d</code> :</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(rp, <span class="kw">aes</span>(<span class="dt">x =</span> dipl_sup, <span class="dt">y =</span> cadres)) <span class="op">+</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">geom_point</span>(<span class="dt">alpha =</span> <span class="fl">0.2</span>) <span class="op">+</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">geom_density2d</span>(<span class="dt">color =</span> <span class="st">&quot;red&quot;</span>) <span class="op">+</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">geom_smooth</span>(<span class="dt">method =</span> <span class="st">&quot;lm&quot;</span>)</code></pre></div>
+<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-155-1.svg" width="672" /></p>
+<div id="plusieurs-sources-de-donnees" class="section level3">
+<h3><span class="header-section-number">8.4.1</span> Plusieurs sources de données</h3>
+<p>On peut aussi associer à différents <code>geom</code> des sources de données différentes via l’argument <code>data</code>. Supposons qu’on souhaite afficher les noms des communes de plus de 50000 habitants. On peut commencer par créer un tableau de données avec seulement ces communes :</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">com50 &lt;-<span class="st"> </span><span class="kw">filter</span>(rp, pop_tot <span class="op">&gt;=</span><span class="st"> </span><span class="dv">50000</span>)</code></pre></div>
+<p>On fait ensuite le nuage de points comme habituellement, et on ajoute un <code>geom_text</code> dont les données sont tirées de ce nouveau <em>data frame</em> :</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(<span class="dt">data =</span> rp, <span class="kw">aes</span>(<span class="dt">x =</span> dipl_sup, <span class="dt">y =</span> cadres)) <span class="op">+</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">geom_point</span>(<span class="dt">alpha =</span> <span class="fl">0.2</span>) <span class="op">+</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">geom_text</span>(<span class="dt">data =</span> com50, <span class="kw">aes</span>(<span class="dt">label =</span> commune), <span class="dt">color =</span> <span class="st">&quot;red&quot;</span>, <span class="dt">size =</span> <span class="dv">3</span>)</code></pre></div>
+<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-157-1.svg" width="672" /></p>
+</div>
+</div>
+<div id="mappages-aesthetics" class="section level2">
+<h2><span class="header-section-number">8.5</span> Mappages (<em>aesthetics</em>)</h2>
+<p>Un <em>mappage</em> est une mise en relation entre un attribut graphique du <code>geom</code> (position, couleur, taille…) et une variable du tableau de données. Ces mappages sont passés aux différents <code>geom</code> via la fonction <code>aes()</code> (abbréviation d’<em>aesthetic</em>).</p>
+<div id="exemples-de-mappages" class="section level3">
+<h3><span class="header-section-number">8.5.1</span> Exemples de mappages</h3>
+<p>On a déjà vu les mappages <code>x</code> et <code>y</code> pour un nuage de points. Ceux-ci signifient que la position d’un point donné horizontalement (<code>x</code>) et verticalement (<code>y</code>) depend de la valeur des variables passées comme arguments <code>x</code> et <code>y</code> dans <code>aes()</code> :</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(rp) <span class="op">+</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">geom_point</span>(<span class="kw">aes</span>(<span class="dt">x =</span> dipl_sup, <span class="dt">y =</span> cadres))</code></pre></div>
+<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-158-1.svg" width="672" /></p>
+<p>On peut en ajouter d’autres. Par exemple, <code>color</code> permet de faire varier la couleur des points automatiquement en fonction des valeurs d’une troisième variable :</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(rp) <span class="op">+</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">geom_point</span>(<span class="kw">aes</span>(<span class="dt">x =</span> dipl_sup, <span class="dt">y =</span> cadres, <span class="dt">color =</span> departement))</code></pre></div>
+<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-159-1.svg" width="672" /></p>
+<p>On peut faire varier la taille des points avec <code>size</code> :</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(rp) <span class="op">+</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">geom_point</span>(<span class="kw">aes</span>(<span class="dt">x =</span> dipl_sup, <span class="dt">y =</span> cadres, 
+                 <span class="dt">color =</span> departement, <span class="dt">size =</span> pop_tot))</code></pre></div>
+<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-160-1.svg" width="672" /></p>
+<p>Ou même leur transparence avec <code>alpha</code> :</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(rp) <span class="op">+</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">geom_point</span>(<span class="kw">aes</span>(<span class="dt">x =</span> dipl_sup, <span class="dt">y =</span> cadres, 
+                 <span class="dt">color =</span> departement, <span class="dt">size =</span> pop_tot, <span class="dt">alpha =</span> maison))</code></pre></div>
+<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-161-1.svg" width="672" /></p>
+<p>Chaque <code>geom</code> possède sa propre liste de mappages.</p>
+</div>
+<div id="aesthetic-or-not-aesthetic" class="section level3">
+<h3><span class="header-section-number">8.5.2</span> <em>aesthetic</em> or not <em>aesthetic</em> ?</h3>
+<p>Parfois on souhaite changer un attribut sans le relier à une variable. Par exemple, on veut représenter tous les points en rouge. Dans ce cas on utilise toujours l’attribut <code>color</code>, mais comme il ne s’agit pas d’un mappage, on le définit <strong>à l’extérieur</strong> de la fonction <code>aes()</code> :</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(rp) <span class="op">+</span><span class="st"> </span><span class="kw">geom_point</span>(<span class="kw">aes</span>(<span class="dt">x =</span> dipl_sup, <span class="dt">y =</span> cadres), <span class="dt">color =</span> <span class="st">&quot;red&quot;</span>)</code></pre></div>
+<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-162-1.svg" width="672" /></p>
+<p>On peut évidemment mélanger attributs liés à une variable (dans <code>aes()</code>) et attributs constants (à l’extérieur) :</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(rp) <span class="op">+</span><span class="st"> </span><span class="kw">geom_point</span>(<span class="kw">aes</span>(<span class="dt">x =</span> dipl_sup, <span class="dt">y =</span> cadres, <span class="dt">size =</span> pop_tot), <span class="dt">color =</span> <span class="st">&quot;royalblue&quot;</span>, <span class="dt">alpha =</span> <span class="fl">0.3</span>)</code></pre></div>
+<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-163-1.svg" width="672" /></p>
+<p><strong>La règle est donc simple mais très importante :</strong></p>
+<blockquote>
+<p>Si on établit un lien entre les valeurs d’une variable et un attribut graphique, on définit un mappage, et on le déclare dans <code>aes()</code>. Sinon, on modifie l’attribut de la même manière pour tous les points, et on le définit donc en-dehors de la fonction <code>aes()</code>.</p>
+</blockquote>
+</div>
+<div id="geom_bar-et-position" class="section level3">
+<h3><span class="header-section-number">8.5.3</span> <code>geom_bar</code> et <code>position</code></h3>
+<p>Un des mappages possibles de <code>geom_bar</code> est l’attribut <code>fill</code>, qui permet de tracer des barres de couleur différentes selon les modalités d’une variable :</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(rp) <span class="op">+</span><span class="st"> </span><span class="kw">geom_bar</span>(<span class="kw">aes</span>(<span class="dt">x =</span> departement, <span class="dt">fill =</span> pop_cl))</code></pre></div>
+<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-164-1.svg" width="672" /></p>
+<p>L’attribut <code>position</code> de <code>geom_bar</code> permet d’indiquer comment les différentes barres doivent être positionnées. Par défaut on a <code>position = &quot;stack&quot;</code> et elles sont donc “empilées”. Mais on peut préciser <code>position = &quot;dodge&quot;</code> pour les mettre côte à côte :</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(rp) <span class="op">+</span><span class="st"> </span><span class="kw">geom_bar</span>(<span class="kw">aes</span>(<span class="dt">x =</span> departement, <span class="dt">fill =</span> pop_cl), <span class="dt">position =</span> <span class="st">&quot;dodge&quot;</span>)</code></pre></div>
+<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-165-1.svg" width="672" /></p>
+<p>Ou encore <code>position = &quot;fill&quot;</code> pour représenter non plus des effectifs, mais des proportions :</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(rp) <span class="op">+</span><span class="st"> </span><span class="kw">geom_bar</span>(<span class="kw">aes</span>(<span class="dt">x =</span> departement, <span class="dt">fill =</span> pop_cl), <span class="dt">position =</span> <span class="st">&quot;fill&quot;</span>)</code></pre></div>
+<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-166-1.svg" width="672" /></p>
+</div>
+</div>
+<div id="facets" class="section level2">
+<h2><span class="header-section-number">8.6</span> <em>facets</em></h2>
+<p>Le <em>faceting</em> permet d’effectuer plusieurs fois le même graphique selon les valeurs d’une ou plusieurs variables qualitatives.</p>
+<p>Par exemple, on peut représenter l’histogramme du pourcentage de cadres :</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(<span class="dt">data =</span> rp) <span class="op">+</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">geom_histogram</span>(<span class="kw">aes</span>(<span class="dt">x =</span> cadres))</code></pre></div>
+<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-167-1.svg" width="672" /></p>
+<p>Mais on peut vouloir faire un histogramme pour chaque département. On peut dans ce cas utiliser <code>facet_wrap</code> ou <code>facet_grid</code>.</p>
+<p>Les deux fonctions prennent en paramètre une formule. Pour <code>facet_wrap</code>, les différents graphiques sont affichés les uns à côté des autres et répartis automatiquement dans la page. La formule prend la forme <code>~variable</code> :</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(<span class="dt">data =</span> rp) <span class="op">+</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">geom_histogram</span>(<span class="kw">aes</span>(<span class="dt">x =</span> cadres)) <span class="op">+</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">facet_wrap</span>(<span class="op">~</span>departement)</code></pre></div>
+<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-168-1.svg" width="672" /></p>
+<p>Pour <code>facet_grid</code>, les graphiques sont disposés selon une grille. La formule est de la forme <code>variable en ligne ~ variable en colonne</code>. Si on n’a pas de variable dans l’une des deux dimensions, on met un point (<code>.</code>) :</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(<span class="dt">data =</span> rp) <span class="op">+</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">geom_histogram</span>(<span class="kw">aes</span>(<span class="dt">x =</span> cadres)) <span class="op">+</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">facet_grid</span>(.<span class="op">~</span>departement)</code></pre></div>
+<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-169-1.svg" width="672" /></p>
+<p>Enfin, on peut même faire du faceting sur plusieurs variables à la fois :</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(<span class="dt">data =</span> rp) <span class="op">+</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">geom_histogram</span>(<span class="kw">aes</span>(<span class="dt">x =</span> cadres)) <span class="op">+</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">facet_grid</span>(pop_cl<span class="op">~</span>departement)</code></pre></div>
+<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-170-1.svg" width="672" /></p>
+</div>
+<div id="scales" class="section level2">
+<h2><span class="header-section-number">8.7</span> <em>scales</em></h2>
+<p>Dans <code>ggplot2</code>, on appelle <em>scales</em> la manière dont un attribut graphique va être relié aux valeurs d’une variable et dont la légende correspondante va être affichée. Par exemple, pour <code>color</code>, on définira la palette de couleur utilisée. Pour <code>size</code>, les tailles minimales et maximales, etc.</p>
+<p>Pour modifier une <em>scale</em> existante, on ajoute un nouvel élément à notre objet <code>ggplot2</code>, qui prendra la forme <code>scale_&lt;attribut&gt;_&lt;type&gt;</code>.</p>
+<div id="scale_size" class="section level3">
+<h3><span class="header-section-number">8.7.1</span> <code>scale_size</code></h3>
+<p>Par exemple, si on souhaite modifier les tailles minimales et maximales des objets quand on a effectué un mappage de type <code>size</code>, on peut utiliser :</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(rp) <span class="op">+</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">geom_point</span>(<span class="kw">aes</span>(<span class="dt">x =</span> dipl_sup, <span class="dt">y =</span> cadres, <span class="dt">size =</span> pop_tot)) <span class="op">+</span>
+<span class="st">  </span><span class="kw">scale_size</span>(<span class="dt">range =</span> <span class="kw">c</span>(<span class="dv">0</span>,<span class="dv">15</span>))</code></pre></div>
+<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-171-1.svg" width="672" /></p>
+<p>On peut ajouter d’autres paramètres. Le premier argument est toujours le titre donné à la légende :</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(rp) <span class="op">+</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">geom_point</span>(<span class="kw">aes</span>(<span class="dt">x =</span> dipl_sup, <span class="dt">y =</span> cadres, <span class="dt">size =</span> pop_tot)) <span class="op">+</span>
+<span class="st">  </span><span class="kw">scale_size</span>(<span class="st">&quot;Population&quot;</span>, <span class="dt">range =</span> <span class="kw">c</span>(<span class="dv">0</span>,<span class="dv">15</span>))</code></pre></div>
+<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-172-1.svg" width="672" /></p>
+<p>On peut aussi, de la même manière, définir manuellement les éléments de légende représentés :</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(rp) <span class="op">+</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">geom_point</span>(<span class="kw">aes</span>(<span class="dt">x =</span> dipl_sup, <span class="dt">y =</span> cadres, <span class="dt">size =</span> pop_tot)) <span class="op">+</span>
+<span class="st">  </span><span class="kw">scale_size</span>(<span class="st">&quot;Population&quot;</span>, <span class="dt">range =</span> <span class="kw">c</span>(<span class="dv">0</span>,<span class="dv">15</span>), <span class="dt">breaks =</span> <span class="kw">c</span>(<span class="dv">1000</span>,<span class="dv">5000</span>,<span class="dv">10000</span>,<span class="dv">50000</span>))</code></pre></div>
+<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-173-1.svg" width="672" /></p>
+</div>
+<div id="scale_x_-scale_y_" class="section level3">
+<h3><span class="header-section-number">8.7.2</span> <code>scale_x_*</code>, <code>scale_y_*</code></h3>
+<p>Les <em>scales</em> <code>scale_x</code> et <code>scale_y</code> modifient les axes <code>x</code> et <code>y</code> du graphique.</p>
+<p><code>scale_x_continuous</code> et <code>scale_y_continuous</code> s’appliquent lorsque la variable <code>x</code> ou <code>y</code> est numérique (quantitative).</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(rp) <span class="op">+</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">geom_point</span>(<span class="kw">aes</span>(<span class="dt">x =</span> dipl_sup, <span class="dt">y =</span> cadres)) <span class="op">+</span>
+<span class="st">  </span><span class="kw">scale_x_continuous</span>(<span class="st">&quot;Diplômés du supérieur&quot;</span>, <span class="dt">limits =</span> <span class="kw">c</span>(<span class="dv">0</span>,<span class="dv">100</span>))</code></pre></div>
+<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-174-1.svg" width="672" /></p>
+<p>On peut utiliser <code>scale_x_log10</code> et <code>scale_y_log10</code> pour passer un axe à une échelle logarithmique :</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(rp) <span class="op">+</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">geom_point</span>(<span class="kw">aes</span>(<span class="dt">x =</span> dipl_sup, <span class="dt">y =</span> cadres)) <span class="op">+</span>
+<span class="st">  </span><span class="kw">scale_x_log10</span>(<span class="st">&quot;Diplômés du supérieur&quot;</span>)</code></pre></div>
+<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-175-1.svg" width="672" /></p>
+<p><code>scale_x_discrete</code> et <code>scale_y_discrete</code> s’appliquent lorsque l’axe correspond à une variable discrète (qualitative) :</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(rp) <span class="op">+</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">geom_bar</span>(<span class="kw">aes</span>(<span class="dt">x =</span> departement)) <span class="op">+</span>
+<span class="st">  </span><span class="kw">scale_x_discrete</span>(<span class="st">&quot;Département&quot;</span>)</code></pre></div>
+<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-176-1.svg" width="672" /></p>
+<p>L’argument <code>limits</code> permet d’indiquer quelles valeurs sont affichées et dans quel ordre.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(rp) <span class="op">+</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">geom_bar</span>(<span class="kw">aes</span>(<span class="dt">x =</span> departement)) <span class="op">+</span>
+<span class="st">  </span><span class="kw">scale_x_discrete</span>(<span class="st">&quot;Département&quot;</span>, <span class="dt">limits =</span> <span class="kw">c</span>(<span class="st">&quot;Oise&quot;</span>, <span class="st">&quot;Lozère&quot;</span>, <span class="st">&quot;Seine-Saint-Denis&quot;</span>))</code></pre></div>
+<pre><code>## Warning: Removed 252 rows containing non-finite values (stat_count).</code></pre>
+<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-177-1.svg" width="672" /></p>
+</div>
+<div id="scale_color_-scale_fill_" class="section level3">
+<h3><span class="header-section-number">8.7.3</span> <code>scale_color_*</code>, <code>scale_fill_*</code></h3>
+<p>Ces <em>scales</em> permettent entre autre de modifier les palettes de couleur utilisées pour le dessin (<code>color</code>) ou le remplissage (<code>fill</code>).</p>
+<p>Si on colore des points selon une variable numérique :</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(rp) <span class="op">+</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">geom_point</span>(<span class="kw">aes</span>(<span class="dt">x =</span> dipl_sup, <span class="dt">y =</span> cadres, <span class="dt">color =</span> chom))</code></pre></div>
+<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-178-1.svg" width="672" /></p>
+<p>On peut modifier les couleurs utilisées avec <code>scale_*_gradient</code> :</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(rp) <span class="op">+</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">geom_point</span>(<span class="kw">aes</span>(<span class="dt">x =</span> dipl_sup, <span class="dt">y =</span> cadres, <span class="dt">color =</span> chom)) <span class="op">+</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">scale_color_gradient</span>(<span class="st">&quot;Taux de chômage&quot;</span>, <span class="dt">low =</span> <span class="st">&quot;white&quot;</span>, <span class="dt">high =</span> <span class="st">&quot;red&quot;</span>)</code></pre></div>
+<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-179-1.svg" width="672" /></p>
+<p>Si on a fait un mappage avec une variable discrète :</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(rp) <span class="op">+</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">geom_density</span>(<span class="kw">aes</span>(<span class="dt">x =</span> cadres, <span class="dt">fill =</span> departement), <span class="dt">alpha =</span> <span class="fl">0.5</span>)</code></pre></div>
+<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-180-1.svg" width="672" /></p>
+<p>On peut modifier la palette notamment avec <code>scale_*_manual</code>, <code>scale_*_hue</code> :</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(rp) <span class="op">+</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">geom_density</span>(<span class="kw">aes</span>(<span class="dt">x =</span> cadres, <span class="dt">fill =</span> departement), <span class="dt">alpha =</span> <span class="fl">0.5</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">scale_fill_manual</span>(<span class="st">&quot;Département&quot;</span>, <span class="dt">values =</span> <span class="kw">c</span>(<span class="st">&quot;red&quot;</span>, <span class="st">&quot;#FFDD45&quot;</span>, <span class="kw">rgb</span>(<span class="fl">0.1</span>,<span class="fl">0.2</span>,<span class="fl">0.6</span>), <span class="st">&quot;darkgreen&quot;</span>, <span class="st">&quot;grey80&quot;</span>))</code></pre></div>
+<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-181-1.svg" width="672" /></p>
+<p>Les <em>scales</em> <code>scale_*_brewer</code> sont très pratiques, elles récupèrent des palettes depuis le site <a href="http://colorbrewer2.org/">Colorbrewer</a>. Les palettes en question, initialement prévues pour la cartographie, permettent une bonne lisibilité, et peuvent être adaptées pour certains types de daltonisme.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(rp) <span class="op">+</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">geom_density</span>(<span class="kw">aes</span>(<span class="dt">x =</span> cadres, <span class="dt">fill =</span> departement), <span class="dt">alpha =</span> <span class="fl">0.5</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">scale_fill_brewer</span>(<span class="st">&quot;Département&quot;</span>, <span class="dt">palette =</span> <span class="st">&quot;Accent&quot;</span>)</code></pre></div>
+<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-182-1.svg" width="672" /></p>
+<p>Il existe de nombreuses autres méthodes pour définir les couleurs, se reporter à la <a href="http://ggplot2.tidyverse.org/articles/ggplot2-specs.html#colour">documentation officielle</a>.</p>
+</div>
+</div>
+<div id="themes" class="section level2">
+<h2><span class="header-section-number">8.8</span> Thèmes</h2>
+<p>Les thèmes permettent de contrôler l’affichage de tous les éléments du graphique qui ne sont pas reliés aux données : titres, grilles, fonds, etc.</p>
+<p>Il existe un certain nombre de thèmes préexistants :</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(<span class="dt">data =</span> rp) <span class="op">+</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">geom_histogram</span>(<span class="kw">aes</span>(<span class="dt">x =</span> cadres)) <span class="op">+</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">theme_bw</span>()</code></pre></div>
+<pre><code>## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.</code></pre>
+<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-183-1.svg" width="672" /></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(<span class="dt">data =</span> rp) <span class="op">+</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">geom_histogram</span>(<span class="kw">aes</span>(<span class="dt">x =</span> cadres)) <span class="op">+</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">theme_minimal</span>()</code></pre></div>
+<pre><code>## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.</code></pre>
+<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-184-1.svg" width="672" /></p>
+<p>Mais tous les éléments sont personnalisables. Un bon moyen de se familiariser avec tous les arguments est sans doute l’addin RStudio <code>ggThemeAssist</code>. Pour cela il suffit d’installer le package en question, de sélectionner dans son script RStudio le code correspondant à un graphique <code>ggplot2</code>, puis d’aller dans le menu <em>Addins</em> et choisir <em>ggplot Theme Assistant</em>. Une interface graphique s’affiche alors permettant de modifier les différents éléments. Si on clique sur <em>Done</em>, le code dans le script est alors automatiquement mis à jour par le code correspondant aux modifications effectuées.</p>
+<p>Ce qui permet d’obtenir très facilement des résultats extrêmement moches :</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(<span class="dt">data =</span> rp) <span class="op">+</span><span class="st"> </span><span class="kw">geom_histogram</span>(<span class="kw">aes</span>(<span class="dt">x =</span> cadres)) <span class="op">+</span><span class="st"> </span>
+<span class="st"> </span><span class="kw">theme</span>(<span class="dt">panel.grid.major =</span> <span class="kw">element_line</span>(<span class="dt">colour =</span> <span class="st">&quot;dodgerblue&quot;</span>, 
+    <span class="dt">size =</span> <span class="fl">0.5</span>, <span class="dt">linetype =</span> <span class="st">&quot;dotdash&quot;</span>), <span class="dt">axis.title =</span> <span class="kw">element_text</span>(<span class="dt">family =</span> <span class="st">&quot;serif&quot;</span>, 
+    <span class="dt">size =</span> <span class="dv">18</span>, <span class="dt">face =</span> <span class="st">&quot;italic&quot;</span>, <span class="dt">colour =</span> <span class="st">&quot;white&quot;</span>), 
+    <span class="dt">axis.text =</span> <span class="kw">element_text</span>(<span class="dt">family =</span> <span class="st">&quot;serif&quot;</span>, 
+        <span class="dt">size =</span> <span class="dv">15</span>, <span class="dt">face =</span> <span class="st">&quot;bold&quot;</span>), <span class="dt">axis.text.x =</span> <span class="kw">element_text</span>(<span class="dt">family =</span> <span class="st">&quot;mono&quot;</span>), 
+    <span class="dt">plot.title =</span> <span class="kw">element_text</span>(<span class="dt">family =</span> <span class="st">&quot;serif&quot;</span>), 
+    <span class="dt">legend.text =</span> <span class="kw">element_text</span>(<span class="dt">family =</span> <span class="st">&quot;serif&quot;</span>), 
+    <span class="dt">legend.title =</span> <span class="kw">element_text</span>(<span class="dt">family =</span> <span class="st">&quot;serif&quot;</span>), 
+    <span class="dt">panel.background =</span> <span class="kw">element_rect</span>(<span class="dt">fill =</span> <span class="st">&quot;coral&quot;</span>), 
+    <span class="dt">plot.background =</span> <span class="kw">element_rect</span>(<span class="dt">fill =</span> <span class="st">&quot;blueviolet&quot;</span>))</code></pre></div>
+<pre><code>## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.</code></pre>
+<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-185-1.svg" width="672" /></p>
+<p>Enfin, les fonctions <code>ggtitle</code>, <code>xlab</code> et <code>ylab</code> permettent d’ajouter ou de modifier facilement un titre de graphique, ainsi que ceux des étiquettes des axes <code>x</code> et <code>y</code> :</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(<span class="dt">data =</span> rp) <span class="op">+</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">geom_histogram</span>(<span class="kw">aes</span>(<span class="dt">x =</span> cadres)) <span class="op">+</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">ggtitle</span>(<span class="st">&quot;Un bien bel histogramme&quot;</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">xlab</span>(<span class="st">&quot;Pourcentage de cadres&quot;</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">ylab</span>(<span class="st">&quot;Effectif&quot;</span>)</code></pre></div>
+<pre><code>## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.</code></pre>
+<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-186-1.svg" width="672" /></p>
+</div>
+<div id="ressources" class="section level2">
+<h2><span class="header-section-number">8.9</span> Ressources</h2>
+<p>La documentation officielle (en anglais) de <code>ggplot2</code> est très complète et accessible en ligne : <a href="http://ggplot2.tidyverse.org/index.html" class="uri">http://ggplot2.tidyverse.org/index.html</a></p>
+<p>Une “antisèche” (en anglais) résumant en deux pages l’ensemble des fonctions et arguments et disponible soit directement depuis RStudio (menu <em>Help &gt; Chetasheets &gt; Data visualization with ggplot2</em>) ou en ligne à l’adresse suivante : <a href="https://www.rstudio.com/resources/cheatsheets/" class="uri">https://www.rstudio.com/resources/cheatsheets/</a></p>
+<p>La partie <em>Data visualisation</em> de l’ouvrage en ligne <em>R for data science</em>, de Hadley Wickham, est une très bonne introduction à <code>ggplot2</code> : <a href="http://r4ds.had.co.nz/data-visualisation.html" class="uri">http://r4ds.had.co.nz/data-visualisation.html</a></p>
+<p>Enfin, plusieurs ouvrages, toujours en anglais, abordent en détail l’utilisation de <code>ggplot2</code>, en particulier <em>ggplot2: Elegant Graphics for Data Analysis</em>, de Hadley Wickham : <a href="http://www.amazon.fr/ggplot2-Elegant-Graphics-Data-Analysis/dp/0387981403/" class="uri">http://www.amazon.fr/ggplot2-Elegant-Graphics-Data-Analysis/dp/0387981403/</a></p>
+<p>Et le <em>R Graphics Cookbook</em> de Winston Chang : <a href="http://www.amazon.fr/R-Graphics-Cookbook-Winston-Chang/dp/1449316956" class="uri">http://www.amazon.fr/R-Graphics-Cookbook-Winston-Chang/dp/1449316956</a></p>
+<p>Le site associé à ce dernier ouvrage comporte aussi pas mal d’exemples et d’informations intéressantes : <a href="http://www.cookbook-r.com/Graphs/" class="uri">http://www.cookbook-r.com/Graphs/</a></p>
+</div>
+<div id="exercices-2" class="section level2">
+<h2><span class="header-section-number">8.10</span> Exercices</h2>
+<p>Pour les exercices qui suivent, on commence par charger les extensions nécessaires et les données du jeu de données <code>rp2012</code>. On crée alors un objet <code>rp69</code> comprenant uniquement les communes du Rhône et de la Loire.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(tidyverse)
+<span class="kw">library</span>(questionr)
+<span class="kw">data</span>(rp2012)
+
+rp69 &lt;-<span class="st"> </span><span class="kw">filter</span>(rp2012, departement <span class="op">%in%</span><span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;Rhône&quot;</span>, <span class="st">&quot;Loire&quot;</span>))</code></pre></div>
+<p><strong>Exercice 1</strong></p>
+<p>Faire un nuage de points croisant le pourcentage de sans diplôme et le pourcentage d’ouvriers.</p>
+<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-188-1.svg" width="672" /></p>
+<p><strong>Exercice 2</strong></p>
+<p>Faire un nuage de points croisant le pourcentage de sans diplôme et le pourcentage d’ouvriers, avec les points en rouge et de transparence 0.2.</p>
+<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-189-1.svg" width="672" /></p>
+<p><strong>Exercice 3</strong></p>
+<p>Représenter la répartition du pourcentage de propriétaires selon la taille de la commune en 5 classes (variable <code>pop_cl</code>) sous forme de boîtes à moustache.</p>
+<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-190-1.svg" width="672" /></p>
+<p><strong>Exercice 4</strong></p>
+<p>Représenter la répartition du nombre de communes selon la taille de la commune en 5 classes sous forme de diagramme en bâtons.</p>
+<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-191-1.svg" width="672" /></p>
+<p><strong>Exercice 5</strong></p>
+<p>Faire un nuage de points croisant le pourcentage de sans diplôme et le pourcentage d’ouvriers. Faire varier la couleur selon le département et la taille selon la population totale. Mettre une transparence de 0.5.</p>
+<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-192-1.svg" width="672" /></p>
+<p><strong>Exercice 6</strong></p>
+<p>Représenter la répartition du nombre de communes selon la taille de la commune en 5 classes sous forme de diagramme en bâtons, avec une couleur différente selon le département.</p>
+<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-193-1.svg" width="672" /></p>
+<p>Faire varier la valeur du paramètre <code>position</code> pour afficher les barres les unes à côté des autres.</p>
+<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-194-1.svg" width="672" /></p>
+<p>Changer à nouveau la valeur du paramètre <code>position</code> pour représenter les proportions de communes de chaque département pour chaque catégorie de taille.</p>
+<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-195-1.svg" width="672" /></p>
+<p><strong>Exercice 7</strong></p>
+<p>Faire le nuage de points du pourcentage de cadres par le pourcentage de diplômés du supérieur. Représenter ce nuage par deux graphiques différents selon le département en utilisant <code>facet_grid</code>.</p>
+<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-196-1.svg" width="672" /></p>
+<p><strong>Exercice 8</strong></p>
+<p>Faire le nuage de points croisant pourcentage de chômeurs et pourcentage de sans diplôme. Y ajouter les noms des communes correspondant, en rouge et en taille 2.5 :</p>
+<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-197-1.svg" width="672" /></p>
+<p><strong>Exercice 9</strong></p>
+<p>Dans le graphique précédent, n’afficher que le nom des communes ayant plus de 15% de chômage.</p>
+<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-198-1.svg" width="672" /></p>
+
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="07-import.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="09-dplyr.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"google": false,
+"weibo": false,
+"instapper": false,
+"vk": false,
+"all": ["facebook", "google", "twitter", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": null,
+"text": null
+},
+"download": null,
+"toc": {
+"collapse": "section"
+}
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://cdn.bootcss.com/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:" && /^https?:/.test(script.src))
+      script.src  = script.src.replace(/^https?:/, '');
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>
