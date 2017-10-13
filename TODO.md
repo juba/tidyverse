@@ -1,7 +1,8 @@
 # TODO
 
-- Expliquer la syntaxe "formule" pour les boxplots et les régressions
+- Ajouter r-bloggers et #rstats
 - Police des blocs de code
 - Caching dans rmarkdown
 - htmlwidgets
 - Exercices manquants
+- Lien Gtihub

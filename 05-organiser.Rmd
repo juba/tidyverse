@@ -1,6 +1,6 @@
 # Organiser ses scripts
 
-On l'a vu, le script est l'élément central de toute analyse dans R. C'est lui qui contient l'ensemble des actions constitutifs d'une analyse, dans leur ordre d'exécution : chargement des données, recodages, manipulations, calculs et exports de résultats...
+On l'a vu, le script est l'élément central de toute analyse dans R. C'est lui qui contient l'ensemble des opérations constitutives d'une analyse, dans leur ordre d'exécution : chargement des données, recodages, manipulations, analyses, exports de résultats, etc.
 
 Une conséquence est qu'un script peut rapidement devenir très long, et on peut finir par s'y perdre. Il est donc nécessaire d'organiser son travail pour pouvoir se retrouver facilement parmi les différentes étapes d'un projet d'analyse.
 
@@ -9,7 +9,7 @@ Une conséquence est qu'un script peut rapidement devenir très long, et on peut
 
 La notion de projet est une fonctionnalité très pratique de RStudio, qui permet d'organiser son travail et de faciliter l'accès à l'ensemble des fichiers constitutifs d'une analyse (données, scripts, documentation, etc.).
 
-En pratique, un projet est un dossier que vous avez créé où bon vous semble sur votre disque dur, et dans lequel vous regrouperez tous les fichiers en question. Utilisez des projets procure plusieurs avantages :
+En pratique, un projet est un dossier que vous avez créé où bon vous semble sur votre disque dur, et dans lequel vous regrouperez tous les fichiers en question. Utiliser des projets procure plusieurs avantages :
 
 - RStudio lance automatiquement R dans le dossier du projet et facilite ainsi grandement l'accès aux fichiers de données à importer (plus besoin de taper le chemin d'accès complet). De même, si vous déplacez votre dossier sur votre disque, le projet continuera à fonctionner.
 - L'onglet *Files* de la zone en bas à droite de l'interface de RStudio vous permet de naviguer facilement dans les fichiers de votre projet.
@@ -22,16 +22,17 @@ Pour créer un projet, il faut aller dans le menu *File* puis sélectionner *New
 
 Selon que le dossier du projet existe déjà ou pas, on choisira *Existing directory* ou *New directory*. L'étape d'après consiste à créer ou sélectionner le dossier, puis on n'a plus qu'à cliquer sur *Create project*.
 
-À la création du projet, et chaque fois, que vous l'ouvrirez, une nouvelle session R est lancée dans la fenêtre *Console* avec le dossier du projet comme répertoire de travail, et l'onglet *Files* affiche les fichiers contenus dans ce dossier.
+À la création du projet, et chaque fois, que vous l'ouvrirez une nouvelle session R est lancée dans la fenêtre *Console* avec le dossier du projet comme répertoire de travail, et l'onglet *Files* affiche les fichiers contenus dans ce dossier.
 
 Une fois le projet créé, son nom est affiché dans un petit menu déroulant en haut à droite de l'interface de RStudio (menu qui permet de passer facilement d'un projet à un autre). 
 
 ![Menu projets](resources/screenshots/rstudio_project_menu.png)
 
+```{block type='rmdnote'}
 Si vous ne retrouvez pas le nom du projet dans ce menu, vous pouvez l'ouvrir en sélectionnant *File* puis *Open Project...* et en allant sélectionner le fichier `.Rproj` qui se trouve dans le dossier du projet à ouvrir.
+```
 
-
-## Créer des sections
+## Créer des sections dans un script
 
 Lorsqu'un script est long, RStudio permet de créer des "sections" facilitant la navigation.
 
@@ -41,9 +42,7 @@ Pour créer une section, il suffit de faire suivre une ligne de commentaires par
 ## Titre de la section -------------------------------------
 ```
 
-Le nombre de tirets n'a pas d'importance, il doit juste y'en avoir plus de quatre.
-
-À partir de là, RStudio affiche dans la marge de gauche du script un petit triangle noir qui permet de replier ou déplier le contenu de la section :
+Le nombre de tirets n'a pas d'importance, il doit juste y'en avoir plus de quatre. RStudio affiche alors dans la marge de gauche du script un petit triangle noir qui permet de replier ou déplier le contenu de la section :
 
 ![Section de script dépliée](resources/screenshots/rstudio_section_depliee.png)
 
@@ -57,11 +56,11 @@ De plus, en cliquant sur l'icône *Show document outline* (la plus à droite de 
 
 ## Répartir son travail entre plusieurs scripts
 
-Si le script devient très long, les sections peuvent ne plus être suffisantes. De plus, il est souvent intéressant d'isoler certaines parties d'un script, par exemple pour pouvoir la mutualiser. On peut alors répartir les étapes d'une analyse entre plusieurs scripts.
+Si le script devient très long, les sections peuvent ne plus être suffisantes. De plus, il est souvent intéressant d'isoler certaines parties d'un script, par exemple pour pouvoir les mutualiser. On peut alors répartir les étapes d'une analyse entre plusieurs scripts.
 
-Un exemple courant concerne les recodages et la manipulation des données. Il est fréquent, au cours d'une analyse, de calculer de nouvelles variables, recoder des variables qualitatives existantes, etc. Il peut alors être intéressant de regrouper tous ces recodages dans un script à part (nommé, par exemple, `recodages.R`). Ce contient alors l'ensemble des recodages "validés", ceux qu'on a testé et qu'on sait vouloir conserver.
+Un exemple courant concerne les recodages et la manipulation des données. Il est fréquent, au cours d'une analyse, de calculer de nouvelles variables, recoder des variables qualitatives existantes, etc. Il peut alors être intéressant de regrouper tous ces recodages dans un script à part (nommé, par exemple, `recodages.R`). Ce fichier contient alors l'ensemble des recodages "validés", ceux qu'on a testé et qu'on sait vouloir conserver.
 
-Pour exécuter ces recodages, on peut évidemment ouvrir le script `recodages.R` dans RStudio et lancer l'ensemble du code qu'il contient. Mais il est beaucoup plus pratique d'utiliser la fonction `source` : celle-ci prend en paramètre un nom de fichier `.R`, et quand on l'exécute elle va exécuter l'ensemble du code contenu dans ce fichier.
+Pour exécuter ces recodages, on peut évidemment ouvrir le script `recodages.R` dans RStudio et lancer l'ensemble du code qu'il contient. Mais une méthode plus pratique est d'utiliser la fonction `source` : celle-ci prend en paramètre un nom de fichier `.R`, et quand on l'exécute elle va exécuter l'ensemble du code contenu dans ce fichier.
 
 Ainsi, un début de script `analyse.R` pourra ressembler à ceci :
 
@@ -70,7 +69,6 @@ Ainsi, un début de script `analyse.R` pourra ressembler à ceci :
 
 ## Chargement des extensions et des données --------------------------
 
-library(tidyverse)
 library(questionr)
 
 data(hdv2003)
@@ -98,7 +96,6 @@ L'autre avantage est qu'on peut répartir nos analyses entre différents scripts
 
 ## Chargement des extensions et des données --------------------------
 
-library(tidyverse)
 library(questionr)
 
 data(hdv2003)
@@ -115,18 +112,23 @@ freq(hdv2003$qualif)
 
 On peut évidemment répartir les recodages entre plusieurs fichiers et faire appel à autant de `source` que l'on souhaite.
 
-Cette organisation recalcule l'ensemble des recodages à chaque début de script. C'est intéressant et pratique pour des données de taille raisonnable, mais pour des fichiers plus volumineux les calculs peuvent être trop longs. Dans ce cas il est préférable de créer des scripts dédiés qui chargent les données source, effectuent calculs et recodages, et enregistrent les données résultantes dans un fichier de données (voir la section \@ref(import) sur l'import/export de données). Et c'est ce fichier résultat qui sera chargé par les scripts d'analyse.
+```{block type='rmdnote'}
+Cette organisation recalcule l'ensemble des recodages à chaque début de script. C'est intéressant et pratique pour des données de taille raisonnable, mais pour des fichiers plus volumineux les calculs peuvent être trop longs. Dans ce cas il est préférable de créer des scripts dédiés qui chargent les données source, effectuent calculs et recodages, et enregistrent les données résultantes dans un fichier de données (voir le chapitre sur l'import/export de données). Et c'est ce fichier résultat qui sera chargé par les scripts d'analyse.
 
 Enfin, pour des projets un peu complexes, on pourra se référer à l'extension [ProjectTemplate](http://projecttemplate.net/), qui propose une architecture de dossiers spécifique et des outils associés.
+```
 
 
-## Désactiver la sauvegarde et le chargement automatique de l'environnement par RStudio
 
-Vous avez sans doute remarqué qu'au moment de quitter RStudio, une boîte de dialogue semble à ceci s'affiche parfois :
+## Désactiver la sauvegarde de l'espace de travail
+
+Vous avez sans doute remarqué qu'au moment de quitter RStudio, une boîte de dialogue semblable à celle-ci s'affiche parfois :
 
 ![Dialogue d'enregistrement de l'espace de travail](resources/screenshots/rstudio_save_workspace_dialog.png)
 
-Et il est bien difficile de comprendre de quoi cela parle. Il s'agit en fait d'une fonctionnalité de R lui-même qui propose d'enregistrer notre espace de travail (*workspace*), c'est-à-dire l'ensemble des objets qui existent actuellement dans notre environnement, dans un fichier nommé `.RData`. La prochaine fois que R est lancé dans le même dossier (par exemple à la réouverture du projet), s'il trouve un fichier `.RData` il va le lire automatiquement et restaurer l'ensemble des objets dans l'état où ils étaient.
+Et il est bien difficile de comprendre de quoi cela parle. 
+
+Il s'agit en fait d'une fonctionnalité de R lui-même qui propose d'enregistrer notre espace de travail (*workspace*), c'est-à-dire l'ensemble des objets qui existent actuellement dans notre environnement, dans un fichier nommé `.RData`. La prochaine fois que R est lancé dans le même dossier (par exemple à la réouverture du projet), s'il trouve un fichier `.RData` il va le lire automatiquement et restaurer l'ensemble des objets dans l'état où ils étaient.
 
 Ceci peut sembler pratique, mais c'est en fait une mauvaise idée, pour deux raisons :
 
