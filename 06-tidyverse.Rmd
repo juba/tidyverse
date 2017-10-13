@@ -27,7 +27,7 @@ Un des objectifs de ces extensions est de fournir des fonctions avec une syntaxe
 
 ## Installation
 
-`tidyverse` est également le nom d'une extension qu'on peut installer de manière classique, soit via le bouton *Install* de l'onglet *Packages* de RStudio, soit en utilisant la comande :
+`tidyverse` est également le nom d'une extension qu'on peut installer de manière classique, soit via le bouton *Install* de l'onglet *Packages* de RStudio, soit en utilisant la commande :
 
 ```{r eval=FALSE}
 install.packages("tidyverse")
@@ -55,11 +55,11 @@ Il existe d'autres extensions qui font partie du *tidyverse* mais qui doivent ê
 La liste complète des extensions se trouve sur [le site officiel du *tidyverse*](https://www.tidyverse.org/packages/).
 
 
-## *tidy data* {#tidy-data}
+## tidy data {#tidy-data}
 
 Le *tidyverse* est en partie fondé sur le concept de *tidy data*, développé à l'origine par Hadley Wickham dans un [article de 2014](https://www.jstatsoft.org/article/view/v059i10) du *Journal of Statistical Software*.
 
-Il s'agit d'un modèle d'organisation des données qui vise à faciliter le travail souvent long et fastidieux de nettoyage et de préparation des données préalable à la mise en oeuvre de méthodes d'analyse.
+Il s'agit d'un modèle d'organisation des données qui vise à faciliter le travail souvent long et fastidieux de nettoyage et de préparation préalable à la mise en oeuvre de méthodes d'analyse.
 
 Les principes d'un jeu de données *tidy* sont les suivants :
 
@@ -67,25 +67,25 @@ Les principes d'un jeu de données *tidy* sont les suivants :
 2. chaque observation est une ligne
 3. chaque type d'observation est dans une table différente
 
-On verra plus précisément dans la section \@ref(tidyr) comment définir et rendre des données *tidy* avec notamment l'extension `tidyr`.
+On verra plus précisément dans la section \@ref(tidyr) comment définir et rendre des données *tidy* avec l'extension `tidyr`.
 
 Les extensions du tidyverse, notamment `ggplot2` et `dplyr`, sont prévues pour fonctionner avec des données *tidy*. 
 
 
 
-## tibbles et *data frames*
+## tibbles {#tibbles}
 
 Une autre particularité du *tidyverse* est que ces extensions travaillent avec des tableaux de données au format *tibble*, qui est une évolution plus moderne du classique *data frame* du R de base. Ce format est fourni est géré par l'extension du même nom (`tibble`), qui fait partie du coeur du *tidyverse*. La plupart des fonctions des extensions du *tidyverse* accepetent des *data frames* en entrée, mais retournent un objet de classe `tibble`.
 
 Contrairement aux *data frames*, les *tibbles* :
 
-- n'ont pas de *rownames*
-- autorisent des noms de colonnes invalides pour les *data frames* (espaces, caractères spéciaux, nombres...) ^[Quand on veut utiliser des noms de ce type, on doit les entourer avec des *backticks* (```)]
-- s'affichent plus intelligemment que les *data frames* : seules les premières lignes sont affichées, ainsi que quelques informations utiles
+- n'ont pas de noms de lignes (*rownames*)
+- autorisent des noms de colonnes invalides pour les *data frames* (espaces, caractères spéciaux, nombres...) ^[Quand on veut utiliser des noms de ce type, on doit les entourer avec des *backticks* (`)]
+- s'affichent plus intelligemment que les *data frames* : seules les premières lignes sont affichées, ainsi que quelques informations supplémentaires utiles (dimensions, types des colonnes...)
 - ne font pas de *partial matching* sur les noms de colonnes ^[Dans R de base, si une table `d` contient une colonne `qualif`, `d$qual` retournera cette colonne.]
 - affichent un avertissement si on essaie d'accéder à une colonne qui n'existe pas
 
-Pour autant, les tibbles restent compatibles avec les *data frames*. On peut facilement convertir un *data frame* en tibble avec `as_tibble` :
+Pour autant, les tibbles restent compatibles avec les *data frames*. On peut ainsi facilement convertir un *data frame* en tibble avec `as_tibble` :
 
 ```{r paged.print=FALSE, warning=FALSE}
 as_tibble(mtcars)
@@ -94,9 +94,7 @@ as_tibble(mtcars)
 Si le *data frame* d'origine a des *rownames*, on peut d'abord les convertir en colonnes avec `rownames_to_columns` :
 
 ```{r warning=FALSE, paged.print=FALSE}
-d <- mtcars
-d <- rownames_to_column(d)
-d <- as_tibble(d)
+d <- as_tibble(rownames_to_column(mtcars))
 d
 ```
 
@@ -112,5 +110,8 @@ Là encore, on peut convertir la colonne `rowname` en "vrais" *rownames* avec `c
 column_to_rownames(as.data.frame(d))
 ```
 
+```{block type='rmdnote'}
+Les deux fonctions `column_to_rownames` et `rownames_to_column` acceptent un argument supplémentaire `var` qui permet d'indiquer un nom de colonne autre que le nom `rowname` utilisé par défaut pour créer ou identifier la colonne contenant les noms de lignes.
+```
 
 
