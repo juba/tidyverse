@@ -75,7 +75,13 @@ En complément du test du χ², on peut aussi regarder les *résidus* de ce test
 chisq.residuals(tab)
 ```
 
-L'interprétation des résidus est la suivante : si la valeur du résidu pour une case est inférieure à -2, alors il y a une sous-représentation de cette case dans le tableau : les effectifs sont significativement plus faibles que ceux attendus sous l'hypothèse d'indépendance. À l'inverse, si le résidu est supérieur à 2, il y a sur-représentatation de cette case. Si le résidu est compris entre -2 et 2, il n'y a pas d'écart à l'indépendance significatif.
+L'interprétation des résidus est la suivante :
+
+- si la valeur du résidu pour une case est inférieure à -2, alors il y a une sous-représentation de cette case dans le tableau : les effectifs sont significativement plus faibles que ceux attendus sous l'hypothèse d'indépendance
+- à l'inverse, si le résidu est supérieur à 2, il y a sur-représentatation de cette case
+- si le résidu est compris entre -2 et 2, il n'y a pas d'écart à l'indépendance significatif
+
+Les résidus peuvent être une aide utile à l'interprétation, notamment pour des tableaux de grande dimension.
 
 ### Représentation graphique
 
@@ -113,11 +119,25 @@ d'indépendance.
 
 Croiser une variable quantitative et une variable qualitative, c'est essayer de voir si les valeurs de la variable quantitative se répartissent différemment selon la catégorie d'appartenance de la variable qualitative.
 
-Pour cela, l'idéal est de commencer par une représentation graphique de type "boîte à moustache" à l'aide de la fonction `boxplot`. Par exemple, si on veut visualiser la répartition des âges selon la pratique ou non d'un sport, on va utiliser la syntaxe suivante (le `~` peut se lire comme "en fonction de") :
+Pour cela, l'idéal est de commencer par une représentation graphique de type "boîte à moustache" à l'aide de la fonction `boxplot`. Par exemple, si on veut visualiser la répartition des âges selon la pratique ou non d'un sport, on va utiliser la syntaxe suivante :
 
-```{r}
+```{r eval=FALSE}
 boxplot(d$age ~ d$sport)
 ```
+
+```{block type='rmdnote'}
+Cette syntaxe de `boxplot` utilise une nouvelle notation de type "formule". Celle-ci est utilisée notamment pour la spécification des modèles de régression. Ici le `~` peut se lire comme "en fonction de" : on veut représenter le boxplot de l'âge en fonction du sport.
+```
+
+Ce qui va nous donner le résultat suivant :
+
+```{r echo=FALSE}
+boxplot(d$age ~ d$sport)
+```
+
+
+
+
 
 ```{block type='rmdnote'}
 L'interprétation d'un boxplot est la suivante : Les bords inférieurs et supérieurs du carré central représentent le premier et le troisième quartile de la variable représentée sur l'axe vertical. On a donc 50% de nos observations dans cet intervalle. Le trait horizontal dans le carré représente la médiane. Enfin, des "moustaches" s'étendent de chaque côté du carré, jusqu'aux valeurs minimales et maximales, avec une exception : si des valeurs sont éloignées du carré de plus de 1,5 fois l'écart interquartile (la hauteur du carré), alors on les représente sous forme de points (symbolisant des valeurs considérées comme "extrêmes").
@@ -388,6 +408,15 @@ Une régression linéaire simple se fait à l'aide de la fonction `lm` :
 lm(rp2012$cadres ~ rp2012$dipl_sup)
 ```
 
+```{block type='rmdnote'}
+On retrouve avec `lm` la syntaxe "formule" déjà rencontrée avec `boxplot`. Elle permet ici de spécifier des modèles de régression : la variable dépendante se place à gauche du `~`, et la variable indépendante à droite. Si on souhaite faire une régression multiple avec plusieurs variables indépendantes, on aura une formule du type `dep ~ indep1 + indep2`. Il est également possible de spécifier des termes plus complexes, des interactions, etc.
+```
+
+`lm` nous renvoit par défaut les coefficients de la droite de régression :
+
+- l'ordonnée à l'origine `(Intercept)` vaut 0.92
+- le coefficient associé à `dipl_sup` vaut 1.08
+
 Pour des résultats plus détaillés, on peut stocker le résultat de la régression dans un objet et utiliser la fonction `summary` :
 
 ```{r}
@@ -395,17 +424,71 @@ reg <- lm(rp2012$cadres ~ rp2012$dipl_sup)
 summary(reg)
 ```
 
+Ces résultats montrent notamment que les coefficients sont significativement
+différents de 0. La part de cadres augmente donc bien avec celle de diplômés du supérieur. 
 
-Les résultats montrent notamment que les coefficients sont significativement
-différents de 0. La part de cadres augmente donc avec celle de
-diplômés du supérieur. 
-
-On peut représenter la droite de régression sur notre nuage de points à l'aide de la fonction `abline` :
+On peut enfin représenter la droite de régression sur notre nuage de points à l'aide de la fonction `abline` :
 
 ```{r}
 plot(rp2012$dipl_sup, rp2012$cadres)
 abline(reg, col="red")
 ```
+
+
+## Exercices
+
+**Exercice 1**
+
+Dans le jeu de données `hdv2003`, faire le tableau croisé entre la catégorie socio-professionnelle (variable `qualif`) et le fait de croire ou non en l'existence des classes sociales (variable `clso`). Identifier la variable indépendante et la variable dépendante, et calculer les pourcentages ligne ou colonne. Interpréter le résultat.
+
+```{r include=FALSE, eval=FALSE}
+library(questionr)
+data(hdv2003)
+tab <- table(hdv2003$qualif, hdv2003$clso)
+tab
+lprop(tab)
+chisq.test(tab)
+mosaicplot(tab, shade=TRUE)
+```
+
+
+Faire un test du χ². Peut-on rejeter l'hypothèse d'indépendance ?
+
+Représenter ce tableau croisé sous la forme d'un `mosaicplot` en colorant les cases selon les résidus du test du χ².
+
+**Exercice 2**
+
+Toujours sur le jeu de données `hdv2003`, faire le boxplot qui croise le nombre d'heure passé devant la télévision (variable `heures.tv`) avec le statut d'occupation (variable `occup`).
+
+Calculer la durée moyenne en fonction du statut d'occupation à l'aide de `tapply`.
+
+
+```{r include=FALSE, eval=FALSE}
+library(questionr)
+data(hdv2003)
+boxplot(hdv2003$heures.tv ~ hdv2003$occup)
+tapply(hdv2003$heures.tv, hdv2003$occup, mean)
+sort(tapply(hdv2003$heures.tv, hdv2003$occup, mean, na.rm = TRUE))
+```
+
+**Exercice 3**
+
+Sur le jeu de données `rp2012`, représenter le nuage de points croisant le pourcentage de personnes sans diplôme (variable `dipl_aucun`) et le pourcentage de propriétaires (variable `proprio`).
+
+Calculer le coefficient de corrélation linéaire correspondant.
+
+
+
+```{r include=FALSE, eval=FALSE}
+library(questionr)
+data(rp2012)
+plot(rp2012$dipl_aucun, rp2012$proprio)
+cor(rp2012$dipl_aucun, rp2012$proprio)
+```
+
+
+
+
 
 
 
