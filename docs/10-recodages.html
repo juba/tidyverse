@@ -25,7 +25,7 @@
 <meta name="author" content="Julien Barnier">
 
 
-<meta name="date" content="2017-10-13">
+<meta name="date" content="2017-10-14">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -47,7 +47,7 @@
 
 
 
-<script src="libs/htmlwidgets-0.9/htmlwidgets.js"></script>
+<script src="libs/htmlwidgets-0.8/htmlwidgets.js"></script>
 <link href="libs/leaflet-0.7.7/leaflet.css" rel="stylesheet" />
 <script src="libs/leaflet-0.7.7/leaflet.js"></script>
 <link href="libs/leafletfix-1.0.0/leafletfix.css" rel="stylesheet" />
@@ -245,7 +245,7 @@ code > span. { color: #1f1c1b; } /* Normal */
 <li class="chapter" data-level="9.2.2" data-path="09-dplyr.html"><a href="09-dplyr.html#filter"><i class="fa fa-check"></i><b>9.2.2</b> <code>filter</code></a></li>
 <li class="chapter" data-level="9.2.3" data-path="09-dplyr.html"><a href="09-dplyr.html#select-et-rename"><i class="fa fa-check"></i><b>9.2.3</b> <code>select</code> et <code>rename</code></a></li>
 <li class="chapter" data-level="9.2.4" data-path="09-dplyr.html"><a href="09-dplyr.html#arrange"><i class="fa fa-check"></i><b>9.2.4</b> <code>arrange</code></a></li>
-<li class="chapter" data-level="9.2.5" data-path="09-dplyr.html"><a href="09-dplyr.html#mutate"><i class="fa fa-check"></i><b>9.2.5</b> mutate</a></li>
+<li class="chapter" data-level="9.2.5" data-path="09-dplyr.html"><a href="09-dplyr.html#mutate"><i class="fa fa-check"></i><b>9.2.5</b> <code>mutate</code></a></li>
 </ul></li>
 <li class="chapter" data-level="9.3" data-path="09-dplyr.html"><a href="09-dplyr.html#enchainer-les-operations-avec-le-pipe"><i class="fa fa-check"></i><b>9.3</b> Enchaîner les opérations avec le <em>pipe</em> : <code>%&gt;%</code></a></li>
 <li class="chapter" data-level="9.4" data-path="09-dplyr.html"><a href="09-dplyr.html#operations-groupees"><i class="fa fa-check"></i><b>9.4</b> Opérations groupées</a><ul>
@@ -258,7 +258,6 @@ code > span. { color: #1f1c1b; } /* Normal */
 <li class="chapter" data-level="9.5.2" data-path="09-dplyr.html"><a href="09-dplyr.html#lead-et-lag"><i class="fa fa-check"></i><b>9.5.2</b> <code>lead</code> et <code>lag</code></a></li>
 <li class="chapter" data-level="9.5.3" data-path="09-dplyr.html"><a href="09-dplyr.html#tally"><i class="fa fa-check"></i><b>9.5.3</b> <code>tally</code></a></li>
 <li class="chapter" data-level="9.5.4" data-path="09-dplyr.html"><a href="09-dplyr.html#distinct"><i class="fa fa-check"></i><b>9.5.4</b> <code>distinct</code></a></li>
-<li class="chapter" data-level="9.5.5" data-path="09-dplyr.html"><a href="09-dplyr.html#do"><i class="fa fa-check"></i><b>9.5.5</b> <code>do</code></a></li>
 </ul></li>
 <li class="chapter" data-level="9.6" data-path="09-dplyr.html"><a href="09-dplyr.html#tables-multiples"><i class="fa fa-check"></i><b>9.6</b> Tables multiples</a><ul>
 <li class="chapter" data-level="9.6.1" data-path="09-dplyr.html"><a href="09-dplyr.html#concatenation-bind_rows-et-bind_cols"><i class="fa fa-check"></i><b>9.6.1</b> Concaténation : <code>bind_rows</code> et <code>bind_cols</code></a></li>
@@ -380,7 +379,7 @@ nombres &lt;-<span class="st"> </span><span class="dv">1</span><span class="op">
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">hdv2003<span class="op">$</span>qualif</code></pre></div>
 <p>Quand on utilise <code>dplyr</code>, on a vu qu’on peut utiliser <code>select</code><a href="#fn14" class="footnoteRef" id="fnref14"><sup>14</sup></a> :</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">hdv2003 <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(qualif)</code></pre></div>
-<p>On peut facilement créer de nouvelles variables (ou colonnes) dans un tableau de données en utilisant le <code>$</code> :</p>
+<p>On peut facilement créer de nouvelles variables (ou colonnes) dans un tableau de données en utilisant également le <code>$</code> :</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">hdv2003<span class="op">$</span>minutes.tv &lt;-<span class="st"> </span>hdv2003<span class="op">$</span>heures.tv <span class="op">*</span><span class="st"> </span><span class="dv">60</span></code></pre></div>
 <p>Ou à l’aide de la fonction <code>mutate</code> de <code>dplyr</code> :</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">hdv2003 &lt;-<span class="st"> </span>hdv2003 <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">mutate</span>(<span class="dt">minutes.tv =</span> heures.tv <span class="op">*</span><span class="st"> </span><span class="dv">60</span>)</code></pre></div>
@@ -412,11 +411,11 @@ vec[<span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">3</span
 <div id="tests" class="section level2">
 <h2><span class="header-section-number">10.2</span> Tests et comparaison</h2>
 <p>Un test est une opération logique de comparaison qui renvoit vrai (<code>TRUE</code>) ou faux (<code>FALSE</code>) pour chacun des éléments d’un vecteur.</p>
-<p>Parmi les opérateurs tests disponibles, on trouve notamment :</p>
+<p>Parmi les opérateurs de comparaison disponibles, on trouve notamment :</p>
 <ul>
 <li><code>==</code> qui teste l’égalité</li>
 <li><code>!=</code> qui teste la différence</li>
-<li><code>&gt;</code>, <code>&lt;</code>, <code>&lt;=</code>, <code>&gt;=</code> qui testent la supériorité ou l’infériorité.</li>
+<li><code>&gt;</code>, <code>&lt;</code>, <code>&lt;=</code>, <code>&gt;=</code> qui testent la supériorité ou l’infériorité</li>
 <li><code>%in%</code> qui teste l’appartenance à un ensemble de valeurs</li>
 </ul>
 <p>Exemple le plus simple :</p>
@@ -424,11 +423,9 @@ vec[<span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">3</span
 <pre><code>[1] FALSE</code></pre>
 <p>Exemple appliqué à un vecteur :</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">x &lt;-<span class="st"> </span><span class="dv">1</span><span class="op">:</span><span class="dv">10</span>
-x</code></pre></div>
-<pre><code> [1]  1  2  3  4  5  6  7  8  9 10</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">x <span class="op">&lt;</span><span class="st"> </span><span class="dv">5</span></code></pre></div>
+x <span class="op">&lt;</span><span class="st"> </span><span class="dv">5</span></code></pre></div>
 <pre><code> [1]  TRUE  TRUE  TRUE  TRUE FALSE FALSE FALSE FALSE FALSE FALSE</code></pre>
-<p>On peut combiner plusieurs tests avec les opérateurs logiques <em>et</em> (<code>&amp;</code>) et <em>ou</em> (<code>|</code>). Ainsi, si on veut tester qu’une valeur est comprise entre 3 et 6, on peut faire :</p>
+<p>On peut combiner plusieurs tests avec les opérateurs logiques <em>et</em> (<code>&amp;</code>) et <em>ou</em> (<code>|</code>). Ainsi, si on veut tester qu’une valeur est comprise entre 3 et 6 inclus, on peut faire :</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">x <span class="op">&gt;=</span><span class="st"> </span><span class="dv">3</span> <span class="op">&amp;</span><span class="st"> </span>x <span class="op">&lt;=</span><span class="st"> </span><span class="dv">6</span></code></pre></div>
 <pre><code> [1] FALSE FALSE  TRUE  TRUE  TRUE  TRUE FALSE FALSE FALSE FALSE</code></pre>
 <p>Si on veut tester qu’une valeur est égale à “Bleu” ou à “Vert”, on peut faire :</p>
@@ -441,19 +438,19 @@ vec <span class="op">==</span><span class="st"> &quot;Jaune&quot;</span> <span c
 <p>Enfin, on peut inverser un test avec l’opérateur <em>non</em> (<code>!</code>) :</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="op">!</span>(vec <span class="op">%in%</span><span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;Jaune&quot;</span>, <span class="st">&quot;Vert&quot;</span>))</code></pre></div>
 <pre><code>[1] FALSE FALSE  TRUE FALSE</code></pre>
-<p>Les tests sont notamment utilisés par le verbe <code>filter</code> de <code>dplyr</code> (voir section <a href="09-dplyr.html#filter">9.2.2</a>) qui permet de sélectionner certaines lignes d’un tableau de données :</p>
+<p>Les tests sont notamment utilisés par le verbe <code>filter</code> de <code>dplyr</code> (voir section <a href="09-dplyr.html#filter">9.2.2</a>) qui permet de sélectionner certaines lignes d’un tableau de données. On peut ainsi sélectionner les individus ayant entre 20 et 40 ans en filtrant sur la variable <code>age</code> :</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">hdv2003 <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st">  </span><span class="kw">filter</span>(age <span class="op">&gt;=</span><span class="st"> </span><span class="dv">20</span> <span class="op">&amp;</span><span class="st"> </span>age <span class="op">&lt;=</span><span class="st"> </span><span class="dv">40</span>)</code></pre></div>
 <pre><code># A tibble: 684 x 21
       id   age   sexe                                              nivetud
    &lt;int&gt; &lt;int&gt; &lt;fctr&gt;                                               &lt;fctr&gt;
  1     1    28  Femme Enseignement superieur y compris technique superieur
- 2     2    23  Femme                                                 &lt;NA&gt;
+ 2     2    23  Femme                                                   NA
  3     4    34  Homme Enseignement superieur y compris technique superieur
  4     6    35  Femme        Enseignement technique ou professionnel court
- 5     9    20  Femme                                                 &lt;NA&gt;
+ 5     9    20  Femme                                                   NA
  6    10    28  Homme         Enseignement technique ou professionnel long
- 7    18    20  Femme                                                 &lt;NA&gt;
+ 7    18    20  Femme                                                   NA
  8    20    39  Femme        Enseignement technique ou professionnel court
  9    21    30  Femme        Enseignement technique ou professionnel court
 10    22    30  Homme        Enseignement technique ou professionnel court
@@ -462,6 +459,7 @@ vec <span class="op">==</span><span class="st"> &quot;Jaune&quot;</span> <span c
 #   relig &lt;fctr&gt;, trav.imp &lt;fctr&gt;, trav.satisf &lt;fctr&gt;, hard.rock &lt;fctr&gt;,
 #   lecture.bd &lt;fctr&gt;, peche.chasse &lt;fctr&gt;, cuisine &lt;fctr&gt;, bricol &lt;fctr&gt;,
 #   cinema &lt;fctr&gt;, sport &lt;fctr&gt;, heures.tv &lt;dbl&gt;, minutes.tv &lt;dbl&gt;</code></pre>
+<p>Ou sélectionner les personnes ayant comme catégorie socio-professionnelle <code>Ouvrier specialise</code> ou <code>Ouvrier qualifie</code> en filtrant sur la variable <code>qualif</code> :</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">hdv2003 <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st">  </span><span class="kw">filter</span>(qualif <span class="op">%in%</span><span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;Ouvrier specialise&quot;</span>, <span class="st">&quot;Ouvrier qualifie&quot;</span>))</code></pre></div>
 <pre><code># A tibble: 495 x 21
@@ -472,7 +470,7 @@ vec <span class="op">==</span><span class="st"> &quot;Jaune&quot;</span> <span c
  3    12    47  Homme                                    2eme cycle
  4    19    70  Homme             Derniere annee d&#39;etudes primaires
  5    20    39  Femme Enseignement technique ou professionnel court
- 6    25    20  Femme                                          &lt;NA&gt;
+ 6    25    20  Femme                                            NA
  7    27    31  Femme  Enseignement technique ou professionnel long
  8    28    35  Homme                                     1er cycle
  9    29    35  Homme Enseignement technique ou professionnel court
@@ -482,7 +480,7 @@ vec <span class="op">==</span><span class="st"> &quot;Jaune&quot;</span> <span c
 #   relig &lt;fctr&gt;, trav.imp &lt;fctr&gt;, trav.satisf &lt;fctr&gt;, hard.rock &lt;fctr&gt;,
 #   lecture.bd &lt;fctr&gt;, peche.chasse &lt;fctr&gt;, cuisine &lt;fctr&gt;, bricol &lt;fctr&gt;,
 #   cinema &lt;fctr&gt;, sport &lt;fctr&gt;, heures.tv &lt;dbl&gt;, minutes.tv &lt;dbl&gt;</code></pre>
-<p>On peut utiliser les tests pour sélectionner certains éléments d’un vecteur : si on passeun test à l’opérateur de sélection <code>[]</code>, seuls les éléments pour lesquels ce test est vrai seront conservés :</p>
+<p>On peut utiliser les tests pour sélectionner certains éléments d’un vecteur. Si on passe un test à l’opérateur de sélection <code>[]</code>, seuls les éléments pour lesquels ce test est vrai seront conservés :</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">x &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">12</span>, <span class="dv">8</span>, <span class="dv">14</span>, <span class="dv">7</span>, <span class="dv">6</span>, <span class="dv">18</span>)
 x[x <span class="op">&gt;</span><span class="st"> </span><span class="dv">10</span>]</code></pre></div>
 <pre><code>[1] 12 14 18</code></pre>
@@ -512,17 +510,15 @@ f</code></pre></div>
 Levels: Cerise Ananas Fraise</code></pre>
 <p>Autre exemple sur une “vraie” variable :</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">freq</span>(hdv2003<span class="op">$</span>qualif)</code></pre></div>
-<pre><code># A tibble: 8 x 3
-      n   `%` `val%`
-* &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt;
-1   203  10.2   12.3
-2   292  14.6   17.7
-3    86   4.3    5.2
-4   160   8.0    9.7
-5   260  13.0   15.7
-6   594  29.7   35.9
-7    58   2.9    3.5
-8   347  17.3     NA</code></pre>
+<pre><code>                           n    % val%
+Ouvrier specialise       203 10.2 12.3
+Ouvrier qualifie         292 14.6 17.7
+Technicien                86  4.3  5.2
+Profession intermediaire 160  8.0  9.7
+Cadre                    260 13.0 15.7
+Employe                  594 29.7 35.9
+Autre                     58  2.9  3.5
+NA                       347 17.3   NA</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">hdv2003 &lt;-<span class="st"> </span>hdv2003 <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st">  </span><span class="kw">mutate</span>(<span class="dt">qualif5 =</span> <span class="kw">fct_recode</span>(qualif,
                               <span class="st">&quot;Ouvrier&quot;</span> =<span class="st"> &quot;Ouvrier specialise&quot;</span>,
@@ -531,93 +527,87 @@ Levels: Cerise Ananas Fraise</code></pre>
                               <span class="st">&quot;Interm&quot;</span> =<span class="st"> &quot;Profession intermediaire&quot;</span>))
          
 <span class="kw">freq</span>(hdv2003<span class="op">$</span>qualif5)</code></pre></div>
-<pre><code># A tibble: 6 x 3
-      n   `%` `val%`
-* &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt;
-1   495  24.8   29.9
-2   246  12.3   14.9
-3   260  13.0   15.7
-4   594  29.7   35.9
-5    58   2.9    3.5
-6   347  17.3     NA</code></pre>
-<p>Attention, les anciennes valeurs saisies doivent être exactement égales aux valeurs des modalités du facteur : toute différence d’accent ou d’espaces fera que ce recodage ne sera pas pris en compte. Dans ce cas, <code>forcats</code> affiche un avertissement nous indiquant qu’une valeur saisie n’a pas été trouvée dans les modalités de la variable :</p>
+<pre><code>          n    % val%
+Ouvrier 495 24.8 29.9
+Interm  246 12.3 14.9
+Cadre   260 13.0 15.7
+Employe 594 29.7 35.9
+Autre    58  2.9  3.5
+NA      347 17.3   NA</code></pre>
+<p>Attention, les anciennes valeurs saisies doivent être exactement égales aux valeurs des modalités de la variable recodée : toute différence d’accent ou d’espace fera que ce recodage ne sera pas pris en compte. Dans ce cas, <code>forcats</code> affiche un avertissement nous indiquant qu’une valeur saisie n’a pas été trouvée dans les modalités de la variable :</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">hdv2003 &lt;-<span class="st"> </span>hdv2003 <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st">  </span><span class="kw">mutate</span>(<span class="dt">qualif_test =</span> <span class="kw">fct_recode</span>(qualif,
                                   <span class="st">&quot;Ouvrier&quot;</span> =<span class="st"> &quot;Ouvrier spécialisé&quot;</span>,
                                   <span class="st">&quot;Ouvrier&quot;</span> =<span class="st"> &quot;Ouvrier qualifié&quot;</span>))</code></pre></div>
 <pre><code>Warning: Unknown levels in `f`: Ouvrier spécialisé, Ouvrier qualifié</code></pre>
-<p>D’autres fonctions sont proposées par <code>forcats</code> pour faciliter ces recodage, dont <code>fct_collapse</code>, qui propose une autre syntaxe pratique quand on doit regrouper ensemble des modalités :</p>
+<p>D’autres fonctions sont proposées par <code>forcats</code> pour faciliter certains recodage, comme <code>fct_collapse</code>, qui propose une autre syntaxe pratique quand on doit regrouper ensemble des modalités :</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">hdv2003 &lt;-<span class="st"> </span>hdv2003 <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st">  </span><span class="kw">mutate</span>(<span class="dt">qualif_rec =</span> <span class="kw">fct_collapse</span>(qualif,
                                    <span class="st">&quot;Ouvrier&quot;</span> =<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;Ouvrier specialise&quot;</span>, <span class="st">&quot;Ouvrier qualifie&quot;</span>),
                                    <span class="st">&quot;Interm&quot;</span> =<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;Technicien&quot;</span>, <span class="st">&quot;Profession intermediaire&quot;</span>)))
 
 <span class="kw">freq</span>(hdv2003<span class="op">$</span>qualif_rec)</code></pre></div>
-<pre><code># A tibble: 6 x 3
-      n   `%` `val%`
-* &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt;
-1   495  24.8   29.9
-2   246  12.3   14.9
-3   260  13.0   15.7
-4   594  29.7   35.9
-5    58   2.9    3.5
-6   347  17.3     NA</code></pre>
+<pre><code>          n    % val%
+Ouvrier 495 24.8 29.9
+Interm  246 12.3 14.9
+Cadre   260 13.0 15.7
+Employe 594 29.7 35.9
+Autre    58  2.9  3.5
+NA      347 17.3   NA</code></pre>
 <p><code>fct_other</code>, qui regroupe une liste de modalités en une seule modalité “Other” :</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">hdv2003 &lt;-<span class="st"> </span>hdv2003 <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st">  </span><span class="kw">mutate</span>(<span class="dt">qualif_rec =</span> <span class="kw">fct_other</span>(qualif,
                <span class="dt">drop =</span> <span class="kw">c</span>(<span class="st">&quot;Ouvrier specialise&quot;</span>, <span class="st">&quot;Ouvrier qualifie&quot;</span>, <span class="st">&quot;Cadre&quot;</span>, <span class="st">&quot;Autre&quot;</span>)))
 
 <span class="kw">freq</span>(hdv2003<span class="op">$</span>qualif_rec)</code></pre></div>
-<pre><code># A tibble: 5 x 3
-      n   `%` `val%`
-* &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt;
-1    86   4.3    5.2
-2   160   8.0    9.7
-3   594  29.7   35.9
-4   813  40.6   49.2
-5   347  17.3     NA</code></pre>
+<pre><code>                           n    % val%
+Technicien                86  4.3  5.2
+Profession intermediaire 160  8.0  9.7
+Employe                  594 29.7 35.9
+Other                    813 40.6 49.2
+NA                       347 17.3   NA</code></pre>
 <p><code>fct_lump</code>, qui regroupe automatiquement les modalités les moins fréquentes en une seule modalité “Other” (avec possibilité d’indiquer des seuils de regroupement) :</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">hdv2003 &lt;-<span class="st"> </span>hdv2003 <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st">  </span><span class="kw">mutate</span>(<span class="dt">qualif_rec =</span> <span class="kw">fct_lump</span>(qualif))
 
 <span class="kw">freq</span>(hdv2003<span class="op">$</span>qualif_rec)</code></pre></div>
-<pre><code># A tibble: 7 x 3
-      n   `%` `val%`
-* &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt;
-1   203  10.2   12.3
-2   292  14.6   17.7
-3   160   8.0    9.7
-4   260  13.0   15.7
-5   594  29.7   35.9
-6   144   7.2    8.7
-7   347  17.3     NA</code></pre>
+<pre><code>                           n    % val%
+Ouvrier specialise       203 10.2 12.3
+Ouvrier qualifie         292 14.6 17.7
+Profession intermediaire 160  8.0  9.7
+Cadre                    260 13.0 15.7
+Employe                  594 29.7 35.9
+Other                    144  7.2  8.7
+NA                       347 17.3   NA</code></pre>
 <p><code>fct_explicit_na</code> qui convertit toutes les valeurs manquantes (<code>NA</code>) d’un facteur en une modalité spécifique :</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">hdv2003 &lt;-<span class="st"> </span>hdv2003 <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st">  </span><span class="kw">mutate</span>(<span class="dt">qualif_rec =</span> <span class="kw">fct_explicit_na</span>(qualif, <span class="dt">na_level =</span> <span class="st">&quot;(Manquant)&quot;</span>))
 
 <span class="kw">freq</span>(hdv2003<span class="op">$</span>qualif_rec)</code></pre></div>
-<pre><code># A tibble: 8 x 3
-      n   `%` `val%`
-* &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt;
-1   203  10.2   10.2
-2   292  14.6   14.6
-3    86   4.3    4.3
-4   160   8.0    8.0
-5   260  13.0   13.0
-6   594  29.7   29.7
-7    58   2.9    2.9
-8   347  17.3   17.3</code></pre>
+<pre><code>                           n    % val%
+Ouvrier specialise       203 10.2 10.2
+Ouvrier qualifie         292 14.6 14.6
+Technicien                86  4.3  4.3
+Profession intermediaire 160  8.0  8.0
+Cadre                    260 13.0 13.0
+Employe                  594 29.7 29.7
+Autre                     58  2.9  2.9
+(Manquant)               347 17.3 17.3</code></pre>
 <div id="irec" class="section level4">
 <h4><span class="header-section-number">10.3.2.1</span> Interface graphique de recodage</h4>
 <p>L’extension <code>questionr</code> propose une interface graphique facilitant le recodage des valeurs d’une variable qualitative. L’objectif est de permettre à l’utilisateur de saisir les nouvelles valeurs dans un formulaire, et de générer ensuite le code R correspondant au recodage indiqué.</p>
-<p>Pour utiliser cette interface, sous RStudio vous pouvez aller dans le menu <em>Addins</em> puis choisir <em>Levels recoding</em>. Sinon, vous pouvez lancer dans la console la fonction <code>irec()</code> en lui passant comme paramètre la variable à recoder.</p>
+<p>Pour utiliser cette interface, sous RStudio vous pouvez aller dans le menu <em>Addins</em> (présent dans la barre d’outils principale) puis choisir <em>Levels recoding</em>. Sinon, vous pouvez lancer dans la console la fonction <code>irec()</code> en lui passant comme paramètre la variable à recoder.</p>
 <div class="figure">
 <img src="resources/screenshots/irec.png" alt="Interface graphique de irec" />
 <p class="caption">Interface graphique de <code>irec</code></p>
 </div>
 <p>L’interface se compose de trois onglets : l’onglet <em>Variable et paramètres</em> vous permet de sélectionner la variable à recoder, le nom de la nouvelle variable et d’autres paramètres, l’onglet <em>Recodages</em> vous permet de saisir les nouvelles valeurs des modalités, et l’onglet <em>Code et résultat</em> affiche le code R correspondant ainsi qu’un tableau permettant de vérifier les résultats.</p>
 <p>Une fois votre recodage terminé, cliquez sur le bouton <em>Done</em> et le code R sera inséré dans votre script R ou affiché dans la console.</p>
-<p><strong>Attention</strong>, cette interface est prévue pour ne pas modifier vos données. C’est donc à vous d’exécuter le code généré pour que le recodage soit réellement effectif.</p>
+<div class="rmdimportant">
+<p>
+<strong>Attention</strong>, cette interface est prévue pour ne pas modifier vos données. C’est donc à vous d’exécuter le code généré pour que le recodage soit réellement effectif.
+</p>
+</div>
 </div>
 </div>
 <div id="ordonner-les-modalites-dune-variable-qualitative" class="section level3">
@@ -630,34 +620,32 @@ Levels: Cerise Ananas Fraise</code></pre>
                                   <span class="st">&quot;Employe&quot;</span>, <span class="st">&quot;Ouvrier qualifie&quot;</span>, <span class="st">&quot;Ouvrier specialise&quot;</span>,
                                   <span class="st">&quot;Autre&quot;</span>))
 <span class="kw">freq</span>(hdv2003<span class="op">$</span>qualif_rec)</code></pre></div>
-<pre><code># A tibble: 8 x 3
-      n   `%` `val%`
-* &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt;
-1   260  13.0   15.7
-2   160   8.0    9.7
-3    86   4.3    5.2
-4   594  29.7   35.9
-5   292  14.6   17.7
-6   203  10.2   12.3
-7    58   2.9    3.5
-8   347  17.3     NA</code></pre>
+<pre><code>                           n    % val%
+Cadre                    260 13.0 15.7
+Profession intermediaire 160  8.0  9.7
+Technicien                86  4.3  5.2
+Employe                  594 29.7 35.9
+Ouvrier qualifie         292 14.6 17.7
+Ouvrier specialise       203 10.2 12.3
+Autre                     58  2.9  3.5
+NA                       347 17.3   NA</code></pre>
 <p>Une autre possibilité est d’ordonner les modalités d’un facteur selon les valeurs d’une autre variable. Par exemple, si on représente le boxplot de la répartition de l’âge selon le statut d’occupation :</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(ggplot2)
 <span class="kw">ggplot</span>(hdv2003) <span class="op">+</span><span class="st"> </span>
 <span class="st">  </span><span class="kw">geom_boxplot</span>(<span class="kw">aes</span>(<span class="dt">x=</span>occup, <span class="dt">y=</span>age))</code></pre></div>
-<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-371-1.svg" width="672" /></p>
+<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-383-1.svg" width="672" /></p>
 <p>Le graphique pourrait être plus lisible si les modalités étaient triées par âge median croissant. Ceci est possible en utilisant <code>fct_reorder</code>. Celle-ci prend 3 arguments : le facteur à réordonner, la variable dont les valeurs doivent être utilisées pour ce réordonnancement, et enfin une fonction à appliquer à cette deuxième variable.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">hdv2003 &lt;-<span class="st"> </span>hdv2003 <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st">  </span><span class="kw">mutate</span>(<span class="dt">occup_age =</span> <span class="kw">fct_reorder</span>(occup, age, median))
 
 <span class="kw">ggplot</span>(hdv2003) <span class="op">+</span><span class="st"> </span>
 <span class="st">  </span><span class="kw">geom_boxplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> occup_age, <span class="dt">y =</span> age))</code></pre></div>
-<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-372-1.svg" width="672" /></p>
+<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-384-1.svg" width="672" /></p>
 <div id="iorder" class="section level4">
 <h4><span class="header-section-number">10.3.3.1</span> Interface graphique</h4>
-<p>On peut aussi utiliser l’interface graphique proposée par l’extension <code>questionr</code> afin de faciliter cette opération. Pour la lancer, sélectionner le menu <em>Addins</em> puis <em>Levels ordering</em>, ou exécuter la fonction <code>iorder()</code> en lui passant comme paramètre le facteur à réordonner.</p>
+<p>On peut aussi utiliser l’interface graphique proposée par l’extension <code>questionr</code> afin de faciliter cette opération de réordonnancement. Pour la lancer, sélectionner le menu <em>Addins</em> puis <em>Levels ordering</em>, ou exécuter la fonction <code>iorder()</code> en lui passant comme paramètre le facteur à réordonner.</p>
 <div class="figure">
-<img src="resources/screenshots/irec.png" alt="Interface graphique de iorder" />
+<img src="resources/screenshots/iorder.png" alt="Interface graphique de iorder" />
 <p class="caption">Interface graphique de <code>iorder</code></p>
 </div>
 <p>Le fonctionnement de l’interface est similaire à celui de <a href="10-recodages.html#irec">l’interface de recodage</a>. Vous pouvez réordonner les modalités en les faisant glisser avec la souris, puis récupérer et exécuter le code R généré.</p>
@@ -666,7 +654,7 @@ Levels: Cerise Ananas Fraise</code></pre>
 </div>
 <div id="combiner-une-ou-plusieurs-variables" class="section level2">
 <h2><span class="header-section-number">10.4</span> Combiner une ou plusieurs variables</h2>
-<p>Parfois, on veut créer une nouvelle variable en partant des valeurs d’une ou plusieurs autres variables. Dans ce cas on peut utiliser les fonctions <code>if_else</code> pour les cas les plus simples, ou <code>case_when</code> pour les cas plus complexes.</p>
+<p>Parfois, on veut créer une nouvelle variable en partant des valeurs d’une ou plusieurs autres variables. Dans ce cas on peut utiliser les fonctions <code>if_else</code> pour les cas les plus simples, ou <code>case_when</code> pour les cas plus complexes. Ces deux fonctions sont incluses dans l’extension <code>dplyr</code>, qu’il faut donc avoir chargé précédemment.</p>
 <div id="if_else" class="section level3">
 <h3><span class="header-section-number">10.4.1</span> <code>if_else</code></h3>
 <p><code>if_else</code> prend trois arguments : un test, une valeur à renvoyer si le test est vrai, et une valeur à renvoyer si le test est faux.</p>
@@ -681,11 +669,9 @@ Levels: Cerise Ananas Fraise</code></pre>
                           <span class="st">&quot;Autre&quot;</span>))
 
 <span class="kw">freq</span>(hdv2003<span class="op">$</span>statut)</code></pre></div>
-<pre><code># A tibble: 2 x 3
-      n   `%` `val%`
-* &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt;
-1  1778  88.9   88.9
-2   222  11.1   11.1</code></pre>
+<pre><code>                           n    % val%
+Autre                   1778 88.9 88.9
+Homme de plus de 60 ans  222 11.1 11.1</code></pre>
 </div>
 <div id="case_when" class="section level3">
 <h3><span class="header-section-number">10.4.2</span> <code>case_when</code></h3>
@@ -698,15 +684,17 @@ Levels: Cerise Ananas Fraise</code></pre>
     <span class="ot">TRUE</span> <span class="op">~</span><span class="st"> &quot;Autre&quot;</span>))
 
 <span class="kw">freq</span>(hdv2003<span class="op">$</span>statut)</code></pre></div>
-<pre><code># A tibble: 3 x 3
-      n   `%` `val%`
-* &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt;
-1  1512  75.6   75.6
-2   266  13.3   13.3
-3   222  11.1   11.1</code></pre>
+<pre><code>                           n    % val%
+Autre                   1512 75.6 75.6
+Femme de plus de 60 ans  266 13.3 13.3
+Homme de plus de 60 ans  222 11.1 11.1</code></pre>
 <p><code>case_when</code> prend en arguments une série d’instructions sous la forme <code>condition ~ valeur</code>. Il les exécute une par une, et dès qu’une <code>condition</code> est vraie, il renvoit la <code>valeur</code> associée.</p>
 <p>La clause <code>TRUE ~ &quot;Autre&quot;</code> permet d’assigner une valeur à toutes les lignes pour lesquelles aucune des conditions précédentes n’est vraie.</p>
-<p><strong>Attention :</strong> comme les conditions sont testées l’une après l’autre et que la valeur renvoyée est celle correspondant à la première condition vraie, l’ordre de ces conditions est très important. Il faut absolument aller du plus spécifique au plus général.</p>
+<div class="rmdimportant">
+<p>
+<strong>Attention :</strong> comme les conditions sont testées l’une après l’autre et que la valeur renvoyée est celle correspondant à la première condition vraie, l’ordre de ces conditions est très important. Il faut absolument aller du plus spécifique au plus général.
+</p>
+</div>
 <p>Par exemple le recodage suivant ne fonctionne pas :</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">hdv2003 &lt;-<span class="st"> </span>hdv2003 <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st">  </span><span class="kw">mutate</span>(<span class="dt">statut =</span> <span class="kw">case_when</span>(
@@ -715,11 +703,9 @@ Levels: Cerise Ananas Fraise</code></pre>
     <span class="ot">TRUE</span> <span class="op">~</span><span class="st"> &quot;Autre&quot;</span>))
 
 <span class="kw">freq</span>(hdv2003<span class="op">$</span>statut)</code></pre></div>
-<pre><code># A tibble: 2 x 3
-      n   `%` `val%`
-* &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt;
-1  1101    55     55
-2   899    45     45</code></pre>
+<pre><code>         n  % val%
+Autre 1101 55   55
+Homme  899 45   45</code></pre>
 <p>Comme la condition <code>sexe == &quot;Homme&quot;</code> est plus générale que <code>sexe == &quot;Homme&quot; &amp; age &gt; 60</code>, cette deuxième condition n’est jamais testée ! On n’obtiendra jamais la valeur correspondante.</p>
 <p>Pour que ce recodage fonctionne il faut donc changer l’ordre des conditions pour aller du plus spécifique au plus général :</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">hdv2003 &lt;-<span class="st"> </span>hdv2003 <span class="op">%&gt;%</span><span class="st"> </span>
@@ -729,58 +715,58 @@ Levels: Cerise Ananas Fraise</code></pre>
     <span class="ot">TRUE</span> <span class="op">~</span><span class="st"> &quot;Autre&quot;</span>))
 
 <span class="kw">freq</span>(hdv2003<span class="op">$</span>statut)</code></pre></div>
-<pre><code># A tibble: 3 x 3
-      n   `%` `val%`
-* &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt;
-1  1101  55.0   55.0
-2   677  33.9   33.9
-3   222  11.1   11.1</code></pre>
+<pre><code>                           n    % val%
+Autre                   1101 55.0 55.0
+Homme                    677 33.9 33.9
+Homme de plus de 60 ans  222 11.1 11.1</code></pre>
 </div>
 </div>
 <div id="decouper-une-variable-numerique-en-classes" class="section level2">
 <h2><span class="header-section-number">10.5</span> Découper une variable numérique en classes</h2>
-<p>Une opération relativement courante consiste à découper une variable numérique en classes. Par exemple, on voudra transformer une variable <em>revenu</em> contenant le revenu mensuel en une variable avec des catégorie <em>Moins de 500 euros</em>, <em>500-1000 euros</em>, etc.</p>
+<p>Une opération relativement courante consiste à découper une variable numérique en classes. Par exemple, on voudra transformer une variable <em>revenu</em> contenant le revenu mensuel en une variable qualitative avec des catégories <em>Moins de 500 euros</em>, <em>500-1000 euros</em>, etc.</p>
 <p>Pour cela on peut utiliser la fonction <code>cut()</code> :</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">hdv2003<span class="op">$</span>agecl &lt;-<span class="st"> </span><span class="kw">cut</span>(hdv2003<span class="op">$</span>age, <span class="dt">breaks =</span> <span class="dv">5</span>)
 <span class="kw">freq</span>(hdv2003<span class="op">$</span>agecl)</code></pre></div>
-<pre><code># A tibble: 5 x 3
-      n   `%` `val%`
-* &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt;
-1   454  22.7   22.7
-2   628  31.4   31.4
-3   556  27.8   27.8
-4   319  16.0   16.0
-5    43   2.1    2.1</code></pre>
+<pre><code>              n    % val%
+(17.9,33.8] 454 22.7 22.7
+(33.8,49.6] 628 31.4 31.4
+(49.6,65.4] 556 27.8 27.8
+(65.4,81.2] 319 16.0 16.0
+(81.2,97.1]  43  2.1  2.1</code></pre>
 <p>Si on donne un nombre entier à l’argument <code>breaks</code>, un nombre correspondant de classes d’amplitudes égales sont automatiquement calculées. Il est souvent préférable cependant d’avoir des limites “rondes”, on peut alors spécifier ces dernières manuellement en passant un vecteur à <code>breaks</code> :</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">hdv2003<span class="op">$</span>agecl &lt;-<span class="st"> </span><span class="kw">cut</span>(hdv2003<span class="op">$</span>age, <span class="dt">breaks =</span> <span class="kw">c</span>(<span class="dv">18</span>, <span class="dv">25</span>, <span class="dv">35</span>, <span class="dv">45</span>, <span class="dv">55</span>, <span class="dv">65</span>, <span class="dv">97</span>), <span class="dt">include.lowest =</span> <span class="ot">TRUE</span>)
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">hdv2003<span class="op">$</span>agecl &lt;-<span class="st"> </span><span class="kw">cut</span>(hdv2003<span class="op">$</span>age, 
+                     <span class="dt">breaks =</span> <span class="kw">c</span>(<span class="dv">18</span>, <span class="dv">25</span>, <span class="dv">35</span>, <span class="dv">45</span>, <span class="dv">55</span>, <span class="dv">65</span>, <span class="dv">97</span>), 
+                     <span class="dt">include.lowest =</span> <span class="ot">TRUE</span>)
 <span class="kw">freq</span>(hdv2003<span class="op">$</span>agecl)</code></pre></div>
-<pre><code># A tibble: 6 x 3
-      n   `%` `val%`
-* &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt;
-1   191   9.6    9.6
-2   338  16.9   16.9
-3   390  19.5   19.5
-4   414  20.7   20.7
-5   305  15.2   15.2
-6   362  18.1   18.1</code></pre>
+<pre><code>          n    % val%
+[18,25] 191  9.6  9.6
+(25,35] 338 16.9 16.9
+(35,45] 390 19.5 19.5
+(45,55] 414 20.7 20.7
+(55,65] 305 15.2 15.2
+(65,97] 362 18.1 18.1</code></pre>
 <p>Ici on a été obligé d’ajouter l’argument <code>include.lowest = TRUE</code> car sinon la valeur 18 n’aurait pas été incluse, et on aurait eu des valeurs manquantes.</p>
 <div id="interface-graphique" class="section level3">
 <h3><span class="header-section-number">10.5.1</span> Interface graphique</h3>
 <p>Comme l’utilisation des arguments de <code>cut</code> n’est pas toujours très intuitive, l’extension <code>questionr</code> propose une interface graphique facilitant cette opếration de découpage en classes d’une variable numérique.</p>
-<p>Pour lancer cette interface, sous RStudio ouvrir le menu <em>Addins</em> et sélectionner <em>Variable cutting</em>, ou exécuter la fonction <code>icut()</code> dans la console en lui passant comme argument la variable numériqueà découper.</p>
+<p>Pour lancer cette interface, sous RStudio ouvrir le menu <em>Addins</em> et sélectionner <em>Variable cutting</em>, ou exécuter la fonction <code>icut()</code> dans la console en lui passant comme argument la variable quantitative à découper.</p>
 <div class="figure">
 <img src="resources/screenshots/icut.png" alt="Interface graphique de icut" />
 <p class="caption">Interface graphique de <code>icut</code></p>
 </div>
-<p>Vous pouvez alors choisir la variable à découper dans l’onglet <em>Variable et paramètres</em>, indiquer les limites de vos classes ainsi que quelques options complémentaires dans l’onglet <em>Découpage en classes</em>, et vérifier le résultat dans l’onglet <em>Code et résultat</em>. Une fois le résultat satisfaisant, cliquez sur Done : si vous êtes sous RStudio le code généré sera directement inséré dans votre script actuel à l’emplacement du curseur. Sinon, ce code sera affiché dans la console et vous pourrez le copier/coller pour l’inclure dans votre script.</p>
-<p><strong>Attention</strong>, cette interface est prévue pour ne pas modifier vos données. C’est donc à vous d’exécuter le code généré pour que le découpage soit réellement effectif.</p>
+<p>Vous pouvez alors choisir la variable à découper dans l’onglet <em>Variable et paramètres</em>, indiquer les limites de vos classes ainsi que quelques options complémentaires dans l’onglet <em>Découpage en classes</em>, et vérifier le résultat dans l’onglet <em>Code et résultat</em>. Une fois le résultat satisfaisant, cliquez sur <em>Done</em> : si vous êtes sous RStudio le code généré sera directement inséré dans votre script actuel à l’emplacement du curseur. Sinon, ce code sera affiché dans la console et vous pourrez le copier/coller pour l’inclure dans votre script.</p>
+<div class="rmdimportant">
+<p>
+<strong>Attention</strong>, cette interface est prévue pour ne pas modifier vos données. C’est donc à vous d’exécuter le code généré pour que le découpage soit réellement effectif.
+</p>
+</div>
 </div>
 </div>
 <div id="exercices-5" class="section level2">
 <h2><span class="header-section-number">10.6</span> Exercices</h2>
 <div id="preparation-2" class="section level3">
 <h3><span class="header-section-number">10.6.1</span> Préparation</h3>
-<p>Pour ces exercices, on a besoin des extensions <code>forcats</code> et <code>questionr</code>, et du jeu de données d’exemple <code>hdv2003</code>.</p>
+<p>Pour la plupart de ces exercices, on a besoin des extensions <code>forcats</code> et <code>questionr</code>, et du jeu de données d’exemple <code>hdv2003</code>.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(forcats)
 <span class="kw">library</span>(questionr)
 <span class="kw">data</span>(hdv2003)</code></pre></div>
@@ -793,7 +779,7 @@ Levels: Cerise Ananas Fraise</code></pre>
 <p>Et le convertir en vecteur numérique. Que remarquez-vous ?</p>
 <p><strong>Exercice 1.2</strong></p>
 <p>Construire le vecteur suivant :</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">x &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">20</span>, <span class="dv">21</span>, <span class="fl">15.5</span>, <span class="dv">14</span>, <span class="dv">12</span>, <span class="dv">8</span>, <span class="dv">16</span>, <span class="dv">1</span>)</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">x &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">20</span>, <span class="dv">21</span>, <span class="fl">15.5</span>, <span class="dv">14</span>, <span class="dv">12</span>, <span class="dv">8</span>)</code></pre></div>
 <ul>
 <li>Écrire le test qui indique si les éléments du vecteur sont strictement supérieurs à 15.</li>
 <li>Utiliser ce test pour extraire du vecteur les éléments correspondants.</li>
@@ -807,15 +793,13 @@ Levels: Cerise Ananas Fraise</code></pre>
 <h3><span class="header-section-number">10.6.3</span> Recodages de variable qualitative</h3>
 <p><strong>Exercice 2.1</strong></p>
 <p>Dans le jeu de données <code>hdv2003</code>, découper la variable <code>heures.tv</code> en classes de manière à obtenir au final le tri à plat suivant :</p>
-<pre><code># A tibble: 6 x 3
-      n   `%` `val%`
-* &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt;
-1   684  34.2   34.3
-2   535  26.8   26.8
-3   594  29.7   29.8
-4   138   6.9    6.9
-5    44   2.2    2.2
-6     5   0.2     NA</code></pre>
+<pre><code>         n    % val%
+[0,1]  684 34.2 34.3
+(1,2]  535 26.8 26.8
+(2,4]  594 29.7 29.8
+(4,6]  138  6.9  6.9
+(6,12]  44  2.2  2.2
+NA       5  0.2   NA</code></pre>
 <p><strong>Exercice 2.2</strong></p>
 <p>Construire un vecteur <code>f</code> à l’aide du code suivant :</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">f &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;Jan&quot;</span>, <span class="st">&quot;Jan&quot;</span>, <span class="st">&quot;Fev&quot;</span>, <span class="st">&quot;Juil&quot;</span>)</code></pre></div>
@@ -824,52 +808,44 @@ Levels: Cerise Ananas Fraise</code></pre>
 Levels: Février Janvier Juillet</code></pre>
 <p><strong>Exercice 2.3</strong></p>
 <p>À l’aide de l’interface graphique <code>irec</code> de <code>questionr</code>, recoder la variable <code>relig</code> du jeu de données <code>hdv2003</code> pour obtenir le tri à plat suivant :</p>
-<pre><code># A tibble: 5 x 3
-      n   `%` `val%`
-* &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt;
-1   708  35.4   35.4
-2   760  38.0   38.0
-3   399  20.0   20.0
-4    93   4.7    4.7
-5    40   2.0    2.0</code></pre>
+<pre><code>                              n    % val%
+Pratiquant                  708 35.4 35.4
+Appartenance                760 38.0 38.0
+Ni croyance ni appartenance 399 20.0 20.0
+Rejet                        93  4.7  4.7
+NSP                          40  2.0  2.0</code></pre>
 <p><strong>Exercice 2.4</strong></p>
 <p>À l’aide de l’interface graphique de <code>questionr</code>, recoder la variable <code>nivetud</code> pour obtenir le tri à plat suivant :</p>
-<pre><code># A tibble: 7 x 3
-      n   `%` `val%`
-* &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt;
-1    39   2.0    2.1
-2   427  21.3   22.6
-3   204  10.2   10.8
-4   183   9.2    9.7
-5   594  29.7   31.5
-6   441  22.1   23.4
-7   112   5.6     NA</code></pre>
+<pre><code>                                          n    % val%
+N&#39;a jamais fait d&#39;etudes                 39  2.0  2.1
+Études primaires                        427 21.3 22.6
+1er cycle                               204 10.2 10.8
+2eme cycle                              183  9.2  9.7
+Enseignement technique ou professionnel 594 29.7 31.5
+Enseignement superieur                  441 22.1 23.4
+NA                                      112  5.6   NA</code></pre>
 <p>Toujours à l’aide de l’interface graphique, réordonner les modalités de cette variable recodée pour obtenir le tri à plat suivant :</p>
-<pre><code># A tibble: 7 x 3
-      n   `%` `val%`
-* &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt;
-1   441  22.1   23.4
-2   594  29.7   31.5
-3   183   9.2    9.7
-4   204  10.2   10.8
-5   427  21.3   22.6
-6    39   2.0    2.1
-7   112   5.6     NA</code></pre>
+<pre><code>                                          n    % val%
+Enseignement superieur                  441 22.1 23.4
+Enseignement technique ou professionnel 594 29.7 31.5
+2eme cycle                              183  9.2  9.7
+1er cycle                               204 10.2 10.8
+Études primaires                        427 21.3 22.6
+N&#39;a jamais fait d&#39;etudes                 39  2.0  2.1
+NA                                      112  5.6   NA</code></pre>
 <p><strong>Exercice 2.5</strong></p>
 <p>À l’aide de la fonction <code>fct_reorder</code>, trier les modalités de la variable <code>relig</code> du jeu de données <code>hdv2003</code> selon leur âge médian.</p>
 <p>Vérifier en générant le boxplot suivant :</p>
-<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-392-1.svg" width="672" /></p>
+<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-406-1.svg" width="672" /></p>
 </div>
 <div id="combiner-plusieurs-variables" class="section level3">
 <h3><span class="header-section-number">10.6.4</span> Combiner plusieurs variables</h3>
 <p><strong>Exercice 3.1</strong></p>
 <p>À l’aide de la fonction <code>if_else</code>, créer une nouvelle variable <code>cinema_bd</code> permettant d’identifier les personnes qui vont au cinéma et déclarent lire des bandes dessinées.</p>
 <p>Vous devriez obtenir le tri à plat suivant pour cette nouvelle variable :</p>
-<pre><code># A tibble: 2 x 3
-      n   `%` `val%`
-* &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt;
-1  1971  98.6   98.6
-2    29   1.5    1.5</code></pre>
+<pre><code>                n    % val%
+Autre        1971 98.6 98.6
+Cinéma et BD   29  1.5  1.5</code></pre>
 <p><strong>Exercice 3.2</strong></p>
 <p>À l’aide de la fonction <code>case_when</code>, créer une nouvelle variable ayant les modalités suivantes :</p>
 <ul>
@@ -878,12 +854,10 @@ Levels: Février Janvier Juillet</code></pre>
 <li>Autre</li>
 </ul>
 <p>Vous devriez obtenir le tri à plat suivant :</p>
-<pre><code># A tibble: 3 x 3
-      n   `%` `val%`
-* &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt;
-1  1001  50.0   50.0
-2   546  27.3   27.3
-3   453  22.7   22.7</code></pre>
+<pre><code>                                          n    % val%
+Autre                                  1001 50.0 50.0
+Femme ayant plus de 2 frères et soeurs  546 27.3 27.3
+Homme ayant plus de 2 frères et soeurs  453 22.7 22.7</code></pre>
 <p><strong>Exercice 3.3</strong></p>
 <p>À l’aide de la fonction <code>case_when</code>, créer une nouvelle variable ayant les modalités suivantes :</p>
 <ul>
@@ -893,13 +867,11 @@ Levels: Février Janvier Juillet</code></pre>
 <li>Autre</li>
 </ul>
 <p>Vous devriez obtenir le tri à plat suivant :</p>
-<pre><code># A tibble: 4 x 3
-      n   `%` `val%`
-* &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt;
-1   714  35.7   35.7
-2   549  27.5   27.5
-3   610  30.5   30.5
-4   127   6.3    6.3</code></pre>
+<pre><code>                                                    n    % val%
+Autre                                             714 35.7 35.7
+Femme pratiquant le sport ou le bricolage         549 27.5 27.5
+Homme de plus de 30 ans                           610 30.5 30.5
+Homme de plus de 40 ans satisfait par son travail 127  6.3  6.3</code></pre>
 
 </div>
 </div>
@@ -907,7 +879,7 @@ Levels: Février Janvier Juillet</code></pre>
 <div class="footnotes">
 <hr />
 <ol start="14">
-<li id="fn14"><p>À la différence de <code>$</code>, <code>select</code> ne renvoie cependant pas un vecteur mais à un tableau à une seule colonne. Si on veut extraire le vecteur on peut utiliser la fonction <code>pull</code> : <code>{r eval=FALSE} hdv2003 %&gt;% pull(qualif)</code><a href="10-recodages.html#fnref14">↩</a></p></li>
+<li id="fn14"><p>À la différence de <code>$</code>, <code>select</code> ne renvoit cependant pas un vecteur mais à un tableau à une seule colonne. Si on veut extraire le vecteur on peut utiliser la fonction <code>pull</code> : <code>hdv2003 %&gt;% pull(qualif)</code><a href="10-recodages.html#fnref14">↩</a></p></li>
 </ol>
 </div>
             </section>
