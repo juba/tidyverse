@@ -1,13 +1,5 @@
 # Recoder et calculer des variables {#vector_factor}
 
-```{r setup_vec,echo=FALSE, cache=FALSE}
-library(knitr)
-library(questionr)
-library(forcats)
-data(hdv2003)
-```
-
- 
 ## Rappel sur les variables et les vecteurs
 
 Dans R, une variable, en général une colonne d'un tableau de données, est un objet de type *vecteur*. Un vecteur est un ensemble d'éléments, tous du même type.
@@ -32,14 +24,14 @@ Quand on veut accéder à un vecteur d'un tableau de données, on peut utiliser 
 hdv2003$qualif
 ```
 
-Quand on utilise `dplyr`, on a vu qu'on peut utiliser `select` ^[À la différence de `$`, `select` ne renvoie cependant pas un vecteur mais à un tableau à une seule colonne. Si on veut extraire le vecteur on peut utiliser la fonction `pull` :
-`{r eval=FALSE} hdv2003 %>% pull(qualif)`] :
+Quand on utilise `dplyr`, on a vu qu'on peut utiliser `select` ^[À la différence de `$`, `select` ne renvoit cependant pas un vecteur mais à un tableau à une seule colonne. Si on veut extraire le vecteur on peut utiliser la fonction `pull` :
+`hdv2003 %>% pull(qualif)`] :
 
 ```{r eval=FALSE}
 hdv2003 %>% select(qualif)
 ```
 
-On peut facilement créer de nouvelles variables (ou colonnes) dans un tableau de données en utilisant le `$` :
+On peut facilement créer de nouvelles variables (ou colonnes) dans un tableau de données en utilisant également le `$` :
 
 ```{r}
 hdv2003$minutes.tv <- hdv2003$heures.tv * 60
@@ -97,11 +89,11 @@ vec[c(1,3)]
 
 Un test est une opération logique de comparaison qui renvoit vrai (`TRUE`) ou faux (`FALSE`) pour chacun des éléments d'un vecteur.
 
-Parmi les opérateurs tests disponibles, on trouve notamment :
+Parmi les opérateurs de comparaison disponibles, on trouve notamment :
 
 - `==` qui teste l'égalité
 - `!=` qui teste la différence
-- `>`, `<`, `<=`, `>=` qui testent la supériorité ou l'infériorité.
+- `>`, `<`, `<=`, `>=` qui testent la supériorité ou l'infériorité
 - `%in%` qui teste l'appartenance à un ensemble de valeurs
 
 Exemple le plus simple :
@@ -114,12 +106,11 @@ Exemple appliqué à un vecteur :
 
 ```{r}
 x <- 1:10
-x
 x < 5
 ```
 
 On peut combiner plusieurs tests avec les opérateurs logiques *et* (`&`) et *ou* (`|`).
-Ainsi, si on veut tester qu'une valeur est comprise entre 3 et 6, on peut faire :
+Ainsi, si on veut tester qu'une valeur est comprise entre 3 et 6 inclus, on peut faire :
 
 ```{r}
 x >= 3 & x <= 6
@@ -144,19 +135,21 @@ Enfin, on peut inverser un test avec l'opérateur *non* (`!`) :
 !(vec %in% c("Jaune", "Vert"))
 ```
 
-Les tests sont notamment utilisés par le verbe `filter` de `dplyr` (voir section \@ref(filter)) qui permet de sélectionner certaines lignes d'un tableau de données :
+Les tests sont notamment utilisés par le verbe `filter` de `dplyr` (voir section \@ref(filter)) qui permet de sélectionner certaines lignes d'un tableau de données. On peut ainsi sélectionner les individus ayant entre 20 et 40 ans en filtrant sur la variable `age` :
 
 ```{r}
 hdv2003 %>% 
   filter(age >= 20 & age <= 40)
 ```
 
+Ou sélectionner les personnes ayant comme catégorie socio-professionnelle `Ouvrier specialise` ou `Ouvrier qualifie` en filtrant sur la variable `qualif` :
+
 ```{r}
 hdv2003 %>% 
   filter(qualif %in% c("Ouvrier specialise", "Ouvrier qualifie"))
 ```
 
-On peut utiliser les tests pour sélectionner certains éléments d'un vecteur : si on passeun test à l'opérateur de sélection `[]`, seuls les éléments pour lesquels ce test est vrai seront conservés :
+On peut utiliser les tests pour sélectionner certains éléments d'un vecteur. Si on passe un test à l'opérateur de sélection `[]`, seuls les éléments pour lesquels ce test est vrai seront conservés :
 
 ```{r}
 x <- c(12, 8, 14, 7, 6, 18)
@@ -205,6 +198,7 @@ Autre exemple sur une "vraie" variable :
 freq(hdv2003$qualif)
 ```
 
+
 ```{r}
 hdv2003 <- hdv2003 %>% 
   mutate(qualif5 = fct_recode(qualif,
@@ -216,7 +210,8 @@ hdv2003 <- hdv2003 %>%
 freq(hdv2003$qualif5)
 ```
 
-Attention, les anciennes valeurs saisies doivent être exactement égales aux valeurs des modalités du facteur : toute différence d'accent ou d'espaces fera que ce recodage ne sera pas pris en compte. Dans ce cas, `forcats` affiche un avertissement nous indiquant qu'une valeur saisie n'a pas été trouvée dans les modalités de la variable :
+
+Attention, les anciennes valeurs saisies doivent être exactement égales aux valeurs des modalités de la variable recodée : toute différence d'accent ou d'espace fera que ce recodage ne sera pas pris en compte. Dans ce cas, `forcats` affiche un avertissement nous indiquant qu'une valeur saisie n'a pas été trouvée dans les modalités de la variable :
 
 ```{r}
 hdv2003 <- hdv2003 %>% 
@@ -226,7 +221,7 @@ hdv2003 <- hdv2003 %>%
 ```
 
 
-D'autres fonctions sont proposées par `forcats` pour faciliter ces recodage, dont `fct_collapse`, qui propose une autre syntaxe pratique quand on doit regrouper ensemble des modalités :
+D'autres fonctions sont proposées par `forcats` pour faciliter certains recodage, comme `fct_collapse`, qui propose une autre syntaxe pratique quand on doit regrouper ensemble des modalités :
 
 ```{r}
 hdv2003 <- hdv2003 %>% 
@@ -236,6 +231,7 @@ hdv2003 <- hdv2003 %>%
 
 freq(hdv2003$qualif_rec)
 ```
+
 
 `fct_other`, qui regroupe une liste de modalités en une seule modalité "Other" :
 
@@ -247,6 +243,7 @@ hdv2003 <- hdv2003 %>%
 freq(hdv2003$qualif_rec)
 ```
 
+
 `fct_lump`, qui regroupe automatiquement les modalités les moins fréquentes en une seule modalité "Other" (avec possibilité d'indiquer des seuils de regroupement) :
 
 ```{r}
@@ -255,6 +252,7 @@ hdv2003 <- hdv2003 %>%
 
 freq(hdv2003$qualif_rec)
 ```
+
 
 `fct_explicit_na` qui convertit toutes les valeurs manquantes (`NA`) d'un facteur en une modalité spécifique :
 
@@ -265,11 +263,13 @@ hdv2003 <- hdv2003 %>%
 freq(hdv2003$qualif_rec)
 ```
 
+
+
 #### Interface graphique de recodage {#irec}
 
 L'extension `questionr` propose une interface graphique facilitant le recodage des valeurs d'une variable qualitative. L'objectif est de permettre à l'utilisateur de saisir les nouvelles valeurs dans un formulaire, et de générer ensuite le code R correspondant au recodage indiqué.
 
-Pour utiliser cette interface, sous RStudio vous pouvez aller dans le menu *Addins* puis choisir *Levels recoding*. Sinon, vous pouvez lancer dans la console la fonction `irec()` en lui passant comme paramètre la variable à recoder.
+Pour utiliser cette interface, sous RStudio vous pouvez aller dans le menu *Addins* (présent dans la barre d'outils principale) puis choisir *Levels recoding*. Sinon, vous pouvez lancer dans la console la fonction `irec()` en lui passant comme paramètre la variable à recoder.
 
 ![Interface graphique de `irec`](resources/screenshots/irec.png)
 
@@ -277,7 +277,11 @@ L'interface se compose de trois onglets : l'onglet *Variable et paramètres* vou
 
 Une fois votre recodage terminé, cliquez sur le bouton *Done* et le code R sera inséré dans votre script R ou affiché dans la console. 
 
+```{block type='rmdimportant'}
 **Attention**, cette interface est prévue pour ne pas modifier vos données. C'est donc à vous d'exécuter le code généré pour que le recodage soit réellement effectif.
+```
+
+
 
 
 
@@ -295,6 +299,8 @@ hdv2003 <- hdv2003 %>%
                                   "Autre"))
 freq(hdv2003$qualif_rec)
 ```
+
+
 
 Une autre possibilité est d'ordonner les modalités d'un facteur selon les valeurs d'une autre variable. Par exemple, si on représente le boxplot de la répartition de l'âge selon le statut d'occupation :
 
@@ -316,16 +322,16 @@ ggplot(hdv2003) +
 
 #### Interface graphique {#iorder}
 
-On peut aussi utiliser l'interface graphique proposée par l'extension `questionr` afin de faciliter cette opération. Pour la lancer, sélectionner le menu *Addins* puis *Levels ordering*, ou exécuter la fonction `iorder()` en lui passant comme paramètre le facteur à réordonner.
+On peut aussi utiliser l'interface graphique proposée par l'extension `questionr` afin de faciliter cette opération de réordonnancement. Pour la lancer, sélectionner le menu *Addins* puis *Levels ordering*, ou exécuter la fonction `iorder()` en lui passant comme paramètre le facteur à réordonner.
 
-![Interface graphique de `iorder`](resources/screenshots/irec.png)
+![Interface graphique de `iorder`](resources/screenshots/iorder.png)
 
 Le fonctionnement de l'interface est similaire à celui de [l'interface de recodage](#irec). Vous pouvez réordonner les modalités en les faisant glisser avec la souris, puis récupérer et exécuter le code R généré.
 
 
 ## Combiner une ou plusieurs variables
 
-Parfois, on veut créer une nouvelle variable en partant des valeurs d'une ou plusieurs autres variables. Dans ce cas on peut utiliser les fonctions `if_else` pour les cas les plus simples, ou `case_when` pour les cas plus complexes.
+Parfois, on veut créer une nouvelle variable en partant des valeurs d'une ou plusieurs autres variables. Dans ce cas on peut utiliser les fonctions `if_else` pour les cas les plus simples, ou `case_when` pour les cas plus complexes. Ces deux fonctions sont incluses dans l'extension `dplyr`, qu'il faut donc avoir chargé précédemment.
 
 ### `if_else`
 
@@ -370,7 +376,10 @@ freq(hdv2003$statut)
 
 La clause `TRUE ~ "Autre"` permet d'assigner une valeur à toutes les lignes pour lesquelles aucune des conditions précédentes n'est vraie.
 
+
+```{block type='rmdimportant'}
 **Attention :** comme les conditions sont testées l'une après l'autre et que la valeur renvoyée est celle correspondant à la première condition vraie, l'ordre de ces conditions est très important. Il faut absolument aller du plus spécifique au plus général.
+```
 
 Par exemple le recodage suivant ne fonctionne pas :
 
@@ -383,6 +392,7 @@ hdv2003 <- hdv2003 %>%
 
 freq(hdv2003$statut)
 ```
+
 
 Comme la condition `sexe == "Homme"` est plus générale que `sexe == "Homme" & age > 60`, cette deuxième condition n'est jamais testée ! On n'obtiendra jamais la valeur correspondante.
 
@@ -401,7 +411,7 @@ freq(hdv2003$statut)
 
 ## Découper une variable numérique en classes
 
-Une opération relativement courante consiste à découper une variable numérique en classes. Par exemple, on voudra transformer une variable *revenu* contenant le revenu mensuel en une variable avec des catégorie *Moins de 500 euros*, *500-1000 euros*, etc.
+Une opération relativement courante consiste à découper une variable numérique en classes. Par exemple, on voudra transformer une variable *revenu* contenant le revenu mensuel en une variable qualitative avec des catégories *Moins de 500 euros*, *500-1000 euros*, etc.
 
 Pour cela on peut utiliser la fonction `cut()` :
 
@@ -413,23 +423,28 @@ freq(hdv2003$agecl)
 Si on donne un nombre entier à l'argument `breaks`, un nombre correspondant de classes d'amplitudes égales sont automatiquement calculées. Il est souvent préférable cependant d'avoir des limites "rondes", on peut alors spécifier ces dernières manuellement en passant un vecteur à `breaks` :
 
 ```{r}
-hdv2003$agecl <- cut(hdv2003$age, breaks = c(18, 25, 35, 45, 55, 65, 97), include.lowest = TRUE)
+hdv2003$agecl <- cut(hdv2003$age, 
+                     breaks = c(18, 25, 35, 45, 55, 65, 97), 
+                     include.lowest = TRUE)
 freq(hdv2003$agecl)
 ```
+
 Ici on a été obligé d'ajouter l'argument `include.lowest = TRUE` car sinon la valeur 18 n'aurait pas été incluse, et on aurait eu des valeurs manquantes.
 
 ### Interface graphique
 
 Comme l'utilisation des arguments de `cut` n'est pas toujours très intuitive, l'extension `questionr` propose une interface graphique facilitant cette opếration de découpage en classes d'une variable numérique. 
 
-Pour lancer cette interface, sous RStudio ouvrir le menu *Addins* et sélectionner *Variable cutting*, ou exécuter la fonction `icut()` dans la console en lui passant comme argument la variable numériqueà découper.
+Pour lancer cette interface, sous RStudio ouvrir le menu *Addins* et sélectionner *Variable cutting*, ou exécuter la fonction `icut()` dans la console en lui passant comme argument la variable quantitative à découper.
 
 ![Interface graphique de `icut`](resources/screenshots/icut.png)
 
 Vous pouvez alors choisir la variable à découper dans l’onglet *Variable et paramètres*, indiquer les
-limites de vos classes ainsi que quelques options complémentaires dans l’onglet *Découpage en classes*, et vérifier le résultat dans l’onglet *Code et résultat*. Une fois le résultat satisfaisant, cliquez sur Done : si vous êtes sous RStudio le code généré sera directement inséré dans votre script actuel à l’emplacement du curseur. Sinon, ce code sera affiché dans la console et vous pourrez le copier/coller pour l’inclure dans votre script.
+limites de vos classes ainsi que quelques options complémentaires dans l’onglet *Découpage en classes*, et vérifier le résultat dans l’onglet *Code et résultat*. Une fois le résultat satisfaisant, cliquez sur *Done* : si vous êtes sous RStudio le code généré sera directement inséré dans votre script actuel à l’emplacement du curseur. Sinon, ce code sera affiché dans la console et vous pourrez le copier/coller pour l’inclure dans votre script.
 
+```{block type='rmdimportant'}
 **Attention**, cette interface est prévue pour ne pas modifier vos données. C'est donc à vous d'exécuter le code généré pour que le découpage soit réellement effectif.
+```
 
 
 
@@ -438,7 +453,7 @@ limites de vos classes ainsi que quelques options complémentaires dans l’ongl
 
 ### Préparation
 
-Pour ces exercices, on a besoin des extensions `forcats` et `questionr`, et du jeu de données d'exemple `hdv2003`.
+Pour la plupart de ces exercices, on a besoin des extensions `forcats` et `questionr`, et du jeu de données d'exemple `hdv2003`.
 
 ```{r}
 library(forcats)
@@ -469,7 +484,7 @@ as.numeric(x)
 Construire le vecteur suivant :
 
 ```{r}
-x <- c(1, 20, 21, 15.5, 14, 12, 8, 16, 1)
+x <- c(1, 20, 21, 15.5, 14, 12, 8)
 ```
 
 - Écrire le test qui indique si les éléments du vecteur sont strictement supérieurs à 15. 
