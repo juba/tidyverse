@@ -1,8 +1,4 @@
 # TODO
 
-- Ajouter r-bloggers et #rstats
-- Police des blocs de code
-- Caching dans rmarkdown
+- Manipulation de chaînes de caractères
 - htmlwidgets
-- Exercices manquants
-- Lien Gtihub
