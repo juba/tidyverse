@@ -8,8 +8,7 @@ library(tidyverse)
 
 Comme indiqué dans la section \@ref(tidydata), les extensions du *tidyverse* comme `dplyr` ou `ggplot2` partent du principe que les données sont "bien rangées" sous forme de *tidy data*.
 
-Prenons un exemple avec les données suivantes :
-
+Prenons un exemple avec les données suivantes, qui indique la population de trois pays pour quatre années différentes :
 
 ```{r echo=FALSE, paged.print=FALSE, warning=FALSE}
 library(gapminder)
@@ -20,7 +19,7 @@ dm <- d %>%
          year >= 1992) %>%
   select(country, year, pop) %>% 
   spread(year, pop)
-dm
+kable(dm)
 ```
 
 Imaginons qu'on souhaite représenter avec `ggplot2` l'évolution de la population pour chaque pays sous forme de lignes : c'est impossible avec les données sous ce format. On a besoin d'arranger le tableau de la manière suivante :
@@ -29,10 +28,10 @@ Imaginons qu'on souhaite représenter avec `ggplot2` l'évolution de la populati
 d <- dm %>% 
   gather(annee, population, -country) %>% 
   mutate(annee = as.numeric(annee))
-d
+kable(d)
 ```
 
-Il est alors possible de réaliser le graphique :
+C'est seulement avec les données dans ce format qu'on peut réaliser le graphique :
 
 ```{r}
 ggplot(d) + 
@@ -40,7 +39,7 @@ ggplot(d) +
   scale_x_continuous(breaks = unique(d$annee))
 ```
 
-C'est la même chose pour `dplyr`, si on voulait calculer la population minimale pour chaque pays avec `summarise` :
+C'est la même chose pour `dplyr`, par exemple si on voulait calculer la population minimale pour chaque pays avec `summarise` :
 
 ```{r warning=FALSE, paged.print=FALSE}
 d %>% 
@@ -60,20 +59,23 @@ Ces règles ne sont pas forcément très intuitives. De plus, il y a une infinit
 
 Prenons par exemple les règles 1 et 2 et le tableau de notre premier exemple :
 
-```{r warning=FALSE, paged.print=FALSE}
-dm
+```{r warning=FALSE, paged.print=FALSE, echo=FALSE}
+kable(dm)
 ```
 
-Pourquoi ce tableau n'est pas *tidy* ? Parce que si on essaie d'identifier les variables mesurées dans le tableau, il y en a trois : le pays, l'année et la population. Or elles ne correspondant pas aux colonnes de la table. C'est le cas par contre pour la table transformée :
+Pourquoi ce tableau n'est pas *tidy* ? Parce que si on essaie d'identifier les variables mesurées dans le tableau, il y en a trois : le pays, l'année et la population. Or elles ne correspondent pas aux colonnes de la table. C'est le cas par contre pour la table transformée :
 
-```{r warning=FALSE, paged.print=FALSE}
- dm %>% 
-  gather(annee, population, -country)
+```{r echo=FALSE, warning=FALSE}
+kable(dm %>% 
+  gather(annee, population, -country))
 ```
 
-Et on peut remarquer qu'en modifiant notre table pour satisfaire à la deuxième règle, on a aussi réglé la première : chaque ligne correspond désormais à une observation, qui est en l'occurrence l'observation de pays à plusieurs moments dans le temps. Dans notre table d'origine, chaque ligne comportait en réalité quatre observations différentes. Cela permet aussi d'illustrer que les règles sont interdépendantes.
 
-Un autre exemple, tiré du jeu de données `nycflights13`, permettant cette fois d'illustrer la troisième règle :
+On peut remarquer qu'en modifiant notre table pour satisfaire à la deuxième règle, on a aussi réglé la première : chaque ligne correspond désormais à une observation, en l'occurrence l'observation de trois pays à plusieurs moments dans le temps. Dans notre table d'origine, chaque ligne comportait en réalité quatre observations différentes. 
+
+Ce point permet d'illustrer le fait que les règles sont interdépendantes.
+
+Autre exemple, généré depuis le jeu de données `nycflights13`, permettant cette fois d'illustrer la troisième règle :
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE}
 library(nycflights13)
@@ -85,19 +87,19 @@ df <- flights %>%
   slice(1:8) %>% 
   select(year, month, day, dep_time, carrier) %>% 
   left_join(airlines)
-df
+kable(df)
 ```
 
-Dans ce tableau on a bien une observation par ligne (un vol), et une variable par colonne. Mais on a une "infraction" à la troisième règle, qui est que chaque valeur doit être présente dans une unique case de la table avec la colonne `name`. On a en effet une duplication de l'information concernant le nom des compagnies aériennes. Notre tableau mêle en fait deux types d'observations différents : des observations sur les vols, et des observations sur les compagnies aériennes.
+Dans ce tableau on a bien une observation par ligne (un vol), et une variable par colonne. Mais on a une "infraction" à la troisième règle, qui est que chaque valeur doit être présente dans une unique case : si on regardela colonne `name`, on a en effet une duplication de l'information concernant le nom des compagnies aériennes. Notre tableau mêle en fait deux types d'observations différents : des observations sur les vols, et des observations sur les compagnies aériennes.
 
 Pour "arranger" ce tableau, il faut séparer les deux types d'observations en deux tables différentes :
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE}
-df %>% select(-name)
+kable(df %>% select(-name))
 ```
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE}
-df %>% select(carrier, name) %>%  distinct
+kable(df %>% select(carrier, name) %>%  distinct)
 ```
 
 On a désormais deux tables distinctes, l'information n'est pas dupliquée, et on peut facilement faire une jointure si on a besoin de récupérer l'information d'une table dans une autre.
@@ -105,7 +107,7 @@ On a désormais deux tables distinctes, l'information n'est pas dupliquée, et o
 
 ## Les verbes de `tidyr`
 
-L'objectif de `tidyr` est de fournir des fonctions pour arranger ses données et les convertir dans un format *tidy*. Ces fonctions prennent la forme de verbes qui viennent compléter ceux de `dplyr` et s'intègrent parfaitement dans les séries de *pipes* (`%>%`) permettant d'enchaîner les opérations.
+L'objectif de `tidyr` est de fournir des fonctions pour arranger ses données et les convertir dans un format *tidy*. Ces fonctions prennent la forme de verbes qui viennent compléter ceux de `dplyr` et s'intègrent parfaitement dans les séries de *pipes* (`%>%`), les *pipelines*, permettant d'enchaîner les opérations.
 
 
 
@@ -113,7 +115,7 @@ L'objectif de `tidyr` est de fournir des fonctions pour arranger ses données et
 
 Prenons le tableau `d` suivant, qui liste la population de 6 pays en 2002 et 2007 :
 
-```{r message=FALSE, warning=FALSE, paged.print=FALSE}
+```{r echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE}
 library(gapminder)
 data(gapminder)
 d <- gapminder
@@ -122,18 +124,18 @@ d <- d %>%
          year >= 2002) %>%
   select(country, year, pop) %>% 
   spread(year, pop)
-d
+kable(d)
 ```
 
 Dans ce tableau, une même variable (la population) est répartie sur plusieurs colonnes, chacune représentant une observation à un moment différent. On souhaite que la variable ne représente plus qu'une seule colonne, et que les observations soient réparties sur plusieurs lignes. 
 
-Pour cela on va utiliser la fonction `gather` (rassembler) : 
+Pour cela on va utiliser la fonction `gather` ("rassembler") : 
 
 ```{r warning=FALSE, paged.print=FALSE}
 d %>% gather(`2002`, `2007`, key = annee, value = population)
 ```
 
-La fonction `gather` prend comme arguments la liste des colonnes à rassembler (ici on a mis `2002` et `2007` entre *backticks* (```2002```) pour indiquer à `gather` qu'il s'agit d'un nom de colonne et pas d'un nombre), ainsi que deux arguments `key` et `value` :
+La fonction `gather` prend comme arguments la liste des colonnes à rassembler (ici on a mis `2002` et `2007` entre *backticks* (`` `2002` ``) pour indiquer à `gather` qu'il s'agit d'un nom de colonne et pas d'un nombre), ainsi que deux arguments `key` et `value` :
 
 - `key` est le nom de la colonne qui va contenir les "clés", c'est-à-dire les identifiants des différentes observations
 - `value` est le nom de la colonne qui va contenir la valeur des observations
@@ -153,16 +155,16 @@ La fonction `spread` est l'inverse de `gather`.
 
 Soit le tableau `d` suivant :
 
-```{r warning=FALSE, paged.print=FALSE}
+```{r echo=FALSE, warning=FALSE, paged.print=FALSE}
 library(gapminder)
 data(gapminder)
 dm <- gapminder
-dm <- dm %>% 
+d <- dm %>% 
   filter(country %in% c("France", "Germany", "Belgium"),
          year >= 2002) %>% 
   select(-gdpPercap) %>% 
   gather(lifeExp, pop, key = variable, value = value)
-dm
+kable(d)
 ```
 
 Ce tableau a le problème inverse du précédent : on a deux variables, `lifeExp` et `pop` qui, plutôt que d'être réparties en deux colonnes, sont réparties entre plusieurs lignes.
@@ -170,8 +172,7 @@ Ce tableau a le problème inverse du précédent : on a deux variables, `lifeExp
 On va donc utiliser `spread` pour "disperser" ces lignes dans deux colonnes différentes :
 
 ```{r warning=FALSE, paged.print=FALSE}
-dm %>% 
-  spread(key = variable, value = value)
+d %>% spread(key = variable, value = value)
 ```
 
 `spread` prend deux arguments principaux :
@@ -179,15 +180,23 @@ dm %>%
 - `key` indique la colonne contenant les noms des nouvelles variables à créer
 - `value` indique la colonne contenant les valeurs de ces variables
 
-Il peut arriver que certaines variables soient absentes pour certaines observations. Dans ce cas l'argument `fill` permet de spécifier la valeur à utiliser pour ces données manquantes (par défaut `fill` vaut, logiquement, `NA`) :
+Il peut arriver que certaines variables soient absentes pour certaines observations. Dans ce cas l'argument `fill` permet de spécifier la valeur à utiliser pour ces données manquantes (par défaut `fill` vaut, logiquement, `NA`).
+
+Exemple avec le tableau `d` suivant :
 
 ```{r warning=FALSE, paged.print=FALSE, echo = FALSE}
-dm <- dm %>% bind_rows(list(country = "France", continent = "Europe", year = 2002, variable = "density", value = 94))
-dm
+d <- d %>% bind_rows(list(country = "France", continent = "Europe", year = 2002, variable = "density", value = 94))
+kable(d)
 ```
 
 ```{r warning=FALSE, paged.print=FALSE}
-dm %>% 
+d %>% 
+  spread(key = variable, value = value)
+```
+
+
+```{r warning=FALSE, paged.print=FALSE}
+d %>% 
   spread(key = variable, value = value, fill = "-")
 ```
 
@@ -199,10 +208,10 @@ Parfois on a plusieurs informations réunies en une seule colonne et on souhaite
 ```{r echo=FALSE, warning=FALSE, paged.print=FALSE}
 df <- tibble(eleve = c("Félicien Machin", "Raymonde Bidule", "Martial Truc"),
              note = c("5/20", "6/10", "87/100"))
-df
+kable(df)
 ```
 
-`separate` permet de séprer la colonne `note` en deux nouvelles colonnes `note` et `note_sur` :
+`separate` permet de séparer la colonne `note` en deux nouvelles colonnes `note` et `note_sur` :
 
 ```{r warning=FALSE, paged.print=FALSE}
 df %>% separate(note, c("note", "note_sur"))
@@ -226,20 +235,21 @@ d <- rp2012 %>%
   slice(1:6) %>% 
   select(code_insee, commune, pop_tot) %>% 
   extract(code_insee, c("code_departement", "code_commune"), regex = "(..)(...)")
-d
+kable(d)
 ```
 
-On souhaite reconstruire une colonne `code_insee` qui indique le code INSEE de la commune, et qui s'obtient en concaténant le code du département et celui de la commune. On peut alors utiliser `unite` :
+On souhaite reconstruire une colonne `code_insee` qui indique le code INSEE de la commune, et qui s'obtient en concaténant le code du département et celui de la commune. On peut utiliser `unite` pour cela :
 
 ```{r warning=FALSE, paged.print=FALSE}
 d %>% unite(code_insee, code_departement, code_commune)
 ```
 
-Le résultat n'est pas idéal : par défaut `unite` ajoute un caractère `_` entre les deux valeurs concaténer, alors qu'on ne veut aucun séparateur. De plus, on souhaite conserver nos deux colonnes d'origine, qui peuvent nous être utiles. On peut résoudre ces deux problèmes à l'aide des arguments `sep` et `remove` :
+Le résultat n'est pas idéal : par défaut `unite` ajoute un caractère `_` entre les deux valeurs concaténées, alors qu'on ne veut aucun séparateur. De plus, on souhaite conserver nos deux colonnes d'origine, qui peuvent nous être utiles. On peut résoudre ces deux problèmes à l'aide des arguments `sep` et `remove` :
 
 ```{r warning=FALSE, paged.print=FALSE}
 d %>% 
-  unite(code_insee, code_departement, code_commune, sep = "", remove = FALSE)
+  unite(code_insee, code_departement, code_commune, 
+        sep = "", remove = FALSE)
 ```
 
 
@@ -248,9 +258,9 @@ d %>%
 
 Chaque jeu de données est différent, et le travail de remise en forme est souvent long et plus ou moins compliqué. On n'a donné ici que les exemples les plus simples, et c'est souvent en combinant différentes opérations qu'on finit par obtenir le résultat souhaité.
 
-Le livre *R for data science*, librement accessibles en ligne, contient [un chapitre complet](http://r4ds.had.co.nz/tidy-data.html) sur la remise en forme des données. 
+Le livre *R for data science*, librement accessible en ligne, contient [un chapitre complet](http://r4ds.had.co.nz/tidy-data.html) sur la remise en forme des données. 
 
-L'article [Tidy data](https://www.jstatsoft.org/article/view/v059i10), publié en 2014 dans le *Journal of Statistical Software*, présente de manière détaillée le concept éponyme (mais il utilise par contre des extensions désormais obsolètes qui ont été remplacées par `dplyr` et`tidyr`).
+L'article [Tidy data](https://www.jstatsoft.org/article/view/v059i10), publié en 2014 dans le *Journal of Statistical Software*, présente de manière détaillée le concept éponyme (mais il utilise des extensions désormais obsolètes qui ont depuis été remplacées par `dplyr` et`tidyr`).
 
 Le site de l'extension est accessible à l'adresse : http://tidyr.tidyverse.org/ et contient une liste des fonctions et les pages d'aide associées.
 
