@@ -1,11 +1,11 @@
 # Exporter les résultats
 
-L'extension `rmarkdown` permet de générer des documents de manière dynamique en mélangeant texte mis en forme et résultats produits par du code R. Les documents générés peuvent être au format HTML, PDF, Word, et bien d'autres ^[On peut citer les formats `odt`, `rtf`, Markdown, etc.].
+L'extension `rmarkdown` permet de générer des documents de manière dynamique en mélangeant texte mis en forme et résultats produits par du code R. Les documents générés peuvent être au format HTML, PDF, Word, et bien d'autres^[On peut citer les formats `odt`, `rtf`, Markdown, etc.]. C'est donc un outil très pratique pour l'exportation, la communication et la diffusion de résultats d'analyse.
 
-Le présent document a lui-même été généré à partir de fichiers R Markdown ^[Plus précisément grâce à l'extension `bookdown` qui permet de générer des documents de type livre.]
+Le présent document a lui-même été généré à partir de fichiers R Markdown^[Plus précisément grâce à l'extension `bookdown` qui permet de générer des documents de type livre.].
 
-`rmarkdown` ne fait pas partie du *tidyverse*, mais elle est installée et chargée par défaut par RStudio ^[Si vous n'utilisez pas ce dernier, l'extension peut être installée à part avec `install.packages("rmarkdown")` et chargée explicitement avec 
-`library(rmarkdown)`].
+`rmarkdown` ne fait pas partie du *tidyverse*, mais elle est installée et chargée par défaut par RStudio^[Si vous n'utilisez pas ce dernier, l'extension peut être installée à part avec `install.packages("rmarkdown")` et chargée explicitement avec 
+`library(rmarkdown)`.].
 
 Voici un exemple de document R Markdown minimal :
 
@@ -16,7 +16,7 @@ cat(htmltools::includeText("resources/rmarkdown/minimal_sample.Rmd"))
 
 Ce document peut être "compilé" sous différents formats. Lors de cette étape, le texte est mis en forme, les blocs de code sont exécutés, leur résultat ajouté au document, et le tout est transformé dans un des différents formats possibles.
 
-Voici par exemple le rendu du document précédent au format HTML :
+Voici le rendu du document précédent au format HTML :
 
 ![Rendu HTML](resources/screenshots/rmd_minimal_html.png)
 
@@ -44,7 +44,7 @@ Sous RStudio, on peut créer un nouveau document en allant dans le menu *File* p
 
 ![Création d'un document R Markdown](resources/screenshots/rstudio_new_rmarkdown.png)
 
-Elle permet d'indiquer le titre, l'auteur du document ainsi que le format de sortie par défaut (il est possible de modifier facilement ses éléments par la suite). Plutôt qu'un document classique, on peut aussi choisir de créer une présentation sous forme de slides (entrée *Presentation*) ou à créer un document à partir d'un modèle (Entrée *From Template*).
+On peut indiquer le titre, l'auteur du document ainsi que le format de sortie par défaut (il est possible de modifier facilement ses éléments par la suite). Plutôt qu'un document classique, on verra section \@ref(templates) qu'on peut aussi choisir de créer une présentation sous forme de slides (entrée *Presentation*) ou de créer un document à partir d'un modèle (Entrée *From Template*).
 
 Un fichier comportant un contenu d'exemple s'affiche alors. Vous pouvez l'enregistrer où vous le souhaitez avec une extension `.Rmd`.
 
@@ -94,7 +94,7 @@ Génèrera le texte mis en forme suivant :
 
 On voit que des mots placés entre des astérisques sont mis en italique, des lignes qui commencent par un tiret sont transformés en liste à puce, etc.
 
-On peut définir des titres de différents niveaux en faisant débuter la ligne par un ou plusieurs caractères `#` :
+On peut définir des titres de différents niveaux en faisant débuter une ligne par un ou plusieurs caractères `#` :
 
 ```
 # Titre de niveau 1
@@ -104,20 +104,24 @@ On peut définir des titres de différents niveaux en faisant débuter la ligne 
 ### Titre de niveau 3
 ```
 
-Petite astuce, si vous cliquez sur l'icône totalement à droite de la barre d'outils associée au fichier R Markdown, une table des matières dynamique générée automatiquement à partir des titres présents dans le document s'affiche et vous permet de naviguer facilement dans celui-ci :
-
+```{block type='rmdnote'}
+Petite astuce, si vous cliquez sur l'icône *Show document outline* totalement à droite de la barre d'outils associée au fichier R Markdown, une table des matières dynamique générée automatiquement à partir des titres présents dans le document s'affiche et vous permet de naviguer facilement dans celui-ci :
 
 ![Table des matières dynamique](resources/screenshots/rstudio_rmd_toc.png)
 
+```
 
-La syntaxe Markdown permet d'autres mises en forme, comme la possibilité d'insérer des liens ou des images. Dans RStudio, le menu *Help* puis *Markdown quick reference* donne un aperçu plus complet de la syntaxe. Par exemple, le code suivant :
+
+
+La syntaxe Markdown permet d'autres mises en forme, comme la possibilité d'insérer des liens ou des images. Par exemple, le code suivant :
 
     [Exemple de lien](https://example.com)
 
 Donnera le lien suivant :
 
-[Exemple de lien](https://example.com)
+> [Exemple de lien](https://example.com)
 
+Dans RStudio, le menu *Help* puis *Markdown quick reference* donne un aperçu plus complet de la syntaxe.
 
 ### Blocs de code R
 
@@ -128,20 +132,21 @@ En plus du texte libre au format Markdown, un document R Markdown contient, comm
 cat(htmltools::includeText("resources/rmarkdown/code_chunk.Rmd"))
 ```
 
-Comme cette suite de caractères n'est pas très simple à saisir, vous pouvez utiliser le menu *Insert* de RStudio et choisir *R* ^[Il est possible d'inclure dans un document R Markdown des blocs de code d'autres langages], ou, encore mieux, d'utiliser le raccourci clavier `Ctrl+Alt+i`.
+Comme cette suite de caractères n'est pas très simple à saisir, vous pouvez utiliser le menu *Insert* de RStudio et choisir *R*^[Il est possible d'inclure dans un document R Markdown des blocs de code d'autres langages], ou utiliser le raccourci clavier `Ctrl+Alt+i`.
 
 ![Menu d'insertion d'un bloc de code](resources/screenshots/rstudio_insert_chunk.png)
 
-Dans RStudio les blocs de code R sont en général affichés avec une couleur de fond légèrement différente.
+Dans RStudio les blocs de code R sont en général affichés avec une couleur de fond légèrement différente pour les distinguer du reste du document.
 
-Quand votre curseur se trouve dans cette zone, vous pouvez saisir le code R que vous souhaitez, l'exécuter, utiliser l'autocomplétion, exactement comme si vous vous trouviez dans un script R. Vous pouvez également exécuter l'ensemble du code contenu dans un bloc à l'aide du raccourci clavier `Ctrl+Shift+Entrée`.
+Quand votre curseur se trouve dans un bloc, vous pouvez saisir le code R que vous souhaitez, l'exécuter, utiliser l'autocomplétion, exactement comme si vous vous trouviez dans un script R. Vous pouvez également exécuter l'ensemble du code contenu dans un bloc à l'aide du raccourci clavier `Ctrl+Shift+Entrée`.
 
-Dans RStudio, par défaut, les résultats d'un bloc de code (texte, tableau ou graphique) s'affichent directement *dans* le document, permettant de les visualiser directement et de les conserver le temps de la session ^[Ce comportement peut être modifié en cliquant sur l'icône d'engrenage de la barre d'outils et en choisissant *Chunk Output in Console*].
+Dans RStudio, par défaut, les résultats d'un bloc de code (texte, tableau ou graphique) s'affichent directement *dans* la fenêtre d'édition du document, permettant de les visualiser facilement et de les conserver le temps de la session ^[Ce comportement peut être modifié en cliquant sur l'icône d'engrenage de la barre d'outils et en choisissant *Chunk Output in Console*].
 
-Lorsque le document sera "compilé" au format HTML, PDF ou docx, chaque bloc est exécuté tour à tour, et le résultat inclus dans le document final, qu'il s'agisse de texte, d'un tableau ou d'un graphique. Les blocs sont liés entre eux, dans le sens où les données importées ou calculées dans un bloc sont accessibles aux blocs suivants. On peut donc aussi voir un document R Markdown comme un scipt R dans lequel on aurait intercalé du texte libre au format Markdown.
+Lorsque le document est "compilé" au format HTML, PDF ou docx, chaque bloc est exécuté tour à tour, et le résultat inclus dans le document final, qu'il s'agisse de texte, d'un tableau ou d'un graphique. Les blocs sont liés entre eux, dans le sens où les données importées ou calculées dans un bloc sont accessibles aux blocs suivants. On peut donc aussi voir un document R Markdown comme un script R dans lequel on aurait intercalé du texte libre au format Markdown.
 
+```{block type='rmdnote'}
 À noter qu'avant chaque compilation, une nouvelle session R est lancée, ne contenant aucun objet. Les premiers blocs de code d'un document sont donc souvent utilisés pour importer des données, exécuter des recodages, etc.
-
+```
 
 
 ### Compiler un document (*Knit*)
@@ -152,9 +157,13 @@ On peut à tout moment compiler, ou plutôt "tricoter" (*Knit*), un document R M
 
 Vous pouvez aussi utiliser le raccourci `Ctrl+Shift+K` pour compiler le document dans le dernier format utilisé.
 
-**Attention :** pour la génération du format PDF, vous devez avoir une installation fonctionnelle de LaTeX sur votre système. C'est en général le cas pour des ordinateurs Mac ou Linux, mais pas sous Windows : dans ce cas vous devrez installer une distribution comme [MiKTeX](https://miktex.org/).
 
-Un onglet *R Markdown* s'ouvre dans la même zone que l'onglet *Console* et indique la progression de la compilation, ainsi que les messages d'erreur éventuels. Si tout se passe bien, Le document devrait s'afficher soit dans une fenêtre *Vihttps://miktex.org/ewer* de RStudio (pour la sortie HTML), soit dans le logiciel par défaut de votre ordinateur.
+```{block type='rmdimportant'}
+Pour la génération du format PDF, vous devez avoir une installation fonctionnelle de $\LaTeX$ sur votre système. C'est en général le cas pour des ordinateurs Mac ou Linux, mais pas sous Windows : dans ce cas vous devrez installer une distribution comme [MiKTeX](https://miktex.org/).
+```
+
+
+Un onglet *R Markdown* s'ouvre dans la même zone que l'onglet *Console* et indique la progression de la compilation, ainsi que les messages d'erreur éventuels. Si tout se passe bien, Le document devrait s'afficher soit dans une fenêtre *Viewer* de RStudio (pour la sortie HTML), soit dans le logiciel par défaut de votre ordinateur.
 
 ## Personnaliser le document généré
 
@@ -168,7 +177,10 @@ Une boîte de dialogue s'affiche vous permettant de sélectionner le format de s
 
 Pour le format HTML par exemple, l'onglet *General* vous permet de spécifier si vous voulez une table des matières, sa profondeur, les thèmes à appliquer pour le document et la coloration syntaxique des blocs R, etc. L'onglet *Figures* vous permet de changer les dimensions par défaut des graphiques générés.
 
-Une option très intéressante pour les fichiers HTML, accessible via l'onglet *Advanced*, est l'entrée *Create standalone HTML document*. Si elle est cochée (ce qui est le cas par défaut), le document HTML généré contiendra en un seul fichier le code HTML mais aussi les images et toutes les autres ressources nécessaires à son affichage. Ceci permet de générer des fichiers assez volumineux, mais que vous pouvez transférer très facilement à quelqu'un par mail ou en le mettant en ligne quelque part. Si la case n'est pas cochée, les images et autres ressources sont placées dans un dossier à part.
+```{block type='rmdnote'}
+Une option très intéressante pour les fichiers HTML, accessible via l'onglet *Advanced*, est l'entrée *Create standalone HTML document*. Si elle est cochée (ce qui est le cas par défaut), le document HTML généré contiendra en un seul fichier le code HTML mais aussi les images et toutes les autres ressources nécessaires à son affichage. Ceci permet de générer des fichiers (parfois assez volumineux) que vous pouvez transférer très facilement à quelqu'un par mail ou en le mettant en ligne quelque part. Si la case n'est pas cochée, les images et autres ressources sont placées dans un dossier à part.
+```
+
 
 Lorsque vous changez des options, RStudio va en fait modifier le préambule de votre document. Ainsi, si vous choisissez d'afficher une table des matières et de modifier le thème de coloration syntaxique, votre en-tête va devenir quelque chose comme :
 
@@ -180,7 +192,9 @@ Lorsque vous changez des options, RStudio va en fait modifier le préambule de v
          toc: yes
     ---
 
-Vous pouvez modifier les options directement en éditant le préambule. Il est possible de spécifier des options différentes selon les formats, par exemple :
+Vous pouvez modifier les options directement en éditant le préambule. 
+
+À noter qu'il est possible de spécifier des options différentes selon les formats, par exemple :
 
     ---
     title: "Test R Markdown"
@@ -193,7 +207,7 @@ Vous pouvez modifier les options directement en éditant le préambule. Il est p
         highlight: kate
     ---
 
-La liste complète des options possibles est présente sur [le site de la documentation officielle](http://rmarkdown.rstudio.com/formats.html) (très complet et bien fait) et sur l'antisèche et le guide de référence, accessible depuis RStudio via le menu *Help* puis *Cheatsheets*.
+La liste complète des options possibles est présente sur [le site de la documentation officielle](http://rmarkdown.rstudio.com/formats.html) (très complet et bien fait) et sur l'antisèche et le guide de référence, accessibles depuis RStudio via le menu *Help* puis *Cheatsheets*.
 
 
 ## Options des blocs de code R
@@ -206,15 +220,15 @@ On rappelle qu'on bloc de code se présente de la manière suivante :
 cat(htmltools::includeText("resources/rmarkdown/code_chunk.Rmd"))
 ```
 
-### Nom du bloc
-
 Les options d'un bloc de code sont à placer à l'intérieur des accolades `{r}`.
 
-La première possibilité est de donner un *nom* au bloc celui-ci est passé directement après le `r` :
+### Nom du bloc
+
+La première possibilité est de donner un *nom* au bloc. Celui-ci est indiqué directement après le `r` :
 
 `{r nom_du_bloc}`
 
-Il n'est pas obligatoire de donner un nom à un bloc, mais cela peut être utile en cas d'erreur à la compilation, pour identifier le bloc ayant causé le problème. Attention, on ne peut pas avoir deux blocs avec le même nom.
+Il n'est pas obligatoire de nommer un bloc, mais cela peut être utile en cas d'erreur à la compilation, pour identifier le bloc ayant causé le problème. Attention, on ne peut pas avoir deux blocs avec le même nom.
 
 ### Options
 
@@ -237,12 +251,14 @@ x <- 1:5
 print(x)
 ```
 
-Mais si on positionne l'option `echo=FALSE`, alors le code R n'est plus inséré dans le document :
+Mais si on positionne l'option `echo=FALSE`, alors le code R n'est plus inséré dans le document, et seul le résultat est visible :
 
 ```{r echo=FALSE}
 x <- 1:5
 print(x)
 ```
+
+Voici une liste de quelques unes des options disponibles :
 
 Option   |    Valeurs    |  Description
 ---------|---------------|-------------------------------------------
@@ -270,8 +286,7 @@ Vous pouvez ensuite modifier les options les plus courantes, et cliquer sur *App
 On peut vouloir appliquer une option à l'ensemble des blocs d'un document. Par exemple, on peut souhaiter par défaut ne pas afficher le code R de chaque bloc dans le document final.
 
 On peut positionner une option globalement en utilisant la fonction `knitr::opts_chunk$set()`.
-
-Par exemple, insérer `knitr::opts_chunk$set(echo = FALSE)` dans un bloc de code positionnera l'option `echo=FALSE` par défaut pour tous les blocs suivants.
+Par exemple, insérer `knitr::opts_chunk$set(echo = FALSE)` dans un bloc de code positionnera l'option `echo = FALSE` par défaut pour tous les blocs suivants.
 
 En général, on place toutes ces modifications globales dans un bloc spécial nommé `setup` et qui est le premier bloc du document :
 
@@ -279,8 +294,25 @@ En général, on place toutes ces modifications globales dans un bloc spécial n
 cat(htmltools::includeText("resources/rmarkdown/setup_chunk.Rmd"))
 ```
 
+```{block type='rmdnote'}
 Par défaut RStudio exécute systématiquement le contenu du bloc `setup` avant d'exécuter celui d'un autre bloc.
+```
 
+
+### Mise en cache des résultats
+
+Compiler un document R Markdown peut être long, car il faut à chaque fois exécuter l'ensemble des blocs de code R qui le constituent.
+
+Pour accélérer cette opération, R Markdown utilise un système de *mise en cache* : les résultats de chaque bloc sont enregistrés dans un fichier et à la prochaine compilation, si le code et les options du bloc n'ont pas été modifiés, c'est le contenu du fichier de cache qui est utilisé, ce qui évite d'exécuter le code R.
+
+```{block type='rmdnote'}
+On peut activer ou désactiver la mise en cache des résultats pour chaque bloc de code avec l'option `cache = TRUE` ou `cache = FALSE`, et on peut aussi désactiver totalement la mise en cache pour le document en ajoutant `knitr::opts_chunk$set(echo = FALSE)` dans le premier bloc *setup*.
+```
+
+
+Ce système de cache peut poser problème par exemple si les données source changent : dans ce cas les résultats de certains blocs peuvent ne pas être mis à jour s'ils sont présents en cache. Dans ce cas, on peut vider le cache du document, ce qui forcera un recalcul de tous les blocs de code à la prochaine compilation. Pour cela, vous pouvez ouvrir le menu *Knit* et choisir *Clear Knitr Cache...* :
+
+![Menu *Knit*](resources/screenshots/rstudio_knit_menu.png)
 
 ## Rendu des tableaux
 
@@ -295,22 +327,30 @@ tab <- lprop(table(hdv2003$qualif, hdv2003$sexe))
 tab
 ```
 
-On peut améliorer leur présentation en utilisant la fonction `kable` de l'extension `knitr`. Celle-ci fournit un formatage adapté en fonction du format de sortie. On aura donc des tableaux "propres" que ce soit en HTML, PDF ouformats traitements de texte :
+On peut améliorer leur présentation en utilisant la fonction `kable` de l'extension `knitr`. Celle-ci fournit un formatage adapté en fonction du format de sortie. On aura donc des tableaux "propres" que ce soit en HTML, PDF ou aux formats traitements de texte :
 
 ```{r}
 library(knitr)
 kable(tab)
 ```
 
+Différents arguments permettent de modifier la sortie de `kable`. `digits`, par exemple, permet de spécifier le nombre de chiffres significatifs à afficher dans les colonnes de nombres :
+
+```{r}
+kable(tab, digits = 1)
+```
+
+
 ### Tableaux de données et tris à plat
 
-En ce qui concerne les tableaux de données, l'affichage HTML par défaut se contente d'un affichage texte comme dans la console, très peu lisible dès que le tableau dépasse une certaine dimension.
+En ce qui concerne les tableaux de données (tibble ou *data frame*), l'affichage HTML par défaut se contente d'un affichage texte comme dans la console, très peu lisible dès que le tableau dépasse une certaine dimension.
 
 Une alternative est d'utiliser la fonction `paged_table`, qui affiche une représentation HTML paginée du tableau :
 
-```{r}
+```{r paged.print=TRUE}
 rmarkdown::paged_table(hdv2003)
 ```
+
 
 Une autre alternative est d'utiliser `kable`, ou encore la fonction `datatable` de l'extension `DT`, qui propose encore davantage d'interactivité :
 
@@ -318,28 +358,32 @@ Une autre alternative est d'utiliser `kable`, ou encore la fonction `datatable` 
 DT::datatable(hdv2003)
 ```
 
-Dans tous les cas il est déconseillé d'afficher de cette manière un tableau de données de très grandes dimensions, car le fichier HTML résultant serait très volumineux.
+Dans tous les cas il est déconseillé d'afficher de cette manière un tableau de données de très grandes dimensions, car le fichier HTML résultant contiendrait l'ensemble des données et serait donc très volumineux.
 
+```{block type='rmdnote'}
 On peut définir un mode d'affichage par défaut pour tous les tableaux de données en modifiant les *Output options* du format HTML (onglet *General*, *Print dataframes as*), ou en modifiant manuellement l'option `df_print` de l'entrée `html_document` dans le préambule.
 
 À noter que les tableaux issus de la fonction `freq` de `questionr` s'affichent comme des tableaux de données (et non comme des tableaux croisés).
+```
 
 
-## Modèles de documents
+
+
+## Modèles de documents {#templates}
 
 On a vu ici la production de documents "classiques", mais R Markdown permet de créer bien d'autres choses. 
 
-Le site de documentation de l'extension propose [une galerie](http://rmarkdown.rstudio.com/gallery.html) des différentes sorties possibles. R Markdown et les extensions qui l'utilisent permettent de créer des slides, des sites Web ou même des livres entiers, comme le présent document.
+Le site de documentation de l'extension propose [une galerie](http://rmarkdown.rstudio.com/gallery.html) des différentes sorties possibles. On peut ainsi créer des slides, des sites Web ou même des livres entiers, comme le présent document.
 
 
 ### Slides
 
-Un usage intéressant est la création de diaporamas pour des présentations sous forme de slides. Le principe reste toujours le même : on mélange texte au format Markdown et code R, et R Markdown transforme le tout en présentations au format HTML ou PDF. En général les différents slides sont séparés en fonction de certains niveaux de titre.
+Un usage intéressant est la création de diaporamas pour des présentations sous forme de slides. Le principe reste toujours le même : on mélange texte au format Markdown et code R, et R Markdown transforme le tout en présentations au format HTML ou PDF. En général les différents slides sont séparés au niveau de certains niveaux de titre.
 
 Certains modèles de slides sont inclus avec R Markdown, notamment :
 
 - `ioslides` et `Slidy` pour des présentations HTML
-- `beamer` pour des présentations en PDF via LaTeX
+- `beamer` pour des présentations en PDF via $\LaTeX$
 
 Quand vous créez un nouveau document dans RStudio, ces modèles sont accessibles via l'entrée *Presentation* :
 
@@ -358,8 +402,7 @@ Une fois l'extension installée, elle propose en général un *template* de dép
 ### Templates
 
 
-Il existe également différents templates permettant de changer le format et la présentation des documents générés.
-Une liste de ces formats et leur documentation associées est accessible depuis la page [formats](http://rmarkdown.rstudio.com/formats.html) de la documentation.
+Il existe également différents *templates* permettant de changer le format et la présentation des documents générés. Une liste de ces formats et leur documentation associée est accessible depuis la page [formats](http://rmarkdown.rstudio.com/formats.html) de la documentation.
 
 On notera notamment :
 
