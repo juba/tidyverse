@@ -471,7 +471,7 @@ flights %>%
 
 ## Tables multiples
 
-Le jeu de données `nycflights13` est un exemple de jeu de données réparti en plusieurs tables. Ici on en a trois : les données sur les vols, celles sur les aéroports et celles sur les compagnies aériennes sont dans trois tables distinctes.
+Le jeu de données `nycflights13` est un exemple de données réparties en plusieurs tables. Ici on en a trois : les informations sur les vols, celles sur les aéroports et celles sur les compagnies aériennes sont dans trois tables distinctes.
 
 `dplyr` propose différentes fonctions permettant de travailler avec des données structurées de cette manière.
 
@@ -482,15 +482,22 @@ Les fonctions `bind_rows` et `bind_cols` permettent d'ajouter des lignes (respec
 L'exemple suivant (certes très artificiel) montre l'utilisation de `bind_rows`. On commence par créer trois tableaux `t1`, `t2` et `t3` :
 
 ```{r}
-t1 <- airports %>% slice(1:2)
+t1 <- airports %>% 
+  select(faa, name, lat, lon) %>% 
+  slice(1:2)
 t1
 ```
 ```{r}
-t2 <- airports %>% slice(5:6)
+t2 <- airports %>% 
+  select(faa, name, lat, lon) %>% 
+  slice(5:6)
+
 t2
 ```
 ```{r}
-t3 <- airports %>% slice(100:101) %>% select(-tz, -dst)
+t3 <- airports %>% 
+  select(faa, name) %>% 
+  slice(100:101)
 t3
 ```
 
@@ -500,7 +507,7 @@ On concaténe ensuite les trois tables avec `bind_rows` :
 bind_rows(t1, t2, t3)
 ```
 
-On remarquera que si des colonnes sont manquantes pour certaines tables, comme les colonnes `tz` et `dst` de `t3`, des `NA` sont automatiquement insérées. 
+On remarquera que si des colonnes sont manquantes pour certaines tables, comme les colonnes `lat` et `lon` de `t3`, des `NA` sont automatiquement insérées. 
 
 Il peut être utile, quand on concatène des lignes, de garder une trace du tableau d'origine de chacune des lignes dans le tableau final. C'est possible grâce à l'argument `.id` de `bind_rows`. On passe à cet argument le nom d'une colonne qui contiendra l'indicateur d'origine des lignes :
 
@@ -527,57 +534,97 @@ bind_cols(t1, t2, t3)
 
 ### Jointures
 
-Très souvent, les données relatives à une analyse sont réparties dans plusieurs tables différentes. Dans notre exemple, on peut voir que la table `flights` contient seulement les codes des aéroports de départ et d'arrivée :
+#### Clés implicites
+
+Très souvent, les données relatives à une analyse sont réparties dans plusieurs tables différentes. Dans notre exemple, on peut voir que la table `flights` contient seulement le code de la compagnie aérienne du vol dans la variable `carrier` :
 
 ```{r}
-flights %>% select(origin, dest)
+flights %>% select(carrier)
 ```
 
-Et que par ailleurs la table `airports` contient des informations supplémentaires relatives à ces aéroports, dont le nom complet, les coordonnées géographiques, etc.
+Et que par ailleurs la table `airlines` contient une information supplémentaire relative à ces compagnies, à savoir le nom complet.
 
 ```{r}
-airports
+airlines
 ```
 
-Il est donc naturel de vouloir associer les deux. On peut par exemple vouloir ajouter les noms complets des aéroports à la table `flights`. Dans ce cas on va faire une *jointure* : les lignes d'une table seront associées à une autre en se basant non pas sur leur position, mais sur les valeurs d'une ou plusieurs colonnes. Ces colonnes sont appelées des *clés*.
+Il est donc naturel de vouloir associer les deux, en l'occurrence pour ajouter les noms complets des compagnies à la table `flights`. Dans ce cas on va faire une *jointure* : les lignes d'une table seront associées à une autre en se basant non pas sur leur position, mais sur les valeurs d'une ou plusieurs colonnes. Ces colonnes sont appelées des *clés*.
 
-Commençons par créer une sous-table d'aéroports en ne conservant que la colonne `name` et en la renommant. On conserve également la colonne `faa`, qui est la clé nous permettant de faire le lien avec `flights` :
+Pour faire une jointure de ce type, on va utiliser la fonction `left_join` :
 
-```{r}
-airports_dep <- airports %>% select(faa, dest_name = name)
-airports_dep
-```
-
-On crée ensuite une sous-table de vols en ne conservant que les colonnes `year`, `month` et `day`, et la clé `dest` qui nous permet de faire le lien avec la table `airports` :
-
-```{r}
-flights_dep <- flights %>% select(year, month, day, dest)
-flights_dep
-```
-
-On peut alors joindre les deux tables en utilisant la fonction `left_join` :
-
-```{r}
-left_join(flights_dep, airports_dep, by = c("dest" = "faa"))
-```
-
-On voit que la table résultat a bien fusionné les deux tables selon les valeurs des deux colonnes clés `dest` et `faa`. On est parti de la table `flights_dep`, et pour chaque ligne on a ajouté les colonnes de `airports_dep` pour lesquelles la valeur de `faa` est égale à celle de `dest`.
-
-L'argument `by` permet de spécifier les noms des clés si elles ne portent pas le même nom dans les deux tables. On peut l'omettre si c'est le cas. Dans ce cas `left_join` utilisera comme clés toutes les colonnes présentes dans les deux tables à la fois.
-
-Par exemple, si on souhaite fusionner la table `airlines` sur la table `flights`, on peut se contenter de faire :
-
-```{r}
+```{r eval = FALSE}
 left_join(flights, airlines)
 ```
 
-En effet, la seule colonne commune aux deux tables est `carrier`, et c'est bien la clé qui permet d'associer les lignes d'une table à celles de l'autre. On notera que `dplyr` affiche un message indiquant sur quelles colonnes la jointure s'est faite.
-
-À noter qu'on peut continuer à utiliser le *pipe* avec les fonctions de jointure :
+Pour faciliter la lecture, on va afficher seulement certaines colonnes du résultat :
 
 ```{r}
-flights %>% left_join(airlines)
+left_join(flights, airlines) %>% 
+  select(month, day, carrier, name)
 ```
+
+On voit que la table résultat est bien la fusion des deux tables d'origine selon les valeurs des deux colonnes clés `carrier`. On est parti de la table `flights`, et pour chaque ligne on a ajouté les colonnes de `airlines` pour lesquelles la valeur de `carrier` est la même. On a donc bien une nouvelle colonne `name` dans notre table résultat, avec le nom complet de la compagnie aérienne.
+
+```{block type='rmdnote'}
+À noter qu'on peut tout à fait utiliser le *pipe* avec les fonctions de jointure : 
+
+`flights %>% left_join(airlines)`.
+```
+
+Nous sommes ici dans le cas le plus simple concernant les clés de jointure : les deux clés sont uniques et portent le même nom dans les deux tables. Par défaut, si on ne lui spécifie pas explicitement les clés, `dplyr` fusionne en utilisant l'ensemble des colonnes communes aux deux tables. On peut d'ailleurs voir dans cet exemple qu'un message a été affiché précisant que la jointure s'est faite sur la variable `carrier`.
+
+#### Clés explicites
+
+La table `airports`, elle, contient des informations supplémentaires sur les aéroports : nom complet, altitude, position géographique, etc. Chaque aéroport est identifié par un code contenu dans la colonne `faa`.
+
+Si on regarde la table `flights`, on voit que le code d'identification des aéroports apparaît à deux endroits différents : pour l'aéroport de départ dans la colonne `origin`, et pour celui d'arrivée dans la colonne `dest`. On a donc deux clés de jointures possibles, et qui portent un nom différent de la clé de `airports`.
+
+On va commencer par fusionner les données concernant l'aéroport de départ. Pour simplifier l'affichage des résultats, on va se contenter d'un sous-ensemble des deux tables :
+
+```{r}
+flights_ex <- flights %>% select(month, day, origin, dest)
+airports_ex <- airports %>% select(faa, alt, name)
+```
+
+Si on se contente d'un `left_join` comme à l'étape précédente, on obtient un message d'erreur car aucune colonne commune ne peut être identifiée comme clé de jointure :
+
+```{r error=TRUE}
+left_join(flights_ex, airports_ex)
+```
+
+On doit donc spécifier explicitement les clés avec l'argument `by` de `left_join`. Ici la clé est nommée `origin` dans la première table, et `faa` dans la seconde. La syntaxe est donc la suivante :
+
+```{r}
+left_join(flights_ex, airports_ex, by = c("origin" = "faa"))
+```
+
+On constate que les deux nouvelles colonnes `name` et `alt` contiennent bien les données correspondant à l'aéroport de départ.
+
+On va stocker le résultat de cette jointure dans `flights_ex` :
+
+```{r}
+flights_ex <- flights_ex %>% 
+  left_join(airports_ex, by = c("origin" = "faa"))
+```
+
+Supposons qu'on souhaite maintenant fusionner à nouveau les informations de la table `airports`, mais cette fois pour les aéroports d'arrivée de notre nouvelle table `flights_ex`. Les deux clés sont donc désormais `dest` dans la première table, et `faa` dans la deuxième. La syntaxe est donc la suivante :
+
+```{r}
+left_join(flights_ex, airports_ex, by=c("dest" = "faa"))
+```
+
+Cela fonctionne, les informations de l'aéroport d'arrivée ont bien été ajoutées, mais on constate que les colonnes ont été renommées. En effet, ici les deux tables fusionnées contenaient toutes les deux des colonnes `name` et `alt`. Comme on ne peut pas avoir deux colonnes avec le même nom dans un tableau, `dplyr` a renommé les colonnes de la première table en `name.x` et `alt.x`, et celles de la deuxième en `name.y` et `alt.y`.
+
+C'est pratique, mais pas forcément très parlant. On pourrait renommer manuellement les colonnes pour avoir des intitulés plus explicites avec `rename`, mais on peut aussi utiliser l'argument `suffix` de `left_join`, qui permet d'indiquer les suffixes à ajouter aux colonnes. Ainsi, on peut faire :
+
+```{r}
+left_join(flights_ex, airports_ex, 
+          by = c("dest" = "faa"), 
+          suffix = c("_depart", "_arrivee"))
+```
+
+On obtient ainsi directement des noms de colonnes nettement plus clairs.
+
 
 ### Types de jointures
 
