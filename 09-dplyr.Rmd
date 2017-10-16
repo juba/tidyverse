@@ -82,6 +82,13 @@ Si on passe plusieurs arguments à `filter`, celui-ci rajoute automatiquement un
 filter(flights, dep_delay >= 10, dep_delay <= 15)
 ```
 
+Enfin, on peut également placer des fonctions dans les tests, qui nous permettent par exemple de sélectionner les vols avec la plus grande distance :
+
+```{r}
+filter(flights, distance == max(distance))
+```
+
+
 ### `select` et `rename`
 
 `select` permet de sélectionner des colonnes d'un tableau de données. Ainsi, si on veut extraire les colonnes `lat` et `lon` du tableau airports :
@@ -303,6 +310,15 @@ flights %>%
   mutate(max_delay_month = max(dep_delay, na.rm = TRUE)) %>% 
   select(dep_delay, month, max_delay_month)
 ```
+
+`group_by` peut aussi être utile avec `filter`, par exemple pour sélectionner les vols avec le retard au départ le plus important *pour chaque mois* :
+
+```{r}
+flights %>% 
+  group_by(month) %>% 
+  filter(dep_delay == max(dep_delay, na.rm = TRUE))
+```
+
 
 ```{block type='rmdimportant'}
 **Attention :** la clause `group_by` marche pour les verbes déjà vus précédemment, *sauf* pour `arrange`, qui par défaut trie la table sans tenir compte des groupes. Pour obtenir un tri par groupe, il faut lui ajouter l'argument `.by_group = TRUE`.
