@@ -254,7 +254,87 @@ d %>%
 
 ### `extract` : créer de nouvelles colonnes à partir d'une colonne de texte {#extract}
 
-TODO
+`extract` permet de créer de nouvelles colonnes à partir de sous-chaînes d'une colonne de texte existante, identifiées par des groupes dans une expression régulière.
+
+Par exemple, à partir du tableau suivant :
+
+```{r echo=FALSE, warning=FALSE, paged.print=FALSE}
+df <- tibble(eleve = c("Félicien Machin", "Raymonde Bidule", "Martial Truc"),
+             note = c("5/20", "6/10", "87/100"))
+kable(df)
+```
+
+On peut extraire les noms et prénoms dans deux nouvelles colonnes avec :
+
+```{r}
+df %>% extract(eleve, 
+               c("prenom", "nom"), 
+               "^(.*) (.*)$")
+```
+
+On passe donc à `extract` trois arguments : la colonne d'où on doit extraire les valeurs, un vecteur avec les noms des nouvelles colonnes à créer, et une expression régulière comportant autant de groupes (identifiés par des parenthèses) que de nouvelles colonnes.
+
+Par défaut la colonne d'origine n'est pas conservée dans la table résultat. On peut modifier ce comportement avec l'argument `remove = FALSE`. Ainsi, le code suivant extrait les initiales du prénom et du nom mais conserve la colonne d'origine :
+
+```{r}
+df %>% extract(eleve, 
+               c("initiale_prenom", "initiale_nom"), 
+               "^(.).* (.).*$", 
+               remove = FALSE)
+```
+
+
+### `complete` : compléter des combinaisons de variables manquantes
+
+Imaginons qu'on ait le tableau de résultats suivants :
+
+```{r echo=FALSE, warning=FALSE, paged.print=FALSE}
+df <- tibble(eleve = c("Alain", "Alain", "Barnabé", "Chantal"),
+             matiere = c("Maths", "Français", "Maths", "Français"),
+             note = c(16, 9, 17, 11))
+kable(df)
+```
+
+Les élèves Barnabé et Chantal n'ont pas de notes dans toutes les matières. Supposons que c'est parce qu'ils étaient absents et que leur note est en fait un 0. Si on veut calculer les moyennes des élèves, on doit compléter ces notes manquantes.
+
+La fonction `complete` est prévue pour ce cas de figure : elle permet de compléter des combinaisons manquantes de valeurs de plusieurs colonnes.
+
+On peut l'utiliser de cette manière :
+
+```{r}
+df %>% complete(eleve, matiere)
+```
+
+On voit que les combinaisons manquante "Barnabé - Français" et "Chantal - Maths" ont bien été ajoutées par `complete`.
+
+Par défaut les lignes insérées récupèrent des valeurs manquantes `NA` pour les colonnes restantes. On peut néanmoins choisir une autre valeur avec l'argument `fill`, qui prend la forme d'une liste nommée :
+
+```{r}
+df %>% complete(eleve, matiere, fill = list(note = 0))
+```
+
+Parfois on ne souhaite pas inclure toutes les colonnes dans le calcul des combinaisons de valeurs. Par exemple, supposons qu'on rajoute dans notre tableau une colonne avec les identifiants de chaque élève :
+
+```{r echo=FALSE, warning=FALSE, paged.print=FALSE}
+df <- tibble(
+  id = c(1001001, 1001001, 1001002, 1001003),
+  eleve = c("Alain", "Alain", "Barnabé", "Chantal"),
+  matiere = c("Maths", "Français", "Maths", "Français"),
+  note = c(16, 9, 17, 11))
+kable(df)
+```
+
+Si on applique `complete` comme précédemment, le résultat n'est pas bon car il contient toutes les combinaisons de `id`, `eleve` et `matiere`.
+
+```{r}
+df %>% complete(id, eleve, matiere)
+```
+
+Dans ce cas, pour signifier à `complete` que `id` et `eleve` sont deux attributs d'un même individu et ne doivent pas être combinés entre eux, on doit les placer dans une fonction `nesting` :
+
+```{r}
+df %>% complete(nesting(id, eleve), matiere)
+```
 
 ## Ressources
 
