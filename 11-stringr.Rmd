@@ -8,7 +8,7 @@ On va utiliser ici les fonctions de l'extension `stringr`. Celle-ci fait partie 
 library(stringr)
 ```
 
-```{block type='rmdimportant'}
+```{block type='rmdnote'}
 `stringr` est en fait une interface simplifiée aux fonctions d'une autre extension, `stringi`. Si les fonctions de `stringr` ne sont pas suffisantes ou si on manipule beaucoup de chaînes de caractères, ne pas hésiter à se reporter à la documentation de `stringi`.
 ```
 
@@ -250,4 +250,82 @@ L'ouvrage *R for Data Science*, accessible en ligne, contient [un chapitre entie
 Le [site officiel de stringr](http://stringr.tidyverse.org/) contient une [liste des fonctions](http://stringr.tidyverse.org/reference/index.html) et les pages d'aide associées, ainsi qu'un [article dédié aux expressions régulières](http://stringr.tidyverse.org/articles/regular-expressions.html).
 
 Pour des besoins plus pointus, on pourra aussi utiliser [l'extension stringi](http://www.gagolewski.com/software/stringi/) sur laquelle est elle-même basée `stringr`.
+
+
+## Exercices
+
+Dans ces exercices on utilise un tableau `d`, généré par le code suivant :
+
+```{r}
+d <- tibble(
+  nom = c("M. rené Bézigue", "Mme Paulette fouchin", "Mme yvonne duluc", "M. Jean-Yves Pernoud"),
+  naissance = c("18/04/1937 Vesoul", "En 1947 à Grenoble (38)", "Le 5 mars 1931 à Bar-le-Duc", "Marseille, juin 1938"),
+  profession = c("Ouvrier agric", "ouvrière qualifiée", "Institutrice", "Exploitant agric") 
+)
+```
+
+```{r echo = FALSE}
+kable(d)
+```
+
+
+**Exercice 1**
+
+Capitalisez les noms des personnes avec `str_to_title` :
+
+```{r echo = FALSE}
+str_to_title(d$nom)
+```
+
+
+
+**Exercice 2**
+
+Dans la variable `profession`, remplacer toutes les occurrences de l'abbréviation "agric" par "agricole" :
+
+```{r echo = FALSE}
+str_replace(d$profession, "agric", "agricole")
+```
+
+**Exercice 3**
+
+À l'aide de `str_detect`, identifier les personnes de catégorie professionnelle "Ouvrier". Indication : pensez au modificateur `ignore_case`.
+
+```{r echo = FALSE}
+str_detect(d$profession, regex("Ouvr", ignore_case = TRUE))
+```
+
+
+
+**Exercice 4**
+
+À l'aide de `case_when` et de `str_detect`, créer une nouvelle variable `sexe` identifiant le sexe de chaque personne en fonction de la présence de `M.` ou de `Mme` dans son nom.
+
+```{r echo = FALSE}
+d %>% 
+  mutate(sexe = case_when(
+            str_detect(nom, fixed("Mme")) ~ "Femme",
+            str_detect(nom, fixed("M.")) ~ "Homme")) %>% 
+  select(nom, sexe, everything())
+```
+
+**Exercice 5**
+
+Extraire l'année de naissance de chaque individu avec `str_extract`. Vous pouvez utiliser le regex `"\\d\\d\\d\\d"` qui permet d'identifier les nombres de quatre chiffres.
+
+Vous devez obtenir le vecteur suivant :
+
+```{r echo = FALSE}
+str_extract(d$naissance, "\\d\\d\\d\\d")
+```
+
+À l'aide de la fonction `extract` de l'extension `tidyr` et du regex précédent, créez une nouvelle variable `annee` dans le tableau, qui contient l'année de naissance (pour plus d'informations sur `extract`, voir la section \@ref(extract)).
+
+```{r echo = FALSE}
+library(tidyr)
+d %>% 
+  extract(naissance, "annee", "(\\d\\d\\d\\d)", remove = FALSE)
+```
+
+
 
