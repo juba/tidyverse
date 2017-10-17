@@ -47,7 +47,7 @@
 
 
 
-<script src="libs/htmlwidgets-0.9/htmlwidgets.js"></script>
+<script src="libs/htmlwidgets-0.8/htmlwidgets.js"></script>
 <link href="libs/leaflet-0.7.7/leaflet.css" rel="stylesheet" />
 <script src="libs/leaflet-0.7.7/leaflet.js"></script>
 <link href="libs/leafletfix-1.0.0/leafletfix.css" rel="stylesheet" />
@@ -309,6 +309,7 @@ code > span. { color: #1f1c1b; } /* Normal */
 <li class="chapter" data-level="11.8" data-path="11-stringr.html"><a href="11-stringr.html#remplacer-des-motifs"><i class="fa fa-check"></i><b>11.8</b> Remplacer des motifs</a></li>
 <li class="chapter" data-level="11.9" data-path="11-stringr.html"><a href="11-stringr.html#modificateurs"><i class="fa fa-check"></i><b>11.9</b> Modificateurs de motifs</a></li>
 <li class="chapter" data-level="11.10" data-path="11-stringr.html"><a href="11-stringr.html#ressources-2"><i class="fa fa-check"></i><b>11.10</b> Ressources</a></li>
+<li class="chapter" data-level="11.11" data-path="11-stringr.html"><a href="11-stringr.html#exercices-6"><i class="fa fa-check"></i><b>11.11</b> Exercices</a></li>
 </ul></li>
 <li class="chapter" data-level="12" data-path="12-tidyr.html"><a href="12-tidyr.html"><i class="fa fa-check"></i><b>12</b> Arranger ses données</a><ul>
 <li class="chapter" data-level="12.1" data-path="12-tidyr.html"><a href="12-tidyr.html#tidy-data"><i class="fa fa-check"></i><b>12.1</b> Tidy data</a></li>
@@ -387,7 +388,7 @@ code > span. { color: #1f1c1b; } /* Normal */
 <p>Les fonctions de <code>forcats</code> vues précédemment permettent de modifier des modalités d’une variables qualitative globalement. Mais parfois on a besoin de manipuler le contenu même du texte d’une variable de type chaîne de caractères : combiner, rechercher, remplacer…</p>
 <p>On va utiliser ici les fonctions de l’extension <code>stringr</code>. Celle-ci fait partie du <em>tidyverse</em>, mais pas de son “coeur”. Elle doit donc être installée et chargée explicitement :</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(stringr)</code></pre></div>
-<div class="rmdimportant">
+<div class="rmdnote">
 <p>
 <code>stringr</code> est en fait une interface simplifiée aux fonctions d’une autre extension, <code>stringi</code>. Si les fonctions de <code>stringr</code> ne sont pas suffisantes ou si on manipule beaucoup de chaînes de caractères, ne pas hésiter à se reporter à la documentation de <code>stringi</code>.
 </p>
@@ -619,6 +620,80 @@ d <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">extrac
 <p>L’ouvrage <em>R for Data Science</em>, accessible en ligne, contient <a href="http://r4ds.had.co.nz/strings.html">un chapitre entier</a> sur les chaînes de caractères et les expressions régulières (en anglais).</p>
 <p>Le <a href="http://stringr.tidyverse.org/">site officiel de stringr</a> contient une <a href="http://stringr.tidyverse.org/reference/index.html">liste des fonctions</a> et les pages d’aide associées, ainsi qu’un <a href="http://stringr.tidyverse.org/articles/regular-expressions.html">article dédié aux expressions régulières</a>.</p>
 <p>Pour des besoins plus pointus, on pourra aussi utiliser <a href="http://www.gagolewski.com/software/stringi/">l’extension stringi</a> sur laquelle est elle-même basée <code>stringr</code>.</p>
+</div>
+<div id="exercices-6" class="section level2">
+<h2><span class="header-section-number">11.11</span> Exercices</h2>
+<p>Dans ces exercices on utilise un tableau <code>d</code>, généré par le code suivant :</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">d &lt;-<span class="st"> </span><span class="kw">tibble</span>(
+  <span class="dt">nom =</span> <span class="kw">c</span>(<span class="st">&quot;M. rené Bézigue&quot;</span>, <span class="st">&quot;Mme Paulette fouchin&quot;</span>, <span class="st">&quot;Mme yvonne duluc&quot;</span>, <span class="st">&quot;M. Jean-Yves Pernoud&quot;</span>),
+  <span class="dt">naissance =</span> <span class="kw">c</span>(<span class="st">&quot;18/04/1937 Vesoul&quot;</span>, <span class="st">&quot;En 1947 à Grenoble (38)&quot;</span>, <span class="st">&quot;Le 5 mars 1931 à Bar-le-Duc&quot;</span>, <span class="st">&quot;Marseille, juin 1938&quot;</span>),
+  <span class="dt">profession =</span> <span class="kw">c</span>(<span class="st">&quot;Ouvrier agric&quot;</span>, <span class="st">&quot;ouvrière qualifiée&quot;</span>, <span class="st">&quot;Institutrice&quot;</span>, <span class="st">&quot;Exploitant agric&quot;</span>) 
+)</code></pre></div>
+<table>
+<thead>
+<tr class="header">
+<th align="left">nom</th>
+<th align="left">naissance</th>
+<th align="left">profession</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">M. rené Bézigue</td>
+<td align="left">18/04/1937 Vesoul</td>
+<td align="left">Ouvrier agric</td>
+</tr>
+<tr class="even">
+<td align="left">Mme Paulette fouchin</td>
+<td align="left">En 1947 à Grenoble (38)</td>
+<td align="left">ouvrière qualifiée</td>
+</tr>
+<tr class="odd">
+<td align="left">Mme yvonne duluc</td>
+<td align="left">Le 5 mars 1931 à Bar-le-Duc</td>
+<td align="left">Institutrice</td>
+</tr>
+<tr class="even">
+<td align="left">M. Jean-Yves Pernoud</td>
+<td align="left">Marseille, juin 1938</td>
+<td align="left">Exploitant agric</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Exercice 1</strong></p>
+<p>Capitalisez les noms des personnes avec <code>str_to_title</code> :</p>
+<pre><code>[1] &quot;M. René Bézigue&quot;      &quot;Mme Paulette Fouchin&quot; &quot;Mme Yvonne Duluc&quot;    
+[4] &quot;M. Jean-Yves Pernoud&quot;</code></pre>
+<p><strong>Exercice 2</strong></p>
+<p>Dans la variable <code>profession</code>, remplacer toutes les occurrences de l’abbréviation “agric” par “agricole” :</p>
+<pre><code>[1] &quot;Ouvrier agricole&quot;    &quot;ouvrière qualifiée&quot;  &quot;Institutrice&quot;       
+[4] &quot;Exploitant agricole&quot;</code></pre>
+<p><strong>Exercice 3</strong></p>
+<p>À l’aide de <code>str_detect</code>, identifier les personnes de catégorie professionnelle “Ouvrier”. Indication : pensez au modificateur <code>ignore_case</code>.</p>
+<pre><code>[1]  TRUE  TRUE FALSE FALSE</code></pre>
+<p><strong>Exercice 4</strong></p>
+<p>À l’aide de <code>case_when</code> et de <code>str_detect</code>, créer une nouvelle variable <code>sexe</code> identifiant le sexe de chaque personne en fonction de la présence de <code>M.</code> ou de <code>Mme</code> dans son nom.</p>
+<pre><code># A tibble: 4 x 4
+                   nom  sexe                   naissance
+                 &lt;chr&gt; &lt;chr&gt;                       &lt;chr&gt;
+1      M. rené Bézigue Homme           18/04/1937 Vesoul
+2 Mme Paulette fouchin Femme     En 1947 à Grenoble (38)
+3     Mme yvonne duluc Femme Le 5 mars 1931 à Bar-le-Duc
+4 M. Jean-Yves Pernoud Homme        Marseille, juin 1938
+# ... with 1 more variables: profession &lt;chr&gt;</code></pre>
+<p><strong>Exercice 5</strong></p>
+<p>Extraire l’année de naissance de chaque individu avec <code>str_extract</code>. Vous pouvez utiliser le regex <code>&quot;\\d\\d\\d\\d&quot;</code> qui permet d’identifier les nombres de quatre chiffres.</p>
+<p>Vous devez obtenir le vecteur suivant :</p>
+<pre><code>[1] &quot;1937&quot; &quot;1947&quot; &quot;1931&quot; &quot;1938&quot;</code></pre>
+<p>À l’aide de la fonction <code>extract</code> de l’extension <code>tidyr</code> et du regex précédent, créez une nouvelle variable <code>annee</code> dans le tableau, qui contient l’année de naissance (pour plus d’informations sur <code>extract</code>, voir la section <a href="12-tidyr.html#extract">12.3.5</a>).</p>
+<pre><code># A tibble: 4 x 4
+                   nom                   naissance annee
+*                &lt;chr&gt;                       &lt;chr&gt; &lt;chr&gt;
+1      M. rené Bézigue           18/04/1937 Vesoul  1937
+2 Mme Paulette fouchin     En 1947 à Grenoble (38)  1947
+3     Mme yvonne duluc Le 5 mars 1931 à Bar-le-Duc  1931
+4 M. Jean-Yves Pernoud        Marseille, juin 1938  1938
+# ... with 1 more variables: profession &lt;chr&gt;</code></pre>
 
 </div>
 </div>
