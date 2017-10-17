@@ -1,4 +1,4 @@
 # TODO
 
-- Manipulation de chaînes de caractères
+- Exercices chaînes de caractères
 - htmlwidgets
