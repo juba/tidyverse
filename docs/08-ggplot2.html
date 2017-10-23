@@ -25,7 +25,7 @@
 <meta name="author" content="Julien Barnier">
 
 
-<meta name="date" content="2017-10-20">
+<meta name="date" content="2017-10-23">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -47,7 +47,7 @@
 
 
 
-<script src="libs/htmlwidgets-0.8/htmlwidgets.js"></script>
+<script src="libs/htmlwidgets-0.9/htmlwidgets.js"></script>
 <link href="libs/leaflet-0.7.7/leaflet.css" rel="stylesheet" />
 <script src="libs/leaflet-0.7.7/leaflet.js"></script>
 <link href="libs/leafletfix-1.0.0/leafletfix.css" rel="stylesheet" />
@@ -739,7 +739,7 @@ Quand une commande <code>ggplot2</code> devient longue, il peut être plus lisib
 </div>
 <div id="scale_color-scale_fill" class="section level3">
 <h3><span class="header-section-number">8.7.3</span> <code>scale_color</code>, <code>scale_fill</code></h3>
-<p>Ces <em>scales</em> permettent, entre autre, de modifier les palettes de couleur utilisées pour le dessin (<code>color</code>) ou le remplissage (<code>fill</code>) des éléments graphiques.</p>
+<p>Ces <em>scales</em> permettent, entre autre, de modifier les palettes de couleur utilisées pour le dessin (<code>color</code>) ou le remplissage (<code>fill</code>) des éléments graphiques. Dans ce qui suit, pour chaque fonction <code>scale_color</code> présentée il existe une fonction <code>scale_fill</code> équivalente et avec en général les mêmes arguments.</p>
 <div id="variables-quantitatives" class="section level4">
 <h4><span class="header-section-number">8.7.3.1</span> Variables quantitatives</h4>
 <p>Le graphique suivant colore les points selon la valeur d’une variable numérique quantitative (ici la part de chômeurs) :</p>
@@ -762,19 +762,25 @@ Quand une commande <code>ggplot2</code> devient longue, il peut être plus lisib
 <span class="st">  </span><span class="kw">geom_point</span>(<span class="kw">aes</span>(<span class="dt">x =</span> dipl_sup, <span class="dt">y =</span> cadres, <span class="dt">color =</span> chom)) <span class="op">+</span><span class="st"> </span>
 <span class="st">  </span><span class="kw">scale_color_viridis</span>(<span class="st">&quot;Taux de chômage&quot;</span>, <span class="dt">option =</span> <span class="st">&quot;plasma&quot;</span>)</code></pre></div>
 <p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-235-1.svg" width="672" /></p>
+<p>On peut aussi utiliser <code>scale_color_distiller</code>, qui transforme une des palettes pour variable qualitative de <code>scale_color_brewer</code> en palette continue pour variable numérique :</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(rp) <span class="op">+</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">geom_point</span>(<span class="kw">aes</span>(<span class="dt">x =</span> dipl_sup, <span class="dt">y =</span> cadres, <span class="dt">color =</span> chom)) <span class="op">+</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">scale_color_distiller</span>(<span class="st">&quot;Taux de chômage&quot;</span>, <span class="dt">palette =</span> <span class="st">&quot;Spectral&quot;</span>)</code></pre></div>
+<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-236-1.svg" width="672" /></p>
+<p>La liste des palettes de <code>scale_color_brewer</code> est indiquée en fin de section suivante.</p>
 </div>
 <div id="variables-qualitatives" class="section level4">
 <h4><span class="header-section-number">8.7.3.2</span> Variables qualitatives</h4>
 <p>Si on a fait un mappage avec une variable discrète (qualitative), comme ici avec le département :</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(rp) <span class="op">+</span><span class="st"> </span>
 <span class="st">  </span><span class="kw">geom_point</span>(<span class="kw">aes</span>(<span class="dt">x =</span> dipl_sup, <span class="dt">y =</span> cadres, <span class="dt">color =</span> departement))</code></pre></div>
-<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-236-1.svg" width="672" /></p>
+<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-237-1.svg" width="672" /></p>
 <p>Une première possibilité est de modifier la palette manuellement avec <code>scale_color_manual</code> et son argument <code>values</code> :</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(rp) <span class="op">+</span><span class="st"> </span>
 <span class="st">  </span><span class="kw">geom_point</span>(<span class="kw">aes</span>(<span class="dt">x =</span> dipl_sup, <span class="dt">y =</span> cadres, <span class="dt">color =</span> departement)) <span class="op">+</span>
 <span class="st">  </span><span class="kw">scale_color_manual</span>(<span class="st">&quot;Département&quot;</span>, 
                      <span class="dt">values =</span> <span class="kw">c</span>(<span class="st">&quot;red&quot;</span>, <span class="st">&quot;#FFDD45&quot;</span>, <span class="kw">rgb</span>(<span class="fl">0.1</span>,<span class="fl">0.2</span>,<span class="fl">0.6</span>), <span class="st">&quot;darkgreen&quot;</span>, <span class="st">&quot;grey80&quot;</span>))</code></pre></div>
-<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-237-1.svg" width="672" /></p>
+<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-238-1.svg" width="672" /></p>
 <div class="rmdnote">
 <p>
 L’exemple précédent montre plusieurs manières de définir manuellement des couleurs dans R :
@@ -799,9 +805,9 @@ La liste complète des noms de couleurs connus par R peut être obtenu avec la f
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(rp) <span class="op">+</span><span class="st"> </span>
 <span class="st">  </span><span class="kw">geom_point</span>(<span class="kw">aes</span>(<span class="dt">x =</span> dipl_sup, <span class="dt">y =</span> cadres, <span class="dt">color =</span> departement)) <span class="op">+</span>
 <span class="st">  </span><span class="kw">scale_color_brewer</span>(<span class="st">&quot;Département&quot;</span>, <span class="dt">palette =</span> <span class="st">&quot;Set1&quot;</span>)</code></pre></div>
-<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-239-1.svg" width="672" /></p>
+<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-240-1.svg" width="672" /></p>
 <p>Le graphique suivant montre la liste de toutes les palettes disponibles via <code>scale_color_brewer</code>. Elles sont réparties en trois familles : les palettes séquentielles (pour une variable quantitative), les palettes qualitatives, et les palettes divergentes (typiquement pour une variable quantitative avec une valeur de référence, souvent 0, et deux palettes continues distinctes pour les valeurs inférieures et pour les valeurs supérieures).</p>
-<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-240-1.svg" width="384" /></p>
+<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-241-1.svg" width="384" /></p>
 <p>Il existe d’autres méthodes pour définir les couleurs : pour plus d’informations on pourra se reporter à <a href="http://ggplot2.tidyverse.org/articles/ggplot2-specs.html#colour">l’article de la documentation officielle sur ce sujet</a>.</p>
 </div>
 </div>
@@ -814,13 +820,13 @@ La liste complète des noms de couleurs connus par R peut être obtenu avec la f
 <span class="st">  </span><span class="kw">geom_histogram</span>(<span class="kw">aes</span>(<span class="dt">x =</span> cadres)) <span class="op">+</span><span class="st"> </span>
 <span class="st">  </span><span class="kw">theme_bw</span>()</code></pre></div>
 <pre><code>`stat_bin()` using `bins = 30`. Pick better value with `binwidth`.</code></pre>
-<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-241-1.svg" width="672" /></p>
+<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-242-1.svg" width="672" /></p>
 <p>Ou le thème <code>theme_minimal</code> :</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(<span class="dt">data =</span> rp) <span class="op">+</span><span class="st"> </span>
 <span class="st">  </span><span class="kw">geom_histogram</span>(<span class="kw">aes</span>(<span class="dt">x =</span> cadres)) <span class="op">+</span><span class="st"> </span>
 <span class="st">  </span><span class="kw">theme_minimal</span>()</code></pre></div>
 <pre><code>`stat_bin()` using `bins = 30`. Pick better value with `binwidth`.</code></pre>
-<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-242-1.svg" width="672" /></p>
+<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-243-1.svg" width="672" /></p>
 <p>On peut cependant modifier manuellement les différents éléments. Par exemple, les fonctions <code>ggtitle</code>, <code>xlab</code> et <code>ylab</code> permettent d’ajouter ou de modifier le titre du graphique, ainsi que les étiquettes des axes <code>x</code> et <code>y</code> :</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(<span class="dt">data =</span> rp) <span class="op">+</span><span class="st"> </span>
 <span class="st">  </span><span class="kw">geom_histogram</span>(<span class="kw">aes</span>(<span class="dt">x =</span> cadres)) <span class="op">+</span><span class="st"> </span>
@@ -828,7 +834,7 @@ La liste complète des noms de couleurs connus par R peut être obtenu avec la f
 <span class="st">  </span><span class="kw">xlab</span>(<span class="st">&quot;Pourcentage de cadres&quot;</span>) <span class="op">+</span>
 <span class="st">  </span><span class="kw">ylab</span>(<span class="st">&quot;Effectif&quot;</span>)</code></pre></div>
 <pre><code>`stat_bin()` using `bins = 30`. Pick better value with `binwidth`.</code></pre>
-<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-243-1.svg" width="672" /></p>
+<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-244-1.svg" width="672" /></p>
 <p>Les éléments personnalisables étant nombreux, un bon moyen de se familiariser avec tous les arguments est sans doute l’addin RStudio <code>ggThemeAssist</code>. Pour l’utiliser il suffit d’installer le package du même nom, de sélectionner dans son script RStudio le code correspondant à un graphique <code>ggplot2</code>, puis d’aller dans le menu <em>Addins</em> et choisir <em>ggplot Theme Assistant</em>. Une interface graphique s’affiche alors permettant de modifier les différents éléments. Si on clique sur <em>Done</em>, le code sélectionné dans le script est alors automatiquement mis à jour pour correspondre aux modifications effectuées.</p>
 <p>Ce qui permet d’obtenir très facilement des résultats extrêmement moches :</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(<span class="dt">data =</span> rp) <span class="op">+</span><span class="st"> </span><span class="kw">geom_histogram</span>(<span class="kw">aes</span>(<span class="dt">x =</span> cadres)) <span class="op">+</span><span class="st"> </span>
@@ -843,7 +849,7 @@ La liste complète des noms de couleurs connus par R peut être obtenu avec la f
     <span class="dt">panel.background =</span> <span class="kw">element_rect</span>(<span class="dt">fill =</span> <span class="st">&quot;coral&quot;</span>), 
     <span class="dt">plot.background =</span> <span class="kw">element_rect</span>(<span class="dt">fill =</span> <span class="st">&quot;blueviolet&quot;</span>))</code></pre></div>
 <pre><code>`stat_bin()` using `bins = 30`. Pick better value with `binwidth`.</code></pre>
-<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-244-1.svg" width="672" /></p>
+<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-245-1.svg" width="672" /></p>
 </div>
 <div id="ressources-1" class="section level2">
 <h2><span class="header-section-number">8.9</span> Ressources</h2>
@@ -864,35 +870,35 @@ La liste complète des noms de couleurs connus par R peut être obtenu avec la f
 rp69 &lt;-<span class="st"> </span><span class="kw">filter</span>(rp2012, departement <span class="op">%in%</span><span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;Rhône&quot;</span>, <span class="st">&quot;Loire&quot;</span>))</code></pre></div>
 <p><strong>Exercice 1</strong></p>
 <p>Faire un nuage de points croisant le pourcentage de sans diplôme et le pourcentage d’ouvriers.</p>
-<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-246-1.svg" width="672" /></p>
+<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-247-1.svg" width="672" /></p>
 <p><strong>Exercice 2</strong></p>
 <p>Faire un nuage de points croisant le pourcentage de sans diplôme et le pourcentage d’ouvriers, avec les points en rouge et de transparence 0.2.</p>
-<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-247-1.svg" width="672" /></p>
+<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-248-1.svg" width="672" /></p>
 <p><strong>Exercice 3</strong></p>
 <p>Représenter la répartition du pourcentage de propriétaires selon la taille de la commune en 5 classes (variable <code>pop_cl</code>) sous forme de boîtes à moustache.</p>
-<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-248-1.svg" width="672" /></p>
+<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-249-1.svg" width="672" /></p>
 <p><strong>Exercice 4</strong></p>
 <p>Représenter la répartition du nombre de communes selon la taille de la commune en 5 classes sous la forme d’un diagramme en bâtons.</p>
-<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-249-1.svg" width="672" /></p>
+<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-250-1.svg" width="672" /></p>
 <p><strong>Exercice 5</strong></p>
 <p>Faire un nuage de points croisant le pourcentage de sans diplôme et le pourcentage d’ouvriers. Faire varier la couleur selon le département et la taille selon la population totale. Mettre une transparence de 0.5.</p>
-<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-250-1.svg" width="672" /></p>
+<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-251-1.svg" width="672" /></p>
 <p><strong>Exercice 6</strong></p>
 <p>Représenter la répartition du nombre de communes selon la taille de la commune en 5 classes sous forme de diagramme en bâtons, avec une couleur différente selon le département.</p>
-<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-251-1.svg" width="672" /></p>
-<p>Faire varier la valeur du paramètre <code>position</code> pour afficher les barres les unes à côté des autres.</p>
 <p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-252-1.svg" width="672" /></p>
-<p>Changer à nouveau la valeur du paramètre <code>position</code> pour représenter les proportions de communes de chaque département pour chaque catégorie de taille.</p>
+<p>Faire varier la valeur du paramètre <code>position</code> pour afficher les barres les unes à côté des autres.</p>
 <p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-253-1.svg" width="672" /></p>
+<p>Changer à nouveau la valeur du paramètre <code>position</code> pour représenter les proportions de communes de chaque département pour chaque catégorie de taille.</p>
+<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-254-1.svg" width="672" /></p>
 <p><strong>Exercice 7</strong></p>
 <p>Faire le nuage de points du pourcentage de cadres par le pourcentage de diplômés du supérieur. Représenter ce nuage par deux graphiques différents selon le département en utilisant <code>facet_grid</code>.</p>
-<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-254-1.svg" width="672" /></p>
+<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-255-1.svg" width="672" /></p>
 <p><strong>Exercice 8</strong></p>
 <p>Faire le nuage de points croisant pourcentage de chômeurs et pourcentage de sans diplôme. Y ajouter les noms des communes correspondant, en rouge et en taille 2.5 :</p>
-<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-255-1.svg" width="672" /></p>
+<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-256-1.svg" width="672" /></p>
 <p><strong>Exercice 9</strong></p>
 <p>Dans le graphique précédent, n’afficher que le nom des communes ayant plus de 15% de chômage.</p>
-<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-256-1.svg" width="672" /></p>
+<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-257-1.svg" width="672" /></p>
 
 </div>
 </div>
@@ -934,7 +940,7 @@ gitbook.start({
 "link": "https://github.com/juba/tidyverse/edit/master/08-ggplot2.Rmd",
 "text": "Éditer"
 },
-"download": ["introduction_au_tidyverse.pdf", "introduction_au_tidyverse.epub"],
+"download": null,
 "toc": {
 "collapse": "section"
 }
