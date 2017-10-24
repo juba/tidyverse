@@ -25,7 +25,7 @@
 <meta name="author" content="Julien Barnier">
 
 
-<meta name="date" content="2017-10-23">
+<meta name="date" content="2017-10-24">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -238,7 +238,7 @@ code > span. { color: #1f1c1b; } /* Normal */
 <li class="chapter" data-level="8.7" data-path="08-ggplot2.html"><a href="08-ggplot2.html#scales"><i class="fa fa-check"></i><b>8.7</b> Scales</a><ul>
 <li class="chapter" data-level="8.7.1" data-path="08-ggplot2.html"><a href="08-ggplot2.html#scale_size"><i class="fa fa-check"></i><b>8.7.1</b> <code>scale_size</code></a></li>
 <li class="chapter" data-level="8.7.2" data-path="08-ggplot2.html"><a href="08-ggplot2.html#scale_x-scale_y"><i class="fa fa-check"></i><b>8.7.2</b> <code>scale_x</code>, <code>scale_y</code></a></li>
-<li class="chapter" data-level="8.7.3" data-path="08-ggplot2.html"><a href="08-ggplot2.html#scale_color-scale_fill"><i class="fa fa-check"></i><b>8.7.3</b> <code>scale_color</code>, <code>scale_fill</code></a></li>
+<li class="chapter" data-level="8.7.3" data-path="08-ggplot2.html"><a href="08-ggplot2.html#scalecolor"><i class="fa fa-check"></i><b>8.7.3</b> <code>scale_color</code>, <code>scale_fill</code></a></li>
 </ul></li>
 <li class="chapter" data-level="8.8" data-path="08-ggplot2.html"><a href="08-ggplot2.html#themes"><i class="fa fa-check"></i><b>8.8</b> Thèmes</a></li>
 <li class="chapter" data-level="8.9" data-path="08-ggplot2.html"><a href="08-ggplot2.html#ressources-1"><i class="fa fa-check"></i><b>8.9</b> Ressources</a></li>
@@ -566,7 +566,7 @@ code > span. { color: #1f1c1b; } /* Normal */
  9   Shoestring Aviation Airfield   0P2 39.79482  -76.64719  1000    -5
 10          Jefferson County Intl   0S9 48.05381 -122.81064   108    -8
 # ... with 1,448 more rows, and 2 more variables: dst &lt;chr&gt;, tzone &lt;chr&gt;</code></pre>
-<p>Une variante de <code>select</code> est <code>rename</code><a href="#fn13" class="footnoteRef" id="fnref13"><sup>13</sup></a>, qui permet de renommer facilement des colonnes. On l’utilise en lui passant des paramètres de la forme <code>nouveau_nom = ancien_nom</code>. Ainsi, si on veut renommer les colonnes <code>lon</code> et <code>lat</code> de <code>airports</code> en <code>longitude</code> et <code>latitude</code> :</p>
+<p>Une variante de <code>select</code> est <code>rename</code><a href="#fn14" class="footnoteRef" id="fnref14"><sup>14</sup></a>, qui permet de renommer facilement des colonnes. On l’utilise en lui passant des paramètres de la forme <code>nouveau_nom = ancien_nom</code>. Ainsi, si on veut renommer les colonnes <code>lon</code> et <code>lat</code> de <code>airports</code> en <code>longitude</code> et <code>latitude</code> :</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">rename</span>(airports, <span class="dt">longitude =</span> lon, <span class="dt">latitude =</span> lat)</code></pre></div>
 <pre><code># A tibble: 1,458 x 8
      faa                           name latitude  longitude   alt    tz
@@ -733,7 +733,7 @@ code > span. { color: #1f1c1b; } /* Normal */
 tmp &lt;-<span class="st"> </span><span class="kw">select</span>(tmp, dep_delay, arr_delay)
 <span class="kw">arrange</span>(tmp, dep_delay)</code></pre></div>
 <p>C’est nettement plus lisible, l’ordre des opérations est le bon, et les paramètres sont bien rattachés à leur fonction. Par contre, ça reste un peu “verbeux”, et on crée un objet temporaire <code>tmp</code> dont on n’a pas réellement besoin.</p>
-<p>Pour simplifier et améliorer encore la lisibilité du code, on va utiliser un nouvel opérateur, baptisé <em>pipe</em><a href="#fn14" class="footnoteRef" id="fnref14"><sup>14</sup></a>. Le <em>pipe</em> se note <code>%&gt;%</code>, et son fonctionnement est le suivant : si j’exécute <code>expr %&gt;% f</code>, alors le résultat de l’expression <code>expr</code>, à gauche du <em>pipe</em>, sera passé comme premier argument à la fonction <code>f</code>, à droite du <em>pipe</em>, ce qui revient à exécuter <code>f(expr)</code>.</p>
+<p>Pour simplifier et améliorer encore la lisibilité du code, on va utiliser un nouvel opérateur, baptisé <em>pipe</em><a href="#fn15" class="footnoteRef" id="fnref15"><sup>15</sup></a>. Le <em>pipe</em> se note <code>%&gt;%</code>, et son fonctionnement est le suivant : si j’exécute <code>expr %&gt;% f</code>, alors le résultat de l’expression <code>expr</code>, à gauche du <em>pipe</em>, sera passé comme premier argument à la fonction <code>f</code>, à droite du <em>pipe</em>, ce qui revient à exécuter <code>f(expr)</code>.</p>
 <p>Ainsi les deux expressions suivantes sont rigoureusement équivalentes :</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">filter</span>(flights, dest <span class="op">==</span><span class="st"> &quot;LAX&quot;</span>)</code></pre></div>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">flights <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">filter</span>(dest <span class="op">==</span><span class="st"> &quot;LAX&quot;</span>)</code></pre></div>
@@ -2250,9 +2250,9 @@ map &lt;-<span class="st"> </span><span class="kw">get_map</span>(<span class="d
 </div>
 <div class="footnotes">
 <hr />
-<ol start="13">
-<li id="fn13"><p>Il est également possible de renommer des colonnes directement avec <code>select</code>, avec la même syntaxe que pour <code>rename</code>.<a href="09-dplyr.html#fnref13">↩</a></p></li>
-<li id="fn14"><p>Le <em>pipe</em> a été introduit à l’origine par l’extension <code>magrittr</code>, et repris par <code>dplyr</code><a href="09-dplyr.html#fnref14">↩</a></p></li>
+<ol start="14">
+<li id="fn14"><p>Il est également possible de renommer des colonnes directement avec <code>select</code>, avec la même syntaxe que pour <code>rename</code>.<a href="09-dplyr.html#fnref14">↩</a></p></li>
+<li id="fn15"><p>Le <em>pipe</em> a été introduit à l’origine par l’extension <code>magrittr</code>, et repris par <code>dplyr</code><a href="09-dplyr.html#fnref15">↩</a></p></li>
 </ol>
 </div>
             </section>
