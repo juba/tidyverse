@@ -164,17 +164,37 @@ x <- c(12, 8, 14, 7, 6, 18)
 x[x > 10]
 ```
 
+Enfin, on peut aussi utiliser les tests et la sélection pour modifier les valeurs d'un vecteur. Ainsi, si on assigne une valeur à une sélection, les éléments pour lesquels le test est vrai sont remplacés par cette valeur :
+
+```{r}
+x <- c(12, 8, 14, 7, 6, 18)
+x[x > 10] <- 100
+x
+```
+
 
 ## Recoder une variable qualitative
 
 Pour rappel, on appelle variable qualitative une variable pouvant prendre un nombre limité de modalités (de valeurs possibles). 
 
-### L'extension `forcats`
+### Facteurs et `forcats`
 
 Dans R, les variables qualitatives peuvent être de deux types : ou bien des vecteurs de type `character` (des chaînes de caractères), ou bien des `factor` (facteurs). Si vous utilisez les fonctions des extensions du *tidyverse* comme `readr`, `readxl` ou `haven` pour importer vos données, vos variables qualitatives seront importées sous forme de `character`. Mais dans les autres cas elles se retrouveront souvent sous forme de `factor`. C'est le cas dans notre jeu de données d'exemple :
 
 ```{r}
 class(hdv2003$qualif)
+```
+
+Les facteurs sont un type de variable ne pouvant prendre qu'un nombre défini de modalités nommés *levels* :
+
+```{r}
+levels(hdv2003$qualif)
+```
+
+Ceci complique les opérations de recodage car du coup l'opération suivante, qui tente de modifier une modalité de la variable, aboutit à un avertissement, et l'opération n'est pas effectuée :
+
+```{r}
+hdv2003$qualif[hdv2003$qualif == "Ouvrier specialise"] <- "Ouvrier"
 ```
 
 `forcats` est une extension facilitant la manipulation des variables qualitatives, qu'elles soient sous forme de vecteurs `character` ou de facteurs. Elle ne fait pas à proprement parler partie du *tidyverse*, il faut donc la charger explicitement avec :
@@ -228,6 +248,26 @@ hdv2003 <- hdv2003 %>%
                                   "Ouvrier" = "Ouvrier qualifié"))
 ```
 
+Si on souhaite recoder une modalité de la variable en `NA`, il faut (contre intuitivement) lui assigner la valeur `NULL` :
+
+```{r}
+hdv2003 <- hdv2003 %>% 
+  mutate(qualif_rec = fct_recode(qualif, NULL = "Autre"))
+
+freq(hdv2003$qualif_rec)
+```
+
+
+À l'inverse, si on souhaite recoder les `NA` d'une variable, on utilisera la fonction `fct_explicit_na`, qui convertit toutes les valeurs manquantes (`NA`) d'un facteur en une modalité spécifique :
+
+```{r}
+hdv2003 <- hdv2003 %>% 
+  mutate(qualif_rec = fct_explicit_na(qualif, na_level = "(Manquant)"))
+
+freq(hdv2003$qualif_rec)
+```
+
+
 
 D'autres fonctions sont proposées par `forcats` pour faciliter certains recodage, comme `fct_collapse`, qui propose une autre syntaxe pratique quand on doit regrouper ensemble des modalités :
 
@@ -262,14 +302,7 @@ freq(hdv2003$qualif_rec)
 ```
 
 
-`fct_explicit_na` qui convertit toutes les valeurs manquantes (`NA`) d'un facteur en une modalité spécifique :
 
-```{r}
-hdv2003 <- hdv2003 %>% 
-  mutate(qualif_rec = fct_explicit_na(qualif, na_level = "(Manquant)"))
-
-freq(hdv2003$qualif_rec)
-```
 
 
 
