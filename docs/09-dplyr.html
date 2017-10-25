@@ -1176,6 +1176,43 @@ L’utilisation du <em>pipe</em> n’est pas obligatoire, mais elle rend les scr
  9     9     1
 10    10     1
 # ... with 355 more rows</code></pre>
+<p>On peut lui spécifier une liste de variables : dans ce cas, pour toutes les observations ayant des valeurs identiques pour les variables en question, <code>distinct</code> ne conservera que la première d’entre elles.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">flights <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">distinct</span>(month, day)</code></pre></div>
+<pre><code># A tibble: 365 x 2
+   month   day
+   &lt;int&gt; &lt;int&gt;
+ 1     1     1
+ 2     1     2
+ 3     1     3
+ 4     1     4
+ 5     1     5
+ 6     1     6
+ 7     1     7
+ 8     1     8
+ 9     1     9
+10     1    10
+# ... with 355 more rows</code></pre>
+<p>L’option <code>.keep_all</code> permet, dans l’opération précédente, de conserver l’ensemble des colonnes du tableau :</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">flights <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">distinct</span>(month, day, <span class="dt">.keep_all =</span> <span class="ot">TRUE</span>) </code></pre></div>
+<pre><code># A tibble: 365 x 21
+    year month   day dep_time sched_dep_time dep_delay arr_time
+   &lt;int&gt; &lt;int&gt; &lt;int&gt;    &lt;int&gt;          &lt;int&gt;     &lt;dbl&gt;    &lt;int&gt;
+ 1  2013     1     1      517            515         2      830
+ 2  2013     1     2       42           2359        43      518
+ 3  2013     1     3       32           2359        33      504
+ 4  2013     1     4       25           2359        26      505
+ 5  2013     1     5       14           2359        15      503
+ 6  2013     1     6       16           2359        17      451
+ 7  2013     1     7       49           2359        50      531
+ 8  2013     1     8      454            500        -6      625
+ 9  2013     1     9        2           2359         3      432
+10  2013     1    10        3           2359         4      426
+# ... with 355 more rows, and 14 more variables: sched_arr_time &lt;int&gt;,
+#   arr_delay &lt;dbl&gt;, carrier &lt;chr&gt;, flight &lt;int&gt;, tailnum &lt;chr&gt;,
+#   origin &lt;chr&gt;, dest &lt;chr&gt;, air_time &lt;dbl&gt;, distance &lt;dbl&gt;, hour &lt;dbl&gt;,
+#   minute &lt;dbl&gt;, time_hour &lt;dttm&gt;, distance_km &lt;dbl&gt;, vitesse &lt;dbl&gt;</code></pre>
 </div>
 </div>
 <div id="tables-multiples" class="section level2">
