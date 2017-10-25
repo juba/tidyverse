@@ -25,7 +25,7 @@
 <meta name="author" content="Julien Barnier">
 
 
-<meta name="date" content="2017-10-24">
+<meta name="date" content="2017-10-26">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -283,7 +283,7 @@ code > span. { color: #1f1c1b; } /* Normal */
 <li class="chapter" data-level="10.1" data-path="10-recodages.html"><a href="10-recodages.html#rappel-sur-les-variables-et-les-vecteurs"><i class="fa fa-check"></i><b>10.1</b> Rappel sur les variables et les vecteurs</a></li>
 <li class="chapter" data-level="10.2" data-path="10-recodages.html"><a href="10-recodages.html#tests"><i class="fa fa-check"></i><b>10.2</b> Tests et comparaison</a></li>
 <li class="chapter" data-level="10.3" data-path="10-recodages.html"><a href="10-recodages.html#recoder-une-variable-qualitative"><i class="fa fa-check"></i><b>10.3</b> Recoder une variable qualitative</a><ul>
-<li class="chapter" data-level="10.3.1" data-path="10-recodages.html"><a href="10-recodages.html#lextension-forcats"><i class="fa fa-check"></i><b>10.3.1</b> L’extension <code>forcats</code></a></li>
+<li class="chapter" data-level="10.3.1" data-path="10-recodages.html"><a href="10-recodages.html#facteurs-et-forcats"><i class="fa fa-check"></i><b>10.3.1</b> Facteurs et <code>forcats</code></a></li>
 <li class="chapter" data-level="10.3.2" data-path="10-recodages.html"><a href="10-recodages.html#modifier-les-modalites-dune-variable-qualitative"><i class="fa fa-check"></i><b>10.3.2</b> Modifier les modalités d’une variable qualitative</a></li>
 <li class="chapter" data-level="10.3.3" data-path="10-recodages.html"><a href="10-recodages.html#ordonner-les-modalites-dune-variable-qualitative"><i class="fa fa-check"></i><b>10.3.3</b> Ordonner les modalités d’une variable qualitative</a></li>
 </ul></li>
@@ -979,24 +979,6 @@ L’utilisation du <em>pipe</em> n’est pas obligatoire, mais elle rend les scr
  9   BGR   375
 10   BHM   297
 # ... with 95 more rows</code></pre>
-<p>On peut également compter selon plusieurs variables :</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">flights <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">count</span>(origin, dest) <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">arrange</span>(<span class="kw">desc</span>(n))</code></pre></div>
-<pre><code># A tibble: 224 x 3
-   origin  dest     n
-    &lt;chr&gt; &lt;chr&gt; &lt;int&gt;
- 1    JFK   LAX 11262
- 2    LGA   ATL 10263
- 3    LGA   ORD  8857
- 4    JFK   SFO  8204
- 5    LGA   CLT  6168
- 6    EWR   ORD  6100
- 7    JFK   BOS  5898
- 8    LGA   MIA  5781
- 9    JFK   MCO  5464
-10    EWR   BOS  5327
-# ... with 214 more rows</code></pre>
 </div>
 <div id="grouper-selon-plusieurs-variables" class="section level3">
 <h3><span class="header-section-number">9.4.3</span> Grouper selon plusieurs variables</h3>
@@ -1020,6 +1002,24 @@ L’utilisation du <em>pipe</em> n’est pas obligatoire, mais elle rend les scr
  9     8   LAX  1505
 10     7   LAX  1500
 # ... with 1,103 more rows</code></pre>
+<p>On peut également compter selon plusieurs variables :</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">flights <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">count</span>(origin, dest) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">arrange</span>(<span class="kw">desc</span>(n))</code></pre></div>
+<pre><code># A tibble: 224 x 3
+   origin  dest     n
+    &lt;chr&gt; &lt;chr&gt; &lt;int&gt;
+ 1    JFK   LAX 11262
+ 2    LGA   ATL 10263
+ 3    LGA   ORD  8857
+ 4    JFK   SFO  8204
+ 5    LGA   CLT  6168
+ 6    EWR   ORD  6100
+ 7    JFK   BOS  5898
+ 8    LGA   MIA  5781
+ 9    JFK   MCO  5464
+10    EWR   BOS  5327
+# ... with 214 more rows</code></pre>
 <p>On peut utiliser plusieurs opérations de groupage dans le même <em>pipeline</em>. Ainsi, si on souhaite déterminer le couple origine/destination ayant le plus grand nombre de vols selon le mois de l’année, on devra procéder en deux étapes :</p>
 <ul>
 <li>d’abord grouper selon mois, origine et destination pour calculer le nombre de vols</li>
@@ -1948,7 +1948,7 @@ airports_ex &lt;-<span class="st"> </span>airports <span class="op">%&gt;%</span
 <p><strong>Exercice 2.1</strong></p>
 <p>Réécrire le code de l’exercice précédent en utilisant le <em>pipe</em> <code>%&gt;%</code>.</p>
 <p><strong>Exercice 2.2</strong></p>
-<p>Sélectionnez les vols à destination de San Francico (code <code>SFO</code>) et triez-les selon le retard au départ décroissant (variable <code>dep_delay</code>).</p>
+<p>Sélectionnez les vols à destination de San Francico (code <code>SFO</code> de la variable <code>dest</code>) et triez-les selon le retard au départ décroissant (variable <code>dep_delay</code>).</p>
 <pre><code># A tibble: 13,331 x 19
     year month   day dep_time sched_dep_time dep_delay arr_time
    &lt;int&gt; &lt;int&gt; &lt;int&gt;    &lt;int&gt;          &lt;int&gt;     &lt;dbl&gt;    &lt;int&gt;
