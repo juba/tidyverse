@@ -184,6 +184,21 @@ flights <- mutate(flights,
 select(flights, distance, distance_km, vitesse)
 ```
 
+À noter que `mutate` est évidemment parfaitement compatible avec les fonctions vues dans le chapitre \@ref(vectorfactor) sur les recodages : fonctions de `forcats`, `if_else`, `case_when`...
+
+L'avantage d'utiliser `mutate` est double. D'abord il permet d'éviter d'avoir à saisir le nom du tableau de données dans les conditions d'un `if_else` ou d'un `case_when` :
+
+```{r, eval=FALSE}
+flights <- mutate(flights,
+                  type_retard = case_when(
+                    dep_delay > 0 & arr_delay > 0 ~ "Retard départ et arrivée",
+                    dep_delay > 0 & arr_delay <= 0 ~ "Retard départ",
+                    dep_delay <= 0 & arr_delay > 0 ~ "Retard arrivée",
+                    TRUE ~ "Aucun retard"))
+```
+
+Utiliser `mutate` pour les recodages permet aussi de les intégrer dans un *pipeline* de traitement de données, concept présenté dans la section suivante.
+
 
 ## Enchaîner les opérations avec le *pipe* : `%>%`
 
