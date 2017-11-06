@@ -435,6 +435,41 @@ flights %>%
   filter(nb == max(nb))
 ```
 
+Lorsqu'on effectue un `group_by` suivi d'un `summarise`, le tableau résultat est automatiquement dégroupé *de la dernière variable de regroupement*. Ainsi le tableau généré par le code suivant est groupé par `month` et `origin` :
+
+```{r}
+flights %>%
+  group_by(month, origin, dest) %>%
+  summarise(nb = n())
+```
+
+Cela peut permettre "d'enchaîner" les opérations groupées. Dans l'exemple suivant on calcule le pourcentage des trajets pour chaque destination par rapport à tous les trajets du mois :
+
+```{r}
+flights %>%
+  group_by(month, dest) %>%
+  summarise(nb = n()) %>% 
+  mutate(pourcentage = nb / sum(nb) * 100)
+```
+
+On peut à tout moment "dégrouper" un tableau à l'aide de `ungroup`. Ce serait par exemple nécessaire, dans l'exemple précédent, si on voulait calculer le pourcentage sur le nombre total de vols plutôt que sur le nombre de vols par mois :
+
+```{r}
+flights %>%
+  group_by(month, dest) %>%
+  summarise(nb = n()) %>% 
+  ungroup() %>% 
+  mutate(pourcentage = nb / sum(nb) * 100)
+```
+
+À noter que `count`, par contre, renvoit un tableau non groupé :
+
+```{r}
+flights %>% 
+  count(month, dest)
+```
+
+
 
 
 ## Autres fonctions utiles
