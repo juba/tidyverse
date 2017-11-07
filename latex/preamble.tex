@@ -1,0 +1,121 @@
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{babel}
+\usepackage{fancyhdr}
+\usepackage{fancybox}
+\usepackage{picinpar}
+
+%\usepackage[sf,bf]{titlesec}
+
+\hypersetup{colorlinks=true,urlcolor=blue}
+
+
+%\usepackage[bf,singlelinecheck=off]{caption}
+ 
+\usepackage{framed,color}
+\definecolor{shadecolor}{RGB}{248,248,248}
+ 
+\FrenchFootnotes                                                                                                                    \AddThinSpaceBeforeFootnotes                                                                                                        \VerbatimFootnotes
+
+\renewcommand{\textfraction}{0.05}
+\renewcommand{\topfraction}{0.8}
+\renewcommand{\bottomfraction}{0.8}
+\renewcommand{\floatpagefraction}{0.75}
+ 
+%\renewenvironment{quote}{\begin{VF}}{\end{VF}}
+
+\ifxetex
+ \usepackage{letltxmacro}
+ \setlength{\XeTeXLinkMargin}{1pt}
+ \LetLtxMacro\SavedIncludeGraphics\includegraphics
+ \def\includegraphics#1#{% #1 catches optional stuff (star/opt. arg.)
+   \IncludeGraphicsAux{#1}%
+ }%
+ \newcommand*{\IncludeGraphicsAux}[2]{%
+   \XeTeXLinkBox{%
+     \SavedIncludeGraphics#1{#2}%
+   }%
+ }%
+\fi
+ 
+\makeatletter
+\newenvironment{kframe}{%
+\medskip{}
+\setlength{\fboxsep}{.8em}
+ \def\at@end@of@kframe{}%
+ \ifinner\ifhmode%
+  \def\at@end@of@kframe{\end{minipage}}%
+  \begin{minipage}{\columnwidth}%
+ \fi\fi%
+ \def\FrameCommand##1{\hskip\@totalleftmargin \hskip-\fboxsep
+ \colorbox{shadecolor}{##1}\hskip-\fboxsep
+     % There is no \\@totalrightmargin, so:
+     \hskip-\linewidth \hskip-\@totalleftmargin \hskip\columnwidth}%
+ \MakeFramed {\advance\hsize-\width
+   \@totalleftmargin\z@ \linewidth\hsize
+   \@setminipage}}%
+ {\par\unskip\endMakeFramed%
+ \at@end@of@kframe}
+\makeatother
+
+\renewenvironment{Shaded}{\begin{kframe}}{\end{kframe}}
+
+\newenvironment{rmdblock}[1]
+  {
+  \begin{itemize}
+  \renewcommand{\labelitemi}{
+    \raisebox{-.7\height}[0pt][0pt]{
+      {\setkeys{Gin}{width=3em,keepaspectratio}\includegraphics{#1}}
+    }
+  }
+  \setlength{\fboxsep}{1em}
+  \begin{kframe}
+  \item
+  }
+  {
+  \end{kframe}
+  \end{itemize}
+  }
+\newenvironment{rmdnote}
+  {\begin{rmdblock}{resources/icons/help-about.png}}
+  {\end{rmdblock}}
+\newenvironment{rmdimportant}
+  {\begin{rmdblock}{resources/icons/emblem-important.png}}
+  {\end{rmdblock}}
+
+\newsavebox{\fcolbox}
+
+\newenvironment{greyframe}%
+{\setlength\fboxsep{10pt}%
+  \setlength{\rightmargin}{\leftmargin}%
+  \footnotesize\raggedright%
+  \begin{lrbox}{\fcolbox}%
+    \begin{minipage}{\linewidth-4\fboxsep}}%
+    {\end{minipage}%
+  \end{lrbox}%
+  \vspace{3ex}%
+  \begin{center}%
+    \fcolorbox{grisfonce}{grisclair}{\usebox{\fcolbox}}%
+  \end{center}
+  \vspace{3ex}%
+}
+
+\newenvironment{remarque}%
+{\begin{greyframe}%
+    \begin{window}[0,l,{%
+        \includegraphics[height=0.8cm,keepaspectratio=true]{img/note.png}%
+      },{}]}%
+{\end{window}\end{greyframe}}
+
+\newenvironment{astuce}%
+{\begin{greyframe}%
+    \begin{window}[0,l,{%
+        \includegraphics[height=0.8cm,keepaspectratio=true]{img/astuce.png}%
+      },{}]}%
+{\end{window}\end{greyframe}}
+
+
+%\newenvironment{rmdnote}{}{}
+%\newenvironment{rmdimportant}{}{}
+
+\urlstyle{tt}
