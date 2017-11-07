@@ -1,6 +1,6 @@
 # Organiser ses scripts
 
-On l'a vu, le script est l'élément central de toute analyse dans R. C'est lui qui contient l'ensemble des opérations constitutives d'une analyse, dans leur ordre d'exécution : chargement des données, recodages, manipulations, analyses, exports de résultats, etc.
+On l'a vu, le script est l'élément central de toute analyse dans R. C'est lui qui contient l'ensemble des opérations constitutives d'une analyse, dans leur ordre d'exécution : chargement des données, recodages, manipulations, analyses, exports de résultats, etc.
 
 Une conséquence est qu'un script peut rapidement devenir très long, et on peut finir par s'y perdre. Il est donc nécessaire d'organiser son travail pour pouvoir se retrouver facilement parmi les différentes étapes d'un projet d'analyse.
 
@@ -9,7 +9,7 @@ Une conséquence est qu'un script peut rapidement devenir très long, et on peut
 
 La notion de projet est une fonctionnalité très pratique de RStudio, qui permet d'organiser son travail et de faciliter l'accès à l'ensemble des fichiers constitutifs d'une analyse (données, scripts, documentation, etc.).
 
-En pratique, un projet est un dossier que vous avez créé où bon vous semble sur votre disque dur, et dans lequel vous regrouperez tous les fichiers en question. Utiliser des projets procure plusieurs avantages :
+En pratique, un projet est un dossier que vous avez créé où bon vous semble sur votre disque dur, et dans lequel vous regrouperez tous les fichiers en question. Utiliser des projets procure plusieurs avantages :
 
 - RStudio lance automatiquement R dans le dossier du projet et facilite ainsi grandement l'accès aux fichiers de données à importer (plus besoin de taper le chemin d'accès complet). De même, si vous déplacez votre dossier sur votre disque, le projet continuera à fonctionner.
 - L'onglet *Files* de la zone en bas à droite de l'interface de RStudio vous permet de naviguer facilement dans les fichiers de votre projet.
@@ -36,19 +36,19 @@ Si vous ne retrouvez pas le nom du projet dans ce menu, vous pouvez l'ouvrir en 
 
 Lorsqu'un script est long, RStudio permet de créer des "sections" facilitant la navigation.
 
-Pour créer une section, il suffit de faire suivre une ligne de commentaires par plusieurs tirets `-`, comme ceci  :
+Pour créer une section, il suffit de faire suivre une ligne de commentaires par plusieurs tirets `-`, comme ceci  :
 
 ```
 ## Titre de la section -------------------------------------
 ```
 
-Le nombre de tirets n'a pas d'importance, il doit juste y'en avoir plus de quatre. RStudio affiche alors dans la marge de gauche du script un petit triangle noir qui permet de replier ou déplier le contenu de la section :
+Le nombre de tirets n'a pas d'importance, il doit juste y'en avoir plus de quatre. RStudio affiche alors dans la marge de gauche du script un petit triangle noir qui permet de replier ou déplier le contenu de la section :
 
 ![Section de script dépliée](resources/screenshots/rstudio_section_depliee.png)
 
 ![Section de script repliée](resources/screenshots/rstudio_section_repliee.png)
 
-De plus, en cliquant sur l'icône *Show document outline* (la plus à droite de la barre d'outils de la fenêtre du script), ou en utilisant le raccourci clavier `Ctrl+Shift+O`, RStudio affiche une "table des matières" automatiquement mise à jour qui liste les sections existantes et permet de naviguer facilement dans le script :
+De plus, en cliquant sur l'icône *Show document outline* (la plus à droite de la barre d'outils de la fenêtre du script), ou en utilisant le raccourci clavier `Ctrl+Shift+O`, RStudio affiche une "table des matières" automatiquement mise à jour qui liste les sections existantes et permet de naviguer facilement dans le script :
 
 ![Liste dynamique des sections](resources/screenshots/rstudio_toc.png)
 
@@ -60,9 +60,9 @@ Si le script devient très long, les sections peuvent ne plus être suffisantes.
 
 Un exemple courant concerne les recodages et la manipulation des données. Il est fréquent, au cours d'une analyse, de calculer de nouvelles variables, recoder des variables qualitatives existantes, etc. Il peut alors être intéressant de regrouper tous ces recodages dans un script à part (nommé, par exemple, `recodages.R`). Ce fichier contient alors l'ensemble des recodages "validés", ceux qu'on a testé et qu'on sait vouloir conserver.
 
-Pour exécuter ces recodages, on peut évidemment ouvrir le script `recodages.R` dans RStudio et lancer l'ensemble du code qu'il contient. Mais une méthode plus pratique est d'utiliser la fonction `source` : celle-ci prend en paramètre un nom de fichier `.R`, et quand on l'exécute elle va exécuter l'ensemble du code contenu dans ce fichier.
+Pour exécuter ces recodages, on peut évidemment ouvrir le script `recodages.R` dans RStudio et lancer l'ensemble du code qu'il contient. Mais une méthode plus pratique est d'utiliser la fonction `source` : celle-ci prend en paramètre un nom de fichier `.R`, et quand on l'exécute elle va exécuter l'ensemble du code contenu dans ce fichier.
 
-Ainsi, un début de script `analyse.R` pourra ressembler à ceci :
+Ainsi, un début de script `analyse.R` pourra ressembler à ceci :
 
 ```{r eval=FALSE}
 # Analyse des données Histoire de vie 2003
@@ -81,7 +81,7 @@ hist(hdv2003$age)
 (...)
 ```
 
-L'avantage principal est qu'on peut à tout moment revenir à nos données d'origine et aux recodages "validés" simplement en exécutant les deux lignes :
+L'avantage principal est qu'on peut à tout moment revenir à nos données d'origine et aux recodages "validés" simplement en exécutant les deux lignes :
 
 ```{r eval=FALSE}
 data(hdv2003)
@@ -89,7 +89,7 @@ source("recodages.R")
 ```
 
 
-L'autre avantage est qu'on peut répartir nos analyses entre différents scripts, et conserver ces deux lignes en haut de chaque script, ce qui permet de "mutualiser" les recodages validés. On pourrait ainsi créer un deuxième script `analyse_qualif.R` qui pourrait ressembler à ceci :
+L'autre avantage est qu'on peut répartir nos analyses entre différents scripts, et conserver ces deux lignes en haut de chaque script, ce qui permet de "mutualiser" les recodages validés. On pourrait ainsi créer un deuxième script `analyse_qualif.R` qui pourrait ressembler à ceci :
 
 ```{r eval=FALSE}
 # Analyse des données Histoire de vie 2003 - Qualifications
@@ -122,7 +122,7 @@ Enfin, pour des projets un peu complexes, on pourra se référer à l'extension 
 
 ## Désactiver la sauvegarde de l'espace de travail
 
-Vous avez sans doute remarqué qu'au moment de quitter RStudio, une boîte de dialogue semblable à celle-ci s'affiche parfois :
+Vous avez sans doute remarqué qu'au moment de quitter RStudio, une boîte de dialogue semblable à celle-ci s'affiche parfois :
 
 ![Dialogue d'enregistrement de l'espace de travail](resources/screenshots/rstudio_save_workspace_dialog.png)
 
@@ -130,12 +130,12 @@ Et il est bien difficile de comprendre de quoi cela parle.
 
 Il s'agit en fait d'une fonctionnalité de R lui-même qui propose d'enregistrer notre espace de travail (*workspace*), c'est-à-dire l'ensemble des objets qui existent actuellement dans notre environnement, dans un fichier nommé `.RData`. La prochaine fois que R est lancé dans le même dossier (par exemple à la réouverture du projet), s'il trouve un fichier `.RData` il va le lire automatiquement et restaurer l'ensemble des objets dans l'état où ils étaient.
 
-Ceci peut sembler pratique, mais c'est en fait une mauvaise idée, pour deux raisons :
+Ceci peut sembler pratique, mais c'est en fait une mauvaise idée, pour deux raisons :
 
 - on peut se retrouver avec des objets dont on ne sait plus d'où ils viennent et comment ils ont été calculés
 - cette manière de faire casse la logique principale de R, qui est que c'est le script qui est central, et que c'est lui qui retrace toutes les étapes de notre analyse et permet de les reproduire
 
-Il est donc *fortement recommandé*, juste après l'installation de RStudio, de désactiver cette fonctionnalité. Pour cela, aller dans le menu *Tools*, puis *Global Options*, et s'assurer que :
+Il est donc *fortement recommandé*, juste après l'installation de RStudio, de désactiver cette fonctionnalité. Pour cela, aller dans le menu *Tools*, puis *Global Options*, et s'assurer que :
 
 - la case *Restore .RData into workspace at startup* est *décochée*
 - le champ *Save workspace to .RData on exit* vaut *Never*
