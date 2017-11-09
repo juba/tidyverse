@@ -1,34 +1,21 @@
-\usepackage{booktabs}
-\usepackage{longtable}
+%\usepackage{booktabs}
 \usepackage{ctable}
-\usepackage{babel}
 \usepackage{fancyhdr}
-% \usepackage{fancybox}
-% \usepackage{fancyvrb}
-% \usepackage{lineno}
-% \usepackage{picinpar}
-% \usepackage{mparhack}
-% \usepackage{vmargin}
-% \usepackage{verbatim}
-% \usepackage{xspace}
+\usepackage{float}
 
+\floatplacement{figure}{H}
 
 %\usepackage[sf,bf]{titlesec}
 
 \hypersetup{colorlinks=true, urlcolor=blue}
 
+\renewcommand{\chaptername}{Chapitre}
+\renewcommand{\contentsname}{Table des Matières}
+\renewcommand{\partname}{Partie}
 
-%\usepackage[bf,singlelinecheck=off]{caption}
- 
 \usepackage{framed,color}
-\definecolor{shadecolor}{RGB}{248,248,248}
-\definecolor{grisclair}{rgb}{0.97,0.97,0.97}
-\definecolor{grisinterm}{rgb}{0.95,0.95,0.95}
-\definecolor{grisfonce}{rgb}{0.5,0.5,0.5}
-\definecolor{inputcol}{rgb}{0,0,0.5}
-\definecolor{outputcol}{rgb}{0.5,0,0} 
- 
-\FrenchFootnotes                                                                                                                    \AddThinSpaceBeforeFootnotes                                                                                                        \VerbatimFootnotes
+\definecolor{incolor}{RGB}{240,240,240}
+\definecolor{outcolor}{RGB}{248,248,248}
 
 \renewcommand{\textfraction}{0.05}
 \renewcommand{\topfraction}{0.8}
@@ -55,82 +42,50 @@
 \newenvironment{kframe}{%
 \medskip{}
 \setlength{\fboxsep}{.8em}
- \def\at@end@of@kframe{}%
- \ifinner\ifhmode%
-  \def\at@end@of@kframe{\end{minipage}}%
-  \begin{minipage}{\columnwidth}%
- \fi\fi%
- \def\FrameCommand##1{\hskip\@totalleftmargin \hskip-\fboxsep
- \colorbox{shadecolor}{##1}\hskip-\fboxsep
-     % There is no \\@totalrightmargin, so:
-     \hskip-\linewidth \hskip-\@totalleftmargin \hskip\columnwidth}%
- \MakeFramed {\advance\hsize-\width
-   \@totalleftmargin\z@ \linewidth\hsize
-   \@setminipage}}%
- {\par\unskip\endMakeFramed%
- \at@end@of@kframe}
+\def\at@end@of@kframe{}%
+\ifinner\ifhmode%
+ \def\at@end@of@kframe{\end{minipage}}%
+ \begin{minipage}{\columnwidth}%
+\fi\fi%
+\def\FrameCommand##1{\hskip\@totalleftmargin \hskip-\fboxsep
+\colorbox{incolor}{##1}\hskip-\fboxsep
+    % There is no \\@totalrightmargin, so:
+    \hskip-\linewidth \hskip-\@totalleftmargin \hskip\columnwidth}%
+\MakeFramed {\advance\hsize-\width
+  \@totalleftmargin\z@ \linewidth\hsize
+  \@setminipage}}%
+{\par\unskip\endMakeFramed%
+\at@end@of@kframe}
 \makeatother
 
+\let\oldverbatim\verbatim
 \renewenvironment{Shaded}{\vspace{0.2cm}\begin{kframe}}{\end{kframe}}
+\renewenvironment{verbatim}{\begin{shaded}\begin{oldverbatim}}{\end{oldverbatim}\end{shaded}}
 
 \newenvironment{rmdblock}[1]
-  {
-  \begin{itemize}
-  \renewcommand{\labelitemi}{
-    \raisebox{-.7\height}[0pt][0pt]{
-      {\setkeys{Gin}{width=3em,keepaspectratio}\includegraphics{#1}}
-    }
-  }
-  \setlength{\fboxsep}{1em}
-  \begin{kframe}
-  \item
-  }
-  {
-  \end{kframe}
-  \end{itemize}
-  }
+ {
+ \begin{itemize}
+ \renewcommand{\labelitemi}{
+   \raisebox{-.7\height}[0pt][0pt]{
+     {\setkeys{Gin}{width=3em,keepaspectratio}\includegraphics{#1}}
+   }
+ }
+ \begin{kframe}
+ \setlength{\fboxsep}{1em}
+ \item
+ }
+ {
+ \end{kframe}
+ \end{itemize}
+ }
 \newenvironment{rmdnote}
-  {\begin{rmdblock}{resources/icons/help-about.png}}
-  {\end{rmdblock}}
+ {\begin{rmdblock}{resources/icons/help-about.png}}
+ {\end{rmdblock}}
 \newenvironment{rmdimportant}
-  {\begin{rmdblock}{resources/icons/emblem-important.png}}
-  {\end{rmdblock}}
+ {\begin{rmdblock}{resources/icons/emblem-important.png}}
+ {\end{rmdblock}}
 
-% \newsavebox{\fcolbox}
-% \newenvironment{greyframe}%
-% {\setlength\fboxsep{10pt}%
-%   \setlength{\rightmargin}{\leftmargin}%
-%   \footnotesize\raggedright%
-%   \begin{lrbox}{\fcolbox}%
-%     \begin{minipage}{\linewidth-4\fboxsep}}%
-%     {\end{minipage}%
-%   \end{lrbox}%
-%   \vspace{3ex}%
-%   \begin{center}%
-%     \fcolorbox{grisfonce}{grisclair}{\usebox{\fcolbox}}%
-%   \end{center}
-%   \vspace{3ex}%
-% }
-% 
-% %\renewenvironment{Shaded}{\vspace{0.5cm}\begin{greyframe}}{\end{greyframe}}
-% 
-% 
-% \newenvironment{rmdnote}%
-% {\begin{greyframe}%
-%     \begin{window}[0,l,{%
-%         \includegraphics[height=0.8cm,keepaspectratio=true]{resources/icons/help-about.png}%
-%       },{}]}%
-% {\end{window}\end{greyframe}}
-% 
-% \newenvironment{rmdimportant}%
-% {\begin{greyframe}%
-%     \begin{window}[0,l,{%
-%         \includegraphics[height=0.8cm,keepaspectratio=true]{resources/icons/emblem-important.png}%
-%       },{}]}%
-% {\end{window}\end{greyframe}}
-
-
-%\newenvironment{rmdnote}{}{}
-%\newenvironment{rmdimportant}{}{}
 
 \urlstyle{tt}
+
+\frontmatter
