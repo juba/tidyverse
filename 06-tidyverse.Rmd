@@ -50,9 +50,29 @@ library(tidyverse)
 
 Chargera l'ensemble des extensions précédentes.
 
-Il existe d'autres extensions qui font partie du *tidyverse* mais qui doivent être installées et chargées à part, comme par exemple `readxl` (pour l'importation de données depuis des fichiers Excel).
+Il existe d'autres extensions qui font partie du *tidyverse* mais qui doivent être chargées explicitement, comme par exemple `readxl` (pour l'importation de données depuis des fichiers Excel).
 
 La liste complète des extensions se trouve sur [le site officiel du *tidyverse*](https://www.tidyverse.org/packages/).
+
+Ce document est basé sur les versions d'extension suivantes :
+
+```{r echo=FALSE, message=TRUE, warning=TRUE}
+core <- tidyverse:::core
+versions <- vapply(core, tidyverse:::package_version, character(1))
+  packages <- paste0(
+    crayon::blue(format(core)), " ",
+    crayon::col_align(versions, max(crayon::col_nchar(versions)))
+  )
+
+  if (length(packages) %% 2 == 1) {
+    packages <- append(packages, "")
+  }
+  col1 <- seq_len(length(packages) / 2)
+  info <- paste0(packages[col1], "     ", packages[-col1])
+
+tidyverse:::msg(paste(info, collapse = "\n"), startup = TRUE)
+
+```
 
 
 ## tidy data {#tidydata}
