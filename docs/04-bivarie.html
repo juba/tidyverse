@@ -25,7 +25,7 @@
 <meta name="author" content="Julien Barnier">
 
 
-<meta name="date" content="2017-11-24">
+<meta name="date" content="2018-03-02">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -47,7 +47,7 @@
 
 
 
-<script src="libs/htmlwidgets-0.9/htmlwidgets.js"></script>
+<script src="libs/htmlwidgets-1.0/htmlwidgets.js"></script>
 <link href="libs/leaflet-0.7.7/leaflet.css" rel="stylesheet" />
 <script src="libs/leaflet-0.7.7/leaflet.js"></script>
 <link href="libs/leafletfix-1.0.0/leafletfix.css" rel="stylesheet" />
@@ -492,10 +492,10 @@ X-squared = 387.56, df = 6, p-value &lt; 2.2e-16</code></pre>
 <h3><span class="header-section-number">4.1.3</span> Représentation graphique</h3>
 <p>Il est possible de faire une représentation graphique d’un tableau croisé, par exemple avec la fonction <code>mosaicplot</code> :</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">mosaicplot</span>(tab)</code></pre></div>
-<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-98-1.svg" width="576" /></p>
+<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-108-1.svg" width="576" /></p>
 <p>On peut améliorer ce graphique en colorant les cases selon les résidus du test du χ² (argument <code>shade = TRUE</code>) et en orientant verticalement les labels de colonnes (argument <code>las = 3</code>) :</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">mosaicplot</span>(tab, <span class="dt">las =</span> <span class="dv">3</span>, <span class="dt">shade =</span> <span class="ot">TRUE</span>)</code></pre></div>
-<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-99-1.svg" width="576" /></p>
+<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-109-1.svg" width="576" /></p>
 <p>Chaque rectangle de ce graphique représente une case de tableau. Sa largeur correspond au pourcentage des modalités en colonnes (il y’a beaucoup d’employés et d’ouvriers et très peu d’“autres”). Sa hauteur correspond aux pourcentages colonnes : la proportion d’hommes chez les cadres est plus élevée que chez les employés. Enfin, la couleur de la case correspond au résidu du test du χ² correspondant : les cases en rouge sont sous-représentées, les cases en bleu sur-représentées, et les cases blanches sont proches des effectifs attendus sous l’hypothèse d’indépendance.</p>
 </div>
 </div>
@@ -512,7 +512,7 @@ Cette syntaxe de <code>boxplot</code> utilise une nouvelle notation de type “f
 </p>
 </div>
 <p>Ce qui va nous donner le résultat suivant :</p>
-<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-102-1.svg" width="672" /></p>
+<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-112-1.svg" width="672" /></p>
 <div class="rmdnote">
 <p>
 L’interprétation d’un boxplot est la suivante : Les bords inférieurs et supérieurs du carré central représentent le premier et le troisième quartile de la variable représentée sur l’axe vertical. On a donc 50% de nos observations dans cet intervalle. Le trait horizontal dans le carré représente la médiane. Enfin, des “moustaches” s’étendent de chaque côté du carré, jusqu’aux valeurs minimales et maximales, avec une exception : si des valeurs sont éloignées du carré de plus de 1,5 fois l’écart interquartile (la hauteur du carré), alors on les représente sous forme de points (symbolisant des valeurs considérées comme “extrêmes”).
@@ -559,9 +559,9 @@ mean in group Non mean in group Oui
 <p>Le résultat du test est significatif, avec un <em>p</em> extrêmement petit, et on peut rejeter l’hypothèse nulle d’égalité des moyennes des deux groupes. Le test nous donne même un intervalle de confiance à 95% pour la valeur de la différence entre les deux moyennes.</p>
 <p>Nous sommes cependant allés un peu vite, et avons négligé le fait que le test <em>t</em> s’applique normalement à des distributions normales. On peut se faire un premier aperçu visuel de cette normalité en traçant les histogrammes des deux répartitions :</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">hist</span>(d_sport<span class="op">$</span>age)</code></pre></div>
-<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-110-1.svg" width="672" /></p>
+<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-120-1.svg" width="672" /></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">hist</span>(d_nonsport<span class="op">$</span>age)</code></pre></div>
-<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-111-1.svg" width="672" /></p>
+<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-121-1.svg" width="672" /></p>
 <p>Si l’âge dans le groupe des non sportifs se rapproche d’une distribution normale, celui des sportifs en semble assez éloigné, notamment du fait de la limite d’âge à 18 ans imposée par construction de l’enquête.</p>
 <p>On peut tester cette normalité à l’aide du test de Shapiro-Wilk et de la fonction <code>shapiro.test</code> :</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">shapiro.test</span>(d_sport<span class="op">$</span>age)</code></pre></div>
@@ -597,12 +597,12 @@ alternative hypothesis: true location shift is not equal to 0</code></pre>
 <h3><span class="header-section-number">4.3.1</span> Représentation graphique</h3>
 <p>Quand on croise deux variables quantitatives, l’idéal est de faire une représentation graphique sous forme de nuage de points à l’aide de la fonction <code>plot</code>. On va représenter le croisement entre le pourcentage de cadres et le pourcentage de diplômés du supérieur dans la commune :</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plot</span>(rp2012<span class="op">$</span>cadres, rp2012<span class="op">$</span>proprio)</code></pre></div>
-<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-116-1.svg" width="672" /></p>
+<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-126-1.svg" width="672" /></p>
 <p>Une représentation graphique est l’idéal pour visualiser l’existence d’un lien entre les deux variables. Voici quelques exemples d’interprétation :</p>
-<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-117-1.svg" width="576" /></p>
+<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-127-1.svg" width="576" /></p>
 <p>Dans ce premier graphique généré sur nos données, il semble difficile de mettre en évidence une relation de dépendance. Si par contre on croise le pourcentage de cadres et celui de diplômés du supérieur, on obtient une belle relation de dépendance linéaire.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plot</span>(rp2012<span class="op">$</span>cadres, rp2012<span class="op">$</span>dipl_sup)</code></pre></div>
-<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-118-1.svg" width="672" /></p>
+<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-128-1.svg" width="672" /></p>
 </div>
 <div id="calcul-dindicateurs" class="section level3">
 <h3><span class="header-section-number">4.3.2</span> Calcul d’indicateurs</h3>
@@ -625,7 +625,7 @@ alternative hypothesis: true location shift is not equal to 0</code></pre>
 <p>Le coefficient de corrélation de Pearson ci-dessus fait une hypothèse forte sur les données : elles doivent être liées par une association linéaire. Quand ça n’est pas le cas mais qu’on est en présence d’une association monotone, on peut utiliser un autre coefficient, le coefficient de corrélation des rangs de Spearman.</p>
 <p>Plutôt que de se baser sur les valeurs des variables, cette corrélation va se baser sur leurs rangs, c’est-à-dire sur leur position parmi les différentes valeurs prises par les variables.</p>
 <p>Ainsi, si la valeur la plus basse de la première variable est associée à la valeur la plus basse de la deuxième, et ainsi de suite jusqu’à la valeur la plus haute, on obtiendra une corrélation de 1. Si la valeur la plus forte de la première variable est associée à la valeur la plus faible de la seconde, et ainsi de suite, et que la valeur la plus faible de la première est associée à la plus forte de la deuxième, on obtiendra une corrélation de -1. Si les rangs sont “mélangés”, sans rapports entre eux, on obtiendra une corrélation autour de 0.</p>
-<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-121-1.svg" width="576" /></p>
+<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-131-1.svg" width="576" /></p>
 <p>La corrélation des rangs a aussi pour avantage d’être moins sensibles aux valeurs extrêmes ou aux points isolés. On dit qu’elle est plus “robuste”.</p>
 <p>Pour calculer une corrélation de Spearman, on utilise la fonction <code>cor</code> mais avec l’argument <code>method = &quot;spearman&quot;</code> :</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">cor</span>(rp2012<span class="op">$</span>cadres, rp2012<span class="op">$</span>dipl_sup, <span class="dt">method =</span> <span class="st">&quot;spearman&quot;</span>)</code></pre></div>
@@ -679,21 +679,67 @@ F-statistic: 3.729e+04 on 1 and 5168 DF,  p-value: &lt; 2.2e-16</code></pre>
 <p>On peut enfin représenter la droite de régression sur notre nuage de points à l’aide de la fonction <code>abline</code> :</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plot</span>(rp2012<span class="op">$</span>dipl_sup, rp2012<span class="op">$</span>cadres)
 <span class="kw">abline</span>(reg, <span class="dt">col=</span><span class="st">&quot;red&quot;</span>)</code></pre></div>
-<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-126-1.svg" width="672" /></p>
+<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-136-1.svg" width="672" /></p>
 </div>
 </div>
 <div id="exercices-2" class="section level2">
 <h2><span class="header-section-number">4.4</span> Exercices</h2>
 <p><strong>Exercice 1</strong></p>
 <p>Dans le jeu de données <code>hdv2003</code>, faire le tableau croisé entre la catégorie socio-professionnelle (variable <code>qualif</code>) et le fait de croire ou non en l’existence des classes sociales (variable <code>clso</code>). Identifier la variable indépendante et la variable dépendante, et calculer les pourcentages ligne ou colonne. Interpréter le résultat.</p>
+<div class="solution">
+
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(questionr)
+<span class="kw">data</span>(hdv2003)
+tab &lt;-<span class="st"> </span><span class="kw">table</span>(hdv2003<span class="op">$</span>qualif, hdv2003<span class="op">$</span>clso)
+
+## Ici la variable indépendante est `qualif`, on calcule donc 
+## les pourcentages lignes
+<span class="kw">lprop</span>(tab)</code></pre></div>
+
+</div>
 <p>Faire un test du χ². Peut-on rejeter l’hypothèse d’indépendance ?</p>
+<div class="solution">
+
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">chisq.test</span>(tab)
+
+## On peut rejeter l&#39;hypothèse d&#39;indépendance au seuil de 0.05, 
+## et même au seuil de 0.001</code></pre></div>
+
+</div>
 <p>Représenter ce tableau croisé sous la forme d’un <code>mosaicplot</code> en colorant les cases selon les résidus du test du χ².</p>
+<div class="solution">
+
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">mosaicplot</span>(tab, <span class="dt">shade =</span> <span class="ot">TRUE</span>)</code></pre></div>
+
+</div>
 <p><strong>Exercice 2</strong></p>
-<p>Toujours sur le jeu de données <code>hdv2003</code>, faire le boxplot qui croise le nombre d’heure passé devant la télévision (variable <code>heures.tv</code>) avec le statut d’occupation (variable <code>occup</code>).</p>
+<p>Toujours sur le jeu de données <code>hdv2003</code>, faire le boxplot qui croise le nombre d’heures passées devant la télévision (variable <code>heures.tv</code>) avec le statut d’occupation (variable <code>occup</code>).</p>
+<div class="solution">
+
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">boxplot</span>(hdv2003<span class="op">$</span>heures.tv <span class="op">~</span><span class="st"> </span>hdv2003<span class="op">$</span>occup)</code></pre></div>
+
+</div>
 <p>Calculer la durée moyenne en fonction du statut d’occupation à l’aide de <code>tapply</code>.</p>
+<div class="solution">
+
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">tapply</span>(hdv2003<span class="op">$</span>heures.tv, hdv2003<span class="op">$</span>occup, mean, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>)</code></pre></div>
+
+</div>
 <p><strong>Exercice 3</strong></p>
 <p>Sur le jeu de données <code>rp2012</code>, représenter le nuage de points croisant le pourcentage de personnes sans diplôme (variable <code>dipl_aucun</code>) et le pourcentage de propriétaires (variable <code>proprio</code>).</p>
+<div class="solution">
+
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(questionr)
+<span class="kw">data</span>(rp2012)
+<span class="kw">plot</span>(rp2012<span class="op">$</span>dipl_aucun, rp2012<span class="op">$</span>proprio)</code></pre></div>
+
+</div>
 <p>Calculer le coefficient de corrélation linéaire correspondant.</p>
+<div class="solution">
+
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">cor</span>(rp2012<span class="op">$</span>dipl_aucun, rp2012<span class="op">$</span>proprio)</code></pre></div>
+
+</div>
 
 </div>
 </div>
@@ -703,6 +749,7 @@ F-statistic: 3.729e+04 on 1 and 5168 DF,  p-value: &lt; 2.2e-16</code></pre>
 <li id="fn9"><p>Le package en question est présenté en détail dans la partie <a href="10-dplyr.html#dplyr">10</a>.<a href="04-bivarie.html#fnref9">↩</a></p></li>
 </ol>
 </div>
+<script src="js/tidyverse.js"></script>
             </section>
 
           </div>
@@ -738,8 +785,8 @@ gitbook.start({
 "size": 2
 },
 "edit": {
-"link": "https://github.com/juba/tidyverse/edit/master/04-bivarie.Rmd",
-"text": "Éditer"
+"link": "https://github.com/juba/tidyverse/blob/master/04-bivarie.Rmd",
+"text": "Source"
 },
 "download": ["introduction_au_tidyverse.pdf", "introduction_au_tidyverse.epub"],
 "toc": {

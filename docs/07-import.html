@@ -25,7 +25,7 @@
 <meta name="author" content="Julien Barnier">
 
 
-<meta name="date" content="2017-11-24">
+<meta name="date" content="2018-03-02">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -47,7 +47,7 @@
 
 
 
-<script src="libs/htmlwidgets-0.9/htmlwidgets.js"></script>
+<script src="libs/htmlwidgets-1.0/htmlwidgets.js"></script>
 <link href="libs/leaflet-0.7.7/leaflet.css" rel="stylesheet" />
 <script src="libs/leaflet-0.7.7/leaflet.js"></script>
 <link href="libs/leafletfix-1.0.0/leafletfix.css" rel="stylesheet" />
@@ -517,20 +517,19 @@ con &lt;-<span class="st"> </span>DBI<span class="op">::</span><span class="kw">
 <p>On peut également envoyer une requête SQL directement à la base et récupérer le résultat :</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">dbGetQuery</span>(con, <span class="st">&quot;SELECT * FROM mtcars WHERE cyl = 4&quot;</span>)</code></pre></div>
 <pre><code># A tibble: 11 x 12
-     mpg   cyl  disp    hp  drat    wt  qsec    vs    am  gear  carb
-   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
- 1  22.8     4 108.0    93  3.85 2.320 18.61     1     1     4     1
- 2  24.4     4 146.7    62  3.69 3.190 20.00     1     0     4     2
- 3  22.8     4 140.8    95  3.92 3.150 22.90     1     0     4     2
- 4  32.4     4  78.7    66  4.08 2.200 19.47     1     1     4     1
- 5  30.4     4  75.7    52  4.93 1.615 18.52     1     1     4     2
- 6  33.9     4  71.1    65  4.22 1.835 19.90     1     1     4     1
- 7  21.5     4 120.1    97  3.70 2.465 20.01     1     0     3     1
- 8  27.3     4  79.0    66  4.08 1.935 18.90     1     1     4     1
- 9  26.0     4 120.3    91  4.43 2.140 16.70     0     1     5     2
-10  30.4     4  95.1   113  3.77 1.513 16.90     1     1     5     2
-11  21.4     4 121.0   109  4.11 2.780 18.60     1     1     4     2
-# ... with 1 more variables: name &lt;chr&gt;</code></pre>
+     mpg   cyl  disp    hp  drat    wt  qsec    vs    am  gear  carb name 
+   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;chr&gt;
+ 1  22.8  4.00 108    93.0  3.85  2.32  18.6  1.00  1.00  4.00  1.00 Dats…
+ 2  24.4  4.00 147    62.0  3.69  3.19  20.0  1.00  0     4.00  2.00 Merc…
+ 3  22.8  4.00 141    95.0  3.92  3.15  22.9  1.00  0     4.00  2.00 Merc…
+ 4  32.4  4.00  78.7  66.0  4.08  2.20  19.5  1.00  1.00  4.00  1.00 Fiat…
+ 5  30.4  4.00  75.7  52.0  4.93  1.62  18.5  1.00  1.00  4.00  2.00 Hond…
+ 6  33.9  4.00  71.1  65.0  4.22  1.84  19.9  1.00  1.00  4.00  1.00 Toyo…
+ 7  21.5  4.00 120    97.0  3.70  2.46  20.0  1.00  0     3.00  1.00 Toyo…
+ 8  27.3  4.00  79.0  66.0  4.08  1.94  18.9  1.00  1.00  4.00  1.00 Fiat…
+ 9  26.0  4.00 120    91.0  4.43  2.14  16.7  0     1.00  5.00  2.00 Pors…
+10  30.4  4.00  95.1 113    3.77  1.51  16.9  1.00  1.00  5.00  2.00 Lotu…
+11  21.4  4.00 121   109    4.11  2.78  18.6  1.00  1.00  4.00  2.00 Volv…</code></pre>
 <p>Enfin, quand on a terminé, on peut se déconnecter à l’aide de <code>dbDisconnect</code> :</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">dbDisconnect</span>(con)</code></pre></div>
 <p>Ceci n’est évidemment qu’un tout petit aperçu des fonctionnalités de <code>DBI</code>.</p>
@@ -554,19 +553,19 @@ Ici l’objet <code>cars_tbl</code> n’est <em>pas</em> un tableau de données,
 <span class="st">  </span><span class="kw">filter</span>(cyl <span class="op">==</span><span class="st"> </span><span class="dv">4</span>) <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st">  </span><span class="kw">select</span>(name, mpg, cyl)</code></pre></div>
 <pre><code># A tibble: 11 x 3
-             name   mpg   cyl
-            &lt;chr&gt; &lt;dbl&gt; &lt;dbl&gt;
- 1     Datsun 710  22.8     4
- 2      Merc 240D  24.4     4
- 3       Merc 230  22.8     4
- 4       Fiat 128  32.4     4
- 5    Honda Civic  30.4     4
- 6 Toyota Corolla  33.9     4
- 7  Toyota Corona  21.5     4
- 8      Fiat X1-9  27.3     4
- 9  Porsche 914-2  26.0     4
-10   Lotus Europa  30.4     4
-11     Volvo 142E  21.4     4</code></pre>
+   name             mpg   cyl
+   &lt;chr&gt;          &lt;dbl&gt; &lt;dbl&gt;
+ 1 Datsun 710      22.8  4.00
+ 2 Merc 240D       24.4  4.00
+ 3 Merc 230        22.8  4.00
+ 4 Fiat 128        32.4  4.00
+ 5 Honda Civic     30.4  4.00
+ 6 Toyota Corolla  33.9  4.00
+ 7 Toyota Corona   21.5  4.00
+ 8 Fiat X1-9       27.3  4.00
+ 9 Porsche 914-2   26.0  4.00
+10 Lotus Europa    30.4  4.00
+11 Volvo 142E      21.4  4.00</code></pre>
 <p><code>dbplyr</code> s’occupe, de manière transparente, de transformer les instructions <code>dplyr</code> en requête SQL, d’interroger la base de données et de renvoyer le résultat. De plus, tout est fait pour qu’un minimum d’opérations sur la base, parfois coûteuses en temps de calcul, ne soient effectuées.</p>
 <div class="rmdimportant">
 <p>
@@ -631,6 +630,7 @@ Attention, quand on utilise <code>load</code>, les objets chargés sont importé
 <li id="fn13"><p><code>feather</code> est un format compatible avec Python, R et Julia. Pour plus d’informations voir <a href="https://github.com/wesm/feather" class="uri">https://github.com/wesm/feather</a><a href="07-import.html#fnref13">↩</a></p></li>
 </ol>
 </div>
+<script src="js/tidyverse.js"></script>
             </section>
 
           </div>
@@ -666,8 +666,8 @@ gitbook.start({
 "size": 2
 },
 "edit": {
-"link": "https://github.com/juba/tidyverse/edit/master/07-import.Rmd",
-"text": "Éditer"
+"link": "https://github.com/juba/tidyverse/blob/master/07-import.Rmd",
+"text": "Source"
 },
 "download": ["introduction_au_tidyverse.pdf", "introduction_au_tidyverse.epub"],
 "toc": {

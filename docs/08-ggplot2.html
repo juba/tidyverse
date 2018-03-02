@@ -25,7 +25,7 @@
 <meta name="author" content="Julien Barnier">
 
 
-<meta name="date" content="2017-11-24">
+<meta name="date" content="2018-03-02">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -47,7 +47,7 @@
 
 
 
-<script src="libs/htmlwidgets-0.9/htmlwidgets.js"></script>
+<script src="libs/htmlwidgets-1.0/htmlwidgets.js"></script>
 <link href="libs/leaflet-0.7.7/leaflet.css" rel="stylesheet" />
 <script src="libs/leaflet-0.7.7/leaflet.js"></script>
 <link href="libs/leafletfix-1.0.0/leafletfix.css" rel="stylesheet" />
@@ -415,11 +415,11 @@ rp &lt;-<span class="st"> </span><span class="kw">filter</span>(rp2012, departem
 <p>Reste à indiquer quelle donnée nous voulons représenter sous forme d’histogramme. Cela se fait à l’aide d’arguments passés via la fonction <code>aes()</code>. Ici nous avons un paramètre à renseigner, <code>x</code>, qui indique la variable à représenter sur l’axe des x (l’axe horizontal). Par exemple :</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(rp) <span class="op">+</span><span class="st"> </span><span class="kw">geom_histogram</span>(<span class="kw">aes</span>(<span class="dt">x =</span> cadres))</code></pre></div>
 <pre><code>`stat_bin()` using `bins = 30`. Pick better value with `binwidth`.</code></pre>
-<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-178-1.svg" width="672" /></p>
+<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-194-1.svg" width="672" /></p>
 <p>Si on veut représenter une autre variable, il suffit de changer la valeur de <code>x</code> :</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(rp) <span class="op">+</span><span class="st"> </span><span class="kw">geom_histogram</span>(<span class="kw">aes</span>(<span class="dt">x =</span> ouvr))</code></pre></div>
 <pre><code>`stat_bin()` using `bins = 30`. Pick better value with `binwidth`.</code></pre>
-<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-179-1.svg" width="672" /></p>
+<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-195-1.svg" width="672" /></p>
 <div class="rmdnote">
 <p>
 Quand on spécifie une variable, inutile d’indiquer le nom du tableau de données sous la forme <code>rp$ouvr</code>, car <code>ggplot2</code> recherche automatiquement la variable dans le tableau de données indiqué avec le paramètre <code>data</code>. On peut donc se contenter de <code>ouvr</code>.
@@ -427,12 +427,12 @@ Quand on spécifie une variable, inutile d’indiquer le nom du tableau de donn�
 </div>
 <p>Certains <code>geom</code> prennent plusieurs paramètres. Ainsi, si on veut représenter un nuage de points, on peut le faire en ajoutant un <code>geom_point</code>. On doit alors indiquer à la fois la position en <code>x</code> et en <code>y</code> de ces points, il faut donc passer ces deux arguments à <code>aes()</code> :</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(rp) <span class="op">+</span><span class="st"> </span><span class="kw">geom_point</span>(<span class="kw">aes</span>(<span class="dt">x =</span> dipl_sup, <span class="dt">y =</span> cadres))</code></pre></div>
-<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-181-1.svg" width="672" /></p>
+<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-197-1.svg" width="672" /></p>
 <p>On peut modifier certains attributs graphiques d’un <code>geom</code> en lui passant des arguments supplémentaires. Par exemple, pour un nuage de points, on peut modifier la couleur des points avec l’argument <code>color</code>, leur taille avec l’argument <code>size</code>, et leur transparence avec l’argument <code>alpha</code> :</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(rp) <span class="op">+</span><span class="st"> </span>
 <span class="st">  </span><span class="kw">geom_point</span>(<span class="kw">aes</span>(<span class="dt">x =</span> dipl_sup, <span class="dt">y =</span> cadres), 
              <span class="dt">color =</span> <span class="st">&quot;darkgreen&quot;</span>, <span class="dt">size =</span> <span class="dv">3</span>, <span class="dt">alpha =</span> <span class="fl">0.3</span>)</code></pre></div>
-<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-182-1.svg" width="672" /></p>
+<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-198-1.svg" width="672" /></p>
 </div>
 <div id="exemples-de-geom" class="section level2">
 <h2><span class="header-section-number">8.3</span> Exemples de <code>geom</code></h2>
@@ -441,22 +441,22 @@ Quand on spécifie une variable, inutile d’indiquer le nom du tableau de donn�
 <h3><span class="header-section-number">8.3.1</span> <code>geom_boxplot</code></h3>
 <p><code>geom_boxplot</code> permet de représenter des boîtes à moustaches. On lui passe en <code>y</code> la variable dont on veut étudier la répartition, et en <code>x</code> la variable contenant les classes qu’on souhaite comparer. Ainsi, si on veut comparer la répartition du pourcentage de maisons en fonction du département de la commune, on pourra faire :</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(rp) <span class="op">+</span><span class="st"> </span><span class="kw">geom_boxplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> departement, <span class="dt">y =</span> maison))</code></pre></div>
-<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-183-1.svg" width="672" /></p>
+<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-199-1.svg" width="672" /></p>
 <p>À noter que dans ce cas, <code>x</code> doit être une variable qualitative, et <code>y</code> une variable numérique.</p>
 <p>On peut personnaliser la présentation avec différents argument supplémentaires :</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(rp) <span class="op">+</span><span class="st"> </span>
 <span class="st">  </span><span class="kw">geom_boxplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> departement, <span class="dt">y =</span> maison), <span class="dt">fill =</span> <span class="st">&quot;wheat&quot;</span>, <span class="dt">color =</span> <span class="st">&quot;tomato4&quot;</span>)</code></pre></div>
-<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-184-1.svg" width="672" /></p>
+<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-200-1.svg" width="672" /></p>
 <p>Un autre argument utile, <code>varwidth</code>, permet de faire varier la largeur des boîtes en fonction des effectifs de la classe (donc, ici, en fonction du nombre de communes de chaque département) :</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(rp) <span class="op">+</span><span class="st"> </span>
 <span class="st">  </span><span class="kw">geom_boxplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> departement, <span class="dt">y =</span> maison), <span class="dt">varwidth =</span> <span class="ot">TRUE</span>)</code></pre></div>
-<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-185-1.svg" width="672" /></p>
+<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-201-1.svg" width="672" /></p>
 </div>
 <div id="geom_violin" class="section level3">
 <h3><span class="header-section-number">8.3.2</span> <code>geom_violin</code></h3>
 <p><code>geom_violin</code> est très semblable à <code>geom_boxplot</code>, mais utilise des graphes en violon à la place des boîtes à moustache.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(rp) <span class="op">+</span><span class="st"> </span><span class="kw">geom_violin</span>(<span class="kw">aes</span>(<span class="dt">x =</span> departement, <span class="dt">y =</span> maison))</code></pre></div>
-<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-186-1.svg" width="672" /></p>
+<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-202-1.svg" width="672" /></p>
 <p>Les graphes en violon peuvent donner une lecture plus fine des différences de distribution selon les classes.</p>
 </div>
 <div id="geom_bar" class="section level3">
@@ -464,54 +464,54 @@ Quand on spécifie une variable, inutile d’indiquer le nom du tableau de donn�
 <p><code>geom_bar</code> permet de produire un graphique en bâtons (<em>barplot</em>). On lui passe en <code>x</code> la variable qualitative dont on souhaite représenter l’effectif de chaque modalité.</p>
 <p>Par exemple, si on veut afficher le nombre de communes de notre jeu de données pour chaque département :</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(rp) <span class="op">+</span><span class="st"> </span><span class="kw">geom_bar</span>(<span class="kw">aes</span>(<span class="dt">x =</span> departement))</code></pre></div>
-<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-187-1.svg" width="672" /></p>
+<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-203-1.svg" width="672" /></p>
 <p>Un cas assez fréquent mais un peu plus complexe survient quand on a déjà calculé le tri à plat de la variable à représenter. Dans ce cas on souhaite que <code>geom_bar</code> représente les effectifs sans les calculer : cela se fait en indiquant un mappage <code>y</code> pour la variable contenant les effectifs précalculés, et en ajoutant l’argument <code>stat = &quot;identity&quot;</code>.</p>
 <p>Par exemple, si on a les données sous cette forme :</p>
 <pre><code># A tibble: 5 x 2
-       departement     n
-            &lt;fctr&gt; &lt;int&gt;
+  departement          n
+  &lt;fct&gt;            &lt;int&gt;
 1 Bouches-du-Rhône    98
-2   Hauts-de-Seine    35
-3           Lozère     5
-4             Oise    75
-5            Rhône   119</code></pre>
+2 Hauts-de-Seine      35
+3 Lozère               5
+4 Oise                75
+5 Rhône              119</code></pre>
 <p>On peut obtenir le graphique souhaité ainsi :</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(df) <span class="op">+</span><span class="st"> </span><span class="kw">geom_bar</span>(<span class="kw">aes</span>(<span class="dt">x =</span> departement, <span class="dt">y =</span> n), <span class="dt">stat =</span> <span class="st">&quot;identity&quot;</span>)</code></pre></div>
-<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-189-1.svg" width="672" /></p>
+<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-205-1.svg" width="672" /></p>
 <p>À noter qu’on peut aussi utiliser <code>geom_col</code> qui est un raccourci pour appliquer un <code>geom_bar</code> avec <code>stat = &quot;identity&quot;</code>. La commande précédente est donc équivalente à :</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(df) <span class="op">+</span><span class="st"> </span><span class="kw">geom_col</span>(<span class="kw">aes</span>(<span class="dt">x =</span> departement, <span class="dt">y =</span> n))</code></pre></div>
-<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-190-1.svg" width="672" /></p>
+<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-206-1.svg" width="672" /></p>
 <p>On peut également modifier l’apparence du graphique avec des arguments supplémentaires comme <code>fill</code> ou <code>width</code> :</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(rp) <span class="op">+</span><span class="st"> </span><span class="kw">geom_bar</span>(<span class="kw">aes</span>(<span class="dt">x =</span> departement), <span class="dt">fill =</span> <span class="st">&quot;darkblue&quot;</span>, <span class="dt">width =</span> .<span class="dv">5</span>)</code></pre></div>
-<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-191-1.svg" width="672" /></p>
+<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-207-1.svg" width="672" /></p>
 </div>
 <div id="geom_text" class="section level3">
 <h3><span class="header-section-number">8.3.4</span> <code>geom_text</code></h3>
 <p><code>geom_text</code> représente des points identifiés par des labels. On doit lui passer <code>x</code> et <code>y</code> pour la position des points, et <code>label</code> pour le texte des étiquettes.</p>
 <p>Par exemple, si on souhaite représenter le nuage croisant la part des diplômés du supérieur et la part de cadres, mais en affichant le nom de la commune plutôt qu’un simple point, on peut faire :</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(rp) <span class="op">+</span><span class="st"> </span><span class="kw">geom_text</span>(<span class="kw">aes</span>(<span class="dt">x =</span> dipl_sup, <span class="dt">y =</span> cadres, <span class="dt">label =</span> commune))</code></pre></div>
-<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-192-1.svg" width="672" /></p>
+<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-208-1.svg" width="672" /></p>
 <p>On peut personnaliser l’apparence et la position du texte avec des arguments comme <code>size</code>, <code>color</code>, etc.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(rp) <span class="op">+</span><span class="st"> </span>
 <span class="st">  </span><span class="kw">geom_text</span>(<span class="kw">aes</span>(<span class="dt">x =</span> dipl_sup, <span class="dt">y =</span> cadres, <span class="dt">label =</span> commune), 
             <span class="dt">color =</span> <span class="st">&quot;darkred&quot;</span>, <span class="dt">size =</span> <span class="dv">2</span>)</code></pre></div>
-<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-193-1.svg" width="672" /></p>
+<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-209-1.svg" width="672" /></p>
 </div>
 <div id="geom_label" class="section level3">
 <h3><span class="header-section-number">8.3.5</span> <code>geom_label</code></h3>
 <p><code>geom_label</code> est identique à <code>geom_text</code>, mais avec une présentation un peu différente.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(rp) <span class="op">+</span><span class="st"> </span><span class="kw">geom_label</span>(<span class="kw">aes</span>(<span class="dt">x =</span> dipl_sup, <span class="dt">y =</span> cadres, <span class="dt">label =</span> commune))</code></pre></div>
-<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-194-1.svg" width="672" /></p>
+<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-210-1.svg" width="672" /></p>
 </div>
 <div id="geom_density" class="section level3">
 <h3><span class="header-section-number">8.3.6</span> <code>geom_density</code></h3>
 <p><code>geom_density</code> permet d’afficher l’estimation de densité d’une variable numérique. Son usage est similaire à celui de <code>geom_histogram</code>.</p>
 <p>Ainsi, si on veut afficher la densité de la répartition de la part des cadres dans les communes de notre jeu de données :</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(rp) <span class="op">+</span><span class="st"> </span><span class="kw">geom_density</span>(<span class="kw">aes</span>(<span class="dt">x =</span> cadres))</code></pre></div>
-<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-195-1.svg" width="672" /></p>
+<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-211-1.svg" width="672" /></p>
 <p>On peut utiliser différents arguments pour ajuster le calcul de l’estimation de densité, parmi lesquels <code>kernel</code> et <code>bw</code> (voir la page d’adide de la fonction <code>density</code> pour plus de détails) :</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(rp) <span class="op">+</span><span class="st"> </span><span class="kw">geom_density</span>(<span class="kw">aes</span>(<span class="dt">x =</span> cadres), <span class="dt">bw =</span> <span class="dv">1</span>)</code></pre></div>
-<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-196-1.svg" width="672" /></p>
+<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-212-1.svg" width="672" /></p>
 </div>
 <div id="geom_line" class="section level3">
 <h3><span class="header-section-number">8.3.7</span> <code>geom_line</code></h3>
@@ -520,21 +520,21 @@ Quand on spécifie une variable, inutile d’indiquer le nom du tableau de donn�
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">data</span>(<span class="st">&quot;economics&quot;</span>)
 economics</code></pre></div>
 <pre><code># A tibble: 574 x 6
-         date   pce    pop psavert uempmed unemploy
-       &lt;date&gt; &lt;dbl&gt;  &lt;int&gt;   &lt;dbl&gt;   &lt;dbl&gt;    &lt;int&gt;
- 1 1967-07-01 507.4 198712    12.5     4.5     2944
- 2 1967-08-01 510.5 198911    12.5     4.7     2945
- 3 1967-09-01 516.3 199113    11.7     4.6     2958
- 4 1967-10-01 512.9 199311    12.5     4.9     3143
- 5 1967-11-01 518.1 199498    12.5     4.7     3066
- 6 1967-12-01 525.8 199657    12.1     4.8     3018
- 7 1968-01-01 531.5 199808    11.7     5.1     2878
- 8 1968-02-01 534.2 199920    12.2     4.5     3001
- 9 1968-03-01 544.9 200056    11.6     4.1     2877
-10 1968-04-01 544.6 200208    12.2     4.6     2709
+   date         pce    pop psavert uempmed unemploy
+   &lt;date&gt;     &lt;dbl&gt;  &lt;int&gt;   &lt;dbl&gt;   &lt;dbl&gt;    &lt;int&gt;
+ 1 1967-07-01   507 198712    12.5    4.50     2944
+ 2 1967-08-01   510 198911    12.5    4.70     2945
+ 3 1967-09-01   516 199113    11.7    4.60     2958
+ 4 1967-10-01   513 199311    12.5    4.90     3143
+ 5 1967-11-01   518 199498    12.5    4.70     3066
+ 6 1967-12-01   526 199657    12.1    4.80     3018
+ 7 1968-01-01   532 199808    11.7    5.10     2878
+ 8 1968-02-01   534 199920    12.2    4.50     3001
+ 9 1968-03-01   545 200056    11.6    4.10     2877
+10 1968-04-01   545 200208    12.2    4.60     2709
 # ... with 564 more rows</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(economics) <span class="op">+</span><span class="st"> </span><span class="kw">geom_line</span>(<span class="kw">aes</span>(<span class="dt">x =</span> date, <span class="dt">y =</span> unemploy))</code></pre></div>
-<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-198-1.svg" width="672" /></p>
+<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-214-1.svg" width="672" /></p>
 </div>
 </div>
 <div id="mappages" class="section level2">
@@ -546,34 +546,34 @@ economics</code></pre></div>
 <p>On a déjà vu les mappages <code>x</code> et <code>y</code> pour un nuage de points. Ceux-ci signifient que la position d’un point donné horizontalement (<code>x</code>) et verticalement (<code>y</code>) depend de la valeur des variables passées comme arguments <code>x</code> et <code>y</code> dans <code>aes()</code> :</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(rp) <span class="op">+</span><span class="st"> </span>
 <span class="st">  </span><span class="kw">geom_point</span>(<span class="kw">aes</span>(<span class="dt">x =</span> dipl_sup, <span class="dt">y =</span> cadres))</code></pre></div>
-<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-199-1.svg" width="672" /></p>
+<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-215-1.svg" width="672" /></p>
 <p>Mais on peut en ajouter d’autres. Par exemple, <code>color</code> permet de faire varier la couleur des points automatiquement en fonction des valeurs d’une troisième variable. Par exemple, on peut vouloir colorer les points selon le département de la commune correspondante :</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(rp) <span class="op">+</span><span class="st"> </span>
 <span class="st">  </span><span class="kw">geom_point</span>(<span class="kw">aes</span>(<span class="dt">x =</span> dipl_sup, <span class="dt">y =</span> cadres, <span class="dt">color =</span> departement))</code></pre></div>
-<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-200-1.svg" width="672" /></p>
+<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-216-1.svg" width="672" /></p>
 <p>On peut aussi faire varier la taille des points avec <code>size</code>. Ici, la taille dépend de la population totale de la commune :</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(rp) <span class="op">+</span><span class="st"> </span>
 <span class="st">  </span><span class="kw">geom_point</span>(<span class="kw">aes</span>(<span class="dt">x =</span> dipl_sup, <span class="dt">y =</span> cadres, 
                  <span class="dt">color =</span> departement, <span class="dt">size =</span> pop_tot))</code></pre></div>
-<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-201-1.svg" width="672" /></p>
+<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-217-1.svg" width="672" /></p>
 <p>On peut même associer la transparence des points à une variable avec <code>alpha</code> :</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(rp) <span class="op">+</span><span class="st"> </span>
 <span class="st">  </span><span class="kw">geom_point</span>(<span class="kw">aes</span>(<span class="dt">x =</span> dipl_sup, <span class="dt">y =</span> cadres, 
                  <span class="dt">color =</span> departement, <span class="dt">size =</span> pop_tot, <span class="dt">alpha =</span> maison))</code></pre></div>
-<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-202-1.svg" width="672" /></p>
+<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-218-1.svg" width="672" /></p>
 <p>Chaque <code>geom</code> possède sa propre liste de mappages.</p>
 </div>
 <div id="aes-or-not-aes" class="section level3">
 <h3><span class="header-section-number">8.4.2</span> <code>aes()</code> or not <code>aes()</code> ?</h3>
 <p>Comme on l’a déjà vu, parfois on souhaite changer un attribut sans le relier à une variable. Par exemple, on veut représenter tous les points en rouge. Dans ce cas on utilise toujours l’attribut <code>color</code>, mais comme il ne s’agit pas d’un mappage, on le définit <strong>à l’extérieur</strong> de la fonction <code>aes()</code> :</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(rp) <span class="op">+</span><span class="st"> </span><span class="kw">geom_point</span>(<span class="kw">aes</span>(<span class="dt">x =</span> dipl_sup, <span class="dt">y =</span> cadres), <span class="dt">color =</span> <span class="st">&quot;red&quot;</span>)</code></pre></div>
-<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-203-1.svg" width="672" /></p>
+<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-219-1.svg" width="672" /></p>
 <p>Par contre, si on veut faire varier la couleur en fonction des valeurs prises par une variable, on réalise un mappage, et on doit donc placer l’attribut <code>color</code> <strong>à l’intérieur</strong> de <code>aes()</code>.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(rp) <span class="op">+</span><span class="st"> </span><span class="kw">geom_point</span>(<span class="kw">aes</span>(<span class="dt">x =</span> dipl_sup, <span class="dt">y =</span> cadres, <span class="dt">color =</span> departement))</code></pre></div>
-<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-204-1.svg" width="672" /></p>
+<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-220-1.svg" width="672" /></p>
 <p>On peut évidemment mélanger attributs liés à une variable (mappage, donc dans <code>aes()</code>) et attributs constants (donc à l’extérieur). Dans l’exemple suivant, la taille varie en fonction de la variable <code>pop_tot</code>, mais la couleur est constante pour tous les points :</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(rp) <span class="op">+</span><span class="st"> </span><span class="kw">geom_point</span>(<span class="kw">aes</span>(<span class="dt">x =</span> dipl_sup, <span class="dt">y =</span> cadres, <span class="dt">size =</span> pop_tot), <span class="dt">color =</span> <span class="st">&quot;royalblue&quot;</span>)</code></pre></div>
-<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-205-1.svg" width="672" /></p>
+<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-221-1.svg" width="672" /></p>
 <div class="rmdimportant">
 <p>
 <strong>La règle est donc simple mais très importante :</strong>
@@ -587,13 +587,13 @@ Si on établit un lien entre les valeurs d’une variable et un attribut graphiq
 <h3><span class="header-section-number">8.4.3</span> <code>geom_bar</code> et <code>position</code></h3>
 <p>Un des mappages possibles de <code>geom_bar</code> est l’attribut <code>fill</code>, qui permet de tracer des barres de couleur différentes selon les modalités d’une variable :</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(rp) <span class="op">+</span><span class="st"> </span><span class="kw">geom_bar</span>(<span class="kw">aes</span>(<span class="dt">x =</span> departement, <span class="dt">fill =</span> pop_cl))</code></pre></div>
-<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-207-1.svg" width="672" /></p>
+<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-223-1.svg" width="672" /></p>
 <p>L’attribut <code>position</code> de <code>geom_bar</code> permet d’indiquer comment les différentes barres doivent être positionnées. Par défaut on a <code>position = &quot;stack&quot;</code> et elles sont donc “empilées”. Mais on peut préciser <code>position = &quot;dodge&quot;</code> pour les mettre côte à côte :</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(rp) <span class="op">+</span><span class="st"> </span><span class="kw">geom_bar</span>(<span class="kw">aes</span>(<span class="dt">x =</span> departement, <span class="dt">fill =</span> pop_cl), <span class="dt">position =</span> <span class="st">&quot;dodge&quot;</span>)</code></pre></div>
-<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-208-1.svg" width="672" /></p>
+<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-224-1.svg" width="672" /></p>
 <p>Ou encore <code>position = &quot;fill&quot;</code> pour représenter non plus des effectifs, mais des proportions :</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(rp) <span class="op">+</span><span class="st"> </span><span class="kw">geom_bar</span>(<span class="kw">aes</span>(<span class="dt">x =</span> departement, <span class="dt">fill =</span> pop_cl), <span class="dt">position =</span> <span class="st">&quot;fill&quot;</span>)</code></pre></div>
-<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-209-1.svg" width="672" /></p>
+<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-225-1.svg" width="672" /></p>
 </div>
 </div>
 <div id="representation-de-plusieurs-geom" class="section level2">
@@ -603,7 +603,7 @@ Si on établit un lien entre les valeurs d’une variable et un attribut graphiq
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(rp) <span class="op">+</span><span class="st"> </span>
 <span class="st">  </span><span class="kw">geom_boxplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> departement, <span class="dt">y =</span> maison)) <span class="op">+</span><span class="st"> </span>
 <span class="st">  </span><span class="kw">geom_point</span>(<span class="kw">aes</span>(<span class="dt">x =</span> departement, <span class="dt">y =</span> maison), <span class="dt">col =</span> <span class="st">&quot;red&quot;</span>, <span class="dt">alpha =</span> <span class="fl">0.2</span>)</code></pre></div>
-<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-210-1.svg" width="672" /></p>
+<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-226-1.svg" width="672" /></p>
 <div class="rmdnote">
 <p>
 Quand une commande <code>ggplot2</code> devient longue, il peut être plus lisible de la répartir sur plusieurs lignes. Dans ce cas, il faut penser à placer l’opérateur <code>+</code> en fin de ligne, afin que R comprenne que la commande n’est pas complète et prenne en compte la suite.
@@ -613,23 +613,23 @@ Quand une commande <code>ggplot2</code> devient longue, il peut être plus lisib
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(rp) <span class="op">+</span>
 <span class="st">  </span><span class="kw">geom_boxplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> departement, <span class="dt">y =</span> maison)) <span class="op">+</span><span class="st"> </span>
 <span class="st">  </span><span class="kw">geom_jitter</span>(<span class="kw">aes</span>(<span class="dt">x =</span> departement, <span class="dt">y =</span> maison), <span class="dt">col =</span> <span class="st">&quot;red&quot;</span>, <span class="dt">alpha =</span> <span class="fl">0.2</span>)</code></pre></div>
-<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-212-1.svg" width="672" /></p>
+<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-228-1.svg" width="672" /></p>
 <p>Dans ce cas, plutôt que de déclarer les mappages dans chaque <code>geom</code>, on peut les déclarer dans l’appel à <code>ggplot()</code>. Ils seront automatiquement “hérités” par les <code>geom</code> ajoutés (sauf s’ils redéfinissent les mêmes mappages) :</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(rp, <span class="kw">aes</span>(<span class="dt">x =</span> departement, <span class="dt">y =</span> maison)) <span class="op">+</span><span class="st"> </span>
 <span class="st">  </span><span class="kw">geom_boxplot</span>() <span class="op">+</span><span class="st"> </span>
 <span class="st">  </span><span class="kw">geom_jitter</span>(<span class="dt">color =</span> <span class="st">&quot;red&quot;</span>, <span class="dt">alpha =</span> <span class="fl">0.2</span>)</code></pre></div>
-<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-213-1.svg" width="672" /></p>
+<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-229-1.svg" width="672" /></p>
 <p>Autre exemple, on peut vouloir ajouter à un nuage de points une ligne de régression linéaire à l’aide de <code>geom_smooth</code> :</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(rp, <span class="kw">aes</span>(<span class="dt">x =</span> dipl_sup, <span class="dt">y =</span> cadres)) <span class="op">+</span><span class="st"> </span>
 <span class="st">  </span><span class="kw">geom_point</span>(<span class="dt">alpha =</span> <span class="fl">0.2</span>) <span class="op">+</span><span class="st"> </span>
 <span class="st">  </span><span class="kw">geom_smooth</span>(<span class="dt">method =</span> <span class="st">&quot;lm&quot;</span>)</code></pre></div>
-<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-214-1.svg" width="672" /></p>
+<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-230-1.svg" width="672" /></p>
 <p>Et on peut même superposer une troisième visualisation de la répartition des points dans l’espace avec <code>geom_density2d</code> :</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(rp, <span class="kw">aes</span>(<span class="dt">x =</span> dipl_sup, <span class="dt">y =</span> cadres)) <span class="op">+</span><span class="st"> </span>
 <span class="st">  </span><span class="kw">geom_point</span>(<span class="dt">alpha =</span> <span class="fl">0.2</span>) <span class="op">+</span><span class="st"> </span>
 <span class="st">  </span><span class="kw">geom_density2d</span>(<span class="dt">color =</span> <span class="st">&quot;red&quot;</span>) <span class="op">+</span><span class="st"> </span>
 <span class="st">  </span><span class="kw">geom_smooth</span>(<span class="dt">method =</span> <span class="st">&quot;lm&quot;</span>)</code></pre></div>
-<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-215-1.svg" width="672" /></p>
+<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-231-1.svg" width="672" /></p>
 <div id="plusieurs-sources-de-donnees" class="section level3">
 <h3><span class="header-section-number">8.5.1</span> Plusieurs sources de données</h3>
 <p>On peut aussi associer à différents <code>geom</code> des sources de données différentes. Supposons qu’on souhaite afficher sur un nuage de points les noms des communes de plus de 50000 habitants. On peut commencer par créer un tableau de données avec seulement ces communes à l’aide de la fonction <code>filter</code> :</p>
@@ -637,12 +637,12 @@ Quand une commande <code>ggplot2</code> devient longue, il peut être plus lisib
 <p>On fait ensuite le nuage de points comme précédemment :</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(<span class="dt">data =</span> rp, <span class="kw">aes</span>(<span class="dt">x =</span> dipl_sup, <span class="dt">y =</span> cadres)) <span class="op">+</span><span class="st"> </span>
 <span class="st">  </span><span class="kw">geom_point</span>(<span class="dt">alpha =</span> <span class="fl">0.2</span>)</code></pre></div>
-<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-217-1.svg" width="672" /></p>
+<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-233-1.svg" width="672" /></p>
 <p>Pour superposer les noms de communes de plus de 50 000 habitants, on peut ajouter un <code>geom_text</code>, mais en spécifiant que les données proviennent du nouveau tableau <code>com50</code> et non de notre tableau initial <code>rp</code>. On le fait en passant un argument <code>data</code> spécifique à <code>geom_text</code> :</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(<span class="dt">data =</span> rp, <span class="kw">aes</span>(<span class="dt">x =</span> dipl_sup, <span class="dt">y =</span> cadres)) <span class="op">+</span><span class="st"> </span>
 <span class="st">  </span><span class="kw">geom_point</span>(<span class="dt">alpha =</span> <span class="fl">0.2</span>) <span class="op">+</span><span class="st"> </span>
 <span class="st">  </span><span class="kw">geom_text</span>(<span class="dt">data =</span> com50, <span class="kw">aes</span>(<span class="dt">label =</span> commune), <span class="dt">color =</span> <span class="st">&quot;red&quot;</span>, <span class="dt">size =</span> <span class="dv">3</span>)</code></pre></div>
-<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-218-1.svg" width="672" /></p>
+<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-234-1.svg" width="672" /></p>
 <p>Ainsi, on a un graphique avec deux <code>geom</code> superposés, mais dont les données proviennent de deux tableaux différents.</p>
 </div>
 </div>
@@ -652,25 +652,25 @@ Quand une commande <code>ggplot2</code> devient longue, il peut être plus lisib
 <p>Par exemple, on peut représenter l’histogramme du pourcentage de cadres dans nos communes :</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(<span class="dt">data =</span> rp) <span class="op">+</span><span class="st"> </span>
 <span class="st">  </span><span class="kw">geom_histogram</span>(<span class="kw">aes</span>(<span class="dt">x =</span> cadres))</code></pre></div>
-<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-219-1.svg" width="672" /></p>
+<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-235-1.svg" width="672" /></p>
 <p>On peut vouloir comparer la répartition de la part des cadres selon le département, et donc faire un histogramme pour chacun de ces départements. On peut dans ce cas utiliser <code>facet_wrap</code> ou <code>facet_grid</code>.</p>
 <p>Les deux fonctions prennent en paramètre une formule de la forme <code>~variable</code>, où <code>variable</code> est le nom de la variable en fonction de laquelle on souhaite faire les différents graphiques.</p>
 <p>Avec <code>facet_wrap</code>, les différents graphiques sont affichés les uns à côté des autres et répartis automatiquement dans la page. Par exemple :</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(<span class="dt">data =</span> rp) <span class="op">+</span><span class="st"> </span>
 <span class="st">  </span><span class="kw">geom_histogram</span>(<span class="kw">aes</span>(<span class="dt">x =</span> cadres)) <span class="op">+</span><span class="st"> </span>
 <span class="st">  </span><span class="kw">facet_wrap</span>(<span class="op">~</span>departement)</code></pre></div>
-<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-220-1.svg" width="672" /></p>
+<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-236-1.svg" width="672" /></p>
 <p>Pour <code>facet_grid</code>, les graphiques sont disposés selon une grille. La formule est alors de la forme <code>variable en ligne ~ variable en colonne</code>. Si on n’a pas de variable dans l’une des deux dimensions, on met un point (<code>.</code>) :</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(<span class="dt">data =</span> rp) <span class="op">+</span><span class="st"> </span>
 <span class="st">  </span><span class="kw">geom_histogram</span>(<span class="kw">aes</span>(<span class="dt">x =</span> cadres)) <span class="op">+</span><span class="st"> </span>
 <span class="st">  </span><span class="kw">facet_grid</span>(.<span class="op">~</span>departement)</code></pre></div>
-<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-221-1.svg" width="672" /></p>
+<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-237-1.svg" width="672" /></p>
 <p>Un des intérêts du faceting dans <code>ggplot2</code> est que tous les graphiques générés ont les mêmes échelles, ce qui permet une comparaison directe.</p>
 <p>Enfin, notons qu’on peut même faire du faceting sur plusieurs variables à la fois. Ici on fait des histogrammes de la répartition de la part des cadres pour chaque croisement des variables <code>departement</code> et <code>pop_cl</code> :</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(<span class="dt">data =</span> rp) <span class="op">+</span><span class="st"> </span>
 <span class="st">  </span><span class="kw">geom_histogram</span>(<span class="kw">aes</span>(<span class="dt">x =</span> cadres)) <span class="op">+</span><span class="st"> </span>
 <span class="st">  </span><span class="kw">facet_grid</span>(departement<span class="op">~</span>pop_cl)</code></pre></div>
-<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-222-1.svg" width="672" /></p>
+<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-238-1.svg" width="672" /></p>
 </div>
 <div id="scales" class="section level2">
 <h2><span class="header-section-number">8.7</span> Scales</h2>
@@ -684,22 +684,22 @@ Quand une commande <code>ggplot2</code> devient longue, il peut être plus lisib
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(rp) <span class="op">+</span><span class="st"> </span>
 <span class="st">  </span><span class="kw">geom_point</span>(<span class="kw">aes</span>(<span class="dt">x =</span> dipl_sup, <span class="dt">y =</span> cadres, <span class="dt">size =</span> pop_tot)) <span class="op">+</span>
 <span class="st">  </span><span class="kw">scale_size</span>(<span class="dt">range =</span> <span class="kw">c</span>(<span class="dv">0</span>,<span class="dv">20</span>))</code></pre></div>
-<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-223-1.svg" width="672" /></p>
+<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-239-1.svg" width="672" /></p>
 <p>À comparer par exemple à :</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(rp) <span class="op">+</span><span class="st"> </span>
 <span class="st">  </span><span class="kw">geom_point</span>(<span class="kw">aes</span>(<span class="dt">x =</span> dipl_sup, <span class="dt">y =</span> cadres, <span class="dt">size =</span> pop_tot)) <span class="op">+</span>
 <span class="st">  </span><span class="kw">scale_size</span>(<span class="dt">range =</span> <span class="kw">c</span>(<span class="dv">2</span>,<span class="dv">8</span>))</code></pre></div>
-<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-224-1.svg" width="672" /></p>
+<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-240-1.svg" width="672" /></p>
 <p>On peut ajouter d’autres paramètres à <code>scale_size</code>. Le premier argument est toujours le titre donné à la légende :</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(rp) <span class="op">+</span><span class="st"> </span>
 <span class="st">  </span><span class="kw">geom_point</span>(<span class="kw">aes</span>(<span class="dt">x =</span> dipl_sup, <span class="dt">y =</span> cadres, <span class="dt">size =</span> pop_tot)) <span class="op">+</span>
 <span class="st">  </span><span class="kw">scale_size</span>(<span class="st">&quot;Population&quot;</span>, <span class="dt">range =</span> <span class="kw">c</span>(<span class="dv">0</span>,<span class="dv">15</span>))</code></pre></div>
-<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-225-1.svg" width="672" /></p>
+<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-241-1.svg" width="672" /></p>
 <p>On peut aussi définir manuellement les éléments de légende représentés :</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(rp) <span class="op">+</span><span class="st"> </span>
 <span class="st">  </span><span class="kw">geom_point</span>(<span class="kw">aes</span>(<span class="dt">x =</span> dipl_sup, <span class="dt">y =</span> cadres, <span class="dt">size =</span> pop_tot)) <span class="op">+</span>
 <span class="st">  </span><span class="kw">scale_size</span>(<span class="st">&quot;Population&quot;</span>, <span class="dt">range =</span> <span class="kw">c</span>(<span class="dv">0</span>,<span class="dv">15</span>), <span class="dt">breaks =</span> <span class="kw">c</span>(<span class="dv">1000</span>,<span class="dv">5000</span>,<span class="dv">10000</span>,<span class="dv">50000</span>))</code></pre></div>
-<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-226-1.svg" width="672" /></p>
+<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-242-1.svg" width="672" /></p>
 </div>
 <div id="scale_x-scale_y" class="section level3">
 <h3><span class="header-section-number">8.7.2</span> <code>scale_x</code>, <code>scale_y</code></h3>
@@ -708,34 +708,34 @@ Quand une commande <code>ggplot2</code> devient longue, il peut être plus lisib
 <p>C’est le cas de notre nuage de points croisant part de cadres et part de diplômés du supérieur :</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(rp) <span class="op">+</span><span class="st"> </span>
 <span class="st">  </span><span class="kw">geom_point</span>(<span class="kw">aes</span>(<span class="dt">x =</span> dipl_sup, <span class="dt">y =</span> cadres))</code></pre></div>
-<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-227-1.svg" width="672" /></p>
+<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-243-1.svg" width="672" /></p>
 <p>Comme on représente des pourcentages, on peut vouloir forcer les axes <code>x</code> et <code>y</code> à s’étendre des valeurs 0 à 100. On peut le faire en ajoutant un élément <code>scale_x_continuous</code> et un élément <code>scale_y_continuous</code>, et en utilisant leur argument <code>limits</code> :</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(rp) <span class="op">+</span><span class="st"> </span>
 <span class="st">  </span><span class="kw">geom_point</span>(<span class="kw">aes</span>(<span class="dt">x =</span> dipl_sup, <span class="dt">y =</span> cadres)) <span class="op">+</span>
 <span class="st">  </span><span class="kw">scale_x_continuous</span>(<span class="dt">limits =</span> <span class="kw">c</span>(<span class="dv">0</span>,<span class="dv">100</span>)) <span class="op">+</span>
 <span class="st">  </span><span class="kw">scale_y_continuous</span>(<span class="dt">limits =</span> <span class="kw">c</span>(<span class="dv">0</span>,<span class="dv">100</span>))</code></pre></div>
-<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-228-1.svg" width="672" /></p>
+<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-244-1.svg" width="672" /></p>
 <p>Là aussi, on peut modifier les étiquettes des axes en indiquant une chaîne de caractères en premier argument :</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(rp) <span class="op">+</span><span class="st"> </span>
 <span class="st">  </span><span class="kw">geom_point</span>(<span class="kw">aes</span>(<span class="dt">x =</span> dipl_sup, <span class="dt">y =</span> cadres)) <span class="op">+</span>
 <span class="st">  </span><span class="kw">scale_x_continuous</span>(<span class="st">&quot;Diplômés du supérieur&quot;</span>, <span class="dt">limits =</span> <span class="kw">c</span>(<span class="dv">0</span>,<span class="dv">100</span>))</code></pre></div>
-<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-229-1.svg" width="672" /></p>
+<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-245-1.svg" width="672" /></p>
 <p>On peut utiliser <code>scale_x_log10</code> et <code>scale_y_log10</code> pour passer un axe à une échelle logarithmique :</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(rp) <span class="op">+</span><span class="st"> </span>
 <span class="st">  </span><span class="kw">geom_point</span>(<span class="kw">aes</span>(<span class="dt">x =</span> dipl_sup, <span class="dt">y =</span> cadres)) <span class="op">+</span>
 <span class="st">  </span><span class="kw">scale_x_log10</span>(<span class="st">&quot;Diplômés du supérieur&quot;</span>)</code></pre></div>
-<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-230-1.svg" width="672" /></p>
+<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-246-1.svg" width="672" /></p>
 <p><code>scale_x_discrete</code> et <code>scale_y_discrete</code> s’appliquent quant à elles lorsque l’axe correspond à une variable discrète (qualitative). C’est le cas de l’axe des <code>x</code> dans un diagramme en bâtons :</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(rp) <span class="op">+</span><span class="st"> </span>
 <span class="st">  </span><span class="kw">geom_bar</span>(<span class="kw">aes</span>(<span class="dt">x =</span> departement)) <span class="op">+</span>
 <span class="st">  </span><span class="kw">scale_x_discrete</span>(<span class="st">&quot;Département&quot;</span>)</code></pre></div>
-<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-231-1.svg" width="672" /></p>
+<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-247-1.svg" width="672" /></p>
 <p>L’argument <code>limits</code> de <code>scale_x_discrete</code> permet d’indiquer quelles valeurs sont affichées et dans quel ordre.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(rp) <span class="op">+</span><span class="st"> </span>
 <span class="st">  </span><span class="kw">geom_bar</span>(<span class="kw">aes</span>(<span class="dt">x =</span> departement)) <span class="op">+</span>
 <span class="st">  </span><span class="kw">scale_x_discrete</span>(<span class="st">&quot;Département&quot;</span>, <span class="dt">limits =</span> <span class="kw">c</span>(<span class="st">&quot;Oise&quot;</span>, <span class="st">&quot;Lozère&quot;</span>, <span class="st">&quot;Rhône&quot;</span>))</code></pre></div>
 <pre><code>Warning: Removed 133 rows containing non-finite values (stat_count).</code></pre>
-<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-232-1.svg" width="672" /></p>
+<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-248-1.svg" width="672" /></p>
 </div>
 <div id="scalecolor" class="section level3">
 <h3><span class="header-section-number">8.7.3</span> <code>scale_color</code>, <code>scale_fill</code></h3>
@@ -745,28 +745,28 @@ Quand une commande <code>ggplot2</code> devient longue, il peut être plus lisib
 <p>Le graphique suivant colore les points selon la valeur d’une variable numérique quantitative (ici la part de chômeurs) :</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(rp) <span class="op">+</span><span class="st"> </span>
 <span class="st">  </span><span class="kw">geom_point</span>(<span class="kw">aes</span>(<span class="dt">x =</span> dipl_sup, <span class="dt">y =</span> cadres, <span class="dt">color =</span> chom))</code></pre></div>
-<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-233-1.svg" width="672" /></p>
+<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-249-1.svg" width="672" /></p>
 <p>On peut modifier les couleurs utilisées avec les arguments <code>low</code> et <code>high</code> de la fonction <code>scale_color_gradient</code>. Ici on souhaite que la valeur la plus faible soit blanche, et la plus élevée rouge :</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(rp) <span class="op">+</span><span class="st"> </span>
 <span class="st">  </span><span class="kw">geom_point</span>(<span class="kw">aes</span>(<span class="dt">x =</span> dipl_sup, <span class="dt">y =</span> cadres, <span class="dt">color =</span> chom)) <span class="op">+</span><span class="st"> </span>
 <span class="st">  </span><span class="kw">scale_color_gradient</span>(<span class="st">&quot;Taux de chômage&quot;</span>, <span class="dt">low =</span> <span class="st">&quot;white&quot;</span>, <span class="dt">high =</span> <span class="st">&quot;red&quot;</span>)</code></pre></div>
-<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-234-1.svg" width="672" /></p>
+<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-250-1.svg" width="672" /></p>
 <p>On peut aussi utiliser des palettes prédéfinies. L’une des plus populaires est la palette <em>viridis</em>, accessible depuis l’extension du même nom. On l’ajoute en utilisant <code>scale_color_viridis</code> :</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(viridis)
 <span class="kw">ggplot</span>(rp) <span class="op">+</span><span class="st"> </span>
 <span class="st">  </span><span class="kw">geom_point</span>(<span class="kw">aes</span>(<span class="dt">x =</span> dipl_sup, <span class="dt">y =</span> cadres, <span class="dt">color =</span> chom)) <span class="op">+</span><span class="st"> </span>
 <span class="st">  </span><span class="kw">scale_color_viridis</span>(<span class="st">&quot;Taux de chômage&quot;</span>)</code></pre></div>
-<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-235-1.svg" width="672" /></p>
+<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-251-1.svg" width="672" /></p>
 <p>L’extension <code>viridis</code> propose également trois autres palettes, <em>magma</em>, <em>inferno</em> et <em>plasma</em>, accessibles via l’argument <code>option</code> :</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(rp) <span class="op">+</span><span class="st"> </span>
 <span class="st">  </span><span class="kw">geom_point</span>(<span class="kw">aes</span>(<span class="dt">x =</span> dipl_sup, <span class="dt">y =</span> cadres, <span class="dt">color =</span> chom)) <span class="op">+</span><span class="st"> </span>
 <span class="st">  </span><span class="kw">scale_color_viridis</span>(<span class="st">&quot;Taux de chômage&quot;</span>, <span class="dt">option =</span> <span class="st">&quot;plasma&quot;</span>)</code></pre></div>
-<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-236-1.svg" width="672" /></p>
+<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-252-1.svg" width="672" /></p>
 <p>On peut aussi utiliser <code>scale_color_distiller</code>, qui transforme une des palettes pour variable qualitative de <code>scale_color_brewer</code> en palette continue pour variable numérique :</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(rp) <span class="op">+</span><span class="st"> </span>
 <span class="st">  </span><span class="kw">geom_point</span>(<span class="kw">aes</span>(<span class="dt">x =</span> dipl_sup, <span class="dt">y =</span> cadres, <span class="dt">color =</span> chom)) <span class="op">+</span><span class="st"> </span>
 <span class="st">  </span><span class="kw">scale_color_distiller</span>(<span class="st">&quot;Taux de chômage&quot;</span>, <span class="dt">palette =</span> <span class="st">&quot;Spectral&quot;</span>)</code></pre></div>
-<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-237-1.svg" width="672" /></p>
+<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-253-1.svg" width="672" /></p>
 <p>La liste des palettes de <code>scale_color_brewer</code> est indiquée en fin de section suivante.</p>
 </div>
 <div id="variables-qualitatives" class="section level4">
@@ -774,13 +774,13 @@ Quand une commande <code>ggplot2</code> devient longue, il peut être plus lisib
 <p>Si on a fait un mappage avec une variable discrète (qualitative), comme ici avec le département :</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(rp) <span class="op">+</span><span class="st"> </span>
 <span class="st">  </span><span class="kw">geom_point</span>(<span class="kw">aes</span>(<span class="dt">x =</span> dipl_sup, <span class="dt">y =</span> cadres, <span class="dt">color =</span> departement))</code></pre></div>
-<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-238-1.svg" width="672" /></p>
+<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-254-1.svg" width="672" /></p>
 <p>Une première possibilité est de modifier la palette manuellement avec <code>scale_color_manual</code> et son argument <code>values</code> :</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(rp) <span class="op">+</span><span class="st"> </span>
 <span class="st">  </span><span class="kw">geom_point</span>(<span class="kw">aes</span>(<span class="dt">x =</span> dipl_sup, <span class="dt">y =</span> cadres, <span class="dt">color =</span> departement)) <span class="op">+</span>
 <span class="st">  </span><span class="kw">scale_color_manual</span>(<span class="st">&quot;Département&quot;</span>, 
                      <span class="dt">values =</span> <span class="kw">c</span>(<span class="st">&quot;red&quot;</span>, <span class="st">&quot;#FFDD45&quot;</span>, <span class="kw">rgb</span>(<span class="fl">0.1</span>,<span class="fl">0.2</span>,<span class="fl">0.6</span>), <span class="st">&quot;darkgreen&quot;</span>, <span class="st">&quot;grey80&quot;</span>))</code></pre></div>
-<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-239-1.svg" width="672" /></p>
+<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-255-1.svg" width="672" /></p>
 <div class="rmdnote">
 <p>
 L’exemple précédent montre plusieurs manières de définir manuellement des couleurs dans R :
@@ -805,10 +805,10 @@ La liste complète des noms de couleurs connus par R peut être obtenu avec la f
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(rp) <span class="op">+</span><span class="st"> </span>
 <span class="st">  </span><span class="kw">geom_point</span>(<span class="kw">aes</span>(<span class="dt">x =</span> dipl_sup, <span class="dt">y =</span> cadres, <span class="dt">color =</span> departement)) <span class="op">+</span>
 <span class="st">  </span><span class="kw">scale_color_brewer</span>(<span class="st">&quot;Département&quot;</span>, <span class="dt">palette =</span> <span class="st">&quot;Set1&quot;</span>)</code></pre></div>
-<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-241-1.svg" width="672" /></p>
+<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-257-1.svg" width="672" /></p>
 <p>Le graphique suivant, accessible via la fonction <code>display.brewer.all()</code>, montre la liste de toutes les palettes disponibles via <code>scale_color_brewer</code>. Elles sont réparties en trois familles : les palettes séquentielles (pour une variable quantitative), les palettes qualitatives, et les palettes divergentes (typiquement pour une variable quantitative avec une valeur de référence, souvent 0, et deux palettes continues distinctes pour les valeurs inférieures et pour les valeurs supérieures).</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">RColorBrewer<span class="op">::</span><span class="kw">display.brewer.all</span>()</code></pre></div>
-<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-243-1.svg" width="384" /></p>
+<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-259-1.svg" width="384" /></p>
 <p>Il existe d’autres méthodes pour définir les couleurs : pour plus d’informations on pourra se reporter à <a href="http://ggplot2.tidyverse.org/articles/ggplot2-specs.html#colour">l’article de la documentation officielle sur ce sujet</a>.</p>
 </div>
 </div>
@@ -821,13 +821,13 @@ La liste complète des noms de couleurs connus par R peut être obtenu avec la f
 <span class="st">  </span><span class="kw">geom_histogram</span>(<span class="kw">aes</span>(<span class="dt">x =</span> cadres)) <span class="op">+</span><span class="st"> </span>
 <span class="st">  </span><span class="kw">theme_bw</span>()</code></pre></div>
 <pre><code>`stat_bin()` using `bins = 30`. Pick better value with `binwidth`.</code></pre>
-<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-244-1.svg" width="672" /></p>
+<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-260-1.svg" width="672" /></p>
 <p>Ou le thème <code>theme_minimal</code> :</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(<span class="dt">data =</span> rp) <span class="op">+</span><span class="st"> </span>
 <span class="st">  </span><span class="kw">geom_histogram</span>(<span class="kw">aes</span>(<span class="dt">x =</span> cadres)) <span class="op">+</span><span class="st"> </span>
 <span class="st">  </span><span class="kw">theme_minimal</span>()</code></pre></div>
 <pre><code>`stat_bin()` using `bins = 30`. Pick better value with `binwidth`.</code></pre>
-<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-245-1.svg" width="672" /></p>
+<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-261-1.svg" width="672" /></p>
 <p>On peut cependant modifier manuellement les différents éléments. Par exemple, les fonctions <code>ggtitle</code>, <code>xlab</code> et <code>ylab</code> permettent d’ajouter ou de modifier le titre du graphique, ainsi que les étiquettes des axes <code>x</code> et <code>y</code> :</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(<span class="dt">data =</span> rp) <span class="op">+</span><span class="st"> </span>
 <span class="st">  </span><span class="kw">geom_histogram</span>(<span class="kw">aes</span>(<span class="dt">x =</span> cadres)) <span class="op">+</span><span class="st"> </span>
@@ -835,7 +835,7 @@ La liste complète des noms de couleurs connus par R peut être obtenu avec la f
 <span class="st">  </span><span class="kw">xlab</span>(<span class="st">&quot;Pourcentage de cadres&quot;</span>) <span class="op">+</span>
 <span class="st">  </span><span class="kw">ylab</span>(<span class="st">&quot;Effectif&quot;</span>)</code></pre></div>
 <pre><code>`stat_bin()` using `bins = 30`. Pick better value with `binwidth`.</code></pre>
-<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-246-1.svg" width="672" /></p>
+<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-262-1.svg" width="672" /></p>
 <p>Les éléments personnalisables étant nombreux, un bon moyen de se familiariser avec tous les arguments est sans doute l’addin RStudio <code>ggThemeAssist</code>. Pour l’utiliser il suffit d’installer le package du même nom, de sélectionner dans son script RStudio le code correspondant à un graphique <code>ggplot2</code>, puis d’aller dans le menu <em>Addins</em> et choisir <em>ggplot Theme Assistant</em>. Une interface graphique s’affiche alors permettant de modifier les différents éléments. Si on clique sur <em>Done</em>, le code sélectionné dans le script est alors automatiquement mis à jour pour correspondre aux modifications effectuées.</p>
 <p>Ce qui permet d’obtenir très facilement des résultats extrêmement moches :</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(<span class="dt">data =</span> rp) <span class="op">+</span><span class="st"> </span><span class="kw">geom_histogram</span>(<span class="kw">aes</span>(<span class="dt">x =</span> cadres)) <span class="op">+</span><span class="st"> </span>
@@ -850,7 +850,7 @@ La liste complète des noms de couleurs connus par R peut être obtenu avec la f
     <span class="dt">panel.background =</span> <span class="kw">element_rect</span>(<span class="dt">fill =</span> <span class="st">&quot;coral&quot;</span>), 
     <span class="dt">plot.background =</span> <span class="kw">element_rect</span>(<span class="dt">fill =</span> <span class="st">&quot;blueviolet&quot;</span>))</code></pre></div>
 <pre><code>`stat_bin()` using `bins = 30`. Pick better value with `binwidth`.</code></pre>
-<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-247-1.svg" width="672" /></p>
+<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-263-1.svg" width="672" /></p>
 </div>
 <div id="ressources-1" class="section level2">
 <h2><span class="header-section-number">8.9</span> Ressources</h2>
@@ -870,39 +870,109 @@ La liste complète des noms de couleurs connus par R peut être obtenu avec la f
 
 rp69 &lt;-<span class="st"> </span><span class="kw">filter</span>(rp2012, departement <span class="op">%in%</span><span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;Rhône&quot;</span>, <span class="st">&quot;Loire&quot;</span>))</code></pre></div>
 <p><strong>Exercice 1</strong></p>
-<p>Faire un nuage de points croisant le pourcentage de sans diplôme et le pourcentage d’ouvriers.</p>
-<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-249-1.svg" width="672" /></p>
+<p>Faire un nuage de points croisant le pourcentage de sans diplôme (<code>dipl_aucun</code>) et le pourcentage d’ouvriers (<code>ouvr</code>).</p>
+<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-265-1.svg" width="672" /></p>
+<div class="solution">
+
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(rp69) <span class="op">+</span><span class="st"> </span><span class="kw">geom_point</span>(<span class="kw">aes</span>(<span class="dt">x =</span> dipl_aucun, <span class="dt">y =</span> ouvr))</code></pre></div>
+
+</div>
 <p><strong>Exercice 2</strong></p>
 <p>Faire un nuage de points croisant le pourcentage de sans diplôme et le pourcentage d’ouvriers, avec les points en rouge et de transparence 0.2.</p>
-<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-250-1.svg" width="672" /></p>
+<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-267-1.svg" width="672" /></p>
+<div class="solution">
+
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(rp69) <span class="op">+</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">geom_point</span>(<span class="kw">aes</span>(<span class="dt">x =</span> dipl_aucun, <span class="dt">y =</span> ouvr), <span class="dt">color =</span> <span class="st">&quot;red&quot;</span>, <span class="dt">alpha =</span> <span class="fl">0.2</span>)</code></pre></div>
+
+</div>
 <p><strong>Exercice 3</strong></p>
 <p>Représenter la répartition du pourcentage de propriétaires selon la taille de la commune en 5 classes (variable <code>pop_cl</code>) sous forme de boîtes à moustache.</p>
-<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-251-1.svg" width="672" /></p>
+<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-269-1.svg" width="672" /></p>
+<div class="solution">
+
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(rp69) <span class="op">+</span><span class="st"> </span><span class="kw">geom_boxplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> pop_cl, <span class="dt">y =</span> proprio))</code></pre></div>
+
+</div>
 <p><strong>Exercice 4</strong></p>
 <p>Représenter la répartition du nombre de communes selon la taille de la commune en 5 classes sous la forme d’un diagramme en bâtons.</p>
-<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-252-1.svg" width="672" /></p>
+<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-271-1.svg" width="672" /></p>
+<div class="solution">
+
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(rp69) <span class="op">+</span><span class="st"> </span><span class="kw">geom_bar</span>(<span class="kw">aes</span>(<span class="dt">x =</span> pop_cl))</code></pre></div>
+
+</div>
 <p><strong>Exercice 5</strong></p>
-<p>Faire un nuage de points croisant le pourcentage de sans diplôme et le pourcentage d’ouvriers. Faire varier la couleur selon le département et la taille selon la population totale. Mettre une transparence de 0.5.</p>
-<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-253-1.svg" width="672" /></p>
+<p>Faire un nuage de points croisant le pourcentage de sans diplôme et le pourcentage d’ouvriers. Faire varier la couleur selon le département (<code>departement</code>) et la taille selon la population totale (<code>pop_tot</code>). Mettre une transparence de 0.5.</p>
+<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-273-1.svg" width="672" /></p>
+<div class="solution">
+
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(rp69) <span class="op">+</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">geom_point</span>(<span class="kw">aes</span>(<span class="dt">x =</span> dipl_aucun, <span class="dt">y =</span> ouvr, <span class="dt">color =</span> departement, <span class="dt">size =</span> pop_tot), 
+             <span class="dt">alpha =</span> <span class="fl">0.5</span>)</code></pre></div>
+
+</div>
 <p><strong>Exercice 6</strong></p>
 <p>Représenter la répartition du nombre de communes selon la taille de la commune en 5 classes sous forme de diagramme en bâtons, avec une couleur différente selon le département.</p>
-<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-254-1.svg" width="672" /></p>
+<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-275-1.svg" width="672" /></p>
+<div class="solution">
+
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(rp69) <span class="op">+</span><span class="st"> </span><span class="kw">geom_bar</span>(<span class="kw">aes</span>(<span class="dt">x =</span> pop_cl, <span class="dt">fill =</span> departement))</code></pre></div>
+
+</div>
 <p>Faire varier la valeur du paramètre <code>position</code> pour afficher les barres les unes à côté des autres.</p>
-<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-255-1.svg" width="672" /></p>
+<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-277-1.svg" width="672" /></p>
+<div class="solution">
+
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(rp69) <span class="op">+</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">geom_bar</span>(<span class="kw">aes</span>(<span class="dt">x =</span> pop_cl, <span class="dt">fill =</span> departement), 
+           <span class="dt">position =</span> <span class="st">&quot;dodge&quot;</span>)</code></pre></div>
+
+</div>
 <p>Changer à nouveau la valeur du paramètre <code>position</code> pour représenter les proportions de communes de chaque département pour chaque catégorie de taille.</p>
-<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-256-1.svg" width="672" /></p>
+<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-279-1.svg" width="672" /></p>
+<div class="solution">
+
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(rp69) <span class="op">+</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">geom_bar</span>(<span class="kw">aes</span>(<span class="dt">x =</span> pop_cl, <span class="dt">fill =</span> departement), 
+           <span class="dt">position =</span> <span class="st">&quot;fill&quot;</span>)</code></pre></div>
+
+</div>
 <p><strong>Exercice 7</strong></p>
-<p>Faire le nuage de points du pourcentage de cadres par le pourcentage de diplômés du supérieur. Représenter ce nuage par deux graphiques différents selon le département en utilisant <code>facet_grid</code>.</p>
-<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-257-1.svg" width="672" /></p>
+<p>Faire le nuage de points du pourcentage de cadres (<code>cadres</code>) par le pourcentage de diplômés du supérieur (<code>dipl_sup</code>). Représenter ce nuage par deux graphiques différents selon le département en utilisant <code>facet_grid</code>.</p>
+<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-281-1.svg" width="672" /></p>
+<div class="solution">
+
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(rp69) <span class="op">+</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">geom_point</span>(<span class="kw">aes</span>(<span class="dt">x=</span>cadres, <span class="dt">y=</span>dipl_sup)) <span class="op">+</span>
+<span class="st">  </span><span class="kw">facet_grid</span>(<span class="op">~</span>departement)</code></pre></div>
+
+</div>
 <p><strong>Exercice 8</strong></p>
-<p>Faire le nuage de points croisant pourcentage de chômeurs et pourcentage de sans diplôme. Y ajouter les noms des communes correspondant, en rouge et en taille 2.5 :</p>
-<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-258-1.svg" width="672" /></p>
+<p>Faire le nuage de points croisant pourcentage de chômeurs (<code>chom</code>) et pourcentage de sans diplôme. Y ajouter les noms des communes correspondant (variable <code>commune</code>), en rouge et en taille 2.5 :</p>
+<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-283-1.svg" width="672" /></p>
+<div class="solution">
+
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(rp69, <span class="kw">aes</span>(<span class="dt">x =</span> chom, <span class="dt">y =</span> dipl_aucun)) <span class="op">+</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">geom_point</span>() <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_text</span>(<span class="kw">aes</span>(<span class="dt">label =</span> commune), <span class="dt">color =</span> <span class="st">&quot;red&quot;</span>, <span class="dt">size =</span> <span class="fl">2.5</span>)</code></pre></div>
+
+</div>
 <p><strong>Exercice 9</strong></p>
 <p>Dans le graphique précédent, n’afficher que le nom des communes ayant plus de 15% de chômage.</p>
-<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-259-1.svg" width="672" /></p>
+<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-285-1.svg" width="672" /></p>
+<div class="solution">
+
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">chom15 &lt;-<span class="st"> </span><span class="kw">filter</span>(rp69, chom <span class="op">&gt;</span><span class="st"> </span><span class="dv">15</span>)
+<span class="kw">ggplot</span>(rp69, <span class="kw">aes</span>(<span class="dt">x =</span> chom, <span class="dt">y =</span> dipl_aucun)) <span class="op">+</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">geom_point</span>(<span class="dt">alpha =</span> <span class="fl">0.15</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_text</span>(<span class="dt">data =</span> chom15, <span class="kw">aes</span>(<span class="dt">label =</span> commune), <span class="dt">color=</span><span class="st">&quot;red&quot;</span>, <span class="dt">size=</span><span class="dv">3</span>)</code></pre></div>
+
+</div>
 
 </div>
 </div>
+<script src="js/tidyverse.js"></script>
             </section>
 
           </div>
@@ -938,8 +1008,8 @@ gitbook.start({
 "size": 2
 },
 "edit": {
-"link": "https://github.com/juba/tidyverse/edit/master/08-ggplot2.Rmd",
-"text": "Éditer"
+"link": "https://github.com/juba/tidyverse/blob/master/08-ggplot2.Rmd",
+"text": "Source"
 },
 "download": ["introduction_au_tidyverse.pdf", "introduction_au_tidyverse.epub"],
 "toc": {

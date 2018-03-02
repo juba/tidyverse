@@ -25,7 +25,7 @@
 <meta name="author" content="Julien Barnier">
 
 
-<meta name="date" content="2017-11-24">
+<meta name="date" content="2018-03-02">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -47,7 +47,7 @@
 
 
 
-<script src="libs/htmlwidgets-0.9/htmlwidgets.js"></script>
+<script src="libs/htmlwidgets-1.0/htmlwidgets.js"></script>
 <link href="libs/leaflet-0.7.7/leaflet.css" rel="stylesheet" />
 <script src="libs/leaflet-0.7.7/leaflet.js"></script>
 <link href="libs/leafletfix-1.0.0/leafletfix.css" rel="stylesheet" />
@@ -415,12 +415,19 @@ code > span. { color: #1f1c1b; } /* Normal */
 <li><code>purrr</code> (programmation)</li>
 <li><code>readr</code> (importation de données)</li>
 <li><code>tibble</code> (tableaux de données)</li>
+<li><code>forcats</code> (variables qualitatives)</li>
+<li><code>stringr</code> (chaînes de caractères)</li>
 </ul>
 <p>De la même manière, charger l’extension avec :</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(tidyverse)</code></pre></div>
 <p>Chargera l’ensemble des extensions précédentes.</p>
-<p>Il existe d’autres extensions qui font partie du <em>tidyverse</em> mais qui doivent être installées et chargées à part, comme <code>forcats</code> (pour le recodage des variables qualitatives) ou <code>readxl</code> (pour l’importation de données depuis des fichiers Excel).</p>
+<p>Il existe d’autres extensions qui font partie du <em>tidyverse</em> mais qui doivent être chargées explicitement, comme par exemple <code>readxl</code> (pour l’importation de données depuis des fichiers Excel).</p>
 <p>La liste complète des extensions se trouve sur <a href="https://www.tidyverse.org/packages/">le site officiel du <em>tidyverse</em></a>.</p>
+<p>Ce document est basé sur les versions d’extension suivantes :</p>
+<pre><code>ggplot2 2.2.1     purrr   0.2.4
+tibble  1.4.2     dplyr   0.7.4
+tidyr   0.8.0     stringr 1.3.0
+readr   1.1.1     forcats 0.3.0</code></pre>
 </div>
 <div id="tidydata" class="section level2">
 <h2><span class="header-section-number">6.3</span> tidy data</h2>
@@ -451,65 +458,65 @@ code > span. { color: #1f1c1b; } /* Normal */
 <pre><code># A tibble: 32 x 11
      mpg   cyl  disp    hp  drat    wt  qsec    vs    am  gear  carb
  * &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
- 1  21.0     6 160.0   110  3.90 2.620 16.46     0     1     4     4
- 2  21.0     6 160.0   110  3.90 2.875 17.02     0     1     4     4
- 3  22.8     4 108.0    93  3.85 2.320 18.61     1     1     4     1
- 4  21.4     6 258.0   110  3.08 3.215 19.44     1     0     3     1
- 5  18.7     8 360.0   175  3.15 3.440 17.02     0     0     3     2
- 6  18.1     6 225.0   105  2.76 3.460 20.22     1     0     3     1
- 7  14.3     8 360.0   245  3.21 3.570 15.84     0     0     3     4
- 8  24.4     4 146.7    62  3.69 3.190 20.00     1     0     4     2
- 9  22.8     4 140.8    95  3.92 3.150 22.90     1     0     4     2
-10  19.2     6 167.6   123  3.92 3.440 18.30     1     0     4     4
+ 1  21.0  6.00   160 110    3.90  2.62  16.5  0     1.00  4.00  4.00
+ 2  21.0  6.00   160 110    3.90  2.88  17.0  0     1.00  4.00  4.00
+ 3  22.8  4.00   108  93.0  3.85  2.32  18.6  1.00  1.00  4.00  1.00
+ 4  21.4  6.00   258 110    3.08  3.22  19.4  1.00  0     3.00  1.00
+ 5  18.7  8.00   360 175    3.15  3.44  17.0  0     0     3.00  2.00
+ 6  18.1  6.00   225 105    2.76  3.46  20.2  1.00  0     3.00  1.00
+ 7  14.3  8.00   360 245    3.21  3.57  15.8  0     0     3.00  4.00
+ 8  24.4  4.00   147  62.0  3.69  3.19  20.0  1.00  0     4.00  2.00
+ 9  22.8  4.00   141  95.0  3.92  3.15  22.9  1.00  0     4.00  2.00
+10  19.2  6.00   168 123    3.92  3.44  18.3  1.00  0     4.00  4.00
 # ... with 22 more rows</code></pre>
 <p>Si le <em>data frame</em> d’origine a des <em>rownames</em>, on peut d’abord les convertir en colonnes avec <code>rownames_to_columns</code> :</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">d &lt;-<span class="st"> </span><span class="kw">as_tibble</span>(<span class="kw">rownames_to_column</span>(mtcars))
 d</code></pre></div>
 <pre><code># A tibble: 32 x 12
-             rowname   mpg   cyl  disp    hp  drat    wt  qsec    vs    am
-               &lt;chr&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
- 1         Mazda RX4  21.0     6 160.0   110  3.90 2.620 16.46     0     1
- 2     Mazda RX4 Wag  21.0     6 160.0   110  3.90 2.875 17.02     0     1
- 3        Datsun 710  22.8     4 108.0    93  3.85 2.320 18.61     1     1
- 4    Hornet 4 Drive  21.4     6 258.0   110  3.08 3.215 19.44     1     0
- 5 Hornet Sportabout  18.7     8 360.0   175  3.15 3.440 17.02     0     0
- 6           Valiant  18.1     6 225.0   105  2.76 3.460 20.22     1     0
- 7        Duster 360  14.3     8 360.0   245  3.21 3.570 15.84     0     0
- 8         Merc 240D  24.4     4 146.7    62  3.69 3.190 20.00     1     0
- 9          Merc 230  22.8     4 140.8    95  3.92 3.150 22.90     1     0
-10          Merc 280  19.2     6 167.6   123  3.92 3.440 18.30     1     0
-# ... with 22 more rows, and 2 more variables: gear &lt;dbl&gt;, carb &lt;dbl&gt;</code></pre>
+   rowname       mpg   cyl  disp    hp  drat    wt  qsec    vs    am  gear
+   &lt;chr&gt;       &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+ 1 Mazda RX4    21.0  6.00   160 110    3.90  2.62  16.5  0     1.00  4.00
+ 2 Mazda RX4 …  21.0  6.00   160 110    3.90  2.88  17.0  0     1.00  4.00
+ 3 Datsun 710   22.8  4.00   108  93.0  3.85  2.32  18.6  1.00  1.00  4.00
+ 4 Hornet 4 D…  21.4  6.00   258 110    3.08  3.22  19.4  1.00  0     3.00
+ 5 Hornet Spo…  18.7  8.00   360 175    3.15  3.44  17.0  0     0     3.00
+ 6 Valiant      18.1  6.00   225 105    2.76  3.46  20.2  1.00  0     3.00
+ 7 Duster 360   14.3  8.00   360 245    3.21  3.57  15.8  0     0     3.00
+ 8 Merc 240D    24.4  4.00   147  62.0  3.69  3.19  20.0  1.00  0     4.00
+ 9 Merc 230     22.8  4.00   141  95.0  3.92  3.15  22.9  1.00  0     4.00
+10 Merc 280     19.2  6.00   168 123    3.92  3.44  18.3  1.00  0     4.00
+# ... with 22 more rows, and 1 more variable: carb &lt;dbl&gt;</code></pre>
 <p>À l’inverse, on peut à tout moment convertir un tibble en <em>data frame</em> avec <code>as.data.frame</code> :</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">as.data.frame</span>(d)</code></pre></div>
 <pre><code># A tibble: 32 x 12
-             rowname   mpg   cyl  disp    hp  drat    wt  qsec    vs    am
-               &lt;chr&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
- 1         Mazda RX4  21.0     6 160.0   110  3.90 2.620 16.46     0     1
- 2     Mazda RX4 Wag  21.0     6 160.0   110  3.90 2.875 17.02     0     1
- 3        Datsun 710  22.8     4 108.0    93  3.85 2.320 18.61     1     1
- 4    Hornet 4 Drive  21.4     6 258.0   110  3.08 3.215 19.44     1     0
- 5 Hornet Sportabout  18.7     8 360.0   175  3.15 3.440 17.02     0     0
- 6           Valiant  18.1     6 225.0   105  2.76 3.460 20.22     1     0
- 7        Duster 360  14.3     8 360.0   245  3.21 3.570 15.84     0     0
- 8         Merc 240D  24.4     4 146.7    62  3.69 3.190 20.00     1     0
- 9          Merc 230  22.8     4 140.8    95  3.92 3.150 22.90     1     0
-10          Merc 280  19.2     6 167.6   123  3.92 3.440 18.30     1     0
-# ... with 22 more rows, and 2 more variables: gear &lt;dbl&gt;, carb &lt;dbl&gt;</code></pre>
+   rowname       mpg   cyl  disp    hp  drat    wt  qsec    vs    am  gear
+   &lt;chr&gt;       &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+ 1 Mazda RX4    21.0  6.00   160 110    3.90  2.62  16.5  0     1.00  4.00
+ 2 Mazda RX4 …  21.0  6.00   160 110    3.90  2.88  17.0  0     1.00  4.00
+ 3 Datsun 710   22.8  4.00   108  93.0  3.85  2.32  18.6  1.00  1.00  4.00
+ 4 Hornet 4 D…  21.4  6.00   258 110    3.08  3.22  19.4  1.00  0     3.00
+ 5 Hornet Spo…  18.7  8.00   360 175    3.15  3.44  17.0  0     0     3.00
+ 6 Valiant      18.1  6.00   225 105    2.76  3.46  20.2  1.00  0     3.00
+ 7 Duster 360   14.3  8.00   360 245    3.21  3.57  15.8  0     0     3.00
+ 8 Merc 240D    24.4  4.00   147  62.0  3.69  3.19  20.0  1.00  0     4.00
+ 9 Merc 230     22.8  4.00   141  95.0  3.92  3.15  22.9  1.00  0     4.00
+10 Merc 280     19.2  6.00   168 123    3.92  3.44  18.3  1.00  0     4.00
+# ... with 22 more rows, and 1 more variable: carb &lt;dbl&gt;</code></pre>
 <p>Là encore, on peut convertir la colonne <code>rowname</code> en “vrais” <em>rownames</em> avec <code>column_to_rownames</code> :</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">column_to_rownames</span>(<span class="kw">as.data.frame</span>(d))</code></pre></div>
 <pre><code># A tibble: 32 x 11
      mpg   cyl  disp    hp  drat    wt  qsec    vs    am  gear  carb
  * &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
- 1  21.0     6 160.0   110  3.90 2.620 16.46     0     1     4     4
- 2  21.0     6 160.0   110  3.90 2.875 17.02     0     1     4     4
- 3  22.8     4 108.0    93  3.85 2.320 18.61     1     1     4     1
- 4  21.4     6 258.0   110  3.08 3.215 19.44     1     0     3     1
- 5  18.7     8 360.0   175  3.15 3.440 17.02     0     0     3     2
- 6  18.1     6 225.0   105  2.76 3.460 20.22     1     0     3     1
- 7  14.3     8 360.0   245  3.21 3.570 15.84     0     0     3     4
- 8  24.4     4 146.7    62  3.69 3.190 20.00     1     0     4     2
- 9  22.8     4 140.8    95  3.92 3.150 22.90     1     0     4     2
-10  19.2     6 167.6   123  3.92 3.440 18.30     1     0     4     4
+ 1  21.0  6.00   160 110    3.90  2.62  16.5  0     1.00  4.00  4.00
+ 2  21.0  6.00   160 110    3.90  2.88  17.0  0     1.00  4.00  4.00
+ 3  22.8  4.00   108  93.0  3.85  2.32  18.6  1.00  1.00  4.00  1.00
+ 4  21.4  6.00   258 110    3.08  3.22  19.4  1.00  0     3.00  1.00
+ 5  18.7  8.00   360 175    3.15  3.44  17.0  0     0     3.00  2.00
+ 6  18.1  6.00   225 105    2.76  3.46  20.2  1.00  0     3.00  1.00
+ 7  14.3  8.00   360 245    3.21  3.57  15.8  0     0     3.00  4.00
+ 8  24.4  4.00   147  62.0  3.69  3.19  20.0  1.00  0     4.00  2.00
+ 9  22.8  4.00   141  95.0  3.92  3.15  22.9  1.00  0     4.00  2.00
+10  19.2  6.00   168 123    3.92  3.44  18.3  1.00  0     4.00  4.00
 # ... with 22 more rows</code></pre>
 <div class="rmdnote">
 <p>
@@ -526,6 +533,7 @@ Les deux fonctions <code>column_to_rownames</code> et <code>rownames_to_column</
 <li id="fn11"><p>Dans R de base, si une table <code>d</code> contient une colonne <code>qualif</code>, <code>d$qual</code> retournera cette colonne.<a href="06-tidyverse.html#fnref11">↩</a></p></li>
 </ol>
 </div>
+<script src="js/tidyverse.js"></script>
             </section>
 
           </div>
@@ -561,8 +569,8 @@ gitbook.start({
 "size": 2
 },
 "edit": {
-"link": "https://github.com/juba/tidyverse/edit/master/06-tidyverse.Rmd",
-"text": "Éditer"
+"link": "https://github.com/juba/tidyverse/blob/master/06-tidyverse.Rmd",
+"text": "Source"
 },
 "download": ["introduction_au_tidyverse.pdf", "introduction_au_tidyverse.epub"],
 "toc": {

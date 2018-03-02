@@ -25,7 +25,7 @@
 <meta name="author" content="Julien Barnier">
 
 
-<meta name="date" content="2017-11-24">
+<meta name="date" content="2018-03-02">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -47,7 +47,7 @@
 
 
 
-<script src="libs/htmlwidgets-0.9/htmlwidgets.js"></script>
+<script src="libs/htmlwidgets-1.0/htmlwidgets.js"></script>
 <link href="libs/leaflet-0.7.7/leaflet.css" rel="stylesheet" />
 <script src="libs/leaflet-0.7.7/leaflet.js"></script>
 <link href="libs/leafletfix-1.0.0/leafletfix.css" rel="stylesheet" />
@@ -602,20 +602,20 @@ Levels: Homme Femme</code></pre>
 <p>L’outil le plus utile pour étudier la distribution des valeurs d’une variable quantitative reste la représentation graphique.</p>
 <p>La représentation la plus courante est sans doute l’histogramme. On peut l’obtenir avec la fonction <code>hist</code> :</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">hist</span>(d<span class="op">$</span>age)</code></pre></div>
-<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-75-1.svg" width="672" /></p>
+<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-80-1.svg" width="672" /></p>
 <p>Cette fonction n’a pas pour effet direct d’effectuer un calcul ou de nous renvoyer un résultat : elle génère un graphique qui va s’afficher dans l’onglet <em>Plots</em> de RStudio.</p>
 <p>On peut personnaliser l’apparence de l’histogramme en ajoutant des arguments supplémentaires à la fonction <code>hist</code>. L’argument le plus important est <code>breaks</code>, qui permet d’indiquer le nombre de classes que l’on souhaite.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">hist</span>(d<span class="op">$</span>age, <span class="dt">breaks =</span> <span class="dv">10</span>)</code></pre></div>
-<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-76-1.svg" width="672" /></p>
+<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-81-1.svg" width="672" /></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">hist</span>(d<span class="op">$</span>age, <span class="dt">breaks =</span> <span class="dv">70</span>)</code></pre></div>
-<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-77-1.svg" width="672" /></p>
+<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-82-1.svg" width="672" /></p>
 <p>Le choix d’un “bon” nombre de classes pour un histogramme n’est pas un problème simple : si on a trop peu de classes, on risque d’effacer quasiment toutes les variations, et si on en a trop on risque d’avoir trop de détails et de masquer les grandes tendances.</p>
 <p>Les arguments de <code>hist</code> permettent également de modifier la présentation du graphique. On peut ainsi changer la couleur des barres avec <code>col</code><a href="#fn8" class="footnoteRef" id="fnref8"><sup>8</sup></a>, le titre avec <code>main</code>, les étiquettes des axes avec <code>xlab</code> et <code>ylab</code>, etc. :</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">hist</span>(d<span class="op">$</span>age, <span class="dt">col =</span> <span class="st">&quot;skyblue&quot;</span>,
      <span class="dt">main =</span> <span class="st">&quot;Répartition des âges des enquêtés&quot;</span>,
      <span class="dt">xlab =</span> <span class="st">&quot;Âge&quot;</span>,
      <span class="dt">ylab =</span> <span class="st">&quot;Effectif&quot;</span>)</code></pre></div>
-<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-78-1.svg" width="672" /></p>
+<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-83-1.svg" width="672" /></p>
 <p>La fonction <code>hist</code> fait partie des fonctions graphique de base de R. La partie <a href="08-ggplot2.html#ggplot2">8</a> de ce document est consacrée à l’extension <code>ggplot2</code>, qui fait partie du <em>tidyverse</em> et qui permet la production et la personnalisation de graphiques complexes sous R.</p>
 </div>
 </div>
@@ -701,15 +701,15 @@ Total                    2000 100.0</code></pre>
 <p>On peut représenter graphiquement le tri à plat d’une variable qualitative avec un diagramme en barres, obtenu avec la fonction <code>barplot</code>. Attention, contrairement à <code>hist</code> cette fonction ne s’applique pas directement à la variable mais au résultat du tri à plat de cette variable, calculé avec <code>table</code>. Il faut donc procéder en deux étapes :</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">tab &lt;-<span class="st"> </span><span class="kw">table</span>(d<span class="op">$</span>clso)
 <span class="kw">barplot</span>(tab)</code></pre></div>
-<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-87-1.svg" width="672" /></p>
+<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-92-1.svg" width="672" /></p>
 <p>On peut aussi trier le tri à plat avec la fonction <code>sort</code> avant de le représenter graphiquement, ce qui peut faciliter la lecture du graphique :</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">barplot</span>(<span class="kw">sort</span>(tab))</code></pre></div>
-<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-88-1.svg" width="672" /></p>
+<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-93-1.svg" width="672" /></p>
 <p>Une alternative au graphique en barres est le <em>diagramme de Cleveland</em>, qu’on peut obtenir avec la fonction <code>dotchart</code>. Celle-ci s’applique elle aussi au tri à plat de la variable calculé avec <code>table</code>.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">dotchart</span>(<span class="kw">table</span>(d<span class="op">$</span>qualif))</code></pre></div>
-<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-89-1.svg" width="672" /> Là aussi, pour améliorer la lisibilité du graphique il est préférable de trier le tri à plat de la variable avant de le représenter :</p>
+<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-94-1.svg" width="672" /> Là aussi, pour améliorer la lisibilité du graphique il est préférable de trier le tri à plat de la variable avant de le représenter :</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">dotchart</span>(<span class="kw">sort</span>(<span class="kw">table</span>(d<span class="op">$</span>qualif)))</code></pre></div>
-<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-90-1.svg" width="672" /></p>
+<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-95-1.svg" width="672" /></p>
 </div>
 </div>
 </div>
@@ -723,12 +723,48 @@ Total                    2000 100.0</code></pre>
 <li>copier le jeu de données dans un nouvel objet nommé <code>df</code></li>
 <li>afficher les dimensions et la liste des variables de <code>df</code></li>
 </ul>
+<div class="solution">
+
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(questionr)
+
+<span class="kw">data</span>(hdv2003)
+df &lt;-<span class="st"> </span>hdv2003
+
+<span class="kw">dim</span>(df)
+<span class="kw">names</span>(df)</code></pre></div>
+
+</div>
 <p><strong>Exercice 2</strong></p>
 <p>On souhaite étudier la répartition du temps passé devant la télévision par les enquêtés (variable <code>heures.tv</code>). Pour cela, affichez les principaux indicateurs de cette variable : valeur minimale, maximale, moyenne, médiane et écart-type. Représentez ensuite sa distribution par un histogramme en 10 classes.</p>
+<div class="solution">
+
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">summary</span>(df<span class="op">$</span>heures.tv)
+<span class="kw">sd</span>(df<span class="op">$</span>heures.tv)
+
+<span class="kw">hist</span>(df<span class="op">$</span>heures.tv, <span class="dt">breaks =</span> <span class="dv">10</span>)</code></pre></div>
+
+</div>
 <p><strong>Exercice 3</strong></p>
 <p>On s’intéresse maintenant à l’importance accordée par les enquêtés à leur travail (variable <code>trav.imp</code>). Faites un tri à plat des effectifs des modalités de cette variable avec la commande <code>table</code>.</p>
+<div class="solution">
+
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">table</span>(df<span class="op">$</span>trav.imp)</code></pre></div>
+
+</div>
 <p>Faites un tri à plat affichant à la fois les effectifs et les pourcentages de chaque modalité. Y’a-t-il des valeurs manquantes ?</p>
+<div class="solution">
+
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">freq</span>(df<span class="op">$</span>trav.imp)</code></pre></div>
+
+</div>
 <p>Représentez graphiquement les effectifs des modalités à l’aide d’un graphique en barres puis d’un diagramme de Cleveland.</p>
+<div class="solution">
+
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">tab &lt;-<span class="st"> </span><span class="kw">sort</span>(<span class="kw">table</span>(df<span class="op">$</span>trav.imp))
+<span class="kw">barplot</span>(tab)
+<span class="kw">dotchart</span>(tab)</code></pre></div>
+
+</div>
 
 </div>
 </div>
@@ -740,6 +776,7 @@ Total                    2000 100.0</code></pre>
 <li id="fn8"><p>Les différentes manières de spécifier des couleurs sont indiquées dans l’encadré de la section <a href="08-ggplot2.html#scalecolor">8.7.3</a>.<a href="03-premier_travail.html#fnref8">↩</a></p></li>
 </ol>
 </div>
+<script src="js/tidyverse.js"></script>
             </section>
 
           </div>
@@ -775,8 +812,8 @@ gitbook.start({
 "size": 2
 },
 "edit": {
-"link": "https://github.com/juba/tidyverse/edit/master/03-premier_travail.Rmd",
-"text": "Éditer"
+"link": "https://github.com/juba/tidyverse/blob/master/03-premier_travail.Rmd",
+"text": "Source"
 },
 "download": ["introduction_au_tidyverse.pdf", "introduction_au_tidyverse.epub"],
 "toc": {

@@ -25,7 +25,7 @@
 <meta name="author" content="Julien Barnier">
 
 
-<meta name="date" content="2017-11-24">
+<meta name="date" content="2018-03-02">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -47,7 +47,7 @@
 
 
 
-<script src="libs/htmlwidgets-0.9/htmlwidgets.js"></script>
+<script src="libs/htmlwidgets-1.0/htmlwidgets.js"></script>
 <link href="libs/leaflet-0.7.7/leaflet.css" rel="stylesheet" />
 <script src="libs/leaflet-0.7.7/leaflet.js"></script>
 <link href="libs/leafletfix-1.0.0/leafletfix.css" rel="stylesheet" />
@@ -502,8 +502,8 @@ x</code></pre></div>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">hdv2003<span class="op">$</span>qualif[hdv2003<span class="op">$</span>qualif <span class="op">==</span><span class="st"> &quot;Ouvrier specialise&quot;</span>] &lt;-<span class="st"> &quot;Ouvrier&quot;</span></code></pre></div>
 <pre><code>Warning in `[&lt;-.factor`(`*tmp*`, hdv2003$qualif == &quot;Ouvrier specialise&quot;, :
 invalid factor level, NA generated</code></pre>
-<p><code>forcats</code> est une extension facilitant la manipulation des variables qualitatives, qu’elles soient sous forme de vecteurs <code>character</code> ou de facteurs. Elle ne fait pas à proprement parler partie du <em>tidyverse</em>, il faut donc la charger explicitement avec :</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(forcats)</code></pre></div>
+<p><code>forcats</code> est une extension facilitant la manipulation des variables qualitatives, qu’elles soient sous forme de vecteurs <code>character</code> ou de facteurs. Elle fait partie du <em>tidyverse</em>, et est donc automatiquement chargée par :</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(tidyverse)</code></pre></div>
 </div>
 <div id="modifier-les-modalites-dune-variable-qualitative" class="section level3">
 <h3><span class="header-section-number">9.3.2</span> Modifier les modalités d’une variable qualitative</h3>
@@ -647,13 +647,13 @@ NA                       550 27.5   NA</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(ggplot2)
 <span class="kw">ggplot</span>(hdv2003) <span class="op">+</span><span class="st"> </span>
 <span class="st">  </span><span class="kw">geom_boxplot</span>(<span class="kw">aes</span>(<span class="dt">x=</span>occup, <span class="dt">y=</span>age))</code></pre></div>
-<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-296-1.svg" width="672" /></p>
+<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-323-1.svg" width="672" /></p>
 <p>Le graphique pourrait être plus lisible si les modalités étaient triées par âge median croissant. Ceci est possible en utilisant <code>fct_reorder</code>. Celle-ci prend 3 arguments : le facteur à réordonner, la variable dont les valeurs doivent être utilisées pour ce réordonnancement, et enfin une fonction à appliquer à cette deuxième variable.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">hdv2003<span class="op">$</span>occup_age &lt;-<span class="st"> </span><span class="kw">fct_reorder</span>(hdv2003<span class="op">$</span>occup, hdv2003<span class="op">$</span>age, median)
 
 <span class="kw">ggplot</span>(hdv2003) <span class="op">+</span><span class="st"> </span>
 <span class="st">  </span><span class="kw">geom_boxplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> occup_age, <span class="dt">y =</span> age))</code></pre></div>
-<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-297-1.svg" width="672" /></p>
+<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-324-1.svg" width="672" /></p>
 <div id="iorder" class="section level4">
 <h4><span class="header-section-number">9.3.3.1</span> Interface graphique</h4>
 <p>On peut aussi utiliser l’interface graphique proposée par l’extension <code>questionr</code> afin de faciliter cette opération de réordonnancement. Pour la lancer, sélectionner le menu <em>Addins</em> puis <em>Levels ordering</em>, ou exécuter la fonction <code>iorder()</code> en lui passant comme paramètre le facteur à réordonner.</p>
@@ -786,6 +786,14 @@ Homme de plus de 60 ans  222 11.1 11.1</code></pre>
 <p>Construire le vecteur suivant :</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">x &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;12&quot;</span>, <span class="st">&quot;3.5&quot;</span>, <span class="st">&quot;421&quot;</span>, <span class="st">&quot;2,4&quot;</span>)</code></pre></div>
 <p>Et le convertir en vecteur numérique. Que remarquez-vous ?</p>
+<div class="solution">
+
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">as.numeric</span>(x)
+
+## Un nombre avec la virgule comme séparateur décimal
+## renvoie NA</code></pre></div>
+
+</div>
 <p><strong>Exercice 1.2</strong></p>
 <p>Construire le vecteur suivant :</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">x &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">20</span>, <span class="dv">21</span>, <span class="fl">15.5</span>, <span class="dv">14</span>, <span class="dv">12</span>, <span class="dv">8</span>)</code></pre></div>
@@ -793,10 +801,24 @@ Homme de plus de 60 ans  222 11.1 11.1</code></pre>
 <li>Écrire le test qui indique si les éléments du vecteur sont strictement supérieurs à 15.</li>
 <li>Utiliser ce test pour extraire du vecteur les éléments correspondants.</li>
 </ul>
+<div class="solution">
+
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">x <span class="op">&gt;</span><span class="st"> </span><span class="dv">15</span>
+x[x <span class="op">&gt;</span><span class="st"> </span><span class="dv">15</span>]</code></pre></div>
+
+</div>
 <p><strong>Exercice 1.3</strong></p>
 <p>Le code suivant génère un vecteur de 1000 nombres aléatoires compris entre 0 et 10 :</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">x &lt;-<span class="st"> </span><span class="kw">runif</span>(<span class="dv">1000</span>, <span class="dv">0</span>, <span class="dv">10</span>)</code></pre></div>
 <p>Combien d’éléments de ce vecteur sont compris entre 2 et 4 ?</p>
+<div class="solution">
+
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## Possibilité 1
+<span class="kw">length</span>(x[x <span class="op">&gt;=</span><span class="st"> </span><span class="dv">2</span> <span class="op">&amp;</span><span class="st"> </span>x <span class="op">&lt;=</span><span class="st"> </span><span class="dv">4</span>])
+## Possibilité 2
+<span class="kw">table</span>(x <span class="op">&gt;=</span><span class="st"> </span><span class="dv">2</span> <span class="op">&amp;</span><span class="st"> </span>x <span class="op">&lt;=</span><span class="st"> </span><span class="dv">4</span>)</code></pre></div>
+
+</div>
 </div>
 <div id="recodages-de-variable-qualitative" class="section level3">
 <h3><span class="header-section-number">9.6.3</span> Recodages de variable qualitative</h3>
@@ -806,6 +828,15 @@ Homme de plus de 60 ans  222 11.1 11.1</code></pre>
 <p>Recoder le vecteur à l’aide de la fonction <code>fct_recode</code> pour obtenir le résultat suivant :</p>
 <pre><code>[1] Janvier Janvier Février Juillet
 Levels: Février Janvier Juillet</code></pre>
+<div class="solution">
+
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">f &lt;-<span class="st"> </span><span class="kw">fct_recode</span>(f,
+          <span class="st">&quot;Janvier&quot;</span> =<span class="st"> &quot;Jan&quot;</span>,
+          <span class="st">&quot;Février&quot;</span> =<span class="st"> &quot;Fev&quot;</span>,
+          <span class="st">&quot;Juillet&quot;</span> =<span class="st"> &quot;Juil&quot;</span>)
+f</code></pre></div>
+
+</div>
 <p><strong>Exercice 2.2</strong></p>
 <p>À l’aide de l’interface graphique de <code>questionr</code>, recoder la variable <code>relig</code> du jeu de données <code>hdv2003</code> pour obtenir le tri à plat suivant (il se peut que l’ordre des modalités dans le tri à plat soit différent) :</p>
 <pre><code>                              n    % val%
@@ -814,6 +845,17 @@ Appartenance                760 38.0 38.0
 Ni croyance ni appartenance 399 20.0 20.0
 Rejet                        93  4.7  4.7
 NSP                          40  2.0  2.0</code></pre>
+<div class="solution">
+
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">hdv2003<span class="op">$</span>relig_rec &lt;-<span class="st"> </span><span class="kw">fct_recode</span>(hdv2003<span class="op">$</span>relig,
+               <span class="st">&quot;Pratiquant&quot;</span> =<span class="st"> &quot;Pratiquant regulier&quot;</span>,
+               <span class="st">&quot;Pratiquant&quot;</span> =<span class="st"> &quot;Pratiquant occasionnel&quot;</span>,
+               <span class="st">&quot;Appartenance&quot;</span> =<span class="st"> &quot;Appartenance sans pratique&quot;</span>,
+               <span class="st">&quot;NSP&quot;</span> =<span class="st"> &quot;NSP ou NVPR&quot;</span>)
+
+<span class="kw">freq</span>(hdv2003<span class="op">$</span>relig_rec)</code></pre></div>
+
+</div>
 <p><strong>Exercice 2.3</strong></p>
 <p>À l’aide de l’interface graphique de <code>questionr</code>, recoder la variable <code>nivetud</code> pour obtenir le tri à plat suivant (il se peut que l’ordre des modalités dans le tri à plat soit différent) :</p>
 <pre><code>                                          n    % val%
@@ -824,6 +866,18 @@ N&#39;a jamais fait d&#39;etudes                 39  2.0  2.1
 Enseignement technique ou professionnel 594 29.7 31.5
 Enseignement superieur                  441 22.1 23.4
 NA                                      112  5.6   NA</code></pre>
+<div class="solution">
+
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">hdv2003<span class="op">$</span>nivetud_rec &lt;-<span class="st"> </span><span class="kw">fct_recode</span>(hdv2003<span class="op">$</span>nivetud,
+               <span class="st">&quot;Études primaires&quot;</span> =<span class="st"> &quot;A arrete ses etudes, avant la derniere annee d&#39;etudes primaires&quot;</span>,
+               <span class="st">&quot;Études primaires&quot;</span> =<span class="st"> &quot;Derniere annee d&#39;etudes primaires&quot;</span>,
+               <span class="st">&quot;Enseignement technique ou professionnel&quot;</span> =<span class="st"> &quot;Enseignement technique ou professionnel court&quot;</span>,
+               <span class="st">&quot;Enseignement technique ou professionnel&quot;</span> =<span class="st"> &quot;Enseignement technique ou professionnel long&quot;</span>,
+               <span class="st">&quot;Enseignement superieur&quot;</span> =<span class="st"> &quot;Enseignement superieur y compris technique superieur&quot;</span>)
+
+<span class="kw">freq</span>(hdv2003<span class="op">$</span>nivetud_rec)</code></pre></div>
+
+</div>
 <p>Toujours à l’aide de l’interface graphique, réordonner les modalités de cette variable recodée pour obtenir le tri à plat suivant :</p>
 <pre><code>                                          n    % val%
 Enseignement superieur                  441 22.1 23.4
@@ -833,10 +887,24 @@ Enseignement technique ou professionnel 594 29.7 31.5
 Études primaires                        427 21.3 22.6
 N&#39;a jamais fait d&#39;etudes                 39  2.0  2.1
 NA                                      112  5.6   NA</code></pre>
+<div class="solution">
+
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">hdv2003<span class="op">$</span>nivetud_rec &lt;-<span class="st"> </span><span class="kw">factor</span>(hdv2003<span class="op">$</span>nivetud_rec, 
+                              <span class="dt">levels =</span> <span class="kw">c</span>(<span class="st">&quot;Enseignement superieur&quot;</span>, <span class="st">&quot;Enseignement technique ou professionnel&quot;</span>, <span class="st">&quot;2eme cycle&quot;</span>, <span class="st">&quot;1er cycle&quot;</span>, <span class="st">&quot;Études primaires&quot;</span>, <span class="st">&quot;N&#39;a jamais fait d&#39;etudes&quot;</span>))
+
+<span class="kw">freq</span>(hdv2003<span class="op">$</span>nivetud_rec)</code></pre></div>
+
+</div>
 <p><strong>Exercice 2.4</strong></p>
 <p>À l’aide de la fonction <code>fct_reorder</code>, trier les modalités de la variable <code>relig</code> du jeu de données <code>hdv2003</code> selon leur âge médian.</p>
 <p>Vérifier en générant le boxplot suivant :</p>
-<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-318-1.svg" width="672" /></p>
+<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-352-1.svg" width="672" /></p>
+<div class="solution">
+
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">hdv2003<span class="op">$</span>relig =<span class="st"> </span><span class="kw">fct_reorder</span>(hdv2003<span class="op">$</span>relig, hdv2003<span class="op">$</span>age, median)
+<span class="kw">ggplot</span>(hdv2003) <span class="op">+</span><span class="st"> </span><span class="kw">geom_boxplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> relig, <span class="dt">y =</span> age))</code></pre></div>
+
+</div>
 </div>
 <div id="combiner-plusieurs-variables-1" class="section level3">
 <h3><span class="header-section-number">9.6.4</span> Combiner plusieurs variables</h3>
@@ -846,6 +914,16 @@ NA                                      112  5.6   NA</code></pre>
 <pre><code>                n    % val%
 Autre        1971 98.6 98.6
 Cinéma et BD   29  1.5  1.5</code></pre>
+<div class="solution">
+
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">hdv2003<span class="op">$</span>cinema_bd &lt;-<span class="st"> </span><span class="kw">if_else</span>(
+  hdv2003<span class="op">$</span>cinema <span class="op">==</span><span class="st"> &quot;Oui&quot;</span> <span class="op">&amp;</span><span class="st"> </span>hdv2003<span class="op">$</span>lecture.bd <span class="op">==</span><span class="st"> &quot;Oui&quot;</span>, 
+  <span class="st">&quot;Cinéma et BD&quot;</span>, 
+  <span class="st">&quot;Autre&quot;</span>)
+
+<span class="kw">freq</span>(hdv2003<span class="op">$</span>cinema_bd)</code></pre></div>
+
+</div>
 <p><strong>Exercice 3.2</strong></p>
 <p>À l’aide de la fonction <code>case_when</code>, créer une nouvelle variable ayant les modalités suivantes :</p>
 <ul>
@@ -858,6 +936,17 @@ Cinéma et BD   29  1.5  1.5</code></pre>
 Autre                                  1001 50.0 50.0
 Femme ayant plus de 2 frères et soeurs  546 27.3 27.3
 Homme ayant plus de 2 frères et soeurs  453 22.7 22.7</code></pre>
+<div class="solution">
+
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">hdv2003<span class="op">$</span>groupe &lt;-<span class="st"> </span><span class="kw">case_when</span>(
+    hdv2003<span class="op">$</span>sexe <span class="op">==</span><span class="st"> &quot;Homme&quot;</span> <span class="op">&amp;</span><span class="st"> </span>hdv2003<span class="op">$</span>freres.soeurs <span class="op">&gt;</span><span class="st"> </span><span class="dv">2</span> <span class="op">~</span><span class="st"> &quot;Homme ayant plus de 2 frères et soeurs&quot;</span>,
+    hdv2003<span class="op">$</span>sexe <span class="op">==</span><span class="st"> &quot;Femme&quot;</span> <span class="op">&amp;</span><span class="st"> </span>hdv2003<span class="op">$</span>freres.soeurs <span class="op">&gt;</span><span class="st"> </span><span class="dv">2</span> <span class="op">~</span><span class="st"> &quot;Femme ayant plus de 2 frères et soeurs&quot;</span>,
+    <span class="ot">TRUE</span> <span class="op">~</span><span class="st"> &quot;Autre&quot;</span>
+  )
+
+<span class="kw">freq</span>(hdv2003<span class="op">$</span>groupe)</code></pre></div>
+
+</div>
 <p><strong>Exercice 3.3</strong></p>
 <p>À l’aide de la fonction <code>case_when</code>, créer une nouvelle variable ayant les modalités suivantes :</p>
 <ul>
@@ -872,6 +961,18 @@ Autre                                             714 35.7 35.7
 Femme pratiquant le sport ou le bricolage         549 27.5 27.5
 Homme de plus de 30 ans                           610 30.5 30.5
 Homme de plus de 40 ans satisfait par son travail 127  6.3  6.3</code></pre>
+<div class="solution">
+
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">hdv2003<span class="op">$</span>groupe &lt;-<span class="st"> </span><span class="kw">case_when</span>(
+    hdv2003<span class="op">$</span>sexe <span class="op">==</span><span class="st"> &quot;Homme&quot;</span> <span class="op">&amp;</span><span class="st"> </span>hdv2003<span class="op">$</span>age <span class="op">&gt;</span><span class="st"> </span><span class="dv">40</span> <span class="op">&amp;</span><span class="st"> </span>hdv2003<span class="op">$</span>trav.satisf <span class="op">==</span><span class="st"> &quot;Satisfaction&quot;</span> <span class="op">~</span><span class="st"> &quot;Homme de plus de 40 ans satisfait par son travail&quot;</span>,
+    hdv2003<span class="op">$</span>sexe <span class="op">==</span><span class="st"> &quot;Homme&quot;</span> <span class="op">&amp;</span><span class="st"> </span>hdv2003<span class="op">$</span>age <span class="op">&gt;</span><span class="st"> </span><span class="dv">30</span> <span class="op">~</span><span class="st"> &quot;Homme de plus de 30 ans&quot;</span>,
+    hdv2003<span class="op">$</span>sexe <span class="op">==</span><span class="st"> &quot;Femme&quot;</span> <span class="op">&amp;</span><span class="st"> </span>(hdv2003<span class="op">$</span>sport <span class="op">==</span><span class="st"> &quot;Oui&quot;</span> <span class="op">|</span><span class="st"> </span>hdv2003<span class="op">$</span>bricol <span class="op">==</span><span class="st"> &quot;Oui&quot;</span>) <span class="op">~</span><span class="st"> &quot;Femme pratiquant le sport ou le bricolage&quot;</span>,
+    <span class="ot">TRUE</span> <span class="op">~</span><span class="st"> &quot;Autre&quot;</span>
+)
+
+<span class="kw">freq</span>(hdv2003<span class="op">$</span>groupe)</code></pre></div>
+
+</div>
 </div>
 <div id="decouper-une-variable-numerique" class="section level3">
 <h3><span class="header-section-number">9.6.5</span> Découper une variable numérique</h3>
@@ -884,10 +985,20 @@ Homme de plus de 40 ans satisfait par son travail 127  6.3  6.3</code></pre>
 (4,6]  138  6.9  6.9
 (6,12]  44  2.2  2.2
 NA       5  0.2   NA</code></pre>
+<div class="solution">
+
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">hdv2003<span class="op">$</span>tv_cl &lt;-<span class="st"> </span><span class="kw">cut</span>(hdv2003<span class="op">$</span>heures.tv, 
+                     <span class="dt">include.lowest=</span><span class="ot">TRUE</span>,  
+                     <span class="dt">right=</span><span class="ot">TRUE</span>,
+                     <span class="dt">breaks=</span><span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">4</span>, <span class="dv">6</span>, <span class="dv">12</span>))
+<span class="kw">freq</span>(hdv2003<span class="op">$</span>tv_cl)</code></pre></div>
+
+</div>
 
 </div>
 </div>
 </div>
+<script src="js/tidyverse.js"></script>
             </section>
 
           </div>
@@ -923,8 +1034,8 @@ gitbook.start({
 "size": 2
 },
 "edit": {
-"link": "https://github.com/juba/tidyverse/edit/master/09-recodages.Rmd",
-"text": "Éditer"
+"link": "https://github.com/juba/tidyverse/blob/master/09-recodages.Rmd",
+"text": "Source"
 },
 "download": ["introduction_au_tidyverse.pdf", "introduction_au_tidyverse.epub"],
 "toc": {
