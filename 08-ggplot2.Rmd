@@ -58,13 +58,13 @@ ggplot(rp) + geom_histogram()
 
 Reste à indiquer quelle donnée nous voulons représenter sous forme d'histogramme. Cela se fait à l'aide d'arguments passés via la fonction `aes()`. Ici nous avons un paramètre à renseigner, `x`, qui indique la variable à représenter sur l'axe des x (l'axe horizontal). Par exemple :
 
-```{r warning=FALSE}
+```{r warning=FALSE, warning=FALSE, message=FALSE}
 ggplot(rp) + geom_histogram(aes(x = cadres))
 ```
 
 Si on veut représenter une autre variable, il suffit de changer la valeur de `x` :
 
-```{r warning=FALSE}
+```{r warning=FALSE, warning=FALSE, message=FALSE}
 ggplot(rp) + geom_histogram(aes(x = ouvr))
 ```
 
@@ -650,7 +650,7 @@ Les thèmes permettent de contrôler l'affichage de tous les éléments du graph
 
 Il existe un certain nombre de thèmes préexistants, par exemple le thème `theme_bw` :
 
-```{r warning = FALSE}
+```{r warning = FALSE, message = FALSE}
 ggplot(data = rp) + 
   geom_histogram(aes(x = cadres)) + 
   theme_bw()
@@ -658,7 +658,7 @@ ggplot(data = rp) +
 
 Ou le thème `theme_minimal` :
 
-```{r warning = FALSE}
+```{r warning = FALSE, message = FALSE}
 ggplot(data = rp) + 
   geom_histogram(aes(x = cadres)) + 
   theme_minimal()
@@ -666,7 +666,7 @@ ggplot(data = rp) +
 
 On peut cependant modifier manuellement les différents éléments. Par exemple, les fonctions `ggtitle`, `xlab` et `ylab` permettent d'ajouter ou de modifier le titre du graphique, ainsi que les étiquettes des axes `x` et `y` :
 
-```{r warning = FALSE}
+```{r warning = FALSE, message = FALSE}
 ggplot(data = rp) + 
   geom_histogram(aes(x = cadres)) + 
   ggtitle("Un bien bel histogramme") +
@@ -679,7 +679,7 @@ Les éléments personnalisables étant nombreux, un bon moyen de se familiariser
 Ce qui permet d'obtenir très facilement des résultats extrêmement moches :
 
 
-```{r warning = FALSE}
+```{r warning = FALSE, message = FALSE}
 ggplot(data = rp) + geom_histogram(aes(x = cadres)) + 
  theme(panel.grid.major = element_line(colour = "dodgerblue", 
     size = 0.5, linetype = "dotdash"), axis.title = element_text(family = "serif", 
@@ -693,14 +693,50 @@ ggplot(data = rp) + geom_histogram(aes(x = cadres)) +
     plot.background = element_rect(fill = "blueviolet"))
 ```
 
+## L'add-in `esquisse`
 
+`esquisse` est un package développé notamment par [Victor Perrier](https://twitter.com/_pvictorr) de [dreamRs](https://www.dreamrs.fr/) et qui fournit une interface graphique pour la construction de graphiques avec `ggplot2`.
+
+Pour l'utiliser, il faut évidemment préalablement installer l'extension :
+
+```{r eval = FALSE}
+install.packages("esquisse")
+```
+
+Pour lancer l'interface, ouvrez le menu *Addins* dans la barre d'outils de RStudio, et cliquez sur *'ggplot2' builder*^[Vous pouvez aussi lancer la commande `esquisser::esquisse()` dans la Console.].
+
+![Lancer "Esquisse" depuis le menu Addins](resources/screenshots/esquisse_addin_menu.png)
+
+Une fenêtre s'ouvre : la première étape consiste à choisir un *data frame* de votre environnement, et éventuellement à ne sélectionner que certaines de ses variables.
+
+![Choix d'un data frame](resources/screenshots/esquisse_choose_dataset.png)
+Une fois le choix effectué, cliquez sur *Validate imported data*.
+
+L'interface principale s'affiche alors. La liste des variables du *data frame* apparaît en haut, et vous pouvez les faire glisser dans les zones *X*, *Y*, *Fill*, *Color*, *Size* et *Facet* pour créer des mappages. Le graphique se met automatiquement à jour.
+
+
+![](resources/screenshots/esquisse_plot.png)
+
+Par défaut, `esquisse` sélectionne le type de graphique le plus approprié selon la nature de vos variables. Mais vous pouvez choisir un autre type de graphique à l'aide de l'icône en haut à gauche.
+
+Enfin, une série de menus en bas de l'interface vous permettent de personnaliser les titres, les labels, la présentation ou de filtrer des valeurs de vos variables.
+
+Quand vous avez généré un graphique que vous souhaitez conserver, ouvrez le menu *Export et code* :
+
+![](resources/screenshots/esquisse_export.png)
+
+Vous y trouverez le code R correspondant au graphique actuellement affiché. Vous pouvez dès lors le copier pour le coller dans votre script, ou cliquer sur *Insert code in script* pour l'insérer directement dans votre script à l'endroit où se trouve votre curseur.
+
+`esquisse` ne propose pas (encore) tous les `geom` ou toutes les possibilités de `ggplot2`, mais ça peut être un outil très utile et pratique pour une exploration rapide de données ou lorsqu'on est un peu perdu dans la syntaxe et les fonctions de l'extension.
+
+Pour plus d'informations, vous pouvez vous référer à la [page du projet sur GitHub](https://github.com/dreamRs/esquisse) (en anglais).
 
 
 ## Ressources
 
 [La documentation officielle](http://ggplot2.tidyverse.org/index.html) (en anglais) de `ggplot2` est très complète et accessible en ligne.
 
-Une "antisèche" (en anglais) résumant en deux pages l'ensemble des fonctions et arguments et disponible soit directement depuis RStudio (menu *Help > Chetasheets > Data visualization with ggplot2*) ou [directement en ligne](https://www.rstudio.com/resources/cheatsheets/)
+Une "antisèche" (en anglais) résumant en deux pages l'ensemble des fonctions et arguments et disponible soit directement depuis RStudio (menu *Help > Cheatsheets > Data visualization with ggplot2*) ou [directement en ligne](https://www.rstudio.com/resources/cheatsheets/)
 
 Les parties [Data visualisation](http://r4ds.had.co.nz/data-visualisation.html) et [Graphics for communication](http://r4ds.had.co.nz/graphics-for-communication.html) de l'ouvrage en ligne *R for data science*, de Hadley Wickham, sont une très bonne introduction à `ggplot2`.
 
