@@ -16,11 +16,11 @@ Au premier lancement de RStudio, l'écran principal est découpé en trois grand
 
 La zone de gauche se nomme *Console*. À son démarrage, RStudio a lancé une nouvelle session de R et c'est dans cette fenêtre que nous allons pouvoir interagir avec lui.
 
-La *Console* doit normalement afficher un texte ressemblant à ceci :
+La *Console* doit normalement afficher un texte de bienvenue ressemblant à ceci :
 
 ```
-R version 3.4.3 (2017-11-30) -- "Kite-Eating Tree"
-Copyright (C) 2017 The R Foundation for Statistical Computing
+R version 3.5.2 (2018-12-20) -- "Eggshell Igloo"
+Copyright (C) 2018 The R Foundation for Statistical Computing
 Platform: x86_64-pc-linux-gnu (64-bit)
 
 R est un logiciel libre livré sans AUCUNE GARANTIE.
@@ -58,9 +58,7 @@ Cette dernière opération utilise le symbole `^` qui représente l'opération *
 
 ### Précisions concernant la saisie des commandes
 
-Lorsqu'on saisit une commande, les espaces autour des opérateurs n'ont pas d'importance. Les trois commandes
-suivantes sont donc équivalentes, mais on privilégie en général la
-deuxième pour des raisons de lisibilité du code.
+Lorsqu'on saisit une commande, les espaces autour des opérateurs n'ont pas d'importance. Les trois commandes suivantes sont donc équivalentes, mais on privilégie en général la deuxième pour des raisons de lisibilité du code.
 
 ```{r eval=FALSE}
 10+2
@@ -79,19 +77,6 @@ Enfin, il peut arriver qu'on saisisse une commande de manière incomplète : ou
 ```
 
 Cela signifie qu'il "attend la suite". On peut alors soit compléter la commande sur cette nouvelle ligne et appuyer sur `Entrée`, soit, si on est perdu, tout annuler et revenir à l'invite de commandes normal en appuyant sur `Esc` ou `Échap`.
-
-Dernière remarque, si on affiche dans la console un vecteur avec beaucoup d'éléments, ceux-ci seront répartis sur plusieurs lignes. Par exemple, si on a un vecteur de 50 nombres on peut obtenir quelque chose comme :
-
-     [1] 294 425 339 914 114 896 716 648 915 587 181 926 489
-    [14] 848 583 182 662 888 417 133 146 322 400 698 506 944
-    [27] 237 324 333 443 487 658 793 288 897 588 697 439 697
-    [40] 914 694 126 969 744 927 337 439 226 704 635
-
-On remarque que R ajoute systématiquement un nombre entre crochets au début de chaque ligne : il s'agit en fait de la position du premier élément de la ligne dans le vecteur. Ainsi, le 848 de la deuxième ligne est le 14e élément du vecteur, le 914 de la dernière ligne est le 40e, etc.
-
-Ceci explique le `[1]` qu'on obtient quand on affiche un simple nombre^[Et permet de constater que pour R, un nombre est un vecteur à un seul élément.] :
-
-     [1] 4
 
 
 
@@ -157,6 +142,7 @@ x <- 1
 y <- 3
 x <- y
 x
+## Si on modifie y, cela ne modifie pas x
 y <- 4
 x
 ```
@@ -224,7 +210,7 @@ imc <- poids / (tailles / 100) ^ 2
 imc
 ```
 
-Un vecteur peut contenir des nombres, mais il peut aussi contenir du texte. Imaginons qu'on a demandé aux 5 mêmes personnes leur niveau de diplôme : on peut regrouper l'information dans un vecteur de chaînes de caractères, toujours délimitées par des guillemets simples ou doubles :
+Un vecteur peut contenir des nombres, mais il peut aussi contenir du texte. Imaginons qu'on a demandé aux 5 mêmes personnes leur niveau de diplôme : on peut regrouper l'information dans un vecteur de *chaînes de caractères*. Une chaîne de caractère contient du texte libre, délimité par des guillemets simples ou doubles :
 
 ```{r}
 diplome <- c("CAP", "Bac", "Bac+2", "CAP", "Bac+3")
@@ -246,6 +232,21 @@ diplome[2]
 
 Cette opération, qui utilise l'opérateur `[]`, permet donc la sélection d'éléments d'un vecteur.
 
+Dernière remarque, si on affiche dans la console un vecteur avec beaucoup d'éléments, ceux-ci seront répartis sur plusieurs lignes. Par exemple, si on a un vecteur de 50 nombres on peut obtenir quelque chose comme :
+
+     [1] 294 425 339 914 114 896 716 648 915 587 181 926 489
+    [14] 848 583 182 662 888 417 133 146 322 400 698 506 944
+    [27] 237 324 333 443 487 658 793 288 897 588 697 439 697
+    [40] 914 694 126 969 744 927 337 439 226 704 635
+
+On remarque que R ajoute systématiquement un nombre entre crochets au début de chaque ligne : il s'agit en fait de la position du premier élément de la ligne dans le vecteur. Ainsi, le 848 de la deuxième ligne est le 14e élément du vecteur, le 914 de la dernière ligne est le 40e, etc.
+
+Ceci explique le `[1]` qu'on obtient quand on affiche un simple nombre^[Et permet de constater que pour R, un nombre est un vecteur à un seul élément.] :
+
+     [1] 4
+
+
+
 ## Fonctions
 
 ### Principe
@@ -262,7 +263,7 @@ Prenons tout de suite un exemple. Si on veut connaître le nombre d'éléments d
 length(tailles)
 ```
 
-Ici, `length` est le nom de la fonction, on l'appelle en lui passant un argument entre parenthèses (en l'occurrence notre vecteur `tailles`), et elle nous renvoit un résultat, à savoir le nombre d'éléments du vecteur passé en paramètre.
+Ici, `length` est le nom de la fonction, on l'appelle en lui passant un argument entre parenthèses (en l'occurrence notre vecteur `tailles`), et elle nous renvoie un résultat, à savoir le nombre d'éléments du vecteur passé en paramètre.
 
 Autre exemple, les fonctions `min` et `max` retournent respectivement les valeurs minimales et maximales d'un vecteur de nombres :
 
@@ -284,7 +285,7 @@ sum(tailles)
 ```
 
 
-Jusqu'à présent on n'a vu que des fonctions qui calculent et retournent un unique nombre. Mais une fonction peut renvoyer d'autres types de résultats. Par exemple, la fonction `range` (étendue) renvoit un vecteur de deux nombres, le minimum et le maximum :
+Jusqu'à présent on n'a vu que des fonctions qui calculent et retournent un unique nombre. Mais une fonction peut renvoyer d'autres types de résultats. Par exemple, la fonction `range` (étendue) renvoie un vecteur de deux nombres, le minimum et le maximum :
 
 ```{r}
 range(tailles)
@@ -309,7 +310,9 @@ On a déjà rencontré un exemple de fonction acceptant plusieurs arguments : l
 tailles <- c(156, 164, 197, 181, 173)
 ```
 
-Autre exemple : supposons maintenant que dans notre vecteur `tailles` nous avons une valeur manquante (une personne a refusé de répondre, ou notre mètre mesureur était en panne). On symbolise celle-ci dans R avec le code interne `NA` :
+Ici, `c` est appelée en lui passant cinq arguments, les cinq tailles séparées par des virgules, et elle renvoie un vecteur numérique regroupant ces cinq valeurs.
+
+Supposons maintenant que dans notre vecteur `tailles` nous avons une valeur manquante (une personne a refusé de répondre, ou notre mètre mesureur était en panne). On symbolise celle-ci dans R avec le code interne `NA` :
 
 ```{r}
 tailles <- c(156, 164, 197, NA, 173)
@@ -326,7 +329,7 @@ Si je calcule maintenant la taille moyenne à l'aide de la fonction `mean`, j'ob
 mean(tailles)
 ```
 
-En effet, R considère par défaut qu'il ne peut pas calculer la moyenne si une des valeurs n'est pas disponible. Il considère que cette moyenne est elle-même "non disponible" et renvoit donc comme résultat `NA`.
+En effet, R considère par défaut qu'il ne peut pas calculer la moyenne si une des valeurs n'est pas disponible. Il considère alors que cette moyenne est elle-même "non disponible" et renvoie donc comme résultat `NA`.
 
 On peut cependant indiquer à `mean` d'effectuer le calcul en ignorant les valeurs manquantes. Ceci se fait en ajoutant un argument supplémentaire, nommé `na.rm` (abbréviation de *NA remove*, "enlever les NA"), et de lui attribuer la valeur `TRUE` (code interne de R signifiant *vrai*) :
 
@@ -334,8 +337,7 @@ On peut cependant indiquer à `mean` d'effectuer le calcul en ignorant les valeu
 mean(tailles, na.rm = TRUE)
 ```
 
-Positionner le paramètre `na.rm` à `TRUE`  indique à la fonction `mean` de ne pas tenir compte des valeurs
-manquantes dans le calcul.
+Positionner le paramètre `na.rm` à `TRUE`  indique à la fonction `mean` de ne pas tenir compte des valeurs manquantes dans le calcul.
 
 Si on ne dit rien à la fonction `mean`, cet argument a une valeur par défaut, en l'occurrence `FALSE` (faux), qui fait qu'il ne supprime pas les valeurs manquantes. Les deux commandes suivantes sont donc rigoureusement équivalentes :
 
@@ -425,7 +427,7 @@ max(imc)
 
 R étant un logiciel libre, il bénéficie d'un développement communautaire riche et dynamique. L'installation de base de R permet de faire énormément de choses, mais le langage dispose en plus d'un système d'extensions permettant d'ajouter facilement de nouvelles fonctionnalités. La plupart des extensions sont développées et maintenues par la communauté des utilisateurs de R, et diffusées via un réseau de serveurs nommé CRAN (*Comprehensive R Archive Network*).
 
-Pour installer une extension, et si on dispose d'une connexion Internet, on peut utiliser le bouton *Install* de l'onglet *Packages* de RStudio. 
+Pour installer une extension, si on dispose d'une connexion Internet, on peut utiliser le bouton *Install* de l'onglet *Packages* de RStudio. 
 
 ![Installer une extension](resources/screenshots/rstudio_package_install.png)
 
@@ -511,8 +513,7 @@ conjoint2 <- c(1450, 1870, 1690, 0)
 nb_personnes <- c(4, 2, 3, 2)
 ```
 
-Calculer le revenu total de chaque ménage, puis diviser par le nombre de personnes pour obtenir
-le revenu par personne de chaque ménage.
+Calculer le revenu total de chaque ménage, puis diviser par le nombre de personnes pour obtenir le revenu par personne de chaque ménage.
 
 
 <div class="solution">
@@ -561,6 +562,95 @@ range(conjoint1, na.rm = TRUE)
 
 </div>
 
+
+
+**Exercice 4**
+
+Les deux vecteurs suivants représentent les précipitations (en mm) et la température (en °C) moyennes sur la ville de Lyon, pour chaque mois de l'année, entre 1981 et 2010 :
+
+```{r}
+temperature <- c(3.4, 4.8, 8.4, 11.4, 15.8, 19.4, 22.2, 21.6, 17.6, 13.4, 7.6, 4.4)
+precipitations <- c(47.2, 44.1, 50.4, 74.9, 90.8, 75.6, 63.7, 62, 87.5, 98.6, 81.9, 55.2)
+```
+
+Calculer la température moyenne sur l'année.
+
+Calculer la quantité totale de précipitations sur l'année.
+
+<div class="solution">
+\iffalse
+```{r eval=FALSE}
+mean(temperature)
+sum(precipitations)
+```
+\fi
+
+</div>
+
+À quoi correspond et comment peut-on interpréter le résultat de la fonction suivante ? Vous pouvez vous aider de la page d'aide de la fonction si nécessaire.
+
+```{r}
+cumsum(precipitations)
+```
+
+Même question pour :
+
+```{r}
+diff(temperature)
+```
+
+<div class="solution">
+\iffalse
+`cumsum(precipitations)` correspond à la somme cumulée des précipitations sur l'année. Par exemple, la 6e valeur du vecteur résultat correspond au total de précipitations de janvier à juin.
+
+`diff(temperature)` correspond à la différence de température d'un mois sur l'autre. Par exemple, la 2e valeur de ce vecteur correspond à l'écart de température entre le mois de février et le mois de janvier.
+\fi
+
+</div>
+
+
+**Exercice 5**
+
+On a relevé les notes en maths, anglais et sport d'une classe de 6 élèves et on a stocké ces données dans trois vecteurs :
+
+```{r}
+maths <- c(12, 16, 8, 18, 6, 10)
+anglais <- c(14, 9, 13, 15, 17, 11)
+sport <- c(18, 11, 14, 10, 8, 12)
+```
+
+Calculer la moyenne des élèves de la classe en anglais.
+
+Calculer la moyenne générale de chaque élève.
+
+<div class="solution">
+\iffalse
+```{r eval=FALSE}
+mean(anglais)
+(maths + anglais + sport) / 3
+```
+\fi
+
+</div>
+
+Essayez de comprendre le résultat des deux fonctions suivantes (vous pouvez vous aider de la page d'aide de ces fonctions) :
+
+```{r}
+pmin(maths, anglais, sport)
+```
+
+```{r}
+pmax(maths, anglais, sport)
+```
+
+
+<div class="solution">
+\iffalse
+`pmin` et `pmax` renvoient les minimum et maximum "parallèles" des trois vecteurs passés en argument. Ainsi, `pmin` renvoie pour chaque élève la note minimale dans les trois matières, et `pmax` la note maximale.
+
+\fi
+
+</div>
 
 
 
