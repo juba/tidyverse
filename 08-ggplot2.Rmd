@@ -56,7 +56,7 @@ Un des `geom` les plus simples est `geom_histogram`. On peut l'ajouter de la man
 ggplot(rp) + geom_histogram()
 ```
 
-Reste à indiquer quelle donnée nous voulons représenter sous forme d'histogramme. Cela se fait à l'aide d'arguments passés via la fonction `aes()`. Ici nous avons un paramètre à renseigner, `x`, qui indique la variable à représenter sur l'axe des x (l'axe horizontal). Par exemple :
+Reste à indiquer quelle donnée nous voulons représenter sous forme d'histogramme. Cela se fait à l'aide d'arguments passés via la fonction `aes()`. Ici nous avons un paramètre à renseigner, `x`, qui indique la variable à représenter sur l'axe des x (l'axe horizontal). Ainsi, si on souhaite représenter la distribution des communes du jeu de données selon le pourcentage de cadres dans leur population active (variable `cadres`), on pourra faire :
 
 ```{r warning=FALSE, warning=FALSE, message=FALSE}
 ggplot(rp) + geom_histogram(aes(x = cadres))
@@ -73,7 +73,7 @@ Quand on spécifie une variable, inutile d'indiquer le nom du tableau de donnée
 ```
 
 
-Certains `geom` prennent plusieurs paramètres. Ainsi, si on veut représenter un nuage de points, on peut le faire en ajoutant un `geom_point`. On doit alors indiquer à la fois la position en `x` et en `y` de ces points,  il faut donc passer ces deux arguments à `aes()` :
+Certains `geom` prennent plusieurs paramètres. Ainsi, si on veut représenter un nuage de points, on peut le faire en ajoutant un `geom_point`. On doit alors indiquer à la fois la position en `x` (la variable sur l'axe horizontal) et en `y` (la variable sur l'axe vertical) de ces points,  il faut donc passer ces deux arguments à `aes()` :
 
 ```{r}
 ggplot(rp) + geom_point(aes(x = dipl_sup, y = cadres))
@@ -87,23 +87,21 @@ ggplot(rp) +
              color = "darkgreen", size = 3, alpha = 0.3)
 ```
 
-
+On notera que dans ce cas les arguments sont dans la fonction `geom` mais à l'extérieur du `aes()`. Plus d'explications sur ce point dans quelques instants.
 
 ## Exemples de `geom`
 
-Il existe un grand nombre de `geom`, décrits en détail dans la [documentation officielle](http://ggplot2.tidyverse.org/reference/). Outre `geom_histogram` et `geom_point`, on pourra noter les `geom` suivants.
+Il existe un grand nombre de `geom`, décrits en détail dans la [documentation officielle](http://ggplot2.tidyverse.org/reference/). Outre les `geom_histogram` et `geom_point` que l'on vient de voir, on pourra noter les `geom` suivants.
 
 ### `geom_boxplot`
 
-`geom_boxplot` permet de représenter des boîtes à moustaches. On lui passe en `y` la variable dont on veut étudier la répartition, et en `x` la variable contenant les classes qu'on souhaite comparer. Ainsi, si on veut comparer la répartition du pourcentage de maisons en fonction du département de la commune, on pourra faire :
+`geom_boxplot` permet de représenter des boîtes à moustaches. On lui passe en `y` la variable numérique dont on veut étudier la répartition, et en `x` la variable qualitative contenant les classes qu'on souhaite comparer. Ainsi, si on veut comparer la répartition du pourcentage de maisons en fonction du département de la commune, on pourra faire :
 
 ```{r}
 ggplot(rp) + geom_boxplot(aes(x = departement, y = maison))
 ```
 
-À noter que dans ce cas, `x` doit être une variable qualitative, et `y` une variable numérique.
-
-On peut personnaliser la présentation avec différents argument supplémentaires :
+On peut personnaliser la présentation avec différents argument supplémentaires comme `fill` ou `color` :
 
 ```{r}
 ggplot(rp) + 
@@ -161,7 +159,7 @@ ggplot(df) + geom_col(aes(x = departement, y = n))
 ```
 
 
-On peut également modifier l'apparence du graphique avec des arguments supplémentaires comme `fill` ou `width` :
+Là aussi, on peut modifier l'apparence du graphique avec des arguments supplémentaires comme `fill` ou `width` :
 
 ```{r}
 ggplot(rp) + geom_bar(aes(x = departement), fill = "darkblue", width = .5)
@@ -171,9 +169,9 @@ ggplot(rp) + geom_bar(aes(x = departement), fill = "darkblue", width = .5)
 
 ### `geom_text`
 
-`geom_text` représente des points identifiés par des labels. On doit lui passer `x` et `y` pour la position des points, et `label` pour le texte des étiquettes.
+`geom_text` permet d'afficher des étiquettes de texte. On doit lui passer `x` et `y` pour la position des étiquettes, et `label` pour leur texte.
 
-Par exemple, si on souhaite représenter le nuage croisant la part des diplômés du supérieur et la part de cadres, mais en affichant le nom de la commune plutôt qu'un simple point, on peut faire :
+Par exemple, si on souhaite représenter le nuage croisant la part des diplômés du supérieur et la part de cadres, mais en affichant le nom de la commune (variable `commune`) plutôt qu'un simple point, on peut faire :
 
 ```{r}
 ggplot(rp) + geom_text(aes(x = dipl_sup, y = cadres, label = commune))
@@ -207,7 +205,7 @@ Ainsi, si on veut afficher la densité de la répartition de la part des cadres 
 ggplot(rp) + geom_density(aes(x = cadres))
 ```
 
-On peut utiliser différents arguments pour ajuster le calcul de l'estimation de densité, parmi lesquels `kernel` et `bw` (voir la page d'adide de la fonction `density` pour plus de détails) :
+On peut utiliser différents arguments pour ajuster le calcul de l'estimation de densité, parmi lesquels `kernel` et `bw` (voir la page d'aide de la fonction `density` pour plus de détails). `bw` (abbréviation de *bandwidth*, bande passante) permet de régler la "finesse" de l'estimation de densité, un peu comme le choix du nombre de classes dans un histogramme :
 
 ```{r}
 ggplot(rp) + geom_density(aes(x = cadres), bw = 1)
@@ -218,7 +216,7 @@ ggplot(rp) + geom_density(aes(x = cadres), bw = 1)
 
 `geom_line` trace des lignes connectant les différentes observations entre elles. Il est notamment utilisé pour la représentation de séries temporelles. On passe à `geom_line` deux paramètres : `x` et `y`. Les observations sont alors connectées selon l'ordre des valeurs passées en `x`.
 
-Comme il n'y a pas de données adaptées pour ce type de représentation dans notre jeu de données d'exemple, on va utiliser le jeu de données `economics` inclus dans `ggplot2` et représenter l'évolution du taux de chômage aux États-Unis (variable `unemploy`) dans le temps (variable `date`) :
+Comme il n'y a pas de données adaptées pour ce type de représentation dans notre jeu de données d'exemple, on va utiliser ici le jeu de données `economics` inclus dans `ggplot2` et représenter l'évolution du taux de chômage aux États-Unis (variable `unemploy`) dans le temps (variable `date`) :
 
 ```{r}
 data("economics")
@@ -237,14 +235,14 @@ Ces mappages sont passés aux différents `geom` via la fonction `aes()` (abbré
 
 ### Exemples de mappages
 
-On a déjà vu les mappages `x` et `y` pour un nuage de points. Ceux-ci signifient que la position d'un point donné horizontalement (`x`) et verticalement (`y`) depend de la valeur des variables passées comme arguments `x` et `y` dans `aes()` :
+On a déjà vu les mappages `x` et `y` pour un nuage de points. Ceux-ci signifient que la position d'un point donné horizontalement (`x`) et verticalement (`y`) dépend de la valeur des variables passées comme arguments `x` et `y` dans `aes()` :
 
 ```{r}
 ggplot(rp) + 
   geom_point(aes(x = dipl_sup, y = cadres))
 ```
 
-Mais on peut en ajouter d'autres. Par exemple, `color` permet de faire varier la couleur des points automatiquement en fonction des valeurs d'une troisième variable. Par exemple, on peut vouloir colorer les points selon le département de la commune correspondante :
+Mais on peut ajouter d'autres mappages. Par exemple, `color` permet de faire varier la couleur des points automatiquement en fonction des valeurs d'une troisième variable. Ainsi, on peut vouloir colorer les points selon le département de la commune correspondante :
 
 ```{r}
 ggplot(rp) + 
@@ -299,7 +297,7 @@ Si on établit un lien entre les valeurs d'une variable et un attribut graphique
 
 ### `geom_bar` et `position`
 
-Un des mappages possibles de `geom_bar` est l'attribut `fill`, qui permet de tracer des barres de couleur différentes selon les modalités d'une variable :
+Un des mappages possibles de `geom_bar` est l'attribut `fill`, qui permet de tracer des barres de couleur différentes selon les modalités d'une deuxième variable :
 
 ```{r}
 ggplot(rp) + geom_bar(aes(x = departement, fill = pop_cl))
@@ -321,7 +319,7 @@ ggplot(rp) + geom_bar(aes(x = departement, fill = pop_cl), position = "fill")
 
 On peut représenter plusieurs `geom` simultanément sur un même graphique, il suffit de les ajouter à tour de rôle avec l'opérateur `+`.
 
-Par exemple, on peut superposer la position des points au-dessus d'un graphique en boîtes à moustaches. On va pour cela ajouter un `geom_point` après avoir ajouté notre `geom_boxplot` :
+Par exemple, on peut superposer la position des points au-dessus d'un boxplot. On va pour cela ajouter un `geom_point` après avoir ajouté notre `geom_boxplot` :
 
 ```{r}
 ggplot(rp) + 
@@ -330,7 +328,7 @@ ggplot(rp) +
 ```
 
 ```{block type='rmdnote'}
-Quand une commande `ggplot2` devient longue, il peut être plus lisible de la répartir sur plusieurs lignes. Dans ce cas, il faut penser à placer l'opérateur `+` en fin de ligne, afin que R comprenne que la commande n'est pas complète et prenne en compte la suite.
+Quand une commande `ggplot2` devient longue, il peut être plus lisible de la répartir sur plusieurs lignes. Dans ce cas, il faut penser à placer l'opérateur `+` en fin de ligne, afin que R comprenne que la commande n'est pas complète et qu'il prenne en compte la suite.
 ```
 
 
@@ -343,7 +341,7 @@ ggplot(rp) +
 ```
 
 
-Dans ce cas, plutôt que de déclarer les mappages dans chaque `geom`, on peut les déclarer dans l'appel à `ggplot()`. Ils seront automatiquement "hérités" par les `geom` ajoutés (sauf s'ils redéfinissent les mêmes mappages) :
+Pour simplifier un peu le code, plutôt que de déclarer les mappages dans chaque `geom`, on peut les déclarer dans l'appel à `ggplot()`. Ils seront automatiquement "hérités" par les `geom` ajoutés (sauf s'ils redéfinissent les mêmes mappages) :
 
 ```{r}
 ggplot(rp, aes(x = departement, y = maison)) + 
@@ -392,24 +390,24 @@ ggplot(data = rp, aes(x = dipl_sup, y = cadres)) +
   geom_text(data = com50, aes(label = commune), color = "red", size = 3)
 ```
 
-Ainsi, on a un graphique avec deux `geom` superposés, mais dont les données proviennent de deux tableaux différents.
+Ainsi, on obtient un graphique avec deux `geom` superposés, mais dont les données proviennent de deux tableaux différents.
 
 ## Faceting
 
 Le *faceting* permet d'effectuer plusieurs fois le même graphique selon les valeurs d'une ou plusieurs variables qualitatives.
 
-Par exemple, on peut représenter l'histogramme du pourcentage de cadres dans nos communes :
+Par exemple, on a vu qu'on peut représenter l'histogramme du pourcentage de cadres dans nos communes avec le code suivant :
 
 ```{r, message=FALSE}
 ggplot(data = rp) + 
   geom_histogram(aes(x = cadres))
 ```
 
-On peut vouloir comparer la répartition de la part des cadres selon le département, et donc faire un histogramme pour chacun de ces départements. On peut dans ce cas utiliser `facet_wrap` ou `facet_grid`.
+On peut vouloir comparer cette répartition de la part des cadres selon le département, et donc faire un histogramme pour chacun de ces départements. C'est ce que permettent les fonctions `facet_wrap` et `facet_grid`.
 
 Les deux fonctions prennent en paramètre une formule de la forme `~variable`, où `variable` est le nom de la variable en fonction de laquelle on souhaite faire les différents graphiques.
 
-Avec `facet_wrap`, les différents graphiques sont affichés les uns à côté des autres et répartis automatiquement dans la page. Par exemple :
+Avec `facet_wrap`, les différents graphiques sont affichés les uns à côté des autres et répartis automatiquement dans la page :
 
 ```{r, message=FALSE}
 ggplot(data = rp) + 
@@ -427,7 +425,7 @@ ggplot(data = rp) +
 
 Un des intérêts du faceting dans `ggplot2` est que tous les graphiques générés ont les mêmes échelles, ce qui permet une comparaison directe.
 
-Enfin, notons qu'on peut même faire du faceting sur plusieurs variables à la fois. Ici on fait des histogrammes de la répartition de la part des cadres pour chaque croisement des variables `departement` et `pop_cl` :
+Enfin, notons qu'on peut même faire du faceting sur plusieurs variables à la fois. On peut par exemple faire des histogrammes de la répartition de la part des cadres pour chaque croisement des variables `departement` et `pop_cl` :
 
 ```{r, message=FALSE}
 ggplot(data = rp) + 
@@ -435,12 +433,12 @@ ggplot(data = rp) +
   facet_grid(departement~pop_cl)
 ```
 
-
+L'histogramme en haut à gauche représente la répartition du pourcentage de cadres parmi les communes de 2000 à 3000 habitants dans les Bouches-du-Rhône, etc.
 
 
 ## Scales
 
-On a vu qu'avec `ggplot2` on définissait des mappages entre des attributs graphiques (position, taille, couleur, etc.) et des variables d'un tableau de données. Ces mappages sont définis, pour chaque `geom`, via la fonction `aes()`.
+On a vu qu'avec `ggplot2` on définit des mappages entre des attributs graphiques (position, taille, couleur, etc.) et des variables d'un tableau de données. Ces mappages sont définis, pour chaque `geom`, via la fonction `aes()`.
 
 Les *scales* dans `ggplot2` permettent de modifier la manière dont un attribut graphique va être relié aux valeurs d'une variable, et dont la légende correspondante va être affichée. Par exemple, pour l'attribut `color`, on pourra définir la palette de couleur utilisée. Pour `size`, les tailles minimales et maximales, etc.
 
@@ -510,7 +508,8 @@ Là aussi, on peut modifier les étiquettes des axes en indiquant une chaîne de
 ```{r}
 ggplot(rp) + 
   geom_point(aes(x = dipl_sup, y = cadres)) +
-  scale_x_continuous("Diplômés du supérieur", limits = c(0,100))
+  scale_x_continuous("Part des diplômés du supérieur (%)", limits = c(0,100)) +
+  scale_y_continuous("Part des cadres (%)", limits = c(0,100))
 ```
 
 On peut utiliser `scale_x_log10` et `scale_y_log10` pour passer un axe à une échelle logarithmique :
@@ -705,7 +704,7 @@ install.packages("esquisse")
 
 Pour lancer l'interface, ouvrez le menu *Addins* dans la barre d'outils de RStudio, et cliquez sur *'ggplot2' builder*^[Vous pouvez aussi lancer la commande `esquisser::esquisse()` dans la Console.].
 
-![Lancer "Esquisse" depuis le menu Addins](resources/screenshots/esquisse_addin_menu.png)
+![](resources/screenshots/esquisse_addin_menu.png)
 
 Une fenêtre s'ouvre : la première étape consiste à choisir un *data frame* de votre environnement, et éventuellement à ne sélectionner que certaines de ses variables.
 
@@ -721,7 +720,7 @@ Par défaut, `esquisse` sélectionne le type de graphique le plus approprié sel
 
 Enfin, une série de menus en bas de l'interface vous permettent de personnaliser les titres, les labels, la présentation ou de filtrer des valeurs de vos variables.
 
-Quand vous avez généré un graphique que vous souhaitez conserver, ouvrez le menu *Export et code* :
+Quand vous avez généré un graphique que vous souhaitez conserver, ouvrez le menu *Export & code* :
 
 ![](resources/screenshots/esquisse_export.png)
 
@@ -736,7 +735,7 @@ Pour plus d'informations, vous pouvez vous référer à la [page du projet sur G
 
 [La documentation officielle](http://ggplot2.tidyverse.org/index.html) (en anglais) de `ggplot2` est très complète et accessible en ligne.
 
-Une "antisèche" (en anglais) résumant en deux pages l'ensemble des fonctions et arguments et disponible soit directement depuis RStudio (menu *Help > Cheatsheets > Data visualization with ggplot2*) ou [directement en ligne](https://www.rstudio.com/resources/cheatsheets/)
+Une "antisèche" (en anglais) résumant en deux pages l'ensemble des fonctions et arguments et disponible soit directement depuis RStudio (menu *Help > Cheatsheets > Data visualization with ggplot2*) ou [en ligne](https://www.rstudio.com/resources/cheatsheets/).
 
 Les parties [Data visualisation](http://r4ds.had.co.nz/data-visualisation.html) et [Graphics for communication](http://r4ds.had.co.nz/graphics-for-communication.html) de l'ouvrage en ligne *R for data science*, de Hadley Wickham, sont une très bonne introduction à `ggplot2`.
 
@@ -798,7 +797,7 @@ ggplot(rp69) +
 
 **Exercice 3**
 
-Représenter la répartition du pourcentage de propriétaires selon la taille de la commune en 5 classes (variable `pop_cl`) sous forme de boîtes à moustache.
+Représenter la répartition du pourcentage de propriétaires (variable `proprio`) selon la taille de la commune en classes (variable `pop_cl`) sous forme de boîtes à moustache.
 
 ```{r echo = FALSE}
 ggplot(rp69) + geom_boxplot(aes(x = pop_cl, y = proprio))
@@ -816,7 +815,7 @@ ggplot(rp69) + geom_boxplot(aes(x = pop_cl, y = proprio))
 
 **Exercice 4**
 
-Représenter la répartition du nombre de communes selon la taille de la commune en 5 classes sous la forme d'un diagramme en bâtons.
+Représenter la répartition du nombre de communes selon la taille de la commune en classes sous la forme d'un diagramme en bâtons.
 
 ```{r echo = FALSE}
 ggplot(rp69) + geom_bar(aes(x = pop_cl))
@@ -834,21 +833,55 @@ ggplot(rp69) + geom_bar(aes(x = pop_cl))
 
 **Exercice 5**
 
-Faire un nuage de points croisant le pourcentage de sans diplôme et le pourcentage d'ouvriers. Faire varier la couleur selon le département (`departement`) et la taille selon la population totale (`pop_tot`). Mettre une transparence de 0.5.
-
+Faire un nuage de points croisant le pourcentage de sans diplôme et le pourcentage d'ouvriers. Faire varier la couleur selon le département (`departement`).
 
 ```{r echo = FALSE}
 ggplot(rp69) + 
-  geom_point(aes(x = dipl_aucun, y = ouvr, color = departement, size = pop_tot), 
-             alpha = 0.5)
+  geom_point(aes(x = dipl_aucun, y = ouvr, color = departement))
 ```
 
 <div class="solution">
 \iffalse
 ```{r eval=FALSE}
 ggplot(rp69) + 
-  geom_point(aes(x = dipl_aucun, y = ouvr, color = departement, size = pop_tot), 
-             alpha = 0.5)
+  geom_point(aes(x = dipl_aucun, y = ouvr, color = departement))
+```
+\fi
+
+</div>
+
+
+Sur le même graphique, faire varier la taille des points selon la population totale de la commune (`pop_tot`). 
+
+
+```{r echo = FALSE}
+ggplot(rp69) + 
+  geom_point(aes(x = dipl_aucun, y = ouvr, color = departement, size = pop_tot))
+```
+
+<div class="solution">
+\iffalse
+```{r eval=FALSE}
+ggplot(rp69) + 
+  geom_point(aes(x = dipl_aucun, y = ouvr, color = departement, size = pop_tot))
+```
+\fi
+
+</div>
+
+Enfin, toujours sur le même graphique, rendre les points transparents en plaçant leur opacité à 0.5. 
+
+
+```{r echo = FALSE}
+ggplot(rp69) + 
+  geom_point(aes(x = dipl_aucun, y = ouvr, color = departement, size = pop_tot), alpha = 0.5)
+```
+
+<div class="solution">
+\iffalse
+```{r eval=FALSE}
+ggplot(rp69) + 
+  geom_point(aes(x = dipl_aucun, y = ouvr, color = departement, size = pop_tot), alpha = 0.5)
 ```
 \fi
 
@@ -857,7 +890,7 @@ ggplot(rp69) +
 
 **Exercice 6**
 
-Représenter la répartition du nombre de communes selon la taille de la commune en 5 classes sous forme de diagramme en bâtons, avec une couleur différente selon le département.
+Représenter la répartition du nombre de communes selon la taille de la commune en classes (variable `pop_cl`) sous forme de diagramme en bâtons, avec une couleur différente selon le département.
 
 ```{r echo = FALSE}
 ggplot(rp69) + geom_bar(aes(x = pop_cl, fill = departement))
@@ -908,8 +941,26 @@ ggplot(rp69) +
 </div>
 
 
-
 **Exercice 7**
+
+Représenter la répartition du pourcentage de propriétaires (variable `proprio`) selon la taille de la commune en classes (variable `pop_cl`) sous forme de boîtes à moustache. Faire varier la couleur de remplissage (attribut `fill`) selon le département.
+
+```{r echo = FALSE}
+ggplot(rp69) + 
+  geom_boxplot(aes(x = pop_cl, y = proprio, fill = departement))
+```
+
+<div class="solution">
+\iffalse
+```{r eval=FALSE}
+ggplot(rp69) + 
+  geom_boxplot(aes(x = pop_cl, y = proprio, fill = departement))
+```
+\fi
+
+</div>
+
+**Exercice 8**
 
 Faire le nuage de points du pourcentage de cadres (`cadres`) par le pourcentage de diplômés du supérieur (`dipl_sup`). Représenter ce nuage par deux graphiques différents selon le département en utilisant `facet_grid`.
 
@@ -930,8 +981,27 @@ ggplot(rp69) +
 
 </div>
 
+Sur le même graphique, faire varier la taille des points selon la population totale de la communes (variable `pop_tot`) et rendre les points transparents.
 
-**Exercice 8**
+```{r echo = FALSE}
+ggplot(rp69) + 
+  geom_point(aes(x=cadres, y=dipl_sup, size = pop_tot), alpha = 0.5) +
+  facet_grid(~departement)
+```
+
+<div class="solution">
+\iffalse
+```{r eval=FALSE}
+ggplot(rp69) + 
+  geom_point(aes(x=cadres, y=dipl_sup, size = pop_tot), alpha = 0.5) +
+  facet_grid(~departement)
+```
+\fi
+
+</div>
+
+
+**Exercice 9**
 
 Faire le nuage de points croisant pourcentage de chômeurs (`chom`) et pourcentage de sans diplôme. Y ajouter les noms des communes correspondant (variable `commune`), en rouge et en taille 2.5 :
 
@@ -954,7 +1024,7 @@ ggplot(rp69, aes(x = chom, y = dipl_aucun)) +
 </div>
 
 
-**Exercice 9**
+**Exercice 10**
 
 Dans le graphique précédent, n'afficher que le nom des communes ayant plus de 15% de chômage.
 
