@@ -25,7 +25,7 @@ hdv2003$qualif
 ```
 
 
-On peut facilement créer de nouvelles variables (ou colonnes) dans un tableau de données en utilisant également le `$` :
+On peut facilement créer de nouvelles variables (ou colonnes) dans un tableau de données en utilisant le `$` dans une assignation :
 
 ```{r}
 hdv2003$minutes.tv <- hdv2003$heures.tv * 60
@@ -97,6 +97,10 @@ Exemple le plus simple :
 
 ```{r}
 2 == 3
+```
+
+```{r}
+2 != 3
 ```
 
 Exemple appliqué à un vecteur :
@@ -217,8 +221,11 @@ f
 
 Autre exemple sur une "vraie" variable :
 
-```{r}
+```{r eval=FALSE}
 freq(hdv2003$qualif)
+```
+```{r echo=FALSE}
+print(freq(hdv2003$qualif))
 ```
 
 
@@ -228,8 +235,12 @@ hdv2003$qualif5 <- fct_recode(hdv2003$qualif,
                              "Ouvrier" = "Ouvrier qualifie",
                              "Interm" = "Technicien",
                              "Interm" = "Profession intermediaire")
-
+```
+```{r eval=FALSE}
 freq(hdv2003$qualif5)
+```
+```{r echo=FALSE}
+print(freq(hdv2003$qualif5))
 ```
 
 
@@ -245,8 +256,12 @@ Si on souhaite recoder une modalité de la variable en `NA`, il faut (contre int
 
 ```{r}
 hdv2003$qualif_rec <- fct_recode(hdv2003$qualif, NULL = "Autre")
-
+```
+```{r eval=FALSE}
 freq(hdv2003$qualif_rec)
+```
+```{r echo=FALSE}
+print(freq(hdv2003$qualif_rec))
 ```
 
 
@@ -254,10 +269,13 @@ freq(hdv2003$qualif_rec)
 
 ```{r}
 hdv2003$qualif_rec <- fct_explicit_na(hdv2003$qualif, na_level = "(Manquant)")
-
+```
+```{r eval=FALSE}
 freq(hdv2003$qualif_rec)
 ```
-
+```{r echo=FALSE}
+print(freq(hdv2003$qualif_rec))
+```
 
 
 D'autres fonctions sont proposées par `forcats` pour faciliter certains recodage, comme `fct_collapse`, qui propose une autre syntaxe pratique quand on doit regrouper ensemble des modalités :
@@ -266,8 +284,12 @@ D'autres fonctions sont proposées par `forcats` pour faciliter certains recodag
 hdv2003$qualif_rec <- fct_collapse(hdv2003$qualif,
                                   "Ouvrier" = c("Ouvrier specialise", "Ouvrier qualifie"),
                                   "Interm" = c("Technicien", "Profession intermediaire"))
-
+```
+```{r eval=FALSE}
 freq(hdv2003$qualif_rec)
+```
+```{r echo=FALSE}
+print(freq(hdv2003$qualif_rec))
 ```
 
 
@@ -277,8 +299,12 @@ freq(hdv2003$qualif_rec)
 hdv2003$qualif_rec <- fct_other(hdv2003$qualif,
                                 drop = c("Ouvrier specialise", "Ouvrier qualifie", 
                                          "Cadre", "Autre"))
-
+```
+```{r eval=FALSE}
 freq(hdv2003$qualif_rec)
+```
+```{r echo=FALSE}
+print(freq(hdv2003$qualif_rec))
 ```
 
 
@@ -286,8 +312,12 @@ freq(hdv2003$qualif_rec)
 
 ```{r}
 hdv2003$qualif_rec <- fct_lump(hdv2003$qualif)
-
+```
+```{r eval=FALSE}
 freq(hdv2003$qualif_rec)
+```
+```{r echo=FALSE}
+print(freq(hdv2003$qualif_rec))
 ```
 
 
@@ -297,7 +327,7 @@ freq(hdv2003$qualif_rec)
 
 #### Interface graphique de recodage {#irec}
 
-L'extension `questionr` propose une interface graphique facilitant le recodage des valeurs d'une variable qualitative. L'objectif est de permettre à l'utilisateur de saisir les nouvelles valeurs dans un formulaire, et de générer ensuite le code R correspondant au recodage indiqué.
+L'extension `questionr` propose une interface graphique facilitant le recodage des modalités d'une variable qualitative. L'objectif est de permettre à l'utilisateur de saisir les nouvelles valeurs dans un formulaire, et de générer ensuite le code R correspondant au recodage indiqué.
 
 Pour utiliser cette interface, sous RStudio vous pouvez aller dans le menu *Addins* (présent dans la barre d'outils principale) puis choisir *Levels recoding*. Sinon, vous pouvez lancer dans la console la fonction `irec()` en lui passant comme paramètre la variable à recoder.
 
@@ -326,7 +356,12 @@ hdv2003$qualif_rec <- fct_relevel(hdv2003$qualif,
                                   "Cadre", "Profession intermediaire", "Technicien", 
                                   "Employe", "Ouvrier qualifie", "Ouvrier specialise",
                                   "Autre")
+```
+```{r eval=FALSE}
 freq(hdv2003$qualif_rec)
+```
+```{r echo=FALSE}
+print(freq(hdv2003$qualif_rec))
 ```
 
 
@@ -348,9 +383,19 @@ ggplot(hdv2003) +
   geom_boxplot(aes(x = occup_age, y = age))
 ```
 
+On peut aussi effectuer le réordonnancement directement dans l'appel à `ggplot2`, sans créer de nouvelle variable :
+
+```{r eval=FALSE}
+ggplot(hdv2003) + 
+  geom_boxplot(aes(x = fct_reorder(occup, age, median), 
+                   y = age))
+
+```
+
+
 #### Interface graphique {#iorder}
 
-On peut aussi utiliser l'interface graphique proposée par l'extension `questionr` afin de faciliter cette opération de réordonnancement. Pour la lancer, sélectionner le menu *Addins* puis *Levels ordering*, ou exécuter la fonction `iorder()` en lui passant comme paramètre le facteur à réordonner.
+`questionr` propose une interface graphique afin de faciliter les opérations de réordonnancement manuel. Pour la lancer, sélectionner le menu *Addins* puis *Levels ordering*, ou exécuter la fonction `iorder()` en lui passant comme paramètre le facteur à réordonner.
 
 ![Interface graphique de `iorder`](resources/screenshots/iorder.png)
 
@@ -378,8 +423,12 @@ La fonction devient plus intéressante avec des tests combinant plusieurs variab
 hdv2003$statut <- if_else(hdv2003$sexe == "Homme" & hdv2003$age > 60,
                           "Homme de plus de 60 ans",
                           "Autre")
-
+```
+```{r eval=FALSE}
 freq(hdv2003$statut)
+```
+```{r echo=FALSE}
+print(freq(hdv2003$statut))
 ```
 
 
@@ -394,8 +443,12 @@ hdv2003$statut <- case_when(
     hdv2003$age > 60 & hdv2003$sexe == "Homme" ~ "Homme de plus de 60 ans",
     hdv2003$age > 60 & hdv2003$sexe == "Femme" ~ "Femme de plus de 60 ans",
     TRUE ~ "Autre")
-
+```
+```{r eval=FALSE}
 freq(hdv2003$statut)
+```
+```{r echo=FALSE}
+print(freq(hdv2003$statut))
 ```
 
 `case_when` prend en arguments une série d'instructions sous la forme `condition ~ valeur`. Il les exécute une par une, et dès qu'une `condition` est vraie, il renvoie la `valeur` associée.
@@ -414,8 +467,12 @@ hdv2003$statut <- case_when(
     hdv2003$sexe == "Homme" ~ "Homme",
     hdv2003$sexe == "Homme" & hdv2003$age > 60 ~ "Homme de plus de 60 ans",
     TRUE ~ "Autre")
-
+```
+```{r eval=FALSE}
 freq(hdv2003$statut)
+```
+```{r echo=FALSE}
+print(freq(hdv2003$statut))
 ```
 
 
@@ -428,20 +485,28 @@ hdv2003$statut <- case_when(
     hdv2003$sexe == "Homme" & hdv2003$age > 60 ~ "Homme de plus de 60 ans",
     hdv2003$sexe == "Homme" ~ "Homme",
     TRUE ~ "Autre")
-
+```
+```{r eval=FALSE}
 freq(hdv2003$statut)
 ```
-
+```{r echo=FALSE}
+print(freq(hdv2003$statut))
+```
 
 ## Découper une variable numérique en classes
 
-Une opération relativement courante consiste à découper une variable numérique en classes. Par exemple, on voudra transformer une variable *revenu* contenant le revenu mensuel en une variable qualitative avec des catégories *Moins de 500 euros*, *500-1000 euros*, etc.
+Une autre opération relativement courante consiste à découper une variable numérique en classes. Par exemple, on voudra transformer une variable *revenu* contenant le revenu mensuel en une variable qualitative avec des catégories *Moins de 500 euros*, *500-1000 euros*, etc.
 
-Pour cela on peut utiliser la fonction `cut()` :
+On utilise pour cela la fonction `cut()` :
 
 ```{r}
 hdv2003$agecl <- cut(hdv2003$age, breaks = 5)
+```
+```{r eval=FALSE}
 freq(hdv2003$agecl)
+```
+```{r echo=FALSE}
+print(freq(hdv2003$agecl))
 ```
 
 Si on donne un nombre entier à l'argument `breaks`, un nombre correspondant de classes d'amplitudes égales sont automatiquement calculées. Il est souvent préférable cependant d'avoir des limites "rondes", on peut alors spécifier ces dernières manuellement en passant un vecteur à `breaks` :
@@ -450,14 +515,20 @@ Si on donne un nombre entier à l'argument `breaks`, un nombre correspondant de 
 hdv2003$agecl <- cut(hdv2003$age, 
                      breaks = c(18, 25, 35, 45, 55, 65, 97), 
                      include.lowest = TRUE)
+```
+```{r eval=FALSE}
 freq(hdv2003$agecl)
 ```
+```{r echo=FALSE}
+print(freq(hdv2003$agecl))
+```
+
 
 Ici on a été obligé d'ajouter l'argument `include.lowest = TRUE` car sinon la valeur 18 n'aurait pas été incluse, et on aurait eu des valeurs manquantes.
 
 ### Interface graphique
 
-Comme l'utilisation des arguments de `cut` n'est pas toujours très intuitive, l'extension `questionr` propose une interface graphique facilitant cette opếration de découpage en classes d'une variable numérique. 
+Comme l'utilisation des arguments de `cut` n'est pas toujours très intuitive, l'extension `questionr` propose une interface graphique facilitant cette opération de découpage en classes d'une variable numérique. 
 
 Pour lancer cette interface, sous RStudio ouvrir le menu *Addins* et sélectionner *Numeric range dividing*, ou exécuter la fonction `icut()` dans la console en lui passant comme argument la variable quantitative à découper.
 
@@ -507,7 +578,7 @@ as.numeric(x)
 ```{r eval=FALSE}
 as.numeric(x)
 
-## Un nombre avec la virgule comme séparateur décimal
+## Un nombre avec une virgule comme séparateur décimal
 ## renvoie NA
 ```
 \fi
@@ -605,7 +676,7 @@ hdv2003$relig_rec <- fct_recode(hdv2003$relig,
                "Appartenance" = "Appartenance sans pratique",
                "NSP" = "NSP ou NVPR")
 
-freq(hdv2003$relig_rec)
+print(freq(hdv2003$relig_rec))
 ```
 
 <div class="solution">
@@ -635,7 +706,7 @@ hdv2003$nivetud_rec <- fct_recode(hdv2003$nivetud,
                "Enseignement technique ou professionnel" = "Enseignement technique ou professionnel long",
                "Enseignement superieur" = "Enseignement superieur y compris technique superieur")
 
-freq(hdv2003$nivetud_rec)
+print(freq(hdv2003$nivetud_rec))
 ```
 
 <div class="solution">
@@ -660,7 +731,7 @@ Toujours à l'aide de l'interface graphique, réordonner les modalités de cette
 ```{r echo=FALSE}
 hdv2003$nivetud_rec <- factor(hdv2003$nivetud_rec, levels=c("Enseignement superieur", "Enseignement technique ou professionnel", "2eme cycle", "1er cycle", "Études primaires", "N'a jamais fait d'etudes"))
 
-freq(hdv2003$nivetud_rec)
+print(freq(hdv2003$nivetud_rec))
 ```
 
 <div class="solution">
@@ -693,7 +764,7 @@ ggplot(hdv2003) + geom_boxplot(aes(x = relig, y = age))
 <div class="solution">
 \iffalse
 ```{r eval=FALSE}
-hdv2003$relig = fct_reorder(hdv2003$relig, hdv2003$age, median)
+hdv2003$relig <- fct_reorder(hdv2003$relig, hdv2003$age, median)
 ggplot(hdv2003) + geom_boxplot(aes(x = relig, y = age))
 ```
 \fi
@@ -715,7 +786,7 @@ hdv2003$cinema_bd <- if_else(
   "Cinéma et BD", 
   "Autre")
 
-freq(hdv2003$cinema_bd)
+print(freq(hdv2003$cinema_bd))
 ```
 
 <div class="solution">
@@ -751,7 +822,7 @@ hdv2003$groupe <- case_when(
     TRUE ~ "Autre"
   )
 
-freq(hdv2003$groupe)
+print(freq(hdv2003$groupe))
 ```
 
 <div class="solution">
@@ -790,7 +861,7 @@ hdv2003$groupe <- case_when(
     TRUE ~ "Autre"
 )
 
-freq(hdv2003$groupe)
+print(freq(hdv2003$groupe))
 ```
 
 <div class="solution">
@@ -819,7 +890,7 @@ Dans le jeu de données `hdv2003`, découper la variable `heures.tv` en classes 
 ```{r, echo=FALSE}
 tmp <- cut(hdv2003$heures.tv, include.lowest=TRUE,  right=TRUE,
                              breaks=c(0, 1, 2, 4, 6, 12))
-freq(tmp)
+print(freq(tmp))
 ```
 
 <div class="solution">
