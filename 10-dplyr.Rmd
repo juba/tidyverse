@@ -1,10 +1,13 @@
+---
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
 # Manipuler les données avec `dplyr` {#dplyr}
 
-`dplyr` est une extension facilitant le traitement et la manipulation de données contenues dans une ou plusieurs tables (qu'il s'agisse de *data frame* ou de *tibble*). Elle propose une syntaxe claire et cohérente, sous formes de verbes, pour la plupart des opérations de ce type. 
+`dplyr` est une extension facilitant le traitement et la manipulation de données contenues dans une ou plusieurs tables. Elle propose une syntaxe claire et cohérente, sous formes de verbes, pour la plupart des opérations de ce type. Ses fonctions sont en général plus rapides que leur équivalent sous R de base, elles permettent donc de traiter efficacement des données de grande dimension.
 
-Par ailleurs, les fonctions de `dplyr` sont en général plus rapides que leur équivalent sous R de base, elles permettent donc de traiter des données de grande dimension.
-
-`dplyr` part du principe que les données sont *tidy* (voir la section \@ref(tidydata)). Les fonctions de l'extension peuvent s'appliquer à des tableaux de type `data.frame` ou `tibble`, et elles retournent systématiquement un `tibble` (voir la section \@ref(tibbles)).
+`dplyr` part du principe que les données sont organisées selon le modèle des *tidy data* (voir la section \@ref(tidydata)). Les fonctions de l'extension peuvent s'appliquer à des tableaux de type `data.frame` ou `tibble`, et elles retournent systématiquement un `tibble` (voir la section \@ref(tibbles)).
 
 ## Préparation
 
@@ -20,7 +23,7 @@ On peut également la charger individuellement avec :
 library(dplyr)
 ```
 
-Dans ce qui suit on va utiliser les données du jeu de données `nycflights13`, contenu dans l'extension du même nom (qu'il faut donc avoir installé). Celui-ci correspond aux données de tous les vols au départ d'un des trois aéroports de New-York en 2013. Il a la particularité d'être réparti en trois tables :
+Dans ce qui suit on va utiliser le jeu de données `nycflights13`, contenu dans l'extension du même nom (qu'il faut donc avoir installé). Celui-ci correspond aux données de tous les vols au départ d'un des trois aéroports de New-York en 2013. Il a la particularité d'être réparti en trois tables :
 
 - `flights` contient des informations sur les vols : date, départ, destination, horaires, retard...
 - `airports` contient des informations sur les aéroports
@@ -30,13 +33,13 @@ On va charger les trois tables du jeu de données :
 
 ```{r cache = FALSE}
 library(nycflights13)
-## Chargement des trois tables du jeu de données
+## Chargement des trois tables
 data(flights)
 data(airports)
 data(airlines)
 ```
 
-Normalement trois objets correspondant aux trois tables ont dû apparaître dans votre environnement.
+Trois objets correspondant aux trois tables ont dû apparaître dans votre environnement.
 
 
 ## Les verbes de `dplyr`
@@ -62,7 +65,7 @@ slice(airports, 1:5)
 
 ### `filter` {#filter}
 
-`filter` sélectionne des lignes d'un tableau de données selon une condition. On lui passe en paramètre un test, et seules les lignes pour lesquelles ce test renvoie `TRUE` (vrai) sont conservées. Pour plus d'informations sur les tests et leur syntaxe, voir la section \@ref(tests).
+`filter` sélectionne des lignes d'une table selon une condition. On lui passe en paramètre un test, et seules les lignes pour lesquelles ce test renvoie `TRUE` (vrai) sont conservées. Pour plus d'informations sur les tests et leur syntaxe, voir la section \@ref(tests).
 
 Par exemple, si on veut sélectionner les vols du mois de janvier, on peut filtrer sur la variable `month` de la manière suivante :
 
@@ -76,13 +79,13 @@ Si on veut uniquement les vols avec un retard au départ (variable `dep_delay`) 
 filter(flights, dep_delay >= 10 & dep_delay <= 15)
 ```
 
-Si on passe plusieurs arguments à `filter`, celui-ci rajoute automatiquement une condition *et* entre les conditions. La ligne ci-dessus peut donc également être écrite de la manière suivante, avec le même résultat :
+Si on passe plusieurs arguments à `filter`, celui-ci rajoute automatiquement une condition *et* entre les conditions. La commande précédente peut donc être écrite de la manière suivante, avec le même résultat :
 
 ```{r eval = FALSE}
 filter(flights, dep_delay >= 10, dep_delay <= 15)
 ```
 
-Enfin, on peut également placer des fonctions dans les tests, qui nous permettent par exemple de sélectionner les vols avec la plus grande distance :
+On peut également placer des fonctions dans les tests, qui nous permettent par exemple de sélectionner les vols avec la plus grande distance :
 
 ```{r}
 filter(flights, distance == max(distance))
@@ -102,7 +105,7 @@ Si on fait précéder le nom d'un `-`, la colonne est éliminée plutôt que sé
 select(airports, -lat, -lon)
 ```
 
-`select` comprend toute une série de fonctions facilitant la sélection de multiples colonnes. Par exemple, `starts_with`, `ends_width`, `contains` ou `matches` permettent d'exprimer des conditions sur les noms de variables :
+`select` comprend toute une série de fonctions facilitant la sélection de colonnes multiples. Par exemple, `starts_with`, `ends_width`, `contains` ou `matches` permettent d'exprimer des conditions sur les noms de variables :
 
 ```{r}
 select(flights, starts_with("dep_"))
@@ -122,7 +125,7 @@ select(airports, name, everything())
 ```
 
 
-Une variante de `select` est `rename`^[Il est également possible de renommer des colonnes directement avec `select`, avec la même syntaxe que pour `rename`.], qui permet de renommer facilement des colonnes. On l'utilise en lui passant des paramètres de la forme `nouveau_nom = ancien_nom`. Ainsi, si on veut renommer les colonnes `lon` et `lat` de `airports` en `longitude` et `latitude` :
+Une variante de `select` est `rename`^[Il est également possible de renommer des colonnes directement avec `select`, avec la même syntaxe que pour `rename`.], qui permet de renommer des colonnes. On l'utilise en lui passant des paramètres de la forme `nouveau_nom = ancien_nom`. Ainsi, si on veut renommer les colonnes `lon` et `lat` de `airports` en `longitude` et `latitude` :
 
 ```{r}
 rename(airports, longitude = lon, latitude = lat)
@@ -182,7 +185,7 @@ airports <- mutate(airports, alt_m = alt / 3.2808)
 select(airports, name, alt, alt_m)
 ```
 
-On peut créer plusieurs nouvelles colonnes en une seule fois, et les expressions successives peuvent prendre en compte les résultats des calculs précédents. L'exemple suivant convertit d'abord la distance en kilomètres dans une variable `distance_km`, puis utilise cette nouvelle colonne pour calculer la vitesse en km/h.
+On peut créer plusieurs nouvelles colonnes en une seule commande, et les expressions successives peuvent prendre en compte les résultats des calculs précédents. L'exemple suivant convertit d'abord la distance en kilomètres dans une variable `distance_km`, puis utilise cette nouvelle colonne pour calculer la vitesse en km/h.
 
 ```{r}
 flights <- mutate(flights, 
@@ -191,7 +194,7 @@ flights <- mutate(flights,
 select(flights, distance, distance_km, vitesse)
 ```
 
-À noter que `mutate` est évidemment parfaitement compatible avec les fonctions vues dans le chapitre \@ref(vectorfactor) sur les recodages : fonctions de `forcats`, `if_else`, `case_when`...
+À noter que `mutate` est évidemment parfaitement compatible avec les fonctions vues dans le chapitre \@ref(vectorfactor) sur les recodages : `fct_recode`, `if_else`, `case_when`...
 
 L'avantage d'utiliser `mutate` est double. D'abord il permet d'éviter d'avoir à saisir le nom du tableau de données dans les conditions d'un `if_else` ou d'un `case_when` :
 
@@ -204,14 +207,14 @@ flights <- mutate(flights,
                     TRUE ~ "Aucun retard"))
 ```
 
-Utiliser `mutate` pour les recodages permet aussi de les intégrer dans un *pipeline* de traitement de données, concept présenté dans la section suivante.
+Ensuite, il permet aussi d'intégrer ces recodages dans un *pipeline* de traitement de données, concept présenté dans la section suivante.
 
 
 ## Enchaîner les opérations avec le *pipe* {#pipe}
 
-Quand on manipule un tableau de données, il est très fréquent d'enchaîner plusieurs opérations. On va par exemple filtrer pour extraire une sous-population, sélectionner des colonnes puis trier selon une variable.
+Quand on manipule un tableau de données, il est très fréquent d'enchaîner plusieurs opérations. On va par exemple extraire une sous-population avec `filter`, sélectionner des colonnes avec `select` puis trier selon une variable avec `arrange`, etc.
 
-Dans ce cas on peut le faire de deux manières différentes. La première est d'effectuer toutes les opérations en une fois en les "emboîtant" :
+Quand on veut enchaîner des opérations, on peut le faire de différentes manières. La première est d'effectuer toutes les opérations en une fois en les "emboîtant" :
 
 ```{r eval=FALSE}
 arrange(select(filter(flights, dest == "LAX"), dep_delay, arr_delay), dep_delay)
@@ -324,7 +327,7 @@ Par exemple, si on applique `slice` à un tableau préalablement groupé, il va 
 flights %>% group_by(month) %>% slice(1)
 ```
 
-Idem pour `mutate` : les opérations appliquées lors du calcul des valeurs des nouvelles colonnes sont aplliquée groupe de lignes par groupe de lignes. Dans l'exemple suivant, on ajoute une nouvelle colonne qui contient le retard moyen *du mois correspondant* :
+Idem pour `mutate` : les opérations appliquées lors du calcul des valeurs des nouvelles colonnes sont appliquées groupe de lignes par groupe de lignes. Dans l'exemple suivant, on ajoute une nouvelle colonne qui contient le retard moyen *du mois correspondant* :
 
 ```{r}
 flights %>% 
@@ -405,7 +408,7 @@ flights %>%
 
 ### Grouper selon plusieurs variables
 
-On peut grouper selon plusieurs variables à la fois, il suffit de les indiquer dans la clause du `group_by` :
+On peut grouper selon plusieurs variables à la fois, il suffit de les indiquer dans la clause du `group_by`. Le *pipeline* suivant le nombre de vols pour chaque mois et pour chaque destination, et trie le résultat par nombre de vols décroissant :
 
 ```{r}
 flights %>%
@@ -414,7 +417,7 @@ flights %>%
   arrange(desc(nb))
 ```
 
-On peut également compter selon plusieurs variables :
+On peut également utiliser `count` sur plusieurs variables. Les commandes suivantes comptent le nombre de vols pour chaque couple aéroport de départ / aéroport d'arrivée, et trie le résultat par nombre de vols décroissant :
 
 ```{r}
 flights %>% 
@@ -561,7 +564,7 @@ flights %>%
 
 ## Tables multiples
 
-Le jeu de données `nycflights13` est un exemple de données réparties en plusieurs tables. Ici on en a trois : les informations sur les vols, celles sur les aéroports et celles sur les compagnies aériennes sont dans trois tables distinctes.
+Le jeu de données `nycflights13` est un exemple de données réparties en plusieurs tables. Ici on en a trois : les informations sur les vols dans `flights`, celles sur les aéroports dans `airports` et celles sur les compagnies aériennes dans `airlines`.
 
 `dplyr` propose différentes fonctions permettant de travailler avec des données structurées de cette manière.
 
@@ -620,7 +623,7 @@ t3 <- flights %>% slice(1:5) %>% select(arr_delay, arr_time)
 bind_cols(t1, t2, t3)
 ```
 
-À noter que `bind_cols` associe les lignes uniquement *par position*. Les lignes des différents tableaux associés doivent donc correspondre (et leur nombre doit être identique). Pour associer des tables *par valeur*, on doit utiliser les jointures.
+À noter que `bind_cols` associe les lignes uniquement *par position*. Les lignes des différents tableaux associés doivent donc correspondre (et leur nombre doit être identique). Pour associer des tables *par valeur*, on doit utiliser des jointures.
 
 ### Jointures
 
@@ -667,7 +670,7 @@ Nous sommes ici dans le cas le plus simple concernant les clés de jointure : l
 
 La table `airports`, elle, contient des informations supplémentaires sur les aéroports : nom complet, altitude, position géographique, etc. Chaque aéroport est identifié par un code contenu dans la colonne `faa`.
 
-Si on regarde la table `flights`, on voit que le code d'identification des aéroports apparaît à deux endroits différents : pour l'aéroport de départ dans la colonne `origin`, et pour celui d'arrivée dans la colonne `dest`. On a donc deux clés de jointures possibles, et qui portent un nom différent de la clé de `airports`.
+Si on regarde la table `flights`, on voit que le code d'identification des aéroports apparaît à deux endroits différents : pour l'aéroport de départ dans la colonne `origin`, et pour celui d'arrivée dans la colonne `dest`. On a donc deux clés de jointure possibles, et qui portent un nom différent de la clé de `airports`.
 
 On va commencer par fusionner les données concernant l'aéroport de départ. Pour simplifier l'affichage des résultats, on va se contenter d'un sous-ensemble des deux tables :
 
@@ -690,7 +693,7 @@ left_join(flights_ex, airports_ex, by = c("origin" = "faa"))
 
 On constate que les deux nouvelles colonnes `name` et `alt` contiennent bien les données correspondant à l'aéroport de départ.
 
-On va stocker le résultat de cette jointure dans `flights_ex` :
+On va stocker le résultat de cette jointure dans la table `flights_ex` :
 
 ```{r}
 flights_ex <- flights_ex %>% 
@@ -705,7 +708,7 @@ left_join(flights_ex, airports_ex, by=c("dest" = "faa"))
 
 Cela fonctionne, les informations de l'aéroport d'arrivée ont bien été ajoutées, mais on constate que les colonnes ont été renommées. En effet, ici les deux tables fusionnées contenaient toutes les deux des colonnes `name` et `alt`. Comme on ne peut pas avoir deux colonnes avec le même nom dans un tableau, `dplyr` a renommé les colonnes de la première table en `name.x` et `alt.x`, et celles de la deuxième en `name.y` et `alt.y`.
 
-C'est pratique, mais pas forcément très parlant. On pourrait renommer manuellement les colonnes pour avoir des intitulés plus explicites avec `rename`, mais on peut aussi utiliser l'argument `suffix` de `left_join`, qui permet d'indiquer les suffixes à ajouter aux colonnes. Ainsi, on peut faire :
+C'est pratique, mais pas forcément très parlant. On pourrait renommer manuellement les colonnes avec `rename` avant de faire la jointure pour avoir des intitulés plus explicites, mais on peut aussi utiliser l'argument `suffix` de `left_join`, qui permet d'indiquer les suffixes à ajouter aux colonnes. Ainsi, on peut faire :
 
 ```{r}
 left_join(flights_ex, airports_ex, 
@@ -723,8 +726,8 @@ Jusqu'à présent nous avons utilisé la fonction `left_join`, mais il existe pl
 Partons de deux tables d'exemple, `personnes` et `voitures` :
 
 ```{r}
-personnes <- data_frame(nom = c("Sylvie", "Sylvie", "Monique", "Gunter", "Rayan", "Rayan"),
-                        voiture = c("Twingo", "Ferrari", "Scenic", "Lada", "Twingo", "Clio"))
+personnes <- tibble(nom = c("Sylvie", "Sylvie", "Monique", "Gunter", "Rayan", "Rayan"),
+                    voiture = c("Twingo", "Ferrari", "Scenic", "Lada", "Twingo", "Clio"))
 ```
 
 ```{r, echo=FALSE, eval=TRUE}
@@ -733,8 +736,8 @@ kable(personnes)
 
 
 ```{r}
-voitures <- data_frame(voiture = c("Twingo", "Ferrari", "Clio", "Lada", "208"),
-                       vitesse = c("140", "280", "160", "85", "160"))
+voitures <- tibble(voiture = c("Twingo", "Ferrari", "Clio", "Lada", "208"),
+                   vitesse = c("140", "280", "160", "85", "160"))
 ```
 
 ```{r, echo=FALSE, eval=TRUE}
@@ -790,7 +793,7 @@ kable(right_join(personnes, voitures))
 
 #### inner_join
 
-Dans le cas de `inner_join(x, y)`, seules les lignes présentes à la fois dans `x` et `y` sont présentes (et si nécessaire dupliquées) dans la table résultat :
+Dans le cas de `inner_join(x, y)`, seules les lignes présentes à la fois dans `x` et `y` sont conservées (et si nécessaire dupliquées) dans la table résultat :
 
 ```{r, echo=TRUE, eval=FALSE}
 inner_join(personnes, voitures)
@@ -925,7 +928,7 @@ filter(flights, arr_delay >= 5 & arr_delay <= 15)
 </div>
 
 
-Sélectionnez les vols des compagnies Delta, United et American (codes `AA`, `DL` et `UA`).
+Sélectionnez les vols des compagnies Delta, United et American (codes `DL`, `UA` et `AA`).
 
 ```{r echo=FALSE}
 filter(flights, carrier %in% c("AA", "DL", "UA"))
@@ -934,7 +937,7 @@ filter(flights, carrier %in% c("AA", "DL", "UA"))
 <div class="solution">
 \iffalse
 ```{r eval=FALSE}
-filter(flights, carrier %in% c("AA", "DL", "UA"))
+filter(flights, carrier %in% c("DL", "UA", "AA"))
 ```
 \fi
 
@@ -1012,7 +1015,7 @@ rename(airports, latitude = lat, longitude = lon)
 
 **Exercice 1.5**
 
-Dans la table `flights`, créer une nouvelle variable `duree_h` contenant la durée du vol (variable `air_time`) en heures. Sélectionner dans la table obtenue uniquement les deux colonnes `air_time` et `duree_h`.
+Dans la table `flights`, la colonne `air_time` contient la durée du vol en minutes. Créer une nouvelle variable `duree_h` contenant la durée du vol en heures. Sélectionner dans la table obtenue uniquement les deux colonnes `air_time` et `duree_h`.
 
 ```{r echo=FALSE}
 tmp <- mutate(flights, duree_h = air_time / 60)
@@ -1055,7 +1058,7 @@ flights %>%
 
 **Exercice 2.2**
 
-Sélectionnez les vols à destination de San Francico (code `SFO` de la variable `dest`) et triez-les selon le retard au départ décroissant (variable `dep_delay`).
+En utilisant le *pipe*, sélectionnez les vols à destination de San Francico (code `SFO` de la variable `dest`) et triez-les selon le retard au départ décroissant (variable `dep_delay`).
 
 ```{r echo=FALSE}
 flights %>% 
@@ -1310,7 +1313,7 @@ flights %>%
 
 **Exercice 4.2**
 
-À partir de la table résultat de l'exercice précédent, calculer le retard moyen au départ pour chaque compagnie, trier selon ce retard décroissant et afficher le nom de la compagnie et le retard correspondant.
+À partir de la table résultat de l'exercice précédent, calculer le retard moyen au départ pour chaque compagnie, trier selon ce retard décroissant et ne conserver que le nom de la compagnie et le retard correspondant.
 
 ```{r echo = FALSE, message=FALSE}
 flights %>% 
@@ -1438,16 +1441,6 @@ library(leaflet)
 leaflet(data = flights_dest) %>%
   addTiles %>%
   addCircles(lng=~lon, lat=~lat, radius=~n * 10, popup=~name)
-```
-
-Créez une carte statique des résultats avec `ggmap` et le code suivant :
-
-```{r message=FALSE, warning=FALSE, eval=FALSE}
-library(ggmap)
-map <- get_map(location = "Kansas", zoom=4, color="bw")
-ggmap(map, extent = "device") +
-  geom_point(data = flights_dest, aes(x=lon, y=lat, size=n), 
-             color = "red", alpha = 0.2)
 ```
 
 
