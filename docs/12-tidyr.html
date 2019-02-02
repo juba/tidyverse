@@ -5,27 +5,27 @@
 
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>Introduction à R et au tidyverse</title>
-  <meta name="description" content="Une introduction à R et aux extensions du <em>tidyverse</em>">
-  <meta name="generator" content="bookdown 0.7 and GitBook 2.6.7">
+  <title>Partie 12 Mettre en ordre avec tidyr | Introduction à R et au tidyverse</title>
+  <meta name="description" content="Une introduction à R et aux extensions du tidyverse">
+  <meta name="generator" content="bookdown  and GitBook 2.6.7">
 
-  <meta property="og:title" content="Introduction à R et au tidyverse" />
+  <meta property="og:title" content="Partie 12 Mettre en ordre avec tidyr | Introduction à R et au tidyverse" />
   <meta property="og:type" content="book" />
   
   
-  <meta property="og:description" content="Une introduction à R et aux extensions du <em>tidyverse</em>" />
+  <meta property="og:description" content="Une introduction à R et aux extensions du tidyverse" />
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Introduction à R et au tidyverse" />
+  <meta name="twitter:title" content="Partie 12 Mettre en ordre avec tidyr | Introduction à R et au tidyverse" />
   
-  <meta name="twitter:description" content="Une introduction à R et aux extensions du <em>tidyverse</em>" />
+  <meta name="twitter:description" content="Une introduction à R et aux extensions du tidyverse" />
   
 
 <meta name="author" content="Julien Barnier">
 
 
-<meta name="date" content="2018-03-14">
+<meta name="date" content="2019-02-02">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -36,6 +36,7 @@
 <link rel="next" href="13-rmarkdown.html">
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
@@ -47,62 +48,81 @@
 
 
 
-<script src="libs/htmlwidgets-1.0/htmlwidgets.js"></script>
-<link href="libs/leaflet-0.7.7/leaflet.css" rel="stylesheet" />
-<script src="libs/leaflet-0.7.7/leaflet.js"></script>
+<script src="libs/htmlwidgets-1.3/htmlwidgets.js"></script>
+<link href="libs/leaflet-1.3.1/leaflet.css" rel="stylesheet" />
+<script src="libs/leaflet-1.3.1/leaflet.js"></script>
 <link href="libs/leafletfix-1.0.0/leafletfix.css" rel="stylesheet" />
-<link href="libs/leaflet-label-0.2.2/leaflet.label.css" rel="stylesheet" />
-<script src="libs/leaflet-label-0.2.2/leaflet.label.js"></script>
-<script src="libs/Proj4Leaflet-0.7.2/proj4-compressed.js"></script>
-<script src="libs/Proj4Leaflet-0.7.2/proj4leaflet.js"></script>
-<script src="libs/leaflet-binding-1.1.0/leaflet.js"></script>
-<link href="libs/pagedtable-1.1/css/pagedtable.css" rel="stylesheet" />
-<script src="libs/pagedtable-1.1/js/pagedtable.js"></script>
-<script src="libs/datatables-binding-0.2/datatables.js"></script>
-<link href="libs/dt-core-1.10.12/css/jquery.dataTables.min.css" rel="stylesheet" />
-<link href="libs/dt-core-1.10.12/css/jquery.dataTables.extra.css" rel="stylesheet" />
-<script src="libs/dt-core-1.10.12/js/jquery.dataTables.min.js"></script>
+<script src="libs/Proj4Leaflet-1.0.1/proj4-compressed.js"></script>
+<script src="libs/Proj4Leaflet-1.0.1/proj4leaflet.js"></script>
+<link href="libs/rstudio_leaflet-1.3.1/rstudio_leaflet.css" rel="stylesheet" />
+<script src="libs/leaflet-binding-2.0.2/leaflet.js"></script>
 
 
 <style type="text/css">
-div.sourceCode { overflow-x: auto; }
-table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
-  margin: 0; padding: 0; vertical-align: baseline; border: none; }
-table.sourceCode { width: 100%; line-height: 100%; background-color: #ffffff; color: #1f1c1b; }
-td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; background-color: #ffffff; color: #a0a0a0; border-right: 1px solid #a0a0a0; }
-td.sourceCode { padding-left: 5px; }
-pre, code { color: #1f1c1b; background-color: #ffffff; }
-code > span.kw { color: #1f1c1b; font-weight: bold; } /* Keyword */
-code > span.dt { color: #0057ae; } /* DataType */
-code > span.dv { color: #b08000; } /* DecVal */
-code > span.bn { color: #b08000; } /* BaseN */
-code > span.fl { color: #b08000; } /* Float */
-code > span.cn { color: #aa5500; } /* Constant */
-code > span.ch { color: #924c9d; } /* Char */
-code > span.sc { color: #3daee9; } /* SpecialChar */
-code > span.st { color: #bf0303; } /* String */
-code > span.vs { color: #bf0303; } /* VerbatimString */
-code > span.ss { color: #ff5500; } /* SpecialString */
-code > span.im { color: #ff5500; } /* Import */
-code > span.co { color: #898887; } /* Comment */
-code > span.do { color: #607880; } /* Documentation */
-code > span.an { color: #ca60ca; } /* Annotation */
-code > span.cv { color: #0095ff; } /* CommentVar */
-code > span.ot { color: #006e28; } /* Other */
-code > span.fu { color: #644a9b; } /* Function */
-code > span.va { color: #0057ae; } /* Variable */
-code > span.cf { color: #1f1c1b; font-weight: bold; } /* ControlFlow */
-code > span.op { color: #1f1c1b; } /* Operator */
-code > span.bu { color: #644a9b; font-weight: bold; } /* BuiltIn */
-code > span.ex { color: #0095ff; font-weight: bold; } /* Extension */
-code > span.pp { color: #006e28; } /* Preprocessor */
-code > span.at { color: #0057ae; } /* Attribute */
-code > span.re { color: #0057ae; } /* RegionMarker */
-code > span.in { color: #b08000; } /* Information */
-code > span.wa { color: #bf0303; } /* Warning */
-code > span.al { color: #bf0303; font-weight: bold; } /* Alert */
-code > span.er { color: #bf0303; text-decoration: underline; } /* Error */
-code > span. { color: #1f1c1b; } /* Normal */
+a.sourceLine { display: inline-block; line-height: 1.25; }
+a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
+a.sourceLine:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode { white-space: pre; position: relative; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+code.sourceCode { white-space: pre-wrap; }
+a.sourceLine { text-indent: -1em; padding-left: 1em; }
+}
+pre.numberSource a.sourceLine
+  { position: relative; left: -4em; }
+pre.numberSource a.sourceLine::before
+  { content: attr(data-line-number);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; pointer-events: all; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    background-color: #ffffff;
+    color: #a0a0a0;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #a0a0a0;  padding-left: 4px; }
+div.sourceCode
+  { color: #1f1c1b; background-color: #ffffff; }
+@media screen {
+a.sourceLine::before { text-decoration: underline; }
+}
+code span. { color: #1f1c1b; } /* Normal */
+code span.al { color: #bf0303; background-color: #f7e6e6; font-weight: bold; } /* Alert */
+code span.an { color: #ca60ca; } /* Annotation */
+code span.at { color: #0057ae; } /* Attribute */
+code span.bn { color: #b08000; } /* BaseN */
+code span.bu { color: #644a9b; font-weight: bold; } /* BuiltIn */
+code span.cf { color: #1f1c1b; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #924c9d; } /* Char */
+code span.cn { color: #aa5500; } /* Constant */
+code span.co { color: #898887; } /* Comment */
+code span.cv { color: #0095ff; } /* CommentVar */
+code span.do { color: #607880; } /* Documentation */
+code span.dt { color: #0057ae; } /* DataType */
+code span.dv { color: #b08000; } /* DecVal */
+code span.er { color: #bf0303; text-decoration: underline; } /* Error */
+code span.ex { color: #0095ff; font-weight: bold; } /* Extension */
+code span.fl { color: #b08000; } /* Float */
+code span.fu { color: #644a9b; } /* Function */
+code span.im { color: #ff5500; } /* Import */
+code span.in { color: #b08000; } /* Information */
+code span.kw { color: #1f1c1b; font-weight: bold; } /* Keyword */
+code span.op { color: #1f1c1b; } /* Operator */
+code span.ot { color: #006e28; } /* Other */
+code span.pp { color: #006e28; } /* Preprocessor */
+code span.re { color: #0057ae; background-color: #e0e9f8; } /* RegionMarker */
+code span.sc { color: #3daee9; } /* SpecialChar */
+code span.ss { color: #ff5500; } /* SpecialString */
+code span.st { color: #bf0303; } /* String */
+code span.va { color: #0057ae; } /* Variable */
+code span.vs { color: #bf0303; } /* VerbatimString */
+code span.wa { color: #bf0303; } /* Warning */
 </style>
 
 <link rel="stylesheet" href="css/tidyverse.css" type="text/css" />
@@ -241,8 +261,9 @@ code > span. { color: #1f1c1b; } /* Normal */
 <li class="chapter" data-level="8.7.3" data-path="08-ggplot2.html"><a href="08-ggplot2.html#scalecolor"><i class="fa fa-check"></i><b>8.7.3</b> <code>scale_color</code>, <code>scale_fill</code></a></li>
 </ul></li>
 <li class="chapter" data-level="8.8" data-path="08-ggplot2.html"><a href="08-ggplot2.html#themes"><i class="fa fa-check"></i><b>8.8</b> Thèmes</a></li>
-<li class="chapter" data-level="8.9" data-path="08-ggplot2.html"><a href="08-ggplot2.html#ressources-1"><i class="fa fa-check"></i><b>8.9</b> Ressources</a></li>
-<li class="chapter" data-level="8.10" data-path="08-ggplot2.html"><a href="08-ggplot2.html#exercices-3"><i class="fa fa-check"></i><b>8.10</b> Exercices</a></li>
+<li class="chapter" data-level="8.9" data-path="08-ggplot2.html"><a href="08-ggplot2.html#ladd-in-esquisse"><i class="fa fa-check"></i><b>8.9</b> L’add-in <code>esquisse</code></a></li>
+<li class="chapter" data-level="8.10" data-path="08-ggplot2.html"><a href="08-ggplot2.html#ressources-1"><i class="fa fa-check"></i><b>8.10</b> Ressources</a></li>
+<li class="chapter" data-level="8.11" data-path="08-ggplot2.html"><a href="08-ggplot2.html#exercices-3"><i class="fa fa-check"></i><b>8.11</b> Exercices</a></li>
 </ul></li>
 <li class="chapter" data-level="9" data-path="09-recodages.html"><a href="09-recodages.html"><i class="fa fa-check"></i><b>9</b> Recoder des variables</a><ul>
 <li class="chapter" data-level="9.1" data-path="09-recodages.html"><a href="09-recodages.html#rappel-sur-les-variables-et-les-vecteurs"><i class="fa fa-check"></i><b>9.1</b> Rappel sur les variables et les vecteurs</a></li>
@@ -330,7 +351,7 @@ code > span. { color: #1f1c1b; } /* Normal */
 </ul></li>
 <li class="chapter" data-level="13" data-path="13-rmarkdown.html"><a href="13-rmarkdown.html"><i class="fa fa-check"></i><b>13</b> Diffuser et publier avec <code>rmarkdown</code></a><ul>
 <li class="chapter" data-level="13.1" data-path="13-rmarkdown.html"><a href="13-rmarkdown.html#creer-un-nouveau-document"><i class="fa fa-check"></i><b>13.1</b> Créer un nouveau document</a></li>
-<li class="chapter" data-level="13.2" data-path="13-rmarkdown.html"><a href="13-rmarkdown.html#elements-dun-document-r-markdown"><i class="fa fa-check"></i><b>13.2</b> Élements d’un document R Markdown</a><ul>
+<li class="chapter" data-level="13.2" data-path="13-rmarkdown.html"><a href="13-rmarkdown.html#elements-dun-document-r-markdown"><i class="fa fa-check"></i><b>13.2</b> Éléments d’un document R Markdown</a><ul>
 <li class="chapter" data-level="13.2.1" data-path="13-rmarkdown.html"><a href="13-rmarkdown.html#en-tete-preambule"><i class="fa fa-check"></i><b>13.2.1</b> En-tête (préambule)</a></li>
 <li class="chapter" data-level="13.2.2" data-path="13-rmarkdown.html"><a href="13-rmarkdown.html#texte-du-document"><i class="fa fa-check"></i><b>13.2.2</b> Texte du document</a></li>
 <li class="chapter" data-level="13.2.3" data-path="13-rmarkdown.html"><a href="13-rmarkdown.html#blocs-de-code-r"><i class="fa fa-check"></i><b>13.2.3</b> Blocs de code R</a></li>
@@ -350,7 +371,7 @@ code > span. { color: #1f1c1b; } /* Normal */
 </ul></li>
 <li class="chapter" data-level="13.6" data-path="13-rmarkdown.html"><a href="13-rmarkdown.html#templates"><i class="fa fa-check"></i><b>13.6</b> Modèles de documents</a><ul>
 <li class="chapter" data-level="13.6.1" data-path="13-rmarkdown.html"><a href="13-rmarkdown.html#slides"><i class="fa fa-check"></i><b>13.6.1</b> Slides</a></li>
-<li class="chapter" data-level="13.6.2" data-path="13-rmarkdown.html"><a href="13-rmarkdown.html#templates"><i class="fa fa-check"></i><b>13.6.2</b> Templates</a></li>
+<li class="chapter" data-level="13.6.2" data-path="13-rmarkdown.html"><a href="13-rmarkdown.html#templates-1"><i class="fa fa-check"></i><b>13.6.2</b> Templates</a></li>
 </ul></li>
 <li class="chapter" data-level="13.7" data-path="13-rmarkdown.html"><a href="13-rmarkdown.html#ressources-5"><i class="fa fa-check"></i><b>13.7</b> Ressources</a></li>
 </ul></li>
@@ -500,14 +521,14 @@ code > span. { color: #1f1c1b; } /* Normal */
 </tbody>
 </table>
 <p>C’est seulement avec les données dans ce format qu’on peut réaliser le graphique :</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(d) <span class="op">+</span><span class="st"> </span>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(d) <span class="op">+</span><span class="st"> </span>
 <span class="st">  </span><span class="kw">geom_line</span>(<span class="kw">aes</span>(<span class="dt">x =</span> annee, <span class="dt">y =</span> population, <span class="dt">color =</span> country)) <span class="op">+</span>
-<span class="st">  </span><span class="kw">scale_x_continuous</span>(<span class="dt">breaks =</span> <span class="kw">unique</span>(d<span class="op">$</span>annee))</code></pre></div>
-<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-565-1.svg" width="672" /></p>
+<span class="st">  </span><span class="kw">scale_x_continuous</span>(<span class="dt">breaks =</span> <span class="kw">unique</span>(d<span class="op">$</span>annee))</code></pre>
+<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-615-1.svg" width="672" /></p>
 <p>C’est la même chose pour <code>dplyr</code>, par exemple si on voulait calculer la population minimale pour chaque pays avec <code>summarise</code> :</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">d <span class="op">%&gt;%</span><span class="st"> </span>
+<pre class="sourceCode r"><code class="sourceCode r">d <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st">  </span><span class="kw">group_by</span>(country) <span class="op">%&gt;%</span><span class="st">  </span>
-<span class="st">  </span><span class="kw">summarise</span>(<span class="dt">pop_min =</span> <span class="kw">min</span>(population))</code></pre></div>
+<span class="st">  </span><span class="kw">summarise</span>(<span class="dt">pop_min =</span> <span class="kw">min</span>(population))</code></pre>
 <pre><code># A tibble: 3 x 2
   country  pop_min
   &lt;fct&gt;      &lt;dbl&gt;
@@ -852,7 +873,7 @@ code > span. { color: #1f1c1b; } /* Normal */
 </table>
 <p>Dans ce tableau, une même variable (la population) est répartie sur plusieurs colonnes, chacune représentant une observation à un moment différent. On souhaite que la variable ne représente plus qu’une seule colonne, et que les observations soient réparties sur plusieurs lignes.</p>
 <p>Pour cela on va utiliser la fonction <code>gather</code> (“rassembler”) :</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">d <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">gather</span>(<span class="st">`</span><span class="dt">2002</span><span class="st">`</span>, <span class="st">`</span><span class="dt">2007</span><span class="st">`</span>, <span class="dt">key =</span> annee, <span class="dt">value =</span> population)</code></pre></div>
+<pre class="sourceCode r"><code class="sourceCode r">d <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">gather</span>(<span class="st">`</span><span class="dt">2002</span><span class="st">`</span>, <span class="st">`</span><span class="dt">2007</span><span class="st">`</span>, <span class="dt">key =</span> annee, <span class="dt">value =</span> population)</code></pre>
 <pre><code># A tibble: 12 x 3
    country     annee population
    &lt;fct&gt;       &lt;chr&gt;      &lt;int&gt;
@@ -874,7 +895,7 @@ code > span. { color: #1f1c1b; } /* Normal */
 <li><code>value</code> est le nom de la colonne qui va contenir la valeur des observations</li>
 </ul>
 <p>Parfois il est plus rapide d’indiquer à <code>gather</code> les colonnes qu’on ne souhaite pas rassembler. On peut le faire avec la syntaxe suivante :</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">d <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">gather</span>(<span class="op">-</span>country, <span class="dt">key =</span> annee, <span class="dt">value =</span> population)</code></pre></div>
+<pre class="sourceCode r"><code class="sourceCode r">d <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">gather</span>(<span class="op">-</span>country, <span class="dt">key =</span> annee, <span class="dt">value =</span> population)</code></pre>
 <pre><code># A tibble: 12 x 3
    country     annee population
    &lt;fct&gt;       &lt;chr&gt;      &lt;int&gt;
@@ -994,7 +1015,7 @@ code > span. { color: #1f1c1b; } /* Normal */
 </table>
 <p>Ce tableau a le problème inverse du précédent : on a deux variables, <code>lifeExp</code> et <code>pop</code> qui, plutôt que d’être réparties en deux colonnes, sont réparties entre plusieurs lignes.</p>
 <p>On va donc utiliser <code>spread</code> pour “disperser” ces lignes dans deux colonnes différentes :</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">d <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">spread</span>(<span class="dt">key =</span> variable, <span class="dt">value =</span> value)</code></pre></div>
+<pre class="sourceCode r"><code class="sourceCode r">d <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">spread</span>(<span class="dt">key =</span> variable, <span class="dt">value =</span> value)</code></pre>
 <pre><code># A tibble: 6 x 5
   country continent  year lifeExp      pop
   &lt;fct&gt;   &lt;fct&gt;     &lt;int&gt;   &lt;dbl&gt;    &lt;dbl&gt;
@@ -1115,19 +1136,19 @@ code > span. { color: #1f1c1b; } /* Normal */
 </tr>
 </tbody>
 </table>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">d <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">spread</span>(<span class="dt">key =</span> variable, <span class="dt">value =</span> value)</code></pre></div>
+<pre class="sourceCode r"><code class="sourceCode r">d <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">spread</span>(<span class="dt">key =</span> variable, <span class="dt">value =</span> value)</code></pre>
 <pre><code># A tibble: 6 x 6
   country continent  year density lifeExp      pop
   &lt;chr&gt;   &lt;chr&gt;     &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;    &lt;dbl&gt;
-1 Belgium Europe     2002    NA      78.3 10311970
-2 Belgium Europe     2007    NA      79.4 10392226
-3 France  Europe     2002    94.0    79.6 59925035
-4 France  Europe     2007    NA      80.7 61083916
-5 Germany Europe     2002    NA      78.7 82350671
-6 Germany Europe     2007    NA      79.4 82400996</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">d <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">spread</span>(<span class="dt">key =</span> variable, <span class="dt">value =</span> value, <span class="dt">fill =</span> <span class="st">&quot;-&quot;</span>)</code></pre></div>
+1 Belgium Europe     2002      NA    78.3 10311970
+2 Belgium Europe     2007      NA    79.4 10392226
+3 France  Europe     2002      94    79.6 59925035
+4 France  Europe     2007      NA    80.7 61083916
+5 Germany Europe     2002      NA    78.7 82350671
+6 Germany Europe     2007      NA    79.4 82400996</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r">d <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">spread</span>(<span class="dt">key =</span> variable, <span class="dt">value =</span> value, <span class="dt">fill =</span> <span class="st">&quot;-&quot;</span>)</code></pre>
 <pre><code># A tibble: 6 x 6
   country continent  year density lifeExp pop     
   &lt;chr&gt;   &lt;chr&gt;     &lt;dbl&gt; &lt;chr&gt;   &lt;chr&gt;   &lt;chr&gt;   
@@ -1164,7 +1185,7 @@ code > span. { color: #1f1c1b; } /* Normal */
 </tbody>
 </table>
 <p><code>separate</code> permet de séparer la colonne <code>note</code> en deux nouvelles colonnes <code>note</code> et <code>note_sur</code> :</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">df <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">separate</span>(note, <span class="kw">c</span>(<span class="st">&quot;note&quot;</span>, <span class="st">&quot;note_sur&quot;</span>))</code></pre></div>
+<pre class="sourceCode r"><code class="sourceCode r">df <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">separate</span>(note, <span class="kw">c</span>(<span class="st">&quot;note&quot;</span>, <span class="st">&quot;note_sur&quot;</span>))</code></pre>
 <pre><code># A tibble: 3 x 3
   eleve           note  note_sur
   &lt;chr&gt;           &lt;chr&gt; &lt;chr&gt;   
@@ -1172,7 +1193,7 @@ code > span. { color: #1f1c1b; } /* Normal */
 2 Raymonde Bidule 6     10      
 3 Martial Truc    87    100     </code></pre>
 <p><code>separate</code> prend deux arguments principaux, le nom de la colonne à séparer et un vecteur indiquant les noms des nouvelles variables à créer. Par défaut <code>separate</code> “sépare” au niveau des caractères non-alphanumérique (espace, symbole, etc.). On peut lui indiquer explicitement le caractère sur lequel séparer avec l’argument <code>sep</code> :</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">df <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">separate</span>(eleve, <span class="kw">c</span>(<span class="st">&quot;prenom&quot;</span>, <span class="st">&quot;nom&quot;</span>), <span class="dt">sep =</span> <span class="st">&quot; &quot;</span>)</code></pre></div>
+<pre class="sourceCode r"><code class="sourceCode r">df <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">separate</span>(eleve, <span class="kw">c</span>(<span class="st">&quot;prenom&quot;</span>, <span class="st">&quot;nom&quot;</span>), <span class="dt">sep =</span> <span class="st">&quot; &quot;</span>)</code></pre>
 <pre><code># A tibble: 3 x 3
   prenom   nom    note  
   &lt;chr&gt;    &lt;chr&gt;  &lt;chr&gt; 
@@ -1232,7 +1253,7 @@ code > span. { color: #1f1c1b; } /* Normal */
 </tbody>
 </table>
 <p>On souhaite reconstruire une colonne <code>code_insee</code> qui indique le code INSEE de la commune, et qui s’obtient en concaténant le code du département et celui de la commune. On peut utiliser <code>unite</code> pour cela :</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">d <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">unite</span>(code_insee, code_departement, code_commune)</code></pre></div>
+<pre class="sourceCode r"><code class="sourceCode r">d <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">unite</span>(code_insee, code_departement, code_commune)</code></pre>
 <pre><code># A tibble: 6 x 3
   code_insee commune           pop_tot
   &lt;chr&gt;      &lt;chr&gt;               &lt;int&gt;
@@ -1243,9 +1264,9 @@ code > span. { color: #1f1c1b; } /* Normal */
 5 01_025     Bâgé-la-Ville        3130
 6 01_027     Balan                2785</code></pre>
 <p>Le résultat n’est pas idéal : par défaut <code>unite</code> ajoute un caractère <code>_</code> entre les deux valeurs concaténées, alors qu’on ne veut aucun séparateur. De plus, on souhaite conserver nos deux colonnes d’origine, qui peuvent nous être utiles. On peut résoudre ces deux problèmes à l’aide des arguments <code>sep</code> et <code>remove</code> :</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">d <span class="op">%&gt;%</span><span class="st"> </span>
+<pre class="sourceCode r"><code class="sourceCode r">d <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st">  </span><span class="kw">unite</span>(code_insee, code_departement, code_commune, 
-        <span class="dt">sep =</span> <span class="st">&quot;&quot;</span>, <span class="dt">remove =</span> <span class="ot">FALSE</span>)</code></pre></div>
+        <span class="dt">sep =</span> <span class="st">&quot;&quot;</span>, <span class="dt">remove =</span> <span class="ot">FALSE</span>)</code></pre>
 <pre><code># A tibble: 6 x 5
   code_insee code_departement code_commune commune           pop_tot
   &lt;chr&gt;      &lt;chr&gt;            &lt;chr&gt;        &lt;chr&gt;               &lt;int&gt;
@@ -1283,9 +1304,9 @@ code > span. { color: #1f1c1b; } /* Normal */
 </tbody>
 </table>
 <p>On peut extraire les noms et prénoms dans deux nouvelles colonnes avec :</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">df <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">extract</span>(eleve, 
+<pre class="sourceCode r"><code class="sourceCode r">df <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">extract</span>(eleve, 
                <span class="kw">c</span>(<span class="st">&quot;prenom&quot;</span>, <span class="st">&quot;nom&quot;</span>), 
-               <span class="st">&quot;^(.*) (.*)$&quot;</span>)</code></pre></div>
+               <span class="st">&quot;^(.*) (.*)$&quot;</span>)</code></pre>
 <pre><code># A tibble: 3 x 3
   prenom   nom    note  
   &lt;chr&gt;    &lt;chr&gt;  &lt;chr&gt; 
@@ -1294,10 +1315,10 @@ code > span. { color: #1f1c1b; } /* Normal */
 3 Martial  Truc   87/100</code></pre>
 <p>On passe donc à <code>extract</code> trois arguments : la colonne d’où on doit extraire les valeurs, un vecteur avec les noms des nouvelles colonnes à créer, et une expression régulière comportant autant de groupes (identifiés par des parenthèses) que de nouvelles colonnes.</p>
 <p>Par défaut la colonne d’origine n’est pas conservée dans la table résultat. On peut modifier ce comportement avec l’argument <code>remove = FALSE</code>. Ainsi, le code suivant extrait les initiales du prénom et du nom mais conserve la colonne d’origine :</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">df <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">extract</span>(eleve, 
+<pre class="sourceCode r"><code class="sourceCode r">df <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">extract</span>(eleve, 
                <span class="kw">c</span>(<span class="st">&quot;initiale_prenom&quot;</span>, <span class="st">&quot;initiale_nom&quot;</span>), 
                <span class="st">&quot;^(.).* (.).*$&quot;</span>, 
-               <span class="dt">remove =</span> <span class="ot">FALSE</span>)</code></pre></div>
+               <span class="dt">remove =</span> <span class="ot">FALSE</span>)</code></pre>
 <pre><code># A tibble: 3 x 4
   eleve           initiale_prenom initiale_nom note  
   &lt;chr&gt;           &lt;chr&gt;           &lt;chr&gt;        &lt;chr&gt; 
@@ -1342,28 +1363,28 @@ code > span. { color: #1f1c1b; } /* Normal */
 <p>Les élèves Barnabé et Chantal n’ont pas de notes dans toutes les matières. Supposons que c’est parce qu’ils étaient absents et que leur note est en fait un 0. Si on veut calculer les moyennes des élèves, on doit compléter ces notes manquantes.</p>
 <p>La fonction <code>complete</code> est prévue pour ce cas de figure : elle permet de compléter des combinaisons manquantes de valeurs de plusieurs colonnes.</p>
 <p>On peut l’utiliser de cette manière :</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">df <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">complete</span>(eleve, matiere)</code></pre></div>
+<pre class="sourceCode r"><code class="sourceCode r">df <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">complete</span>(eleve, matiere)</code></pre>
 <pre><code># A tibble: 6 x 3
   eleve   matiere   note
   &lt;chr&gt;   &lt;chr&gt;    &lt;dbl&gt;
-1 Alain   Français  9.00
-2 Alain   Maths    16.0 
-3 Barnabé Français NA   
-4 Barnabé Maths    17.0 
-5 Chantal Français 11.0 
-6 Chantal Maths    NA   </code></pre>
+1 Alain   Français     9
+2 Alain   Maths       16
+3 Barnabé Français    NA
+4 Barnabé Maths       17
+5 Chantal Français    11
+6 Chantal Maths       NA</code></pre>
 <p>On voit que les combinaisons manquante “Barnabé - Français” et “Chantal - Maths” ont bien été ajoutées par <code>complete</code>.</p>
 <p>Par défaut les lignes insérées récupèrent des valeurs manquantes <code>NA</code> pour les colonnes restantes. On peut néanmoins choisir une autre valeur avec l’argument <code>fill</code>, qui prend la forme d’une liste nommée :</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">df <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">complete</span>(eleve, matiere, <span class="dt">fill =</span> <span class="kw">list</span>(<span class="dt">note =</span> <span class="dv">0</span>))</code></pre></div>
+<pre class="sourceCode r"><code class="sourceCode r">df <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">complete</span>(eleve, matiere, <span class="dt">fill =</span> <span class="kw">list</span>(<span class="dt">note =</span> <span class="dv">0</span>))</code></pre>
 <pre><code># A tibble: 6 x 3
   eleve   matiere   note
   &lt;chr&gt;   &lt;chr&gt;    &lt;dbl&gt;
-1 Alain   Français  9.00
-2 Alain   Maths    16.0 
-3 Barnabé Français  0   
-4 Barnabé Maths    17.0 
-5 Chantal Français 11.0 
-6 Chantal Maths     0   </code></pre>
+1 Alain   Français     9
+2 Alain   Maths       16
+3 Barnabé Français     0
+4 Barnabé Maths       17
+5 Chantal Français    11
+6 Chantal Maths        0</code></pre>
 <p>Parfois on ne souhaite pas inclure toutes les colonnes dans le calcul des combinaisons de valeurs. Par exemple, supposons qu’on rajoute dans notre tableau une colonne avec les identifiants de chaque élève :</p>
 <table>
 <thead>
@@ -1402,39 +1423,39 @@ code > span. { color: #1f1c1b; } /* Normal */
 </tbody>
 </table>
 <p>Si on applique <code>complete</code> comme précédemment, le résultat n’est pas bon car il contient toutes les combinaisons de <code>id</code>, <code>eleve</code> et <code>matiere</code>.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">df <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">complete</span>(id, eleve, matiere)</code></pre></div>
+<pre class="sourceCode r"><code class="sourceCode r">df <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">complete</span>(id, eleve, matiere)</code></pre>
 <pre><code># A tibble: 18 x 4
         id eleve   matiere   note
      &lt;dbl&gt; &lt;chr&gt;   &lt;chr&gt;    &lt;dbl&gt;
- 1 1001001 Alain   Français  9.00
- 2 1001001 Alain   Maths    16.0 
- 3 1001001 Barnabé Français NA   
- 4 1001001 Barnabé Maths    NA   
- 5 1001001 Chantal Français NA   
- 6 1001001 Chantal Maths    NA   
- 7 1001002 Alain   Français NA   
- 8 1001002 Alain   Maths    NA   
- 9 1001002 Barnabé Français NA   
-10 1001002 Barnabé Maths    17.0 
-11 1001002 Chantal Français NA   
-12 1001002 Chantal Maths    NA   
-13 1001003 Alain   Français NA   
-14 1001003 Alain   Maths    NA   
-15 1001003 Barnabé Français NA   
-16 1001003 Barnabé Maths    NA   
-17 1001003 Chantal Français 11.0 
-18 1001003 Chantal Maths    NA   </code></pre>
+ 1 1001001 Alain   Français     9
+ 2 1001001 Alain   Maths       16
+ 3 1001001 Barnabé Français    NA
+ 4 1001001 Barnabé Maths       NA
+ 5 1001001 Chantal Français    NA
+ 6 1001001 Chantal Maths       NA
+ 7 1001002 Alain   Français    NA
+ 8 1001002 Alain   Maths       NA
+ 9 1001002 Barnabé Français    NA
+10 1001002 Barnabé Maths       17
+11 1001002 Chantal Français    NA
+12 1001002 Chantal Maths       NA
+13 1001003 Alain   Français    NA
+14 1001003 Alain   Maths       NA
+15 1001003 Barnabé Français    NA
+16 1001003 Barnabé Maths       NA
+17 1001003 Chantal Français    11
+18 1001003 Chantal Maths       NA</code></pre>
 <p>Dans ce cas, pour signifier à <code>complete</code> que <code>id</code> et <code>eleve</code> sont deux attributs d’un même individu et ne doivent pas être combinés entre eux, on doit les placer dans une fonction <code>nesting</code> :</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">df <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">complete</span>(<span class="kw">nesting</span>(id, eleve), matiere)</code></pre></div>
+<pre class="sourceCode r"><code class="sourceCode r">df <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">complete</span>(<span class="kw">nesting</span>(id, eleve), matiere)</code></pre>
 <pre><code># A tibble: 6 x 4
        id eleve   matiere   note
     &lt;dbl&gt; &lt;chr&gt;   &lt;chr&gt;    &lt;dbl&gt;
-1 1001001 Alain   Français  9.00
-2 1001001 Alain   Maths    16.0 
-3 1001002 Barnabé Français NA   
-4 1001002 Barnabé Maths    17.0 
-5 1001003 Chantal Français 11.0 
-6 1001003 Chantal Maths    NA   </code></pre>
+1 1001001 Alain   Français     9
+2 1001001 Alain   Maths       16
+3 1001002 Barnabé Français    NA
+4 1001002 Barnabé Maths       17
+5 1001003 Chantal Français    11
+6 1001003 Chantal Maths       NA</code></pre>
 </div>
 </div>
 <div id="ressources-4" class="section level2">
@@ -1442,7 +1463,7 @@ code > span. { color: #1f1c1b; } /* Normal */
 <p>Chaque jeu de données est différent, et le travail de remise en forme est souvent long et plus ou moins compliqué. On n’a donné ici que les exemples les plus simples, et c’est souvent en combinant différentes opérations qu’on finit par obtenir le résultat souhaité.</p>
 <p>Le livre <em>R for data science</em>, librement accessible en ligne, contient <a href="http://r4ds.had.co.nz/tidy-data.html">un chapitre complet</a> sur la remise en forme des données.</p>
 <p>L’article <a href="https://www.jstatsoft.org/article/view/v059i10">Tidy data</a>, publié en 2014 dans le <em>Journal of Statistical Software</em>, présente de manière détaillée le concept éponyme (mais il utilise des extensions désormais obsolètes qui ont depuis été remplacées par <code>dplyr</code> et<code>tidyr</code>).</p>
-<p>Le site de l’extension est accessible à l’adresse : <a href="http://tidyr.tidyverse.org/" class="uri">http://tidyr.tidyverse.org/</a> et contient une liste des fonctions et les pages d’aide associées.</p>
+<p>Le site de l’extension est accessible à l’adresse : <a href="https://tidyr.tidyverse.org/" class="uri">https://tidyr.tidyverse.org/</a> et contient une liste des fonctions et les pages d’aide associées.</p>
 
 </div>
 </div>
@@ -1473,9 +1494,10 @@ gitbook.start({
 "google": false,
 "linkedin": false,
 "weibo": false,
-"instapper": false,
+"instapaper": false,
 "vk": false,
-"all": ["facebook", "google", "twitter", "linkedin", "weibo", "instapaper"]
+"all": ["facebook", "google", "twitter", "linkedin", "weibo", "instapaper"],
+"instapper": false
 },
 "fontsettings": {
 "theme": "white",
@@ -1485,6 +1507,10 @@ gitbook.start({
 "edit": {
 "link": "https://github.com/juba/tidyverse/blob/master/12-tidyr.Rmd",
 "text": "Source"
+},
+"history": {
+"link": null,
+"text": null
 },
 "download": ["introduction_au_tidyverse.pdf", "introduction_au_tidyverse.epub"],
 "toc": {
