@@ -49,7 +49,7 @@ On peut indiquer le titre, l'auteur du document ainsi que le format de sortie pa
 Un fichier comportant un contenu d'exemple s'affiche alors. Vous pouvez l'enregistrer où vous le souhaitez avec une extension `.Rmd`.
 
 
-## Élements d'un document R Markdown
+## Éléments d'un document R Markdown
 
 Un document R Markdown est donc un fichier texte qui ressemble à quelque chose comme ça :
 
@@ -57,6 +57,7 @@ Un document R Markdown est donc un fichier texte qui ressemble à quelque chose 
 cat(htmltools::includeText("resources/rmarkdown/sample_Rmd.Rmd"))
 ```
 
+On va décomposer les différents éléments constitutifs de ce document.
 
 ### En-tête (préambule)
 
@@ -94,7 +95,7 @@ Génèrera le texte mis en forme suivant :
 
 On voit que des mots placés entre des astérisques sont mis en italique, des lignes qui commencent par un tiret sont transformés en liste à puce, etc.
 
-On peut définir des titres de différents niveaux en faisant débuter une ligne par un ou plusieurs caractères `#` :
+On peut définir des titres de différents niveaux en faisant débuter une ligne par un ou plusieurs `#` :
 
 ```
 # Titre de niveau 1
@@ -104,7 +105,7 @@ On peut définir des titres de différents niveaux en faisant débuter une ligne
 ### Titre de niveau 3
 ```
 
-Quand des titres ont été définis, si vous cliquez sur l'icône *Show document outline* totalement à droite de la barre d'outils associée au fichier R Markdown, une table des matières dynamique générée automatiquement à partir des titres présents dans le document s'affiche et vous permet de naviguer facilement dans celui-ci :
+Quand des titres ont été définis, si vous cliquez sur l'icône *Show document outline* totalement à droite de la barre d'outils associée au fichier R Markdown, une table des matières générée automatiquement à partir des titres s'affiche et vous permet de naviguer facilement dans le document :
 
 ![Table des matières dynamique](resources/screenshots/rstudio_rmd_toc.png)
 
@@ -135,7 +136,7 @@ Comme cette suite de caractères n'est pas très simple à saisir, vous pouvez u
 
 Dans RStudio les blocs de code R sont en général affichés avec une couleur de fond légèrement différente pour les distinguer du reste du document.
 
-Quand votre curseur se trouve dans un bloc, vous pouvez saisir le code R que vous souhaitez, l'exécuter, utiliser l'autocomplétion, exactement comme si vous vous trouviez dans un script R. Vous pouvez également exécuter l'ensemble du code contenu dans un bloc à l'aide du raccourci clavier `Ctrl+Shift+Entrée`.
+Quand votre curseur se trouve dans un bloc, vous pouvez saisir le code R que vous souhaitez, l'exécuter, utiliser l'autocomplétion, exactement comme si vous vous trouviez dans un script R. Vous pouvez également exécuter l'ensemble du code contenu dans un bloc à l'aide du raccourci clavier `Ctrl+Maj+Entrée`.
 
 Dans RStudio, par défaut, les résultats d'un bloc de code (texte, tableau ou graphique) s'affichent directement *dans* la fenêtre d'édition du document, permettant de les visualiser facilement et de les conserver le temps de la session ^[Ce comportement peut être modifié en cliquant sur l'icône d'engrenage de la barre d'outils et en choisissant *Chunk Output in Console*].
 
@@ -152,11 +153,18 @@ On peut à tout moment compiler, ou plutôt "tricoter" (*Knit*), un document R M
 
 ![Menu *Knit*](resources/screenshots/rstudio_knit_menu.png)
 
-Vous pouvez aussi utiliser le raccourci `Ctrl+Shift+K` pour compiler le document dans le dernier format utilisé.
+Vous pouvez aussi utiliser le raccourci `Ctrl+Maj+K` pour compiler le document dans le dernier format utilisé.
 
 
 ```{block type='rmdimportant'}
-Pour la génération du format PDF, vous devez avoir une installation fonctionnelle de `LaTeX` sur votre système. C'est en général le cas pour des ordinateurs Mac ou Linux, mais pas sous Windows : dans ce cas vous devrez installer une distribution comme [MiKTeX](https://miktex.org/).
+Pour la génération du format PDF, vous devez avoir une installation fonctionnelle de `LaTeX` sur votre système.
+
+Si ça n'est pas le cas, l'extension `tinytex` de Yihui Xie vise à faciliter l'installation d'une distribution `LaTeX` minimale quel que soit le système d'exploitation de votre machine. Pour l'utiliser il vous faut d'abord installer l'extension avec `install.packages('tinytex')`, puis lancer la commande suivante dans la console (prévoir un téléchargement d'environ 200Mo) :
+
+`tinytex::install_tinytex()`
+
+Plus d'informations sur [le site de tinytex](https://yihui.name/tinytex/).
+
 ```
 
 
@@ -303,7 +311,7 @@ Compiler un document R Markdown peut être long, car il faut à chaque fois exé
 Pour accélérer cette opération, R Markdown utilise un système de *mise en cache* : les résultats de chaque bloc sont enregistrés dans un fichier et à la prochaine compilation, si le code et les options du bloc n'ont pas été modifiés, c'est le contenu du fichier de cache qui est utilisé, ce qui évite d'exécuter le code R.
 
 ```{block type='rmdnote'}
-On peut activer ou désactiver la mise en cache des résultats pour chaque bloc de code avec l'option `cache = TRUE` ou `cache = FALSE`, et on peut aussi désactiver totalement la mise en cache pour le document en ajoutant `knitr::opts_chunk$set(echo = FALSE)` dans le premier bloc *setup*.
+On peut activer ou désactiver la mise en cache des résultats pour chaque bloc de code avec l'option `cache = TRUE` ou `cache = FALSE`, et on peut aussi désactiver totalement la mise en cache pour le document en ajoutant `knitr::opts_chunk$set(cache = FALSE)` dans le premier bloc *setup*.
 ```
 
 
@@ -340,19 +348,16 @@ kable(tab, digits = 1)
 
 ### Tableaux de données et tris à plat
 
-En ce qui concerne les tableaux de données (tibble ou *data frame*), l'affichage HTML par défaut se contente d'un affichage texte comme dans la console, très peu lisible dès que le tableau dépasse une certaine dimension.
+En ce qui concerne les tableaux de données (tibble ou *data frame*), l'affichage HTML par défaut se contente d'un affichage texte comme dans la console, très peu lisible dès que le tableau dépasse une certaine taille.
 
 Une alternative est d'utiliser la fonction `paged_table`, qui affiche une représentation HTML paginée du tableau :
 
-```{r paged_table, paged.print=TRUE}
-rmarkdown::paged_table(hdv2003)
-```
+![Rendu d'une table par `paged_table`](resources/screenshots/rmarkdown_paged_table.png)
 
-Une autre alternative est d'utiliser `kable`, ou encore la fonction `datatable` de l'extension `DT`, qui propose encore davantage d'interactivité :
 
-```{r datatable}
-DT::datatable(hdv2003)
-```
+Une alternative est d'utiliser `kable`, comme précédemment pour les tableaux croisés, ou encore la fonction `datatable` de l'extension `DT`, qui propose encore davantage d'interactivité :
+
+![Rendu d'une table par `DT::datatable`](resources/screenshots/rmarkdown_datatable.png)
 
 Dans tous les cas il est déconseillé d'afficher de cette manière un tableau de données de très grandes dimensions, car le fichier HTML résultant contiendrait l'ensemble des données et serait donc très volumineux.
 
@@ -387,7 +392,8 @@ Quand vous créez un nouveau document dans RStudio, ces modèles sont accessible
 
 D'autres extensions, qui doivent être installées séparément, permettent aussi des diaporamas dans des formats variés. On citera notamment :
 
-- [revealjs](https://github.com/rstudio/revealjs) pour des présentations HTLM basées sur le *framework* [reveal.js](http://lab.hakim.se/reveal-js/#/)
+- [xaringan](https://slides.yihui.name/xaringan/ pour) pour des présentations HTML basées sur [remark.js](https://remarkjs.com/)
+- [revealjs](https://github.com/rstudio/revealjs) pour des présentations HTML basées  [reveal.js](http://lab.hakim.se/reveal-js/#/)
 - [rmdshower](https://github.com/mangothecat/rmdshower) pour des diaporamas HTML basés sur [shower](https://github.com/shower/shower)
 
 Une fois l'extension installée, elle propose en général un *template* de départ lorsqu'on crée un nouveau document dans RStudio. Ceux-ci sont accessibles depuis l'entrée *From Template*.

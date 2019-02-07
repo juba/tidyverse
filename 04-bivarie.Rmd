@@ -20,7 +20,7 @@ d <- hdv2003
 ```
 
 
-Quand on veut croiser deux variables qualitatives, on fait un *tableau croisé*. Comme pour un tri à plat ceci s'obtient avec la fonction `table` de R, mais à laquelle on passe cette fois deux variables en argument. Par exemple, si on veut croiser la catégorie socio professionnelle et le sexe des enquêtés :
+Quand on veut croiser deux variables qualitatives, on fait un *tableau croisé*. Comme pour un tri à plat ceci s'obtient avec la fonction `table` de R, mais à laquelle on passe cette fois deux variables en argument. Par exemple, si on veut croiser la catégorie socio-professionnelle et le sexe des enquêtés :
 
 ```{r}
 table(d$qualif, d$sexe)
@@ -67,7 +67,7 @@ Le résultat nous indique trois valeurs :
 - `df`, le nombre de degrés de libertés du test.
 - `p-value`, le fameux *p*, qui indique la probabilité d'obtenir une valeur de la statistique du χ² au moins aussi extrême sous l'hypothèse d'indépendance.
 
-Ici, le *p* est extrêmement petit (la notation `< 2.2e-16` indique qu'il est plus petit que la plus petite valeur calculable par R), donc certainement en-dessous du seuil de décision choisi préalablement au test (souvent 5%, soit 0.05). On peut donc rejeter l'hypothèse d'indépendance des lignes et des colonnes du tableau.
+Ici, le *p* est extrêmement petit (la notation `< 2.2e-16` indique qu'il est plus petit que la plus petite valeur proche de zéro calculable par R), donc certainement en-dessous du seuil de décision choisi préalablement au test (souvent 5%, soit 0.05). On peut donc rejeter l'hypothèse d'indépendance des lignes et des colonnes du tableau.
 
 En complément du test du χ², on peut aussi regarder les *résidus* de ce test pour affiner la lecture du tableau. Ceux-ci s'obtiennent avec la fonction `chisq.residuals` de `questionr` :
 
@@ -99,16 +99,7 @@ On peut améliorer ce graphique en colorant les cases selon les résidus du test
 mosaicplot(tab, las = 3, shade = TRUE)
 ```
 
-Chaque rectangle de ce graphique
-représente une case de tableau. Sa largeur correspond au pourcentage
-des modalités en colonnes (il y'a beaucoup d'employés et d'ouvriers et
-très peu d'"autres"). Sa hauteur correspond aux
-pourcentages colonnes : la proportion d'hommes chez les cadres est
-plus élevée que chez les employés. Enfin, la couleur de la case
-correspond au résidu du test du χ² correspondant : les cases en
-rouge sont sous-représentées, les cases en bleu sur-représentées, et
-les cases blanches sont proches des effectifs attendus sous l'hypothèse
-d'indépendance.
+Chaque rectangle de ce graphique représente une case de tableau. Sa largeur correspond au pourcentage des modalités en colonnes (il y'a beaucoup d'employés et d'ouvriers et très peu d'"autres"). Sa hauteur correspond aux pourcentages colonnes : la proportion d'hommes chez les cadres est plus élevée que chez les employés. Enfin, la couleur de la case correspond au résidu du test du χ² correspondant : les cases en rouge sont sous-représentées, les cases en bleu sur-représentées, et les cases blanches sont proches des effectifs attendus sous l'hypothèse d'indépendance.
 
 
 
@@ -134,9 +125,6 @@ Ce qui va nous donner le résultat suivant :
 ```{r echo=FALSE}
 boxplot(d$age ~ d$sport)
 ```
-
-
-
 
 
 ```{block type='rmdnote'}
@@ -238,12 +226,12 @@ Le jeu de données `hdv2003` comportant assez peu de variables quantitatives, on
 data(rp2012)
 ```
 
-Un nouveau tableau de données `rp2012` devrait apparaître dans votre environnement. Celui-ci comprend les 5170 communes de Métropole de plus de 2000 habitants, et une soixantaine de variables telles que le département, la population, le taux de chômage, etc. Pour une description plus complète et une liste des variables, voir section \@ref(rp2012).
+Un nouveau tableau de données `rp2012` devrait apparaître dans votre environnement. Celui-ci comprend les 5170 communes de France métropolitaine de plus de 2000 habitants, et une soixantaine de variables telles que le département, la population, le taux de chômage, etc. Pour une description plus complète et une liste des variables, voir section \@ref(rp2012).
 
 
 ### Représentation graphique
 
-Quand on croise deux variables quantitatives, l'idéal est de faire une représentation graphique sous forme de nuage de points à l'aide de la fonction `plot`. On va représenter le croisement entre le pourcentage de cadres et le pourcentage de diplômés du supérieur dans la commune :
+Quand on croise deux variables quantitatives, l'idéal est de faire une représentation graphique sous forme de nuage de points à l'aide de la fonction `plot`. On va représenter le croisement entre le pourcentage de cadres et le pourcentage de propriétaires dans la commune :
 
 ```{r}
 plot(rp2012$cadres, rp2012$proprio)
@@ -412,7 +400,7 @@ lm(rp2012$cadres ~ rp2012$dipl_sup)
 On retrouve avec `lm` la syntaxe "formule" déjà rencontrée avec `boxplot`. Elle permet ici de spécifier des modèles de régression : la variable dépendante se place à gauche du `~`, et la variable indépendante à droite. Si on souhaite faire une régression multiple avec plusieurs variables indépendantes, on aura une formule du type `dep ~ indep1 + indep2`. Il est également possible de spécifier des termes plus complexes, des interactions, etc.
 ```
 
-`lm` nous renvoit par défaut les coefficients de la droite de régression :
+`lm` nous renvoie par défaut les coefficients de la droite de régression :
 
 - l'ordonnée à l'origine `(Intercept)` vaut 0.92
 - le coefficient associé à `dipl_sup` vaut 1.08
@@ -507,7 +495,7 @@ boxplot(hdv2003$heures.tv ~ hdv2003$occup)
 </div>
 
 
-Calculer la durée moyenne en fonction du statut d'occupation à l'aide de `tapply`.
+Calculer la durée moyenne devant la télévision en fonction du statut d'occupation à l'aide de `tapply`.
 
 <div class="solution">
 \iffalse

@@ -30,7 +30,7 @@ Nous devons ensuite indiquer à R que nous souhaitons accéder au jeu de donnée
 data(hdv2003)
 ```
 
-Cette commande ne renvoit aucun résultat particulier (sauf en cas d'erreur), mais vous devriez voir apparaître dans l'onglet *Environment* de RStudio un nouvel objet nommé `hdv2003` :
+Cette commande ne renvoie aucun résultat particulier (sauf en cas d'erreur), mais vous devriez voir apparaître dans l'onglet *Environment* de RStudio un nouvel objet nommé `hdv2003` :
 
 ![Onglet *Environment*](resources/screenshots/rstudio_environment.png)
 
@@ -40,7 +40,7 @@ Cet objet est d'un type nouveau : il s'agit d'un tableau de données.
 ## Tableau de données (*data frame*)
 
 
-Un *data frame* (ou tableau de données, ou table) est un type d'objet dans R qui contient des données au format tabulaire, avec les observations en ligne et les variables en colonnes, comme dans une feuille de tableur de type LibreOffice ou Excel.
+Un *data frame* (ou tableau de données, ou table) est un type d'objet R qui contient des données au format tabulaire, avec les observations en ligne et les variables en colonnes, comme dans une feuille de tableur de type LibreOffice ou Excel.
 
 Si on se contente d'exécuter le nom de notre tableau de données :
 
@@ -104,7 +104,7 @@ nrow(d)
 ncol(d)
 ```
 
-La fonction `dim` renvoit ses dimensions, donc les deux nombres précédents :
+La fonction `dim` renvoie ses dimensions, donc les deux nombres précédents :
 
 ```{r}
 dim(d)
@@ -116,7 +116,7 @@ La fonction `names` retourne les noms des colonnes du tableau, c'est-à-dire la 
 names(d)
 ```
 
-Enfin, la fonction `str` renvoit un descriptif plus détaillé de la structure du tableau. Elle liste les différentes variables, indique leur type ^[Les différents types de variables seront décrits plus en détail pendant le chapitre \@ref(vectorfactor) sur les recodages.] et liste les premières valeurs :
+Enfin, la fonction `str` renvoie un descriptif plus détaillé de la structure du tableau. Elle liste les différentes variables, indique leur type ^[Les différents types de variables seront décrits plus en détail dans le chapitre \@ref(vectorfactor) sur les recodages.] et affiche les premières valeurs :
 
 ```{r}
 str(d)
@@ -130,7 +130,7 @@ Sous RStudio, on peut afficher à tout moment la structure d'un objet en cliquan
 
 ### Accéder aux variables d'un tableau
 
-Une opération très importante est l'accès aux variables du tableau (à ses colonnes) pour pouvoir les manipuler, effectuer des calculs, etc. On va pour cela utiliser l'opérateur `$`, qui permet d'accéder aux colonnes du tableau. Ainsi, si l'on tape :
+Une opération très importante est l'accès aux variables du tableau (à ses colonnes) pour pouvoir les manipuler, effectuer des calculs, etc. On utilise pour cela l'opérateur `$`, qui permet d'accéder aux colonnes du tableau. Ainsi, si l'on tape :
 
 ```{r include=FALSE}
 options(max.print=200)
@@ -143,7 +143,7 @@ d$sexe
 
 R va nous afficher l'ensemble des valeurs de notre variable `sexe` dans la console, ce qui est à nouveau fort peu utile. Mais cela nous permet de constater que `d$sexe` est un vecteur de chaînes de caractères tels qu'on en a déjà rencontré précédemment.
 
-La fonction `table$colonne` renvoit donc la colonne nommée `colonne` du tableau `table`, c'est-à-dire un vecteur, en général de nombres ou de chaînes de caractères.
+La fonction `table$colonne` renvoie donc la colonne nommée `colonne` du tableau `table`, c'est-à-dire un vecteur, en général de nombres ou de chaînes de caractères.
 
 Si on souhaite afficher seulement les premières ou dernières valeurs d'une variable, on peut utiliser les fonctions `head` et `tail` :
 
@@ -186,7 +186,7 @@ head(d$minutes.tv)
 
 On a donc désormais accès à un tableau de données `d`, dont les lignes sont des observations (des individus enquêtés), et les colonnes des variables (des caractéristiques de chacun de ces individus), et on sait accéder à ces variables grâce à l'opérateur `$`. 
 
-Si on souhaite analyser ces variables, les méthodes et fonctions utilisées seront différentes selon qu'il s'agit d'une variable *quantitative* (variable numérique pouvant prendre un grand nombre de valeurs comme l'âge, le revenu, un pourcentage...) ou d'une variable *qualitative* (variable pouvant prendre un nombre limité de valeurs appelées modalités comme le sexe, la profession, etc.).
+Si on souhaite analyser ces variables, les méthodes et fonctions utilisées seront différentes selon qu'il s'agit d'une variable *quantitative* (variable numérique pouvant prendre un grand nombre de valeurs : l'âge, le revenu, un pourcentage...) ou d'une variable *qualitative* (variable pouvant prendre un nombre limité de valeurs appelées modalités : le sexe, la profession, le dernier diplôme obtenu, etc.).
 
 ### Analyser une variable quantitative
 
@@ -302,7 +302,7 @@ hist(d$age, col = "skyblue",
      ylab = "Effectif")
 ```
 
-La fonction `hist` fait partie des fonctions graphique de base de R. La partie \@ref(ggplot2) de ce document est consacrée à l'extension `ggplot2`, qui fait partie du *tidyverse* et qui permet la production et la personnalisation de graphiques complexes sous R.
+La fonction `hist` fait partie des fonctions graphique de base de R. On verra plus en détail d'autres fonctions graphiques dans la partie \@ref(ggplot2) de ce document, consacrée à l'extension `ggplot2`, qui fait partie du *tidyverse* et qui permet la production et la personnalisation de graphiques complexes.
 
 
 ### Analyser une variable qualitative
@@ -352,8 +352,11 @@ library(questionr)
 
 On peut alors utiliser la fonction :
 
-```{r}
+```{r, eval=FALSE}
 freq(d$qualif)
+```
+```{r, echo=FALSE}
+print(freq(d$qualif))
 ```
 
 
@@ -366,8 +369,11 @@ La colonne `n` représente les effectifs de chaque catégorie, la colonne `%` le
 - `total` permet d'ajouter une ligne avec les effectifs totaux
 - `sort` permet de trier le tableau par fréquence croissante (`sort="inc"`) ou décroissante (`sort="dec"`).
 
-```{r}
+```{r eval=FALSE}
 freq(d$qualif, valid= FALSE, total = TRUE, sort = "dec")
+```
+```{r echo=FALSE}
+print(freq(d$qualif, valid= FALSE, total = TRUE, sort = "dec"))
 ```
 
 
@@ -477,7 +483,7 @@ freq(df$trav.imp)
 
 
 
-Représentez graphiquement les effectifs des modalités à l'aide d'un graphique en barres puis d'un diagramme de Cleveland.
+Représentez graphiquement les effectifs des modalités à l'aide d'un graphique en barres.
 
 
 
@@ -486,10 +492,34 @@ Représentez graphiquement les effectifs des modalités à l'aide d'un graphique
 ```{r eval=FALSE}
 tab <- sort(table(df$trav.imp))
 barplot(tab)
-dotchart(tab)
 ```
 \fi
 
 </div>
+
+Utilisez l'argument `col` de la fonction `barplot` pour modifier la couleur du graphique en 
+`tomato`.
+
+<div class="solution">
+\iffalse
+```{r eval=FALSE}
+barplot(tab, col = "tomato")
+```
+\fi
+
+</div>
+
+Tapez `colors()` dans la console pour afficher l'ensemble des noms de couleurs disponibles dans R. Testez chaque couleur une à une pour trouver votre couleur préférée.
+
+<div class="solution">
+\iffalse
+C'est une blague, hein ! Cela dit `moccasin` ou `palevioletred` sont pas mal, si vous voulez essayer :-)
+\fi
+
+</div>
+
+
+
+
 
 

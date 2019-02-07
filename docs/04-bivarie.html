@@ -5,27 +5,27 @@
 
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>Introduction à R et au tidyverse</title>
-  <meta name="description" content="Une introduction à R et aux extensions du <em>tidyverse</em>">
-  <meta name="generator" content="bookdown 0.7 and GitBook 2.6.7">
+  <title>Partie 4 Analyse bivariée | Introduction à R et au tidyverse</title>
+  <meta name="description" content="Une introduction à R et aux extensions du tidyverse">
+  <meta name="generator" content="bookdown  and GitBook 2.6.7">
 
-  <meta property="og:title" content="Introduction à R et au tidyverse" />
+  <meta property="og:title" content="Partie 4 Analyse bivariée | Introduction à R et au tidyverse" />
   <meta property="og:type" content="book" />
   
   
-  <meta property="og:description" content="Une introduction à R et aux extensions du <em>tidyverse</em>" />
+  <meta property="og:description" content="Une introduction à R et aux extensions du tidyverse" />
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Introduction à R et au tidyverse" />
+  <meta name="twitter:title" content="Partie 4 Analyse bivariée | Introduction à R et au tidyverse" />
   
-  <meta name="twitter:description" content="Une introduction à R et aux extensions du <em>tidyverse</em>" />
+  <meta name="twitter:description" content="Une introduction à R et aux extensions du tidyverse" />
   
 
 <meta name="author" content="Julien Barnier">
 
 
-<meta name="date" content="2018-03-08">
+<meta name="date" content="2019-02-06">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -36,6 +36,7 @@
 <link rel="next" href="05-organiser.html">
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
@@ -47,62 +48,81 @@
 
 
 
-<script src="libs/htmlwidgets-1.0/htmlwidgets.js"></script>
-<link href="libs/leaflet-0.7.7/leaflet.css" rel="stylesheet" />
-<script src="libs/leaflet-0.7.7/leaflet.js"></script>
+<script src="libs/htmlwidgets-1.3/htmlwidgets.js"></script>
+<link href="libs/leaflet-1.3.1/leaflet.css" rel="stylesheet" />
+<script src="libs/leaflet-1.3.1/leaflet.js"></script>
 <link href="libs/leafletfix-1.0.0/leafletfix.css" rel="stylesheet" />
-<link href="libs/leaflet-label-0.2.2/leaflet.label.css" rel="stylesheet" />
-<script src="libs/leaflet-label-0.2.2/leaflet.label.js"></script>
-<script src="libs/Proj4Leaflet-0.7.2/proj4-compressed.js"></script>
-<script src="libs/Proj4Leaflet-0.7.2/proj4leaflet.js"></script>
-<script src="libs/leaflet-binding-1.1.0/leaflet.js"></script>
-<link href="libs/pagedtable-1.1/css/pagedtable.css" rel="stylesheet" />
-<script src="libs/pagedtable-1.1/js/pagedtable.js"></script>
-<script src="libs/datatables-binding-0.2/datatables.js"></script>
-<link href="libs/dt-core-1.10.12/css/jquery.dataTables.min.css" rel="stylesheet" />
-<link href="libs/dt-core-1.10.12/css/jquery.dataTables.extra.css" rel="stylesheet" />
-<script src="libs/dt-core-1.10.12/js/jquery.dataTables.min.js"></script>
+<script src="libs/Proj4Leaflet-1.0.1/proj4-compressed.js"></script>
+<script src="libs/Proj4Leaflet-1.0.1/proj4leaflet.js"></script>
+<link href="libs/rstudio_leaflet-1.3.1/rstudio_leaflet.css" rel="stylesheet" />
+<script src="libs/leaflet-binding-2.0.2/leaflet.js"></script>
 
 
 <style type="text/css">
-div.sourceCode { overflow-x: auto; }
-table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
-  margin: 0; padding: 0; vertical-align: baseline; border: none; }
-table.sourceCode { width: 100%; line-height: 100%; background-color: #ffffff; color: #1f1c1b; }
-td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; background-color: #ffffff; color: #a0a0a0; border-right: 1px solid #a0a0a0; }
-td.sourceCode { padding-left: 5px; }
-pre, code { color: #1f1c1b; background-color: #ffffff; }
-code > span.kw { color: #1f1c1b; font-weight: bold; } /* Keyword */
-code > span.dt { color: #0057ae; } /* DataType */
-code > span.dv { color: #b08000; } /* DecVal */
-code > span.bn { color: #b08000; } /* BaseN */
-code > span.fl { color: #b08000; } /* Float */
-code > span.cn { color: #aa5500; } /* Constant */
-code > span.ch { color: #924c9d; } /* Char */
-code > span.sc { color: #3daee9; } /* SpecialChar */
-code > span.st { color: #bf0303; } /* String */
-code > span.vs { color: #bf0303; } /* VerbatimString */
-code > span.ss { color: #ff5500; } /* SpecialString */
-code > span.im { color: #ff5500; } /* Import */
-code > span.co { color: #898887; } /* Comment */
-code > span.do { color: #607880; } /* Documentation */
-code > span.an { color: #ca60ca; } /* Annotation */
-code > span.cv { color: #0095ff; } /* CommentVar */
-code > span.ot { color: #006e28; } /* Other */
-code > span.fu { color: #644a9b; } /* Function */
-code > span.va { color: #0057ae; } /* Variable */
-code > span.cf { color: #1f1c1b; font-weight: bold; } /* ControlFlow */
-code > span.op { color: #1f1c1b; } /* Operator */
-code > span.bu { color: #644a9b; font-weight: bold; } /* BuiltIn */
-code > span.ex { color: #0095ff; font-weight: bold; } /* Extension */
-code > span.pp { color: #006e28; } /* Preprocessor */
-code > span.at { color: #0057ae; } /* Attribute */
-code > span.re { color: #0057ae; } /* RegionMarker */
-code > span.in { color: #b08000; } /* Information */
-code > span.wa { color: #bf0303; } /* Warning */
-code > span.al { color: #bf0303; font-weight: bold; } /* Alert */
-code > span.er { color: #bf0303; text-decoration: underline; } /* Error */
-code > span. { color: #1f1c1b; } /* Normal */
+a.sourceLine { display: inline-block; line-height: 1.25; }
+a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
+a.sourceLine:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode { white-space: pre; position: relative; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+code.sourceCode { white-space: pre-wrap; }
+a.sourceLine { text-indent: -1em; padding-left: 1em; }
+}
+pre.numberSource a.sourceLine
+  { position: relative; left: -4em; }
+pre.numberSource a.sourceLine::before
+  { content: attr(data-line-number);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; pointer-events: all; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    background-color: #ffffff;
+    color: #a0a0a0;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #a0a0a0;  padding-left: 4px; }
+div.sourceCode
+  { color: #1f1c1b; background-color: #ffffff; }
+@media screen {
+a.sourceLine::before { text-decoration: underline; }
+}
+code span. { color: #1f1c1b; } /* Normal */
+code span.al { color: #bf0303; background-color: #f7e6e6; font-weight: bold; } /* Alert */
+code span.an { color: #ca60ca; } /* Annotation */
+code span.at { color: #0057ae; } /* Attribute */
+code span.bn { color: #b08000; } /* BaseN */
+code span.bu { color: #644a9b; font-weight: bold; } /* BuiltIn */
+code span.cf { color: #1f1c1b; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #924c9d; } /* Char */
+code span.cn { color: #aa5500; } /* Constant */
+code span.co { color: #898887; } /* Comment */
+code span.cv { color: #0095ff; } /* CommentVar */
+code span.do { color: #607880; } /* Documentation */
+code span.dt { color: #0057ae; } /* DataType */
+code span.dv { color: #b08000; } /* DecVal */
+code span.er { color: #bf0303; text-decoration: underline; } /* Error */
+code span.ex { color: #0095ff; font-weight: bold; } /* Extension */
+code span.fl { color: #b08000; } /* Float */
+code span.fu { color: #644a9b; } /* Function */
+code span.im { color: #ff5500; } /* Import */
+code span.in { color: #b08000; } /* Information */
+code span.kw { color: #1f1c1b; font-weight: bold; } /* Keyword */
+code span.op { color: #1f1c1b; } /* Operator */
+code span.ot { color: #006e28; } /* Other */
+code span.pp { color: #006e28; } /* Preprocessor */
+code span.re { color: #0057ae; background-color: #e0e9f8; } /* RegionMarker */
+code span.sc { color: #3daee9; } /* SpecialChar */
+code span.ss { color: #ff5500; } /* SpecialString */
+code span.st { color: #bf0303; } /* String */
+code span.va { color: #0057ae; } /* Variable */
+code span.vs { color: #bf0303; } /* VerbatimString */
+code span.wa { color: #bf0303; } /* Warning */
 </style>
 
 <link rel="stylesheet" href="css/tidyverse.css" type="text/css" />
@@ -241,8 +261,9 @@ code > span. { color: #1f1c1b; } /* Normal */
 <li class="chapter" data-level="8.7.3" data-path="08-ggplot2.html"><a href="08-ggplot2.html#scalecolor"><i class="fa fa-check"></i><b>8.7.3</b> <code>scale_color</code>, <code>scale_fill</code></a></li>
 </ul></li>
 <li class="chapter" data-level="8.8" data-path="08-ggplot2.html"><a href="08-ggplot2.html#themes"><i class="fa fa-check"></i><b>8.8</b> Thèmes</a></li>
-<li class="chapter" data-level="8.9" data-path="08-ggplot2.html"><a href="08-ggplot2.html#ressources-1"><i class="fa fa-check"></i><b>8.9</b> Ressources</a></li>
-<li class="chapter" data-level="8.10" data-path="08-ggplot2.html"><a href="08-ggplot2.html#exercices-3"><i class="fa fa-check"></i><b>8.10</b> Exercices</a></li>
+<li class="chapter" data-level="8.9" data-path="08-ggplot2.html"><a href="08-ggplot2.html#ladd-in-esquisse"><i class="fa fa-check"></i><b>8.9</b> L’add-in <code>esquisse</code></a></li>
+<li class="chapter" data-level="8.10" data-path="08-ggplot2.html"><a href="08-ggplot2.html#ressources-1"><i class="fa fa-check"></i><b>8.10</b> Ressources</a></li>
+<li class="chapter" data-level="8.11" data-path="08-ggplot2.html"><a href="08-ggplot2.html#exercices-3"><i class="fa fa-check"></i><b>8.11</b> Exercices</a></li>
 </ul></li>
 <li class="chapter" data-level="9" data-path="09-recodages.html"><a href="09-recodages.html"><i class="fa fa-check"></i><b>9</b> Recoder des variables</a><ul>
 <li class="chapter" data-level="9.1" data-path="09-recodages.html"><a href="09-recodages.html#rappel-sur-les-variables-et-les-vecteurs"><i class="fa fa-check"></i><b>9.1</b> Rappel sur les variables et les vecteurs</a></li>
@@ -330,7 +351,7 @@ code > span. { color: #1f1c1b; } /* Normal */
 </ul></li>
 <li class="chapter" data-level="13" data-path="13-rmarkdown.html"><a href="13-rmarkdown.html"><i class="fa fa-check"></i><b>13</b> Diffuser et publier avec <code>rmarkdown</code></a><ul>
 <li class="chapter" data-level="13.1" data-path="13-rmarkdown.html"><a href="13-rmarkdown.html#creer-un-nouveau-document"><i class="fa fa-check"></i><b>13.1</b> Créer un nouveau document</a></li>
-<li class="chapter" data-level="13.2" data-path="13-rmarkdown.html"><a href="13-rmarkdown.html#elements-dun-document-r-markdown"><i class="fa fa-check"></i><b>13.2</b> Élements d’un document R Markdown</a><ul>
+<li class="chapter" data-level="13.2" data-path="13-rmarkdown.html"><a href="13-rmarkdown.html#elements-dun-document-r-markdown"><i class="fa fa-check"></i><b>13.2</b> Éléments d’un document R Markdown</a><ul>
 <li class="chapter" data-level="13.2.1" data-path="13-rmarkdown.html"><a href="13-rmarkdown.html#en-tete-preambule"><i class="fa fa-check"></i><b>13.2.1</b> En-tête (préambule)</a></li>
 <li class="chapter" data-level="13.2.2" data-path="13-rmarkdown.html"><a href="13-rmarkdown.html#texte-du-document"><i class="fa fa-check"></i><b>13.2.2</b> Texte du document</a></li>
 <li class="chapter" data-level="13.2.3" data-path="13-rmarkdown.html"><a href="13-rmarkdown.html#blocs-de-code-r"><i class="fa fa-check"></i><b>13.2.3</b> Blocs de code R</a></li>
@@ -350,7 +371,7 @@ code > span. { color: #1f1c1b; } /* Normal */
 </ul></li>
 <li class="chapter" data-level="13.6" data-path="13-rmarkdown.html"><a href="13-rmarkdown.html#templates"><i class="fa fa-check"></i><b>13.6</b> Modèles de documents</a><ul>
 <li class="chapter" data-level="13.6.1" data-path="13-rmarkdown.html"><a href="13-rmarkdown.html#slides"><i class="fa fa-check"></i><b>13.6.1</b> Slides</a></li>
-<li class="chapter" data-level="13.6.2" data-path="13-rmarkdown.html"><a href="13-rmarkdown.html#templates"><i class="fa fa-check"></i><b>13.6.2</b> Templates</a></li>
+<li class="chapter" data-level="13.6.2" data-path="13-rmarkdown.html"><a href="13-rmarkdown.html#templates-1"><i class="fa fa-check"></i><b>13.6.2</b> Templates</a></li>
 </ul></li>
 <li class="chapter" data-level="13.7" data-path="13-rmarkdown.html"><a href="13-rmarkdown.html#ressources-5"><i class="fa fa-check"></i><b>13.7</b> Ressources</a></li>
 </ul></li>
@@ -397,11 +418,11 @@ code > span. { color: #1f1c1b; } /* Normal */
 <div id="tableaux-croises" class="section level3">
 <h3><span class="header-section-number">4.1.1</span> Tableaux croisés</h3>
 <p>On va continuer à travailler avec le jeu de données tiré de l’enquête <em>Histoire de vie</em> inclus dans l’extension <code>questionr</code>. On commence donc par charger l’extension, le jeu de données, et à le renommer en un nom plus court pour gagner un peu de temps de saisie au clavier :</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(questionr)
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(questionr)
 <span class="kw">data</span>(hdv2003)
-d &lt;-<span class="st"> </span>hdv2003</code></pre></div>
-<p>Quand on veut croiser deux variables qualitatives, on fait un <em>tableau croisé</em>. Comme pour un tri à plat ceci s’obtient avec la fonction <code>table</code> de R, mais à laquelle on passe cette fois deux variables en argument. Par exemple, si on veut croiser la catégorie socio professionnelle et le sexe des enquêtés :</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">table</span>(d<span class="op">$</span>qualif, d<span class="op">$</span>sexe)</code></pre></div>
+d &lt;-<span class="st"> </span>hdv2003</code></pre>
+<p>Quand on veut croiser deux variables qualitatives, on fait un <em>tableau croisé</em>. Comme pour un tri à plat ceci s’obtient avec la fonction <code>table</code> de R, mais à laquelle on passe cette fois deux variables en argument. Par exemple, si on veut croiser la catégorie socio-professionnelle et le sexe des enquêtés :</p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">table</span>(d<span class="op">$</span>qualif, d<span class="op">$</span>sexe)</code></pre>
 <pre><code>                          
                            Homme Femme
   Ouvrier specialise          96   107
@@ -413,8 +434,8 @@ d &lt;-<span class="st"> </span>hdv2003</code></pre></div>
   Autre                       21    37</code></pre>
 <p>Pour pouvoir interpréter ce tableau on doit passer du tableau en effectifs au tableau en pourcentages ligne ou colonne. Pour cela, on peut utiliser les fonctions <code>lprop</code> et <code>cprop</code> de l’extension <code>questionr</code>, qu’on applique au tableau croisé précédent.</p>
 <p>Pour calculer les pourcentages ligne :</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">tab &lt;-<span class="st"> </span><span class="kw">table</span>(d<span class="op">$</span>qualif, d<span class="op">$</span>sexe)
-<span class="kw">lprop</span>(tab)</code></pre></div>
+<pre class="sourceCode r"><code class="sourceCode r">tab &lt;-<span class="st"> </span><span class="kw">table</span>(d<span class="op">$</span>qualif, d<span class="op">$</span>sexe)
+<span class="kw">lprop</span>(tab)</code></pre>
 <pre><code>                          
                            Homme Femme Total
   Ouvrier specialise        47.3  52.7 100.0
@@ -426,7 +447,7 @@ d &lt;-<span class="st"> </span>hdv2003</code></pre></div>
   Autre                     36.2  63.8 100.0
   Ensemble                  44.8  55.2 100.0</code></pre>
 <p>Et pour les pourcentages colonne :</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">cprop</span>(tab)</code></pre></div>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">cprop</span>(tab)</code></pre>
 <pre><code>                          
                            Homme Femme Ensemble
   Ouvrier specialise        13.0  11.7  12.3   
@@ -456,7 +477,7 @@ Pour faciliter la lecture d’un tableau croisé, il est recommandé de <strong>
 <h3><span class="header-section-number">4.1.2</span> Test du χ²</h3>
 <p>Comme on travaille sur un échantillon et pas sur une population entière, on peut compléter ce tableau croisé par un test d’indépendance du χ². Celui-ci permet de rejeter l’hypothèse d’indépendance des lignes et des colonnes du tableau, c’est à dire de rejeter l’hypothèse que les écarts à l’indépendance observés seraient uniquement dus au biais d’échantillonnage (au fait qu’on n’a pas interrogé toute notre population).</p>
 <p>Pour effectuer un test de ce type, on applique la fonction <code>chisq.test</code> au tableau croisé calculé précédemment :</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">chisq.test</span>(tab)</code></pre></div>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">chisq.test</span>(tab)</code></pre>
 <pre><code>
     Pearson&#39;s Chi-squared test
 
@@ -468,9 +489,9 @@ X-squared = 387.56, df = 6, p-value &lt; 2.2e-16</code></pre>
 <li><code>df</code>, le nombre de degrés de libertés du test.</li>
 <li><code>p-value</code>, le fameux <em>p</em>, qui indique la probabilité d’obtenir une valeur de la statistique du χ² au moins aussi extrême sous l’hypothèse d’indépendance.</li>
 </ul>
-<p>Ici, le <em>p</em> est extrêmement petit (la notation <code>&lt; 2.2e-16</code> indique qu’il est plus petit que la plus petite valeur calculable par R), donc certainement en-dessous du seuil de décision choisi préalablement au test (souvent 5%, soit 0.05). On peut donc rejeter l’hypothèse d’indépendance des lignes et des colonnes du tableau.</p>
+<p>Ici, le <em>p</em> est extrêmement petit (la notation <code>&lt; 2.2e-16</code> indique qu’il est plus petit que la plus petite valeur proche de zéro calculable par R), donc certainement en-dessous du seuil de décision choisi préalablement au test (souvent 5%, soit 0.05). On peut donc rejeter l’hypothèse d’indépendance des lignes et des colonnes du tableau.</p>
 <p>En complément du test du χ², on peut aussi regarder les <em>résidus</em> de ce test pour affiner la lecture du tableau. Ceux-ci s’obtiennent avec la fonction <code>chisq.residuals</code> de <code>questionr</code> :</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">chisq.residuals</span>(tab)</code></pre></div>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">chisq.residuals</span>(tab)</code></pre>
 <pre><code>                          
                             Homme  Femme
   Ouvrier specialise         0.52  -0.47
@@ -491,11 +512,11 @@ X-squared = 387.56, df = 6, p-value &lt; 2.2e-16</code></pre>
 <div id="representation-graphique-1" class="section level3">
 <h3><span class="header-section-number">4.1.3</span> Représentation graphique</h3>
 <p>Il est possible de faire une représentation graphique d’un tableau croisé, par exemple avec la fonction <code>mosaicplot</code> :</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">mosaicplot</span>(tab)</code></pre></div>
-<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-108-1.svg" width="576" /></p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">mosaicplot</span>(tab)</code></pre>
+<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-119-1.svg" width="576" /></p>
 <p>On peut améliorer ce graphique en colorant les cases selon les résidus du test du χ² (argument <code>shade = TRUE</code>) et en orientant verticalement les labels de colonnes (argument <code>las = 3</code>) :</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">mosaicplot</span>(tab, <span class="dt">las =</span> <span class="dv">3</span>, <span class="dt">shade =</span> <span class="ot">TRUE</span>)</code></pre></div>
-<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-109-1.svg" width="576" /></p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">mosaicplot</span>(tab, <span class="dt">las =</span> <span class="dv">3</span>, <span class="dt">shade =</span> <span class="ot">TRUE</span>)</code></pre>
+<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-120-1.svg" width="576" /></p>
 <p>Chaque rectangle de ce graphique représente une case de tableau. Sa largeur correspond au pourcentage des modalités en colonnes (il y’a beaucoup d’employés et d’ouvriers et très peu d’“autres”). Sa hauteur correspond aux pourcentages colonnes : la proportion d’hommes chez les cadres est plus élevée que chez les employés. Enfin, la couleur de la case correspond au résidu du test du χ² correspondant : les cases en rouge sont sous-représentées, les cases en bleu sur-représentées, et les cases blanches sont proches des effectifs attendus sous l’hypothèse d’indépendance.</p>
 </div>
 </div>
@@ -505,14 +526,14 @@ X-squared = 387.56, df = 6, p-value &lt; 2.2e-16</code></pre>
 <h3><span class="header-section-number">4.2.1</span> Représentation graphique</h3>
 <p>Croiser une variable quantitative et une variable qualitative, c’est essayer de voir si les valeurs de la variable quantitative se répartissent différemment selon la catégorie d’appartenance de la variable qualitative.</p>
 <p>Pour cela, l’idéal est de commencer par une représentation graphique de type “boîte à moustache” à l’aide de la fonction <code>boxplot</code>. Par exemple, si on veut visualiser la répartition des âges selon la pratique ou non d’un sport, on va utiliser la syntaxe suivante :</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">boxplot</span>(d<span class="op">$</span>age <span class="op">~</span><span class="st"> </span>d<span class="op">$</span>sport)</code></pre></div>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">boxplot</span>(d<span class="op">$</span>age <span class="op">~</span><span class="st"> </span>d<span class="op">$</span>sport)</code></pre>
 <div class="rmdnote">
 <p>
 Cette syntaxe de <code>boxplot</code> utilise une nouvelle notation de type “formule”. Celle-ci est utilisée notamment pour la spécification des modèles de régression. Ici le <code>~</code> peut se lire comme “en fonction de” : on veut représenter le boxplot de l’âge en fonction du sport.
 </p>
 </div>
 <p>Ce qui va nous donner le résultat suivant :</p>
-<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-112-1.svg" width="672" /></p>
+<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-123-1.svg" width="672" /></p>
 <div class="rmdnote">
 <p>
 L’interprétation d’un boxplot est la suivante : Les bords inférieurs et supérieurs du carré central représentent le premier et le troisième quartile de la variable représentée sur l’axe vertical. On a donc 50% de nos observations dans cet intervalle. Le trait horizontal dans le carré représente la médiane. Enfin, des “moustaches” s’étendent de chaque côté du carré, jusqu’aux valeurs minimales et maximales, avec une exception : si des valeurs sont éloignées du carré de plus de 1,5 fois l’écart interquartile (la hauteur du carré), alors on les représente sous forme de points (symbolisant des valeurs considérées comme “extrêmes”).
@@ -523,19 +544,19 @@ L’interprétation d’un boxplot est la suivante : Les bords inférieurs et s
 <div id="calculs-dindicateurs" class="section level3">
 <h3><span class="header-section-number">4.2.2</span> Calculs d’indicateurs</h3>
 <p>On peut aussi vouloir comparer certains indicateurs (moyenne, médiane) d’une variable quantitative selon les modalités d’une variable qualitative. Si on reprend l’exemple précédent, on peut calculer la moyenne d’âge pour ceux qui pratiquent un sport et pour ceux qui n’en pratiquent pas.</p>
-<p>Une première méthode pour cela est d’extraire de notre population autant de sous-populations qu’il y a de modalités dans la variable qualitative. On peut le faire notamment avec la fonction <code>filter</code> du package <code>dplyr</code> <a href="#fn9" class="footnoteRef" id="fnref9"><sup>9</sup></a>.</p>
+<p>Une première méthode pour cela est d’extraire de notre population autant de sous-populations qu’il y a de modalités dans la variable qualitative. On peut le faire notamment avec la fonction <code>filter</code> du package <code>dplyr</code> <a href="#fn9" class="footnote-ref" id="fnref9"><sup>9</sup></a>.</p>
 <p>On commence par charger <code>dplyr</code> (en l’ayant préalablement installé) :</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(dplyr)</code></pre></div>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(dplyr)</code></pre>
 <p>Puis on applique <code>filter</code> pour créer deux sous-populations, stockées dans deux nouveaux tableaux de données :</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">d_sport &lt;-<span class="st"> </span><span class="kw">filter</span>(d, sport <span class="op">==</span><span class="st"> &quot;Oui&quot;</span>)
-d_nonsport &lt;-<span class="st"> </span><span class="kw">filter</span>(d, sport <span class="op">==</span><span class="st"> &quot;Non&quot;</span>)</code></pre></div>
+<pre class="sourceCode r"><code class="sourceCode r">d_sport &lt;-<span class="st"> </span><span class="kw">filter</span>(d, sport <span class="op">==</span><span class="st"> &quot;Oui&quot;</span>)
+d_nonsport &lt;-<span class="st"> </span><span class="kw">filter</span>(d, sport <span class="op">==</span><span class="st"> &quot;Non&quot;</span>)</code></pre>
 <p>On peut ensuite utiliser ces deux nouveaux tableaux de données comme on en a l’habitude, et calculer les deux moyennes d’âge :</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">mean</span>(d_sport<span class="op">$</span>age)</code></pre></div>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">mean</span>(d_sport<span class="op">$</span>age)</code></pre>
 <pre><code>[1] 40.92531</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">mean</span>(d_nonsport<span class="op">$</span>age)</code></pre></div>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">mean</span>(d_nonsport<span class="op">$</span>age)</code></pre>
 <pre><code>[1] 52.25137</code></pre>
 <p>Une autre possibilité est d’utiliser la fonction <code>tapply</code>, qui prend en paramètre une variable quantitative, une variable qualitative et une fonction, puis applique automatiquement la fonction aux valeurs de la variables quantitative pour chaque niveau de la variable qualitative :</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">tapply</span>(d<span class="op">$</span>age, d<span class="op">$</span>sport, mean)</code></pre></div>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">tapply</span>(d<span class="op">$</span>age, d<span class="op">$</span>sport, mean)</code></pre>
 <pre><code>     Non      Oui 
 52.25137 40.92531 </code></pre>
 <p>On verra dans la partie <a href="10-dplyr.html#dplyr">10</a> d’autres méthodes basées sur <code>dplyr</code> pour effectuer ce genre d’opérations.</p>
@@ -544,7 +565,7 @@ d_nonsport &lt;-<span class="st"> </span><span class="kw">filter</span>(d, sport
 <h3><span class="header-section-number">4.2.3</span> Tests statistiques</h3>
 <p>Un des tests les plus connus est le test du <em>t</em> de Student, qui permet de tester si les moyennes de deux sous-populations peuvent être considérées comme différentes (compte tenu des fluctuations aléatoires provenant du biais d’échantillonnage).</p>
 <p>Un test <em>t</em> s’effectue à l’aide de la fonction <code>t.test</code>. Ainsi, on peut tester l’hypothèse d’égalité des âges moyens selon la pratique ou non d’un sport avec la commande suivante :</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">t.test</span>(d<span class="op">$</span>age <span class="op">~</span><span class="st"> </span>d<span class="op">$</span>sport)</code></pre></div>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">t.test</span>(d<span class="op">$</span>age <span class="op">~</span><span class="st"> </span>d<span class="op">$</span>sport)</code></pre>
 <pre><code>
     Welch Two Sample t-test
 
@@ -558,19 +579,19 @@ mean in group Non mean in group Oui
          52.25137          40.92531 </code></pre>
 <p>Le résultat du test est significatif, avec un <em>p</em> extrêmement petit, et on peut rejeter l’hypothèse nulle d’égalité des moyennes des deux groupes. Le test nous donne même un intervalle de confiance à 95% pour la valeur de la différence entre les deux moyennes.</p>
 <p>Nous sommes cependant allés un peu vite, et avons négligé le fait que le test <em>t</em> s’applique normalement à des distributions normales. On peut se faire un premier aperçu visuel de cette normalité en traçant les histogrammes des deux répartitions :</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">hist</span>(d_sport<span class="op">$</span>age)</code></pre></div>
-<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-120-1.svg" width="672" /></p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">hist</span>(d_nonsport<span class="op">$</span>age)</code></pre></div>
-<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-121-1.svg" width="672" /></p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">hist</span>(d_sport<span class="op">$</span>age)</code></pre>
+<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-131-1.svg" width="672" /></p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">hist</span>(d_nonsport<span class="op">$</span>age)</code></pre>
+<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-132-1.svg" width="672" /></p>
 <p>Si l’âge dans le groupe des non sportifs se rapproche d’une distribution normale, celui des sportifs en semble assez éloigné, notamment du fait de la limite d’âge à 18 ans imposée par construction de l’enquête.</p>
 <p>On peut tester cette normalité à l’aide du test de Shapiro-Wilk et de la fonction <code>shapiro.test</code> :</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">shapiro.test</span>(d_sport<span class="op">$</span>age)</code></pre></div>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">shapiro.test</span>(d_sport<span class="op">$</span>age)</code></pre>
 <pre><code>
     Shapiro-Wilk normality test
 
 data:  d_sport$age
 W = 0.96203, p-value = 9.734e-13</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">shapiro.test</span>(d_nonsport<span class="op">$</span>age)</code></pre></div>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">shapiro.test</span>(d_nonsport<span class="op">$</span>age)</code></pre>
 <pre><code>
     Shapiro-Wilk normality test
 
@@ -578,7 +599,7 @@ data:  d_nonsport$age
 W = 0.98844, p-value = 1.654e-08</code></pre>
 <p>Le test est significatif dans les deux cas et rejette l’hypothèse d’une normalité des deux distributions.</p>
 <p>Dans ce cas on peut faire appel à un test non-paramétrique, qui ne fait donc pas d’hypothèses sur les lois de distribution des variables testées, en l’occurrence le test des rangs de Wilcoxon, à l’aide de la fonction <code>wilcox.test</code> :</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">wilcox.test</span>(d<span class="op">$</span>age <span class="op">~</span><span class="st"> </span>d<span class="op">$</span>sport)</code></pre></div>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">wilcox.test</span>(d<span class="op">$</span>age <span class="op">~</span><span class="st"> </span>d<span class="op">$</span>sport)</code></pre>
 <pre><code>
     Wilcoxon rank sum test with continuity correction
 
@@ -591,18 +612,18 @@ alternative hypothesis: true location shift is not equal to 0</code></pre>
 <div id="croisement-de-deux-variables-quantitatives" class="section level2">
 <h2><span class="header-section-number">4.3</span> Croisement de deux variables quantitatives</h2>
 <p>Le jeu de données <code>hdv2003</code> comportant assez peu de variables quantitatives, on va s’intéresser maintenant à un autre jeu de données comportant des informations du recensement de la population de 2012. On le charge avec :</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">data</span>(rp2012)</code></pre></div>
-<p>Un nouveau tableau de données <code>rp2012</code> devrait apparaître dans votre environnement. Celui-ci comprend les 5170 communes de Métropole de plus de 2000 habitants, et une soixantaine de variables telles que le département, la population, le taux de chômage, etc. Pour une description plus complète et une liste des variables, voir section <a href="14-ressources.html#rp2012">A.3.2.3</a>.</p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">data</span>(rp2012)</code></pre>
+<p>Un nouveau tableau de données <code>rp2012</code> devrait apparaître dans votre environnement. Celui-ci comprend les 5170 communes de France métropolitaine de plus de 2000 habitants, et une soixantaine de variables telles que le département, la population, le taux de chômage, etc. Pour une description plus complète et une liste des variables, voir section <a href="14-ressources.html#rp2012">A.3.2.3</a>.</p>
 <div id="representation-graphique-3" class="section level3">
 <h3><span class="header-section-number">4.3.1</span> Représentation graphique</h3>
-<p>Quand on croise deux variables quantitatives, l’idéal est de faire une représentation graphique sous forme de nuage de points à l’aide de la fonction <code>plot</code>. On va représenter le croisement entre le pourcentage de cadres et le pourcentage de diplômés du supérieur dans la commune :</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plot</span>(rp2012<span class="op">$</span>cadres, rp2012<span class="op">$</span>proprio)</code></pre></div>
-<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-126-1.svg" width="672" /></p>
+<p>Quand on croise deux variables quantitatives, l’idéal est de faire une représentation graphique sous forme de nuage de points à l’aide de la fonction <code>plot</code>. On va représenter le croisement entre le pourcentage de cadres et le pourcentage de propriétaires dans la commune :</p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plot</span>(rp2012<span class="op">$</span>cadres, rp2012<span class="op">$</span>proprio)</code></pre>
+<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-137-1.svg" width="672" /></p>
 <p>Une représentation graphique est l’idéal pour visualiser l’existence d’un lien entre les deux variables. Voici quelques exemples d’interprétation :</p>
-<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-127-1.svg" width="576" /></p>
+<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-138-1.svg" width="576" /></p>
 <p>Dans ce premier graphique généré sur nos données, il semble difficile de mettre en évidence une relation de dépendance. Si par contre on croise le pourcentage de cadres et celui de diplômés du supérieur, on obtient une belle relation de dépendance linéaire.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plot</span>(rp2012<span class="op">$</span>cadres, rp2012<span class="op">$</span>dipl_sup)</code></pre></div>
-<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-128-1.svg" width="672" /></p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plot</span>(rp2012<span class="op">$</span>cadres, rp2012<span class="op">$</span>dipl_sup)</code></pre>
+<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-139-1.svg" width="672" /></p>
 </div>
 <div id="calcul-dindicateurs" class="section level3">
 <h3><span class="header-section-number">4.3.2</span> Calcul d’indicateurs</h3>
@@ -612,11 +633,11 @@ alternative hypothesis: true location shift is not equal to 0</code></pre>
 <p>La corrélation est une mesure du lien d’association <em>linéaire</em> entre deux variables quantitatives. Sa valeur varie entre -1 et 1. Si la corrélation vaut -1, il s’agit d’une association linéaire négative parfaite. Si elle vaut 1, il s’agit d’une association linéaire positive parfaite. Si elle vaut 0, il n’y a aucune association linéaire entre les variables.</p>
 <p>On la calcule dans R à l’aide de la fonction <code>cor</code>.</p>
 <p>Ainsi la corrélation entre le pourcentage de cadres et celui de diplômés du supérieur vaut :</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">cor</span>(rp2012<span class="op">$</span>cadres, rp2012<span class="op">$</span>dipl_sup)</code></pre></div>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">cor</span>(rp2012<span class="op">$</span>cadres, rp2012<span class="op">$</span>dipl_sup)</code></pre>
 <pre><code>[1] 0.9371629</code></pre>
 <p>Ce qui est extrêmement fort. Il y a donc un lien linéaire et positif entre les deux variables (quand la valeur de l’une augmente, la valeur de l’autre augmente également).</p>
 <p>À l’inverse, la corrélation entre le pourcentage de cadres et le pourcentage de propriétaires vaut :</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">cor</span>(rp2012<span class="op">$</span>cadres, rp2012<span class="op">$</span>proprio)</code></pre></div>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">cor</span>(rp2012<span class="op">$</span>cadres, rp2012<span class="op">$</span>proprio)</code></pre>
 <pre><code>[1] 0.1622786</code></pre>
 <p>Ce qui indique, pour nos données, une absence de liaison linéaire entre les deux variables.</p>
 </div>
@@ -625,10 +646,10 @@ alternative hypothesis: true location shift is not equal to 0</code></pre>
 <p>Le coefficient de corrélation de Pearson ci-dessus fait une hypothèse forte sur les données : elles doivent être liées par une association linéaire. Quand ça n’est pas le cas mais qu’on est en présence d’une association monotone, on peut utiliser un autre coefficient, le coefficient de corrélation des rangs de Spearman.</p>
 <p>Plutôt que de se baser sur les valeurs des variables, cette corrélation va se baser sur leurs rangs, c’est-à-dire sur leur position parmi les différentes valeurs prises par les variables.</p>
 <p>Ainsi, si la valeur la plus basse de la première variable est associée à la valeur la plus basse de la deuxième, et ainsi de suite jusqu’à la valeur la plus haute, on obtiendra une corrélation de 1. Si la valeur la plus forte de la première variable est associée à la valeur la plus faible de la seconde, et ainsi de suite, et que la valeur la plus faible de la première est associée à la plus forte de la deuxième, on obtiendra une corrélation de -1. Si les rangs sont “mélangés”, sans rapports entre eux, on obtiendra une corrélation autour de 0.</p>
-<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-131-1.svg" width="576" /></p>
+<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-142-1.svg" width="576" /></p>
 <p>La corrélation des rangs a aussi pour avantage d’être moins sensibles aux valeurs extrêmes ou aux points isolés. On dit qu’elle est plus “robuste”.</p>
 <p>Pour calculer une corrélation de Spearman, on utilise la fonction <code>cor</code> mais avec l’argument <code>method = &quot;spearman&quot;</code> :</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">cor</span>(rp2012<span class="op">$</span>cadres, rp2012<span class="op">$</span>dipl_sup, <span class="dt">method =</span> <span class="st">&quot;spearman&quot;</span>)</code></pre></div>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">cor</span>(rp2012<span class="op">$</span>cadres, rp2012<span class="op">$</span>dipl_sup, <span class="dt">method =</span> <span class="st">&quot;spearman&quot;</span>)</code></pre>
 <pre><code>[1] 0.9036273</code></pre>
 </div>
 </div>
@@ -636,7 +657,7 @@ alternative hypothesis: true location shift is not equal to 0</code></pre>
 <h3><span class="header-section-number">4.3.3</span> Régression linéaire</h3>
 <p>Quand on est en présence d’une association linéaire entre deux variables, on peut vouloir faire la régression linéaire d’une des variables sur l’autres.</p>
 <p>Une régression linéaire simple se fait à l’aide de la fonction <code>lm</code> :</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">lm</span>(rp2012<span class="op">$</span>cadres <span class="op">~</span><span class="st"> </span>rp2012<span class="op">$</span>dipl_sup)</code></pre></div>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">lm</span>(rp2012<span class="op">$</span>cadres <span class="op">~</span><span class="st"> </span>rp2012<span class="op">$</span>dipl_sup)</code></pre>
 <pre><code>
 Call:
 lm(formula = rp2012$cadres ~ rp2012$dipl_sup)
@@ -649,14 +670,14 @@ Coefficients:
 On retrouve avec <code>lm</code> la syntaxe “formule” déjà rencontrée avec <code>boxplot</code>. Elle permet ici de spécifier des modèles de régression : la variable dépendante se place à gauche du <code>~</code>, et la variable indépendante à droite. Si on souhaite faire une régression multiple avec plusieurs variables indépendantes, on aura une formule du type <code>dep ~ indep1 + indep2</code>. Il est également possible de spécifier des termes plus complexes, des interactions, etc.
 </p>
 </div>
-<p><code>lm</code> nous renvoit par défaut les coefficients de la droite de régression :</p>
+<p><code>lm</code> nous renvoie par défaut les coefficients de la droite de régression :</p>
 <ul>
 <li>l’ordonnée à l’origine <code>(Intercept)</code> vaut 0.92</li>
 <li>le coefficient associé à <code>dipl_sup</code> vaut 1.08</li>
 </ul>
 <p>Pour des résultats plus détaillés, on peut stocker le résultat de la régression dans un objet et utiliser la fonction <code>summary</code> :</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">reg &lt;-<span class="st"> </span><span class="kw">lm</span>(rp2012<span class="op">$</span>cadres <span class="op">~</span><span class="st"> </span>rp2012<span class="op">$</span>dipl_sup)
-<span class="kw">summary</span>(reg)</code></pre></div>
+<pre class="sourceCode r"><code class="sourceCode r">reg &lt;-<span class="st"> </span><span class="kw">lm</span>(rp2012<span class="op">$</span>cadres <span class="op">~</span><span class="st"> </span>rp2012<span class="op">$</span>dipl_sup)
+<span class="kw">summary</span>(reg)</code></pre>
 <pre><code>
 Call:
 lm(formula = rp2012$cadres ~ rp2012$dipl_sup)
@@ -675,11 +696,12 @@ Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&
 Residual standard error: 2.701 on 5168 degrees of freedom
 Multiple R-squared:  0.8783,    Adjusted R-squared:  0.8783 
 F-statistic: 3.729e+04 on 1 and 5168 DF,  p-value: &lt; 2.2e-16</code></pre>
-<p>Ces résultats montrent notamment que les coefficients sont significativement différents de 0. La part de cadres augmente donc bien avec celle de diplômés du supérieur.</p>
+<p>Ces résultats montrent notamment que les coefficients sont significativement
+différents de 0. La part de cadres augmente donc bien avec celle de diplômés du supérieur.</p>
 <p>On peut enfin représenter la droite de régression sur notre nuage de points à l’aide de la fonction <code>abline</code> :</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plot</span>(rp2012<span class="op">$</span>dipl_sup, rp2012<span class="op">$</span>cadres)
-<span class="kw">abline</span>(reg, <span class="dt">col=</span><span class="st">&quot;red&quot;</span>)</code></pre></div>
-<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-136-1.svg" width="672" /></p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plot</span>(rp2012<span class="op">$</span>dipl_sup, rp2012<span class="op">$</span>cadres)
+<span class="kw">abline</span>(reg, <span class="dt">col=</span><span class="st">&quot;red&quot;</span>)</code></pre>
+<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-147-1.svg" width="672" /></p>
 </div>
 </div>
 <div id="exercices-2" class="section level2">
@@ -687,58 +709,44 @@ F-statistic: 3.729e+04 on 1 and 5168 DF,  p-value: &lt; 2.2e-16</code></pre>
 <p><strong>Exercice 1</strong></p>
 <p>Dans le jeu de données <code>hdv2003</code>, faire le tableau croisé entre la catégorie socio-professionnelle (variable <code>qualif</code>) et le fait de croire ou non en l’existence des classes sociales (variable <code>clso</code>). Identifier la variable indépendante et la variable dépendante, et calculer les pourcentages ligne ou colonne. Interpréter le résultat.</p>
 <div class="solution">
-
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(questionr)
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(questionr)
 <span class="kw">data</span>(hdv2003)
 tab &lt;-<span class="st"> </span><span class="kw">table</span>(hdv2003<span class="op">$</span>qualif, hdv2003<span class="op">$</span>clso)
 
-## Ici la variable indépendante est `qualif`, on calcule donc 
-## les pourcentages lignes
-<span class="kw">lprop</span>(tab)</code></pre></div>
-
+<span class="co">## Ici la variable indépendante est `qualif`, on calcule donc </span>
+<span class="co">## les pourcentages lignes</span>
+<span class="kw">lprop</span>(tab)</code></pre>
 </div>
 <p>Faire un test du χ². Peut-on rejeter l’hypothèse d’indépendance ?</p>
 <div class="solution">
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">chisq.test</span>(tab)
 
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">chisq.test</span>(tab)
-
-## On peut rejeter l&#39;hypothèse d&#39;indépendance au seuil de 0.05, 
-## et même au seuil de 0.001</code></pre></div>
-
+<span class="co">## On peut rejeter l&#39;hypothèse d&#39;indépendance au seuil de 0.05, </span>
+<span class="co">## et même au seuil de 0.001</span></code></pre>
 </div>
 <p>Représenter ce tableau croisé sous la forme d’un <code>mosaicplot</code> en colorant les cases selon les résidus du test du χ².</p>
 <div class="solution">
-
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">mosaicplot</span>(tab, <span class="dt">shade =</span> <span class="ot">TRUE</span>)</code></pre></div>
-
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">mosaicplot</span>(tab, <span class="dt">shade =</span> <span class="ot">TRUE</span>)</code></pre>
 </div>
 <p><strong>Exercice 2</strong></p>
 <p>Toujours sur le jeu de données <code>hdv2003</code>, faire le boxplot qui croise le nombre d’heures passées devant la télévision (variable <code>heures.tv</code>) avec le statut d’occupation (variable <code>occup</code>).</p>
 <div class="solution">
-
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">boxplot</span>(hdv2003<span class="op">$</span>heures.tv <span class="op">~</span><span class="st"> </span>hdv2003<span class="op">$</span>occup)</code></pre></div>
-
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">boxplot</span>(hdv2003<span class="op">$</span>heures.tv <span class="op">~</span><span class="st"> </span>hdv2003<span class="op">$</span>occup)</code></pre>
 </div>
-<p>Calculer la durée moyenne en fonction du statut d’occupation à l’aide de <code>tapply</code>.</p>
+<p>Calculer la durée moyenne devant la télévision en fonction du statut d’occupation à l’aide de <code>tapply</code>.</p>
 <div class="solution">
-
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">tapply</span>(hdv2003<span class="op">$</span>heures.tv, hdv2003<span class="op">$</span>occup, mean, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>)</code></pre></div>
-
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">tapply</span>(hdv2003<span class="op">$</span>heures.tv, hdv2003<span class="op">$</span>occup, mean, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>)</code></pre>
 </div>
 <p><strong>Exercice 3</strong></p>
 <p>Sur le jeu de données <code>rp2012</code>, représenter le nuage de points croisant le pourcentage de personnes sans diplôme (variable <code>dipl_aucun</code>) et le pourcentage de propriétaires (variable <code>proprio</code>).</p>
 <div class="solution">
-
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(questionr)
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(questionr)
 <span class="kw">data</span>(rp2012)
-<span class="kw">plot</span>(rp2012<span class="op">$</span>dipl_aucun, rp2012<span class="op">$</span>proprio)</code></pre></div>
-
+<span class="kw">plot</span>(rp2012<span class="op">$</span>dipl_aucun, rp2012<span class="op">$</span>proprio)</code></pre>
 </div>
 <p>Calculer le coefficient de corrélation linéaire correspondant.</p>
 <div class="solution">
-
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">cor</span>(rp2012<span class="op">$</span>dipl_aucun, rp2012<span class="op">$</span>proprio)</code></pre></div>
-
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">cor</span>(rp2012<span class="op">$</span>dipl_aucun, rp2012<span class="op">$</span>proprio)</code></pre>
 </div>
 
 </div>
@@ -746,7 +754,7 @@ tab &lt;-<span class="st"> </span><span class="kw">table</span>(hdv2003<span cla
 <div class="footnotes">
 <hr />
 <ol start="9">
-<li id="fn9"><p>Le package en question est présenté en détail dans la partie <a href="10-dplyr.html#dplyr">10</a>.<a href="04-bivarie.html#fnref9">↩</a></p></li>
+<li id="fn9"><p>Le package en question est présenté en détail dans la partie <a href="10-dplyr.html#dplyr">10</a>.<a href="04-bivarie.html#fnref9" class="footnote-back">↩</a></p></li>
 </ol>
 </div>
 <script src="js/tidyverse.js"></script>
@@ -776,9 +784,10 @@ gitbook.start({
 "google": false,
 "linkedin": false,
 "weibo": false,
-"instapper": false,
+"instapaper": false,
 "vk": false,
-"all": ["facebook", "google", "twitter", "linkedin", "weibo", "instapaper"]
+"all": ["facebook", "google", "twitter", "linkedin", "weibo", "instapaper"],
+"instapper": false
 },
 "fontsettings": {
 "theme": "white",
@@ -788,6 +797,10 @@ gitbook.start({
 "edit": {
 "link": "https://github.com/juba/tidyverse/blob/master/04-bivarie.Rmd",
 "text": "Source"
+},
+"history": {
+"link": null,
+"text": null
 },
 "download": ["introduction_au_tidyverse.pdf", "introduction_au_tidyverse.epub"],
 "toc": {

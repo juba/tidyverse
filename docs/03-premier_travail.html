@@ -5,27 +5,27 @@
 
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>Introduction à R et au tidyverse</title>
-  <meta name="description" content="Une introduction à R et aux extensions du <em>tidyverse</em>">
-  <meta name="generator" content="bookdown 0.7 and GitBook 2.6.7">
+  <title>Partie 3 Premier travail avec des données | Introduction à R et au tidyverse</title>
+  <meta name="description" content="Une introduction à R et aux extensions du tidyverse">
+  <meta name="generator" content="bookdown  and GitBook 2.6.7">
 
-  <meta property="og:title" content="Introduction à R et au tidyverse" />
+  <meta property="og:title" content="Partie 3 Premier travail avec des données | Introduction à R et au tidyverse" />
   <meta property="og:type" content="book" />
   
   
-  <meta property="og:description" content="Une introduction à R et aux extensions du <em>tidyverse</em>" />
+  <meta property="og:description" content="Une introduction à R et aux extensions du tidyverse" />
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Introduction à R et au tidyverse" />
+  <meta name="twitter:title" content="Partie 3 Premier travail avec des données | Introduction à R et au tidyverse" />
   
-  <meta name="twitter:description" content="Une introduction à R et aux extensions du <em>tidyverse</em>" />
+  <meta name="twitter:description" content="Une introduction à R et aux extensions du tidyverse" />
   
 
 <meta name="author" content="Julien Barnier">
 
 
-<meta name="date" content="2018-03-08">
+<meta name="date" content="2019-02-06">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -36,6 +36,7 @@
 <link rel="next" href="04-bivarie.html">
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
@@ -47,62 +48,81 @@
 
 
 
-<script src="libs/htmlwidgets-1.0/htmlwidgets.js"></script>
-<link href="libs/leaflet-0.7.7/leaflet.css" rel="stylesheet" />
-<script src="libs/leaflet-0.7.7/leaflet.js"></script>
+<script src="libs/htmlwidgets-1.3/htmlwidgets.js"></script>
+<link href="libs/leaflet-1.3.1/leaflet.css" rel="stylesheet" />
+<script src="libs/leaflet-1.3.1/leaflet.js"></script>
 <link href="libs/leafletfix-1.0.0/leafletfix.css" rel="stylesheet" />
-<link href="libs/leaflet-label-0.2.2/leaflet.label.css" rel="stylesheet" />
-<script src="libs/leaflet-label-0.2.2/leaflet.label.js"></script>
-<script src="libs/Proj4Leaflet-0.7.2/proj4-compressed.js"></script>
-<script src="libs/Proj4Leaflet-0.7.2/proj4leaflet.js"></script>
-<script src="libs/leaflet-binding-1.1.0/leaflet.js"></script>
-<link href="libs/pagedtable-1.1/css/pagedtable.css" rel="stylesheet" />
-<script src="libs/pagedtable-1.1/js/pagedtable.js"></script>
-<script src="libs/datatables-binding-0.2/datatables.js"></script>
-<link href="libs/dt-core-1.10.12/css/jquery.dataTables.min.css" rel="stylesheet" />
-<link href="libs/dt-core-1.10.12/css/jquery.dataTables.extra.css" rel="stylesheet" />
-<script src="libs/dt-core-1.10.12/js/jquery.dataTables.min.js"></script>
+<script src="libs/Proj4Leaflet-1.0.1/proj4-compressed.js"></script>
+<script src="libs/Proj4Leaflet-1.0.1/proj4leaflet.js"></script>
+<link href="libs/rstudio_leaflet-1.3.1/rstudio_leaflet.css" rel="stylesheet" />
+<script src="libs/leaflet-binding-2.0.2/leaflet.js"></script>
 
 
 <style type="text/css">
-div.sourceCode { overflow-x: auto; }
-table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
-  margin: 0; padding: 0; vertical-align: baseline; border: none; }
-table.sourceCode { width: 100%; line-height: 100%; background-color: #ffffff; color: #1f1c1b; }
-td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; background-color: #ffffff; color: #a0a0a0; border-right: 1px solid #a0a0a0; }
-td.sourceCode { padding-left: 5px; }
-pre, code { color: #1f1c1b; background-color: #ffffff; }
-code > span.kw { color: #1f1c1b; font-weight: bold; } /* Keyword */
-code > span.dt { color: #0057ae; } /* DataType */
-code > span.dv { color: #b08000; } /* DecVal */
-code > span.bn { color: #b08000; } /* BaseN */
-code > span.fl { color: #b08000; } /* Float */
-code > span.cn { color: #aa5500; } /* Constant */
-code > span.ch { color: #924c9d; } /* Char */
-code > span.sc { color: #3daee9; } /* SpecialChar */
-code > span.st { color: #bf0303; } /* String */
-code > span.vs { color: #bf0303; } /* VerbatimString */
-code > span.ss { color: #ff5500; } /* SpecialString */
-code > span.im { color: #ff5500; } /* Import */
-code > span.co { color: #898887; } /* Comment */
-code > span.do { color: #607880; } /* Documentation */
-code > span.an { color: #ca60ca; } /* Annotation */
-code > span.cv { color: #0095ff; } /* CommentVar */
-code > span.ot { color: #006e28; } /* Other */
-code > span.fu { color: #644a9b; } /* Function */
-code > span.va { color: #0057ae; } /* Variable */
-code > span.cf { color: #1f1c1b; font-weight: bold; } /* ControlFlow */
-code > span.op { color: #1f1c1b; } /* Operator */
-code > span.bu { color: #644a9b; font-weight: bold; } /* BuiltIn */
-code > span.ex { color: #0095ff; font-weight: bold; } /* Extension */
-code > span.pp { color: #006e28; } /* Preprocessor */
-code > span.at { color: #0057ae; } /* Attribute */
-code > span.re { color: #0057ae; } /* RegionMarker */
-code > span.in { color: #b08000; } /* Information */
-code > span.wa { color: #bf0303; } /* Warning */
-code > span.al { color: #bf0303; font-weight: bold; } /* Alert */
-code > span.er { color: #bf0303; text-decoration: underline; } /* Error */
-code > span. { color: #1f1c1b; } /* Normal */
+a.sourceLine { display: inline-block; line-height: 1.25; }
+a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
+a.sourceLine:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode { white-space: pre; position: relative; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+code.sourceCode { white-space: pre-wrap; }
+a.sourceLine { text-indent: -1em; padding-left: 1em; }
+}
+pre.numberSource a.sourceLine
+  { position: relative; left: -4em; }
+pre.numberSource a.sourceLine::before
+  { content: attr(data-line-number);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; pointer-events: all; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    background-color: #ffffff;
+    color: #a0a0a0;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #a0a0a0;  padding-left: 4px; }
+div.sourceCode
+  { color: #1f1c1b; background-color: #ffffff; }
+@media screen {
+a.sourceLine::before { text-decoration: underline; }
+}
+code span. { color: #1f1c1b; } /* Normal */
+code span.al { color: #bf0303; background-color: #f7e6e6; font-weight: bold; } /* Alert */
+code span.an { color: #ca60ca; } /* Annotation */
+code span.at { color: #0057ae; } /* Attribute */
+code span.bn { color: #b08000; } /* BaseN */
+code span.bu { color: #644a9b; font-weight: bold; } /* BuiltIn */
+code span.cf { color: #1f1c1b; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #924c9d; } /* Char */
+code span.cn { color: #aa5500; } /* Constant */
+code span.co { color: #898887; } /* Comment */
+code span.cv { color: #0095ff; } /* CommentVar */
+code span.do { color: #607880; } /* Documentation */
+code span.dt { color: #0057ae; } /* DataType */
+code span.dv { color: #b08000; } /* DecVal */
+code span.er { color: #bf0303; text-decoration: underline; } /* Error */
+code span.ex { color: #0095ff; font-weight: bold; } /* Extension */
+code span.fl { color: #b08000; } /* Float */
+code span.fu { color: #644a9b; } /* Function */
+code span.im { color: #ff5500; } /* Import */
+code span.in { color: #b08000; } /* Information */
+code span.kw { color: #1f1c1b; font-weight: bold; } /* Keyword */
+code span.op { color: #1f1c1b; } /* Operator */
+code span.ot { color: #006e28; } /* Other */
+code span.pp { color: #006e28; } /* Preprocessor */
+code span.re { color: #0057ae; background-color: #e0e9f8; } /* RegionMarker */
+code span.sc { color: #3daee9; } /* SpecialChar */
+code span.ss { color: #ff5500; } /* SpecialString */
+code span.st { color: #bf0303; } /* String */
+code span.va { color: #0057ae; } /* Variable */
+code span.vs { color: #bf0303; } /* VerbatimString */
+code span.wa { color: #bf0303; } /* Warning */
 </style>
 
 <link rel="stylesheet" href="css/tidyverse.css" type="text/css" />
@@ -241,8 +261,9 @@ code > span. { color: #1f1c1b; } /* Normal */
 <li class="chapter" data-level="8.7.3" data-path="08-ggplot2.html"><a href="08-ggplot2.html#scalecolor"><i class="fa fa-check"></i><b>8.7.3</b> <code>scale_color</code>, <code>scale_fill</code></a></li>
 </ul></li>
 <li class="chapter" data-level="8.8" data-path="08-ggplot2.html"><a href="08-ggplot2.html#themes"><i class="fa fa-check"></i><b>8.8</b> Thèmes</a></li>
-<li class="chapter" data-level="8.9" data-path="08-ggplot2.html"><a href="08-ggplot2.html#ressources-1"><i class="fa fa-check"></i><b>8.9</b> Ressources</a></li>
-<li class="chapter" data-level="8.10" data-path="08-ggplot2.html"><a href="08-ggplot2.html#exercices-3"><i class="fa fa-check"></i><b>8.10</b> Exercices</a></li>
+<li class="chapter" data-level="8.9" data-path="08-ggplot2.html"><a href="08-ggplot2.html#ladd-in-esquisse"><i class="fa fa-check"></i><b>8.9</b> L’add-in <code>esquisse</code></a></li>
+<li class="chapter" data-level="8.10" data-path="08-ggplot2.html"><a href="08-ggplot2.html#ressources-1"><i class="fa fa-check"></i><b>8.10</b> Ressources</a></li>
+<li class="chapter" data-level="8.11" data-path="08-ggplot2.html"><a href="08-ggplot2.html#exercices-3"><i class="fa fa-check"></i><b>8.11</b> Exercices</a></li>
 </ul></li>
 <li class="chapter" data-level="9" data-path="09-recodages.html"><a href="09-recodages.html"><i class="fa fa-check"></i><b>9</b> Recoder des variables</a><ul>
 <li class="chapter" data-level="9.1" data-path="09-recodages.html"><a href="09-recodages.html#rappel-sur-les-variables-et-les-vecteurs"><i class="fa fa-check"></i><b>9.1</b> Rappel sur les variables et les vecteurs</a></li>
@@ -330,7 +351,7 @@ code > span. { color: #1f1c1b; } /* Normal */
 </ul></li>
 <li class="chapter" data-level="13" data-path="13-rmarkdown.html"><a href="13-rmarkdown.html"><i class="fa fa-check"></i><b>13</b> Diffuser et publier avec <code>rmarkdown</code></a><ul>
 <li class="chapter" data-level="13.1" data-path="13-rmarkdown.html"><a href="13-rmarkdown.html#creer-un-nouveau-document"><i class="fa fa-check"></i><b>13.1</b> Créer un nouveau document</a></li>
-<li class="chapter" data-level="13.2" data-path="13-rmarkdown.html"><a href="13-rmarkdown.html#elements-dun-document-r-markdown"><i class="fa fa-check"></i><b>13.2</b> Élements d’un document R Markdown</a><ul>
+<li class="chapter" data-level="13.2" data-path="13-rmarkdown.html"><a href="13-rmarkdown.html#elements-dun-document-r-markdown"><i class="fa fa-check"></i><b>13.2</b> Éléments d’un document R Markdown</a><ul>
 <li class="chapter" data-level="13.2.1" data-path="13-rmarkdown.html"><a href="13-rmarkdown.html#en-tete-preambule"><i class="fa fa-check"></i><b>13.2.1</b> En-tête (préambule)</a></li>
 <li class="chapter" data-level="13.2.2" data-path="13-rmarkdown.html"><a href="13-rmarkdown.html#texte-du-document"><i class="fa fa-check"></i><b>13.2.2</b> Texte du document</a></li>
 <li class="chapter" data-level="13.2.3" data-path="13-rmarkdown.html"><a href="13-rmarkdown.html#blocs-de-code-r"><i class="fa fa-check"></i><b>13.2.3</b> Blocs de code R</a></li>
@@ -350,7 +371,7 @@ code > span. { color: #1f1c1b; } /* Normal */
 </ul></li>
 <li class="chapter" data-level="13.6" data-path="13-rmarkdown.html"><a href="13-rmarkdown.html#templates"><i class="fa fa-check"></i><b>13.6</b> Modèles de documents</a><ul>
 <li class="chapter" data-level="13.6.1" data-path="13-rmarkdown.html"><a href="13-rmarkdown.html#slides"><i class="fa fa-check"></i><b>13.6.1</b> Slides</a></li>
-<li class="chapter" data-level="13.6.2" data-path="13-rmarkdown.html"><a href="13-rmarkdown.html#templates"><i class="fa fa-check"></i><b>13.6.2</b> Templates</a></li>
+<li class="chapter" data-level="13.6.2" data-path="13-rmarkdown.html"><a href="13-rmarkdown.html#templates-1"><i class="fa fa-check"></i><b>13.6.2</b> Templates</a></li>
 </ul></li>
 <li class="chapter" data-level="13.7" data-path="13-rmarkdown.html"><a href="13-rmarkdown.html#ressources-5"><i class="fa fa-check"></i><b>13.7</b> Ressources</a></li>
 </ul></li>
@@ -401,11 +422,11 @@ code > span. { color: #1f1c1b; } /* Normal */
 <p>Pour plus d’informations sur les extensions et leur installation, voir la section <a href="02-prise_en_main.html#packages">2.5</a>.</p>
 <p>Le jeu de données que nous allons utiliser est un extrait de l’enquête <em>Histoire de vie</em> réalisée par l’INSEE en 2003. Il contient 2000 individus et 20 variables. Pour une description plus complète et une liste des variables, voir la section <a href="14-ressources.html#hdv2003">A.3.2.2</a>.</p>
 <p>Pour pouvoir utiliser ces données, il faut d’abord charger l’extension <code>questionr</code> (après l’avoir installée, bien entendu) :</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(questionr)</code></pre></div>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(questionr)</code></pre>
 <p>L’utilisation de <code>library</code> permet de rendre “disponibles”, dans notre session R, les fonctions et jeux de données inclus dans l’extension.</p>
 <p>Nous devons ensuite indiquer à R que nous souhaitons accéder au jeu de données à l’aide de la commande <code>data</code> :</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">data</span>(hdv2003)</code></pre></div>
-<p>Cette commande ne renvoit aucun résultat particulier (sauf en cas d’erreur), mais vous devriez voir apparaître dans l’onglet <em>Environment</em> de RStudio un nouvel objet nommé <code>hdv2003</code> :</p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">data</span>(hdv2003)</code></pre>
+<p>Cette commande ne renvoie aucun résultat particulier (sauf en cas d’erreur), mais vous devriez voir apparaître dans l’onglet <em>Environment</em> de RStudio un nouvel objet nommé <code>hdv2003</code> :</p>
 <div class="figure">
 <img src="resources/screenshots/rstudio_environment.png" alt="Onglet Environment" />
 <p class="caption">Onglet <em>Environment</em></p>
@@ -414,9 +435,9 @@ code > span. { color: #1f1c1b; } /* Normal */
 </div>
 <div id="tableau-de-donnees-data-frame" class="section level2">
 <h2><span class="header-section-number">3.2</span> Tableau de données (<em>data frame</em>)</h2>
-<p>Un <em>data frame</em> (ou tableau de données, ou table) est un type d’objet dans R qui contient des données au format tabulaire, avec les observations en ligne et les variables en colonnes, comme dans une feuille de tableur de type LibreOffice ou Excel.</p>
+<p>Un <em>data frame</em> (ou tableau de données, ou table) est un type d’objet R qui contient des données au format tabulaire, avec les observations en ligne et les variables en colonnes, comme dans une feuille de tableur de type LibreOffice ou Excel.</p>
 <p>Si on se contente d’exécuter le nom de notre tableau de données :</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">hdv2003</code></pre></div>
+<pre class="sourceCode r"><code class="sourceCode r">hdv2003</code></pre>
 <p>R va, comme à son habitude, nous l’afficher dans la console, ce qui est tout sauf utile.</p>
 <p>Une autre manière d’afficher le contenu du tableau est de cliquer sur l’icône en forme de tableau à droite du nom de l’objet dans l’onglet <em>Environment</em> :</p>
 <div class="figure">
@@ -424,47 +445,48 @@ code > span. { color: #1f1c1b; } /* Normal */
 <p class="caption">View icon</p>
 </div>
 <p>Ou d’utiliser la fonction <code>View</code> :</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">View</span>(hdv2003)</code></pre></div>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">View</span>(hdv2003)</code></pre>
 <p>Dans les deux cas votre tableau devrait s’afficher dans RStudio avec une interface de type tableur :</p>
 <div class="figure">
-<img src="resources/screenshots/rstudio_view.png" alt="Interface View" />
+<img src="resources/screenshots/rstudio_view.png" alt="Interface “View”" />
 <p class="caption">Interface “View”</p>
 </div>
-<p>Il est important de comprendre que l’objet <code>hdv2003</code> contient <em>l’intégralité</em> des données du tableau. On voit donc qu’un objet peut contenir des données de types très différents (simple nombre, texte, vecteur, tableau de données entier), et être potentiellement de très grande taille<a href="#fn6" class="footnoteRef" id="fnref6"><sup>6</sup></a>.</p>
+<p>Il est important de comprendre que l’objet <code>hdv2003</code> contient <em>l’intégralité</em> des données du tableau.
+On voit donc qu’un objet peut contenir des données de types très différents (simple nombre, texte, vecteur, tableau de données entier), et être potentiellement de très grande taille<a href="#fn6" class="footnote-ref" id="fnref6"><sup>6</sup></a>.</p>
 <div class="rmdnote">
 <p>
 Sous R, on peut importer ou créer autant de tableaux de données qu’on le souhaite, dans les limites des capacités de sa machine.
 </p>
 </div>
 <p>Un <em>data frame</em> peut être manipulé comme les autres objets vus précédemment. On peut par exemple faire :</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">d &lt;-<span class="st"> </span>hdv2003</code></pre></div>
+<pre class="sourceCode r"><code class="sourceCode r">d &lt;-<span class="st"> </span>hdv2003</code></pre>
 <p>ce qui va entraîner la copie de l’ensemble de nos données dans un nouvel objet nommé <code>d</code>. Ceci peut paraître parfaitement inutile mais a en fait l’avantage de fournir un objet avec un nom beaucoup plus court, ce qui diminuera la quantité de texte à saisir par la suite.</p>
 <p><strong>Pour résumer</strong>, comme nous avons désormais décidé de saisir nos commandes dans un script et non plus directement dans la console, les premières lignes de notre fichier de travail sur les données de l’enquête <em>Histoire de vie</em> pourraient donc ressembler à ceci :</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## Chargement des extensions nécessaires
+<pre class="sourceCode r"><code class="sourceCode r"><span class="co">## Chargement des extensions nécessaires</span>
 <span class="kw">library</span>(questionr)
 
-## Jeu de données hdv2003
+<span class="co">## Jeu de données hdv2003</span>
 <span class="kw">data</span>(hdv2003)
-d &lt;-<span class="st"> </span>hdv2003</code></pre></div>
+d &lt;-<span class="st"> </span>hdv2003</code></pre>
 <div id="structure-du-tableau" class="section level3">
 <h3><span class="header-section-number">3.2.1</span> Structure du tableau</h3>
 <p>Un tableau étant un objet comme un autre, on peut lui appliquer des fonctions. Par exemple, <code>nrow</code> et <code>ncol</code> retournent le nombre de lignes et de colonnes du tableau :</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">nrow</span>(d)</code></pre></div>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">nrow</span>(d)</code></pre>
 <pre><code>[1] 2000</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ncol</span>(d)</code></pre></div>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ncol</span>(d)</code></pre>
 <pre><code>[1] 20</code></pre>
-<p>La fonction <code>dim</code> renvoit ses dimensions, donc les deux nombres précédents :</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">dim</span>(d)</code></pre></div>
+<p>La fonction <code>dim</code> renvoie ses dimensions, donc les deux nombres précédents :</p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">dim</span>(d)</code></pre>
 <pre><code>[1] 2000   20</code></pre>
 <p>La fonction <code>names</code> retourne les noms des colonnes du tableau, c’est-à-dire la liste de nos <em>variables</em> :</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">names</span>(d)</code></pre></div>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">names</span>(d)</code></pre>
 <pre><code> [1] &quot;id&quot;            &quot;age&quot;           &quot;sexe&quot;          &quot;nivetud&quot;      
  [5] &quot;poids&quot;         &quot;occup&quot;         &quot;qualif&quot;        &quot;freres.soeurs&quot;
  [9] &quot;clso&quot;          &quot;relig&quot;         &quot;trav.imp&quot;      &quot;trav.satisf&quot;  
 [13] &quot;hard.rock&quot;     &quot;lecture.bd&quot;    &quot;peche.chasse&quot;  &quot;cuisine&quot;      
 [17] &quot;bricol&quot;        &quot;cinema&quot;        &quot;sport&quot;         &quot;heures.tv&quot;    </code></pre>
-<p>Enfin, la fonction <code>str</code> renvoit un descriptif plus détaillé de la structure du tableau. Elle liste les différentes variables, indique leur type <a href="#fn7" class="footnoteRef" id="fnref7"><sup>7</sup></a> et liste les premières valeurs :</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">str</span>(d)</code></pre></div>
+<p>Enfin, la fonction <code>str</code> renvoie un descriptif plus détaillé de la structure du tableau. Elle liste les différentes variables, indique leur type <a href="#fn7" class="footnote-ref" id="fnref7"><sup>7</sup></a> et affiche les premières valeurs :</p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">str</span>(d)</code></pre>
 <pre><code>&#39;data.frame&#39;:   2000 obs. of  20 variables:
  $ id           : int  1 2 3 4 5 6 7 8 9 10 ...
  $ age          : int  28 23 59 34 71 35 60 47 20 28 ...
@@ -494,8 +516,8 @@ d &lt;-<span class="st"> </span>hdv2003</code></pre></div>
 </div>
 <div id="acceder-aux-variables-dun-tableau" class="section level3">
 <h3><span class="header-section-number">3.2.2</span> Accéder aux variables d’un tableau</h3>
-<p>Une opération très importante est l’accès aux variables du tableau (à ses colonnes) pour pouvoir les manipuler, effectuer des calculs, etc. On va pour cela utiliser l’opérateur <code>$</code>, qui permet d’accéder aux colonnes du tableau. Ainsi, si l’on tape :</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">d<span class="op">$</span>sexe</code></pre></div>
+<p>Une opération très importante est l’accès aux variables du tableau (à ses colonnes) pour pouvoir les manipuler, effectuer des calculs, etc. On utilise pour cela l’opérateur <code>$</code>, qui permet d’accéder aux colonnes du tableau. Ainsi, si l’on tape :</p>
+<pre class="sourceCode r"><code class="sourceCode r">d<span class="op">$</span>sexe</code></pre>
 <pre><code>  [1] Femme Femme Homme Homme Femme Femme Femme Homme Femme Homme Femme
  [12] Homme Femme Femme Femme Femme Homme Femme Homme Femme Femme Homme
  [23] Femme Femme Femme Homme Femme Homme Homme Homme Homme Homme Homme
@@ -518,11 +540,11 @@ d &lt;-<span class="st"> </span>hdv2003</code></pre></div>
  [ reached getOption(&quot;max.print&quot;) -- omitted 1800 entries ]
 Levels: Homme Femme</code></pre>
 <p>R va nous afficher l’ensemble des valeurs de notre variable <code>sexe</code> dans la console, ce qui est à nouveau fort peu utile. Mais cela nous permet de constater que <code>d$sexe</code> est un vecteur de chaînes de caractères tels qu’on en a déjà rencontré précédemment.</p>
-<p>La fonction <code>table$colonne</code> renvoit donc la colonne nommée <code>colonne</code> du tableau <code>table</code>, c’est-à-dire un vecteur, en général de nombres ou de chaînes de caractères.</p>
+<p>La fonction <code>table$colonne</code> renvoie donc la colonne nommée <code>colonne</code> du tableau <code>table</code>, c’est-à-dire un vecteur, en général de nombres ou de chaînes de caractères.</p>
 <p>Si on souhaite afficher seulement les premières ou dernières valeurs d’une variable, on peut utiliser les fonctions <code>head</code> et <code>tail</code> :</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">head</span>(d<span class="op">$</span>age)</code></pre></div>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">head</span>(d<span class="op">$</span>age)</code></pre>
 <pre><code>[1] 28 23 59 34 71 35</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">tail</span>(d<span class="op">$</span>age, <span class="dv">10</span>)</code></pre></div>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">tail</span>(d<span class="op">$</span>age, <span class="dv">10</span>)</code></pre>
 <pre><code> [1] 52 42 50 41 46 45 46 24 24 66</code></pre>
 <p>Le deuxième argument numérique permet d’indiquer le nombre de valeurs à afficher.</p>
 </div>
@@ -530,19 +552,19 @@ Levels: Homme Femme</code></pre>
 <h3><span class="header-section-number">3.2.3</span> Créer une nouvelle variable</h3>
 <p>On peut aussi utiliser l’opérateur <code>$</code> pour créer une nouvelle variable dans notre tableau : pour cela, il suffit de lui assigner une valeur.</p>
 <p>Par exemple, la variable <code>heures.tv</code> contient le nombre d’heures passées quotidiennement devant la télé :</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">head</span>(d<span class="op">$</span>heures.tv, <span class="dv">10</span>)</code></pre></div>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">head</span>(d<span class="op">$</span>heures.tv, <span class="dv">10</span>)</code></pre>
 <pre><code> [1] 0.0 1.0 0.0 2.0 3.0 2.0 2.9 1.0 2.0 2.0</code></pre>
 <p>On peut vouloir créer une nouvelle variable dans notre tableau qui contienne la même durée mais en minutes. On va donc créer une nouvelle variables <code>minutes.tv</code> de la manière suivante :</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">d<span class="op">$</span>minutes.tv &lt;-<span class="st"> </span>d<span class="op">$</span>heures.tv <span class="op">*</span><span class="st"> </span><span class="dv">60</span></code></pre></div>
+<pre class="sourceCode r"><code class="sourceCode r">d<span class="op">$</span>minutes.tv &lt;-<span class="st"> </span>d<span class="op">$</span>heures.tv <span class="op">*</span><span class="st"> </span><span class="dv">60</span></code></pre>
 <p>On peut alors constater, soit visuellement soit dans la console, qu’une nouvelle variable (une nouvelle colonne) a bien été ajoutée au tableau :</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">head</span>(d<span class="op">$</span>minutes.tv)</code></pre></div>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">head</span>(d<span class="op">$</span>minutes.tv)</code></pre>
 <pre><code>[1]   0  60   0 120 180 120</code></pre>
 </div>
 </div>
 <div id="analyse-univariee" class="section level2">
 <h2><span class="header-section-number">3.3</span> Analyse univariée</h2>
 <p>On a donc désormais accès à un tableau de données <code>d</code>, dont les lignes sont des observations (des individus enquêtés), et les colonnes des variables (des caractéristiques de chacun de ces individus), et on sait accéder à ces variables grâce à l’opérateur <code>$</code>.</p>
-<p>Si on souhaite analyser ces variables, les méthodes et fonctions utilisées seront différentes selon qu’il s’agit d’une variable <em>quantitative</em> (variable numérique pouvant prendre un grand nombre de valeurs comme l’âge, le revenu, un pourcentage…) ou d’une variable <em>qualitative</em> (variable pouvant prendre un nombre limité de valeurs appelées modalités comme le sexe, la profession, etc.).</p>
+<p>Si on souhaite analyser ces variables, les méthodes et fonctions utilisées seront différentes selon qu’il s’agit d’une variable <em>quantitative</em> (variable numérique pouvant prendre un grand nombre de valeurs : l’âge, le revenu, un pourcentage…) ou d’une variable <em>qualitative</em> (variable pouvant prendre un nombre limité de valeurs appelées modalités : le sexe, la profession, le dernier diplôme obtenu, etc.).</p>
 <div id="analyser-une-variable-quantitative" class="section level3">
 <h3><span class="header-section-number">3.3.1</span> Analyser une variable quantitative</h3>
 <p>Une variable quantitative est une variable de type numérique (un nombre) qui peut prendre un grand nombre de valeurs. On en a plusieurs dans notre jeu de données, notamment l’âge (variable <code>age</code>) ou le nombre d’heures passées devant la télé (<code>heures.tv</code>).</p>
@@ -550,17 +572,17 @@ Levels: Homme Femme</code></pre>
 <h4><span class="header-section-number">3.3.1.1</span> Indicateurs de centralité</h4>
 <p>Caractériser une variable quantitative, c’est essayer de décrire la manière dont ses valeurs se répartissent, ou se distribuent.</p>
 <p>Pour cela on peut commencer par regarder les valeurs extrêmes, avec les fonctions <code>min</code>, <code>max</code> ou <code>range</code> :</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">min</span>(d<span class="op">$</span>age)</code></pre></div>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">min</span>(d<span class="op">$</span>age)</code></pre>
 <pre><code>[1] 18</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">max</span>(d<span class="op">$</span>age)</code></pre></div>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">max</span>(d<span class="op">$</span>age)</code></pre>
 <pre><code>[1] 97</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">range</span>(d<span class="op">$</span>age)</code></pre></div>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">range</span>(d<span class="op">$</span>age)</code></pre>
 <pre><code>[1] 18 97</code></pre>
 <p>On peut aussi calculer des indicateurs de <em>centralité</em> : ceux-ci indiquent autour de quel nombre se répartissent les valeurs de la variable. Il y en a plusieurs, le plus connu étant la moyenne, qu’on peut calculer avec la fonction <code>mean</code> :</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">mean</span>(d<span class="op">$</span>age)</code></pre></div>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">mean</span>(d<span class="op">$</span>age)</code></pre>
 <pre><code>[1] 48.157</code></pre>
 <p>Il existe aussi la médiane, qui est la valeur qui sépare notre population en deux : on a la moitié de nos observations en-dessous, et la moitié au-dessus. Elle se calcule avec la fonction <code>median</code> :</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">median</span>(d<span class="op">$</span>age)</code></pre></div>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">median</span>(d<span class="op">$</span>age)</code></pre>
 <pre><code>[1] 48</code></pre>
 <p>Une différence entre les deux indicateurs est que la médiane est beaucoup moins sensible aux valeurs “extrêmes” : on dit qu’elle est plus <em>robuste</em>. Ainsi, en 2013, le salaire net <em>moyen</em> des salariés à temps plein en France était de 2202 euros, tandis que le salaire net <em>médian</em> n’était que de 1772 euros. La différence étant due à des très hauts salaires qui “tirent” la moyenne vers le haut.</p>
 </div>
@@ -568,12 +590,12 @@ Levels: Homme Femme</code></pre>
 <h4><span class="header-section-number">3.3.1.2</span> Indicateurs de dispersion</h4>
 <p>Les indicateurs de dispersion permettent de mesurer si les valeurs sont plutôt regroupées ou au contraire plutôt dispersées.</p>
 <p>L’indicateur le plus simple est l’étendue de la distribution, qui décrit l’écart maximal observé entre les observations :</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">max</span>(d<span class="op">$</span>age) <span class="op">-</span><span class="st"> </span><span class="kw">min</span>(d<span class="op">$</span>age)</code></pre></div>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">max</span>(d<span class="op">$</span>age) <span class="op">-</span><span class="st"> </span><span class="kw">min</span>(d<span class="op">$</span>age)</code></pre>
 <pre><code>[1] 79</code></pre>
 <p>Les indicateurs de dispersion les plus utilisés sont la variance ou, de manière équivalente, l’écart-type (qui est égal à la racine carrée de la variance). On obtient la première avec la fonction <code>var</code>, et le second avec <code>sd</code> (abbréviation de <em>standard deviation</em>) :</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">var</span>(d<span class="op">$</span>age)</code></pre></div>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">var</span>(d<span class="op">$</span>age)</code></pre>
 <pre><code>[1] 287.0249</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">sd</span>(d<span class="op">$</span>age)</code></pre></div>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">sd</span>(d<span class="op">$</span>age)</code></pre>
 <pre><code>[1] 16.94181</code></pre>
 <p>Plus la variance ou l’écart-type sont élevés, plus les valeurs sont dispersées autour de la moyenne. À l’inverse, plus ils sont faibles et plus les valeurs sont regroupées.</p>
 <p>Une autre manière de mesurer la dispersion est de calculer les quartiles :</p>
@@ -583,17 +605,17 @@ Levels: Homme Femme</code></pre>
 <li>le troisième quartile est la valeur pour laquelle on a 75% des observations en dessous et 25% au dessus</li>
 </ul>
 <p>On peut les calculer avec la fonction <code>quantile</code> :</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## Premier quartile
-<span class="kw">quantile</span>(d<span class="op">$</span>age, <span class="dt">prob =</span> <span class="fl">0.25</span>)</code></pre></div>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="co">## Premier quartile</span>
+<span class="kw">quantile</span>(d<span class="op">$</span>age, <span class="dt">prob =</span> <span class="fl">0.25</span>)</code></pre>
 <pre><code>25% 
  35 </code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## Troisième quartile
-<span class="kw">quantile</span>(d<span class="op">$</span>age, <span class="dt">prob =</span> <span class="fl">0.75</span>)</code></pre></div>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="co">## Troisième quartile</span>
+<span class="kw">quantile</span>(d<span class="op">$</span>age, <span class="dt">prob =</span> <span class="fl">0.75</span>)</code></pre>
 <pre><code>75% 
  60 </code></pre>
 <p><code>quantile</code> prend deux arguments principaux : le vecteur dont on veut calculer le quantile, et un argument <code>prob</code> qui indique quel quantile on souhaite obtenir. <code>prob</code> prend une valeur entre 0 et 1 : 0.5 est la médiane, 0.25 le premier quartile, 0.1 le premier décile, etc.</p>
 <p>Notons enfin que la fonction <code>summary</code> permet d’obtenir d’un coup plusieurs indicateurs classiques :</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">summary</span>(d<span class="op">$</span>age)</code></pre></div>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">summary</span>(d<span class="op">$</span>age)</code></pre>
 <pre><code>   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
   18.00   35.00   48.00   48.16   60.00   97.00 </code></pre>
 </div>
@@ -601,22 +623,22 @@ Levels: Homme Femme</code></pre>
 <h4><span class="header-section-number">3.3.1.3</span> Représentation graphique</h4>
 <p>L’outil le plus utile pour étudier la distribution des valeurs d’une variable quantitative reste la représentation graphique.</p>
 <p>La représentation la plus courante est sans doute l’histogramme. On peut l’obtenir avec la fonction <code>hist</code> :</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">hist</span>(d<span class="op">$</span>age)</code></pre></div>
-<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-80-1.svg" width="672" /></p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">hist</span>(d<span class="op">$</span>age)</code></pre>
+<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-88-1.svg" width="672" /></p>
 <p>Cette fonction n’a pas pour effet direct d’effectuer un calcul ou de nous renvoyer un résultat : elle génère un graphique qui va s’afficher dans l’onglet <em>Plots</em> de RStudio.</p>
 <p>On peut personnaliser l’apparence de l’histogramme en ajoutant des arguments supplémentaires à la fonction <code>hist</code>. L’argument le plus important est <code>breaks</code>, qui permet d’indiquer le nombre de classes que l’on souhaite.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">hist</span>(d<span class="op">$</span>age, <span class="dt">breaks =</span> <span class="dv">10</span>)</code></pre></div>
-<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-81-1.svg" width="672" /></p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">hist</span>(d<span class="op">$</span>age, <span class="dt">breaks =</span> <span class="dv">70</span>)</code></pre></div>
-<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-82-1.svg" width="672" /></p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">hist</span>(d<span class="op">$</span>age, <span class="dt">breaks =</span> <span class="dv">10</span>)</code></pre>
+<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-89-1.svg" width="672" /></p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">hist</span>(d<span class="op">$</span>age, <span class="dt">breaks =</span> <span class="dv">70</span>)</code></pre>
+<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-90-1.svg" width="672" /></p>
 <p>Le choix d’un “bon” nombre de classes pour un histogramme n’est pas un problème simple : si on a trop peu de classes, on risque d’effacer quasiment toutes les variations, et si on en a trop on risque d’avoir trop de détails et de masquer les grandes tendances.</p>
-<p>Les arguments de <code>hist</code> permettent également de modifier la présentation du graphique. On peut ainsi changer la couleur des barres avec <code>col</code><a href="#fn8" class="footnoteRef" id="fnref8"><sup>8</sup></a>, le titre avec <code>main</code>, les étiquettes des axes avec <code>xlab</code> et <code>ylab</code>, etc. :</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">hist</span>(d<span class="op">$</span>age, <span class="dt">col =</span> <span class="st">&quot;skyblue&quot;</span>,
+<p>Les arguments de <code>hist</code> permettent également de modifier la présentation du graphique. On peut ainsi changer la couleur des barres avec <code>col</code><a href="#fn8" class="footnote-ref" id="fnref8"><sup>8</sup></a>, le titre avec <code>main</code>, les étiquettes des axes avec <code>xlab</code> et <code>ylab</code>, etc. :</p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">hist</span>(d<span class="op">$</span>age, <span class="dt">col =</span> <span class="st">&quot;skyblue&quot;</span>,
      <span class="dt">main =</span> <span class="st">&quot;Répartition des âges des enquêtés&quot;</span>,
      <span class="dt">xlab =</span> <span class="st">&quot;Âge&quot;</span>,
-     <span class="dt">ylab =</span> <span class="st">&quot;Effectif&quot;</span>)</code></pre></div>
-<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-83-1.svg" width="672" /></p>
-<p>La fonction <code>hist</code> fait partie des fonctions graphique de base de R. La partie <a href="08-ggplot2.html#ggplot2">8</a> de ce document est consacrée à l’extension <code>ggplot2</code>, qui fait partie du <em>tidyverse</em> et qui permet la production et la personnalisation de graphiques complexes sous R.</p>
+     <span class="dt">ylab =</span> <span class="st">&quot;Effectif&quot;</span>)</code></pre>
+<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-91-1.svg" width="672" /></p>
+<p>La fonction <code>hist</code> fait partie des fonctions graphique de base de R. On verra plus en détail d’autres fonctions graphiques dans la partie <a href="08-ggplot2.html#ggplot2">8</a> de ce document, consacrée à l’extension <code>ggplot2</code>, qui fait partie du <em>tidyverse</em> et qui permet la production et la personnalisation de graphiques complexes.</p>
 </div>
 </div>
 <div id="analyser-une-variable-qualitative" class="section level3">
@@ -626,12 +648,12 @@ Levels: Homme Femme</code></pre>
 <div id="tri-a-plat" class="section level4">
 <h4><span class="header-section-number">3.3.2.1</span> Tri à plat</h4>
 <p>L’outil le plus utilisé pour représenter la répartition des valeurs d’une variable qualitative est le <em>tri à plat</em> : il s’agit simplement de compter, pour chacune des valeurs possibles de la variable (pour chacune des modalités), le nombre d’observations ayant cette valeur. Un tri à plat s’obtient sous R à l’aide de la fonction <code>table</code> :</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">table</span>(d<span class="op">$</span>sexe)</code></pre></div>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">table</span>(d<span class="op">$</span>sexe)</code></pre>
 <pre><code>
 Homme Femme 
   899  1101 </code></pre>
 <p>Ce tableau nous indique donc que parmi nos enquêtés on trouve 899 hommes et 1101 femmes.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">table</span>(d<span class="op">$</span>qualif)</code></pre></div>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">table</span>(d<span class="op">$</span>qualif)</code></pre>
 <pre><code>
       Ouvrier specialise         Ouvrier qualifie               Technicien 
                      203                      292                       86 
@@ -640,8 +662,8 @@ Profession intermediaire                    Cadre                  Employe
                    Autre 
                       58 </code></pre>
 <p>Un tableau de ce type peut être affiché ou stocké dans un objet, et on peut à son tour lui appliquer des fonctions. Par exemple, la fonction <code>sort</code> permet de trier le tableau selon la valeur de l’effectif. On peut donc faire :</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">tab &lt;-<span class="st"> </span><span class="kw">table</span>(d<span class="op">$</span>qualif)
-<span class="kw">sort</span>(tab)</code></pre></div>
+<pre class="sourceCode r"><code class="sourceCode r">tab &lt;-<span class="st"> </span><span class="kw">table</span>(d<span class="op">$</span>qualif)
+<span class="kw">sort</span>(tab)</code></pre>
 <pre><code>
                    Autre               Technicien Profession intermediaire 
                       58                       86                      160 
@@ -655,7 +677,7 @@ Attention, par défaut la fonction <code>table</code> n’affiche pas les valeur
 </p>
 </div>
 <p>À noter qu’on peut aussi appliquer <code>summary</code> à une variable qualitative. Le résultat est également le tri à plat de la variable, avec en plus le nombre de valeurs manquantes éventuelles :</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">summary</span>(d<span class="op">$</span>qualif)</code></pre></div>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">summary</span>(d<span class="op">$</span>qualif)</code></pre>
 <pre><code>      Ouvrier specialise         Ouvrier qualifie               Technicien 
                      203                      292                       86 
 Profession intermediaire                    Cadre                  Employe 
@@ -663,10 +685,10 @@ Profession intermediaire                    Cadre                  Employe
                    Autre                     NA&#39;s 
                       58                      347 </code></pre>
 <p>Par défaut ces tris à plat sont en effectifs et ne sont donc pas toujours très lisibles, notamment quand on a des effectifs importants. On leur rajoute donc en général la répartition en pourcentages. Pour cela, nous allons utiliser la fonction <code>freq</code> de l’extension <code>questionr</code>, qui devra donc avoir précédemment été chargée avec <code>library(questionr)</code> :</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## À rajouter en haut de script et à exécuter
-<span class="kw">library</span>(questionr)</code></pre></div>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="co">## À rajouter en haut de script et à exécuter</span>
+<span class="kw">library</span>(questionr)</code></pre>
 <p>On peut alors utiliser la fonction :</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">freq</span>(d<span class="op">$</span>qualif)</code></pre></div>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">freq</span>(d<span class="op">$</span>qualif)</code></pre>
 <pre><code>                           n    % val%
 Ouvrier specialise       203 10.2 12.3
 Ouvrier qualifie         292 14.6 17.7
@@ -684,7 +706,7 @@ NA                       347 17.3   NA</code></pre>
 <li><code>total</code> permet d’ajouter une ligne avec les effectifs totaux</li>
 <li><code>sort</code> permet de trier le tableau par fréquence croissante (<code>sort=&quot;inc&quot;</code>) ou décroissante (<code>sort=&quot;dec&quot;</code>).</li>
 </ul>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">freq</span>(d<span class="op">$</span>qualif, <span class="dt">valid=</span> <span class="ot">FALSE</span>, <span class="dt">total =</span> <span class="ot">TRUE</span>, <span class="dt">sort =</span> <span class="st">&quot;dec&quot;</span>)</code></pre></div>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">freq</span>(d<span class="op">$</span>qualif, <span class="dt">valid=</span> <span class="ot">FALSE</span>, <span class="dt">total =</span> <span class="ot">TRUE</span>, <span class="dt">sort =</span> <span class="st">&quot;dec&quot;</span>)</code></pre>
 <pre><code>                            n     %
 Employe                   594  29.7
 Ouvrier qualifie          292  14.6
@@ -699,17 +721,18 @@ Total                    2000 100.0</code></pre>
 <div id="representations-graphiques" class="section level4">
 <h4><span class="header-section-number">3.3.2.2</span> Représentations graphiques</h4>
 <p>On peut représenter graphiquement le tri à plat d’une variable qualitative avec un diagramme en barres, obtenu avec la fonction <code>barplot</code>. Attention, contrairement à <code>hist</code> cette fonction ne s’applique pas directement à la variable mais au résultat du tri à plat de cette variable, calculé avec <code>table</code>. Il faut donc procéder en deux étapes :</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">tab &lt;-<span class="st"> </span><span class="kw">table</span>(d<span class="op">$</span>clso)
-<span class="kw">barplot</span>(tab)</code></pre></div>
-<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-92-1.svg" width="672" /></p>
+<pre class="sourceCode r"><code class="sourceCode r">tab &lt;-<span class="st"> </span><span class="kw">table</span>(d<span class="op">$</span>clso)
+<span class="kw">barplot</span>(tab)</code></pre>
+<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-102-1.svg" width="672" /></p>
 <p>On peut aussi trier le tri à plat avec la fonction <code>sort</code> avant de le représenter graphiquement, ce qui peut faciliter la lecture du graphique :</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">barplot</span>(<span class="kw">sort</span>(tab))</code></pre></div>
-<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-93-1.svg" width="672" /></p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">barplot</span>(<span class="kw">sort</span>(tab))</code></pre>
+<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-103-1.svg" width="672" /></p>
 <p>Une alternative au graphique en barres est le <em>diagramme de Cleveland</em>, qu’on peut obtenir avec la fonction <code>dotchart</code>. Celle-ci s’applique elle aussi au tri à plat de la variable calculé avec <code>table</code>.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">dotchart</span>(<span class="kw">table</span>(d<span class="op">$</span>qualif))</code></pre></div>
-<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-94-1.svg" width="672" /> Là aussi, pour améliorer la lisibilité du graphique il est préférable de trier le tri à plat de la variable avant de le représenter :</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">dotchart</span>(<span class="kw">sort</span>(<span class="kw">table</span>(d<span class="op">$</span>qualif)))</code></pre></div>
-<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-95-1.svg" width="672" /></p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">dotchart</span>(<span class="kw">table</span>(d<span class="op">$</span>qualif))</code></pre>
+<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-104-1.svg" width="672" />
+Là aussi, pour améliorer la lisibilité du graphique il est préférable de trier le tri à plat de la variable avant de le représenter :</p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">dotchart</span>(<span class="kw">sort</span>(<span class="kw">table</span>(d<span class="op">$</span>qualif)))</code></pre>
+<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-105-1.svg" width="672" /></p>
 </div>
 </div>
 </div>
@@ -724,46 +747,45 @@ Total                    2000 100.0</code></pre>
 <li>afficher les dimensions et la liste des variables de <code>df</code></li>
 </ul>
 <div class="solution">
-
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(questionr)
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(questionr)
 
 <span class="kw">data</span>(hdv2003)
 df &lt;-<span class="st"> </span>hdv2003
 
 <span class="kw">dim</span>(df)
-<span class="kw">names</span>(df)</code></pre></div>
-
+<span class="kw">names</span>(df)</code></pre>
 </div>
 <p><strong>Exercice 2</strong></p>
 <p>On souhaite étudier la répartition du temps passé devant la télévision par les enquêtés (variable <code>heures.tv</code>). Pour cela, affichez les principaux indicateurs de cette variable : valeur minimale, maximale, moyenne, médiane et écart-type. Représentez ensuite sa distribution par un histogramme en 10 classes.</p>
 <div class="solution">
-
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">summary</span>(df<span class="op">$</span>heures.tv)
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">summary</span>(df<span class="op">$</span>heures.tv)
 <span class="kw">sd</span>(df<span class="op">$</span>heures.tv)
 
-<span class="kw">hist</span>(df<span class="op">$</span>heures.tv, <span class="dt">breaks =</span> <span class="dv">10</span>)</code></pre></div>
-
+<span class="kw">hist</span>(df<span class="op">$</span>heures.tv, <span class="dt">breaks =</span> <span class="dv">10</span>)</code></pre>
 </div>
 <p><strong>Exercice 3</strong></p>
 <p>On s’intéresse maintenant à l’importance accordée par les enquêtés à leur travail (variable <code>trav.imp</code>). Faites un tri à plat des effectifs des modalités de cette variable avec la commande <code>table</code>.</p>
 <div class="solution">
-
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">table</span>(df<span class="op">$</span>trav.imp)</code></pre></div>
-
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">table</span>(df<span class="op">$</span>trav.imp)</code></pre>
 </div>
 <p>Faites un tri à plat affichant à la fois les effectifs et les pourcentages de chaque modalité. Y’a-t-il des valeurs manquantes ?</p>
 <div class="solution">
-
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">freq</span>(df<span class="op">$</span>trav.imp)</code></pre></div>
-
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">freq</span>(df<span class="op">$</span>trav.imp)</code></pre>
 </div>
-<p>Représentez graphiquement les effectifs des modalités à l’aide d’un graphique en barres puis d’un diagramme de Cleveland.</p>
+<p>Représentez graphiquement les effectifs des modalités à l’aide d’un graphique en barres.</p>
 <div class="solution">
-
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">tab &lt;-<span class="st"> </span><span class="kw">sort</span>(<span class="kw">table</span>(df<span class="op">$</span>trav.imp))
-<span class="kw">barplot</span>(tab)
-<span class="kw">dotchart</span>(tab)</code></pre></div>
-
+<pre class="sourceCode r"><code class="sourceCode r">tab &lt;-<span class="st"> </span><span class="kw">sort</span>(<span class="kw">table</span>(df<span class="op">$</span>trav.imp))
+<span class="kw">barplot</span>(tab)</code></pre>
+</div>
+<p>Utilisez l’argument <code>col</code> de la fonction <code>barplot</code> pour modifier la couleur du graphique en
+<code>tomato</code>.</p>
+<div class="solution">
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">barplot</span>(tab, <span class="dt">col =</span> <span class="st">&quot;tomato&quot;</span>)</code></pre>
+</div>
+<p>Tapez <code>colors()</code> dans la console pour afficher l’ensemble des noms de couleurs disponibles dans R. Testez chaque couleur une à une pour trouver votre couleur préférée.</p>
+<div class="solution">
+<p>C’est une blague, hein ! Cela dit <code>moccasin</code> ou <code>palevioletred</code> sont pas mal, si vous voulez essayer :-)
+</p>
 </div>
 
 </div>
@@ -771,9 +793,9 @@ df &lt;-<span class="st"> </span>hdv2003
 <div class="footnotes">
 <hr />
 <ol start="6">
-<li id="fn6"><p>La seule limite pour la taille d’un objet étant la mémoire vive (RAM) de la machine sur laquelle tourne la session R.<a href="03-premier_travail.html#fnref6">↩</a></p></li>
-<li id="fn7"><p>Les différents types de variables seront décrits plus en détail pendant le chapitre <a href="09-recodages.html#vectorfactor">9</a> sur les recodages.<a href="03-premier_travail.html#fnref7">↩</a></p></li>
-<li id="fn8"><p>Les différentes manières de spécifier des couleurs sont indiquées dans l’encadré de la section <a href="08-ggplot2.html#scalecolor">8.7.3</a>.<a href="03-premier_travail.html#fnref8">↩</a></p></li>
+<li id="fn6"><p>La seule limite pour la taille d’un objet étant la mémoire vive (RAM) de la machine sur laquelle tourne la session R.<a href="03-premier_travail.html#fnref6" class="footnote-back">↩</a></p></li>
+<li id="fn7"><p>Les différents types de variables seront décrits plus en détail dans le chapitre <a href="09-recodages.html#vectorfactor">9</a> sur les recodages.<a href="03-premier_travail.html#fnref7" class="footnote-back">↩</a></p></li>
+<li id="fn8"><p>Les différentes manières de spécifier des couleurs sont indiquées dans l’encadré de la section <a href="08-ggplot2.html#scalecolor">8.7.3</a>.<a href="03-premier_travail.html#fnref8" class="footnote-back">↩</a></p></li>
 </ol>
 </div>
 <script src="js/tidyverse.js"></script>
@@ -803,9 +825,10 @@ gitbook.start({
 "google": false,
 "linkedin": false,
 "weibo": false,
-"instapper": false,
+"instapaper": false,
 "vk": false,
-"all": ["facebook", "google", "twitter", "linkedin", "weibo", "instapaper"]
+"all": ["facebook", "google", "twitter", "linkedin", "weibo", "instapaper"],
+"instapper": false
 },
 "fontsettings": {
 "theme": "white",
@@ -815,6 +838,10 @@ gitbook.start({
 "edit": {
 "link": "https://github.com/juba/tidyverse/blob/master/03-premier_travail.Rmd",
 "text": "Source"
+},
+"history": {
+"link": null,
+"text": null
 },
 "download": ["introduction_au_tidyverse.pdf", "introduction_au_tidyverse.epub"],
 "toc": {
