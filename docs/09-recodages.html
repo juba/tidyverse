@@ -25,7 +25,7 @@
 <meta name="author" content="Julien Barnier">
 
 
-<meta name="date" content="2019-02-06">
+<meta name="date" content="2019-02-07">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -424,18 +424,20 @@ nombres &lt;-<span class="st"> </span><span class="dv">1</span><span class="op">
 <p>On peut facilement créer de nouvelles variables (ou colonnes) dans un tableau de données en utilisant le <code>$</code> dans une assignation :</p>
 <pre class="sourceCode r"><code class="sourceCode r">hdv2003<span class="op">$</span>minutes.tv &lt;-<span class="st"> </span>hdv2003<span class="op">$</span>heures.tv <span class="op">*</span><span class="st"> </span><span class="dv">60</span></code></pre>
 <p>Les vecteurs peuvent être de classes différentes, selon le type de données qu’ils contiennent.</p>
-<p>On a ainsi des vecteurs de classe <code>numeric</code> ou <code>integer</code>, qui contiennent des nombres :</p>
-<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">class</span>(hdv2003<span class="op">$</span>heures.tv)</code></pre>
-<pre><code>[1] &quot;numeric&quot;</code></pre>
-<p>Des vecteurs de classe <code>character</code>, qui contiennent des chaînes de caractères :</p>
+<p>On a ainsi des vecteurs de type <code>integer</code> ou <code>double</code>, qui contiennent respectivement des nombres entiers ou décimaux :</p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">typeof</span>(hdv2003<span class="op">$</span>age)</code></pre>
+<pre><code>[1] &quot;integer&quot;</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">typeof</span>(hdv2003<span class="op">$</span>heures.tv)</code></pre>
+<pre><code>[1] &quot;double&quot;</code></pre>
+<p>Des vecteurs de type <code>character</code>, qui contiennent des chaînes de caractères :</p>
 <pre class="sourceCode r"><code class="sourceCode r">vec &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;Jaune&quot;</span>, <span class="st">&quot;Jaune&quot;</span>, <span class="st">&quot;Rouge&quot;</span>, <span class="st">&quot;Vert&quot;</span>)
-<span class="kw">class</span>(vec)</code></pre>
+<span class="kw">typeof</span>(vec)</code></pre>
 <pre><code>[1] &quot;character&quot;</code></pre>
-<p>Et des vecteurs de classe <code>logical</code>, qui ne peuvent contenir que les valeurs vraie (<code>TRUE</code>) ou fausse (<code>FALSE</code>).</p>
+<p>Et des vecteurs de type <code>logical</code>, qui ne peuvent contenir que les valeurs vraie (<code>TRUE</code>) ou fausse (<code>FALSE</code>).</p>
 <pre class="sourceCode r"><code class="sourceCode r">vec &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="ot">TRUE</span>, <span class="ot">FALSE</span>, <span class="ot">FALSE</span>, <span class="ot">TRUE</span>)
-<span class="kw">class</span>(vec)</code></pre>
+<span class="kw">typeof</span>(vec)</code></pre>
 <pre><code>[1] &quot;logical&quot;</code></pre>
-<p>On peut convertir un vecteur d’une classe en une autre en utilisant les fonctions <code>as.numeric</code>, <code>as.character</code> ou <code>as.logical</code>. Les valeurs qui n’ont pas pu être converties sont automatiquement transformées en <code>NA</code>.</p>
+<p>On peut convertir un vecteur d’un type en un autre en utilisant les fonctions <code>as.numeric</code>, <code>as.character</code> ou <code>as.logical</code>. Les valeurs qui n’ont pas pu être converties sont automatiquement transformées en <code>NA</code>.</p>
 <pre class="sourceCode r"><code class="sourceCode r">x &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;1&quot;</span>, <span class="st">&quot;2.35&quot;</span>, <span class="st">&quot;8.2e+03&quot;</span>, <span class="st">&quot;foo&quot;</span>)
 <span class="kw">as.numeric</span>(x)</code></pre>
 <pre><code>Warning: NAs introduits lors de la conversion automatique</code></pre>
@@ -672,13 +674,13 @@ NA                       550 27.5   NA</code></pre>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(ggplot2)
 <span class="kw">ggplot</span>(hdv2003) <span class="op">+</span><span class="st"> </span>
 <span class="st">  </span><span class="kw">geom_boxplot</span>(<span class="kw">aes</span>(<span class="dt">x=</span>occup, <span class="dt">y=</span>age))</code></pre>
-<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-361-1.svg" width="672" /></p>
+<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-362-1.svg" width="672" /></p>
 <p>Le graphique pourrait être plus lisible si les modalités étaient triées par âge median croissant. Ceci est possible en utilisant <code>fct_reorder</code>. Celle-ci prend 3 arguments : le facteur à réordonner, la variable dont les valeurs doivent être utilisées pour ce réordonnancement, et enfin une fonction à appliquer à cette deuxième variable.</p>
 <pre class="sourceCode r"><code class="sourceCode r">hdv2003<span class="op">$</span>occup_age &lt;-<span class="st"> </span><span class="kw">fct_reorder</span>(hdv2003<span class="op">$</span>occup, hdv2003<span class="op">$</span>age, median)
 
 <span class="kw">ggplot</span>(hdv2003) <span class="op">+</span><span class="st"> </span>
 <span class="st">  </span><span class="kw">geom_boxplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> occup_age, <span class="dt">y =</span> age))</code></pre>
-<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-362-1.svg" width="672" /></p>
+<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-363-1.svg" width="672" /></p>
 <p>On peut aussi effectuer le réordonnancement directement dans l’appel à <code>ggplot2</code>, sans créer de nouvelle variable :</p>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(hdv2003) <span class="op">+</span><span class="st"> </span>
 <span class="st">  </span><span class="kw">geom_boxplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> <span class="kw">fct_reorder</span>(occup, age, median), 
@@ -910,7 +912,7 @@ NA                                      112  5.6   NA</code></pre>
 <p><strong>Exercice 2.4</strong></p>
 <p>À l’aide de la fonction <code>fct_reorder</code>, trier les modalités de la variable <code>relig</code> du jeu de données <code>hdv2003</code> selon leur âge médian.</p>
 <p>Vérifier en générant le boxplot suivant :</p>
-<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-403-1.svg" width="672" /></p>
+<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-404-1.svg" width="672" /></p>
 <div class="solution">
 <pre class="sourceCode r"><code class="sourceCode r">hdv2003<span class="op">$</span>relig &lt;-<span class="st"> </span><span class="kw">fct_reorder</span>(hdv2003<span class="op">$</span>relig, hdv2003<span class="op">$</span>age, median)
 <span class="kw">ggplot</span>(hdv2003) <span class="op">+</span><span class="st"> </span><span class="kw">geom_boxplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> relig, <span class="dt">y =</span> age))</code></pre>
