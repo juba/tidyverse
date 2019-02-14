@@ -178,20 +178,21 @@ slice(tmp, 1:3)
 
 `mutate` permet de créer de nouvelles colonnes dans le tableau de données, en général à partir de variables existantes.
 
-Par exemple, la table `airports` contient l'altitude de l'aéroport en pieds. Si on veut créer une nouvelle variable `alt_m` avec l'altitude en mètres, on peut faire :
+Par exemple, la table `flights` contient la durée du vol en minutes.. Si on veut créer une nouvelle variable `duree_h` avec cette durée en heures, on peut faire :
 
 ```{r}
-airports <- mutate(airports, alt_m = alt / 3.2808)
-select(airports, name, alt, alt_m)
+flights <- mutate(flights, duree_h = air_time / 60)
+select(flights, air_time, duree_h)
 ```
 
-On peut créer plusieurs nouvelles colonnes en une seule commande, et les expressions successives peuvent prendre en compte les résultats des calculs précédents. L'exemple suivant convertit d'abord la distance en kilomètres dans une variable `distance_km`, puis utilise cette nouvelle colonne pour calculer la vitesse en km/h.
+On peut créer plusieurs nouvelles colonnes en une seule commande, et les expressions successives peuvent prendre en compte les résultats des calculs précédents. L'exemple suivant convertit d'abord la durée en heures dans une variable `duree_h` et la distance en kilomètres dans une variable `distance_km`, puis utilise ces nouvelles colonnes pour calculer la vitesse en km/h.
 
 ```{r}
 flights <- mutate(flights, 
+                  duree_h = air_time / 60,
                   distance_km = distance / 0.62137,
-                  vitesse = distance_km / air_time * 60)
-select(flights, distance, distance_km, vitesse)
+                  vitesse = distance_km / duree_h)
+select(flights, air_time, duree_h, distance, distance_km, vitesse)
 ```
 
 À noter que `mutate` est évidemment parfaitement compatible avec les fonctions vues dans le chapitre \@ref(vectorfactor) sur les recodages : `fct_recode`, `if_else`, `case_when`...
@@ -1015,18 +1016,18 @@ rename(airports, latitude = lat, longitude = lon)
 
 **Exercice 1.5**
 
-Dans la table `flights`, la colonne `air_time` contient la durée du vol en minutes. Créer une nouvelle variable `duree_h` contenant la durée du vol en heures. Sélectionner dans la table obtenue uniquement les deux colonnes `air_time` et `duree_h`.
+Dans la table `airports`, la colonne `alt` contient l'altitude de l'aéroport en pieds. Créer une nouvelle variable `alt_m` contenant l'altitude en mètres (on convertit des pieds en mètres en les divisant par 3.2808). Sélectionner dans la table obtenue uniquement les deux colonnes `alt` et `alt_m`.
 
 ```{r echo=FALSE}
-tmp <- mutate(flights, duree_h = air_time / 60)
-select(tmp, air_time, duree_h)
+tmp <- mutate(airports, alt_m = alt / 3.2808)
+select(tmp, alt, alt_m)
 ```
 
 <div class="solution">
 \iffalse
 ```{r eval=FALSE}
-tmp <- mutate(flights, duree_h = air_time / 60)
-select(tmp, air_time, duree_h)
+tmp <- mutate(airports, alt_m = alt / 3.2808)
+select(tmp, alt, alt_m)
 ```
 \fi
 
