@@ -328,16 +328,25 @@ Par exemple, si on applique `slice` à un tableau préalablement groupé, il va 
 flights %>% group_by(month) %>% slice(1)
 ```
 
-Idem pour `mutate` : les opérations appliquées lors du calcul des valeurs des nouvelles colonnes sont appliquées groupe de lignes par groupe de lignes. Dans l'exemple suivant, on ajoute une nouvelle colonne qui contient le retard moyen *du mois correspondant* :
+Idem pour `mutate` : les opérations appliquées lors du calcul des valeurs des nouvelles colonnes sont appliquées groupe de lignes par groupe de lignes. Dans l'exemple suivant, on ajoute une nouvelle colonne qui contient le retard moyen *pour chaque compagnie aérienne*. Cette valeur est donc différente d'une compagnie à une autre, mais identique pour tous les vols d'une même compagnie :
 
 ```{r}
 flights %>% 
-  group_by(month) %>% 
-  mutate(mean_delay_month = mean(dep_delay, na.rm = TRUE)) %>% 
-  select(dep_delay, month, mean_delay_month)
+  group_by(carrier) %>% 
+  mutate(mean_delay_carrier = mean(dep_delay, na.rm = TRUE)) %>% 
+  select(dep_delay, month, mean_delay_carrier)
 ```
 
-Ceci peut permettre, par exemple, de déterminer si un retard donné est supérieur ou inférieur au retard moyen du mois en cours.
+Ceci peut permettre, par exemple, de déterminer si un retard donné est supérieur ou inférieur au retard médian de la compagnie :
+
+```{r}
+flights %>% 
+  group_by(carrier) %>% 
+  mutate(median_delay = median(dep_delay, na.rm = TRUE),
+         delay_carrier = if_else(dep_delay > median_delay,
+                                  "Supérieur", "Inférieur ou égal")) %>% 
+  select(dep_delay, month, median_delay, delay_carrier)
+```
 
 `group_by` peut aussi être utile avec `filter`, par exemple pour sélectionner les vols avec le retard au départ le plus important *pour chaque mois* :
 
