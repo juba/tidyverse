@@ -25,7 +25,7 @@
 <meta name="author" content="Julien Barnier">
 
 
-<meta name="date" content="2019-02-07">
+<meta name="date" content="2019-02-14">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -380,7 +380,8 @@ code span.wa { color: #bf0303; } /* Warning */
 <li class="chapter" data-level="A.1" data-path="14-ressources.html"><a href="14-ressources.html#aide"><i class="fa fa-check"></i><b>A.1</b> Aide</a><ul>
 <li class="chapter" data-level="A.1.1" data-path="14-ressources.html"><a href="14-ressources.html#aide-de-r-et-rstudio"><i class="fa fa-check"></i><b>A.1.1</b> Aide de R et RStudio</a></li>
 <li class="chapter" data-level="A.1.2" data-path="14-ressources.html"><a href="14-ressources.html#aide-en-ligne"><i class="fa fa-check"></i><b>A.1.2</b> Aide en ligne</a></li>
-<li class="chapter" data-level="A.1.3" data-path="14-ressources.html"><a href="14-ressources.html#ou-poser-des-questions"><i class="fa fa-check"></i><b>A.1.3</b> Où poser des questions</a></li>
+<li class="chapter" data-level="A.1.3" data-path="14-ressources.html"><a href="14-ressources.html#antiseches"><i class="fa fa-check"></i><b>A.1.3</b> Antisèches</a></li>
+<li class="chapter" data-level="A.1.4" data-path="14-ressources.html"><a href="14-ressources.html#ou-poser-des-questions"><i class="fa fa-check"></i><b>A.1.4</b> Où poser des questions</a></li>
 </ul></li>
 <li class="chapter" data-level="A.2" data-path="14-ressources.html"><a href="14-ressources.html#ouvrages-blogs-moocs"><i class="fa fa-check"></i><b>A.2</b> Ouvrages, blogs, MOOCs…</a><ul>
 <li class="chapter" data-level="A.2.1" data-path="14-ressources.html"><a href="14-ressources.html#francophones"><i class="fa fa-check"></i><b>A.2.1</b> Francophones</a></li>
@@ -713,41 +714,42 @@ code span.wa { color: #bf0303; } /* Warning */
 <div id="mutate" class="section level3">
 <h3><span class="header-section-number">10.2.5</span> <code>mutate</code></h3>
 <p><code>mutate</code> permet de créer de nouvelles colonnes dans le tableau de données, en général à partir de variables existantes.</p>
-<p>Par exemple, la table <code>airports</code> contient l’altitude de l’aéroport en pieds. Si on veut créer une nouvelle variable <code>alt_m</code> avec l’altitude en mètres, on peut faire :</p>
-<pre class="sourceCode r"><code class="sourceCode r">airports &lt;-<span class="st"> </span><span class="kw">mutate</span>(airports, <span class="dt">alt_m =</span> alt <span class="op">/</span><span class="st"> </span><span class="fl">3.2808</span>)
-<span class="kw">select</span>(airports, name, alt, alt_m)</code></pre>
-<pre><code># A tibble: 1,458 x 3
-   name                             alt  alt_m
-   &lt;chr&gt;                          &lt;int&gt;  &lt;dbl&gt;
- 1 Lansdowne Airport               1044 318.  
- 2 Moton Field Municipal Airport    264  80.5 
- 3 Schaumburg Regional              801 244.  
- 4 Randall Airport                  523 159.  
- 5 Jekyll Island Airport             11   3.35
- 6 Elizabethton Municipal Airport  1593 486.  
- 7 Williams County Airport          730 223.  
- 8 Finger Lakes Regional Airport    492 150.  
- 9 Shoestring Aviation Airfield    1000 305.  
-10 Jefferson County Intl            108  32.9 
-# … with 1,448 more rows</code></pre>
-<p>On peut créer plusieurs nouvelles colonnes en une seule commande, et les expressions successives peuvent prendre en compte les résultats des calculs précédents. L’exemple suivant convertit d’abord la distance en kilomètres dans une variable <code>distance_km</code>, puis utilise cette nouvelle colonne pour calculer la vitesse en km/h.</p>
+<p>Par exemple, la table <code>flights</code> contient la durée du vol en minutes.. Si on veut créer une nouvelle variable <code>duree_h</code> avec cette durée en heures, on peut faire :</p>
+<pre class="sourceCode r"><code class="sourceCode r">flights &lt;-<span class="st"> </span><span class="kw">mutate</span>(flights, <span class="dt">duree_h =</span> air_time <span class="op">/</span><span class="st"> </span><span class="dv">60</span>)
+<span class="kw">select</span>(flights, air_time, duree_h)</code></pre>
+<pre><code># A tibble: 336,776 x 2
+   air_time duree_h
+      &lt;dbl&gt;   &lt;dbl&gt;
+ 1      227   3.78 
+ 2      227   3.78 
+ 3      160   2.67 
+ 4      183   3.05 
+ 5      116   1.93 
+ 6      150   2.5  
+ 7      158   2.63 
+ 8       53   0.883
+ 9      140   2.33 
+10      138   2.3  
+# … with 336,766 more rows</code></pre>
+<p>On peut créer plusieurs nouvelles colonnes en une seule commande, et les expressions successives peuvent prendre en compte les résultats des calculs précédents. L’exemple suivant convertit d’abord la durée en heures dans une variable <code>duree_h</code> et la distance en kilomètres dans une variable <code>distance_km</code>, puis utilise ces nouvelles colonnes pour calculer la vitesse en km/h.</p>
 <pre class="sourceCode r"><code class="sourceCode r">flights &lt;-<span class="st"> </span><span class="kw">mutate</span>(flights, 
+                  <span class="dt">duree_h =</span> air_time <span class="op">/</span><span class="st"> </span><span class="dv">60</span>,
                   <span class="dt">distance_km =</span> distance <span class="op">/</span><span class="st"> </span><span class="fl">0.62137</span>,
-                  <span class="dt">vitesse =</span> distance_km <span class="op">/</span><span class="st"> </span>air_time <span class="op">*</span><span class="st"> </span><span class="dv">60</span>)
-<span class="kw">select</span>(flights, distance, distance_km, vitesse)</code></pre>
-<pre><code># A tibble: 336,776 x 3
-   distance distance_km vitesse
-      &lt;dbl&gt;       &lt;dbl&gt;   &lt;dbl&gt;
- 1     1400       2253.    596.
- 2     1416       2279.    602.
- 3     1089       1753.    657.
- 4     1576       2536.    832.
- 5      762       1226.    634.
- 6      719       1157.    463.
- 7     1065       1714.    651.
- 8      229        369.    417.
- 9      944       1519.    651.
-10      733       1180.    513.
+                  <span class="dt">vitesse =</span> distance_km <span class="op">/</span><span class="st"> </span>duree_h)
+<span class="kw">select</span>(flights, air_time, duree_h, distance, distance_km, vitesse)</code></pre>
+<pre><code># A tibble: 336,776 x 5
+   air_time duree_h distance distance_km vitesse
+      &lt;dbl&gt;   &lt;dbl&gt;    &lt;dbl&gt;       &lt;dbl&gt;   &lt;dbl&gt;
+ 1      227   3.78      1400       2253.    596.
+ 2      227   3.78      1416       2279.    602.
+ 3      160   2.67      1089       1753.    657.
+ 4      183   3.05      1576       2536.    832.
+ 5      116   1.93       762       1226.    634.
+ 6      150   2.5        719       1157.    463.
+ 7      158   2.63      1065       1714.    651.
+ 8       53   0.883      229        369.    417.
+ 9      140   2.33       944       1519.    651.
+10      138   2.3        733       1180.    513.
 # … with 336,766 more rows</code></pre>
 <p>À noter que <code>mutate</code> est évidemment parfaitement compatible avec les fonctions vues dans le chapitre <a href="09-recodages.html#vectorfactor">9</a> sur les recodages : <code>fct_recode</code>, <code>if_else</code>, <code>case_when</code>…</p>
 <p>L’avantage d’utiliser <code>mutate</code> est double. D’abord il permet d’éviter d’avoir à saisir le nom du tableau de données dans les conditions d’un <code>if_else</code> ou d’un <code>case_when</code> :</p>
@@ -821,7 +823,7 @@ L’utilisation du <em>pipe</em> n’est pas obligatoire, mais elle rend les scr
 <h3><span class="header-section-number">10.4.1</span> <code>group_by</code></h3>
 <p>Un élément très important de <code>dplyr</code> est la fonction <code>group_by</code>. Elle permet de définir des groupes de lignes à partir des valeurs d’une ou plusieurs colonnes. Par exemple, on peut grouper les vols selon leur mois :</p>
 <pre class="sourceCode r"><code class="sourceCode r">flights <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">group_by</span>(month)</code></pre>
-<pre><code># A tibble: 336,776 x 21
+<pre><code># A tibble: 336,776 x 22
     year month   day dep_time sched_dep_time dep_delay arr_time
    &lt;int&gt; &lt;int&gt; &lt;int&gt;    &lt;int&gt;          &lt;int&gt;     &lt;dbl&gt;    &lt;int&gt;
  1  2013     1     1      517            515         2      830
@@ -834,14 +836,15 @@ L’utilisation du <em>pipe</em> n’est pas obligatoire, mais elle rend les scr
  8  2013     1     1      557            600        -3      709
  9  2013     1     1      557            600        -3      838
 10  2013     1     1      558            600        -2      753
-# … with 336,766 more rows, and 14 more variables: sched_arr_time &lt;int&gt;,
+# … with 336,766 more rows, and 15 more variables: sched_arr_time &lt;int&gt;,
 #   arr_delay &lt;dbl&gt;, carrier &lt;chr&gt;, flight &lt;int&gt;, tailnum &lt;chr&gt;,
 #   origin &lt;chr&gt;, dest &lt;chr&gt;, air_time &lt;dbl&gt;, distance &lt;dbl&gt;, hour &lt;dbl&gt;,
-#   minute &lt;dbl&gt;, time_hour &lt;dttm&gt;, distance_km &lt;dbl&gt;, vitesse &lt;dbl&gt;</code></pre>
+#   minute &lt;dbl&gt;, time_hour &lt;dttm&gt;, duree_h &lt;dbl&gt;, distance_km &lt;dbl&gt;,
+#   vitesse &lt;dbl&gt;</code></pre>
 <p>Par défaut ceci ne fait rien de visible, à part l’apparition d’une mention <code>Groups</code> dans l’affichage du résultat. Mais à partir du moment où des groupes ont été définis, les verbes comme <code>slice</code>, <code>mutate</code> ou <code>summarise</code> vont en tenir compte lors de leurs opérations.</p>
 <p>Par exemple, si on applique <code>slice</code> à un tableau préalablement groupé, il va sélectionner les lignes aux positions indiquées <em>pour chaque groupe</em>. Ainsi la commande suivante affiche le premier vol de chaque mois, selon leur ordre d’apparition dans le tableau :</p>
 <pre class="sourceCode r"><code class="sourceCode r">flights <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">group_by</span>(month) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">slice</span>(<span class="dv">1</span>)</code></pre>
-<pre><code># A tibble: 12 x 21
+<pre><code># A tibble: 12 x 22
     year month   day dep_time sched_dep_time dep_delay arr_time
    &lt;int&gt; &lt;int&gt; &lt;int&gt;    &lt;int&gt;          &lt;int&gt;     &lt;dbl&gt;    &lt;int&gt;
  1  2013     1     1      517            515         2      830
@@ -856,35 +859,57 @@ L’utilisation du <em>pipe</em> n’est pas obligatoire, mais elle rend les scr
 10  2013    10     1      447            500       -13      614
 11  2013    11     1        5           2359         6      352
 12  2013    12     1       13           2359        14      446
-# … with 14 more variables: sched_arr_time &lt;int&gt;, arr_delay &lt;dbl&gt;,
+# … with 15 more variables: sched_arr_time &lt;int&gt;, arr_delay &lt;dbl&gt;,
 #   carrier &lt;chr&gt;, flight &lt;int&gt;, tailnum &lt;chr&gt;, origin &lt;chr&gt;, dest &lt;chr&gt;,
 #   air_time &lt;dbl&gt;, distance &lt;dbl&gt;, hour &lt;dbl&gt;, minute &lt;dbl&gt;,
-#   time_hour &lt;dttm&gt;, distance_km &lt;dbl&gt;, vitesse &lt;dbl&gt;</code></pre>
-<p>Idem pour <code>mutate</code> : les opérations appliquées lors du calcul des valeurs des nouvelles colonnes sont appliquées groupe de lignes par groupe de lignes. Dans l’exemple suivant, on ajoute une nouvelle colonne qui contient le retard moyen <em>du mois correspondant</em> :</p>
+#   time_hour &lt;dttm&gt;, duree_h &lt;dbl&gt;, distance_km &lt;dbl&gt;, vitesse &lt;dbl&gt;</code></pre>
+<p>Idem pour <code>mutate</code> : les opérations appliquées lors du calcul des valeurs des nouvelles colonnes sont appliquées groupe de lignes par groupe de lignes. Dans l’exemple suivant, on ajoute une nouvelle colonne qui contient le retard moyen <em>pour chaque compagnie aérienne</em>. Cette valeur est donc différente d’une compagnie à une autre, mais identique pour tous les vols d’une même compagnie :</p>
 <pre class="sourceCode r"><code class="sourceCode r">flights <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">group_by</span>(month) <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">mean_delay_month =</span> <span class="kw">mean</span>(dep_delay, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>)) <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">select</span>(dep_delay, month, mean_delay_month)</code></pre>
-<pre><code># A tibble: 336,776 x 3
-   dep_delay month mean_delay_month
-       &lt;dbl&gt; &lt;int&gt;            &lt;dbl&gt;
- 1         2     1             10.0
- 2         4     1             10.0
- 3         2     1             10.0
- 4        -1     1             10.0
- 5        -6     1             10.0
- 6        -4     1             10.0
- 7        -5     1             10.0
- 8        -3     1             10.0
- 9        -3     1             10.0
-10        -2     1             10.0
+<span class="st">  </span><span class="kw">group_by</span>(carrier) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">mean_delay_carrier =</span> <span class="kw">mean</span>(dep_delay, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>)) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">select</span>(dep_delay, month, mean_delay_carrier)</code></pre>
+<pre><code>Adding missing grouping variables: `carrier`</code></pre>
+<pre><code># A tibble: 336,776 x 4
+   carrier dep_delay month mean_delay_carrier
+   &lt;chr&gt;       &lt;dbl&gt; &lt;int&gt;              &lt;dbl&gt;
+ 1 UA              2     1              12.1 
+ 2 UA              4     1              12.1 
+ 3 AA              2     1               8.59
+ 4 B6             -1     1              13.0 
+ 5 DL             -6     1               9.26
+ 6 UA             -4     1              12.1 
+ 7 B6             -5     1              13.0 
+ 8 EV             -3     1              20.0 
+ 9 B6             -3     1              13.0 
+10 AA             -2     1               8.59
 # … with 336,766 more rows</code></pre>
-<p>Ceci peut permettre, par exemple, de déterminer si un retard donné est supérieur ou inférieur au retard moyen du mois en cours.</p>
+<p>Ceci peut permettre, par exemple, de déterminer si un retard donné est supérieur ou inférieur au retard médian de la compagnie :</p>
+<pre class="sourceCode r"><code class="sourceCode r">flights <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">group_by</span>(carrier) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">median_delay =</span> <span class="kw">median</span>(dep_delay, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>),
+         <span class="dt">delay_carrier =</span> <span class="kw">if_else</span>(dep_delay <span class="op">&gt;</span><span class="st"> </span>median_delay,
+                                  <span class="st">&quot;Supérieur&quot;</span>, <span class="st">&quot;Inférieur ou égal&quot;</span>)) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">select</span>(dep_delay, month, median_delay, delay_carrier)</code></pre>
+<pre><code>Adding missing grouping variables: `carrier`</code></pre>
+<pre><code># A tibble: 336,776 x 5
+   carrier dep_delay month median_delay delay_carrier    
+   &lt;chr&gt;       &lt;dbl&gt; &lt;int&gt;        &lt;dbl&gt; &lt;chr&gt;            
+ 1 UA              2     1            0 Supérieur        
+ 2 UA              4     1            0 Supérieur        
+ 3 AA              2     1           -3 Supérieur        
+ 4 B6             -1     1           -1 Inférieur ou égal
+ 5 DL             -6     1           -2 Inférieur ou égal
+ 6 UA             -4     1            0 Inférieur ou égal
+ 7 B6             -5     1           -1 Inférieur ou égal
+ 8 EV             -3     1           -1 Inférieur ou égal
+ 9 B6             -3     1           -1 Inférieur ou égal
+10 AA             -2     1           -3 Supérieur        
+# … with 336,766 more rows</code></pre>
 <p><code>group_by</code> peut aussi être utile avec <code>filter</code>, par exemple pour sélectionner les vols avec le retard au départ le plus important <em>pour chaque mois</em> :</p>
 <pre class="sourceCode r"><code class="sourceCode r">flights <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st">  </span><span class="kw">group_by</span>(month) <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st">  </span><span class="kw">filter</span>(dep_delay <span class="op">==</span><span class="st"> </span><span class="kw">max</span>(dep_delay, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>))</code></pre>
-<pre><code># A tibble: 12 x 21
+<pre><code># A tibble: 12 x 22
     year month   day dep_time sched_dep_time dep_delay arr_time
    &lt;int&gt; &lt;int&gt; &lt;int&gt;    &lt;int&gt;          &lt;int&gt;     &lt;dbl&gt;    &lt;int&gt;
  1  2013     1     9      641            900      1301     1242
@@ -899,10 +924,10 @@ L’utilisation du <em>pipe</em> n’est pas obligatoire, mais elle rend les scr
 10  2013     7    22      845           1600      1005     1044
 11  2013     8     8     2334           1454       520      120
 12  2013     9    20     1139           1845      1014     1457
-# … with 14 more variables: sched_arr_time &lt;int&gt;, arr_delay &lt;dbl&gt;,
+# … with 15 more variables: sched_arr_time &lt;int&gt;, arr_delay &lt;dbl&gt;,
 #   carrier &lt;chr&gt;, flight &lt;int&gt;, tailnum &lt;chr&gt;, origin &lt;chr&gt;, dest &lt;chr&gt;,
 #   air_time &lt;dbl&gt;, distance &lt;dbl&gt;, hour &lt;dbl&gt;, minute &lt;dbl&gt;,
-#   time_hour &lt;dttm&gt;, distance_km &lt;dbl&gt;, vitesse &lt;dbl&gt;</code></pre>
+#   time_hour &lt;dttm&gt;, duree_h &lt;dbl&gt;, distance_km &lt;dbl&gt;, vitesse &lt;dbl&gt;</code></pre>
 <div class="rmdimportant">
 <p>
 <strong>Attention :</strong> la clause <code>group_by</code> marche pour les verbes déjà vus précédemment, <em>sauf</em> pour <code>arrange</code>, qui par défaut trie la table sans tenir compte des groupes. Pour obtenir un tri par groupe, il faut lui ajouter l’argument <code>.by_group = TRUE</code>.
@@ -912,7 +937,7 @@ L’utilisation du <em>pipe</em> n’est pas obligatoire, mais elle rend les scr
 <pre class="sourceCode r"><code class="sourceCode r">flights <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st">  </span><span class="kw">group_by</span>(month) <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st">  </span><span class="kw">arrange</span>(<span class="kw">desc</span>(dep_delay))</code></pre>
-<pre><code># A tibble: 336,776 x 21
+<pre><code># A tibble: 336,776 x 22
     year month   day dep_time sched_dep_time dep_delay arr_time
    &lt;int&gt; &lt;int&gt; &lt;int&gt;    &lt;int&gt;          &lt;int&gt;     &lt;dbl&gt;    &lt;int&gt;
  1  2013     1     9      641            900      1301     1242
@@ -925,14 +950,15 @@ L’utilisation du <em>pipe</em> n’est pas obligatoire, mais elle rend les scr
  8  2013     6    27      959           1900       899     1236
  9  2013     7    22     2257            759       898      121
 10  2013    12     5      756           1700       896     1058
-# … with 336,766 more rows, and 14 more variables: sched_arr_time &lt;int&gt;,
+# … with 336,766 more rows, and 15 more variables: sched_arr_time &lt;int&gt;,
 #   arr_delay &lt;dbl&gt;, carrier &lt;chr&gt;, flight &lt;int&gt;, tailnum &lt;chr&gt;,
 #   origin &lt;chr&gt;, dest &lt;chr&gt;, air_time &lt;dbl&gt;, distance &lt;dbl&gt;, hour &lt;dbl&gt;,
-#   minute &lt;dbl&gt;, time_hour &lt;dttm&gt;, distance_km &lt;dbl&gt;, vitesse &lt;dbl&gt;</code></pre>
+#   minute &lt;dbl&gt;, time_hour &lt;dttm&gt;, duree_h &lt;dbl&gt;, distance_km &lt;dbl&gt;,
+#   vitesse &lt;dbl&gt;</code></pre>
 <pre class="sourceCode r"><code class="sourceCode r">flights <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st">  </span><span class="kw">group_by</span>(month) <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st">  </span><span class="kw">arrange</span>(<span class="kw">desc</span>(dep_delay), <span class="dt">.by_group =</span> <span class="ot">TRUE</span>)</code></pre>
-<pre><code># A tibble: 336,776 x 21
+<pre><code># A tibble: 336,776 x 22
     year month   day dep_time sched_dep_time dep_delay arr_time
    &lt;int&gt; &lt;int&gt; &lt;int&gt;    &lt;int&gt;          &lt;int&gt;     &lt;dbl&gt;    &lt;int&gt;
  1  2013     1     9      641            900      1301     1242
@@ -945,10 +971,11 @@ L’utilisation du <em>pipe</em> n’est pas obligatoire, mais elle rend les scr
  8  2013     1     1     2343           1724       379      314
  9  2013     1     2     2131           1512       379     2340
 10  2013     1     7     2021           1415       366     2332
-# … with 336,766 more rows, and 14 more variables: sched_arr_time &lt;int&gt;,
+# … with 336,766 more rows, and 15 more variables: sched_arr_time &lt;int&gt;,
 #   arr_delay &lt;dbl&gt;, carrier &lt;chr&gt;, flight &lt;int&gt;, tailnum &lt;chr&gt;,
 #   origin &lt;chr&gt;, dest &lt;chr&gt;, air_time &lt;dbl&gt;, distance &lt;dbl&gt;, hour &lt;dbl&gt;,
-#   minute &lt;dbl&gt;, time_hour &lt;dttm&gt;, distance_km &lt;dbl&gt;, vitesse &lt;dbl&gt;</code></pre>
+#   minute &lt;dbl&gt;, time_hour &lt;dttm&gt;, duree_h &lt;dbl&gt;, distance_km &lt;dbl&gt;,
+#   vitesse &lt;dbl&gt;</code></pre>
 </div>
 <div id="summarise-et-count" class="section level3">
 <h3><span class="header-section-number">10.4.2</span> <code>summarise</code> et <code>count</code></h3>
@@ -1057,32 +1084,33 @@ L’utilisation du <em>pipe</em> n’est pas obligatoire, mais elle rend les scr
  9 JFK    MCO    5464
 10 EWR    BOS    5327
 # … with 214 more rows</code></pre>
-<p>On peut utiliser plusieurs opérations de groupage dans le même <em>pipeline</em>. Ainsi, si on souhaite déterminer le couple origine/destination ayant le plus grand nombre de vols selon le mois de l’année, on devra procéder en deux étapes :</p>
+<p>On peut utiliser plusieurs opérations de groupage dans le même <em>pipeline</em>. Ainsi, si on souhaite déterminer le triplet compagnie aérienne / aéroport de départ / aéroport d’arrivée ayant le plus grand nombre de vols selon le mois de l’année, on devra procéder en deux étapes :</p>
 <ul>
-<li>d’abord grouper selon mois, origine et destination pour calculer le nombre de vols</li>
+<li>d’abord grouper selon mois, compagnie, aéroports d’origine et d’arrivée pour calculer le nombre de vols</li>
 <li>puis grouper uniquement selon le mois pour sélectionner la ligne avec la valeur maximale.</li>
 </ul>
 <p>Au final, on obtient le code suivant :</p>
 <pre class="sourceCode r"><code class="sourceCode r">flights <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">group_by</span>(month, origin, dest) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">group_by</span>(month, carrier, origin, dest) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">summarise</span>(<span class="dt">nb =</span> <span class="kw">n</span>()) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">group_by</span>(month) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">filter</span>(nb <span class="op">==</span><span class="st"> </span><span class="kw">max</span>(nb))</code></pre>
-<pre><code># A tibble: 12 x 4
-   month origin dest     nb
-   &lt;int&gt; &lt;chr&gt;  &lt;chr&gt; &lt;int&gt;
- 1     1 JFK    LAX     937
- 2     2 JFK    LAX     834
- 3     3 JFK    LAX     960
- 4     4 JFK    LAX     935
- 5     5 JFK    LAX     960
- 6     6 JFK    LAX     928
- 7     7 JFK    LAX     985
- 8     8 JFK    LAX     979
- 9     9 JFK    LAX     925
-10    10 JFK    LAX     965
-11    11 JFK    LAX     907
-12    12 JFK    LAX     947</code></pre>
+<pre><code># A tibble: 13 x 5
+   month carrier origin dest     nb
+   &lt;int&gt; &lt;chr&gt;   &lt;chr&gt;  &lt;chr&gt; &lt;int&gt;
+ 1     1 AA      LGA    DFW     437
+ 2     1 DL      LGA    ATL     437
+ 3     2 DL      LGA    ATL     402
+ 4     3 DL      LGA    ATL     461
+ 5     4 AA      LGA    ORD     501
+ 6     5 AA      LGA    ORD     518
+ 7     6 AA      LGA    ORD     520
+ 8     7 AA      LGA    ORD     551
+ 9     8 AA      LGA    ORD     545
+10     9 AA      LGA    ORD     492
+11    10 AA      LGA    ORD     516
+12    11 DL      LGA    ATL     471
+13    12 DL      LGA    ATL     489</code></pre>
 <p>Lorsqu’on effectue un <code>group_by</code> suivi d’un <code>summarise</code>, le tableau résultat est automatiquement dégroupé <em>de la dernière variable de regroupement</em>. Ainsi le tableau généré par le code suivant est groupé par <code>month</code> et <code>origin</code> :</p>
 <pre class="sourceCode r"><code class="sourceCode r">flights <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">group_by</span>(month, origin, dest) <span class="op">%&gt;%</span>
@@ -1166,33 +1194,34 @@ L’utilisation du <em>pipe</em> n’est pas obligatoire, mais elle rend les scr
 <h3><span class="header-section-number">10.5.1</span> <code>sample_n</code>, <code>sample_frac</code></h3>
 <p>Ces verbes permettent de sélectionner un nombre de lignes ou une fraction des lignes d’un tableau aléatoirement. Ainsi si on veut choisir 5 lignes au hasard dans le tableau <code>airports</code> :</p>
 <pre class="sourceCode r"><code class="sourceCode r">airports <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">sample_n</span>(<span class="dv">5</span>)</code></pre>
-<pre><code># A tibble: 5 x 9
-  faa   name                 lat    lon   alt    tz dst   tzone       alt_m
-  &lt;chr&gt; &lt;chr&gt;              &lt;dbl&gt;  &lt;dbl&gt; &lt;int&gt; &lt;dbl&gt; &lt;chr&gt; &lt;chr&gt;       &lt;dbl&gt;
-1 BMT   Beaumont Municipal  30.1  -94.2    32    -6 A     America/C… 9.75e0
-2 PAO   Palo Alto Airport…  37.5 -122.      7    -8 A     America/L… 2.13e0
-3 P52   Cottonwood Airport  34.7 -112.   3550    -7 A     America/P… 1.08e3
-4 SBM   Sheboygan County …  43.8  -87.9   755    -6 A     America/C… 2.30e2
-5 6K8   Tok Junction Airp…  63.3 -143.   1639    -9 A     America/A… 5.00e2</code></pre>
+<pre><code># A tibble: 5 x 8
+  faa   name                    lat    lon   alt    tz dst   tzone         
+  &lt;chr&gt; &lt;chr&gt;                 &lt;dbl&gt;  &lt;dbl&gt; &lt;int&gt; &lt;dbl&gt; &lt;chr&gt; &lt;chr&gt;         
+1 HYS   Hays Regional Airport  38.8  -99.3  1998    -6 A     America/Chica…
+2 MLY   Manley Hot Springs A…  65.0 -151.    270    -9 A     America/Ancho…
+3 KGK   Koliganek Airport      59.7 -157.    269    -9 A     America/Ancho…
+4 IJD   Windham Airport        41.7  -72.2   246    -5 A     America/New_Y…
+5 EKI   Elkhart Municipal      41.7  -86.0   778    -5 A     America/New_Y…</code></pre>
 <p>Si on veut tirer au hasard 10% des lignes de <code>flights</code> :</p>
 <pre class="sourceCode r"><code class="sourceCode r">flights <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">sample_frac</span>(<span class="fl">0.1</span>)</code></pre>
-<pre><code># A tibble: 33,678 x 21
+<pre><code># A tibble: 33,678 x 22
     year month   day dep_time sched_dep_time dep_delay arr_time
    &lt;int&gt; &lt;int&gt; &lt;int&gt;    &lt;int&gt;          &lt;int&gt;     &lt;dbl&gt;    &lt;int&gt;
- 1  2013     5     1     1550           1610       -20     1704
- 2  2013     5    31     2051           2055        -4       NA
- 3  2013    12     7     1007           1015        -8     1325
- 4  2013     3    24     1051           1059        -8     1322
- 5  2013     1    24     1915           1856        19     2200
- 6  2013     9    16     1701           1651        10     1938
- 7  2013     2    10     1854           1857        -3     2201
- 8  2013     4    24      652            640        12      810
- 9  2013     7     3     1407           1359         8     1706
-10  2013     4    13     1451           1459        -8     1604
-# … with 33,668 more rows, and 14 more variables: sched_arr_time &lt;int&gt;,
+ 1  2013    11     6      823            830        -7     1005
+ 2  2013     2    26     1022           1030        -8     1315
+ 3  2013     5     4      937            943        -6     1126
+ 4  2013     7    22     2004           2000         4       34
+ 5  2013     6     1     1532           1538        -6     1835
+ 6  2013     4    18      806            810        -4     1113
+ 7  2013    12    15     2140           2111        29     2338
+ 8  2013     6    22      908            900         8     1153
+ 9  2013    10    11     1547           1520        27     1842
+10  2013     6    23      621            630        -9      853
+# … with 33,668 more rows, and 15 more variables: sched_arr_time &lt;int&gt;,
 #   arr_delay &lt;dbl&gt;, carrier &lt;chr&gt;, flight &lt;int&gt;, tailnum &lt;chr&gt;,
 #   origin &lt;chr&gt;, dest &lt;chr&gt;, air_time &lt;dbl&gt;, distance &lt;dbl&gt;, hour &lt;dbl&gt;,
-#   minute &lt;dbl&gt;, time_hour &lt;dttm&gt;, distance_km &lt;dbl&gt;, vitesse &lt;dbl&gt;</code></pre>
+#   minute &lt;dbl&gt;, time_hour &lt;dttm&gt;, duree_h &lt;dbl&gt;, distance_km &lt;dbl&gt;,
+#   vitesse &lt;dbl&gt;</code></pre>
 <p>Ces fonctions sont utiles notamment pour faire de “l’échantillonnage” en tirant au hasard un certain nombre d’observations du tableau.</p>
 </div>
 <div id="lead-et-lag" class="section level3">
@@ -1303,7 +1332,7 @@ L’utilisation du <em>pipe</em> n’est pas obligatoire, mais elle rend les scr
 <p>L’option <code>.keep_all</code> permet, dans l’opération précédente, de conserver l’ensemble des colonnes du tableau :</p>
 <pre class="sourceCode r"><code class="sourceCode r">flights <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">distinct</span>(month, day, <span class="dt">.keep_all =</span> <span class="ot">TRUE</span>) </code></pre>
-<pre><code># A tibble: 365 x 21
+<pre><code># A tibble: 365 x 22
     year month   day dep_time sched_dep_time dep_delay arr_time
    &lt;int&gt; &lt;int&gt; &lt;int&gt;    &lt;int&gt;          &lt;int&gt;     &lt;dbl&gt;    &lt;int&gt;
  1  2013     1     1      517            515         2      830
@@ -1316,10 +1345,11 @@ L’utilisation du <em>pipe</em> n’est pas obligatoire, mais elle rend les scr
  8  2013     1     8      454            500        -6      625
  9  2013     1     9        2           2359         3      432
 10  2013     1    10        3           2359         4      426
-# … with 355 more rows, and 14 more variables: sched_arr_time &lt;int&gt;,
+# … with 355 more rows, and 15 more variables: sched_arr_time &lt;int&gt;,
 #   arr_delay &lt;dbl&gt;, carrier &lt;chr&gt;, flight &lt;int&gt;, tailnum &lt;chr&gt;,
 #   origin &lt;chr&gt;, dest &lt;chr&gt;, air_time &lt;dbl&gt;, distance &lt;dbl&gt;, hour &lt;dbl&gt;,
-#   minute &lt;dbl&gt;, time_hour &lt;dttm&gt;, distance_km &lt;dbl&gt;, vitesse &lt;dbl&gt;</code></pre>
+#   minute &lt;dbl&gt;, time_hour &lt;dttm&gt;, duree_h &lt;dbl&gt;, distance_km &lt;dbl&gt;,
+#   vitesse &lt;dbl&gt;</code></pre>
 </div>
 </div>
 <div id="tables-multiples" class="section level2">
@@ -2095,24 +2125,24 @@ airports_ex &lt;-<span class="st"> </span>airports <span class="op">%&gt;%</span
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">rename</span>(airports, <span class="dt">latitude =</span> lat, <span class="dt">longitude =</span> lon)</code></pre>
 </div>
 <p><strong>Exercice 1.5</strong></p>
-<p>Dans la table <code>flights</code>, la colonne <code>air_time</code> contient la durée du vol en minutes. Créer une nouvelle variable <code>duree_h</code> contenant la durée du vol en heures. Sélectionner dans la table obtenue uniquement les deux colonnes <code>air_time</code> et <code>duree_h</code>.</p>
-<pre><code># A tibble: 336,776 x 2
-   air_time duree_h
-      &lt;dbl&gt;   &lt;dbl&gt;
- 1      227   3.78 
- 2      227   3.78 
- 3      160   2.67 
- 4      183   3.05 
- 5      116   1.93 
- 6      150   2.5  
- 7      158   2.63 
- 8       53   0.883
- 9      140   2.33 
-10      138   2.3  
-# … with 336,766 more rows</code></pre>
+<p>Dans la table <code>airports</code>, la colonne <code>alt</code> contient l’altitude de l’aéroport en pieds. Créer une nouvelle variable <code>alt_m</code> contenant l’altitude en mètres (on convertit des pieds en mètres en les divisant par 3.2808). Sélectionner dans la table obtenue uniquement les deux colonnes <code>alt</code> et <code>alt_m</code>.</p>
+<pre><code># A tibble: 1,458 x 2
+     alt  alt_m
+   &lt;int&gt;  &lt;dbl&gt;
+ 1  1044 318.  
+ 2   264  80.5 
+ 3   801 244.  
+ 4   523 159.  
+ 5    11   3.35
+ 6  1593 486.  
+ 7   730 223.  
+ 8   492 150.  
+ 9  1000 305.  
+10   108  32.9 
+# … with 1,448 more rows</code></pre>
 <div class="solution">
-<pre class="sourceCode r"><code class="sourceCode r">tmp &lt;-<span class="st"> </span><span class="kw">mutate</span>(flights, <span class="dt">duree_h =</span> air_time <span class="op">/</span><span class="st"> </span><span class="dv">60</span>)
-<span class="kw">select</span>(tmp, air_time, duree_h)</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r">tmp &lt;-<span class="st"> </span><span class="kw">mutate</span>(airports, <span class="dt">alt_m =</span> alt <span class="op">/</span><span class="st"> </span><span class="fl">3.2808</span>)
+<span class="kw">select</span>(tmp, alt, alt_m)</code></pre>
 </div>
 </div>
 <div id="enchainer-des-operations" class="section level3">
@@ -2214,26 +2244,17 @@ airports_ex &lt;-<span class="st"> </span>airports <span class="op">%&gt;%</span
 <span class="st">  </span><span class="kw">arrange</span>(n)</code></pre>
 </div>
 <p><strong>Exercice 3.2</strong></p>
-<p>Calculer le retard au départ moyen selon le mois.</p>
-<pre><code># A tibble: 12 x 2
-   month retard_moyen
-   &lt;int&gt;        &lt;dbl&gt;
- 1     1        10.0 
- 2     2        10.8 
- 3     3        13.2 
- 4     4        13.9 
- 5     5        13.0 
- 6     6        20.8 
- 7     7        21.7 
- 8     8        12.6 
- 9     9         6.72
-10    10         6.24
-11    11         5.44
-12    12        16.6 </code></pre>
+<p>Calculer la distance moyenne des vols selon l’aéroport de départ.</p>
+<pre><code># A tibble: 3 x 2
+  origin distance_moyenne
+  &lt;chr&gt;             &lt;dbl&gt;
+1 EWR               1057.
+2 JFK               1266.
+3 LGA                780.</code></pre>
 <div class="solution">
 <pre class="sourceCode r"><code class="sourceCode r">flights <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">group_by</span>(month) <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">summarise</span>(<span class="dt">retard_moyen =</span> <span class="kw">mean</span>(dep_delay, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>))</code></pre>
+<span class="st">  </span><span class="kw">group_by</span>(origin) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">summarise</span>(<span class="dt">distance_moyenne =</span> <span class="kw">mean</span>(distance))</code></pre>
 </div>
 <p><strong>Exercice 3.3</strong></p>
 <p>Calculer le nombre de vols à destination de Los Angeles (code <code>LAX</code>) pour chaque mois de l’année.</p>
@@ -2501,8 +2522,8 @@ airports_ex &lt;-<span class="st"> </span>airports <span class="op">%&gt;%</span
 <span class="kw">leaflet</span>(<span class="dt">data =</span> flights_dest) <span class="op">%&gt;%</span>
 <span class="st">  </span>addTiles <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">addCircles</span>(<span class="dt">lng=</span><span class="op">~</span>lon, <span class="dt">lat=</span><span class="op">~</span>lat, <span class="dt">radius=</span><span class="op">~</span>n <span class="op">*</span><span class="st"> </span><span class="dv">10</span>, <span class="dt">popup=</span><span class="op">~</span>name)</code></pre>
-<div id="htmlwidget-56c0202ed434ccf6faf9" style="width:672px;height:480px;" class="leaflet html-widget"></div>
-<script type="application/json" data-for="htmlwidget-56c0202ed434ccf6faf9">{"x":{"options":{"crs":{"crsClass":"L.CRS.EPSG3857","code":null,"proj4def":null,"projectedBounds":null,"options":{}}},"calls":[{"method":"addTiles","args":["//{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",null,null,{"minZoom":0,"maxZoom":18,"tileSize":256,"subdomains":"abc","errorTileUrl":"","tms":false,"noWrap":false,"zoomOffset":0,"zoomReverse":false,"opacity":1,"zIndex":1,"detectRetina":false,"attribution":"&copy; <a href=\"http://openstreetmap.org\">OpenStreetMap<\/a> contributors, <a href=\"http://creativecommons.org/licenses/by-sa/2.0/\">CC-BY-SA<\/a>"}]},{"method":"addCircles","args":[[35.0402222,41.253053,42.748267,61.174361,33.636719,30.194528,35.436194,41.938889,44.807444,33.562942,36.124472,42.364347,null,44.471861,42.940525,34.200667,39.175361,45.777643,33.938833,40.9160833,38.138639,32.898647,41.411689,35.214,39.997972,38.373147,39.048836,39.902375,38.852083,39.861656,32.896828,41.533972,42.212444,39.642556,24.556111,26.072583,42.880833,36.09775,34.895556,40.481181,21.318681,29.645419,38.944533,29.984433,34.270615,39.717331,43.607333333,30.494056,36.080056,33.942536,38.0365,40.777245,33.817722,39.297606,28.429394,41.785972,35.042417,42.932556,25.79325,42.947222,43.139858,44.881956,29.993389,38.509794,41.391667,33.67975,37.721278,35.393089,41.303167,41.978603,36.894611,26.683161,45.588722,39.871944,33.434278,40.491467,null,33.829667,41.732581,43.646161,35.877639,37.505167,43.118866,26.536167,32.733556,29.533694,32.127583,41.708661,38.1740858,47.449,37.618972,37.3626,null,40.788389,38.695417,33.675667,27.395444,38.748697,null,43.111187,27.975472,36.198389,44.741445,35.810972,36.2818694],[-106.6091944,-70.060181,-73.801692,-149.996361,-84.428067,-97.669889,-82.541806,-72.683222,-68.828139,-86.75355,-86.678194,-71.005181,null,-73.153278,-78.732167,-118.358667,-76.668333,-111.160151,-81.119528,-81.4421944,-78.452861,-80.040528,-81.849794,-80.943139,-82.891889,-81.593189,-84.667822,-84.219375,-77.037722,-104.673178,-97.037997,-93.663083,-83.353389,-106.917694,-81.759556,-80.15275,-85.522806,-79.937306,-82.218889,-107.21766,-157.922428,-95.278889,-77.455811,-95.341442,-77.902569,-86.294383,-110.73775,-81.687861,-115.15225,-118.408075,-84.605889,-73.872608,-118.151611,-94.713905,-81.308994,-87.752417,-89.976667,-71.435667,-80.290556,-87.896583,-89.337514,-93.221767,-90.258028,-107.894242,-70.615278,-78.928333,-122.220722,-97.600733,-95.894069,-87.904842,-76.201222,-80.095589,-122.5975,-75.241139,-112.011583,-80.232872,null,-116.506694,-71.420383,-70.309281,-78.787472,-77.319667,-77.672389,-81.755167,-117.189667,-98.469778,-81.202139,-86.31725,-85.7364989,-122.309306,-122.374889,-121.929022,null,-111.977772,-121.590778,-117.868222,-82.554389,-90.370028,null,-76.106311,-82.53325,-95.888111,-85.582235,-83.994028,-94.3068111],[2540,2650,4390,80,172150,24390,2750,4430,3750,2970,63330,155080,8960,25890,46810,3710,17810,360,1160,8640,520,28840,45730,140640,35240,1380,39410,15250,97050,72660,87380,5690,93840,2130,170,120550,7650,16060,8490,150,7070,21150,57000,71980,1100,20770,250,27200,59970,161740,10,10,6680,20080,140820,41130,17890,10090,117280,28020,5720,71850,37990,150,2210,590,3120,3460,8490,172830,15360,65540,13540,16320,46560,28750,3650,190,3760,23520,81630,24540,24160,35370,27370,6860,8040,100,11570,39230,133310,3290,58190,24670,2840,8250,12110,43390,5220,17610,74660,3150,1010,6310,10360],null,null,{"interactive":true,"className":"","stroke":true,"color":"#03F","weight":5,"opacity":0.5,"fill":true,"fillColor":"#03F","fillOpacity":0.2},["Albuquerque International Sunport","Nantucket Mem","Albany Intl","Ted Stevens Anchorage Intl","Hartsfield Jackson Atlanta Intl","Austin Bergstrom Intl","Asheville Regional Airport","Bradley Intl","Bangor Intl","Birmingham Intl","Nashville Intl","General Edward Lawrence Logan Intl",null,"Burlington Intl","Buffalo Niagara Intl","Bob Hope","Baltimore Washington Intl","Gallatin Field","Columbia Metropolitan","Akron Canton Regional Airport","Charlottesville-Albemarle","Charleston Afb Intl","Cleveland Hopkins Intl","Charlotte Douglas Intl","Port Columbus Intl","Yeager","Cincinnati Northern Kentucky Intl","James M Cox Dayton Intl","Ronald Reagan Washington Natl","Denver Intl","Dallas Fort Worth Intl","Des Moines Intl","Detroit Metro Wayne Co","Eagle Co Rgnl","Key West Intl","Fort Lauderdale Hollywood Intl","Gerald R Ford Intl","Piedmont Triad","Greenville-Spartanburg International","Yampa Valley","Honolulu Intl","William P Hobby","Washington Dulles Intl","George Bush Intercontinental","Wilmington Intl","Indianapolis Intl","Jackson Hole Airport","Jacksonville Intl","Mc Carran Intl","Los Angeles Intl","Blue Grass","La Guardia","Long Beach","Kansas City Intl","Orlando Intl","Chicago Midway Intl","Memphis Intl","Manchester Regional Airport","Miami Intl","General Mitchell Intl","Dane Co Rgnl Truax Fld","Minneapolis St Paul Intl","Louis Armstrong New Orleans Intl","Montrose Regional Airport","Martha\\\\'s Vineyard","Myrtle Beach Intl","Metropolitan Oakland Intl","Will Rogers World","Eppley Afld","Chicago Ohare Intl","Norfolk Intl","Palm Beach Intl","Portland Intl","Philadelphia Intl","Phoenix Sky Harbor Intl","Pittsburgh Intl",null,"Palm Springs Intl","Theodore Francis Green State","Portland Intl Jetport","Raleigh Durham Intl","Richmond Intl","Greater Rochester Intl","Southwest Florida Intl","San Diego Intl","San Antonio Intl","Savannah Hilton Head Intl","South Bend Rgnl","Louisville International Airport","Seattle Tacoma Intl","San Francisco Intl","Norman Y Mineta San Jose Intl",null,"Salt Lake City Intl","Sacramento Intl","John Wayne Arpt Orange Co","Sarasota Bradenton Intl","Lambert St Louis Intl",null,"Syracuse Hancock Intl","Tampa Intl","Tulsa Intl","Cherry Capital Airport","Mc Ghee Tyson","NW Arkansas Regional"],null,null,{"interactive":false,"permanent":false,"direction":"auto","opacity":1,"offset":[0,0],"textsize":"10px","textOnly":false,"className":"","sticky":true},null,null]}],"limits":{"lat":[21.318681,61.174361],"lng":[-157.922428,-68.828139]}},"evals":[],"jsHooks":[]}</script>
+<div id="htmlwidget-f1f249579830461e8b78" style="width:672px;height:480px;" class="leaflet html-widget"></div>
+<script type="application/json" data-for="htmlwidget-f1f249579830461e8b78">{"x":{"options":{"crs":{"crsClass":"L.CRS.EPSG3857","code":null,"proj4def":null,"projectedBounds":null,"options":{}}},"calls":[{"method":"addTiles","args":["//{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",null,null,{"minZoom":0,"maxZoom":18,"tileSize":256,"subdomains":"abc","errorTileUrl":"","tms":false,"noWrap":false,"zoomOffset":0,"zoomReverse":false,"opacity":1,"zIndex":1,"detectRetina":false,"attribution":"&copy; <a href=\"http://openstreetmap.org\">OpenStreetMap<\/a> contributors, <a href=\"http://creativecommons.org/licenses/by-sa/2.0/\">CC-BY-SA<\/a>"}]},{"method":"addCircles","args":[[35.0402222,41.253053,42.748267,61.174361,33.636719,30.194528,35.436194,41.938889,44.807444,33.562942,36.124472,42.364347,null,44.471861,42.940525,34.200667,39.175361,45.777643,33.938833,40.9160833,38.138639,32.898647,41.411689,35.214,39.997972,38.373147,39.048836,39.902375,38.852083,39.861656,32.896828,41.533972,42.212444,39.642556,24.556111,26.072583,42.880833,36.09775,34.895556,40.481181,21.318681,29.645419,38.944533,29.984433,34.270615,39.717331,43.607333333,30.494056,36.080056,33.942536,38.0365,40.777245,33.817722,39.297606,28.429394,41.785972,35.042417,42.932556,25.79325,42.947222,43.139858,44.881956,29.993389,38.509794,41.391667,33.67975,37.721278,35.393089,41.303167,41.978603,36.894611,26.683161,45.588722,39.871944,33.434278,40.491467,null,33.829667,41.732581,43.646161,35.877639,37.505167,43.118866,26.536167,32.733556,29.533694,32.127583,41.708661,38.1740858,47.449,37.618972,37.3626,null,40.788389,38.695417,33.675667,27.395444,38.748697,null,43.111187,27.975472,36.198389,44.741445,35.810972,36.2818694],[-106.6091944,-70.060181,-73.801692,-149.996361,-84.428067,-97.669889,-82.541806,-72.683222,-68.828139,-86.75355,-86.678194,-71.005181,null,-73.153278,-78.732167,-118.358667,-76.668333,-111.160151,-81.119528,-81.4421944,-78.452861,-80.040528,-81.849794,-80.943139,-82.891889,-81.593189,-84.667822,-84.219375,-77.037722,-104.673178,-97.037997,-93.663083,-83.353389,-106.917694,-81.759556,-80.15275,-85.522806,-79.937306,-82.218889,-107.21766,-157.922428,-95.278889,-77.455811,-95.341442,-77.902569,-86.294383,-110.73775,-81.687861,-115.15225,-118.408075,-84.605889,-73.872608,-118.151611,-94.713905,-81.308994,-87.752417,-89.976667,-71.435667,-80.290556,-87.896583,-89.337514,-93.221767,-90.258028,-107.894242,-70.615278,-78.928333,-122.220722,-97.600733,-95.894069,-87.904842,-76.201222,-80.095589,-122.5975,-75.241139,-112.011583,-80.232872,null,-116.506694,-71.420383,-70.309281,-78.787472,-77.319667,-77.672389,-81.755167,-117.189667,-98.469778,-81.202139,-86.31725,-85.7364989,-122.309306,-122.374889,-121.929022,null,-111.977772,-121.590778,-117.868222,-82.554389,-90.370028,null,-76.106311,-82.53325,-95.888111,-85.582235,-83.994028,-94.3068111],[2540,2650,4390,80,172150,24390,2750,4430,3750,2970,63330,155080,8960,25890,46810,3710,17810,360,1160,8640,520,28840,45730,140640,35240,1380,39410,15250,97050,72660,87380,5690,93840,2130,170,120550,7650,16060,8490,150,7070,21150,57000,71980,1100,20770,250,27200,59970,161740,10,10,6680,20080,140820,41130,17890,10090,117280,28020,5720,71850,37990,150,2210,590,3120,3460,8490,172830,15360,65540,13540,16320,46560,28750,3650,190,3760,23520,81630,24540,24160,35370,27370,6860,8040,100,11570,39230,133310,3290,58190,24670,2840,8250,12110,43390,5220,17610,74660,3150,1010,6310,10360],null,null,{"interactive":true,"className":"","stroke":true,"color":"#03F","weight":5,"opacity":0.5,"fill":true,"fillColor":"#03F","fillOpacity":0.2},["Albuquerque International Sunport","Nantucket Mem","Albany Intl","Ted Stevens Anchorage Intl","Hartsfield Jackson Atlanta Intl","Austin Bergstrom Intl","Asheville Regional Airport","Bradley Intl","Bangor Intl","Birmingham Intl","Nashville Intl","General Edward Lawrence Logan Intl",null,"Burlington Intl","Buffalo Niagara Intl","Bob Hope","Baltimore Washington Intl","Gallatin Field","Columbia Metropolitan","Akron Canton Regional Airport","Charlottesville-Albemarle","Charleston Afb Intl","Cleveland Hopkins Intl","Charlotte Douglas Intl","Port Columbus Intl","Yeager","Cincinnati Northern Kentucky Intl","James M Cox Dayton Intl","Ronald Reagan Washington Natl","Denver Intl","Dallas Fort Worth Intl","Des Moines Intl","Detroit Metro Wayne Co","Eagle Co Rgnl","Key West Intl","Fort Lauderdale Hollywood Intl","Gerald R Ford Intl","Piedmont Triad","Greenville-Spartanburg International","Yampa Valley","Honolulu Intl","William P Hobby","Washington Dulles Intl","George Bush Intercontinental","Wilmington Intl","Indianapolis Intl","Jackson Hole Airport","Jacksonville Intl","Mc Carran Intl","Los Angeles Intl","Blue Grass","La Guardia","Long Beach","Kansas City Intl","Orlando Intl","Chicago Midway Intl","Memphis Intl","Manchester Regional Airport","Miami Intl","General Mitchell Intl","Dane Co Rgnl Truax Fld","Minneapolis St Paul Intl","Louis Armstrong New Orleans Intl","Montrose Regional Airport","Martha\\\\'s Vineyard","Myrtle Beach Intl","Metropolitan Oakland Intl","Will Rogers World","Eppley Afld","Chicago Ohare Intl","Norfolk Intl","Palm Beach Intl","Portland Intl","Philadelphia Intl","Phoenix Sky Harbor Intl","Pittsburgh Intl",null,"Palm Springs Intl","Theodore Francis Green State","Portland Intl Jetport","Raleigh Durham Intl","Richmond Intl","Greater Rochester Intl","Southwest Florida Intl","San Diego Intl","San Antonio Intl","Savannah Hilton Head Intl","South Bend Rgnl","Louisville International Airport","Seattle Tacoma Intl","San Francisco Intl","Norman Y Mineta San Jose Intl",null,"Salt Lake City Intl","Sacramento Intl","John Wayne Arpt Orange Co","Sarasota Bradenton Intl","Lambert St Louis Intl",null,"Syracuse Hancock Intl","Tampa Intl","Tulsa Intl","Cherry Capital Airport","Mc Ghee Tyson","NW Arkansas Regional"],null,null,{"interactive":false,"permanent":false,"direction":"auto","opacity":1,"offset":[0,0],"textsize":"10px","textOnly":false,"className":"","sticky":true},null,null]}],"limits":{"lat":[21.318681,61.174361],"lng":[-157.922428,-68.828139]}},"evals":[],"jsHooks":[]}</script>
 
 </div>
 </div>
