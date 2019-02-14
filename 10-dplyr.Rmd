@@ -435,16 +435,16 @@ flights %>%
   arrange(desc(n))
 ```
 
-On peut utiliser plusieurs opérations de groupage dans le même *pipeline*. Ainsi, si on souhaite déterminer le couple origine/destination ayant le plus grand nombre de vols selon le mois de l'année, on devra procéder en deux étapes : 
+On peut utiliser plusieurs opérations de groupage dans le même *pipeline*. Ainsi, si on souhaite déterminer le triplet compagnie aérienne / aéroport de départ / aéroport d'arrivée ayant le plus grand nombre de vols selon le mois de l'année, on devra procéder en deux étapes : 
 
-- d'abord grouper selon mois, origine et destination pour calculer le nombre de vols
+- d'abord grouper selon mois, compagnie, aéroports d'origine et d'arrivée pour calculer le nombre de vols
 - puis grouper uniquement selon le mois pour sélectionner la ligne avec la valeur maximale.
 
 Au final, on obtient le code suivant :
 
 ```{r}
 flights %>%
-  group_by(month, origin, dest) %>%
+  group_by(month, carrier, origin, dest) %>%
   summarise(nb = n()) %>%
   group_by(month) %>%
   filter(nb == max(nb))
