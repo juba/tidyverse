@@ -415,6 +415,40 @@ flights %>%
   count(dest)
 ```
 
+Depuis la version 0.8 de `dplyr`, lorsque la variable de groupage est un facteur et que certaines valeurs du facteur ne sont pas présentes dans le tableau, l'argument `.drop = FALSE` de `group_by` permet de conserver ces niveaux dans le résultat d'une opération groupée.
+
+Par exemple, si on transforme la variable `origin` en facteur pour conserver la liste de ses modalités, et on ne garde que les vols à destination de San Francisco (code `SFO`) :
+
+```{r}
+ff <- flights %>% 
+  mutate(origin = factor(origin)) %>% 
+  filter(dest == "SFO")
+```
+
+Par défaut, si on compte le nombre de vols selon l'aéroport de départ, La Guardia n'apparaît pas car il ne compte aucun vol :
+
+```{r}
+ff %>% 
+  group_by(origin) %>% 
+  summarise(n = n())
+```
+
+Si on souhaite faire apparaître cette information dans la sortie du , on peut ajouter l'argument `.drop = FALSE` au `group_by` :
+
+```{r}
+ff %>% 
+  group_by(origin, .drop = FALSE) %>% 
+  summarise(n = n())
+```
+
+Cet argument fonctionne aussi avec `count` :
+
+```{r}
+ff %>% 
+  count(origin, .drop = FALSE)
+```
+
+
 
 ### Grouper selon plusieurs variables
 
