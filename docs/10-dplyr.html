@@ -25,7 +25,7 @@
 <meta name="author" content="Julien Barnier">
 
 
-<meta name="date" content="2019-02-25">
+<meta name="date" content="2019-04-16">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -1324,6 +1324,29 @@ L’utilisation du <em>pipe</em> n’est pas obligatoire, mais elle rend les scr
  9     3 LGA     8717
 10     4 EWR    10531
 # … with 26 more rows</code></pre>
+<p>Et ainsi de suite :</p>
+<pre class="sourceCode r"><code class="sourceCode r">flights <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">group_by</span>(month, origin, dest) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span>tally <span class="op">%&gt;%</span>
+<span class="st">  </span>tally <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span>tally</code></pre>
+<pre><code>Using `n` as weighting variable
+Using `n` as weighting variable</code></pre>
+<pre><code># A tibble: 12 x 2
+   month     n
+   &lt;int&gt; &lt;int&gt;
+ 1     1 27004
+ 2     2 24951
+ 3     3 28834
+ 4     4 28330
+ 5     5 28796
+ 6     6 28243
+ 7     7 29425
+ 8     8 29327
+ 9     9 27574
+10    10 28889
+11    11 27268
+12    12 28135</code></pre>
 </div>
 <div id="distinct" class="section level3">
 <h3><span class="header-section-number">10.5.4</span> <code>distinct</code></h3>
@@ -1552,7 +1575,7 @@ t3 &lt;-<span class="st"> </span>flights <span class="op">%&gt;%</span><span cla
 airports_ex &lt;-<span class="st"> </span>airports <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(faa, alt, name)</code></pre>
 <p>Si on se contente d’un <code>left_join</code> comme à l’étape précédente, on obtient un message d’erreur car aucune colonne commune ne peut être identifiée comme clé de jointure :</p>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">left_join</span>(flights_ex, airports_ex)</code></pre>
-<pre><code>Error: `by` required, because the data sources have no common variables</code></pre>
+<pre><code>`by` required, because the data sources have no common variables</code></pre>
 <p>On doit donc spécifier explicitement les clés avec l’argument <code>by</code> de <code>left_join</code>. Ici la clé est nommée <code>origin</code> dans la première table, et <code>faa</code> dans la seconde. La syntaxe est donc la suivante :</p>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">left_join</span>(flights_ex, airports_ex, <span class="dt">by =</span> <span class="kw">c</span>(<span class="st">&quot;origin&quot;</span> =<span class="st"> &quot;faa&quot;</span>))</code></pre>
 <pre><code># A tibble: 336,776 x 6
