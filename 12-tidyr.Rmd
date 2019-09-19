@@ -18,7 +18,7 @@ dm <- d %>%
   filter(country %in% c("France", "Germany", "Belgium"),
          year >= 1992) %>%
   select(country, year, pop) %>% 
-  spread(year, pop)
+  pivot_wider(names_from = year, values_from = pop)
 kable(dm)
 ```
 
@@ -26,7 +26,7 @@ Imaginons qu'on souhaite représenter avec `ggplot2` l'évolution de la populati
 
 ```{r echo=FALSE, warning=FALSE, paged.print=FALSE}
 d <- dm %>% 
-  gather(annee, population, -country) %>% 
+  pivot_longer(-country, names_to = "annee", values_to = "population") %>% 
   mutate(annee = as.numeric(annee))
 kable(d)
 ```
@@ -67,7 +67,7 @@ Pourquoi ce tableau n'est pas *tidy* ? Parce que si on essaie d'identifier les v
 
 ```{r echo=FALSE, warning=FALSE}
 kable(dm %>% 
-  gather(annee, population, -country))
+  pivot_longer(-country, names_to = "annee", values_to = "population"))
 ```
 
 
@@ -111,7 +111,7 @@ L'objectif de `tidyr` est de fournir des fonctions pour arranger ses données et
 
 
 
-### `gather` : rassembler des colonnes
+### `pivot_longer` : transformer des colonnes en lignes
 
 Prenons le tableau `d` suivant, qui liste la population de 6 pays en 2002 et 2007 :
 
@@ -123,35 +123,39 @@ d <- d %>%
   filter(country %in% c("France", "Germany", "Belgium", "Switzerland", "Spain", "Italy"),
          year >= 2002) %>%
   select(country, year, pop) %>% 
-  spread(year, pop)
+  pivot_wider(names_from = year, values_from = pop)
 kable(d)
 ```
 
 Dans ce tableau, une même variable (la population) est répartie sur plusieurs colonnes, chacune représentant une observation à un moment différent. On souhaite que la variable ne représente plus qu'une seule colonne, et que les observations soient réparties sur plusieurs lignes. 
 
-Pour cela on va utiliser la fonction `gather` ("rassembler") : 
+Pour cela on va utiliser la fonction `pivot_longer`^[`pivot_longer` et `pivot_wider` ont été introduites dans la version 1.0 de `tidyr`. Elles ont alors remplacé `gather` et `spread`.] : 
 
 ```{r warning=FALSE, paged.print=FALSE}
-d %>% gather(`2002`, `2007`, key = annee, value = population)
+d %>% pivot_longer(c(`2002`,`2007`))
 ```
 
-La fonction `gather` prend comme arguments la liste des colonnes à rassembler (ici on a mis `2002` et `2007` entre *backticks* (`` `2002` ``) pour indiquer à `gather` qu'il s'agit d'un nom de colonne et pas d'un nombre), ainsi que deux arguments `key` et `value` :
+La fonction `pivot_longer` prend comme premier argument la liste des colonnes à rassembler (ici on a mis `2002` et `2007` entre *backticks* (`` `2002` ``) pour indiquer à `pivot_longer` qu'il s'agit d'un nom de colonne et pas d'un nombre). Ces colonnes peuvent être spécifiées avec la même syntaxe que celle de la fonction `select` de `dplyr`.
 
-- `key` est le nom de la colonne qui va contenir les "clés", c'est-à-dire les identifiants des différentes observations
-- `value` est le nom de la colonne qui va contenir la valeur des observations
-
-Parfois il est plus rapide d'indiquer à `gather` les colonnes qu'on ne souhaite pas rassembler. On peut le faire avec la syntaxe suivante :
+Par exemple, il est parfois plus rapide d'indiquer à `pivot_longer` les colonnes qu'on ne souhaite pas "rassembler". On peut le faire avec la syntaxe suivante :
 
 ```{r warning=FALSE, paged.print=FALSE}
-d %>% gather(-country, key = annee, value = population)
+d %>% pivot_longer(-country)
 ```
 
+Par défaut, les colonnes qui contiennent les noms des colonnes d'origine et leurs valeurs sont nommées `name` et `value`. Si cela ne convient pas, on peut indiquer les noms à utiliser via les arguments `names_to` et `values_to` :
+
+```{r warning=FALSE, paged.print=FALSE}
+d %>% pivot_longer(c(`2002`,`2007`), names_to = "population", values_to = "annee")
+```
+
+Au final, la nom de `pivot_longer` s'explique par le fait qu'on fait "pivoter" notre tableau de départ d'un format "large" (avec plus de colonnes) vers un format "long" (avec plus de lignes).
 
 
 
-### `spread` : disperser des lignes
+### `pivot_wider` : transformer des lignes en colonnes
 
-La fonction `spread` est l'inverse de `gather`.
+La fonction `pivot_wider` est l'inverse de `pivot_longer`.
 
 Soit le tableau `d` suivant :
 
@@ -160,27 +164,27 @@ library(gapminder)
 data(gapminder)
 dm <- gapminder
 d <- dm %>% 
-  filter(country %in% c("France", "Germany", "Belgium"),
+  filter(country %in% c("France", "Belgium"),
          year >= 2002) %>% 
   select(-gdpPercap) %>% 
-  gather(lifeExp, pop, key = variable, value = value)
+  pivot_longer(c(`lifeExp`, `pop`), names_to = "variable", values_to = "value")
 kable(d)
 ```
 
 Ce tableau a le problème inverse du précédent : on a deux variables, `lifeExp` et `pop` qui, plutôt que d'être réparties en deux colonnes, sont réparties entre plusieurs lignes.
 
-On va donc utiliser `spread` pour "disperser" ces lignes dans deux colonnes différentes :
+On va donc utiliser `pivot_wider` pour répartir ces lignes dans deux colonnes différentes :
 
 ```{r warning=FALSE, paged.print=FALSE}
-d %>% spread(key = variable, value = value)
+d %>% pivot_wider(names_from = variable, values_from = value)
 ```
 
-`spread` prend deux arguments principaux :
+`pivot_wider` prend deux arguments principaux :
 
-- `key` indique la colonne contenant les noms des nouvelles variables à créer
-- `value` indique la colonne contenant les valeurs de ces variables
+- `names_from` indique la colonne contenant les noms des nouvelles variables à créer
+- `values_from` indique la colonne contenant les valeurs de ces variables
 
-Il peut arriver que certaines variables soient absentes pour certaines observations. Dans ce cas l'argument `fill` permet de spécifier la valeur à utiliser pour ces données manquantes (par défaut `fill` vaut, logiquement, `NA`).
+Il peut arriver que certaines variables soient absentes pour certaines observations. Dans ce cas l'argument `values_fill` permet de spécifier la valeur à utiliser pour ces données manquantes (par défaut les valeurs absentes sont, logiquement, indiquées par des `NA`).
 
 Exemple avec le tableau `d` suivant :
 
@@ -191,14 +195,20 @@ kable(d)
 
 ```{r warning=FALSE, paged.print=FALSE}
 d %>% 
-  spread(key = variable, value = value)
+  pivot_wider(names_from = variable, values_from = value)
 ```
 
 
 ```{r warning=FALSE, paged.print=FALSE}
 d %>% 
-  spread(key = variable, value = value, fill = "-")
+  pivot_wider(
+    names_from = variable, values_from = value, 
+    values_fill = list(value = 0)
+  )
 ```
+
+Au final, la nom de `pivot_wider` s'explique par le fait qu'on fait "pivoter" notre tableau de départ d'un format "long" (avec plus de lignes) vers un format "large" (avec plus de colonnes).
+
 
 ### `separate` : séparer une colonne en plusieurs {#separate}
 
