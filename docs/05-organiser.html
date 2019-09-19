@@ -6,7 +6,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>Partie 5 Organiser ses scripts | Introduction à R et au tidyverse</title>
   <meta name="description" content="Une introduction à R et aux extensions du tidyverse" />
-  <meta name="generator" content="bookdown 0.10 and GitBook 2.6.7" />
+  <meta name="generator" content="bookdown 0.13 and GitBook 2.6.7" />
 
   <meta property="og:title" content="Partie 5 Organiser ses scripts | Introduction à R et au tidyverse" />
   <meta property="og:type" content="book" />
@@ -24,15 +24,15 @@
 <meta name="author" content="Julien Barnier" />
 
 
-<meta name="date" content="2019-06-13" />
+<meta name="date" content="2019-09-19" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="04-bivarie.html">
-<link rel="next" href="06-tidyverse.html">
+<link rel="prev" href="04-bivarie.html"/>
+<link rel="next" href="06-tidyverse.html"/>
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
@@ -63,7 +63,6 @@ a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
 a.sourceLine:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
 code.sourceCode { white-space: pre; position: relative; }
-div.sourceCode { margin: 1em 0; }
 pre.sourceCode { margin: 0; }
 @media screen {
 div.sourceCode { overflow: auto; }
@@ -339,8 +338,8 @@ code span.wa { color: #bf0303; } /* Warning */
 <li class="chapter" data-level="12.1" data-path="12-tidyr.html"><a href="12-tidyr.html#tidy-data"><i class="fa fa-check"></i><b>12.1</b> Tidy data</a></li>
 <li class="chapter" data-level="12.2" data-path="12-tidyr.html"><a href="12-tidyr.html#trois-regles-pour-des-donnees-bien-rangees"><i class="fa fa-check"></i><b>12.2</b> Trois règles pour des données bien rangées</a></li>
 <li class="chapter" data-level="12.3" data-path="12-tidyr.html"><a href="12-tidyr.html#les-verbes-de-tidyr"><i class="fa fa-check"></i><b>12.3</b> Les verbes de <code>tidyr</code></a><ul>
-<li class="chapter" data-level="12.3.1" data-path="12-tidyr.html"><a href="12-tidyr.html#gather-rassembler-des-colonnes"><i class="fa fa-check"></i><b>12.3.1</b> <code>gather</code> : rassembler des colonnes</a></li>
-<li class="chapter" data-level="12.3.2" data-path="12-tidyr.html"><a href="12-tidyr.html#spread-disperser-des-lignes"><i class="fa fa-check"></i><b>12.3.2</b> <code>spread</code> : disperser des lignes</a></li>
+<li class="chapter" data-level="12.3.1" data-path="12-tidyr.html"><a href="12-tidyr.html#pivot_longer-transformer-des-colonnes-en-lignes"><i class="fa fa-check"></i><b>12.3.1</b> <code>pivot_longer</code> : transformer des colonnes en lignes</a></li>
+<li class="chapter" data-level="12.3.2" data-path="12-tidyr.html"><a href="12-tidyr.html#pivot_wider-transformer-des-lignes-en-colonnes"><i class="fa fa-check"></i><b>12.3.2</b> <code>pivot_wider</code> : transformer des lignes en colonnes</a></li>
 <li class="chapter" data-level="12.3.3" data-path="12-tidyr.html"><a href="12-tidyr.html#separate"><i class="fa fa-check"></i><b>12.3.3</b> <code>separate</code> : séparer une colonne en plusieurs</a></li>
 <li class="chapter" data-level="12.3.4" data-path="12-tidyr.html"><a href="12-tidyr.html#unite-regrouper-plusieurs-colonnes-en-une-seule"><i class="fa fa-check"></i><b>12.3.4</b> <code>unite</code> : regrouper plusieurs colonnes en une seule</a></li>
 <li class="chapter" data-level="12.3.5" data-path="12-tidyr.html"><a href="12-tidyr.html#extract"><i class="fa fa-check"></i><b>12.3.5</b> <code>extract</code> : créer de nouvelles colonnes à partir d’une colonne de texte</a></li>
@@ -465,38 +464,38 @@ Si vous ne retrouvez pas le nom du projet dans ce menu, vous pouvez l’ouvrir e
 <p>Un exemple courant concerne les recodages et la manipulation des données. Il est fréquent, au cours d’une analyse, de calculer de nouvelles variables, recoder des variables qualitatives existantes, etc. Il peut alors être intéressant de regrouper tous ces recodages dans un script à part (nommé, par exemple, <code>recodages.R</code>). Ce fichier contient alors l’ensemble des recodages “validés”, ceux qu’on a testé et qu’on sait vouloir conserver.</p>
 <p>Pour exécuter ces recodages, on peut évidemment ouvrir le script <code>recodages.R</code> dans RStudio et lancer l’ensemble du code qu’il contient. Mais une méthode plus pratique est d’utiliser la fonction <code>source</code> : celle-ci prend en paramètre un nom de fichier <code>.R</code>, et quand on l’exécute elle va exécuter l’ensemble du code contenu dans ce fichier.</p>
 <p>Ainsi, un début de script <code>analyse.R</code> pourra ressembler à ceci :</p>
-<pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Analyse des données Histoire de vie 2003</span>
-
-<span class="co"># Chargement des extensions et des données --------------------------</span>
-
-<span class="kw">library</span>(questionr)
-
-<span class="kw">data</span>(hdv2003)
-<span class="kw">source</span>(<span class="st">&quot;recodages.R&quot;</span>)
-
-<span class="co"># Analyse de l&#39;âge --------------------------------------------------</span>
-
-<span class="kw">hist</span>(hdv2003<span class="op">$</span>age)
-
-(...)</code></pre>
+<div class="sourceCode" id="cb235"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb235-1" data-line-number="1"><span class="co"># Analyse des données Histoire de vie 2003</span></a>
+<a class="sourceLine" id="cb235-2" data-line-number="2"></a>
+<a class="sourceLine" id="cb235-3" data-line-number="3"><span class="co"># Chargement des extensions et des données --------------------------</span></a>
+<a class="sourceLine" id="cb235-4" data-line-number="4"></a>
+<a class="sourceLine" id="cb235-5" data-line-number="5"><span class="kw">library</span>(questionr)</a>
+<a class="sourceLine" id="cb235-6" data-line-number="6"></a>
+<a class="sourceLine" id="cb235-7" data-line-number="7"><span class="kw">data</span>(hdv2003)</a>
+<a class="sourceLine" id="cb235-8" data-line-number="8"><span class="kw">source</span>(<span class="st">&quot;recodages.R&quot;</span>)</a>
+<a class="sourceLine" id="cb235-9" data-line-number="9"></a>
+<a class="sourceLine" id="cb235-10" data-line-number="10"><span class="co"># Analyse de l&#39;âge --------------------------------------------------</span></a>
+<a class="sourceLine" id="cb235-11" data-line-number="11"></a>
+<a class="sourceLine" id="cb235-12" data-line-number="12"><span class="kw">hist</span>(hdv2003<span class="op">$</span>age)</a>
+<a class="sourceLine" id="cb235-13" data-line-number="13"></a>
+<a class="sourceLine" id="cb235-14" data-line-number="14">(...)</a></code></pre></div>
 <p>L’avantage principal est qu’on peut à tout moment revenir à nos données d’origine et aux recodages “validés” simplement en exécutant les deux lignes :</p>
-<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">data</span>(hdv2003)
-<span class="kw">source</span>(<span class="st">&quot;recodages.R&quot;</span>)</code></pre>
+<div class="sourceCode" id="cb236"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb236-1" data-line-number="1"><span class="kw">data</span>(hdv2003)</a>
+<a class="sourceLine" id="cb236-2" data-line-number="2"><span class="kw">source</span>(<span class="st">&quot;recodages.R&quot;</span>)</a></code></pre></div>
 <p>L’autre avantage est qu’on peut répartir nos analyses entre différents scripts, et conserver ces deux lignes en haut de chaque script, ce qui permet de “mutualiser” les recodages validés. On pourrait ainsi créer un deuxième script <code>analyse_qualif.R</code> qui pourrait ressembler à ceci :</p>
-<pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Analyse des données Histoire de vie 2003 - Qualifications</span>
-
-<span class="co"># Chargement des extensions et des données --------------------------</span>
-
-<span class="kw">library</span>(questionr)
-
-<span class="kw">data</span>(hdv2003)
-<span class="kw">source</span>(<span class="st">&quot;recodages.R&quot;</span>)
-
-<span class="co"># Analyse des qualifications --------------------------------------------------</span>
-
-<span class="kw">freq</span>(hdv2003<span class="op">$</span>qualif)
-
-(...)</code></pre>
+<div class="sourceCode" id="cb237"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb237-1" data-line-number="1"><span class="co"># Analyse des données Histoire de vie 2003 - Qualifications</span></a>
+<a class="sourceLine" id="cb237-2" data-line-number="2"></a>
+<a class="sourceLine" id="cb237-3" data-line-number="3"><span class="co"># Chargement des extensions et des données --------------------------</span></a>
+<a class="sourceLine" id="cb237-4" data-line-number="4"></a>
+<a class="sourceLine" id="cb237-5" data-line-number="5"><span class="kw">library</span>(questionr)</a>
+<a class="sourceLine" id="cb237-6" data-line-number="6"></a>
+<a class="sourceLine" id="cb237-7" data-line-number="7"><span class="kw">data</span>(hdv2003)</a>
+<a class="sourceLine" id="cb237-8" data-line-number="8"><span class="kw">source</span>(<span class="st">&quot;recodages.R&quot;</span>)</a>
+<a class="sourceLine" id="cb237-9" data-line-number="9"></a>
+<a class="sourceLine" id="cb237-10" data-line-number="10"><span class="co"># Analyse des qualifications --------------------------------------------------</span></a>
+<a class="sourceLine" id="cb237-11" data-line-number="11"></a>
+<a class="sourceLine" id="cb237-12" data-line-number="12"><span class="kw">freq</span>(hdv2003<span class="op">$</span>qualif)</a>
+<a class="sourceLine" id="cb237-13" data-line-number="13"></a>
+<a class="sourceLine" id="cb237-14" data-line-number="14">(...)</a></code></pre></div>
 <p>On peut évidemment répartir les recodages entre plusieurs fichiers et faire appel à autant de <code>source</code> que l’on souhaite.</p>
 <div class="rmdnote">
 <p>

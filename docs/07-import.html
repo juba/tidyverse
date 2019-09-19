@@ -6,7 +6,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>Partie 7 Importer et exporter des données | Introduction à R et au tidyverse</title>
   <meta name="description" content="Une introduction à R et aux extensions du tidyverse" />
-  <meta name="generator" content="bookdown 0.10 and GitBook 2.6.7" />
+  <meta name="generator" content="bookdown 0.13 and GitBook 2.6.7" />
 
   <meta property="og:title" content="Partie 7 Importer et exporter des données | Introduction à R et au tidyverse" />
   <meta property="og:type" content="book" />
@@ -24,15 +24,15 @@
 <meta name="author" content="Julien Barnier" />
 
 
-<meta name="date" content="2019-06-13" />
+<meta name="date" content="2019-09-19" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="06-tidyverse.html">
-<link rel="next" href="08-ggplot2.html">
+<link rel="prev" href="06-tidyverse.html"/>
+<link rel="next" href="08-ggplot2.html"/>
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
@@ -63,7 +63,6 @@ a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
 a.sourceLine:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
 code.sourceCode { white-space: pre; position: relative; }
-div.sourceCode { margin: 1em 0; }
 pre.sourceCode { margin: 0; }
 @media screen {
 div.sourceCode { overflow: auto; }
@@ -339,8 +338,8 @@ code span.wa { color: #bf0303; } /* Warning */
 <li class="chapter" data-level="12.1" data-path="12-tidyr.html"><a href="12-tidyr.html#tidy-data"><i class="fa fa-check"></i><b>12.1</b> Tidy data</a></li>
 <li class="chapter" data-level="12.2" data-path="12-tidyr.html"><a href="12-tidyr.html#trois-regles-pour-des-donnees-bien-rangees"><i class="fa fa-check"></i><b>12.2</b> Trois règles pour des données bien rangées</a></li>
 <li class="chapter" data-level="12.3" data-path="12-tidyr.html"><a href="12-tidyr.html#les-verbes-de-tidyr"><i class="fa fa-check"></i><b>12.3</b> Les verbes de <code>tidyr</code></a><ul>
-<li class="chapter" data-level="12.3.1" data-path="12-tidyr.html"><a href="12-tidyr.html#gather-rassembler-des-colonnes"><i class="fa fa-check"></i><b>12.3.1</b> <code>gather</code> : rassembler des colonnes</a></li>
-<li class="chapter" data-level="12.3.2" data-path="12-tidyr.html"><a href="12-tidyr.html#spread-disperser-des-lignes"><i class="fa fa-check"></i><b>12.3.2</b> <code>spread</code> : disperser des lignes</a></li>
+<li class="chapter" data-level="12.3.1" data-path="12-tidyr.html"><a href="12-tidyr.html#pivot_longer-transformer-des-colonnes-en-lignes"><i class="fa fa-check"></i><b>12.3.1</b> <code>pivot_longer</code> : transformer des colonnes en lignes</a></li>
+<li class="chapter" data-level="12.3.2" data-path="12-tidyr.html"><a href="12-tidyr.html#pivot_wider-transformer-des-lignes-en-colonnes"><i class="fa fa-check"></i><b>12.3.2</b> <code>pivot_wider</code> : transformer des lignes en colonnes</a></li>
 <li class="chapter" data-level="12.3.3" data-path="12-tidyr.html"><a href="12-tidyr.html#separate"><i class="fa fa-check"></i><b>12.3.3</b> <code>separate</code> : séparer une colonne en plusieurs</a></li>
 <li class="chapter" data-level="12.3.4" data-path="12-tidyr.html"><a href="12-tidyr.html#unite-regrouper-plusieurs-colonnes-en-une-seule"><i class="fa fa-check"></i><b>12.3.4</b> <code>unite</code> : regrouper plusieurs colonnes en une seule</a></li>
 <li class="chapter" data-level="12.3.5" data-path="12-tidyr.html"><a href="12-tidyr.html#extract"><i class="fa fa-check"></i><b>12.3.5</b> <code>extract</code> : créer de nouvelles colonnes à partir d’une colonne de texte</a></li>
@@ -421,11 +420,11 @@ Les projets permettent notamment de ne pas avoir à spécifier un chemin complet
 <h2><span class="header-section-number">7.1</span> Import de fichiers textes</h2>
 <p>L’extension <code>readr</code>, qui fait partie du <em>tidyverse</em>, permet l’importation de fichiers texte, notamment au format CSV (<em>Comma separated values</em>), format standard pour l’échange de données tabulaires entre logiciels.</p>
 <p>Cette extension fait partie du “coeur” du <em>tidyverse</em>, elle est donc automatiquement chargée avec :</p>
-<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(tidyverse)</code></pre>
+<div class="sourceCode" id="cb249"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb249-1" data-line-number="1"><span class="kw">library</span>(tidyverse)</a></code></pre></div>
 <p>Si votre fichier CSV suit un format CSV standard (c’est le cas s’il a été exporté depuis LibreOffice par exemple), avec des champs séparés par des virgules, vous pouvez utiliser la fonction <code>read_csv</code> en lui passant en argument le nom du fichier :</p>
-<pre class="sourceCode r"><code class="sourceCode r">d &lt;-<span class="st"> </span><span class="kw">read_csv</span>(<span class="st">&quot;fichier.csv&quot;</span>)</code></pre>
+<div class="sourceCode" id="cb250"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb250-1" data-line-number="1">d &lt;-<span class="st"> </span><span class="kw">read_csv</span>(<span class="st">&quot;fichier.csv&quot;</span>)</a></code></pre></div>
 <p>Si votre fichier vient d’Excel, avec des valeurs séparées par des points virgule, utilisez la fonction <code>read_csv2</code> :</p>
-<pre class="sourceCode r"><code class="sourceCode r">d &lt;-<span class="st"> </span><span class="kw">read_csv2</span>(<span class="st">&quot;fichier.csv&quot;</span>)</code></pre>
+<div class="sourceCode" id="cb251"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb251-1" data-line-number="1">d &lt;-<span class="st"> </span><span class="kw">read_csv2</span>(<span class="st">&quot;fichier.csv&quot;</span>)</a></code></pre></div>
 <p>Dans la même famille de fonction, <code>read_tsv</code> permet d’importer des fichiers dont les valeurs sont séparées par des tabulations, et <code>read_delim</code> des fichiers délimités par un séparateur indiqué en argument.</p>
 <p>Chaque fonction dispose de plusieurs arguments, parmi lesquels :</p>
 <ul>
@@ -434,9 +433,9 @@ Les projets permettent notamment de ne pas avoir à spécifier un chemin complet
 <li><code>na</code> est un vecteur de chaînes de caractères indiquant les valeurs devant être considérées comme manquantes. Ce vecteur vaut <code>c(&quot;&quot;, &quot;NA&quot;)</code> par défaut</li>
 </ul>
 <p>Il peut arriver, notamment sous Windows, que l’encodage des caractères accentués ne soit pas correct au moment de l’importation. On peut alors spécifier manuellement l’encodage du fichier importé à l’aide de l’option <code>locale</code>. Par exemple, si l’on est sous Mac ou Linux et que le fichier a été créé sous Windows, il est possible qu’il soit encodé au format iso-8859-1. On peut alors l’importer avec :</p>
-<pre class="sourceCode r"><code class="sourceCode r">d &lt;-<span class="st"> </span><span class="kw">read_csv</span>(<span class="st">&quot;fichier.csv&quot;</span>, <span class="dt">locale =</span> <span class="kw">locale</span>(<span class="dt">encoding =</span> <span class="st">&quot;ISO-8859-1&quot;</span>))</code></pre>
+<div class="sourceCode" id="cb252"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb252-1" data-line-number="1">d &lt;-<span class="st"> </span><span class="kw">read_csv</span>(<span class="st">&quot;fichier.csv&quot;</span>, <span class="dt">locale =</span> <span class="kw">locale</span>(<span class="dt">encoding =</span> <span class="st">&quot;ISO-8859-1&quot;</span>))</a></code></pre></div>
 <p>À l’inverse, si vous importez un fichier sous Windows et que les accents ne sont pas affichés correctement, il est sans doute encodé en UTF-8 :</p>
-<pre class="sourceCode r"><code class="sourceCode r">d &lt;-<span class="st"> </span><span class="kw">read_csv</span>(<span class="st">&quot;fichier.csv&quot;</span>, <span class="dt">locale =</span> <span class="kw">locale</span>(<span class="dt">encoding =</span> <span class="st">&quot;UTF-8&quot;</span>))</code></pre>
+<div class="sourceCode" id="cb253"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb253-1" data-line-number="1">d &lt;-<span class="st"> </span><span class="kw">read_csv</span>(<span class="st">&quot;fichier.csv&quot;</span>, <span class="dt">locale =</span> <span class="kw">locale</span>(<span class="dt">encoding =</span> <span class="st">&quot;UTF-8&quot;</span>))</a></code></pre></div>
 <p>Pour plus d’informations sur ces fonctions, voir <a href="http://readr.tidyverse.org/">le site de l’extension readr</a>.</p>
 <div class="rmdnote">
 <p>
@@ -475,11 +474,11 @@ Cette manière de faire permet “d’automatiser” l’importation des donnée
 <h2><span class="header-section-number">7.2</span> Import depuis un fichier Excel</h2>
 <p>L’extension <code>readxl</code>, qui fait également partie du <em>tidyverse</em>, permet d’importer des données directement depuis un fichier au format <code>xls</code>ou <code>xlsx</code>.</p>
 <p>Elle ne fait pas partie du “coeur” du <em>tidyverse</em>, il faut donc la charger explicitement avec :</p>
-<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(readxl)</code></pre>
+<div class="sourceCode" id="cb254"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb254-1" data-line-number="1"><span class="kw">library</span>(readxl)</a></code></pre></div>
 <p>On peut alors utiliser la fonction <code>read_excel</code> en lui spécifiant le nom du fichier :</p>
-<pre class="sourceCode r"><code class="sourceCode r">d &lt;-<span class="st"> </span><span class="kw">read_excel</span>(<span class="st">&quot;fichier.xls&quot;</span>)</code></pre>
+<div class="sourceCode" id="cb255"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb255-1" data-line-number="1">d &lt;-<span class="st"> </span><span class="kw">read_excel</span>(<span class="st">&quot;fichier.xls&quot;</span>)</a></code></pre></div>
 <p>Il est possible de spécifier la feuille et la plage de cellules que l’on souhaite importer avec les arguments <code>sheet</code> et <code>range</code> :</p>
-<pre class="sourceCode r"><code class="sourceCode r">d &lt;-<span class="st"> </span><span class="kw">read_excel</span>(<span class="st">&quot;fichier.xls&quot;</span>, <span class="dt">sheet =</span> <span class="st">&quot;Feuille2&quot;</span>, <span class="dt">range =</span> <span class="st">&quot;C1:F124&quot;</span>)</code></pre>
+<div class="sourceCode" id="cb256"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb256-1" data-line-number="1">d &lt;-<span class="st"> </span><span class="kw">read_excel</span>(<span class="st">&quot;fichier.xls&quot;</span>, <span class="dt">sheet =</span> <span class="st">&quot;Feuille2&quot;</span>, <span class="dt">range =</span> <span class="st">&quot;C1:F124&quot;</span>)</a></code></pre></div>
 <p>Comme pour l’import de fichiers texte, une interface interactive d’import de fichiers Excel est disponible dans RStudio dans l’onglet <em>Environment</em>. Pour y accéder, cliquez sur <em>Import Dataset</em> puis <em>From Excel…</em>.</p>
 <div class="figure">
 <img src="resources/screenshots/import_excel.png" alt="Dialogue d’importation d’un fichier Excel" />
@@ -492,7 +491,7 @@ Cette manière de faire permet “d’automatiser” l’importation des donnée
 <h2><span class="header-section-number">7.3</span> Import de fichiers SAS, SPSS et Stata</h2>
 <p>L’import de fichiers de données au format SAS, SPSS ou Stata se fait via les fonctions de l’extension <code>haven</code>.</p>
 <p>Celle-ci fait partie du <em>tidyverse</em>, mais doit être chargée explicitement avec :</p>
-<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(haven)</code></pre>
+<div class="sourceCode" id="cb257"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb257-1" data-line-number="1"><span class="kw">library</span>(haven)</a></code></pre></div>
 <ul>
 <li>Pour les fichiers provenant de SAS, vous pouvez utiliser les fonctions <code>read_sas</code> ou <code>read_xpt</code></li>
 <li>Pour les fichiers provenant de SPSS, vous pouvez utiliser <code>read_sav</code> ou <code>read_por</code></li>
@@ -505,8 +504,8 @@ Cette manière de faire permet “d’automatiser” l’importation des donnée
 <h2><span class="header-section-number">7.4</span> Import de fichiers dBase</h2>
 <p>Le format dBase est encore utilisé, notamment par l’INSEE, pour la diffusion de données volumineuses.</p>
 <p>Les fichiers au format <code>dbf</code> peuvent être importées à l’aide de la fonction <code>read.dbf</code> de l’extension <code>foreign</code> <a href="#fn12" class="footnote-ref" id="fnref12"><sup>12</sup></a> :</p>
-<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(foreign)
-d &lt;-<span class="st"> </span><span class="kw">read.dbf</span>(<span class="st">&quot;fichier.dbf&quot;</span>)</code></pre>
+<div class="sourceCode" id="cb258"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb258-1" data-line-number="1"><span class="kw">library</span>(foreign)</a>
+<a class="sourceLine" id="cb258-2" data-line-number="2">d &lt;-<span class="st"> </span><span class="kw">read.dbf</span>(<span class="st">&quot;fichier.dbf&quot;</span>)</a></code></pre></div>
 <p>La fonction <code>read.dbf</code> n’admet qu’un seul argument, <code>as.is</code>. Si <code>as.is = FALSE</code> (valeur par défaut), les chaînes de caractères sont automatiquement converties en <code>factor</code> à l’importation. Si <code>as.is = TRUE</code>, elles sont conservées telles quelles.</p>
 </div>
 <div id="connexion-a-des-bases-de-donnees" class="section level2">
@@ -515,28 +514,28 @@ d &lt;-<span class="st"> </span><span class="kw">read.dbf</span>(<span class="st
 <h3><span class="header-section-number">7.5.1</span> Interfaçage via l’extension <code>DBI</code></h3>
 <p>R est capable de s’interfacer avec différents systèmes de bases de données relationnelles, dont SQLite, MS SQL Server, PostgreSQL, MariaDB, etc.</p>
 <p>Pour illustrer rapidement l’utilisation de bases de données, on va créer une base SQLite d’exemple à l’aide du code R suivant, qui copie la table du jeu de données <code>mtcars</code> dans une base de données <code>bdd.sqlite</code> :</p>
-<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(DBI)
-<span class="kw">library</span>(RSQLite)
-con &lt;-<span class="st"> </span>DBI<span class="op">::</span><span class="kw">dbConnect</span>(RSQLite<span class="op">::</span><span class="kw">SQLite</span>(), <span class="dt">dbname =</span> <span class="st">&quot;bdd.sqlite&quot;</span>)
-<span class="kw">data</span>(mtcars)
-mtcars<span class="op">$</span>name &lt;-<span class="st"> </span><span class="kw">rownames</span>(mtcars)
-<span class="kw">dbWriteTable</span>(con, <span class="st">&quot;mtcars&quot;</span>, mtcars)
-<span class="kw">dbDisconnect</span>(con)</code></pre>
+<div class="sourceCode" id="cb259"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb259-1" data-line-number="1"><span class="kw">library</span>(DBI)</a>
+<a class="sourceLine" id="cb259-2" data-line-number="2"><span class="kw">library</span>(RSQLite)</a>
+<a class="sourceLine" id="cb259-3" data-line-number="3">con &lt;-<span class="st"> </span>DBI<span class="op">::</span><span class="kw">dbConnect</span>(RSQLite<span class="op">::</span><span class="kw">SQLite</span>(), <span class="dt">dbname =</span> <span class="st">&quot;bdd.sqlite&quot;</span>)</a>
+<a class="sourceLine" id="cb259-4" data-line-number="4"><span class="kw">data</span>(mtcars)</a>
+<a class="sourceLine" id="cb259-5" data-line-number="5">mtcars<span class="op">$</span>name &lt;-<span class="st"> </span><span class="kw">rownames</span>(mtcars)</a>
+<a class="sourceLine" id="cb259-6" data-line-number="6"><span class="kw">dbWriteTable</span>(con, <span class="st">&quot;mtcars&quot;</span>, mtcars)</a>
+<a class="sourceLine" id="cb259-7" data-line-number="7"><span class="kw">dbDisconnect</span>(con)</a></code></pre></div>
 <p>Si on souhaite se connecter à cette base de données par la suite, on peut utiliser l’extension <code>DBI</code>, qui propose une interface générique entre R et différents systèmes de bases de données. On doit aussi avoir installé et chargé l’extension spécifique à notre base, ici <code>RSQLite</code>. On commence par ouvrir une connexion à l’aide de la fonction <code>dbConnect</code> de <code>DBI</code> :</p>
-<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(DBI)
-<span class="kw">library</span>(RSQLite)
-con &lt;-<span class="st"> </span>DBI<span class="op">::</span><span class="kw">dbConnect</span>(RSQLite<span class="op">::</span><span class="kw">SQLite</span>(), <span class="dt">dbname =</span> <span class="st">&quot;bdd.sqlite&quot;</span>)</code></pre>
+<div class="sourceCode" id="cb260"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb260-1" data-line-number="1"><span class="kw">library</span>(DBI)</a>
+<a class="sourceLine" id="cb260-2" data-line-number="2"><span class="kw">library</span>(RSQLite)</a>
+<a class="sourceLine" id="cb260-3" data-line-number="3">con &lt;-<span class="st"> </span>DBI<span class="op">::</span><span class="kw">dbConnect</span>(RSQLite<span class="op">::</span><span class="kw">SQLite</span>(), <span class="dt">dbname =</span> <span class="st">&quot;bdd.sqlite&quot;</span>)</a></code></pre></div>
 <p>La connexion est stockée dans un objet <code>con</code>, qu’on va utiliser à chaque fois qu’on voudra interroger la base.</p>
 <p>On peut vérifier la liste des tables présentes et les champs de ces tables avec <code>dbListTables</code> et <code>dbListFields</code> :</p>
-<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">dbListTables</span>(con)</code></pre>
+<div class="sourceCode" id="cb261"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb261-1" data-line-number="1"><span class="kw">dbListTables</span>(con)</a></code></pre></div>
 <pre><code>[1] &quot;mtcars&quot;</code></pre>
-<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">dbListFields</span>(con, <span class="st">&quot;mtcars&quot;</span>)</code></pre>
+<div class="sourceCode" id="cb263"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb263-1" data-line-number="1"><span class="kw">dbListFields</span>(con, <span class="st">&quot;mtcars&quot;</span>)</a></code></pre></div>
 <pre><code> [1] &quot;mpg&quot;  &quot;cyl&quot;  &quot;disp&quot; &quot;hp&quot;   &quot;drat&quot; &quot;wt&quot;   &quot;qsec&quot; &quot;vs&quot;   &quot;am&quot;   &quot;gear&quot;
 [11] &quot;carb&quot; &quot;name&quot;</code></pre>
 <p>On peut également lire le contenu d’une table dans un objet de notre environnement avec <code>dbReadTable</code> :</p>
-<pre class="sourceCode r"><code class="sourceCode r">cars &lt;-<span class="st"> </span><span class="kw">dbReadTable</span>(con, <span class="st">&quot;mtcars&quot;</span>)</code></pre>
+<div class="sourceCode" id="cb265"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb265-1" data-line-number="1">cars &lt;-<span class="st"> </span><span class="kw">dbReadTable</span>(con, <span class="st">&quot;mtcars&quot;</span>)</a></code></pre></div>
 <p>On peut également envoyer une requête SQL directement à la base et récupérer le résultat :</p>
-<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">dbGetQuery</span>(con, <span class="st">&quot;SELECT * FROM mtcars WHERE cyl = 4&quot;</span>)</code></pre>
+<div class="sourceCode" id="cb266"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb266-1" data-line-number="1"><span class="kw">dbGetQuery</span>(con, <span class="st">&quot;SELECT * FROM mtcars WHERE cyl = 4&quot;</span>)</a></code></pre></div>
 <pre><code># A tibble: 11 x 12
      mpg   cyl  disp    hp  drat    wt  qsec    vs    am  gear  carb name  
    &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;chr&gt; 
@@ -552,27 +551,27 @@ con &lt;-<span class="st"> </span>DBI<span class="op">::</span><span class="kw">
 10  30.4     4  95.1   113  3.77  1.51  16.9     1     1     5     2 Lotus…
 11  21.4     4 121     109  4.11  2.78  18.6     1     1     4     2 Volvo…</code></pre>
 <p>Enfin, quand on a terminé, on peut se déconnecter à l’aide de <code>dbDisconnect</code> :</p>
-<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">dbDisconnect</span>(con)</code></pre>
+<div class="sourceCode" id="cb268"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb268-1" data-line-number="1"><span class="kw">dbDisconnect</span>(con)</a></code></pre></div>
 <p>Ceci n’est évidemment qu’un tout petit aperçu des fonctionnalités de <code>DBI</code>.</p>
 </div>
 <div id="utilisation-de-dplyr-et-dbplyr" class="section level3">
 <h3><span class="header-section-number">7.5.2</span> Utilisation de <code>dplyr</code> et <code>dbplyr</code></h3>
 <p>L’extension <code>dplyr</code> est dédiée à la manipulation de données, elle est présentée chapitre <a href="10-dplyr.html#dplyr">10</a>. En installant l’extension complémentaire <code>dbplyr</code>, on peut utiliser <code>dplyr</code> directement sur une connection à une base de données générée par <code>DBI</code> :</p>
-<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(DBI)
-<span class="kw">library</span>(RSQLite)
-<span class="kw">library</span>(dplyr)
-con &lt;-<span class="st"> </span>DBI<span class="op">::</span><span class="kw">dbConnect</span>(RSQLite<span class="op">::</span><span class="kw">SQLite</span>(), <span class="dt">dbname =</span> <span class="st">&quot;bdd.sqlite&quot;</span>)</code></pre>
+<div class="sourceCode" id="cb269"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb269-1" data-line-number="1"><span class="kw">library</span>(DBI)</a>
+<a class="sourceLine" id="cb269-2" data-line-number="2"><span class="kw">library</span>(RSQLite)</a>
+<a class="sourceLine" id="cb269-3" data-line-number="3"><span class="kw">library</span>(dplyr)</a>
+<a class="sourceLine" id="cb269-4" data-line-number="4">con &lt;-<span class="st"> </span>DBI<span class="op">::</span><span class="kw">dbConnect</span>(RSQLite<span class="op">::</span><span class="kw">SQLite</span>(), <span class="dt">dbname =</span> <span class="st">&quot;bdd.sqlite&quot;</span>)</a></code></pre></div>
 <p>La fonction <code>tbl</code> notamment permet de créer un nouvel objet qui représente une table de la base de données :</p>
-<pre class="sourceCode r"><code class="sourceCode r">cars_tbl &lt;-<span class="st"> </span><span class="kw">tbl</span>(con, <span class="st">&quot;mtcars&quot;</span>)</code></pre>
+<div class="sourceCode" id="cb270"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb270-1" data-line-number="1">cars_tbl &lt;-<span class="st"> </span><span class="kw">tbl</span>(con, <span class="st">&quot;mtcars&quot;</span>)</a></code></pre></div>
 <div class="rmdimportant">
 <p>
 Ici l’objet <code>cars_tbl</code> n’est <em>pas</em> un tableau de données, c’est juste un objet permettant d’interroger la table de notre base de données.
 </p>
 </div>
 <p>On peut utiliser cet objet avec les verbes de <code>dplyr</code> :</p>
-<pre class="sourceCode r"><code class="sourceCode r">cars_tbl <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">filter</span>(cyl <span class="op">==</span><span class="st"> </span><span class="dv">4</span>) <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">select</span>(name, mpg, cyl)</code></pre>
+<div class="sourceCode" id="cb271"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb271-1" data-line-number="1">cars_tbl <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb271-2" data-line-number="2"><span class="st">  </span><span class="kw">filter</span>(cyl <span class="op">==</span><span class="st"> </span><span class="dv">4</span>) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb271-3" data-line-number="3"><span class="st">  </span><span class="kw">select</span>(name, mpg, cyl)</a></code></pre></div>
 <pre><code># A tibble: 11 x 3
    name             mpg   cyl
    &lt;chr&gt;          &lt;dbl&gt; &lt;dbl&gt;
@@ -600,10 +599,10 @@ Dans ce cas la nouvelle colonne <code>type</code> est bien créée et on peut y 
 </p>
 </div>
 <p>Bien souvent on utilisera une base de données quand les données sont trop volumineuses pour être gérées par un ordinateur de bureau. Mais si les données ne sont pas trop importantes, il sera toujours plus rapide de récupérer l’intégralité de la table dans notre session R pour pouvoir la manipuler comme les tableaux de données habituels. Ceci se fait grâce à la fonction <code>collect</code> de <code>dplyr</code> :</p>
-<pre class="sourceCode r"><code class="sourceCode r">cars &lt;-<span class="st"> </span>cars_tbl <span class="op">%&gt;%</span><span class="st"> </span>collect</code></pre>
+<div class="sourceCode" id="cb273"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb273-1" data-line-number="1">cars &lt;-<span class="st"> </span>cars_tbl <span class="op">%&gt;%</span><span class="st"> </span>collect</a></code></pre></div>
 <p>Ici, <code>cars</code> est bien un tableau de données classique, copie de la table de la base au moment du <code>collect</code>.</p>
 <p>Et dans tous les cas, on n’oubliera pas de se déconnecter avec :</p>
-<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">dbDisconnect</span>(con)</code></pre>
+<div class="sourceCode" id="cb274"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb274-1" data-line-number="1"><span class="kw">dbDisconnect</span>(con)</a></code></pre></div>
 </div>
 <div id="ressources" class="section level3">
 <h3><span class="header-section-number">7.5.3</span> Ressources</h3>
@@ -631,9 +630,9 @@ Dans ce cas la nouvelle colonne <code>type</code> est bien créée et on peut y 
 <h3><span class="header-section-number">7.6.2</span> Sauvegarder des objets</h3>
 <p>Une autre manière de sauvegarder des données est de les enregistrer au format <code>RData</code>. Ce format propre à R est compact, rapide, et permet d’enregistrer plusieurs objets R, quel que soit leur type, dans un même fichier.</p>
 <p>Pour enregistrer des objets, il suffit d’utiliser la fonction <code>save</code> et de lui fournir la liste des objets à sauvegarder et le nom du fichier :</p>
-<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">save</span>(d, rp2012, tab, <span class="dt">file =</span> <span class="st">&quot;fichier.RData&quot;</span>)</code></pre>
+<div class="sourceCode" id="cb275"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb275-1" data-line-number="1"><span class="kw">save</span>(d, rp2012, tab, <span class="dt">file =</span> <span class="st">&quot;fichier.RData&quot;</span>)</a></code></pre></div>
 <p>Pour charger des objets préalablement enregistrés, utiliser <code>load</code> :</p>
-<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">load</span>(<span class="st">&quot;fichier.RData&quot;</span>)</code></pre>
+<div class="sourceCode" id="cb276"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb276-1" data-line-number="1"><span class="kw">load</span>(<span class="st">&quot;fichier.RData&quot;</span>)</a></code></pre></div>
 <p>Les objets <code>d</code>, <code>rp2012</code> et <code>tab</code> devraient alors apparaître dans votre environnement.</p>
 <div class="rmdimportant">
 <p>

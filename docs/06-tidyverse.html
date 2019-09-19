@@ -6,7 +6,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>Partie 6 Le tidyverse | Introduction à R et au tidyverse</title>
   <meta name="description" content="Une introduction à R et aux extensions du tidyverse" />
-  <meta name="generator" content="bookdown 0.10 and GitBook 2.6.7" />
+  <meta name="generator" content="bookdown 0.13 and GitBook 2.6.7" />
 
   <meta property="og:title" content="Partie 6 Le tidyverse | Introduction à R et au tidyverse" />
   <meta property="og:type" content="book" />
@@ -24,15 +24,15 @@
 <meta name="author" content="Julien Barnier" />
 
 
-<meta name="date" content="2019-06-13" />
+<meta name="date" content="2019-09-19" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="05-organiser.html">
-<link rel="next" href="07-import.html">
+<link rel="prev" href="05-organiser.html"/>
+<link rel="next" href="07-import.html"/>
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
@@ -63,7 +63,6 @@ a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
 a.sourceLine:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
 code.sourceCode { white-space: pre; position: relative; }
-div.sourceCode { margin: 1em 0; }
 pre.sourceCode { margin: 0; }
 @media screen {
 div.sourceCode { overflow: auto; }
@@ -339,8 +338,8 @@ code span.wa { color: #bf0303; } /* Warning */
 <li class="chapter" data-level="12.1" data-path="12-tidyr.html"><a href="12-tidyr.html#tidy-data"><i class="fa fa-check"></i><b>12.1</b> Tidy data</a></li>
 <li class="chapter" data-level="12.2" data-path="12-tidyr.html"><a href="12-tidyr.html#trois-regles-pour-des-donnees-bien-rangees"><i class="fa fa-check"></i><b>12.2</b> Trois règles pour des données bien rangées</a></li>
 <li class="chapter" data-level="12.3" data-path="12-tidyr.html"><a href="12-tidyr.html#les-verbes-de-tidyr"><i class="fa fa-check"></i><b>12.3</b> Les verbes de <code>tidyr</code></a><ul>
-<li class="chapter" data-level="12.3.1" data-path="12-tidyr.html"><a href="12-tidyr.html#gather-rassembler-des-colonnes"><i class="fa fa-check"></i><b>12.3.1</b> <code>gather</code> : rassembler des colonnes</a></li>
-<li class="chapter" data-level="12.3.2" data-path="12-tidyr.html"><a href="12-tidyr.html#spread-disperser-des-lignes"><i class="fa fa-check"></i><b>12.3.2</b> <code>spread</code> : disperser des lignes</a></li>
+<li class="chapter" data-level="12.3.1" data-path="12-tidyr.html"><a href="12-tidyr.html#pivot_longer-transformer-des-colonnes-en-lignes"><i class="fa fa-check"></i><b>12.3.1</b> <code>pivot_longer</code> : transformer des colonnes en lignes</a></li>
+<li class="chapter" data-level="12.3.2" data-path="12-tidyr.html"><a href="12-tidyr.html#pivot_wider-transformer-des-lignes-en-colonnes"><i class="fa fa-check"></i><b>12.3.2</b> <code>pivot_wider</code> : transformer des lignes en colonnes</a></li>
 <li class="chapter" data-level="12.3.3" data-path="12-tidyr.html"><a href="12-tidyr.html#separate"><i class="fa fa-check"></i><b>12.3.3</b> <code>separate</code> : séparer une colonne en plusieurs</a></li>
 <li class="chapter" data-level="12.3.4" data-path="12-tidyr.html"><a href="12-tidyr.html#unite-regrouper-plusieurs-colonnes-en-une-seule"><i class="fa fa-check"></i><b>12.3.4</b> <code>unite</code> : regrouper plusieurs colonnes en une seule</a></li>
 <li class="chapter" data-level="12.3.5" data-path="12-tidyr.html"><a href="12-tidyr.html#extract"><i class="fa fa-check"></i><b>12.3.5</b> <code>extract</code> : créer de nouvelles colonnes à partir d’une colonne de texte</a></li>
@@ -427,7 +426,7 @@ code span.wa { color: #bf0303; } /* Warning */
 <div id="installation" class="section level2">
 <h2><span class="header-section-number">6.2</span> Installation</h2>
 <p><code>tidyverse</code> est également le nom d’une extension qu’on peut installer de manière classique, soit via le bouton <em>Install</em> de l’onglet <em>Packages</em> de RStudio, soit en utilisant la commande :</p>
-<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">install.packages</span>(<span class="st">&quot;tidyverse&quot;</span>)</code></pre>
+<div class="sourceCode" id="cb238"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb238-1" data-line-number="1"><span class="kw">install.packages</span>(<span class="st">&quot;tidyverse&quot;</span>)</a></code></pre></div>
 <p>Cette commande va en fait installer plusieurs extensions qui constituent le “coeur” du <em>tidyverse</em>, à savoir :</p>
 <ul>
 <li><code>ggplot2</code> (visualisation)</li>
@@ -444,7 +443,7 @@ code span.wa { color: #bf0303; } /* Warning */
 <p class="caption">Packages de l’extension tidyverse</p>
 </div>
 <p>De la même manière, charger l’extension avec :</p>
-<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(tidyverse)</code></pre>
+<div class="sourceCode" id="cb239"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb239-1" data-line-number="1"><span class="kw">library</span>(tidyverse)</a></code></pre></div>
 <p>Chargera l’ensemble des extensions précédentes.</p>
 <p>Il existe d’autres extensions qui font partie du <em>tidyverse</em> mais qui doivent être chargées explicitement, comme par exemple <code>readxl</code> (pour l’importation de données depuis des fichiers Excel).</p>
 <p>La liste complète des extensions se trouve sur <a href="https://www.tidyverse.org/packages/">le site officiel du <em>tidyverse</em></a>.</p>
@@ -479,7 +478,7 @@ readr   1.3.1     forcats 0.4.0</code></pre>
 <li>affichent un avertissement si on essaie d’accéder à une colonne qui n’existe pas</li>
 </ul>
 <p>Pour autant, les tibbles restent compatibles avec les <em>data frames</em>. On peut ainsi facilement convertir un <em>data frame</em> en tibble avec <code>as_tibble</code> :</p>
-<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">as_tibble</span>(mtcars)</code></pre>
+<div class="sourceCode" id="cb241"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb241-1" data-line-number="1"><span class="kw">as_tibble</span>(mtcars)</a></code></pre></div>
 <pre><code># A tibble: 32 x 11
      mpg   cyl  disp    hp  drat    wt  qsec    vs    am  gear  carb
    &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
@@ -495,8 +494,8 @@ readr   1.3.1     forcats 0.4.0</code></pre>
 10  19.2     6  168.   123  3.92  3.44  18.3     1     0     4     4
 # … with 22 more rows</code></pre>
 <p>Si le <em>data frame</em> d’origine a des <em>rownames</em>, on peut d’abord les convertir en colonnes avec <code>rownames_to_columns</code> :</p>
-<pre class="sourceCode r"><code class="sourceCode r">d &lt;-<span class="st"> </span><span class="kw">as_tibble</span>(<span class="kw">rownames_to_column</span>(mtcars))
-d</code></pre>
+<div class="sourceCode" id="cb243"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb243-1" data-line-number="1">d &lt;-<span class="st"> </span><span class="kw">as_tibble</span>(<span class="kw">rownames_to_column</span>(mtcars))</a>
+<a class="sourceLine" id="cb243-2" data-line-number="2">d</a></code></pre></div>
 <pre><code># A tibble: 32 x 12
    rowname   mpg   cyl  disp    hp  drat    wt  qsec    vs    am  gear
    &lt;chr&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
@@ -512,7 +511,7 @@ d</code></pre>
 10 Merc 2…  19.2     6  168.   123  3.92  3.44  18.3     1     0     4
 # … with 22 more rows, and 1 more variable: carb &lt;dbl&gt;</code></pre>
 <p>À l’inverse, on peut à tout moment convertir un tibble en <em>data frame</em> avec <code>as.data.frame</code> :</p>
-<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">as.data.frame</span>(d)</code></pre>
+<div class="sourceCode" id="cb245"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb245-1" data-line-number="1"><span class="kw">as.data.frame</span>(d)</a></code></pre></div>
 <pre><code># A tibble: 32 x 12
    rowname   mpg   cyl  disp    hp  drat    wt  qsec    vs    am  gear
    &lt;chr&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
@@ -528,7 +527,7 @@ d</code></pre>
 10 Merc 2…  19.2     6  168.   123  3.92  3.44  18.3     1     0     4
 # … with 22 more rows, and 1 more variable: carb &lt;dbl&gt;</code></pre>
 <p>Là encore, on peut convertir la colonne <code>rowname</code> en “vrais” <em>rownames</em> avec <code>column_to_rownames</code> :</p>
-<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">column_to_rownames</span>(<span class="kw">as.data.frame</span>(d))</code></pre>
+<div class="sourceCode" id="cb247"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb247-1" data-line-number="1"><span class="kw">column_to_rownames</span>(<span class="kw">as.data.frame</span>(d))</a></code></pre></div>
 <pre><code># A tibble: 32 x 11
      mpg   cyl  disp    hp  drat    wt  qsec    vs    am  gear  carb
    &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;

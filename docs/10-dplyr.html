@@ -6,7 +6,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>Partie 10 Manipuler les données avec dplyr | Introduction à R et au tidyverse</title>
   <meta name="description" content="Une introduction à R et aux extensions du tidyverse" />
-  <meta name="generator" content="bookdown 0.10 and GitBook 2.6.7" />
+  <meta name="generator" content="bookdown 0.13 and GitBook 2.6.7" />
 
   <meta property="og:title" content="Partie 10 Manipuler les données avec dplyr | Introduction à R et au tidyverse" />
   <meta property="og:type" content="book" />
@@ -24,15 +24,15 @@
 <meta name="author" content="Julien Barnier" />
 
 
-<meta name="date" content="2019-06-13" />
+<meta name="date" content="2019-09-19" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="09-recodages.html">
-<link rel="next" href="11-stringr.html">
+<link rel="prev" href="09-recodages.html"/>
+<link rel="next" href="11-stringr.html"/>
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
@@ -63,7 +63,6 @@ a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
 a.sourceLine:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
 code.sourceCode { white-space: pre; position: relative; }
-div.sourceCode { margin: 1em 0; }
 pre.sourceCode { margin: 0; }
 @media screen {
 div.sourceCode { overflow: auto; }
@@ -339,8 +338,8 @@ code span.wa { color: #bf0303; } /* Warning */
 <li class="chapter" data-level="12.1" data-path="12-tidyr.html"><a href="12-tidyr.html#tidy-data"><i class="fa fa-check"></i><b>12.1</b> Tidy data</a></li>
 <li class="chapter" data-level="12.2" data-path="12-tidyr.html"><a href="12-tidyr.html#trois-regles-pour-des-donnees-bien-rangees"><i class="fa fa-check"></i><b>12.2</b> Trois règles pour des données bien rangées</a></li>
 <li class="chapter" data-level="12.3" data-path="12-tidyr.html"><a href="12-tidyr.html#les-verbes-de-tidyr"><i class="fa fa-check"></i><b>12.3</b> Les verbes de <code>tidyr</code></a><ul>
-<li class="chapter" data-level="12.3.1" data-path="12-tidyr.html"><a href="12-tidyr.html#gather-rassembler-des-colonnes"><i class="fa fa-check"></i><b>12.3.1</b> <code>gather</code> : rassembler des colonnes</a></li>
-<li class="chapter" data-level="12.3.2" data-path="12-tidyr.html"><a href="12-tidyr.html#spread-disperser-des-lignes"><i class="fa fa-check"></i><b>12.3.2</b> <code>spread</code> : disperser des lignes</a></li>
+<li class="chapter" data-level="12.3.1" data-path="12-tidyr.html"><a href="12-tidyr.html#pivot_longer-transformer-des-colonnes-en-lignes"><i class="fa fa-check"></i><b>12.3.1</b> <code>pivot_longer</code> : transformer des colonnes en lignes</a></li>
+<li class="chapter" data-level="12.3.2" data-path="12-tidyr.html"><a href="12-tidyr.html#pivot_wider-transformer-des-lignes-en-colonnes"><i class="fa fa-check"></i><b>12.3.2</b> <code>pivot_wider</code> : transformer des lignes en colonnes</a></li>
 <li class="chapter" data-level="12.3.3" data-path="12-tidyr.html"><a href="12-tidyr.html#separate"><i class="fa fa-check"></i><b>12.3.3</b> <code>separate</code> : séparer une colonne en plusieurs</a></li>
 <li class="chapter" data-level="12.3.4" data-path="12-tidyr.html"><a href="12-tidyr.html#unite-regrouper-plusieurs-colonnes-en-une-seule"><i class="fa fa-check"></i><b>12.3.4</b> <code>unite</code> : regrouper plusieurs colonnes en une seule</a></li>
 <li class="chapter" data-level="12.3.5" data-path="12-tidyr.html"><a href="12-tidyr.html#extract"><i class="fa fa-check"></i><b>12.3.5</b> <code>extract</code> : créer de nouvelles colonnes à partir d’une colonne de texte</a></li>
@@ -415,9 +414,9 @@ code span.wa { color: #bf0303; } /* Warning */
 <div id="preparation-2" class="section level2">
 <h2><span class="header-section-number">10.1</span> Préparation</h2>
 <p><code>dplyr</code> fait partie du coeur du <em>tidyverse</em>, elle est donc chargée automatiquement avec :</p>
-<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(tidyverse)</code></pre>
+<div class="sourceCode" id="cb493"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb493-1" data-line-number="1"><span class="kw">library</span>(tidyverse)</a></code></pre></div>
 <p>On peut également la charger individuellement avec :</p>
-<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(dplyr)</code></pre>
+<div class="sourceCode" id="cb494"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb494-1" data-line-number="1"><span class="kw">library</span>(dplyr)</a></code></pre></div>
 <p>Dans ce qui suit on va utiliser le jeu de données <code>nycflights13</code>, contenu dans l’extension du même nom (qu’il faut donc avoir installé). Celui-ci correspond aux données de tous les vols au départ d’un des trois aéroports de New-York en 2013. Il a la particularité d’être réparti en trois tables :</p>
 <ul>
 <li><code>flights</code> contient des informations sur les vols : date, départ, destination, horaires, retard…</li>
@@ -425,11 +424,11 @@ code span.wa { color: #bf0303; } /* Warning */
 <li><code>airlines</code> contient des données sur les compagnies aériennes</li>
 </ul>
 <p>On va charger les trois tables du jeu de données :</p>
-<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(nycflights13)
-<span class="co">## Chargement des trois tables</span>
-<span class="kw">data</span>(flights)
-<span class="kw">data</span>(airports)
-<span class="kw">data</span>(airlines)</code></pre>
+<div class="sourceCode" id="cb495"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb495-1" data-line-number="1"><span class="kw">library</span>(nycflights13)</a>
+<a class="sourceLine" id="cb495-2" data-line-number="2"><span class="co">## Chargement des trois tables</span></a>
+<a class="sourceLine" id="cb495-3" data-line-number="3"><span class="kw">data</span>(flights)</a>
+<a class="sourceLine" id="cb495-4" data-line-number="4"><span class="kw">data</span>(airports)</a>
+<a class="sourceLine" id="cb495-5" data-line-number="5"><span class="kw">data</span>(airlines)</a></code></pre></div>
 <p>Trois objets correspondant aux trois tables ont dû apparaître dans votre environnement.</p>
 </div>
 <div id="les-verbes-de-dplyr" class="section level2">
@@ -439,13 +438,13 @@ code span.wa { color: #bf0303; } /* Warning */
 <h3><span class="header-section-number">10.2.1</span> <code>slice</code></h3>
 <p>Le verbe <code>slice</code> sélectionne des lignes du tableau selon leur position. On lui passe un chiffre ou un vecteur de chiffres.</p>
 <p>Si on souhaite sélectionner la 345e ligne du tableau <code>airports</code> :</p>
-<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">slice</span>(airports, <span class="dv">345</span>)</code></pre>
+<div class="sourceCode" id="cb496"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb496-1" data-line-number="1"><span class="kw">slice</span>(airports, <span class="dv">345</span>)</a></code></pre></div>
 <pre><code># A tibble: 1 x 8
   faa   name                lat   lon   alt    tz dst   tzone            
   &lt;chr&gt; &lt;chr&gt;             &lt;dbl&gt; &lt;dbl&gt; &lt;int&gt; &lt;dbl&gt; &lt;chr&gt; &lt;chr&gt;            
 1 CYF   Chefornak Airport  60.1 -164.    40    -9 A     America/Anchorage</code></pre>
 <p>Si on veut sélectionner les 5 premières lignes :</p>
-<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">slice</span>(airports, <span class="dv">1</span><span class="op">:</span><span class="dv">5</span>)</code></pre>
+<div class="sourceCode" id="cb498"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb498-1" data-line-number="1"><span class="kw">slice</span>(airports, <span class="dv">1</span><span class="op">:</span><span class="dv">5</span>)</a></code></pre></div>
 <pre><code># A tibble: 5 x 8
   faa   name                      lat   lon   alt    tz dst   tzone        
   &lt;chr&gt; &lt;chr&gt;                   &lt;dbl&gt; &lt;dbl&gt; &lt;int&gt; &lt;dbl&gt; &lt;chr&gt; &lt;chr&gt;        
@@ -459,7 +458,7 @@ code span.wa { color: #bf0303; } /* Warning */
 <h3><span class="header-section-number">10.2.2</span> <code>filter</code></h3>
 <p><code>filter</code> sélectionne des lignes d’une table selon une condition. On lui passe en paramètre un test, et seules les lignes pour lesquelles ce test renvoie <code>TRUE</code> (vrai) sont conservées. Pour plus d’informations sur les tests et leur syntaxe, voir la section <a href="09-recodages.html#tests">9.2</a>.</p>
 <p>Par exemple, si on veut sélectionner les vols du mois de janvier, on peut filtrer sur la variable <code>month</code> de la manière suivante :</p>
-<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">filter</span>(flights, month <span class="op">==</span><span class="st"> </span><span class="dv">1</span>)</code></pre>
+<div class="sourceCode" id="cb500"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb500-1" data-line-number="1"><span class="kw">filter</span>(flights, month <span class="op">==</span><span class="st"> </span><span class="dv">1</span>)</a></code></pre></div>
 <pre><code># A tibble: 27,004 x 19
     year month   day dep_time sched_dep_time dep_delay arr_time
    &lt;int&gt; &lt;int&gt; &lt;int&gt;    &lt;int&gt;          &lt;int&gt;     &lt;dbl&gt;    &lt;int&gt;
@@ -478,7 +477,7 @@ code span.wa { color: #bf0303; } /* Warning */
 #   origin &lt;chr&gt;, dest &lt;chr&gt;, air_time &lt;dbl&gt;, distance &lt;dbl&gt;, hour &lt;dbl&gt;,
 #   minute &lt;dbl&gt;, time_hour &lt;dttm&gt;</code></pre>
 <p>Si on veut uniquement les vols avec un retard au départ (variable <code>dep_delay</code>) compris entre 10 et 15 minutes :</p>
-<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">filter</span>(flights, dep_delay <span class="op">&gt;=</span><span class="st"> </span><span class="dv">10</span> <span class="op">&amp;</span><span class="st"> </span>dep_delay <span class="op">&lt;=</span><span class="st"> </span><span class="dv">15</span>)</code></pre>
+<div class="sourceCode" id="cb502"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb502-1" data-line-number="1"><span class="kw">filter</span>(flights, dep_delay <span class="op">&gt;=</span><span class="st"> </span><span class="dv">10</span> <span class="op">&amp;</span><span class="st"> </span>dep_delay <span class="op">&lt;=</span><span class="st"> </span><span class="dv">15</span>)</a></code></pre></div>
 <pre><code># A tibble: 14,919 x 19
     year month   day dep_time sched_dep_time dep_delay arr_time
    &lt;int&gt; &lt;int&gt; &lt;int&gt;    &lt;int&gt;          &lt;int&gt;     &lt;dbl&gt;    &lt;int&gt;
@@ -497,9 +496,9 @@ code span.wa { color: #bf0303; } /* Warning */
 #   origin &lt;chr&gt;, dest &lt;chr&gt;, air_time &lt;dbl&gt;, distance &lt;dbl&gt;, hour &lt;dbl&gt;,
 #   minute &lt;dbl&gt;, time_hour &lt;dttm&gt;</code></pre>
 <p>Si on passe plusieurs arguments à <code>filter</code>, celui-ci rajoute automatiquement une condition <em>et</em> entre les conditions. La commande précédente peut donc être écrite de la manière suivante, avec le même résultat :</p>
-<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">filter</span>(flights, dep_delay <span class="op">&gt;=</span><span class="st"> </span><span class="dv">10</span>, dep_delay <span class="op">&lt;=</span><span class="st"> </span><span class="dv">15</span>)</code></pre>
+<div class="sourceCode" id="cb504"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb504-1" data-line-number="1"><span class="kw">filter</span>(flights, dep_delay <span class="op">&gt;=</span><span class="st"> </span><span class="dv">10</span>, dep_delay <span class="op">&lt;=</span><span class="st"> </span><span class="dv">15</span>)</a></code></pre></div>
 <p>On peut également placer des fonctions dans les tests, qui nous permettent par exemple de sélectionner les vols avec la plus grande distance :</p>
-<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">filter</span>(flights, distance <span class="op">==</span><span class="st"> </span><span class="kw">max</span>(distance))</code></pre>
+<div class="sourceCode" id="cb505"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb505-1" data-line-number="1"><span class="kw">filter</span>(flights, distance <span class="op">==</span><span class="st"> </span><span class="kw">max</span>(distance))</a></code></pre></div>
 <pre><code># A tibble: 342 x 19
     year month   day dep_time sched_dep_time dep_delay arr_time
    &lt;int&gt; &lt;int&gt; &lt;int&gt;    &lt;int&gt;          &lt;int&gt;     &lt;dbl&gt;    &lt;int&gt;
@@ -521,7 +520,7 @@ code span.wa { color: #bf0303; } /* Warning */
 <div id="select-et-rename" class="section level3">
 <h3><span class="header-section-number">10.2.3</span> <code>select</code> et <code>rename</code></h3>
 <p><code>select</code> permet de sélectionner des colonnes d’un tableau de données. Ainsi, si on veut extraire les colonnes <code>lat</code> et <code>lon</code> du tableau airports :</p>
-<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">select</span>(airports, lat, lon)</code></pre>
+<div class="sourceCode" id="cb507"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb507-1" data-line-number="1"><span class="kw">select</span>(airports, lat, lon)</a></code></pre></div>
 <pre><code># A tibble: 1,458 x 2
      lat    lon
    &lt;dbl&gt;  &lt;dbl&gt;
@@ -537,7 +536,7 @@ code span.wa { color: #bf0303; } /* Warning */
 10  48.1 -123. 
 # … with 1,448 more rows</code></pre>
 <p>Si on fait précéder le nom d’un <code>-</code>, la colonne est éliminée plutôt que sélectionnée :</p>
-<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">select</span>(airports, <span class="op">-</span>lat, <span class="op">-</span>lon)</code></pre>
+<div class="sourceCode" id="cb509"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb509-1" data-line-number="1"><span class="kw">select</span>(airports, <span class="op">-</span>lat, <span class="op">-</span>lon)</a></code></pre></div>
 <pre><code># A tibble: 1,458 x 6
    faa   name                            alt    tz dst   tzone             
    &lt;chr&gt; &lt;chr&gt;                         &lt;int&gt; &lt;dbl&gt; &lt;chr&gt; &lt;chr&gt;             
@@ -553,7 +552,7 @@ code span.wa { color: #bf0303; } /* Warning */
 10 0S9   Jefferson County Intl           108    -8 A     America/Los_Angel…
 # … with 1,448 more rows</code></pre>
 <p><code>select</code> comprend toute une série de fonctions facilitant la sélection de colonnes multiples. Par exemple, <code>starts_with</code>, <code>ends_width</code>, <code>contains</code> ou <code>matches</code> permettent d’exprimer des conditions sur les noms de variables :</p>
-<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">select</span>(flights, <span class="kw">starts_with</span>(<span class="st">&quot;dep_&quot;</span>))</code></pre>
+<div class="sourceCode" id="cb511"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb511-1" data-line-number="1"><span class="kw">select</span>(flights, <span class="kw">starts_with</span>(<span class="st">&quot;dep_&quot;</span>))</a></code></pre></div>
 <pre><code># A tibble: 336,776 x 2
    dep_time dep_delay
       &lt;int&gt;     &lt;dbl&gt;
@@ -569,7 +568,7 @@ code span.wa { color: #bf0303; } /* Warning */
 10      558        -2
 # … with 336,766 more rows</code></pre>
 <p>La syntaxe <code>colonne1:colonne2</code> permet de sélectionner toutes les colonnes situées entre <code>colonne1</code> et <code>colonne2</code> incluses<a href="#fn15" class="footnote-ref" id="fnref15"><sup>15</sup></a> :</p>
-<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">select</span>(flights, year<span class="op">:</span>day)</code></pre>
+<div class="sourceCode" id="cb513"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb513-1" data-line-number="1"><span class="kw">select</span>(flights, year<span class="op">:</span>day)</a></code></pre></div>
 <pre><code># A tibble: 336,776 x 3
     year month   day
    &lt;int&gt; &lt;int&gt; &lt;int&gt;
@@ -585,7 +584,7 @@ code span.wa { color: #bf0303; } /* Warning */
 10  2013     1     1
 # … with 336,766 more rows</code></pre>
 <p><code>select</code> peut être utilisée pour réordonner les colonnes d’une table en utilisant la fonction <code>everything()</code>, qui sélectionne l’ensemble des colonnes non encore sélectionnées. Ainsi, si on souhaite faire passer la colonne <code>name</code> en première position de la table <code>airports</code>, on peut faire :</p>
-<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">select</span>(airports, name, <span class="kw">everything</span>())</code></pre>
+<div class="sourceCode" id="cb515"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb515-1" data-line-number="1"><span class="kw">select</span>(airports, name, <span class="kw">everything</span>())</a></code></pre></div>
 <pre><code># A tibble: 1,458 x 8
    name                  faa     lat    lon   alt    tz dst   tzone        
    &lt;chr&gt;                 &lt;chr&gt; &lt;dbl&gt;  &lt;dbl&gt; &lt;int&gt; &lt;dbl&gt; &lt;chr&gt; &lt;chr&gt;        
@@ -601,7 +600,7 @@ code span.wa { color: #bf0303; } /* Warning */
 10 Jefferson County Intl 0S9    48.1 -123.    108    -8 A     America/Los_…
 # … with 1,448 more rows</code></pre>
 <p>Une variante de <code>select</code> est <code>rename</code><a href="#fn16" class="footnote-ref" id="fnref16"><sup>16</sup></a>, qui permet de renommer des colonnes. On l’utilise en lui passant des paramètres de la forme <code>nouveau_nom = ancien_nom</code>. Ainsi, si on veut renommer les colonnes <code>lon</code> et <code>lat</code> de <code>airports</code> en <code>longitude</code> et <code>latitude</code> :</p>
-<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">rename</span>(airports, <span class="dt">longitude =</span> lon, <span class="dt">latitude =</span> lat)</code></pre>
+<div class="sourceCode" id="cb517"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb517-1" data-line-number="1"><span class="kw">rename</span>(airports, <span class="dt">longitude =</span> lon, <span class="dt">latitude =</span> lat)</a></code></pre></div>
 <pre><code># A tibble: 1,458 x 8
    faa   name              latitude longitude   alt    tz dst   tzone      
    &lt;chr&gt; &lt;chr&gt;                &lt;dbl&gt;     &lt;dbl&gt; &lt;int&gt; &lt;dbl&gt; &lt;chr&gt; &lt;chr&gt;      
@@ -617,10 +616,10 @@ code span.wa { color: #bf0303; } /* Warning */
 10 0S9   Jefferson County…     48.1    -123.    108    -8 A     America/Lo…
 # … with 1,448 more rows</code></pre>
 <p>Si les noms de colonnes comportent des espaces ou des caractères spéciaux, on peut les entourer de guillemets (<code>&quot;</code>) ou de quotes inverses (<code>`</code>) :</p>
-<pre class="sourceCode r"><code class="sourceCode r">tmp &lt;-<span class="st"> </span><span class="kw">rename</span>(flights, 
-              <span class="st">&quot;retard départ&quot;</span> =<span class="st"> </span>dep_delay,
-              <span class="st">&quot;retard arrivée&quot;</span> =<span class="st"> </span>arr_delay)
-<span class="kw">select</span>(tmp, <span class="st">`</span><span class="dt">retard départ</span><span class="st">`</span>, <span class="st">`</span><span class="dt">retard arrivée</span><span class="st">`</span>)</code></pre>
+<div class="sourceCode" id="cb519"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb519-1" data-line-number="1">tmp &lt;-<span class="st"> </span><span class="kw">rename</span>(flights, </a>
+<a class="sourceLine" id="cb519-2" data-line-number="2">              <span class="st">&quot;retard départ&quot;</span> =<span class="st"> </span>dep_delay,</a>
+<a class="sourceLine" id="cb519-3" data-line-number="3">              <span class="st">&quot;retard arrivée&quot;</span> =<span class="st"> </span>arr_delay)</a>
+<a class="sourceLine" id="cb519-4" data-line-number="4"><span class="kw">select</span>(tmp, <span class="st">`</span><span class="dt">retard départ</span><span class="st">`</span>, <span class="st">`</span><span class="dt">retard arrivée</span><span class="st">`</span>)</a></code></pre></div>
 <pre><code># A tibble: 336,776 x 2
    `retard départ` `retard arrivée`
              &lt;dbl&gt;            &lt;dbl&gt;
@@ -640,7 +639,7 @@ code span.wa { color: #bf0303; } /* Warning */
 <h3><span class="header-section-number">10.2.4</span> <code>arrange</code></h3>
 <p><code>arrange</code> réordonne les lignes d’un tableau selon une ou plusieurs colonnes.</p>
 <p>Ainsi, si on veut trier le tableau <code>flights</code> selon le retard au départ croissant :</p>
-<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">arrange</span>(flights, dep_delay)</code></pre>
+<div class="sourceCode" id="cb521"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb521-1" data-line-number="1"><span class="kw">arrange</span>(flights, dep_delay)</a></code></pre></div>
 <pre><code># A tibble: 336,776 x 19
     year month   day dep_time sched_dep_time dep_delay arr_time
    &lt;int&gt; &lt;int&gt; &lt;int&gt;    &lt;int&gt;          &lt;int&gt;     &lt;dbl&gt;    &lt;int&gt;
@@ -659,7 +658,7 @@ code span.wa { color: #bf0303; } /* Warning */
 #   origin &lt;chr&gt;, dest &lt;chr&gt;, air_time &lt;dbl&gt;, distance &lt;dbl&gt;, hour &lt;dbl&gt;,
 #   minute &lt;dbl&gt;, time_hour &lt;dttm&gt;</code></pre>
 <p>On peut trier selon plusieurs colonnes. Par exemple selon le mois, puis selon le retard au départ :</p>
-<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">arrange</span>(flights, month, dep_delay)</code></pre>
+<div class="sourceCode" id="cb523"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb523-1" data-line-number="1"><span class="kw">arrange</span>(flights, month, dep_delay)</a></code></pre></div>
 <pre><code># A tibble: 336,776 x 19
     year month   day dep_time sched_dep_time dep_delay arr_time
    &lt;int&gt; &lt;int&gt; &lt;int&gt;    &lt;int&gt;          &lt;int&gt;     &lt;dbl&gt;    &lt;int&gt;
@@ -678,7 +677,7 @@ code span.wa { color: #bf0303; } /* Warning */
 #   origin &lt;chr&gt;, dest &lt;chr&gt;, air_time &lt;dbl&gt;, distance &lt;dbl&gt;, hour &lt;dbl&gt;,
 #   minute &lt;dbl&gt;, time_hour &lt;dttm&gt;</code></pre>
 <p>Si on veut trier selon une colonne par ordre décroissant, on lui applique la fonction <code>desc()</code> :</p>
-<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">arrange</span>(flights, <span class="kw">desc</span>(dep_delay))</code></pre>
+<div class="sourceCode" id="cb525"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb525-1" data-line-number="1"><span class="kw">arrange</span>(flights, <span class="kw">desc</span>(dep_delay))</a></code></pre></div>
 <pre><code># A tibble: 336,776 x 19
     year month   day dep_time sched_dep_time dep_delay arr_time
    &lt;int&gt; &lt;int&gt; &lt;int&gt;    &lt;int&gt;          &lt;int&gt;     &lt;dbl&gt;    &lt;int&gt;
@@ -697,8 +696,8 @@ code span.wa { color: #bf0303; } /* Warning */
 #   origin &lt;chr&gt;, dest &lt;chr&gt;, air_time &lt;dbl&gt;, distance &lt;dbl&gt;, hour &lt;dbl&gt;,
 #   minute &lt;dbl&gt;, time_hour &lt;dttm&gt;</code></pre>
 <p>Combiné avec <code>slice</code>, <code>arrange</code> permet par exemple de sélectionner les trois vols ayant eu le plus de retard :</p>
-<pre class="sourceCode r"><code class="sourceCode r">tmp &lt;-<span class="st"> </span><span class="kw">arrange</span>(flights, <span class="kw">desc</span>(dep_delay)) 
-<span class="kw">slice</span>(tmp, <span class="dv">1</span><span class="op">:</span><span class="dv">3</span>)</code></pre>
+<div class="sourceCode" id="cb527"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb527-1" data-line-number="1">tmp &lt;-<span class="st"> </span><span class="kw">arrange</span>(flights, <span class="kw">desc</span>(dep_delay)) </a>
+<a class="sourceLine" id="cb527-2" data-line-number="2"><span class="kw">slice</span>(tmp, <span class="dv">1</span><span class="op">:</span><span class="dv">3</span>)</a></code></pre></div>
 <pre><code># A tibble: 3 x 19
    year month   day dep_time sched_dep_time dep_delay arr_time
   &lt;int&gt; &lt;int&gt; &lt;int&gt;    &lt;int&gt;          &lt;int&gt;     &lt;dbl&gt;    &lt;int&gt;
@@ -714,8 +713,8 @@ code span.wa { color: #bf0303; } /* Warning */
 <h3><span class="header-section-number">10.2.5</span> <code>mutate</code></h3>
 <p><code>mutate</code> permet de créer de nouvelles colonnes dans le tableau de données, en général à partir de variables existantes.</p>
 <p>Par exemple, la table <code>flights</code> contient la durée du vol en minutes.. Si on veut créer une nouvelle variable <code>duree_h</code> avec cette durée en heures, on peut faire :</p>
-<pre class="sourceCode r"><code class="sourceCode r">flights &lt;-<span class="st"> </span><span class="kw">mutate</span>(flights, <span class="dt">duree_h =</span> air_time <span class="op">/</span><span class="st"> </span><span class="dv">60</span>)
-<span class="kw">select</span>(flights, air_time, duree_h)</code></pre>
+<div class="sourceCode" id="cb529"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb529-1" data-line-number="1">flights &lt;-<span class="st"> </span><span class="kw">mutate</span>(flights, <span class="dt">duree_h =</span> air_time <span class="op">/</span><span class="st"> </span><span class="dv">60</span>)</a>
+<a class="sourceLine" id="cb529-2" data-line-number="2"><span class="kw">select</span>(flights, air_time, duree_h)</a></code></pre></div>
 <pre><code># A tibble: 336,776 x 2
    air_time duree_h
       &lt;dbl&gt;   &lt;dbl&gt;
@@ -731,11 +730,11 @@ code span.wa { color: #bf0303; } /* Warning */
 10      138   2.3  
 # … with 336,766 more rows</code></pre>
 <p>On peut créer plusieurs nouvelles colonnes en une seule commande, et les expressions successives peuvent prendre en compte les résultats des calculs précédents. L’exemple suivant convertit d’abord la durée en heures dans une variable <code>duree_h</code> et la distance en kilomètres dans une variable <code>distance_km</code>, puis utilise ces nouvelles colonnes pour calculer la vitesse en km/h.</p>
-<pre class="sourceCode r"><code class="sourceCode r">flights &lt;-<span class="st"> </span><span class="kw">mutate</span>(flights, 
-                  <span class="dt">duree_h =</span> air_time <span class="op">/</span><span class="st"> </span><span class="dv">60</span>,
-                  <span class="dt">distance_km =</span> distance <span class="op">/</span><span class="st"> </span><span class="fl">0.62137</span>,
-                  <span class="dt">vitesse =</span> distance_km <span class="op">/</span><span class="st"> </span>duree_h)
-<span class="kw">select</span>(flights, air_time, duree_h, distance, distance_km, vitesse)</code></pre>
+<div class="sourceCode" id="cb531"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb531-1" data-line-number="1">flights &lt;-<span class="st"> </span><span class="kw">mutate</span>(flights, </a>
+<a class="sourceLine" id="cb531-2" data-line-number="2">                  <span class="dt">duree_h =</span> air_time <span class="op">/</span><span class="st"> </span><span class="dv">60</span>,</a>
+<a class="sourceLine" id="cb531-3" data-line-number="3">                  <span class="dt">distance_km =</span> distance <span class="op">/</span><span class="st"> </span><span class="fl">0.62137</span>,</a>
+<a class="sourceLine" id="cb531-4" data-line-number="4">                  <span class="dt">vitesse =</span> distance_km <span class="op">/</span><span class="st"> </span>duree_h)</a>
+<a class="sourceLine" id="cb531-5" data-line-number="5"><span class="kw">select</span>(flights, air_time, duree_h, distance, distance_km, vitesse)</a></code></pre></div>
 <pre><code># A tibble: 336,776 x 5
    air_time duree_h distance distance_km vitesse
       &lt;dbl&gt;   &lt;dbl&gt;    &lt;dbl&gt;       &lt;dbl&gt;   &lt;dbl&gt;
@@ -752,12 +751,12 @@ code span.wa { color: #bf0303; } /* Warning */
 # … with 336,766 more rows</code></pre>
 <p>À noter que <code>mutate</code> est évidemment parfaitement compatible avec les fonctions vues dans le chapitre <a href="09-recodages.html#vectorfactor">9</a> sur les recodages : <code>fct_recode</code>, <code>if_else</code>, <code>case_when</code>…</p>
 <p>L’avantage d’utiliser <code>mutate</code> est double. D’abord il permet d’éviter d’avoir à saisir le nom du tableau de données dans les conditions d’un <code>if_else</code> ou d’un <code>case_when</code> :</p>
-<pre class="sourceCode r"><code class="sourceCode r">flights &lt;-<span class="st"> </span><span class="kw">mutate</span>(flights,
-                  <span class="dt">type_retard =</span> <span class="kw">case_when</span>(
-                    dep_delay <span class="op">&gt;</span><span class="st"> </span><span class="dv">0</span> <span class="op">&amp;</span><span class="st"> </span>arr_delay <span class="op">&gt;</span><span class="st"> </span><span class="dv">0</span> <span class="op">~</span><span class="st"> &quot;Retard départ et arrivée&quot;</span>,
-                    dep_delay <span class="op">&gt;</span><span class="st"> </span><span class="dv">0</span> <span class="op">&amp;</span><span class="st"> </span>arr_delay <span class="op">&lt;=</span><span class="st"> </span><span class="dv">0</span> <span class="op">~</span><span class="st"> &quot;Retard départ&quot;</span>,
-                    dep_delay <span class="op">&lt;=</span><span class="st"> </span><span class="dv">0</span> <span class="op">&amp;</span><span class="st"> </span>arr_delay <span class="op">&gt;</span><span class="st"> </span><span class="dv">0</span> <span class="op">~</span><span class="st"> &quot;Retard arrivée&quot;</span>,
-                    <span class="ot">TRUE</span> <span class="op">~</span><span class="st"> &quot;Aucun retard&quot;</span>))</code></pre>
+<div class="sourceCode" id="cb533"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb533-1" data-line-number="1">flights &lt;-<span class="st"> </span><span class="kw">mutate</span>(flights,</a>
+<a class="sourceLine" id="cb533-2" data-line-number="2">                  <span class="dt">type_retard =</span> <span class="kw">case_when</span>(</a>
+<a class="sourceLine" id="cb533-3" data-line-number="3">                    dep_delay <span class="op">&gt;</span><span class="st"> </span><span class="dv">0</span> <span class="op">&amp;</span><span class="st"> </span>arr_delay <span class="op">&gt;</span><span class="st"> </span><span class="dv">0</span> <span class="op">~</span><span class="st"> &quot;Retard départ et arrivée&quot;</span>,</a>
+<a class="sourceLine" id="cb533-4" data-line-number="4">                    dep_delay <span class="op">&gt;</span><span class="st"> </span><span class="dv">0</span> <span class="op">&amp;</span><span class="st"> </span>arr_delay <span class="op">&lt;=</span><span class="st"> </span><span class="dv">0</span> <span class="op">~</span><span class="st"> &quot;Retard départ&quot;</span>,</a>
+<a class="sourceLine" id="cb533-5" data-line-number="5">                    dep_delay <span class="op">&lt;=</span><span class="st"> </span><span class="dv">0</span> <span class="op">&amp;</span><span class="st"> </span>arr_delay <span class="op">&gt;</span><span class="st"> </span><span class="dv">0</span> <span class="op">~</span><span class="st"> &quot;Retard arrivée&quot;</span>,</a>
+<a class="sourceLine" id="cb533-6" data-line-number="6">                    <span class="ot">TRUE</span> <span class="op">~</span><span class="st"> &quot;Aucun retard&quot;</span>))</a></code></pre></div>
 <p>Ensuite, il permet aussi d’intégrer ces recodages dans un <em>pipeline</em> de traitement de données, concept présenté dans la section suivante.</p>
 </div>
 </div>
@@ -765,7 +764,7 @@ code span.wa { color: #bf0303; } /* Warning */
 <h2><span class="header-section-number">10.3</span> Enchaîner les opérations avec le <em>pipe</em></h2>
 <p>Quand on manipule un tableau de données, il est très fréquent d’enchaîner plusieurs opérations. On va par exemple extraire une sous-population avec <code>filter</code>, sélectionner des colonnes avec <code>select</code> puis trier selon une variable avec <code>arrange</code>, etc.</p>
 <p>Quand on veut enchaîner des opérations, on peut le faire de différentes manières. La première est d’effectuer toutes les opérations en une fois en les “emboîtant” :</p>
-<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">arrange</span>(<span class="kw">select</span>(<span class="kw">filter</span>(flights, dest <span class="op">==</span><span class="st"> &quot;LAX&quot;</span>), dep_delay, arr_delay), dep_delay)</code></pre>
+<div class="sourceCode" id="cb534"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb534-1" data-line-number="1"><span class="kw">arrange</span>(<span class="kw">select</span>(<span class="kw">filter</span>(flights, dest <span class="op">==</span><span class="st"> &quot;LAX&quot;</span>), dep_delay, arr_delay), dep_delay)</a></code></pre></div>
 <p>Cette notation a plusieurs inconvénients :</p>
 <ul>
 <li>elle est peu lisible</li>
@@ -773,43 +772,43 @@ code span.wa { color: #bf0303; } /* Warning */
 <li>Il est difficile de voir quel paramètre se rapporte à quelle fonction</li>
 </ul>
 <p>Une autre manière de faire est d’effectuer les opérations les unes après les autres, en stockant les résultats intermédiaires dans un objet temporaire :</p>
-<pre class="sourceCode r"><code class="sourceCode r">tmp &lt;-<span class="st"> </span><span class="kw">filter</span>(flights, dest <span class="op">==</span><span class="st"> &quot;LAX&quot;</span>)
-tmp &lt;-<span class="st"> </span><span class="kw">select</span>(tmp, dep_delay, arr_delay)
-<span class="kw">arrange</span>(tmp, dep_delay)</code></pre>
+<div class="sourceCode" id="cb535"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb535-1" data-line-number="1">tmp &lt;-<span class="st"> </span><span class="kw">filter</span>(flights, dest <span class="op">==</span><span class="st"> &quot;LAX&quot;</span>)</a>
+<a class="sourceLine" id="cb535-2" data-line-number="2">tmp &lt;-<span class="st"> </span><span class="kw">select</span>(tmp, dep_delay, arr_delay)</a>
+<a class="sourceLine" id="cb535-3" data-line-number="3"><span class="kw">arrange</span>(tmp, dep_delay)</a></code></pre></div>
 <p>C’est nettement plus lisible, l’ordre des opérations est le bon, et les paramètres sont bien rattachés à leur fonction. Par contre, ça reste un peu “verbeux”, et on crée un objet temporaire <code>tmp</code> dont on n’a pas réellement besoin.</p>
 <p>Pour simplifier et améliorer encore la lisibilité du code, on va utiliser un nouvel opérateur, baptisé <em>pipe</em><a href="#fn17" class="footnote-ref" id="fnref17"><sup>17</sup></a>. Le <em>pipe</em> se note <code>%&gt;%</code>, et son fonctionnement est le suivant : si j’exécute <code>expr %&gt;% f</code>, alors le résultat de l’expression <code>expr</code>, à gauche du <em>pipe</em>, sera passé comme premier argument à la fonction <code>f</code>, à droite du <em>pipe</em>, ce qui revient à exécuter <code>f(expr)</code>.</p>
 <p>Ainsi les deux expressions suivantes sont rigoureusement équivalentes :</p>
-<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">filter</span>(flights, dest <span class="op">==</span><span class="st"> &quot;LAX&quot;</span>)</code></pre>
-<pre class="sourceCode r"><code class="sourceCode r">flights <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">filter</span>(dest <span class="op">==</span><span class="st"> &quot;LAX&quot;</span>)</code></pre>
+<div class="sourceCode" id="cb536"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb536-1" data-line-number="1"><span class="kw">filter</span>(flights, dest <span class="op">==</span><span class="st"> &quot;LAX&quot;</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb537"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb537-1" data-line-number="1">flights <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">filter</span>(dest <span class="op">==</span><span class="st"> &quot;LAX&quot;</span>)</a></code></pre></div>
 <p>Ce qui est intéressant dans cette histoire, c’est qu’on va pouvoir enchaîner les <em>pipes</em>. Plutôt que d’écrire :</p>
-<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">select</span>(<span class="kw">filter</span>(flights, dest <span class="op">==</span><span class="st"> &quot;LAX&quot;</span>), dep_delay, arr_delay)</code></pre>
+<div class="sourceCode" id="cb538"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb538-1" data-line-number="1"><span class="kw">select</span>(<span class="kw">filter</span>(flights, dest <span class="op">==</span><span class="st"> &quot;LAX&quot;</span>), dep_delay, arr_delay)</a></code></pre></div>
 <p>On va pouvoir faire :</p>
-<pre class="sourceCode r"><code class="sourceCode r">flights <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">filter</span>(dest <span class="op">==</span><span class="st"> &quot;LAX&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(dep_delay, arr_delay)</code></pre>
+<div class="sourceCode" id="cb539"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb539-1" data-line-number="1">flights <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">filter</span>(dest <span class="op">==</span><span class="st"> &quot;LAX&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(dep_delay, arr_delay)</a></code></pre></div>
 <p>À chaque fois, le résultat de ce qui se trouve à gauche du <em>pipe</em> est passé comme premier argument à ce qui se trouve à droite : on part de l’objet <code>flights</code>, qu’on passe comme premier argument à la fonction <code>filter</code>, puis on passe le résultat de ce <code>filter</code> comme premier argument du <code>select</code>.</p>
 <p>Le résultat final est le même avec les deux syntaxes, mais avec le <em>pipe</em> l’ordre des opérations correspond à l’ordre naturel de leur exécution, et on n’a pas eu besoin de créer d’objet intermédiaire.</p>
 <p>Si la liste des fonctions enchaînées est longue, on peut les répartir sur plusieurs lignes à condition que l’opérateur <code>%&gt;%</code> soit en fin de ligne :</p>
-<pre class="sourceCode r"><code class="sourceCode r">flights <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">filter</span>(dest <span class="op">==</span><span class="st"> &quot;LAX&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">select</span>(dep_delay, arr_delay) <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">arrange</span>(dep_delay)</code></pre>
+<div class="sourceCode" id="cb540"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb540-1" data-line-number="1">flights <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb540-2" data-line-number="2"><span class="st">  </span><span class="kw">filter</span>(dest <span class="op">==</span><span class="st"> &quot;LAX&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb540-3" data-line-number="3"><span class="st">  </span><span class="kw">select</span>(dep_delay, arr_delay) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb540-4" data-line-number="4"><span class="st">  </span><span class="kw">arrange</span>(dep_delay)</a></code></pre></div>
 <div class="rmdnote">
 <p>
 On appelle une suite d’instructions de ce type un <em>pipeline</em>.
 </p>
 </div>
 <p>Évidemment, il est naturel de vouloir récupérer le résultat final d’un <em>pipeline</em> pour le stocker dans un objet. Par exemple, on peut stocker le résultat du <em>pipeline</em> ci-dessus dans un nouveau tableau <code>delay_la</code> de la manière suivante :</p>
-<pre class="sourceCode r"><code class="sourceCode r">delay_la &lt;-<span class="st"> </span>flights <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">filter</span>(dest <span class="op">==</span><span class="st"> &quot;LAX&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">select</span>(dep_delay, arr_delay) <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">arrange</span>(dep_delay)</code></pre>
+<div class="sourceCode" id="cb541"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb541-1" data-line-number="1">delay_la &lt;-<span class="st"> </span>flights <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb541-2" data-line-number="2"><span class="st">  </span><span class="kw">filter</span>(dest <span class="op">==</span><span class="st"> &quot;LAX&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb541-3" data-line-number="3"><span class="st">  </span><span class="kw">select</span>(dep_delay, arr_delay) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb541-4" data-line-number="4"><span class="st">  </span><span class="kw">arrange</span>(dep_delay)</a></code></pre></div>
 <p>Dans ce cas, <code>delay_la</code> contiendra le tableau final, obtenu après application des trois instructions <code>filter</code>, <code>select</code> et <code>arrange</code>.</p>
 <p>Cette notation n’est pas forcément très intuitive au départ. Il faut bien comprendre que c’est le résultat final, une fois application de toutes les opérations du <em>pipeline</em>, qui est renvoyé et stocké dans l’objet en début de ligne.</p>
 <p>Une manière de le comprendre peut être de voir que la notation suivante :</p>
-<pre class="sourceCode r"><code class="sourceCode r">delay_la &lt;-<span class="st"> </span>flights <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">filter</span>(dest <span class="op">==</span><span class="st"> &quot;LAX&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">select</span>(dep_delay, arr_delay)</code></pre>
+<div class="sourceCode" id="cb542"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb542-1" data-line-number="1">delay_la &lt;-<span class="st"> </span>flights <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb542-2" data-line-number="2"><span class="st">  </span><span class="kw">filter</span>(dest <span class="op">==</span><span class="st"> &quot;LAX&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb542-3" data-line-number="3"><span class="st">  </span><span class="kw">select</span>(dep_delay, arr_delay)</a></code></pre></div>
 <p>est équivalente à :</p>
-<pre class="sourceCode r"><code class="sourceCode r">delay_la &lt;-<span class="st"> </span>(flights <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">filter</span>(dest <span class="op">==</span><span class="st"> &quot;LAX&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(dep_delay, arr_delay))</code></pre>
+<div class="sourceCode" id="cb543"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb543-1" data-line-number="1">delay_la &lt;-<span class="st"> </span>(flights <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">filter</span>(dest <span class="op">==</span><span class="st"> &quot;LAX&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(dep_delay, arr_delay))</a></code></pre></div>
 <div class="rmdnote">
 <p>
 L’utilisation du <em>pipe</em> n’est pas obligatoire, mais elle rend les scripts plus lisibles et plus rapides à saisir. On l’utilisera donc dans ce qui suit.
@@ -821,7 +820,7 @@ L’utilisation du <em>pipe</em> n’est pas obligatoire, mais elle rend les scr
 <div id="group_by" class="section level3">
 <h3><span class="header-section-number">10.4.1</span> <code>group_by</code></h3>
 <p>Un élément très important de <code>dplyr</code> est la fonction <code>group_by</code>. Elle permet de définir des groupes de lignes à partir des valeurs d’une ou plusieurs colonnes. Par exemple, on peut grouper les vols selon leur mois :</p>
-<pre class="sourceCode r"><code class="sourceCode r">flights <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">group_by</span>(month)</code></pre>
+<div class="sourceCode" id="cb544"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb544-1" data-line-number="1">flights <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">group_by</span>(month)</a></code></pre></div>
 <pre><code># A tibble: 336,776 x 22
     year month   day dep_time sched_dep_time dep_delay arr_time
    &lt;int&gt; &lt;int&gt; &lt;int&gt;    &lt;int&gt;          &lt;int&gt;     &lt;dbl&gt;    &lt;int&gt;
@@ -842,7 +841,7 @@ L’utilisation du <em>pipe</em> n’est pas obligatoire, mais elle rend les scr
 #   vitesse &lt;dbl&gt;</code></pre>
 <p>Par défaut ceci ne fait rien de visible, à part l’apparition d’une mention <code>Groups</code> dans l’affichage du résultat. Mais à partir du moment où des groupes ont été définis, les verbes comme <code>slice</code>, <code>mutate</code> ou <code>summarise</code> vont en tenir compte lors de leurs opérations.</p>
 <p>Par exemple, si on applique <code>slice</code> à un tableau préalablement groupé, il va sélectionner les lignes aux positions indiquées <em>pour chaque groupe</em>. Ainsi la commande suivante affiche le premier vol de chaque mois, selon leur ordre d’apparition dans le tableau :</p>
-<pre class="sourceCode r"><code class="sourceCode r">flights <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">group_by</span>(month) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">slice</span>(<span class="dv">1</span>)</code></pre>
+<div class="sourceCode" id="cb546"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb546-1" data-line-number="1">flights <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">group_by</span>(month) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">slice</span>(<span class="dv">1</span>)</a></code></pre></div>
 <pre><code># A tibble: 12 x 22
     year month   day dep_time sched_dep_time dep_delay arr_time
    &lt;int&gt; &lt;int&gt; &lt;int&gt;    &lt;int&gt;          &lt;int&gt;     &lt;dbl&gt;    &lt;int&gt;
@@ -863,10 +862,10 @@ L’utilisation du <em>pipe</em> n’est pas obligatoire, mais elle rend les scr
 #   air_time &lt;dbl&gt;, distance &lt;dbl&gt;, hour &lt;dbl&gt;, minute &lt;dbl&gt;,
 #   time_hour &lt;dttm&gt;, duree_h &lt;dbl&gt;, distance_km &lt;dbl&gt;, vitesse &lt;dbl&gt;</code></pre>
 <p>Idem pour <code>mutate</code> : les opérations appliquées lors du calcul des valeurs des nouvelles colonnes sont appliquées groupe de lignes par groupe de lignes. Dans l’exemple suivant, on ajoute une nouvelle colonne qui contient le retard moyen <em>pour chaque compagnie aérienne</em>. Cette valeur est donc différente d’une compagnie à une autre, mais identique pour tous les vols d’une même compagnie :</p>
-<pre class="sourceCode r"><code class="sourceCode r">flights <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">group_by</span>(carrier) <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">mean_delay_carrier =</span> <span class="kw">mean</span>(dep_delay, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>)) <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">select</span>(dep_delay, month, mean_delay_carrier)</code></pre>
+<div class="sourceCode" id="cb548"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb548-1" data-line-number="1">flights <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb548-2" data-line-number="2"><span class="st">  </span><span class="kw">group_by</span>(carrier) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb548-3" data-line-number="3"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">mean_delay_carrier =</span> <span class="kw">mean</span>(dep_delay, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>)) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb548-4" data-line-number="4"><span class="st">  </span><span class="kw">select</span>(dep_delay, month, mean_delay_carrier)</a></code></pre></div>
 <pre><code>Adding missing grouping variables: `carrier`</code></pre>
 <pre><code># A tibble: 336,776 x 4
    carrier dep_delay month mean_delay_carrier
@@ -883,12 +882,12 @@ L’utilisation du <em>pipe</em> n’est pas obligatoire, mais elle rend les scr
 10 AA             -2     1               8.59
 # … with 336,766 more rows</code></pre>
 <p>Ceci peut permettre, par exemple, de déterminer si un retard donné est supérieur ou inférieur au retard médian de la compagnie :</p>
-<pre class="sourceCode r"><code class="sourceCode r">flights <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">group_by</span>(carrier) <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">median_delay =</span> <span class="kw">median</span>(dep_delay, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>),
-         <span class="dt">delay_carrier =</span> <span class="kw">if_else</span>(dep_delay <span class="op">&gt;</span><span class="st"> </span>median_delay,
-                                  <span class="st">&quot;Supérieur&quot;</span>, <span class="st">&quot;Inférieur ou égal&quot;</span>)) <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">select</span>(dep_delay, month, median_delay, delay_carrier)</code></pre>
+<div class="sourceCode" id="cb551"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb551-1" data-line-number="1">flights <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb551-2" data-line-number="2"><span class="st">  </span><span class="kw">group_by</span>(carrier) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb551-3" data-line-number="3"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">median_delay =</span> <span class="kw">median</span>(dep_delay, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>),</a>
+<a class="sourceLine" id="cb551-4" data-line-number="4">         <span class="dt">delay_carrier =</span> <span class="kw">if_else</span>(dep_delay <span class="op">&gt;</span><span class="st"> </span>median_delay,</a>
+<a class="sourceLine" id="cb551-5" data-line-number="5">                                  <span class="st">&quot;Supérieur&quot;</span>, <span class="st">&quot;Inférieur ou égal&quot;</span>)) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb551-6" data-line-number="6"><span class="st">  </span><span class="kw">select</span>(dep_delay, month, median_delay, delay_carrier)</a></code></pre></div>
 <pre><code>Adding missing grouping variables: `carrier`</code></pre>
 <pre><code># A tibble: 336,776 x 5
    carrier dep_delay month median_delay delay_carrier    
@@ -905,9 +904,9 @@ L’utilisation du <em>pipe</em> n’est pas obligatoire, mais elle rend les scr
 10 AA             -2     1           -3 Supérieur        
 # … with 336,766 more rows</code></pre>
 <p><code>group_by</code> peut aussi être utile avec <code>filter</code>, par exemple pour sélectionner les vols avec le retard au départ le plus important <em>pour chaque mois</em> :</p>
-<pre class="sourceCode r"><code class="sourceCode r">flights <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">group_by</span>(month) <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">filter</span>(dep_delay <span class="op">==</span><span class="st"> </span><span class="kw">max</span>(dep_delay, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>))</code></pre>
+<div class="sourceCode" id="cb554"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb554-1" data-line-number="1">flights <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb554-2" data-line-number="2"><span class="st">  </span><span class="kw">group_by</span>(month) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb554-3" data-line-number="3"><span class="st">  </span><span class="kw">filter</span>(dep_delay <span class="op">==</span><span class="st"> </span><span class="kw">max</span>(dep_delay, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>))</a></code></pre></div>
 <pre><code># A tibble: 12 x 22
     year month   day dep_time sched_dep_time dep_delay arr_time
    &lt;int&gt; &lt;int&gt; &lt;int&gt;    &lt;int&gt;          &lt;int&gt;     &lt;dbl&gt;    &lt;int&gt;
@@ -933,9 +932,9 @@ L’utilisation du <em>pipe</em> n’est pas obligatoire, mais elle rend les scr
 </p>
 </div>
 <p>On peut voir la différence en comparant les deux résultats suivants :</p>
-<pre class="sourceCode r"><code class="sourceCode r">flights <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">group_by</span>(month) <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">arrange</span>(<span class="kw">desc</span>(dep_delay))</code></pre>
+<div class="sourceCode" id="cb556"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb556-1" data-line-number="1">flights <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb556-2" data-line-number="2"><span class="st">  </span><span class="kw">group_by</span>(month) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb556-3" data-line-number="3"><span class="st">  </span><span class="kw">arrange</span>(<span class="kw">desc</span>(dep_delay))</a></code></pre></div>
 <pre><code># A tibble: 336,776 x 22
     year month   day dep_time sched_dep_time dep_delay arr_time
    &lt;int&gt; &lt;int&gt; &lt;int&gt;    &lt;int&gt;          &lt;int&gt;     &lt;dbl&gt;    &lt;int&gt;
@@ -954,9 +953,9 @@ L’utilisation du <em>pipe</em> n’est pas obligatoire, mais elle rend les scr
 #   origin &lt;chr&gt;, dest &lt;chr&gt;, air_time &lt;dbl&gt;, distance &lt;dbl&gt;, hour &lt;dbl&gt;,
 #   minute &lt;dbl&gt;, time_hour &lt;dttm&gt;, duree_h &lt;dbl&gt;, distance_km &lt;dbl&gt;,
 #   vitesse &lt;dbl&gt;</code></pre>
-<pre class="sourceCode r"><code class="sourceCode r">flights <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">group_by</span>(month) <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">arrange</span>(<span class="kw">desc</span>(dep_delay), <span class="dt">.by_group =</span> <span class="ot">TRUE</span>)</code></pre>
+<div class="sourceCode" id="cb558"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb558-1" data-line-number="1">flights <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb558-2" data-line-number="2"><span class="st">  </span><span class="kw">group_by</span>(month) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb558-3" data-line-number="3"><span class="st">  </span><span class="kw">arrange</span>(<span class="kw">desc</span>(dep_delay), <span class="dt">.by_group =</span> <span class="ot">TRUE</span>)</a></code></pre></div>
 <pre><code># A tibble: 336,776 x 22
     year month   day dep_time sched_dep_time dep_delay arr_time
    &lt;int&gt; &lt;int&gt; &lt;int&gt;    &lt;int&gt;          &lt;int&gt;     &lt;dbl&gt;    &lt;int&gt;
@@ -979,19 +978,19 @@ L’utilisation du <em>pipe</em> n’est pas obligatoire, mais elle rend les scr
 <div id="summarise-et-count" class="section level3">
 <h3><span class="header-section-number">10.4.2</span> <code>summarise</code> et <code>count</code></h3>
 <p><code>summarise</code> permet d’agréger les lignes du tableau en effectuant une opération “résumée” sur une ou plusieurs colonnes. Par exemple, si on souhaite connaître les retards moyens au départ et à l’arrivée pour l’ensemble des vols du tableau <code>flights</code> :</p>
-<pre class="sourceCode r"><code class="sourceCode r">flights <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">summarise</span>(<span class="dt">retard_dep =</span> <span class="kw">mean</span>(dep_delay, <span class="dt">na.rm=</span><span class="ot">TRUE</span>),
-            <span class="dt">retard_arr =</span> <span class="kw">mean</span>(arr_delay, <span class="dt">na.rm=</span><span class="ot">TRUE</span>))</code></pre>
+<div class="sourceCode" id="cb560"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb560-1" data-line-number="1">flights <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb560-2" data-line-number="2"><span class="st">  </span><span class="kw">summarise</span>(<span class="dt">retard_dep =</span> <span class="kw">mean</span>(dep_delay, <span class="dt">na.rm=</span><span class="ot">TRUE</span>),</a>
+<a class="sourceLine" id="cb560-3" data-line-number="3">            <span class="dt">retard_arr =</span> <span class="kw">mean</span>(arr_delay, <span class="dt">na.rm=</span><span class="ot">TRUE</span>))</a></code></pre></div>
 <pre><code># A tibble: 1 x 2
   retard_dep retard_arr
        &lt;dbl&gt;      &lt;dbl&gt;
 1       12.6       6.90</code></pre>
 <p>Cette fonction est en général utilisée avec <code>group_by</code>, puisqu’elle permet du coup d’agréger et résumer les lignes du tableau groupe par groupe. Si on souhaite calculer le délai maximum, le délai minimum et le délai moyen au départ pour chaque mois, on pourra faire :</p>
-<pre class="sourceCode r"><code class="sourceCode r">flights <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">group_by</span>(month) <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">summarise</span>(<span class="dt">max_delay =</span> <span class="kw">max</span>(dep_delay, <span class="dt">na.rm=</span><span class="ot">TRUE</span>),
-            <span class="dt">min_delay =</span> <span class="kw">min</span>(dep_delay, <span class="dt">na.rm=</span><span class="ot">TRUE</span>),
-            <span class="dt">mean_delay =</span> <span class="kw">mean</span>(dep_delay, <span class="dt">na.rm=</span><span class="ot">TRUE</span>))</code></pre>
+<div class="sourceCode" id="cb562"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb562-1" data-line-number="1">flights <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb562-2" data-line-number="2"><span class="st">  </span><span class="kw">group_by</span>(month) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb562-3" data-line-number="3"><span class="st">  </span><span class="kw">summarise</span>(<span class="dt">max_delay =</span> <span class="kw">max</span>(dep_delay, <span class="dt">na.rm=</span><span class="ot">TRUE</span>),</a>
+<a class="sourceLine" id="cb562-4" data-line-number="4">            <span class="dt">min_delay =</span> <span class="kw">min</span>(dep_delay, <span class="dt">na.rm=</span><span class="ot">TRUE</span>),</a>
+<a class="sourceLine" id="cb562-5" data-line-number="5">            <span class="dt">mean_delay =</span> <span class="kw">mean</span>(dep_delay, <span class="dt">na.rm=</span><span class="ot">TRUE</span>))</a></code></pre></div>
 <pre><code># A tibble: 12 x 4
    month max_delay min_delay mean_delay
    &lt;int&gt;     &lt;dbl&gt;     &lt;dbl&gt;      &lt;dbl&gt;
@@ -1008,9 +1007,9 @@ L’utilisation du <em>pipe</em> n’est pas obligatoire, mais elle rend les scr
 11    11       798       -32       5.44
 12    12       896       -43      16.6 </code></pre>
 <p><code>summarise</code> dispose d’un opérateur spécial, <code>n()</code>, qui retourne le nombre de lignes du groupe. Ainsi si on veut le nombre de vols par destination, on peut utiliser :</p>
-<pre class="sourceCode r"><code class="sourceCode r">flights <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">group_by</span>(dest) <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">summarise</span>(<span class="dt">nb =</span> <span class="kw">n</span>())</code></pre>
+<div class="sourceCode" id="cb564"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb564-1" data-line-number="1">flights <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb564-2" data-line-number="2"><span class="st">  </span><span class="kw">group_by</span>(dest) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb564-3" data-line-number="3"><span class="st">  </span><span class="kw">summarise</span>(<span class="dt">nb =</span> <span class="kw">n</span>())</a></code></pre></div>
 <pre><code># A tibble: 105 x 2
    dest     nb
    &lt;chr&gt; &lt;int&gt;
@@ -1027,8 +1026,8 @@ L’utilisation du <em>pipe</em> n’est pas obligatoire, mais elle rend les scr
 # … with 95 more rows</code></pre>
 <p><code>n()</code> peut aussi être utilisée avec <code>filter</code> et <code>mutate</code>.</p>
 <p>À noter que quand on veut compter le nombre de lignes par groupe, on peut utiliser directement la fonction <code>count</code>. Ainsi le code suivant est identique au précédent :</p>
-<pre class="sourceCode r"><code class="sourceCode r">flights <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">count</span>(dest)</code></pre>
+<div class="sourceCode" id="cb566"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb566-1" data-line-number="1">flights <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb566-2" data-line-number="2"><span class="st">  </span><span class="kw">count</span>(dest)</a></code></pre></div>
 <pre><code># A tibble: 105 x 2
    dest      n
    &lt;chr&gt; &lt;int&gt;
@@ -1045,22 +1044,22 @@ L’utilisation du <em>pipe</em> n’est pas obligatoire, mais elle rend les scr
 # … with 95 more rows</code></pre>
 <p>Depuis la version 0.8 de <code>dplyr</code>, lorsque la variable de groupage est un facteur et que certaines valeurs du facteur ne sont pas présentes dans le tableau, l’argument <code>.drop = FALSE</code> de <code>group_by</code> permet de conserver ces niveaux dans le résultat d’une opération groupée.</p>
 <p>Par exemple, si on transforme la variable <code>origin</code> en facteur pour conserver la liste de ses modalités, et on ne garde que les vols à destination de San Francisco (code <code>SFO</code>) :</p>
-<pre class="sourceCode r"><code class="sourceCode r">ff &lt;-<span class="st"> </span>flights <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">origin =</span> <span class="kw">factor</span>(origin)) <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">filter</span>(dest <span class="op">==</span><span class="st"> &quot;SFO&quot;</span>)</code></pre>
+<div class="sourceCode" id="cb568"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb568-1" data-line-number="1">ff &lt;-<span class="st"> </span>flights <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb568-2" data-line-number="2"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">origin =</span> <span class="kw">factor</span>(origin)) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb568-3" data-line-number="3"><span class="st">  </span><span class="kw">filter</span>(dest <span class="op">==</span><span class="st"> &quot;SFO&quot;</span>)</a></code></pre></div>
 <p>Par défaut, si on compte le nombre de vols selon l’aéroport de départ, La Guardia n’apparaît pas car il ne compte aucun vol :</p>
-<pre class="sourceCode r"><code class="sourceCode r">ff <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">group_by</span>(origin) <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">summarise</span>(<span class="dt">n =</span> <span class="kw">n</span>())</code></pre>
+<div class="sourceCode" id="cb569"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb569-1" data-line-number="1">ff <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb569-2" data-line-number="2"><span class="st">  </span><span class="kw">group_by</span>(origin) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb569-3" data-line-number="3"><span class="st">  </span><span class="kw">summarise</span>(<span class="dt">n =</span> <span class="kw">n</span>())</a></code></pre></div>
 <pre><code># A tibble: 2 x 2
   origin     n
   &lt;fct&gt;  &lt;int&gt;
 1 EWR     5127
 2 JFK     8204</code></pre>
 <p>Si on souhaite faire apparaître cette information dans la sortie du <code>summarise</code>, on peut ajouter l’argument <code>.drop = FALSE</code> au <code>group_by</code> :</p>
-<pre class="sourceCode r"><code class="sourceCode r">ff <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">group_by</span>(origin, <span class="dt">.drop =</span> <span class="ot">FALSE</span>) <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">summarise</span>(<span class="dt">n =</span> <span class="kw">n</span>())</code></pre>
+<div class="sourceCode" id="cb571"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb571-1" data-line-number="1">ff <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb571-2" data-line-number="2"><span class="st">  </span><span class="kw">group_by</span>(origin, <span class="dt">.drop =</span> <span class="ot">FALSE</span>) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb571-3" data-line-number="3"><span class="st">  </span><span class="kw">summarise</span>(<span class="dt">n =</span> <span class="kw">n</span>())</a></code></pre></div>
 <pre><code># A tibble: 3 x 2
   origin     n
   &lt;fct&gt;  &lt;int&gt;
@@ -1068,8 +1067,8 @@ L’utilisation du <em>pipe</em> n’est pas obligatoire, mais elle rend les scr
 2 JFK     8204
 3 LGA        0</code></pre>
 <p>Cet argument fonctionne aussi avec <code>count</code> :</p>
-<pre class="sourceCode r"><code class="sourceCode r">ff <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">count</span>(origin, <span class="dt">.drop =</span> <span class="ot">FALSE</span>)</code></pre>
+<div class="sourceCode" id="cb573"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb573-1" data-line-number="1">ff <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb573-2" data-line-number="2"><span class="st">  </span><span class="kw">count</span>(origin, <span class="dt">.drop =</span> <span class="ot">FALSE</span>)</a></code></pre></div>
 <pre><code># A tibble: 3 x 2
   origin     n
   &lt;fct&gt;  &lt;int&gt;
@@ -1080,10 +1079,10 @@ L’utilisation du <em>pipe</em> n’est pas obligatoire, mais elle rend les scr
 <div id="grouper-selon-plusieurs-variables" class="section level3">
 <h3><span class="header-section-number">10.4.3</span> Grouper selon plusieurs variables</h3>
 <p>On peut grouper selon plusieurs variables à la fois, il suffit de les indiquer dans la clause du <code>group_by</code>. Le <em>pipeline</em> suivant le nombre de vols pour chaque mois et pour chaque destination, et trie le résultat par nombre de vols décroissant :</p>
-<pre class="sourceCode r"><code class="sourceCode r">flights <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">group_by</span>(month, dest) <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">summarise</span>(<span class="dt">nb =</span> <span class="kw">n</span>()) <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">arrange</span>(<span class="kw">desc</span>(nb))</code></pre>
+<div class="sourceCode" id="cb575"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb575-1" data-line-number="1">flights <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb575-2" data-line-number="2"><span class="st">  </span><span class="kw">group_by</span>(month, dest) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb575-3" data-line-number="3"><span class="st">  </span><span class="kw">summarise</span>(<span class="dt">nb =</span> <span class="kw">n</span>()) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb575-4" data-line-number="4"><span class="st">  </span><span class="kw">arrange</span>(<span class="kw">desc</span>(nb))</a></code></pre></div>
 <pre><code># A tibble: 1,113 x 3
    month dest     nb
    &lt;int&gt; &lt;chr&gt; &lt;int&gt;
@@ -1099,9 +1098,9 @@ L’utilisation du <em>pipe</em> n’est pas obligatoire, mais elle rend les scr
 10     7 LAX    1500
 # … with 1,103 more rows</code></pre>
 <p>On peut également utiliser <code>count</code> sur plusieurs variables. Les commandes suivantes comptent le nombre de vols pour chaque couple aéroport de départ / aéroport d’arrivée, et trie le résultat par nombre de vols décroissant :</p>
-<pre class="sourceCode r"><code class="sourceCode r">flights <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">count</span>(origin, dest) <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">arrange</span>(<span class="kw">desc</span>(n))</code></pre>
+<div class="sourceCode" id="cb577"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb577-1" data-line-number="1">flights <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb577-2" data-line-number="2"><span class="st">  </span><span class="kw">count</span>(origin, dest) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb577-3" data-line-number="3"><span class="st">  </span><span class="kw">arrange</span>(<span class="kw">desc</span>(n))</a></code></pre></div>
 <pre><code># A tibble: 224 x 3
    origin dest      n
    &lt;chr&gt;  &lt;chr&gt; &lt;int&gt;
@@ -1122,11 +1121,11 @@ L’utilisation du <em>pipe</em> n’est pas obligatoire, mais elle rend les scr
 <li>puis grouper uniquement selon le mois pour sélectionner la ligne avec la valeur maximale.</li>
 </ul>
 <p>Au final, on obtient le code suivant :</p>
-<pre class="sourceCode r"><code class="sourceCode r">flights <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">group_by</span>(month, carrier, origin, dest) <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">summarise</span>(<span class="dt">nb =</span> <span class="kw">n</span>()) <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">group_by</span>(month) <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">filter</span>(nb <span class="op">==</span><span class="st"> </span><span class="kw">max</span>(nb))</code></pre>
+<div class="sourceCode" id="cb579"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb579-1" data-line-number="1">flights <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb579-2" data-line-number="2"><span class="st">  </span><span class="kw">group_by</span>(month, carrier, origin, dest) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb579-3" data-line-number="3"><span class="st">  </span><span class="kw">summarise</span>(<span class="dt">nb =</span> <span class="kw">n</span>()) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb579-4" data-line-number="4"><span class="st">  </span><span class="kw">group_by</span>(month) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb579-5" data-line-number="5"><span class="st">  </span><span class="kw">filter</span>(nb <span class="op">==</span><span class="st"> </span><span class="kw">max</span>(nb))</a></code></pre></div>
 <pre><code># A tibble: 13 x 5
    month carrier origin dest     nb
    &lt;int&gt; &lt;chr&gt;   &lt;chr&gt;  &lt;chr&gt; &lt;int&gt;
@@ -1144,9 +1143,9 @@ L’utilisation du <em>pipe</em> n’est pas obligatoire, mais elle rend les scr
 12    11 DL      LGA    ATL     471
 13    12 DL      LGA    ATL     489</code></pre>
 <p>Lorsqu’on effectue un <code>group_by</code> suivi d’un <code>summarise</code>, le tableau résultat est automatiquement dégroupé <em>de la dernière variable de regroupement</em>. Ainsi le tableau généré par le code suivant est groupé par <code>month</code> et <code>origin</code> :</p>
-<pre class="sourceCode r"><code class="sourceCode r">flights <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">group_by</span>(month, origin, dest) <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">summarise</span>(<span class="dt">nb =</span> <span class="kw">n</span>())</code></pre>
+<div class="sourceCode" id="cb581"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb581-1" data-line-number="1">flights <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb581-2" data-line-number="2"><span class="st">  </span><span class="kw">group_by</span>(month, origin, dest) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb581-3" data-line-number="3"><span class="st">  </span><span class="kw">summarise</span>(<span class="dt">nb =</span> <span class="kw">n</span>())</a></code></pre></div>
 <pre><code># A tibble: 2,313 x 4
    month origin dest     nb
    &lt;int&gt; &lt;chr&gt;  &lt;chr&gt; &lt;int&gt;
@@ -1162,10 +1161,10 @@ L’utilisation du <em>pipe</em> n’est pas obligatoire, mais elle rend les scr
 10     1 EWR    BUF     119
 # … with 2,303 more rows</code></pre>
 <p>Cela peut permettre “d’enchaîner” les opérations groupées. Dans l’exemple suivant on calcule le pourcentage des trajets pour chaque destination par rapport à tous les trajets du mois :</p>
-<pre class="sourceCode r"><code class="sourceCode r">flights <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">group_by</span>(month, dest) <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">summarise</span>(<span class="dt">nb =</span> <span class="kw">n</span>()) <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">pourcentage =</span> nb <span class="op">/</span><span class="st"> </span><span class="kw">sum</span>(nb) <span class="op">*</span><span class="st"> </span><span class="dv">100</span>)</code></pre>
+<div class="sourceCode" id="cb583"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb583-1" data-line-number="1">flights <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb583-2" data-line-number="2"><span class="st">  </span><span class="kw">group_by</span>(month, dest) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb583-3" data-line-number="3"><span class="st">  </span><span class="kw">summarise</span>(<span class="dt">nb =</span> <span class="kw">n</span>()) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb583-4" data-line-number="4"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">pourcentage =</span> nb <span class="op">/</span><span class="st"> </span><span class="kw">sum</span>(nb) <span class="op">*</span><span class="st"> </span><span class="dv">100</span>)</a></code></pre></div>
 <pre><code># A tibble: 1,113 x 4
    month dest     nb pourcentage
    &lt;int&gt; &lt;chr&gt; &lt;int&gt;       &lt;dbl&gt;
@@ -1181,11 +1180,11 @@ L’utilisation du <em>pipe</em> n’est pas obligatoire, mais elle rend les scr
 10     1 BTV     223     0.826  
 # … with 1,103 more rows</code></pre>
 <p>On peut à tout moment “dégrouper” un tableau à l’aide de <code>ungroup</code>. Ce serait par exemple nécessaire, dans l’exemple précédent, si on voulait calculer le pourcentage sur le nombre total de vols plutôt que sur le nombre de vols par mois :</p>
-<pre class="sourceCode r"><code class="sourceCode r">flights <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">group_by</span>(month, dest) <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">summarise</span>(<span class="dt">nb =</span> <span class="kw">n</span>()) <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">ungroup</span>() <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">pourcentage =</span> nb <span class="op">/</span><span class="st"> </span><span class="kw">sum</span>(nb) <span class="op">*</span><span class="st"> </span><span class="dv">100</span>)</code></pre>
+<div class="sourceCode" id="cb585"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb585-1" data-line-number="1">flights <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb585-2" data-line-number="2"><span class="st">  </span><span class="kw">group_by</span>(month, dest) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb585-3" data-line-number="3"><span class="st">  </span><span class="kw">summarise</span>(<span class="dt">nb =</span> <span class="kw">n</span>()) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb585-4" data-line-number="4"><span class="st">  </span><span class="kw">ungroup</span>() <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb585-5" data-line-number="5"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">pourcentage =</span> nb <span class="op">/</span><span class="st"> </span><span class="kw">sum</span>(nb) <span class="op">*</span><span class="st"> </span><span class="dv">100</span>)</a></code></pre></div>
 <pre><code># A tibble: 1,113 x 4
    month dest     nb pourcentage
    &lt;int&gt; &lt;chr&gt; &lt;int&gt;       &lt;dbl&gt;
@@ -1201,8 +1200,8 @@ L’utilisation du <em>pipe</em> n’est pas obligatoire, mais elle rend les scr
 10     1 BTV     223    0.0662  
 # … with 1,103 more rows</code></pre>
 <p>À noter que <code>count</code>, par contre, renvoie un tableau non groupé :</p>
-<pre class="sourceCode r"><code class="sourceCode r">flights <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">count</span>(month, dest)</code></pre>
+<div class="sourceCode" id="cb587"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb587-1" data-line-number="1">flights <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb587-2" data-line-number="2"><span class="st">  </span><span class="kw">count</span>(month, dest)</a></code></pre></div>
 <pre><code># A tibble: 1,113 x 3
    month dest      n
    &lt;int&gt; &lt;chr&gt; &lt;int&gt;
@@ -1225,7 +1224,7 @@ L’utilisation du <em>pipe</em> n’est pas obligatoire, mais elle rend les scr
 <div id="sample_n-sample_frac" class="section level3">
 <h3><span class="header-section-number">10.5.1</span> <code>sample_n</code>, <code>sample_frac</code></h3>
 <p>Ces verbes permettent de sélectionner un nombre de lignes ou une fraction des lignes d’un tableau aléatoirement. Ainsi si on veut choisir 5 lignes au hasard dans le tableau <code>airports</code> :</p>
-<pre class="sourceCode r"><code class="sourceCode r">airports <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">sample_n</span>(<span class="dv">5</span>)</code></pre>
+<div class="sourceCode" id="cb589"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb589-1" data-line-number="1">airports <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">sample_n</span>(<span class="dv">5</span>)</a></code></pre></div>
 <pre><code># A tibble: 5 x 8
   faa   name                   lat    lon   alt    tz dst   tzone          
   &lt;chr&gt; &lt;chr&gt;                &lt;dbl&gt;  &lt;dbl&gt; &lt;int&gt; &lt;dbl&gt; &lt;chr&gt; &lt;chr&gt;          
@@ -1235,7 +1234,7 @@ L’utilisation du <em>pipe</em> n’est pas obligatoire, mais elle rend les scr
 4 EGA   Eagle County Airport  39.6 -107.   6548    -7 U     America/Denver 
 5 MCF   Macdill Afb           27.8  -82.5    14    -5 A     America/New_Yo…</code></pre>
 <p>Si on veut tirer au hasard 10% des lignes de <code>flights</code> :</p>
-<pre class="sourceCode r"><code class="sourceCode r">flights <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">sample_frac</span>(<span class="fl">0.1</span>)</code></pre>
+<div class="sourceCode" id="cb591"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb591-1" data-line-number="1">flights <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">sample_frac</span>(<span class="fl">0.1</span>)</a></code></pre></div>
 <pre><code># A tibble: 33,678 x 22
     year month   day dep_time sched_dep_time dep_delay arr_time
    &lt;int&gt; &lt;int&gt; &lt;int&gt;    &lt;int&gt;          &lt;int&gt;     &lt;dbl&gt;    &lt;int&gt;
@@ -1259,15 +1258,15 @@ L’utilisation du <em>pipe</em> n’est pas obligatoire, mais elle rend les scr
 <div id="lead-et-lag" class="section level3">
 <h3><span class="header-section-number">10.5.2</span> <code>lead</code> et <code>lag</code></h3>
 <p><code>lead</code> et <code>lag</code> permettent de décaler les observations d’une variable d’un cran vers l’arrière (pour <code>lead</code>) ou vers l’avant (pour <code>lag</code>).</p>
-<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">lead</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">5</span>)</code></pre>
+<div class="sourceCode" id="cb593"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb593-1" data-line-number="1"><span class="kw">lead</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">5</span>)</a></code></pre></div>
 <pre><code>[1]  2  3  4  5 NA</code></pre>
-<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">lag</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">5</span>)</code></pre>
+<div class="sourceCode" id="cb595"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb595-1" data-line-number="1"><span class="kw">lag</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">5</span>)</a></code></pre></div>
 <pre><code>[1] NA  1  2  3  4</code></pre>
 <p>Ceci peut être utile pour des données de type “séries temporelles”. Par exemple, on peut facilement calculer l’écart entre le retard au départ de chaque vol et celui du vol précédent :</p>
-<pre class="sourceCode r"><code class="sourceCode r">flights <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">dep_delay_prev =</span> <span class="kw">lag</span>(dep_delay),
-         <span class="dt">dep_delay_diff =</span> dep_delay <span class="op">-</span><span class="st"> </span>dep_delay_prev) <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">select</span>(dep_delay_prev, dep_delay, dep_delay_diff)</code></pre>
+<div class="sourceCode" id="cb597"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb597-1" data-line-number="1">flights <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb597-2" data-line-number="2"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">dep_delay_prev =</span> <span class="kw">lag</span>(dep_delay),</a>
+<a class="sourceLine" id="cb597-3" data-line-number="3">         <span class="dt">dep_delay_diff =</span> dep_delay <span class="op">-</span><span class="st"> </span>dep_delay_prev) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb597-4" data-line-number="4"><span class="st">  </span><span class="kw">select</span>(dep_delay_prev, dep_delay, dep_delay_diff)</a></code></pre></div>
 <pre><code># A tibble: 336,776 x 3
    dep_delay_prev dep_delay dep_delay_diff
             &lt;dbl&gt;     &lt;dbl&gt;          &lt;dbl&gt;
@@ -1286,9 +1285,9 @@ L’utilisation du <em>pipe</em> n’est pas obligatoire, mais elle rend les scr
 <div id="tally" class="section level3">
 <h3><span class="header-section-number">10.5.3</span> <code>tally</code></h3>
 <p><code>tally</code> est une fonction qui permet de compter le nombre d’observations d’un groupe :</p>
-<pre class="sourceCode r"><code class="sourceCode r">flights <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">group_by</span>(month, origin, dest) <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">  </span>tally</code></pre>
+<div class="sourceCode" id="cb599"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb599-1" data-line-number="1">flights <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb599-2" data-line-number="2"><span class="st">  </span><span class="kw">group_by</span>(month, origin, dest) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb599-3" data-line-number="3"><span class="st">  </span>tally</a></code></pre></div>
 <pre><code># A tibble: 2,313 x 4
    month origin dest      n
    &lt;int&gt; &lt;chr&gt;  &lt;chr&gt; &lt;int&gt;
@@ -1304,10 +1303,10 @@ L’utilisation du <em>pipe</em> n’est pas obligatoire, mais elle rend les scr
 10     1 EWR    BUF     119
 # … with 2,303 more rows</code></pre>
 <p>Lors de son premier appel, elle sera équivalente à un <code>summarise(n = n())</code> ou à un <code>count()</code>. Là où la fonction est intelligente, c’est que si on l’appelle plusieurs fois successivement, elle prendra en compte l’existence d’un <code>n</code> déjà calculé et effectuera automatiquement un <code>summarise(n = sum(n))</code> :</p>
-<pre class="sourceCode r"><code class="sourceCode r">flights <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">group_by</span>(month, origin, dest) <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">  </span>tally <span class="op">%&gt;%</span>
-<span class="st">  </span>tally</code></pre>
+<div class="sourceCode" id="cb601"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb601-1" data-line-number="1">flights <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb601-2" data-line-number="2"><span class="st">  </span><span class="kw">group_by</span>(month, origin, dest) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb601-3" data-line-number="3"><span class="st">  </span>tally <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb601-4" data-line-number="4"><span class="st">  </span>tally</a></code></pre></div>
 <pre><code>Using `n` as weighting variable</code></pre>
 <pre><code># A tibble: 36 x 3
    month origin     n
@@ -1324,11 +1323,11 @@ L’utilisation du <em>pipe</em> n’est pas obligatoire, mais elle rend les scr
 10     4 EWR    10531
 # … with 26 more rows</code></pre>
 <p>Et ainsi de suite :</p>
-<pre class="sourceCode r"><code class="sourceCode r">flights <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">group_by</span>(month, origin, dest) <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">  </span>tally <span class="op">%&gt;%</span>
-<span class="st">  </span>tally <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">  </span>tally</code></pre>
+<div class="sourceCode" id="cb604"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb604-1" data-line-number="1">flights <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb604-2" data-line-number="2"><span class="st">  </span><span class="kw">group_by</span>(month, origin, dest) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb604-3" data-line-number="3"><span class="st">  </span>tally <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb604-4" data-line-number="4"><span class="st">  </span>tally <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb604-5" data-line-number="5"><span class="st">  </span>tally</a></code></pre></div>
 <pre><code>Using `n` as weighting variable
 Using `n` as weighting variable</code></pre>
 <pre><code># A tibble: 12 x 2
@@ -1350,9 +1349,9 @@ Using `n` as weighting variable</code></pre>
 <div id="distinct" class="section level3">
 <h3><span class="header-section-number">10.5.4</span> <code>distinct</code></h3>
 <p><code>distinct</code> filtre les lignes du tableau pour ne conserver que les lignes distinctes, en supprimant toutes les lignes en double.</p>
-<pre class="sourceCode r"><code class="sourceCode r">flights <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">select</span>(day, month) <span class="op">%&gt;%</span>
-<span class="st">  </span>distinct</code></pre>
+<div class="sourceCode" id="cb607"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb607-1" data-line-number="1">flights <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb607-2" data-line-number="2"><span class="st">  </span><span class="kw">select</span>(day, month) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb607-3" data-line-number="3"><span class="st">  </span>distinct</a></code></pre></div>
 <pre><code># A tibble: 365 x 2
      day month
    &lt;int&gt; &lt;int&gt;
@@ -1368,8 +1367,8 @@ Using `n` as weighting variable</code></pre>
 10    10     1
 # … with 355 more rows</code></pre>
 <p>On peut lui spécifier une liste de variables : dans ce cas, pour toutes les observations ayant des valeurs identiques pour les variables en question, <code>distinct</code> ne conservera que la première d’entre elles.</p>
-<pre class="sourceCode r"><code class="sourceCode r">flights <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">distinct</span>(month, day)</code></pre>
+<div class="sourceCode" id="cb609"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb609-1" data-line-number="1">flights <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb609-2" data-line-number="2"><span class="st">  </span><span class="kw">distinct</span>(month, day)</a></code></pre></div>
 <pre><code># A tibble: 365 x 2
    month   day
    &lt;int&gt; &lt;int&gt;
@@ -1385,8 +1384,8 @@ Using `n` as weighting variable</code></pre>
 10     1    10
 # … with 355 more rows</code></pre>
 <p>L’option <code>.keep_all</code> permet, dans l’opération précédente, de conserver l’ensemble des colonnes du tableau :</p>
-<pre class="sourceCode r"><code class="sourceCode r">flights <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">distinct</span>(month, day, <span class="dt">.keep_all =</span> <span class="ot">TRUE</span>) </code></pre>
+<div class="sourceCode" id="cb611"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb611-1" data-line-number="1">flights <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb611-2" data-line-number="2"><span class="st">  </span><span class="kw">distinct</span>(month, day, <span class="dt">.keep_all =</span> <span class="ot">TRUE</span>) </a></code></pre></div>
 <pre><code># A tibble: 365 x 22
     year month   day dep_time sched_dep_time dep_delay arr_time
    &lt;int&gt; &lt;int&gt; &lt;int&gt;    &lt;int&gt;          &lt;int&gt;     &lt;dbl&gt;    &lt;int&gt;
@@ -1415,36 +1414,36 @@ Using `n` as weighting variable</code></pre>
 <h3><span class="header-section-number">10.6.1</span> Concaténation : <code>bind_rows</code> et <code>bind_cols</code></h3>
 <p>Les fonctions <code>bind_rows</code> et <code>bind_cols</code> permettent d’ajouter des lignes (respectivement des colonnes) à une table à partir d’une ou plusieurs autres tables.</p>
 <p>L’exemple suivant (certes très artificiel) montre l’utilisation de <code>bind_rows</code>. On commence par créer trois tableaux <code>t1</code>, <code>t2</code> et <code>t3</code> :</p>
-<pre class="sourceCode r"><code class="sourceCode r">t1 &lt;-<span class="st"> </span>airports <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">select</span>(faa, name, lat, lon) <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">slice</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">2</span>)
-t1</code></pre>
+<div class="sourceCode" id="cb613"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb613-1" data-line-number="1">t1 &lt;-<span class="st"> </span>airports <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb613-2" data-line-number="2"><span class="st">  </span><span class="kw">select</span>(faa, name, lat, lon) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb613-3" data-line-number="3"><span class="st">  </span><span class="kw">slice</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">2</span>)</a>
+<a class="sourceLine" id="cb613-4" data-line-number="4">t1</a></code></pre></div>
 <pre><code># A tibble: 2 x 4
   faa   name                            lat   lon
   &lt;chr&gt; &lt;chr&gt;                         &lt;dbl&gt; &lt;dbl&gt;
 1 04G   Lansdowne Airport              41.1 -80.6
 2 06A   Moton Field Municipal Airport  32.5 -85.7</code></pre>
-<pre class="sourceCode r"><code class="sourceCode r">t2 &lt;-<span class="st"> </span>airports <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">select</span>(faa, name, lat, lon) <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">slice</span>(<span class="dv">5</span><span class="op">:</span><span class="dv">6</span>)
-
-t2</code></pre>
+<div class="sourceCode" id="cb615"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb615-1" data-line-number="1">t2 &lt;-<span class="st"> </span>airports <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb615-2" data-line-number="2"><span class="st">  </span><span class="kw">select</span>(faa, name, lat, lon) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb615-3" data-line-number="3"><span class="st">  </span><span class="kw">slice</span>(<span class="dv">5</span><span class="op">:</span><span class="dv">6</span>)</a>
+<a class="sourceLine" id="cb615-4" data-line-number="4"></a>
+<a class="sourceLine" id="cb615-5" data-line-number="5">t2</a></code></pre></div>
 <pre><code># A tibble: 2 x 4
   faa   name                             lat   lon
   &lt;chr&gt; &lt;chr&gt;                          &lt;dbl&gt; &lt;dbl&gt;
 1 09J   Jekyll Island Airport           31.1 -81.4
 2 0A9   Elizabethton Municipal Airport  36.4 -82.2</code></pre>
-<pre class="sourceCode r"><code class="sourceCode r">t3 &lt;-<span class="st"> </span>airports <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">select</span>(faa, name) <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">slice</span>(<span class="dv">100</span><span class="op">:</span><span class="dv">101</span>)
-t3</code></pre>
+<div class="sourceCode" id="cb617"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb617-1" data-line-number="1">t3 &lt;-<span class="st"> </span>airports <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb617-2" data-line-number="2"><span class="st">  </span><span class="kw">select</span>(faa, name) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb617-3" data-line-number="3"><span class="st">  </span><span class="kw">slice</span>(<span class="dv">100</span><span class="op">:</span><span class="dv">101</span>)</a>
+<a class="sourceLine" id="cb617-4" data-line-number="4">t3</a></code></pre></div>
 <pre><code># A tibble: 2 x 2
   faa   name             
   &lt;chr&gt; &lt;chr&gt;            
 1 ADW   Andrews Afb      
 2 AET   Allakaket Airport</code></pre>
 <p>On concaténe ensuite les trois tables avec <code>bind_rows</code> :</p>
-<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">bind_rows</span>(t1, t2, t3)</code></pre>
+<div class="sourceCode" id="cb619"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb619-1" data-line-number="1"><span class="kw">bind_rows</span>(t1, t2, t3)</a></code></pre></div>
 <pre><code># A tibble: 6 x 4
   faa   name                             lat   lon
   &lt;chr&gt; &lt;chr&gt;                          &lt;dbl&gt; &lt;dbl&gt;
@@ -1456,7 +1455,7 @@ t3</code></pre>
 6 AET   Allakaket Airport               NA    NA  </code></pre>
 <p>On remarquera que si des colonnes sont manquantes pour certaines tables, comme les colonnes <code>lat</code> et <code>lon</code> de <code>t3</code>, des <code>NA</code> sont automatiquement insérées.</p>
 <p>Il peut être utile, quand on concatène des lignes, de garder une trace du tableau d’origine de chacune des lignes dans le tableau final. C’est possible grâce à l’argument <code>.id</code> de <code>bind_rows</code>. On passe à cet argument le nom d’une colonne qui contiendra l’indicateur d’origine des lignes :</p>
-<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">bind_rows</span>(t1, t2, t3, <span class="dt">.id =</span> <span class="st">&quot;source&quot;</span>)</code></pre>
+<div class="sourceCode" id="cb621"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb621-1" data-line-number="1"><span class="kw">bind_rows</span>(t1, t2, t3, <span class="dt">.id =</span> <span class="st">&quot;source&quot;</span>)</a></code></pre></div>
 <pre><code># A tibble: 6 x 5
   source faa   name                             lat   lon
   &lt;chr&gt;  &lt;chr&gt; &lt;chr&gt;                          &lt;dbl&gt; &lt;dbl&gt;
@@ -1467,7 +1466,7 @@ t3</code></pre>
 5 3      ADW   Andrews Afb                     NA    NA  
 6 3      AET   Allakaket Airport               NA    NA  </code></pre>
 <p>Par défaut la colonne <code>.id</code> ne contient qu’un nombre, différent pour chaque tableau. On peut lui spécifier des valeurs plus explicites en “nommant” les tables dans <code>bind_rows</code> de la manière suivante :</p>
-<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">bind_rows</span>(<span class="dt">table1 =</span> t1, <span class="dt">table2 =</span> t2, <span class="dt">table3 =</span> t3, <span class="dt">.id =</span> <span class="st">&quot;source&quot;</span>)</code></pre>
+<div class="sourceCode" id="cb623"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb623-1" data-line-number="1"><span class="kw">bind_rows</span>(<span class="dt">table1 =</span> t1, <span class="dt">table2 =</span> t2, <span class="dt">table3 =</span> t3, <span class="dt">.id =</span> <span class="st">&quot;source&quot;</span>)</a></code></pre></div>
 <pre><code># A tibble: 6 x 5
   source faa   name                             lat   lon
   &lt;chr&gt;  &lt;chr&gt; &lt;chr&gt;                          &lt;dbl&gt; &lt;dbl&gt;
@@ -1478,10 +1477,10 @@ t3</code></pre>
 5 table3 ADW   Andrews Afb                     NA    NA  
 6 table3 AET   Allakaket Airport               NA    NA  </code></pre>
 <p><code>bind_cols</code> permet de concaténer des colonnes et fonctionne de manière similaire :</p>
-<pre class="sourceCode r"><code class="sourceCode r">t1 &lt;-<span class="st"> </span>flights <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">slice</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">5</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(dep_delay, dep_time)
-t2 &lt;-<span class="st"> </span>flights <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">slice</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">5</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(origin, dest)
-t3 &lt;-<span class="st"> </span>flights <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">slice</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">5</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(arr_delay, arr_time)
-<span class="kw">bind_cols</span>(t1, t2, t3)</code></pre>
+<div class="sourceCode" id="cb625"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb625-1" data-line-number="1">t1 &lt;-<span class="st"> </span>flights <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">slice</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">5</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(dep_delay, dep_time)</a>
+<a class="sourceLine" id="cb625-2" data-line-number="2">t2 &lt;-<span class="st"> </span>flights <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">slice</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">5</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(origin, dest)</a>
+<a class="sourceLine" id="cb625-3" data-line-number="3">t3 &lt;-<span class="st"> </span>flights <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">slice</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">5</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(arr_delay, arr_time)</a>
+<a class="sourceLine" id="cb625-4" data-line-number="4"><span class="kw">bind_cols</span>(t1, t2, t3)</a></code></pre></div>
 <pre><code># A tibble: 5 x 6
   dep_delay dep_time origin dest  arr_delay arr_time
       &lt;dbl&gt;    &lt;int&gt; &lt;chr&gt;  &lt;chr&gt;     &lt;dbl&gt;    &lt;int&gt;
@@ -1497,7 +1496,7 @@ t3 &lt;-<span class="st"> </span>flights <span class="op">%&gt;%</span><span cla
 <div id="cles-implicites" class="section level4">
 <h4><span class="header-section-number">10.6.2.1</span> Clés implicites</h4>
 <p>Très souvent, les données relatives à une analyse sont réparties dans plusieurs tables différentes. Dans notre exemple, on peut voir que la table <code>flights</code> contient seulement le code de la compagnie aérienne du vol dans la variable <code>carrier</code> :</p>
-<pre class="sourceCode r"><code class="sourceCode r">flights <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(carrier)</code></pre>
+<div class="sourceCode" id="cb627"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb627-1" data-line-number="1">flights <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(carrier)</a></code></pre></div>
 <pre><code># A tibble: 336,776 x 1
    carrier
    &lt;chr&gt;  
@@ -1513,7 +1512,7 @@ t3 &lt;-<span class="st"> </span>flights <span class="op">%&gt;%</span><span cla
 10 AA     
 # … with 336,766 more rows</code></pre>
 <p>Et que par ailleurs la table <code>airlines</code> contient une information supplémentaire relative à ces compagnies, à savoir le nom complet.</p>
-<pre class="sourceCode r"><code class="sourceCode r">airlines</code></pre>
+<div class="sourceCode" id="cb629"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb629-1" data-line-number="1">airlines</a></code></pre></div>
 <pre><code># A tibble: 16 x 2
    carrier name                       
    &lt;chr&gt;   &lt;chr&gt;                      
@@ -1535,10 +1534,10 @@ t3 &lt;-<span class="st"> </span>flights <span class="op">%&gt;%</span><span cla
 16 YV      Mesa Airlines Inc.         </code></pre>
 <p>Il est donc naturel de vouloir associer les deux, en l’occurrence pour ajouter les noms complets des compagnies à la table <code>flights</code>. Dans ce cas on va faire une <em>jointure</em> : les lignes d’une table seront associées à une autre en se basant non pas sur leur position, mais sur les valeurs d’une ou plusieurs colonnes. Ces colonnes sont appelées des <em>clés</em>.</p>
 <p>Pour faire une jointure de ce type, on va utiliser la fonction <code>left_join</code> :</p>
-<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">left_join</span>(flights, airlines)</code></pre>
+<div class="sourceCode" id="cb631"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb631-1" data-line-number="1"><span class="kw">left_join</span>(flights, airlines)</a></code></pre></div>
 <p>Pour faciliter la lecture, on va afficher seulement certaines colonnes du résultat :</p>
-<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">left_join</span>(flights, airlines) <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">select</span>(month, day, carrier, name)</code></pre>
+<div class="sourceCode" id="cb632"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb632-1" data-line-number="1"><span class="kw">left_join</span>(flights, airlines) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb632-2" data-line-number="2"><span class="st">  </span><span class="kw">select</span>(month, day, carrier, name)</a></code></pre></div>
 <pre><code>Joining, by = &quot;carrier&quot;</code></pre>
 <pre><code># A tibble: 336,776 x 4
    month   day carrier name                    
@@ -1570,13 +1569,13 @@ t3 &lt;-<span class="st"> </span>flights <span class="op">%&gt;%</span><span cla
 <p>La table <code>airports</code>, elle, contient des informations supplémentaires sur les aéroports : nom complet, altitude, position géographique, etc. Chaque aéroport est identifié par un code contenu dans la colonne <code>faa</code>.</p>
 <p>Si on regarde la table <code>flights</code>, on voit que le code d’identification des aéroports apparaît à deux endroits différents : pour l’aéroport de départ dans la colonne <code>origin</code>, et pour celui d’arrivée dans la colonne <code>dest</code>. On a donc deux clés de jointure possibles, et qui portent un nom différent de la clé de <code>airports</code>.</p>
 <p>On va commencer par fusionner les données concernant l’aéroport de départ. Pour simplifier l’affichage des résultats, on va se contenter d’un sous-ensemble des deux tables :</p>
-<pre class="sourceCode r"><code class="sourceCode r">flights_ex &lt;-<span class="st"> </span>flights <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(month, day, origin, dest)
-airports_ex &lt;-<span class="st"> </span>airports <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(faa, alt, name)</code></pre>
+<div class="sourceCode" id="cb635"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb635-1" data-line-number="1">flights_ex &lt;-<span class="st"> </span>flights <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(month, day, origin, dest)</a>
+<a class="sourceLine" id="cb635-2" data-line-number="2">airports_ex &lt;-<span class="st"> </span>airports <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(faa, alt, name)</a></code></pre></div>
 <p>Si on se contente d’un <code>left_join</code> comme à l’étape précédente, on obtient un message d’erreur car aucune colonne commune ne peut être identifiée comme clé de jointure :</p>
-<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">left_join</span>(flights_ex, airports_ex)</code></pre>
+<div class="sourceCode" id="cb636"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb636-1" data-line-number="1"><span class="kw">left_join</span>(flights_ex, airports_ex)</a></code></pre></div>
 <pre><code>`by` required, because the data sources have no common variables</code></pre>
 <p>On doit donc spécifier explicitement les clés avec l’argument <code>by</code> de <code>left_join</code>. Ici la clé est nommée <code>origin</code> dans la première table, et <code>faa</code> dans la seconde. La syntaxe est donc la suivante :</p>
-<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">left_join</span>(flights_ex, airports_ex, <span class="dt">by =</span> <span class="kw">c</span>(<span class="st">&quot;origin&quot;</span> =<span class="st"> &quot;faa&quot;</span>))</code></pre>
+<div class="sourceCode" id="cb638"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb638-1" data-line-number="1"><span class="kw">left_join</span>(flights_ex, airports_ex, <span class="dt">by =</span> <span class="kw">c</span>(<span class="st">&quot;origin&quot;</span> =<span class="st"> &quot;faa&quot;</span>))</a></code></pre></div>
 <pre><code># A tibble: 336,776 x 6
    month   day origin dest    alt name               
    &lt;int&gt; &lt;int&gt; &lt;chr&gt;  &lt;chr&gt; &lt;int&gt; &lt;chr&gt;              
@@ -1593,10 +1592,10 @@ airports_ex &lt;-<span class="st"> </span>airports <span class="op">%&gt;%</span
 # … with 336,766 more rows</code></pre>
 <p>On constate que les deux nouvelles colonnes <code>name</code> et <code>alt</code> contiennent bien les données correspondant à l’aéroport de départ.</p>
 <p>On va stocker le résultat de cette jointure dans la table <code>flights_ex</code> :</p>
-<pre class="sourceCode r"><code class="sourceCode r">flights_ex &lt;-<span class="st"> </span>flights_ex <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">left_join</span>(airports_ex, <span class="dt">by =</span> <span class="kw">c</span>(<span class="st">&quot;origin&quot;</span> =<span class="st"> &quot;faa&quot;</span>))</code></pre>
+<div class="sourceCode" id="cb640"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb640-1" data-line-number="1">flights_ex &lt;-<span class="st"> </span>flights_ex <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb640-2" data-line-number="2"><span class="st">  </span><span class="kw">left_join</span>(airports_ex, <span class="dt">by =</span> <span class="kw">c</span>(<span class="st">&quot;origin&quot;</span> =<span class="st"> &quot;faa&quot;</span>))</a></code></pre></div>
 <p>Supposons qu’on souhaite maintenant fusionner à nouveau les informations de la table <code>airports</code>, mais cette fois pour les aéroports d’arrivée de notre nouvelle table <code>flights_ex</code>. Les deux clés sont donc désormais <code>dest</code> dans la première table, et <code>faa</code> dans la deuxième. La syntaxe est donc la suivante :</p>
-<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">left_join</span>(flights_ex, airports_ex, <span class="dt">by=</span><span class="kw">c</span>(<span class="st">&quot;dest&quot;</span> =<span class="st"> &quot;faa&quot;</span>))</code></pre>
+<div class="sourceCode" id="cb641"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb641-1" data-line-number="1"><span class="kw">left_join</span>(flights_ex, airports_ex, <span class="dt">by=</span><span class="kw">c</span>(<span class="st">&quot;dest&quot;</span> =<span class="st"> &quot;faa&quot;</span>))</a></code></pre></div>
 <pre><code># A tibble: 336,776 x 8
    month   day origin dest  alt.x name.x         alt.y name.y              
    &lt;int&gt; &lt;int&gt; &lt;chr&gt;  &lt;chr&gt; &lt;int&gt; &lt;chr&gt;          &lt;int&gt; &lt;chr&gt;               
@@ -1613,9 +1612,9 @@ airports_ex &lt;-<span class="st"> </span>airports <span class="op">%&gt;%</span
 # … with 336,766 more rows</code></pre>
 <p>Cela fonctionne, les informations de l’aéroport d’arrivée ont bien été ajoutées, mais on constate que les colonnes ont été renommées. En effet, ici les deux tables fusionnées contenaient toutes les deux des colonnes <code>name</code> et <code>alt</code>. Comme on ne peut pas avoir deux colonnes avec le même nom dans un tableau, <code>dplyr</code> a renommé les colonnes de la première table en <code>name.x</code> et <code>alt.x</code>, et celles de la deuxième en <code>name.y</code> et <code>alt.y</code>.</p>
 <p>C’est pratique, mais pas forcément très parlant. On pourrait renommer manuellement les colonnes avec <code>rename</code> avant de faire la jointure pour avoir des intitulés plus explicites, mais on peut aussi utiliser l’argument <code>suffix</code> de <code>left_join</code>, qui permet d’indiquer les suffixes à ajouter aux colonnes. Ainsi, on peut faire :</p>
-<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">left_join</span>(flights_ex, airports_ex, 
-          <span class="dt">by =</span> <span class="kw">c</span>(<span class="st">&quot;dest&quot;</span> =<span class="st"> &quot;faa&quot;</span>), 
-          <span class="dt">suffix =</span> <span class="kw">c</span>(<span class="st">&quot;_depart&quot;</span>, <span class="st">&quot;_arrivee&quot;</span>))</code></pre>
+<div class="sourceCode" id="cb643"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb643-1" data-line-number="1"><span class="kw">left_join</span>(flights_ex, airports_ex, </a>
+<a class="sourceLine" id="cb643-2" data-line-number="2">          <span class="dt">by =</span> <span class="kw">c</span>(<span class="st">&quot;dest&quot;</span> =<span class="st"> &quot;faa&quot;</span>), </a>
+<a class="sourceLine" id="cb643-3" data-line-number="3">          <span class="dt">suffix =</span> <span class="kw">c</span>(<span class="st">&quot;_depart&quot;</span>, <span class="st">&quot;_arrivee&quot;</span>))</a></code></pre></div>
 <pre><code># A tibble: 336,776 x 8
    month   day origin dest  alt_depart name_depart alt_arrivee name_arrivee
    &lt;int&gt; &lt;int&gt; &lt;chr&gt;  &lt;chr&gt;      &lt;int&gt; &lt;chr&gt;             &lt;int&gt; &lt;chr&gt;       
@@ -1637,8 +1636,8 @@ airports_ex &lt;-<span class="st"> </span>airports <span class="op">%&gt;%</span
 <h3><span class="header-section-number">10.6.3</span> Types de jointures</h3>
 <p>Jusqu’à présent nous avons utilisé la fonction <code>left_join</code>, mais il existe plusieurs types de jointures.</p>
 <p>Partons de deux tables d’exemple, <code>personnes</code> et <code>voitures</code> :</p>
-<pre class="sourceCode r"><code class="sourceCode r">personnes &lt;-<span class="st"> </span><span class="kw">tibble</span>(<span class="dt">nom =</span> <span class="kw">c</span>(<span class="st">&quot;Sylvie&quot;</span>, <span class="st">&quot;Sylvie&quot;</span>, <span class="st">&quot;Monique&quot;</span>, <span class="st">&quot;Gunter&quot;</span>, <span class="st">&quot;Rayan&quot;</span>, <span class="st">&quot;Rayan&quot;</span>),
-                    <span class="dt">voiture =</span> <span class="kw">c</span>(<span class="st">&quot;Twingo&quot;</span>, <span class="st">&quot;Ferrari&quot;</span>, <span class="st">&quot;Scenic&quot;</span>, <span class="st">&quot;Lada&quot;</span>, <span class="st">&quot;Twingo&quot;</span>, <span class="st">&quot;Clio&quot;</span>))</code></pre>
+<div class="sourceCode" id="cb645"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb645-1" data-line-number="1">personnes &lt;-<span class="st"> </span><span class="kw">tibble</span>(<span class="dt">nom =</span> <span class="kw">c</span>(<span class="st">&quot;Sylvie&quot;</span>, <span class="st">&quot;Sylvie&quot;</span>, <span class="st">&quot;Monique&quot;</span>, <span class="st">&quot;Gunter&quot;</span>, <span class="st">&quot;Rayan&quot;</span>, <span class="st">&quot;Rayan&quot;</span>),</a>
+<a class="sourceLine" id="cb645-2" data-line-number="2">                    <span class="dt">voiture =</span> <span class="kw">c</span>(<span class="st">&quot;Twingo&quot;</span>, <span class="st">&quot;Ferrari&quot;</span>, <span class="st">&quot;Scenic&quot;</span>, <span class="st">&quot;Lada&quot;</span>, <span class="st">&quot;Twingo&quot;</span>, <span class="st">&quot;Clio&quot;</span>))</a></code></pre></div>
 <table>
 <thead>
 <tr class="header">
@@ -1673,8 +1672,8 @@ airports_ex &lt;-<span class="st"> </span>airports <span class="op">%&gt;%</span
 </tr>
 </tbody>
 </table>
-<pre class="sourceCode r"><code class="sourceCode r">voitures &lt;-<span class="st"> </span><span class="kw">tibble</span>(<span class="dt">voiture =</span> <span class="kw">c</span>(<span class="st">&quot;Twingo&quot;</span>, <span class="st">&quot;Ferrari&quot;</span>, <span class="st">&quot;Clio&quot;</span>, <span class="st">&quot;Lada&quot;</span>, <span class="st">&quot;208&quot;</span>),
-                   <span class="dt">vitesse =</span> <span class="kw">c</span>(<span class="st">&quot;140&quot;</span>, <span class="st">&quot;280&quot;</span>, <span class="st">&quot;160&quot;</span>, <span class="st">&quot;85&quot;</span>, <span class="st">&quot;160&quot;</span>))</code></pre>
+<div class="sourceCode" id="cb646"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb646-1" data-line-number="1">voitures &lt;-<span class="st"> </span><span class="kw">tibble</span>(<span class="dt">voiture =</span> <span class="kw">c</span>(<span class="st">&quot;Twingo&quot;</span>, <span class="st">&quot;Ferrari&quot;</span>, <span class="st">&quot;Clio&quot;</span>, <span class="st">&quot;Lada&quot;</span>, <span class="st">&quot;208&quot;</span>),</a>
+<a class="sourceLine" id="cb646-2" data-line-number="2">                   <span class="dt">vitesse =</span> <span class="kw">c</span>(<span class="st">&quot;140&quot;</span>, <span class="st">&quot;280&quot;</span>, <span class="st">&quot;160&quot;</span>, <span class="st">&quot;85&quot;</span>, <span class="st">&quot;160&quot;</span>))</a></code></pre></div>
 <table>
 <thead>
 <tr class="header">
@@ -1708,7 +1707,7 @@ airports_ex &lt;-<span class="st"> </span>airports <span class="op">%&gt;%</span
 <div id="left_join" class="section level4">
 <h4><span class="header-section-number">10.6.3.1</span> left_join</h4>
 <p>Si on fait un <code>left_join</code> de <code>voitures</code> sur <code>personnes</code> :</p>
-<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">left_join</span>(personnes, voitures)</code></pre>
+<div class="sourceCode" id="cb647"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb647-1" data-line-number="1"><span class="kw">left_join</span>(personnes, voitures)</a></code></pre></div>
 <pre><code>Joining, by = &quot;voiture&quot;</code></pre>
 <table>
 <thead>
@@ -1753,7 +1752,7 @@ airports_ex &lt;-<span class="st"> </span>airports <span class="op">%&gt;%</span
 </table>
 <p>On voit que chaque ligne de <code>personnes</code> est bien présente, et qu’on lui a ajouté une ligne de <code>voitures</code> correspondante si elle existe. Dans le cas du <code>Scenic</code>, il n’y a avait pas de ligne dans <code>voitures</code>, donc <code>vitesse</code> a été mise à <code>NA</code>. Dans le cas de <code>208</code>, présente dans <code>voitures</code> mais pas dans <code>personnes</code>, la ligne n’apparaît pas.</p>
 <p>Si on fait un <code>left_join</code> cette fois de <code>personnes</code> sur <code>voitures</code>, c’est l’inverse :</p>
-<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">left_join</span>(voitures, personnes)</code></pre>
+<div class="sourceCode" id="cb649"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb649-1" data-line-number="1"><span class="kw">left_join</span>(voitures, personnes)</a></code></pre></div>
 <pre><code>Joining, by = &quot;voiture&quot;</code></pre>
 <table>
 <thead>
@@ -1804,7 +1803,7 @@ airports_ex &lt;-<span class="st"> </span>airports <span class="op">%&gt;%</span
 <div id="right_join" class="section level4">
 <h4><span class="header-section-number">10.6.3.2</span> right_join</h4>
 <p>La jointure <code>right_join</code> est l’exacte symétrique de <code>left_join</code>, c’est-à dire que <code>right_join(x, y)</code> est équivalent à <code>left_join(y, x)</code> :</p>
-<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">right_join</span>(personnes, voitures)</code></pre>
+<div class="sourceCode" id="cb651"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb651-1" data-line-number="1"><span class="kw">right_join</span>(personnes, voitures)</a></code></pre></div>
 <pre><code>Joining, by = &quot;voiture&quot;</code></pre>
 <table>
 <thead>
@@ -1851,7 +1850,7 @@ airports_ex &lt;-<span class="st"> </span>airports <span class="op">%&gt;%</span
 <div id="inner_join" class="section level4">
 <h4><span class="header-section-number">10.6.3.3</span> inner_join</h4>
 <p>Dans le cas de <code>inner_join(x, y)</code>, seules les lignes présentes à la fois dans <code>x</code> et <code>y</code> sont conservées (et si nécessaire dupliquées) dans la table résultat :</p>
-<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">inner_join</span>(personnes, voitures)</code></pre>
+<div class="sourceCode" id="cb653"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb653-1" data-line-number="1"><span class="kw">inner_join</span>(personnes, voitures)</a></code></pre></div>
 <pre><code>Joining, by = &quot;voiture&quot;</code></pre>
 <table>
 <thead>
@@ -1894,7 +1893,7 @@ airports_ex &lt;-<span class="st"> </span>airports <span class="op">%&gt;%</span
 <div id="full_join" class="section level4">
 <h4><span class="header-section-number">10.6.3.4</span> full_join</h4>
 <p>Dans le cas de <code>full_join(x, y)</code>, toutes les lignes de <code>x</code> et toutes les lignes de <code>y</code> sont conservées (avec des <code>NA</code> ajoutés si nécessaire) même si elles sont absentes de l’autre table :</p>
-<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">full_join</span>(personnes, voitures)</code></pre>
+<div class="sourceCode" id="cb655"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb655-1" data-line-number="1"><span class="kw">full_join</span>(personnes, voitures)</a></code></pre></div>
 <pre><code>Joining, by = &quot;voiture&quot;</code></pre>
 <table>
 <thead>
@@ -1947,7 +1946,7 @@ airports_ex &lt;-<span class="st"> </span>airports <span class="op">%&gt;%</span
 <h4><span class="header-section-number">10.6.3.5</span> semi_join et anti_join</h4>
 <p><code>semi_join</code> et <code>anti_join</code> sont des jointures <em>filtrantes</em>, c’est-à-dire qu’elles sélectionnent les lignes de <code>x</code> sans ajouter les colonnes de <code>y</code>.</p>
 <p>Ainsi, <code>semi_join</code> ne conservera que les lignes de <code>x</code> pour lesquelles une ligne de <code>y</code> existe également, et supprimera les autres. Dans notre exemple, la ligne <code>Monique</code> est donc supprimée :</p>
-<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">semi_join</span>(personnes, voitures)</code></pre>
+<div class="sourceCode" id="cb657"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb657-1" data-line-number="1"><span class="kw">semi_join</span>(personnes, voitures)</a></code></pre></div>
 <pre><code>Joining, by = &quot;voiture&quot;</code></pre>
 <table>
 <thead>
@@ -1980,7 +1979,7 @@ airports_ex &lt;-<span class="st"> </span>airports <span class="op">%&gt;%</span
 </tbody>
 </table>
 <p>Un <code>anti_join</code> fait l’inverse, il ne conserve que les lignes de <code>x</code> absentes de <code>y</code>. Dans notre exemple, on ne garde donc que la ligne <code>Monique</code> :</p>
-<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">anti_join</span>(personnes, voitures)</code></pre>
+<div class="sourceCode" id="cb659"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb659-1" data-line-number="1"><span class="kw">anti_join</span>(personnes, voitures)</a></code></pre></div>
 <pre><code>Joining, by = &quot;voiture&quot;</code></pre>
 <table>
 <thead>
@@ -2013,11 +2012,11 @@ airports_ex &lt;-<span class="st"> </span>airports <span class="op">%&gt;%</span
 <div id="exercices-5" class="section level2">
 <h2><span class="header-section-number">10.8</span> Exercices</h2>
 <p>On commence par charger les extensions et les données nécessaires.</p>
-<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(tidyverse)
-<span class="kw">library</span>(nycflights13)
-<span class="kw">data</span>(flights)
-<span class="kw">data</span>(airports)
-<span class="kw">data</span>(airlines)</code></pre>
+<div class="sourceCode" id="cb661"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb661-1" data-line-number="1"><span class="kw">library</span>(tidyverse)</a>
+<a class="sourceLine" id="cb661-2" data-line-number="2"><span class="kw">library</span>(nycflights13)</a>
+<a class="sourceLine" id="cb661-3" data-line-number="3"><span class="kw">data</span>(flights)</a>
+<a class="sourceLine" id="cb661-4" data-line-number="4"><span class="kw">data</span>(airports)</a>
+<a class="sourceLine" id="cb661-5" data-line-number="5"><span class="kw">data</span>(airlines)</a></code></pre></div>
 <div id="les-verbes-de-base-de-dplyr" class="section level3">
 <h3><span class="header-section-number">10.8.1</span> Les verbes de base de <code>dplyr</code></h3>
 <p><strong>Exercice 1.1</strong></p>
@@ -2036,7 +2035,7 @@ airports_ex &lt;-<span class="st"> </span>airports <span class="op">%&gt;%</span
 #   air_time &lt;dbl&gt;, distance &lt;dbl&gt;, hour &lt;dbl&gt;, minute &lt;dbl&gt;,
 #   time_hour &lt;dttm&gt;</code></pre>
 <div class="solution">
-<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">slice</span>(flights, <span class="dv">100</span><span class="op">:</span><span class="dv">105</span>)</code></pre>
+<div class="sourceCode" id="cb663"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb663-1" data-line-number="1"><span class="kw">slice</span>(flights, <span class="dv">100</span><span class="op">:</span><span class="dv">105</span>)</a></code></pre></div>
 </div>
 <p><strong>Exercice 1.2</strong></p>
 <p>Sélectionnez les vols du mois de juillet (variable <code>month</code>).</p>
@@ -2058,7 +2057,7 @@ airports_ex &lt;-<span class="st"> </span>airports <span class="op">%&gt;%</span
 #   origin &lt;chr&gt;, dest &lt;chr&gt;, air_time &lt;dbl&gt;, distance &lt;dbl&gt;, hour &lt;dbl&gt;,
 #   minute &lt;dbl&gt;, time_hour &lt;dttm&gt;</code></pre>
 <div class="solution">
-<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">filter</span>(flights, month <span class="op">==</span><span class="st"> </span><span class="dv">7</span>)</code></pre>
+<div class="sourceCode" id="cb665"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb665-1" data-line-number="1"><span class="kw">filter</span>(flights, month <span class="op">==</span><span class="st"> </span><span class="dv">7</span>)</a></code></pre></div>
 </div>
 <p>Sélectionnez les vols avec un retard à l’arrivée (variable <code>arr_delay</code>) compris entre 5 et 15 minutes.</p>
 <pre><code># A tibble: 36,392 x 19
@@ -2079,7 +2078,7 @@ airports_ex &lt;-<span class="st"> </span>airports <span class="op">%&gt;%</span
 #   origin &lt;chr&gt;, dest &lt;chr&gt;, air_time &lt;dbl&gt;, distance &lt;dbl&gt;, hour &lt;dbl&gt;,
 #   minute &lt;dbl&gt;, time_hour &lt;dttm&gt;</code></pre>
 <div class="solution">
-<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">filter</span>(flights, arr_delay <span class="op">&gt;=</span><span class="st"> </span><span class="dv">5</span> <span class="op">&amp;</span><span class="st"> </span>arr_delay <span class="op">&lt;=</span><span class="st"> </span><span class="dv">15</span>)</code></pre>
+<div class="sourceCode" id="cb667"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb667-1" data-line-number="1"><span class="kw">filter</span>(flights, arr_delay <span class="op">&gt;=</span><span class="st"> </span><span class="dv">5</span> <span class="op">&amp;</span><span class="st"> </span>arr_delay <span class="op">&lt;=</span><span class="st"> </span><span class="dv">15</span>)</a></code></pre></div>
 </div>
 <p>Sélectionnez les vols des compagnies Delta, United et American (codes <code>DL</code>, <code>UA</code> et <code>AA</code>).</p>
 <pre><code># A tibble: 139,504 x 19
@@ -2100,7 +2099,7 @@ airports_ex &lt;-<span class="st"> </span>airports <span class="op">%&gt;%</span
 #   origin &lt;chr&gt;, dest &lt;chr&gt;, air_time &lt;dbl&gt;, distance &lt;dbl&gt;, hour &lt;dbl&gt;,
 #   minute &lt;dbl&gt;, time_hour &lt;dttm&gt;</code></pre>
 <div class="solution">
-<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">filter</span>(flights, carrier <span class="op">%in%</span><span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;DL&quot;</span>, <span class="st">&quot;UA&quot;</span>, <span class="st">&quot;AA&quot;</span>))</code></pre>
+<div class="sourceCode" id="cb669"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb669-1" data-line-number="1"><span class="kw">filter</span>(flights, carrier <span class="op">%in%</span><span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;DL&quot;</span>, <span class="st">&quot;UA&quot;</span>, <span class="st">&quot;AA&quot;</span>))</a></code></pre></div>
 </div>
 <p><strong>Exercice 1.3</strong></p>
 <p>Triez la table <code>flights</code> par retard au départ décroissant.</p>
@@ -2122,7 +2121,7 @@ airports_ex &lt;-<span class="st"> </span>airports <span class="op">%&gt;%</span
 #   origin &lt;chr&gt;, dest &lt;chr&gt;, air_time &lt;dbl&gt;, distance &lt;dbl&gt;, hour &lt;dbl&gt;,
 #   minute &lt;dbl&gt;, time_hour &lt;dttm&gt;</code></pre>
 <div class="solution">
-<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">arrange</span>(flights, <span class="kw">desc</span>(dep_delay))</code></pre>
+<div class="sourceCode" id="cb671"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb671-1" data-line-number="1"><span class="kw">arrange</span>(flights, <span class="kw">desc</span>(dep_delay))</a></code></pre></div>
 </div>
 <p><strong>Exercice 1.4</strong></p>
 <p>Sélectionnez les colonnes <code>name</code>, <code>lat</code> et <code>lon</code> de la table <code>airports</code></p>
@@ -2141,7 +2140,7 @@ airports_ex &lt;-<span class="st"> </span>airports <span class="op">%&gt;%</span
 10 Jefferson County Intl           48.1 -123. 
 # … with 1,448 more rows</code></pre>
 <div class="solution">
-<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">select</span>(airports, name, lat, lon)</code></pre>
+<div class="sourceCode" id="cb673"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb673-1" data-line-number="1"><span class="kw">select</span>(airports, name, lat, lon)</a></code></pre></div>
 </div>
 <p>Sélectionnez toutes les colonnes de la table <code>airports</code> sauf les colonnes <code>tz</code> et <code>tzone</code></p>
 <pre><code># A tibble: 1,458 x 6
@@ -2159,7 +2158,7 @@ airports_ex &lt;-<span class="st"> </span>airports <span class="op">%&gt;%</span
 10 0S9   Jefferson County Intl           48.1 -123.    108 A    
 # … with 1,448 more rows</code></pre>
 <div class="solution">
-<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">select</span>(airports, <span class="op">-</span>tz, <span class="op">-</span>tzone)</code></pre>
+<div class="sourceCode" id="cb675"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb675-1" data-line-number="1"><span class="kw">select</span>(airports, <span class="op">-</span>tz, <span class="op">-</span>tzone)</a></code></pre></div>
 </div>
 <p>Toujours dans la table <code>airports</code>, renommez la colonne <code>lat</code> en <code>latitude</code> et <code>lon</code> en <code>longitude</code>.</p>
 <pre><code># A tibble: 1,458 x 8
@@ -2177,7 +2176,7 @@ airports_ex &lt;-<span class="st"> </span>airports <span class="op">%&gt;%</span
 10 0S9   Jefferson County…     48.1    -123.    108    -8 A     America/Lo…
 # … with 1,448 more rows</code></pre>
 <div class="solution">
-<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">rename</span>(airports, <span class="dt">latitude =</span> lat, <span class="dt">longitude =</span> lon)</code></pre>
+<div class="sourceCode" id="cb677"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb677-1" data-line-number="1"><span class="kw">rename</span>(airports, <span class="dt">latitude =</span> lat, <span class="dt">longitude =</span> lon)</a></code></pre></div>
 </div>
 <p><strong>Exercice 1.5</strong></p>
 <p>Dans la table <code>airports</code>, la colonne <code>alt</code> contient l’altitude de l’aéroport en pieds. Créer une nouvelle variable <code>alt_m</code> contenant l’altitude en mètres (on convertit des pieds en mètres en les divisant par 3.2808). Sélectionner dans la table obtenue uniquement les deux colonnes <code>alt</code> et <code>alt_m</code>.</p>
@@ -2196,8 +2195,8 @@ airports_ex &lt;-<span class="st"> </span>airports <span class="op">%&gt;%</span
 10   108  32.9 
 # … with 1,448 more rows</code></pre>
 <div class="solution">
-<pre class="sourceCode r"><code class="sourceCode r">tmp &lt;-<span class="st"> </span><span class="kw">mutate</span>(airports, <span class="dt">alt_m =</span> alt <span class="op">/</span><span class="st"> </span><span class="fl">3.2808</span>)
-<span class="kw">select</span>(tmp, alt, alt_m)</code></pre>
+<div class="sourceCode" id="cb679"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb679-1" data-line-number="1">tmp &lt;-<span class="st"> </span><span class="kw">mutate</span>(airports, <span class="dt">alt_m =</span> alt <span class="op">/</span><span class="st"> </span><span class="fl">3.2808</span>)</a>
+<a class="sourceLine" id="cb679-2" data-line-number="2"><span class="kw">select</span>(tmp, alt, alt_m)</a></code></pre></div>
 </div>
 </div>
 <div id="enchainer-des-operations" class="section level3">
@@ -2205,9 +2204,9 @@ airports_ex &lt;-<span class="st"> </span>airports <span class="op">%&gt;%</span
 <p><strong>Exercice 2.1</strong></p>
 <p>Réécrire le code de l’exercice précédent en utilisant le <em>pipe</em> <code>%&gt;%</code>.</p>
 <div class="solution">
-<pre class="sourceCode r"><code class="sourceCode r">airports <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">alt_m =</span> alt <span class="op">/</span><span class="st"> </span><span class="fl">3.2808</span>) <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">select</span>(alt, alt_m)</code></pre>
+<div class="sourceCode" id="cb680"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb680-1" data-line-number="1">airports <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb680-2" data-line-number="2"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">alt_m =</span> alt <span class="op">/</span><span class="st"> </span><span class="fl">3.2808</span>) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb680-3" data-line-number="3"><span class="st">  </span><span class="kw">select</span>(alt, alt_m)</a></code></pre></div>
 </div>
 <p><strong>Exercice 2.2</strong></p>
 <p>En utilisant le <em>pipe</em>, sélectionnez les vols à destination de San Francico (code <code>SFO</code> de la variable <code>dest</code>) et triez-les selon le retard au départ décroissant (variable <code>dep_delay</code>).</p>
@@ -2229,9 +2228,9 @@ airports_ex &lt;-<span class="st"> </span>airports <span class="op">%&gt;%</span
 #   origin &lt;chr&gt;, dest &lt;chr&gt;, air_time &lt;dbl&gt;, distance &lt;dbl&gt;, hour &lt;dbl&gt;,
 #   minute &lt;dbl&gt;, time_hour &lt;dttm&gt;</code></pre>
 <div class="solution">
-<pre class="sourceCode r"><code class="sourceCode r">flights <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">filter</span>(dest <span class="op">==</span><span class="st"> &quot;SFO&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">arrange</span>(<span class="kw">desc</span>(dep_delay))</code></pre>
+<div class="sourceCode" id="cb682"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb682-1" data-line-number="1">flights <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb682-2" data-line-number="2"><span class="st">  </span><span class="kw">filter</span>(dest <span class="op">==</span><span class="st"> &quot;SFO&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb682-3" data-line-number="3"><span class="st">  </span><span class="kw">arrange</span>(<span class="kw">desc</span>(dep_delay))</a></code></pre></div>
 </div>
 <p><strong>Exercice 2.3</strong></p>
 <p>Sélectionnez les vols des mois de septembre et octobre, conservez les colonnes <code>dest</code> et <code>dep_delay</code>, créez une nouvelle variable <code>retard_h</code> contenant le retard au départ en heures, triez selon <code>retard_h</code> par ordre décroissant et conservez uniquement les 5 premières lignes.</p>
@@ -2244,12 +2243,12 @@ airports_ex &lt;-<span class="st"> </span>airports <span class="op">%&gt;%</span
 4 ATL         602    10.0 
 5 MSP         593     9.88</code></pre>
 <div class="solution">
-<pre class="sourceCode r"><code class="sourceCode r">flights <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">filter</span>(month <span class="op">%in%</span><span class="st"> </span><span class="kw">c</span>(<span class="dv">9</span>, <span class="dv">10</span>)) <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">select</span>(dest, dep_delay) <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">retard_h =</span> dep_delay <span class="op">/</span><span class="st"> </span><span class="dv">60</span>) <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">arrange</span>(<span class="kw">desc</span>(retard_h)) <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">slice</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">5</span>)</code></pre>
+<div class="sourceCode" id="cb684"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb684-1" data-line-number="1">flights <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb684-2" data-line-number="2"><span class="st">  </span><span class="kw">filter</span>(month <span class="op">%in%</span><span class="st"> </span><span class="kw">c</span>(<span class="dv">9</span>, <span class="dv">10</span>)) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb684-3" data-line-number="3"><span class="st">  </span><span class="kw">select</span>(dest, dep_delay) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb684-4" data-line-number="4"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">retard_h =</span> dep_delay <span class="op">/</span><span class="st"> </span><span class="dv">60</span>) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb684-5" data-line-number="5"><span class="st">  </span><span class="kw">arrange</span>(<span class="kw">desc</span>(retard_h)) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb684-6" data-line-number="6"><span class="st">  </span><span class="kw">slice</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">5</span>)</a></code></pre></div>
 </div>
 </div>
 <div id="group_by-et-summarise" class="section level3">
@@ -2272,9 +2271,9 @@ airports_ex &lt;-<span class="st"> </span>airports <span class="op">%&gt;%</span
 11    11 27268
 12    12 28135</code></pre>
 <div class="solution">
-<pre class="sourceCode r"><code class="sourceCode r">flights <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">group_by</span>(month) <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">summarise</span>(<span class="dt">n =</span> <span class="kw">n</span>())</code></pre>
+<div class="sourceCode" id="cb686"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb686-1" data-line-number="1">flights <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb686-2" data-line-number="2"><span class="st">  </span><span class="kw">group_by</span>(month) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb686-3" data-line-number="3"><span class="st">  </span><span class="kw">summarise</span>(<span class="dt">n =</span> <span class="kw">n</span>())</a></code></pre></div>
 </div>
 <p>Triez la table résultat selon le nombre de vols croissant.</p>
 <pre><code># A tibble: 12 x 2
@@ -2293,10 +2292,10 @@ airports_ex &lt;-<span class="st"> </span>airports <span class="op">%&gt;%</span
 11     8 29327
 12     7 29425</code></pre>
 <div class="solution">
-<pre class="sourceCode r"><code class="sourceCode r">flights <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">group_by</span>(month) <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">summarise</span>(<span class="dt">n =</span> <span class="kw">n</span>()) <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">arrange</span>(n)</code></pre>
+<div class="sourceCode" id="cb688"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb688-1" data-line-number="1">flights <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb688-2" data-line-number="2"><span class="st">  </span><span class="kw">group_by</span>(month) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb688-3" data-line-number="3"><span class="st">  </span><span class="kw">summarise</span>(<span class="dt">n =</span> <span class="kw">n</span>()) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb688-4" data-line-number="4"><span class="st">  </span><span class="kw">arrange</span>(n)</a></code></pre></div>
 </div>
 <p><strong>Exercice 3.2</strong></p>
 <p>Calculer la distance moyenne des vols selon l’aéroport de départ.</p>
@@ -2307,9 +2306,9 @@ airports_ex &lt;-<span class="st"> </span>airports <span class="op">%&gt;%</span
 2 JFK               1266.
 3 LGA                780.</code></pre>
 <div class="solution">
-<pre class="sourceCode r"><code class="sourceCode r">flights <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">group_by</span>(origin) <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">summarise</span>(<span class="dt">distance_moyenne =</span> <span class="kw">mean</span>(distance))</code></pre>
+<div class="sourceCode" id="cb690"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb690-1" data-line-number="1">flights <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb690-2" data-line-number="2"><span class="st">  </span><span class="kw">group_by</span>(origin) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb690-3" data-line-number="3"><span class="st">  </span><span class="kw">summarise</span>(<span class="dt">distance_moyenne =</span> <span class="kw">mean</span>(distance))</a></code></pre></div>
 </div>
 <p><strong>Exercice 3.3</strong></p>
 <p>Calculer le nombre de vols à destination de Los Angeles (code <code>LAX</code>) pour chaque mois de l’année.</p>
@@ -2329,9 +2328,9 @@ airports_ex &lt;-<span class="st"> </span>airports <span class="op">%&gt;%</span
 11    11  1336
 12    12  1408</code></pre>
 <div class="solution">
-<pre class="sourceCode r"><code class="sourceCode r">flights <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">filter</span>(dest <span class="op">==</span><span class="st"> &quot;LAX&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">count</span>(month)</code></pre>
+<div class="sourceCode" id="cb692"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb692-1" data-line-number="1">flights <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb692-2" data-line-number="2"><span class="st">  </span><span class="kw">filter</span>(dest <span class="op">==</span><span class="st"> &quot;LAX&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb692-3" data-line-number="3"><span class="st">  </span><span class="kw">count</span>(month)</a></code></pre></div>
 </div>
 <p><strong>Exercice 3.4</strong></p>
 <p>Calculer le nombre de vols selon le mois et la destination.</p>
@@ -2350,8 +2349,8 @@ airports_ex &lt;-<span class="st"> </span>airports <span class="op">%&gt;%</span
 10     1 BTV     223
 # … with 1,103 more rows</code></pre>
 <div class="solution">
-<pre class="sourceCode r"><code class="sourceCode r">flights <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">count</span>(month, dest)</code></pre>
+<div class="sourceCode" id="cb694"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb694-1" data-line-number="1">flights <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb694-2" data-line-number="2"><span class="st">  </span><span class="kw">count</span>(month, dest)</a></code></pre></div>
 </div>
 <p>Ne conserver, pour chaque mois, que la destination avec le nombre maximal de vols.</p>
 <pre><code># A tibble: 12 x 3
@@ -2370,10 +2369,10 @@ airports_ex &lt;-<span class="st"> </span>airports <span class="op">%&gt;%</span
 11    11 ATL    1384
 12    12 ATL    1463</code></pre>
 <div class="solution">
-<pre class="sourceCode r"><code class="sourceCode r">flights <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">count</span>(month, dest) <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">group_by</span>(month) <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">filter</span>(n <span class="op">==</span><span class="st"> </span><span class="kw">max</span>(n))</code></pre>
+<div class="sourceCode" id="cb696"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb696-1" data-line-number="1">flights <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb696-2" data-line-number="2"><span class="st">  </span><span class="kw">count</span>(month, dest) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb696-3" data-line-number="3"><span class="st">  </span><span class="kw">group_by</span>(month) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb696-4" data-line-number="4"><span class="st">  </span><span class="kw">filter</span>(n <span class="op">==</span><span class="st"> </span><span class="kw">max</span>(n))</a></code></pre></div>
 </div>
 <p><strong>Exercice 3.5</strong></p>
 <p>Calculer le nombre de vols selon le mois. Ajouter une colonne comportant le pourcentage de vols annuels réalisés par mois.</p>
@@ -2393,9 +2392,9 @@ airports_ex &lt;-<span class="st"> </span>airports <span class="op">%&gt;%</span
 11    11 27268        8.10
 12    12 28135        8.35</code></pre>
 <div class="solution">
-<pre class="sourceCode r"><code class="sourceCode r">flights <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">count</span>(month) <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">pourcentage =</span> n<span class="op">/</span><span class="kw">sum</span>(n) <span class="op">*</span><span class="st"> </span><span class="dv">100</span>) </code></pre>
+<div class="sourceCode" id="cb698"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb698-1" data-line-number="1">flights <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb698-2" data-line-number="2"><span class="st">  </span><span class="kw">count</span>(month) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb698-3" data-line-number="3"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">pourcentage =</span> n<span class="op">/</span><span class="kw">sum</span>(n) <span class="op">*</span><span class="st"> </span><span class="dv">100</span>) </a></code></pre></div>
 </div>
 <p><strong>Exercice 3.6</strong></p>
 <p>Calculer, pour chaque destination et chaque mois, le retard moyen à l’arrivée. Pour chaque mois, trier les destinations selon ce retard moyen décroissant, et (toujours pour chaque mois) ne conserver que les trois destinations avec le retard le plus important.</p>
@@ -2414,12 +2413,12 @@ airports_ex &lt;-<span class="st"> </span>airports <span class="op">%&gt;%</span
 10     4 CAE           71.3
 # … with 26 more rows</code></pre>
 <div class="solution">
-<pre class="sourceCode r"><code class="sourceCode r">flights <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">group_by</span>(month, dest) <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">summarise</span>(<span class="dt">retard_moyen =</span> <span class="kw">mean</span>(arr_delay, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>)) <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">group_by</span>(month) <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">arrange</span>(<span class="kw">desc</span>(retard_moyen), <span class="dt">.by_group =</span> <span class="ot">TRUE</span>) <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">slice</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">3</span>)</code></pre>
+<div class="sourceCode" id="cb700"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb700-1" data-line-number="1">flights <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb700-2" data-line-number="2"><span class="st">  </span><span class="kw">group_by</span>(month, dest) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb700-3" data-line-number="3"><span class="st">  </span><span class="kw">summarise</span>(<span class="dt">retard_moyen =</span> <span class="kw">mean</span>(arr_delay, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>)) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb700-4" data-line-number="4"><span class="st">  </span><span class="kw">group_by</span>(month) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb700-5" data-line-number="5"><span class="st">  </span><span class="kw">arrange</span>(<span class="kw">desc</span>(retard_moyen), <span class="dt">.by_group =</span> <span class="ot">TRUE</span>) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb700-6" data-line-number="6"><span class="st">  </span><span class="kw">slice</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">3</span>)</a></code></pre></div>
 </div>
 </div>
 <div id="jointures-1" class="section level3">
@@ -2444,8 +2443,8 @@ airports_ex &lt;-<span class="st"> </span>airports <span class="op">%&gt;%</span
 #   origin &lt;chr&gt;, dest &lt;chr&gt;, air_time &lt;dbl&gt;, distance &lt;dbl&gt;, hour &lt;dbl&gt;,
 #   minute &lt;dbl&gt;, time_hour &lt;dttm&gt;, name &lt;chr&gt;</code></pre>
 <div class="solution">
-<pre class="sourceCode r"><code class="sourceCode r">flights <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">left_join</span>(airlines)</code></pre>
+<div class="sourceCode" id="cb702"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb702-1" data-line-number="1">flights <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb702-2" data-line-number="2"><span class="st">  </span><span class="kw">left_join</span>(airlines)</a></code></pre></div>
 </div>
 <p><strong>Exercice 4.2</strong></p>
 <p>À partir de la table résultat de l’exercice précédent, calculer le retard moyen au départ pour chaque compagnie, trier selon ce retard décroissant et ne conserver que le nom de la compagnie et le retard correspondant.</p>
@@ -2469,11 +2468,11 @@ airports_ex &lt;-<span class="st"> </span>airports <span class="op">%&gt;%</span
 15 Hawaiian Airlines Inc.              4.90
 16 US Airways Inc.                     3.78</code></pre>
 <div class="solution">
-<pre class="sourceCode r"><code class="sourceCode r">flights <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">left_join</span>(airlines) <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">group_by</span>(name) <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">summarise</span>(<span class="dt">retard_moyen =</span> <span class="kw">mean</span>(dep_delay, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>)) <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">arrange</span>(<span class="kw">desc</span>(retard_moyen))</code></pre>
+<div class="sourceCode" id="cb704"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb704-1" data-line-number="1">flights <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb704-2" data-line-number="2"><span class="st">  </span><span class="kw">left_join</span>(airlines) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb704-3" data-line-number="3"><span class="st">  </span><span class="kw">group_by</span>(name) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb704-4" data-line-number="4"><span class="st">  </span><span class="kw">summarise</span>(<span class="dt">retard_moyen =</span> <span class="kw">mean</span>(dep_delay, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>)) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb704-5" data-line-number="5"><span class="st">  </span><span class="kw">arrange</span>(<span class="kw">desc</span>(retard_moyen))</a></code></pre></div>
 </div>
 <p><strong>Exercice 4.3</strong></p>
 <p>Faire la jointure de la table <code>airports</code> sur la table <code>flights</code> en utilisant comme clé le code de l’aéroport de destination.</p>
@@ -2496,8 +2495,8 @@ airports_ex &lt;-<span class="st"> </span>airports <span class="op">%&gt;%</span
 #   minute &lt;dbl&gt;, time_hour &lt;dttm&gt;, name &lt;chr&gt;, lat &lt;dbl&gt;, lon &lt;dbl&gt;,
 #   alt &lt;int&gt;, tz &lt;dbl&gt;, dst &lt;chr&gt;, tzone &lt;chr&gt;</code></pre>
 <div class="solution">
-<pre class="sourceCode r"><code class="sourceCode r">flights <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">left_join</span>(airports, <span class="dt">by =</span> <span class="kw">c</span>(<span class="st">&quot;dest&quot;</span> =<span class="st"> &quot;faa&quot;</span>))</code></pre>
+<div class="sourceCode" id="cb706"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb706-1" data-line-number="1">flights <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb706-2" data-line-number="2"><span class="st">  </span><span class="kw">left_join</span>(airports, <span class="dt">by =</span> <span class="kw">c</span>(<span class="st">&quot;dest&quot;</span> =<span class="st"> &quot;faa&quot;</span>))</a></code></pre></div>
 </div>
 <p>À partir de cette table, afficher pour chaque mois le nom de l’aéroport de destination ayant eu le plus petit nombre de vol.</p>
 <pre><code># A tibble: 14 x 3
@@ -2518,11 +2517,11 @@ airports_ex &lt;-<span class="st"> </span>airports <span class="op">%&gt;%</span
 13    11 Blue Grass                1
 14    12 South Bend Rgnl           1</code></pre>
 <div class="solution">
-<pre class="sourceCode r"><code class="sourceCode r">flights <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">left_join</span>(airports, <span class="dt">by =</span> <span class="kw">c</span>(<span class="st">&quot;dest&quot;</span> =<span class="st"> &quot;faa&quot;</span>)) <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">count</span>(month, name) <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">group_by</span>(month) <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">filter</span>(n <span class="op">==</span><span class="st"> </span><span class="kw">min</span>(n))</code></pre>
+<div class="sourceCode" id="cb708"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb708-1" data-line-number="1">flights <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb708-2" data-line-number="2"><span class="st">  </span><span class="kw">left_join</span>(airports, <span class="dt">by =</span> <span class="kw">c</span>(<span class="st">&quot;dest&quot;</span> =<span class="st"> &quot;faa&quot;</span>)) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb708-3" data-line-number="3"><span class="st">  </span><span class="kw">count</span>(month, name) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb708-4" data-line-number="4"><span class="st">  </span><span class="kw">group_by</span>(month) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb708-5" data-line-number="5"><span class="st">  </span><span class="kw">filter</span>(n <span class="op">==</span><span class="st"> </span><span class="kw">min</span>(n))</a></code></pre></div>
 </div>
 <p><strong>Exercice 4.4</strong></p>
 <p>Créer une table indiquant, pour chaque trajet, le nom de l’aéroport de départ et celui de l’aéroport d’arrivée.</p>
@@ -2541,12 +2540,12 @@ airports_ex &lt;-<span class="st"> </span>airports <span class="op">%&gt;%</span
 10 La Guardia          Chicago Ohare Intl             
 # … with 336,766 more rows</code></pre>
 <div class="solution">
-<pre class="sourceCode r"><code class="sourceCode r">flights <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">left_join</span>(airports, <span class="dt">by =</span> <span class="kw">c</span>(<span class="st">&quot;dest&quot;</span> =<span class="st"> &quot;faa&quot;</span>)) <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">rename</span>(<span class="dt">dest_name =</span> name) <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">left_join</span>(airports, <span class="dt">by =</span> <span class="kw">c</span>(<span class="st">&quot;origin&quot;</span> =<span class="st"> &quot;faa&quot;</span>)) <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">rename</span>(<span class="dt">orig_name =</span> name) <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">select</span>(orig_name, dest_name) </code></pre>
+<div class="sourceCode" id="cb710"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb710-1" data-line-number="1">flights <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb710-2" data-line-number="2"><span class="st">  </span><span class="kw">left_join</span>(airports, <span class="dt">by =</span> <span class="kw">c</span>(<span class="st">&quot;dest&quot;</span> =<span class="st"> &quot;faa&quot;</span>)) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb710-3" data-line-number="3"><span class="st">  </span><span class="kw">rename</span>(<span class="dt">dest_name =</span> name) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb710-4" data-line-number="4"><span class="st">  </span><span class="kw">left_join</span>(airports, <span class="dt">by =</span> <span class="kw">c</span>(<span class="st">&quot;origin&quot;</span> =<span class="st"> &quot;faa&quot;</span>)) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb710-5" data-line-number="5"><span class="st">  </span><span class="kw">rename</span>(<span class="dt">orig_name =</span> name) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb710-6" data-line-number="6"><span class="st">  </span><span class="kw">select</span>(orig_name, dest_name) </a></code></pre></div>
 </div>
 </div>
 <div id="bonus" class="section level3">
@@ -2568,15 +2567,15 @@ airports_ex &lt;-<span class="st"> </span>airports <span class="op">%&gt;%</span
 10 BHM     297 Birmingham Intl     33.6  -86.8   644    -6 A     America/C…
 # … with 95 more rows</code></pre>
 <div class="solution">
-<pre class="sourceCode r"><code class="sourceCode r">flights_dest &lt;-<span class="st"> </span>flights <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">count</span>(dest) <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">left_join</span>(airports, <span class="dt">by =</span> <span class="kw">c</span>(<span class="st">&quot;dest&quot;</span>=<span class="st">&quot;faa&quot;</span>))</code></pre>
+<div class="sourceCode" id="cb712"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb712-1" data-line-number="1">flights_dest &lt;-<span class="st"> </span>flights <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb712-2" data-line-number="2"><span class="st">  </span><span class="kw">count</span>(dest) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb712-3" data-line-number="3"><span class="st">  </span><span class="kw">left_join</span>(airports, <span class="dt">by =</span> <span class="kw">c</span>(<span class="st">&quot;dest&quot;</span>=<span class="st">&quot;faa&quot;</span>))</a></code></pre></div>
 </div>
 <p>Créez une carte interactive des résultats avec <code>leaflet</code> et le code suivant :</p>
-<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(leaflet)
-<span class="kw">leaflet</span>(<span class="dt">data =</span> flights_dest) <span class="op">%&gt;%</span>
-<span class="st">  </span>addTiles <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">addCircles</span>(<span class="dt">lng=</span><span class="op">~</span>lon, <span class="dt">lat=</span><span class="op">~</span>lat, <span class="dt">radius=</span><span class="op">~</span>n <span class="op">*</span><span class="st"> </span><span class="dv">10</span>, <span class="dt">popup=</span><span class="op">~</span>name)</code></pre>
+<div class="sourceCode" id="cb713"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb713-1" data-line-number="1"><span class="kw">library</span>(leaflet)</a>
+<a class="sourceLine" id="cb713-2" data-line-number="2"><span class="kw">leaflet</span>(<span class="dt">data =</span> flights_dest) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb713-3" data-line-number="3"><span class="st">  </span>addTiles <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb713-4" data-line-number="4"><span class="st">  </span><span class="kw">addCircles</span>(<span class="dt">lng=</span><span class="op">~</span>lon, <span class="dt">lat=</span><span class="op">~</span>lat, <span class="dt">radius=</span><span class="op">~</span>n <span class="op">*</span><span class="st"> </span><span class="dv">10</span>, <span class="dt">popup=</span><span class="op">~</span>name)</a></code></pre></div>
 <div id="htmlwidget-8e5a69b7fc97fd9b8a58" style="width:672px;height:480px;" class="leaflet html-widget"></div>
 <script type="application/json" data-for="htmlwidget-8e5a69b7fc97fd9b8a58">{"x":{"options":{"crs":{"crsClass":"L.CRS.EPSG3857","code":null,"proj4def":null,"projectedBounds":null,"options":{}}},"calls":[{"method":"addTiles","args":["//{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",null,null,{"minZoom":0,"maxZoom":18,"tileSize":256,"subdomains":"abc","errorTileUrl":"","tms":false,"noWrap":false,"zoomOffset":0,"zoomReverse":false,"opacity":1,"zIndex":1,"detectRetina":false,"attribution":"&copy; <a href=\"http://openstreetmap.org\">OpenStreetMap<\/a> contributors, <a href=\"http://creativecommons.org/licenses/by-sa/2.0/\">CC-BY-SA<\/a>"}]},{"method":"addCircles","args":[[35.0402222,41.253053,42.748267,61.174361,33.636719,30.194528,35.436194,41.938889,44.807444,33.562942,36.124472,42.364347,null,44.471861,42.940525,34.200667,39.175361,45.777643,33.938833,40.9160833,38.138639,32.898647,41.411689,35.214,39.997972,38.373147,39.048836,39.902375,38.852083,39.861656,32.896828,41.533972,42.212444,39.642556,24.556111,26.072583,42.880833,36.09775,34.895556,40.481181,21.318681,29.645419,38.944533,29.984433,34.270615,39.717331,43.607333333,30.494056,36.080056,33.942536,38.0365,40.777245,33.817722,39.297606,28.429394,41.785972,35.042417,42.932556,25.79325,42.947222,43.139858,44.881956,29.993389,38.509794,41.391667,33.67975,37.721278,35.393089,41.303167,41.978603,36.894611,26.683161,45.588722,39.871944,33.434278,40.491467,null,33.829667,41.732581,43.646161,35.877639,37.505167,43.118866,26.536167,32.733556,29.533694,32.127583,41.708661,38.1740858,47.449,37.618972,37.3626,null,40.788389,38.695417,33.675667,27.395444,38.748697,null,43.111187,27.975472,36.198389,44.741445,35.810972,36.2818694],[-106.6091944,-70.060181,-73.801692,-149.996361,-84.428067,-97.669889,-82.541806,-72.683222,-68.828139,-86.75355,-86.678194,-71.005181,null,-73.153278,-78.732167,-118.358667,-76.668333,-111.160151,-81.119528,-81.4421944,-78.452861,-80.040528,-81.849794,-80.943139,-82.891889,-81.593189,-84.667822,-84.219375,-77.037722,-104.673178,-97.037997,-93.663083,-83.353389,-106.917694,-81.759556,-80.15275,-85.522806,-79.937306,-82.218889,-107.21766,-157.922428,-95.278889,-77.455811,-95.341442,-77.902569,-86.294383,-110.73775,-81.687861,-115.15225,-118.408075,-84.605889,-73.872608,-118.151611,-94.713905,-81.308994,-87.752417,-89.976667,-71.435667,-80.290556,-87.896583,-89.337514,-93.221767,-90.258028,-107.894242,-70.615278,-78.928333,-122.220722,-97.600733,-95.894069,-87.904842,-76.201222,-80.095589,-122.5975,-75.241139,-112.011583,-80.232872,null,-116.506694,-71.420383,-70.309281,-78.787472,-77.319667,-77.672389,-81.755167,-117.189667,-98.469778,-81.202139,-86.31725,-85.7364989,-122.309306,-122.374889,-121.929022,null,-111.977772,-121.590778,-117.868222,-82.554389,-90.370028,null,-76.106311,-82.53325,-95.888111,-85.582235,-83.994028,-94.3068111],[2540,2650,4390,80,172150,24390,2750,4430,3750,2970,63330,155080,8960,25890,46810,3710,17810,360,1160,8640,520,28840,45730,140640,35240,1380,39410,15250,97050,72660,87380,5690,93840,2130,170,120550,7650,16060,8490,150,7070,21150,57000,71980,1100,20770,250,27200,59970,161740,10,10,6680,20080,140820,41130,17890,10090,117280,28020,5720,71850,37990,150,2210,590,3120,3460,8490,172830,15360,65540,13540,16320,46560,28750,3650,190,3760,23520,81630,24540,24160,35370,27370,6860,8040,100,11570,39230,133310,3290,58190,24670,2840,8250,12110,43390,5220,17610,74660,3150,1010,6310,10360],null,null,{"interactive":true,"className":"","stroke":true,"color":"#03F","weight":5,"opacity":0.5,"fill":true,"fillColor":"#03F","fillOpacity":0.2},["Albuquerque International Sunport","Nantucket Mem","Albany Intl","Ted Stevens Anchorage Intl","Hartsfield Jackson Atlanta Intl","Austin Bergstrom Intl","Asheville Regional Airport","Bradley Intl","Bangor Intl","Birmingham Intl","Nashville Intl","General Edward Lawrence Logan Intl",null,"Burlington Intl","Buffalo Niagara Intl","Bob Hope","Baltimore Washington Intl","Gallatin Field","Columbia Metropolitan","Akron Canton Regional Airport","Charlottesville-Albemarle","Charleston Afb Intl","Cleveland Hopkins Intl","Charlotte Douglas Intl","Port Columbus Intl","Yeager","Cincinnati Northern Kentucky Intl","James M Cox Dayton Intl","Ronald Reagan Washington Natl","Denver Intl","Dallas Fort Worth Intl","Des Moines Intl","Detroit Metro Wayne Co","Eagle Co Rgnl","Key West Intl","Fort Lauderdale Hollywood Intl","Gerald R Ford Intl","Piedmont Triad","Greenville-Spartanburg International","Yampa Valley","Honolulu Intl","William P Hobby","Washington Dulles Intl","George Bush Intercontinental","Wilmington Intl","Indianapolis Intl","Jackson Hole Airport","Jacksonville Intl","Mc Carran Intl","Los Angeles Intl","Blue Grass","La Guardia","Long Beach","Kansas City Intl","Orlando Intl","Chicago Midway Intl","Memphis Intl","Manchester Regional Airport","Miami Intl","General Mitchell Intl","Dane Co Rgnl Truax Fld","Minneapolis St Paul Intl","Louis Armstrong New Orleans Intl","Montrose Regional Airport","Martha\\\\'s Vineyard","Myrtle Beach Intl","Metropolitan Oakland Intl","Will Rogers World","Eppley Afld","Chicago Ohare Intl","Norfolk Intl","Palm Beach Intl","Portland Intl","Philadelphia Intl","Phoenix Sky Harbor Intl","Pittsburgh Intl",null,"Palm Springs Intl","Theodore Francis Green State","Portland Intl Jetport","Raleigh Durham Intl","Richmond Intl","Greater Rochester Intl","Southwest Florida Intl","San Diego Intl","San Antonio Intl","Savannah Hilton Head Intl","South Bend Rgnl","Louisville International Airport","Seattle Tacoma Intl","San Francisco Intl","Norman Y Mineta San Jose Intl",null,"Salt Lake City Intl","Sacramento Intl","John Wayne Arpt Orange Co","Sarasota Bradenton Intl","Lambert St Louis Intl",null,"Syracuse Hancock Intl","Tampa Intl","Tulsa Intl","Cherry Capital Airport","Mc Ghee Tyson","NW Arkansas Regional"],null,null,{"interactive":false,"permanent":false,"direction":"auto","opacity":1,"offset":[0,0],"textsize":"10px","textOnly":false,"className":"","sticky":true},null,null]}],"limits":{"lat":[21.318681,61.174361],"lng":[-157.922428,-68.828139]}},"evals":[],"jsHooks":[]}</script>
 
