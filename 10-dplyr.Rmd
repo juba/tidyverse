@@ -559,36 +559,6 @@ flights %>%
   select(dep_delay_prev, dep_delay, dep_delay_diff)
 ```
 
-### `tally`
-
-`tally` est une fonction qui permet de compter le nombre d'observations d'un groupe :
-
-```{r}
-flights %>% 
-  group_by(month, origin, dest) %>% 
-  tally
-```
-
-Lors de son premier appel, elle sera équivalente à un `summarise(n = n())` ou à un `count()`. Là où la fonction est intelligente, c'est que si on l'appelle plusieurs fois successivement, elle prendra en compte l'existence d'un `n` déjà calculé et effectuera automatiquement un `summarise(n = sum(n))` :
-
-```{r}
-flights %>% 
-  group_by(month, origin, dest) %>% 
-  tally %>%
-  tally
-
-```
-
-Et ainsi de suite :
-
-```{r}
-flights %>% 
-  group_by(month, origin, dest) %>% 
-  tally %>%
-  tally %>% 
-  tally
-
-```
 
 
 ### `distinct`
