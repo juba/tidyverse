@@ -1,12 +1,12 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<html lang="" xml:lang="">
 <head>
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>Partie 3 Premier travail avec des données | Introduction à R et au tidyverse</title>
   <meta name="description" content="Une introduction à R et aux extensions du tidyverse" />
-  <meta name="generator" content="bookdown 0.14 and GitBook 2.6.7" />
+  <meta name="generator" content="bookdown 0.17 and GitBook 2.6.7" />
 
   <meta property="og:title" content="Partie 3 Premier travail avec des données | Introduction à R et au tidyverse" />
   <meta property="og:type" content="book" />
@@ -24,7 +24,7 @@
 <meta name="author" content="Julien Barnier" />
 
 
-<meta name="date" content="2019-10-21" />
+<meta name="date" content="2020-02-02" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -50,14 +50,14 @@
 
 
 
-<script src="libs/htmlwidgets-1.3/htmlwidgets.js"></script>
+<script src="libs/htmlwidgets-1.5.1/htmlwidgets.js"></script>
 <link href="libs/leaflet-1.3.1/leaflet.css" rel="stylesheet" />
 <script src="libs/leaflet-1.3.1/leaflet.js"></script>
 <link href="libs/leafletfix-1.0.0/leafletfix.css" rel="stylesheet" />
 <script src="libs/Proj4Leaflet-1.0.1/proj4-compressed.js"></script>
 <script src="libs/Proj4Leaflet-1.0.1/proj4leaflet.js"></script>
 <link href="libs/rstudio_leaflet-1.3.1/rstudio_leaflet.css" rel="stylesheet" />
-<script src="libs/leaflet-binding-2.0.2/leaflet.js"></script>
+<script src="libs/leaflet-binding-2.0.3/leaflet.js"></script>
 
 
 <style type="text/css">
@@ -307,8 +307,7 @@ code span.wa { color: #bf0303; } /* Warning */
 <li class="chapter" data-level="10.5" data-path="10-dplyr.html"><a href="10-dplyr.html#autres-fonctions-utiles"><i class="fa fa-check"></i><b>10.5</b> Autres fonctions utiles</a><ul>
 <li class="chapter" data-level="10.5.1" data-path="10-dplyr.html"><a href="10-dplyr.html#sample_n-sample_frac"><i class="fa fa-check"></i><b>10.5.1</b> <code>sample_n</code>, <code>sample_frac</code></a></li>
 <li class="chapter" data-level="10.5.2" data-path="10-dplyr.html"><a href="10-dplyr.html#lead-et-lag"><i class="fa fa-check"></i><b>10.5.2</b> <code>lead</code> et <code>lag</code></a></li>
-<li class="chapter" data-level="10.5.3" data-path="10-dplyr.html"><a href="10-dplyr.html#tally"><i class="fa fa-check"></i><b>10.5.3</b> <code>tally</code></a></li>
-<li class="chapter" data-level="10.5.4" data-path="10-dplyr.html"><a href="10-dplyr.html#distinct"><i class="fa fa-check"></i><b>10.5.4</b> <code>distinct</code></a></li>
+<li class="chapter" data-level="10.5.3" data-path="10-dplyr.html"><a href="10-dplyr.html#distinct"><i class="fa fa-check"></i><b>10.5.3</b> <code>distinct</code></a></li>
 </ul></li>
 <li class="chapter" data-level="10.6" data-path="10-dplyr.html"><a href="10-dplyr.html#tables-multiples"><i class="fa fa-check"></i><b>10.6</b> Tables multiples</a><ul>
 <li class="chapter" data-level="10.6.1" data-path="10-dplyr.html"><a href="10-dplyr.html#concaténation-bind_rows-et-bind_cols"><i class="fa fa-check"></i><b>10.6.1</b> Concaténation : <code>bind_rows</code> et <code>bind_cols</code></a></li>
@@ -520,25 +519,23 @@ Sous R, on peut importer ou créer autant de tableaux de données qu’on le sou
 <h3><span class="header-section-number">3.2.2</span> Accéder aux variables d’un tableau</h3>
 <p>Une opération très importante est l’accès aux variables du tableau (à ses colonnes) pour pouvoir les manipuler, effectuer des calculs, etc. On utilise pour cela l’opérateur <code>$</code>, qui permet d’accéder aux colonnes du tableau. Ainsi, si l’on tape :</p>
 <div class="sourceCode" id="cb121"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb121-1" data-line-number="1">d<span class="op">$</span>sexe</a></code></pre></div>
-<pre><code>  [1] Femme Femme Homme Homme Femme Femme Femme Homme Femme Homme Femme
- [12] Homme Femme Femme Femme Femme Homme Femme Homme Femme Femme Homme
- [23] Femme Femme Femme Homme Femme Homme Homme Homme Homme Homme Homme
- [34] Homme Femme Femme Homme Femme Femme Homme Femme Homme Homme Femme
- [45] Femme Homme Femme Femme Femme Femme Homme Femme Homme Femme Homme
- [56] Femme Femme Femme Homme Femme Femme Homme Homme Homme Homme Femme
- [67] Homme Homme Femme Femme Homme Homme Femme Femme Femme Femme Homme
- [78] Femme Femme Femme Femme Femme Femme Homme Homme Femme Homme Homme
- [89] Homme Homme Homme Femme Homme Femme Femme Femme Homme Homme Femme
-[100] Femme Femme Homme Femme Homme Homme Femme Femme Femme Femme Homme
-[111] Homme Homme Homme Homme Femme Homme Homme Femme Homme Homme Femme
-[122] Femme Femme Homme Femme Femme Homme Femme Femme Homme Femme Homme
-[133] Femme Femme Femme Homme Homme Homme Homme Homme Homme Homme Homme
-[144] Femme Homme Homme Homme Femme Femme Femme Homme Femme Femme Femme
-[155] Femme Homme Femme Homme Homme Homme Femme Homme Femme Homme Femme
-[166] Homme Homme Femme Femme Femme Homme Femme Homme Femme Femme Femme
-[177] Homme Homme Homme Femme Homme Femme Femme Homme Homme Femme Femme
-[188] Femme Femme Femme Homme Homme Femme Homme Homme Femme Homme Femme
-[199] Homme Femme
+<pre><code>  [1] Femme Femme Homme Homme Femme Femme Femme Homme Femme Homme Femme Homme
+ [13] Femme Femme Femme Femme Homme Femme Homme Femme Femme Homme Femme Femme
+ [25] Femme Homme Femme Homme Homme Homme Homme Homme Homme Homme Femme Femme
+ [37] Homme Femme Femme Homme Femme Homme Homme Femme Femme Homme Femme Femme
+ [49] Femme Femme Homme Femme Homme Femme Homme Femme Femme Femme Homme Femme
+ [61] Femme Homme Homme Homme Homme Femme Homme Homme Femme Femme Homme Homme
+ [73] Femme Femme Femme Femme Homme Femme Femme Femme Femme Femme Femme Homme
+ [85] Homme Femme Homme Homme Homme Homme Homme Femme Homme Femme Femme Femme
+ [97] Homme Homme Femme Femme Femme Homme Femme Homme Homme Femme Femme Femme
+[109] Femme Homme Homme Homme Homme Homme Femme Homme Homme Femme Homme Homme
+[121] Femme Femme Femme Homme Femme Femme Homme Femme Femme Homme Femme Homme
+[133] Femme Femme Femme Homme Homme Homme Homme Homme Homme Homme Homme Femme
+[145] Homme Homme Homme Femme Femme Femme Homme Femme Femme Femme Femme Homme
+[157] Femme Homme Homme Homme Femme Homme Femme Homme Femme Homme Homme Femme
+[169] Femme Femme Homme Femme Homme Femme Femme Femme Homme Homme Homme Femme
+[181] Homme Femme Femme Homme Homme Femme Femme Femme Femme Femme Homme Homme
+[193] Femme Homme Homme Femme Homme Femme Homme Femme
  [ reached getOption(&quot;max.print&quot;) -- omitted 1800 entries ]
 Levels: Homme Femme</code></pre>
 <p>R va nous afficher l’ensemble des valeurs de notre variable <code>sexe</code> dans la console, ce qui est à nouveau fort peu utile. Mais cela nous permet de constater que <code>d$sexe</code> est un vecteur de chaînes de caractères tels qu’on en a déjà rencontré précédemment.</p>
@@ -826,12 +823,11 @@ gitbook.start({
 "github": false,
 "facebook": false,
 "twitter": true,
-"google": false,
 "linkedin": false,
 "weibo": false,
 "instapaper": false,
 "vk": false,
-"all": ["facebook", "google", "twitter", "linkedin", "weibo", "instapaper"],
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"],
 "instapper": false
 },
 "fontsettings": {
@@ -844,6 +840,10 @@ gitbook.start({
 "text": "Source"
 },
 "history": {
+"link": null,
+"text": null
+},
+"view": {
 "link": null,
 "text": null
 },

@@ -1,12 +1,12 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<html lang="" xml:lang="">
 <head>
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>Partie 6 Le tidyverse | Introduction à R et au tidyverse</title>
   <meta name="description" content="Une introduction à R et aux extensions du tidyverse" />
-  <meta name="generator" content="bookdown 0.14 and GitBook 2.6.7" />
+  <meta name="generator" content="bookdown 0.17 and GitBook 2.6.7" />
 
   <meta property="og:title" content="Partie 6 Le tidyverse | Introduction à R et au tidyverse" />
   <meta property="og:type" content="book" />
@@ -24,7 +24,7 @@
 <meta name="author" content="Julien Barnier" />
 
 
-<meta name="date" content="2019-10-21" />
+<meta name="date" content="2020-02-02" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -50,14 +50,14 @@
 
 
 
-<script src="libs/htmlwidgets-1.3/htmlwidgets.js"></script>
+<script src="libs/htmlwidgets-1.5.1/htmlwidgets.js"></script>
 <link href="libs/leaflet-1.3.1/leaflet.css" rel="stylesheet" />
 <script src="libs/leaflet-1.3.1/leaflet.js"></script>
 <link href="libs/leafletfix-1.0.0/leafletfix.css" rel="stylesheet" />
 <script src="libs/Proj4Leaflet-1.0.1/proj4-compressed.js"></script>
 <script src="libs/Proj4Leaflet-1.0.1/proj4leaflet.js"></script>
 <link href="libs/rstudio_leaflet-1.3.1/rstudio_leaflet.css" rel="stylesheet" />
-<script src="libs/leaflet-binding-2.0.2/leaflet.js"></script>
+<script src="libs/leaflet-binding-2.0.3/leaflet.js"></script>
 
 
 <style type="text/css">
@@ -307,8 +307,7 @@ code span.wa { color: #bf0303; } /* Warning */
 <li class="chapter" data-level="10.5" data-path="10-dplyr.html"><a href="10-dplyr.html#autres-fonctions-utiles"><i class="fa fa-check"></i><b>10.5</b> Autres fonctions utiles</a><ul>
 <li class="chapter" data-level="10.5.1" data-path="10-dplyr.html"><a href="10-dplyr.html#sample_n-sample_frac"><i class="fa fa-check"></i><b>10.5.1</b> <code>sample_n</code>, <code>sample_frac</code></a></li>
 <li class="chapter" data-level="10.5.2" data-path="10-dplyr.html"><a href="10-dplyr.html#lead-et-lag"><i class="fa fa-check"></i><b>10.5.2</b> <code>lead</code> et <code>lag</code></a></li>
-<li class="chapter" data-level="10.5.3" data-path="10-dplyr.html"><a href="10-dplyr.html#tally"><i class="fa fa-check"></i><b>10.5.3</b> <code>tally</code></a></li>
-<li class="chapter" data-level="10.5.4" data-path="10-dplyr.html"><a href="10-dplyr.html#distinct"><i class="fa fa-check"></i><b>10.5.4</b> <code>distinct</code></a></li>
+<li class="chapter" data-level="10.5.3" data-path="10-dplyr.html"><a href="10-dplyr.html#distinct"><i class="fa fa-check"></i><b>10.5.3</b> <code>distinct</code></a></li>
 </ul></li>
 <li class="chapter" data-level="10.6" data-path="10-dplyr.html"><a href="10-dplyr.html#tables-multiples"><i class="fa fa-check"></i><b>10.6</b> Tables multiples</a><ul>
 <li class="chapter" data-level="10.6.1" data-path="10-dplyr.html"><a href="10-dplyr.html#concaténation-bind_rows-et-bind_cols"><i class="fa fa-check"></i><b>10.6.1</b> Concaténation : <code>bind_rows</code> et <code>bind_cols</code></a></li>
@@ -451,9 +450,9 @@ code span.wa { color: #bf0303; } /* Warning */
 <p>Il existe d’autres extensions qui font partie du <em>tidyverse</em> mais qui doivent être chargées explicitement, comme par exemple <code>readxl</code> (pour l’importation de données depuis des fichiers Excel).</p>
 <p>La liste complète des extensions se trouve sur <a href="https://www.tidyverse.org/packages/">le site officiel du <em>tidyverse</em></a>.</p>
 <p>Ce document est basé sur les versions d’extension suivantes :</p>
-<pre><code>ggplot2 3.1.1     purrr   0.3.2
-tibble  2.1.1     dplyr   0.8.1
-tidyr   0.8.3     stringr 1.4.0
+<pre><code>ggplot2 3.2.1     purrr   0.3.3
+tibble  2.1.3     dplyr   0.8.4
+tidyr   1.0.2     stringr 1.4.0
 readr   1.3.1     forcats 0.4.0</code></pre>
 </div>
 <div id="tidydata" class="section level2">
@@ -500,35 +499,35 @@ readr   1.3.1     forcats 0.4.0</code></pre>
 <div class="sourceCode" id="cb243"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb243-1" data-line-number="1">d &lt;-<span class="st"> </span><span class="kw">as_tibble</span>(<span class="kw">rownames_to_column</span>(mtcars))</a>
 <a class="sourceLine" id="cb243-2" data-line-number="2">d</a></code></pre></div>
 <pre><code># A tibble: 32 x 12
-   rowname   mpg   cyl  disp    hp  drat    wt  qsec    vs    am  gear
-   &lt;chr&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
- 1 Mazda …  21       6  160    110  3.9   2.62  16.5     0     1     4
- 2 Mazda …  21       6  160    110  3.9   2.88  17.0     0     1     4
- 3 Datsun…  22.8     4  108     93  3.85  2.32  18.6     1     1     4
- 4 Hornet…  21.4     6  258    110  3.08  3.22  19.4     1     0     3
- 5 Hornet…  18.7     8  360    175  3.15  3.44  17.0     0     0     3
- 6 Valiant  18.1     6  225    105  2.76  3.46  20.2     1     0     3
- 7 Duster…  14.3     8  360    245  3.21  3.57  15.8     0     0     3
- 8 Merc 2…  24.4     4  147.    62  3.69  3.19  20       1     0     4
- 9 Merc 2…  22.8     4  141.    95  3.92  3.15  22.9     1     0     4
-10 Merc 2…  19.2     6  168.   123  3.92  3.44  18.3     1     0     4
-# … with 22 more rows, and 1 more variable: carb &lt;dbl&gt;</code></pre>
+   rowname       mpg   cyl  disp    hp  drat    wt  qsec    vs    am  gear  carb
+   &lt;chr&gt;       &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+ 1 Mazda RX4    21       6  160    110  3.9   2.62  16.5     0     1     4     4
+ 2 Mazda RX4 …  21       6  160    110  3.9   2.88  17.0     0     1     4     4
+ 3 Datsun 710   22.8     4  108     93  3.85  2.32  18.6     1     1     4     1
+ 4 Hornet 4 D…  21.4     6  258    110  3.08  3.22  19.4     1     0     3     1
+ 5 Hornet Spo…  18.7     8  360    175  3.15  3.44  17.0     0     0     3     2
+ 6 Valiant      18.1     6  225    105  2.76  3.46  20.2     1     0     3     1
+ 7 Duster 360   14.3     8  360    245  3.21  3.57  15.8     0     0     3     4
+ 8 Merc 240D    24.4     4  147.    62  3.69  3.19  20       1     0     4     2
+ 9 Merc 230     22.8     4  141.    95  3.92  3.15  22.9     1     0     4     2
+10 Merc 280     19.2     6  168.   123  3.92  3.44  18.3     1     0     4     4
+# … with 22 more rows</code></pre>
 <p>À l’inverse, on peut à tout moment convertir un tibble en <em>data frame</em> avec <code>as.data.frame</code> :</p>
 <div class="sourceCode" id="cb245"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb245-1" data-line-number="1"><span class="kw">as.data.frame</span>(d)</a></code></pre></div>
 <pre><code># A tibble: 32 x 12
-   rowname   mpg   cyl  disp    hp  drat    wt  qsec    vs    am  gear
-   &lt;chr&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
- 1 Mazda …  21       6  160    110  3.9   2.62  16.5     0     1     4
- 2 Mazda …  21       6  160    110  3.9   2.88  17.0     0     1     4
- 3 Datsun…  22.8     4  108     93  3.85  2.32  18.6     1     1     4
- 4 Hornet…  21.4     6  258    110  3.08  3.22  19.4     1     0     3
- 5 Hornet…  18.7     8  360    175  3.15  3.44  17.0     0     0     3
- 6 Valiant  18.1     6  225    105  2.76  3.46  20.2     1     0     3
- 7 Duster…  14.3     8  360    245  3.21  3.57  15.8     0     0     3
- 8 Merc 2…  24.4     4  147.    62  3.69  3.19  20       1     0     4
- 9 Merc 2…  22.8     4  141.    95  3.92  3.15  22.9     1     0     4
-10 Merc 2…  19.2     6  168.   123  3.92  3.44  18.3     1     0     4
-# … with 22 more rows, and 1 more variable: carb &lt;dbl&gt;</code></pre>
+   rowname       mpg   cyl  disp    hp  drat    wt  qsec    vs    am  gear  carb
+   &lt;chr&gt;       &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+ 1 Mazda RX4    21       6  160    110  3.9   2.62  16.5     0     1     4     4
+ 2 Mazda RX4 …  21       6  160    110  3.9   2.88  17.0     0     1     4     4
+ 3 Datsun 710   22.8     4  108     93  3.85  2.32  18.6     1     1     4     1
+ 4 Hornet 4 D…  21.4     6  258    110  3.08  3.22  19.4     1     0     3     1
+ 5 Hornet Spo…  18.7     8  360    175  3.15  3.44  17.0     0     0     3     2
+ 6 Valiant      18.1     6  225    105  2.76  3.46  20.2     1     0     3     1
+ 7 Duster 360   14.3     8  360    245  3.21  3.57  15.8     0     0     3     4
+ 8 Merc 240D    24.4     4  147.    62  3.69  3.19  20       1     0     4     2
+ 9 Merc 230     22.8     4  141.    95  3.92  3.15  22.9     1     0     4     2
+10 Merc 280     19.2     6  168.   123  3.92  3.44  18.3     1     0     4     4
+# … with 22 more rows</code></pre>
 <p>Là encore, on peut convertir la colonne <code>rowname</code> en “vrais” <em>rownames</em> avec <code>column_to_rownames</code> :</p>
 <div class="sourceCode" id="cb247"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb247-1" data-line-number="1"><span class="kw">column_to_rownames</span>(<span class="kw">as.data.frame</span>(d))</a></code></pre></div>
 <pre><code># A tibble: 32 x 11
@@ -586,12 +585,11 @@ gitbook.start({
 "github": false,
 "facebook": false,
 "twitter": true,
-"google": false,
 "linkedin": false,
 "weibo": false,
 "instapaper": false,
 "vk": false,
-"all": ["facebook", "google", "twitter", "linkedin", "weibo", "instapaper"],
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"],
 "instapper": false
 },
 "fontsettings": {
@@ -604,6 +602,10 @@ gitbook.start({
 "text": "Source"
 },
 "history": {
+"link": null,
+"text": null
+},
+"view": {
 "link": null,
 "text": null
 },
