@@ -6,7 +6,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>Partie 10 Manipuler les données avec dplyr | Introduction à R et au tidyverse</title>
   <meta name="description" content="Une introduction à R et aux extensions du tidyverse" />
-  <meta name="generator" content="bookdown 0.17 and GitBook 2.6.7" />
+  <meta name="generator" content="bookdown 0.18 and GitBook 2.6.7" />
 
   <meta property="og:title" content="Partie 10 Manipuler les données avec dplyr | Introduction à R et au tidyverse" />
   <meta property="og:type" content="book" />
@@ -24,7 +24,7 @@
 <meta name="author" content="Julien Barnier" />
 
 
-<meta name="date" content="2020-02-02" />
+<meta name="date" content="2020-04-03" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -566,7 +566,7 @@ code span.wa { color: #bf0303; } /* Warning */
  9      557        -3
 10      558        -2
 # … with 336,766 more rows</code></pre>
-<p>La syntaxe <code>colonne1:colonne2</code> permet de sélectionner toutes les colonnes situées entre <code>colonne1</code> et <code>colonne2</code> incluses<a href="#fn15" class="footnote-ref" id="fnref15"><sup>15</sup></a> :</p>
+<p>La syntaxe <code>colonne1:colonne2</code> permet de sélectionner toutes les colonnes situées entre <code>colonne1</code> et <code>colonne2</code> incluses<a href="#fn16" class="footnote-ref" id="fnref16"><sup>16</sup></a> :</p>
 <div class="sourceCode" id="cb513"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb513-1" data-line-number="1"><span class="kw">select</span>(flights, year<span class="op">:</span>day)</a></code></pre></div>
 <pre><code># A tibble: 336,776 x 3
     year month   day
@@ -598,7 +598,7 @@ code span.wa { color: #bf0303; } /* Warning */
  9 Shoestring Aviation Air… 0P2    39.8  -76.6  1000    -5 U     America/New_Yo…
 10 Jefferson County Intl    0S9    48.1 -123.    108    -8 A     America/Los_An…
 # … with 1,448 more rows</code></pre>
-<p>Une variante de <code>select</code> est <code>rename</code><a href="#fn16" class="footnote-ref" id="fnref16"><sup>16</sup></a>, qui permet de renommer des colonnes. On l’utilise en lui passant des paramètres de la forme <code>nouveau_nom = ancien_nom</code>. Ainsi, si on veut renommer les colonnes <code>lon</code> et <code>lat</code> de <code>airports</code> en <code>longitude</code> et <code>latitude</code> :</p>
+<p>Une variante de <code>select</code> est <code>rename</code><a href="#fn17" class="footnote-ref" id="fnref17"><sup>17</sup></a>, qui permet de renommer des colonnes. On l’utilise en lui passant des paramètres de la forme <code>nouveau_nom = ancien_nom</code>. Ainsi, si on veut renommer les colonnes <code>lon</code> et <code>lat</code> de <code>airports</code> en <code>longitude</code> et <code>latitude</code> :</p>
 <div class="sourceCode" id="cb517"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb517-1" data-line-number="1"><span class="kw">rename</span>(airports, <span class="dt">longitude =</span> lon, <span class="dt">latitude =</span> lat)</a></code></pre></div>
 <pre><code># A tibble: 1,458 x 8
    faa   name                 latitude longitude   alt    tz dst   tzone        
@@ -771,7 +771,7 @@ code span.wa { color: #bf0303; } /* Warning */
 <a class="sourceLine" id="cb535-2" data-line-number="2">tmp &lt;-<span class="st"> </span><span class="kw">select</span>(tmp, dep_delay, arr_delay)</a>
 <a class="sourceLine" id="cb535-3" data-line-number="3"><span class="kw">arrange</span>(tmp, dep_delay)</a></code></pre></div>
 <p>C’est nettement plus lisible, l’ordre des opérations est le bon, et les paramètres sont bien rattachés à leur fonction. Par contre, ça reste un peu “verbeux”, et on crée un objet temporaire <code>tmp</code> dont on n’a pas réellement besoin.</p>
-<p>Pour simplifier et améliorer encore la lisibilité du code, on va utiliser un nouvel opérateur, baptisé <em>pipe</em><a href="#fn17" class="footnote-ref" id="fnref17"><sup>17</sup></a>. Le <em>pipe</em> se note <code>%&gt;%</code>, et son fonctionnement est le suivant : si j’exécute <code>expr %&gt;% f</code>, alors le résultat de l’expression <code>expr</code>, à gauche du <em>pipe</em>, sera passé comme premier argument à la fonction <code>f</code>, à droite du <em>pipe</em>, ce qui revient à exécuter <code>f(expr)</code>.</p>
+<p>Pour simplifier et améliorer encore la lisibilité du code, on va utiliser un nouvel opérateur, baptisé <em>pipe</em><a href="#fn18" class="footnote-ref" id="fnref18"><sup>18</sup></a>. Le <em>pipe</em> se note <code>%&gt;%</code>, et son fonctionnement est le suivant : si j’exécute <code>expr %&gt;% f</code>, alors le résultat de l’expression <code>expr</code>, à gauche du <em>pipe</em>, sera passé comme premier argument à la fonction <code>f</code>, à droite du <em>pipe</em>, ce qui revient à exécuter <code>f(expr)</code>.</p>
 <p>Ainsi les deux expressions suivantes sont rigoureusement équivalentes :</p>
 <div class="sourceCode" id="cb536"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb536-1" data-line-number="1"><span class="kw">filter</span>(flights, dest <span class="op">==</span><span class="st"> &quot;LAX&quot;</span>)</a></code></pre></div>
 <div class="sourceCode" id="cb537"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb537-1" data-line-number="1">flights <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">filter</span>(dest <span class="op">==</span><span class="st"> &quot;LAX&quot;</span>)</a></code></pre></div>
@@ -1034,8 +1034,8 @@ L’utilisation du <em>pipe</em> n’est pas obligatoire, mais elle rend les scr
  9 BGR     375
 10 BHM     297
 # … with 95 more rows</code></pre>
-<p>Depuis la version 0.8 de <code>dplyr</code>, lorsque la variable de groupage est un facteur et que certaines valeurs du facteur ne sont pas présentes dans le tableau, l’argument <code>.drop = FALSE</code> de <code>group_by</code> permet de conserver ces niveaux dans le résultat d’une opération groupée.</p>
-<p>Par exemple, si on transforme la variable <code>origin</code> en facteur pour conserver la liste de ses modalités, et on ne garde que les vols à destination de San Francisco (code <code>SFO</code>) :</p>
+<p>Lorsque la variable de groupage est un facteur et que certaines valeurs du facteur ne sont pas présentes dans le tableau, l’argument <code>.drop = FALSE</code> de <code>group_by</code> permet de conserver ces niveaux dans le résultat d’une opération groupée.</p>
+<p>Par exemple, si on transforme la variable <code>origin</code> en facteur pour conserver la liste de ses modalités, et qu’on ne garde que les vols à destination de San Francisco (code <code>SFO</code>) :</p>
 <div class="sourceCode" id="cb568"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb568-1" data-line-number="1">ff &lt;-<span class="st"> </span>flights <span class="op">%&gt;%</span><span class="st"> </span></a>
 <a class="sourceLine" id="cb568-2" data-line-number="2"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">origin =</span> <span class="kw">factor</span>(origin)) <span class="op">%&gt;%</span><span class="st"> </span></a>
 <a class="sourceLine" id="cb568-3" data-line-number="3"><span class="st">  </span><span class="kw">filter</span>(dest <span class="op">==</span><span class="st"> &quot;SFO&quot;</span>)</a></code></pre></div>
@@ -1089,7 +1089,7 @@ L’utilisation du <em>pipe</em> n’est pas obligatoire, mais elle rend les scr
  9     8 LAX    1505
 10     7 LAX    1500
 # … with 1,103 more rows</code></pre>
-<p>On peut également utiliser <code>count</code> sur plusieurs variables. Les commandes suivantes comptent le nombre de vols pour chaque couple aéroport de départ / aéroport d’arrivée, et trie le résultat par nombre de vols décroissant :</p>
+<p>On peut également utiliser <code>count</code> sur plusieurs variables. Les commandes suivantes comptent le nombre de vols pour chaque couple aéroport de départ / aéroport d’arrivée, et trie le résultat par nombre de vols décroissant. Ici la colonne qui contient le nombre de vols, créée par <code>count</code>, s’appelle <code>n</code> par défaut :</p>
 <div class="sourceCode" id="cb577"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb577-1" data-line-number="1">flights <span class="op">%&gt;%</span><span class="st"> </span></a>
 <a class="sourceLine" id="cb577-2" data-line-number="2"><span class="st">  </span><span class="kw">count</span>(origin, dest) <span class="op">%&gt;%</span><span class="st"> </span></a>
 <a class="sourceLine" id="cb577-3" data-line-number="3"><span class="st">  </span><span class="kw">arrange</span>(<span class="kw">desc</span>(n))</a></code></pre></div>
@@ -2003,7 +2003,7 @@ L’utilisation du <em>pipe</em> n’est pas obligatoire, mais elle rend les scr
 <div class="solution">
 <div class="sourceCode" id="cb659"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb659-1" data-line-number="1"><span class="kw">filter</span>(flights, arr_delay <span class="op">&gt;=</span><span class="st"> </span><span class="dv">5</span> <span class="op">&amp;</span><span class="st"> </span>arr_delay <span class="op">&lt;=</span><span class="st"> </span><span class="dv">15</span>)</a></code></pre></div>
 </div>
-<p>Sélectionnez les vols des compagnies Delta, United et American (codes <code>DL</code>, <code>UA</code> et <code>AA</code>).</p>
+<p>Sélectionnez les vols des compagnies Delta, United et American (codes <code>DL</code>, <code>UA</code> et <code>AA</code> de la variable <code>carrier</code>).</p>
 <pre><code># A tibble: 139,504 x 19
     year month   day dep_time sched_dep_time dep_delay arr_time sched_arr_time
    &lt;int&gt; &lt;int&gt; &lt;int&gt;    &lt;int&gt;          &lt;int&gt;     &lt;dbl&gt;    &lt;int&gt;          &lt;int&gt;
@@ -2504,10 +2504,10 @@ L’utilisation du <em>pipe</em> n’est pas obligatoire, mais elle rend les scr
 </div>
 <div class="footnotes">
 <hr />
-<ol start="15">
-<li id="fn15"><p>À noter que cette opération est un peu plus “fragile” que les autres, car si l’ordre des colonnes change elle peut renvoyer un résultat différent.<a href="10-dplyr.html#fnref15" class="footnote-back">↩</a></p></li>
-<li id="fn16"><p>Il est également possible de renommer des colonnes directement avec <code>select</code>, avec la même syntaxe que pour <code>rename</code>.<a href="10-dplyr.html#fnref16" class="footnote-back">↩</a></p></li>
-<li id="fn17"><p>Le <em>pipe</em> a été introduit à l’origine par l’extension <code>magrittr</code>, et repris par <code>dplyr</code><a href="10-dplyr.html#fnref17" class="footnote-back">↩</a></p></li>
+<ol start="16">
+<li id="fn16"><p>À noter que cette opération est un peu plus “fragile” que les autres, car si l’ordre des colonnes change elle peut renvoyer un résultat différent.<a href="10-dplyr.html#fnref16" class="footnote-back">↩</a></p></li>
+<li id="fn17"><p>Il est également possible de renommer des colonnes directement avec <code>select</code>, avec la même syntaxe que pour <code>rename</code>.<a href="10-dplyr.html#fnref17" class="footnote-back">↩</a></p></li>
+<li id="fn18"><p>Le <em>pipe</em> a été introduit à l’origine par l’extension <code>magrittr</code>, et repris par <code>dplyr</code><a href="10-dplyr.html#fnref18" class="footnote-back">↩</a></p></li>
 </ol>
 </div>
 <script src="js/tidyverse.js"></script>
