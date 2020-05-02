@@ -1,0 +1,268 @@
+# (PART) Aller plus loin {-}
+
+
+# Écrire ses propres fonctions
+
+## Premiers exemples
+
+Nous avons vu lors de l'introduction à R que le langage repose sur deux grands concept : les *objets* et les *fonctions*. Pour reprendre une citation de John Chambers, en R, tout ce qui existe est un objet, et tout ce qui se passe est une fonction.
+
+Nous avons déjà rencontré et utilisé un grand nombre de fonctions, certaine assez simples (`mean`, `max`...) et d'autres beaucoup plus complexes (`ggplot`, `group_by`...). R, comme tout langage de programmation, offre la possibilité de créer et d'utiliser ses propres fonctions.
+
+
+Voici tout de suite un exemple de fonction très simple, quoi que d'une utilisté douteuse, puisqu'elle se contente d'ajouter 2 à un nombre :
+
+```{r}
+ajoute2 <- function(x) {
+  resultat <- x + 2
+  return(resultat)
+}
+```
+
+Si on exécute ce code, on crée une nouvelle fonction nommée `ajoute2`, que l'on peut directement utiliser dans un script ou dans la console, de la manière suivante :
+
+```{r}
+ajoute2(3)
+```
+
+Essayons de décomposer pas à pas la structure de cette fonction très simple.
+
+D'abord, une fonction est créée en utilisant l'instruction `function`. Celle-ci est suivie d'une paire de parenthèses et d'une paire d'accolades.
+
+```{r eval=FALSE}
+function() {
+  
+}
+```
+
+Dans les parenthèses, on indique les arguments de la fonction que nous souhaitons créer, ceux qui devront être indiqués quand nous l'appelerons. Ici notre fonction ne prend qu'un seul argument, que nous avons décidé de nommer `x` :
+
+```{r eval=FALSE}
+function(x) {
+  
+}
+```
+
+Les accolades comprennent une série d'instructions R qui consituent le *corps* de notre fonction. C'est ce code qui sera exécuté quand notre fonction est appelée. On peut utiliser dans le corps de la fonction les arguments passés à notre fonction. Ici, la première ligne utilise la valeur de l'argument `x`, lui ajoute 2 et stocke le résultat dans un nouvel objet `resultat` :
+
+```{r eval=FALSE}
+function(x) {
+  resultat <- x + 2
+}
+```
+
+Pour qu'elle soit utile, notre fonction doit renvoyer le résultat qu'elle a calculé précédemment. Ceci se fait via l'instruction `return` à qui on passe la valeur à retourner à l'utilisateur :
+
+```{r eval=FALSE}
+function(x) {
+  resultat <- x + 2
+  return(resultat)
+}
+```
+
+Enfin, pour que notre fonction puisse être appelée et utilisée, nous devons lui donner un nom, ou plus précisément la stocker dans un objet :
+
+```{r eval=FALSE}
+ajoute2 <- function(x) {
+  resultat <- x + 2
+  return(resultat)
+}
+```
+
+```{block type='rmdnote'}
+Les fonctions étant des objets comme les autres, elles suivent les mêmes contraintes pour leur nom : on a donc droit aux lettres minuscules et majuscules, chiffres, point et tiret bas.
+```
+
+Avec le code précédent, on a donc créé un nouvel objet `ajoute2` de type `function`. Cette nouvelle fonction prend un seul argument `x`, calcule la valeur `x + 2` et renvoie ce résultat. On l'utilise en tapant son nom suivi de la valeur de ses arguments entre parenthèses, par exemple :
+
+```{r}
+ajoute2(41)
+```
+
+Ou encore :
+
+```{r}
+y <- 5
+z <- ajoute2(y)
+z
+```
+
+
+À noter que notre fonction marche aussi si on lui passe un vecteur en argument :
+
+```{r}
+vec <- 1:5
+ajoute2(vec)
+```
+
+
+Prenons un autre exemple : par défaut on sait que la fonction `table` retourne le tri à plat en effectifs d'une variable qualitative. On pourrait dès lors créer notre propre fonction qui renvoie plutôt le tri à plat en pourcentages. Ça n'est pas très compliqué :
+
+```{r}
+prop_tab <- function(v) {
+  tri <- table(v)
+  tri <- tri / sum(tri) * 100
+  return(tri)
+}
+```
+
+Notre fonction prend en entrée un argument, en l'occurrence un vecteur représentant une variable qualitative. On commence par faire le tri à plat de ce vecteur avec `table`, puis on calcule la répartition en pourcentages en divisant ce tri à plat par l'effectif total (`sum(tri)`) puis en multipliant par 100.
+
+Testons sur une variable de `hdv2003` :
+
+```{r}
+library(questionr)
+data(hdv2003)
+prop_tab(hdv2003$qualif)
+```
+
+Ça fonctionn, mais l'affichage d'un grand nombre de chiffres après la virgule peut nuire à la lisibilité du résultat. On pourrait donc améliorer notre fonction en arrondissant le résultat avec la fonction `round()` avant de le retourner^[Quand on modifie une fonction existante, il faut exécuter à nouveau le code correspondant à sa définition pour la "mettre à jour". Ici, si on ne le fait pas l'objet `prop_tab` contiendra toujours l'ancienne définition.] :
+
+```{r}
+prop_tab <- function(v) {
+  tri <- table(v)
+  tri <- tri / sum(tri) * 100
+  tri <- round(tri, 2)
+  return(tri)
+}
+
+prop_tab(hdv2003$qualif)
+```
+
+Ça marche ! Cela dit, limiter à 2 chiffres après la virgule peut convenir dans certains cas mais moins dans d'autres. L'idéal serait d'offrir la possibilité à l'utilisateur de la fonction de choisir lui-même la précision de l'affichage. Comment ? Tout simplement en ajoutant un deuxième argument à la fonction, que nous nommerons `decimales`, et en utilisant cet argument à la place du 2 dans l'appel à `round()` :
+
+```{r}
+prop_tab <- function(v, decimales) {
+  tri <- table(v)
+  tri <- tri / sum(tri) * 100
+  tri <- round(tri, decimales)
+  return(tri)
+}
+```
+
+Désormais, notre fonction s'utilise en lui indiquant deux arguments :
+
+```{r}
+prop_tab(hdv2003$qualif, 1)
+```
+
+Enfin, dernier exemple, parfois une fonction n'a pas pour objectif de renvoyer un résultat mais d'accomplir une action, par exemple en générant un graphique^[Les actions "visibles" dans notre session R accomplies par une fonction en-dehors du résultat renvoyé sont appelés des "effets de bord"]. Dans ce cas la fonction peut ne pas inclure d'instruction `return()`. 
+
+Par exemple la fonction suivante prend en argument un vecteur numérique un génère un diagramme en barres du tri à plat trié de cette variable (en modifiant la présentation au passage) :
+
+```{r}
+my_barplot <- function(var) {
+  tri <- table(var)
+  tri <- sort(tri)
+  barplot(tri, col = "skyblue", border = NA)
+}
+
+my_barplot(hdv2003$clso)
+```
+
+Ici la fonction n'est pas utilisée pour un résultat qu'elle retourne, mais pour une action qu'elle effectue : afficher un graphique.
+
+
+## Utilité des fonctions
+
+Une question légitime est de se demander dans quels cas il est utile de créer une fonction.
+
+Une règle assez courante consiste à dire que dès qu'on a répété le même code plus de deux fois, il est préférable d'en faire une fonction. Celles-ci ont en effet comme avantage d'éviter le duplication du code.
+
+Prenons tout de suite un exemple. Imaginons que vous avez récupéré un jeu de données avec toute une série de variables ayant les modalités "1" et "2" qui correspondent aux réponses "Oui" et "Non" à des questions.
+
+On crée un *data frame* fictif comportant quatre variables de ce type :
+
+```{r}
+df <- data.frame(
+  q1 = c("1", "1", "2", "1"),
+  q2 = c("1", "2", "2", "2"),
+  q3 = c("2", "2", "1", "1"),
+  q4 = c("1", "2", "1", "1")
+)
+```
+
+On sait qu'on peut facilement [recoder l'une de ces variables](09-recodages.html#recoder-une-variable-qualitative) à l'aide de la fonction `fct_recode` de l'extension `forcats` :
+
+```{r, eval = FALSE}
+df$q1 <- fct_recode(df$q1,
+  "Oui" = "1",
+  "Non" = "2"
+)
+```
+
+On peut donc être tenté de dupliquer ce code autant de fois qu'on a de questions à recoder :
+
+```{r, eval = FALSE}
+df$q1 <- fct_recode(df$q1,
+  "Oui" = "1",
+  "Non" = "2"
+)
+df$q2 <- fct_recode(df$q2,
+  "Oui" = "1",
+  "Non" = "2"
+)
+df$q3 <- fct_recode(df$q3,
+  "Oui" = "1",
+  "Non" = "2"
+)
+df$q4 <- fct_recode(df$q4,
+  "Oui" = "1",
+  "Non" = "2"
+)
+```
+
+Il est toutefois plus judicieux de créer une fonction spécifique pour ce recodage :
+
+```{r}
+recode_oui_non <- function(var) {
+  new_var <- fct_recode(var,
+    "Oui" = "1",
+    "Non" = "2"
+  )
+  return(new_var)
+}
+```
+
+Il est alors très simple d'appliquer ce recodage à plusieurs variables :
+
+```{r, eval = FALSE}
+df$q1 <- recode_oui_non(df$q1)
+df$q2 <- recode_oui_non(df$q2)
+df$q3 <- recode_oui_non(df$q3)
+df$q4 <- recode_oui_non(df$q4)
+```
+
+Autre avantage, si nous réalisons que nous avons commis une erreur et qu'en fait le code "1" correspondait à "Non" et le code "2" à "Oui, je n'ai pas besoin de modifier tous les endroits où j'ai copié/collé mon recodage, mais seulement la définition de ma fonction et à relancer mes recodages.
+
+Les avantages de procéder ainsi sont donc multiples :
+
+- créer une fonction évite la répétition du code et le rend moins long et plus lisible, surtout si on donne à notre fonction un nom explicite permettant de comprendre ce qu'elle fait.
+- créer une fonction évite les erreurs de copier/coller du code.
+- elle permet de mettre à jour plus facilement son code : si on se rend compte d'une erreur ou si on améliore son fonctionnement, on n'a qu'un seul endroit à modifier.
+- enfin, créer des fonctions permet potentiellement de rendre son code réutilisable d'un script à l'autre ou même d'un projet à l'autre. Voire, à terme, de les regrouper dans un package pour soi-même ou pour diffusion à d'autres utilisateurs de R.
+
+ 
+## Arguments d'une fonction
+
+arguments nommés
+valeurs par défaut
+vérifier que les arguments sont du bon type
+... : exemple histogramme avec des valeurs par défaut
+
+## Résultat d'une fonction
+
+return facultatif
+return = sortie de la fonction
+retourner plusieurs arguments
+Ex : créer son propre summary()
+retours invisibles
+
+## Portée des variables
+
+
+## Ressources
+
+
+## Exercices
+
