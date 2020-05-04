@@ -14,7 +14,7 @@ Pour rappel, le principe d'une fonction est de prendre en entrée un certain nom
 Nous avons déjà rencontré et utilisé un grand nombre de fonctions, certaine assez simples (`mean`, `max`...) et d'autres beaucoup plus complexes (`ggplot`, `group_by`...). R, comme tout langage de programmation, offre la possibilité de créer et d'utiliser ses propres fonctions.
 
 
-Voici tout de suite un exemple de fonction très simple, quoi que d'une utilisté douteuse, puisqu'elle se contente d'ajouter 2 à un nombre :
+Voici tout de suite un exemple de fonction très simple, quoi que d'une utilité douteuse, puisqu'elle se contente d'ajouter 2 à un nombre :
 
 ```{r}
 ajoute2 <- function(x) {
@@ -245,32 +245,232 @@ Autre avantage, si nous réalisons que nous avons commis une erreur et qu'en fai
 
 Les avantages de procéder ainsi sont donc multiples :
 
-- créer une fonction évite la répétition du code et le rend moins long et plus lisible, surtout si on donne à notre fonction un nom explicite permettant de comprendre ce qu'elle fait.
+- créer une fonction évite la répétition du code et le rend moins long et plus lisible, surtout si on donne à notre fonction un nom explicite permettant de comprendre immédiatement ce qu'elle fait.
 - créer une fonction évite les erreurs de copier/coller du code.
-- elle permet de mettre à jour plus facilement son code : si on se rend compte d'une erreur ou si on améliore son fonctionnement, on n'a qu'un seul endroit à modifier.
-- enfin, créer des fonctions permet potentiellement de rendre son code réutilisable d'un script à l'autre ou même d'un projet à l'autre. Voire, à terme, de les regrouper dans un package pour soi-même ou pour diffusion à d'autres utilisateurs de R.
+- une fonction permet de mettre à jour plus facilement son code : si on se rend compte d'une erreur ou si on souhaite améliorer son fonctionnement, on n'a qu'un seul endroit à modifier.
+- enfin, créer des fonctions permet potentiellement de rendre son code réutilisable d'un script à l'autre ou même d'un projet à l'autre. Voire, à terme, de les regrouper dans un *package* pour soi-même ou pour diffusion à d'autres utilisateurs de R.
 
  
 ## Arguments d'une fonction
 
-arguments nommés
-valeurs par défaut
-vérifier que les arguments sont du bon type
-... : exemple histogramme avec des valeurs par défaut
+### Définition des arguments
+
+Les arguments d'une fonction sont tout ce qu'on fournit "en entrée" à cette dernière, et qui vont soit lui fournir des données, soit modifier son comportement. La liste des arguments acceptés par une fonction est donnée lors de l'appel de `function` :
+
+```{r, eval = FALSE}
+ma_fonction <- function(arg1, arg2, arg3) {
+  ...
+}
+```
+
+Lors de l'appel de la fonction, on peut lui passer les arguments *par position* :
+
+```{r, eval = FALSE}
+ma_fonction(x, 12, TRUE)
+```
+
+Dans ce cas, `arg1` vaudra `x`, `arg2` vaudra `12` et `arg3` vaudra `TRUE`.
+
+On peut aussi passer les arguments *par nom* :
+
+```{r, eval = FALSE}
+ma_fonction(arg1 = x, arg2 = 12, arg3 = TRUE)
+```
+
+Quand on passe les arguments par nom, on peut les indiquer dans l'ordre qu'on le souhaite :
+
+
+```{r, eval = FALSE}
+ma_fonction(arg1 = x, arg3 = TRUE, arg2 = 12)
+```
+
+Et on peut évidemment mélanger passage par position et passage par nom :
+
+```{r, eval = FALSE}
+ma_fonction(x, 12, arg3 = TRUE)
+```
+
+Le plus souvent, les premiers arguments acceptés par une fonction sont les données sur lesquelles elle va travailler, tandis que les arguments suivants sont des paramètres qui vont modifier son comportement. Par exemple, `median` accepte comme premier argument `x`, un vecteur, puis un argument `na.rm` qui va changer sa manière de calculer la médiane des valeurs de `x`.
+
+En général on appelle la fonction en passant les paramètres correspondant aux données par position, et les autres en les nommant. C'est ainsi qu'on ne fait ni `median(x = tailles, na.rm = TRUE)` ni `median(tailles, TRUE)`, mais plutôt `median(tailles, na.rm = TRUE)`.
+
+
+### Valeurs par défaut
+
+Au moment de la définition de la fonction, on peut indiquer une valeur par défaut qui sera prise par l'argument si l'utilisateur de la fonction n'en fournit pas. 
+
+Si on reprend la fonction `prop_tab` déjà définie plus haut :
+
+```{r, eval = FALSE}
+prop_tab <- function(v, decimales) {
+  tri <- table(v)
+  tri <- tri / sum(tri) * 100
+  tri <- round(tri, decimales)
+  return(tri)
+}
+```
+
+On peut indiquer une valeur par défaut de l'argument `decimales` (qui indique le nombre de chiffres à conserver après la virgule) de la manière suivante :
+
+```{r}
+prop_tab <- function(v, decimales = 1) {
+  tri <- table(v)
+  tri <- tri / sum(tri) * 100
+  tri <- round(tri, decimales)
+  return(tri)
+}
+```
+
+Si on appelle `prop_tab` en lui passant uniquement le vecteur `v`, on voit que `decimales` vaut bien 1 :
+
+```{r}
+prop_tab(hdv2003$qualif)
+```
+
+
+### L'argument `...`
+
+Une fonction peut prendre un argument spécial, nommé `...` :
+
+```{r}
+ma_fonction <- function(x, correct = TRUE, ...) {
+  
+}
+```
+
+Cet argument spécial "capture" tous les arguments présents et qui n'ont pas été définis avec la fonction. Par exemple, si on appelle la fonction précédente avec :
+
+```{r}
+ma_fonction(1:5, correct = FALSE, title = "Titre", size = 12)
+```
+
+Alors `...` contiendra les arguments `title` et `size` et leurs valeurs.
+
+En général `...` est utilisé pour passer ces arguments à d'autres fonctions. Reprenons notre fonction `my_barplot` définie précédemment :
+
+```{r}
+my_barplot <- function(var) {
+  tri <- table(var)
+  tri <- sort(tri)
+  barplot(tri, col = "skyblue", border = NA)
+}
+```
+
+On pourrait permettre à l'utilisateur de personnaliser les couleurs des barres et de leurs bordures en ajoutant des arguments supplémentaires :
+
+```{r}
+my_barplot <- function(var, col = "skyblue", border = NA) {
+  tri <- table(var)
+  tri <- sort(tri)
+  barplot(tri, col = col, border = border)
+}
+```
+
+Mais si on veut aussi permettre de personnaliser d'autres arguments de `barplot` comme `main`, `xlab`, `xlim`, etc., il faudrait rajouter autant d'arguments supplémentaires à notre fonction, ce qui deviendrait vite ingérable. Une solution est de "capturer" tous les arguments supplémentaires avec `...` et de les passer directement à `barplot`, de cette manière : 
+
+```{r}
+my_barplot <- function(var, ...) {
+  tri <- table(var)
+  tri <- sort(tri)
+  barplot(tri, ...)
+}
+```
+
+Ce qui permet d'appeler notre fonction avec tous les arguments possibles de `barplot`, par exemple :
+
+
+```{r}
+my_barplot(hdv2003$clso, col = "yellowgreen", main = "Croyez-vous en l'existence des classes sociales ?")
+```
+
 
 ## Résultat d'une fonction
 
-return facultatif
-return = sortie de la fonction
-retourner plusieurs arguments
-Ex : créer son propre summary()
-retours invisibles
+On l'a vu, l'objectif d'une fonction est en général de renvoyer un résultat. Lors de la définition d'une fonction, le résultat peut être retourné en utilisant la fonction `return` :
+
+```{r}
+ajoute2 <- function(x) {
+  res <- x + 2
+  return(res)
+}
+```
+
+En réalité, l'utilisation de `return` n'est pas obligatoire : une fonction retourne automatiquement le résultat de la dernière instruction qu'elle exécute. On aurait donc pu écrire :
+
+```{r}
+ajoute2 <- function(x) {
+  res <- x + 2
+  res
+}
+```
+
+Ou même, encore mieux et plus lisible :
+
+```{r}
+ajoute2 <- function(x) {
+  x + 2
+}
+```
+
+À noter que lorsque R rencontre une instruction `return` dans une fonction, il interrompt immédiatement son exécution et "sort" de la fonction en renvoyant le résultat.
+
+Ainsi, dans la fonction suivante :
+
+```{r}
+ajoute2 <- function(x) {
+  return(x + 2)
+  x * 5
+}
+```
+
+L'instruction `x * 5` ne sera jamais exécutée car R "sort" de la fonction dès qu'il tombe sur le `return` de la ligne précédente.
+
+Corrolaire de ce comportement, on ne peut utiliser plusieurs `return` pour renvoyer plusieurs résultats depuis une seule fonction. Est-ce à dire qu'une fonction R ne pourrait renvoyer qu'une seule valeur ? Non, car si elle ne peut retourner qu'un seul objet, celui-ci peut être complexe et comporter plusieurs valeurs.
+
+Par exemple, on pourrait créer une fonction `summary` "personnalisée" qui ne retournerait que la moyenne et l'écart-type d'un vecteur numérique. Pour cela, on pourrait renvoyer un vecteur comportant ces deux valeurs :
+
+```{r}
+resume <- function(x) {
+  moyenne <- mean(x)
+  ecart_type <- sd(x)
+  c(moyenne, ecart_type)
+}
+```
+
+```{r}
+resume(hdv2003$age)
+```
+
+Mais dans ce cas de figure il est recommandé de retourner plutôt une liste nommée^[Les listes seront abordées un peu plus en détail dans la partie \@ref(listes)], de cette manière :
+
+```{r}
+resume <- function(x) {
+  moyenne <- mean(x)
+  ecart_type <- sd(x)
+  list(moy = moyenne, et = ecart_type)
+}
+```
+
+```{r}
+resume(hdv2003$age)
+```
+
+On a du coup un affichage un peu plus lisible, et surtout on peut accéder aux valeurs renvoyées via leur nom :
+
+```{r}
+res <- resume(hdv2003$age)
+res$moy
+```
+
 
 ## Portée des variables
 
 
 ## Ressources
 
+- r4ds
+- adv r
+https://cran.r-project.org/doc/manuals/r-release/R-intro.html#Writing-your-own-functions
 
 ## Exercices
 
