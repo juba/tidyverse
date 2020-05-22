@@ -294,6 +294,8 @@ Le plus souvent, les premiers arguments acceptés par une fonction sont les donn
 
 En général on appelle la fonction en passant les paramètres correspondant aux données par position, et les autres en les nommant. C'est ainsi qu'on ne fait ni `median(x = tailles, na.rm = TRUE)` ni `median(tailles, TRUE)`, mais plutôt `median(tailles, na.rm = TRUE)`.
 
+En ce qui concerne le nom des arguments eux-mêmes, en général ceux correspondant aux données transmises à une fonction peuvent avoir des noms relativement génériques (`x`, `y`, `var` pour un vecteur, `data` ou `df` pour un data.frame...). Les autres doivent par contre avoir des noms à la fois courts et explicites : par exemple plutôt `decimales` que `nd` ou `nombre_de_decimales`. 
+
 
 ### Valeurs par défaut
 
@@ -462,8 +464,103 @@ res <- resume(hdv2003$age)
 res$moy
 ```
 
+## Afficher des messages depuis une fonction
+
+Une fonctionnalité utile quand on crée une fonction et d'afficher des messages dans la console pendant son exécution, que ce soit pour présenter des résultats ou informer du déroulement des opérations.
+
+### `print` et `message`
+
+La fonction `print` peut être utile 
+
+
+### `warning` et `error`
+
+message()
+print()
+warning() et stop()
 
 ## Portée des variables
+
+Un point délicat mais important quand on commence à créer ses propres fonctions concerne la *portée des variables*, c'est-à-dire dont les objets créés dans une fonction et en-dehors "cohabitent". C'est une question assez complexe, mais seuls quelques grandes règles sont réellement utiles au départ.
+
+### Une fonction peut accéder à un objet extérieur
+
+Si on fait appel dans une fonction à un objet qui n'existe pas et n'a pas été passé comme argument, on obtient évidemment une erreur :
+
+```{r}
+f <- function(x) {
+  x + ajout
+}
+
+f(2)
+```
+
+On peut évidemment créer cet objet dans notre fonction avant de l'utiliser :
+
+```{r}
+f <- function(x) {
+  ajout <- 2
+  x + ajout
+}
+
+f(2)
+```
+
+Mais on peut aussi accéder depuis une fonction à un objet qui existe dans notre environnement au moment où la fonction a été appelée :
+
+```{r}
+f <- function(x) {
+  x + ajout
+}
+
+ajout <- 3
+f(2)
+```
+
+Dans cet exemple, au moment de l'exécution de `f`, comme `ajout` n'existe pas au sein de la fonction (il n'a pas été passé comme argument ni défini dans le corps de la fonction), R va chercher dans l'environnement global, celui dans lequel la fonction a été appelée. Comme il trouve un objet `ajout`, il utilise sa valeur au moment de l'appel de la fonction.
+
+Que se passe-t-il si un objet avec le même nom existe à la fois dans la fonction et dans notre environnement ? Dans ce cas R privilégie l'objet créé dans la fonction :
+
+```{r}
+f <- function(x) {
+  ajout <- 10
+  x + ajout
+}
+
+ajout <- 3
+f(2)
+```
+
+Cette règle s'applique également pour les arguments passés à la fonction :
+
+
+```{r}
+f <- function(x, ajout) {
+  x + ajout
+}
+
+ajout <- 3
+f(2, 20)
+```
+
+En définitive, les objets créés dans notre session et qui existent dans notre environnement (tel que visible dans l'onglet *Environment* de RStudio) sont appelés des variables "globales" : elles existent également et sont accessible pour les fonctions appelées depuis cet environnement. Les objets créés lors de la définition d'une fonction sont des à l'inverse des variables "locales" : elles n'existent qu'à l'intérieur de la fonction et pour la durée de son exécution. Si deux objets du même nom existent, les objets locaux sont prioritaires par rapport aux objets globaux.
+
+Une conséquence de cette règle est qu'il n'est pas possible de modifier un objet de notre environnement global depuis une fonction^[En fait c'est possible avec l'opérateur `<<-`, mais c'est fortement déconseillé dans la très grande majorité des cas.] :
+
+```{r}
+
+f <- function() {
+  ajout <- 10
+  ajout
+}
+
+ajout <- 3
+f()
+ajout
+
+```
+
+Ici on voit que même si pendant l'exécution de la fonction `ajout` vaut bien 10 (puisque c'est la valeur qu'elle retourne), dès qu'on n'est plus dans la fonction `ajout` vaut toujours sa valeur de départ, c'est-à-dire 3. Dans ce cas, au moment de l'instruction `ajout <- 10` de notre fonction, R crée un objet local qui vaut bien 10, mais qui est distinct de l'objet global dont la valeur est 3. Cet objet local n'existe que le temps de l'exécution de la fonction.
 
 
 ## Ressources
