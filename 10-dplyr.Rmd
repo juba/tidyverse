@@ -9,6 +9,8 @@ editor_options:
 
 `dplyr` part du principe que les données sont organisées selon le modèle des *tidy data* (voir la section \@ref(tidydata)). Les fonctions de l'extension peuvent s'appliquer à des tableaux de type `data.frame` ou `tibble`, et elles retournent systématiquement un `tibble` (voir la section \@ref(tibbles)).
 
+Le code présent dans ce document nécessite d'avoir installé la version 1.0 de `dplyr` (ou plus récente).
+
 ## Préparation
 
 `dplyr` fait partie du coeur du *tidyverse*, elle est donc chargée automatiquement avec :
@@ -115,13 +117,6 @@ La syntaxe `colonne1:colonne2` permet de sélectionner toutes les colonnes situ�
 
 ```{r}
 select(flights, year:day)
-```
-
-
-`select` peut être utilisée pour réordonner les colonnes d'une table en utilisant la fonction `everything()`, qui sélectionne l'ensemble des colonnes non encore sélectionnées. Ainsi, si on souhaite faire passer la colonne `name` en première position de la table `airports`, on peut faire :
-
-```{r}
-select(airports, name, everything())
 ```
 
 
@@ -525,21 +520,56 @@ flights %>%
 
 `dplyr` contient beaucoup d'autres fonctions utiles pour la manipulation de données.
 
-### `sample_n`, `sample_frac`
+### `slice_sample`
 
-Ces verbes permettent de sélectionner un nombre de lignes ou une fraction des lignes d'un tableau aléatoirement. Ainsi si on veut choisir 5 lignes au hasard dans le tableau `airports` :
+Ce verbe permet de sélectionner aléatoirement un nombre de lignes (avec l'argument `n`) ou une fraction des lignes (avec l'argument `prop`) d'un tableau. 
+
+Ainsi si on veut choisir 5 lignes au hasard dans le tableau `airports` :
 
 ```{r}
-airports %>% sample_n(5)
+airports %>% slice_sample(n = 5)
 ```
 
 Si on veut tirer au hasard 10% des lignes de `flights` :
 
 ```{r}
-flights %>% sample_frac(0.1)
+flights %>% slice_sample(prop = 0.1)
 ```
 
 Ces fonctions sont utiles notamment pour faire de "l'échantillonnage" en tirant au hasard un certain nombre d'observations du tableau.
+
+### `slice_head`, `slice_tail`, `slice_min`, `slice_max`
+
+`slice_head` et `slice_tail` permettent de sélectionner les  premières ou dernière lignes d'un tableau. On peut indiquer le nombre (avec `n`) ou la proportion (avec `prop`) de lignes qu'on souhaite.
+
+Ainsi si on veut afficher les trois premières lignes d'`airport` :
+
+```{r}
+airports %>% slice_head(n = 3)
+```
+
+Si on veut afficher les dernières 20% des lignes de `airlines` :
+
+```{r}
+airlines %>% slice_tail(prop = 0.2)
+```
+
+`slice_min` et `slice_max` prennent en argument supplémentaire une variable du tableau et affichent `n` ou `prop` lignes du tableau ayant les valeurs les plus ou les moins élevées de cette variable.
+
+Ainsi si on veut les 1% de lignes de `flights` ayant les plus fortes valeurs de `dep_delay` :
+
+```{r}
+flights %>% slice_max(dep_delay, prop = 0.01)
+```
+
+Si on veut les 2 aéroports avec l'altitude la plus basse :
+
+```{r}
+airports %>% slice_min(alt, n = 2)
+```
+
+On notera que le tableau renvoyé par `slice_min` et `slice_max` est trié selon la variable d'intérêt.
+
 
 ### `lead` et `lag`
 
@@ -561,7 +591,7 @@ flights %>%
 
 
 
-### `distinct`
+### `distinct` et `n_distinct`
 
 `distinct` filtre les lignes du tableau pour ne conserver que les lignes distinctes, en supprimant toutes les lignes en double.
 
@@ -585,7 +615,31 @@ flights %>%
   distinct(month, day, .keep_all = TRUE) 
 ```
 
+La fonction `n_distinct`, elle, renvoie le nombre de valeurs distinctes d'un vecteur. On peut notamment l'utiliser dans un `summarise`. 
 
+Dans l'exemple qui suit on calcule, pour les trois aéroports de départ de la table `flights` le nombre de valeurs distinctes de l'aéroport d'arrivée :
+
+```{r}
+flights %>% 
+  group_by(origin) %>% 
+  summarise(n_dest = n_distinct(dest))
+```
+
+
+
+### `relocate`
+ 
+`relocate` peut être utilisé pour réordonner les colonnes d'une table. Par défaut, si on lui passe un ou plusieurs noms de colonnes, `relocate` les place en début de tableau :
+
+```{r}
+airports %>% relocate(lat, lon)
+```
+ 
+Les arguments supplémentaires `.before` et `.after` permettent de préciser à quel endroit déplacer la ou les colonnes indiquées :
+
+```{r}
+airports %>% relocate(starts_with('tz'), .after = name)
+```
 
 
 ## Tables multiples
