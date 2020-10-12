@@ -9,6 +9,8 @@ editor_options:
 
 `dplyr` part du principe que les données sont organisées selon le modèle des *tidy data* (voir la section \@ref(tidydata)). Les fonctions de l'extension peuvent s'appliquer à des tableaux de type `data.frame` ou `tibble`, et elles retournent systématiquement un `tibble` (voir la section \@ref(tibbles)).
 
+Le code présent dans ce document nécessite d'avoir installé la version 1.0 de `dplyr` (ou plus récente).
+
 ## Préparation
 
 `dplyr` fait partie du coeur du *tidyverse*, elle est donc chargée automatiquement avec :
@@ -115,13 +117,6 @@ La syntaxe `colonne1:colonne2` permet de sélectionner toutes les colonnes situ�
 
 ```{r}
 select(flights, year:day)
-```
-
-
-`select` peut être utilisée pour réordonner les colonnes d'une table en utilisant la fonction `everything()`, qui sélectionne l'ensemble des colonnes non encore sélectionnées. Ainsi, si on souhaite faire passer la colonne `name` en première position de la table `airports`, on peut faire :
-
-```{r}
-select(airports, name, everything())
 ```
 
 
@@ -525,21 +520,56 @@ flights %>%
 
 `dplyr` contient beaucoup d'autres fonctions utiles pour la manipulation de données.
 
-### `sample_n`, `sample_frac`
+### `slice_sample`
 
-Ces verbes permettent de sélectionner un nombre de lignes ou une fraction des lignes d'un tableau aléatoirement. Ainsi si on veut choisir 5 lignes au hasard dans le tableau `airports` :
+Ce verbe permet de sélectionner aléatoirement un nombre de lignes (avec l'argument `n`) ou une fraction des lignes (avec l'argument `prop`) d'un tableau. 
+
+Ainsi si on veut choisir 5 lignes au hasard dans le tableau `airports` :
 
 ```{r}
-airports %>% sample_n(5)
+airports %>% slice_sample(n = 5)
 ```
 
 Si on veut tirer au hasard 10% des lignes de `flights` :
 
 ```{r}
-flights %>% sample_frac(0.1)
+flights %>% slice_sample(prop = 0.1)
 ```
 
 Ces fonctions sont utiles notamment pour faire de "l'échantillonnage" en tirant au hasard un certain nombre d'observations du tableau.
+
+### `slice_head`, `slice_tail`, `slice_min`, `slice_max`
+
+`slice_head` et `slice_tail` permettent de sélectionner les  premières ou dernière lignes d'un tableau. On peut indiquer le nombre (avec `n`) ou la proportion (avec `prop`) de lignes qu'on souhaite.
+
+Ainsi si on veut afficher les trois premières lignes d'`airport` :
+
+```{r}
+airports %>% slice_head(n = 3)
+```
+
+Si on veut afficher les dernières 20% des lignes de `airlines` :
+
+```{r}
+airlines %>% slice_tail(prop = 0.2)
+```
+
+`slice_min` et `slice_max` prennent en argument supplémentaire une variable du tableau et affichent `n` ou `prop` lignes du tableau ayant les valeurs les plus ou les moins élevées de cette variable.
+
+Ainsi si on veut les 1% de lignes de `flights` ayant les plus fortes valeurs de `dep_delay` :
+
+```{r}
+flights %>% slice_max(dep_delay, prop = 0.01)
+```
+
+Si on veut les 2 aéroports avec l'altitude la plus basse :
+
+```{r}
+airports %>% slice_min(alt, n = 2)
+```
+
+On notera que le tableau renvoyé par `slice_min` et `slice_max` est trié selon la variable d'intérêt.
+
 
 ### `lead` et `lag`
 
@@ -561,7 +591,7 @@ flights %>%
 
 
 
-### `distinct`
+### `distinct` et `n_distinct`
 
 `distinct` filtre les lignes du tableau pour ne conserver que les lignes distinctes, en supprimant toutes les lignes en double.
 
@@ -585,7 +615,31 @@ flights %>%
   distinct(month, day, .keep_all = TRUE) 
 ```
 
+La fonction `n_distinct`, elle, renvoie le nombre de valeurs distinctes d'un vecteur. On peut notamment l'utiliser dans un `summarise`. 
 
+Dans l'exemple qui suit on calcule, pour les trois aéroports de départ de la table `flights` le nombre de valeurs distinctes de l'aéroport d'arrivée :
+
+```{r}
+flights %>% 
+  group_by(origin) %>% 
+  summarise(n_dest = n_distinct(dest))
+```
+
+
+
+### `relocate`
+ 
+`relocate` peut être utilisé pour réordonner les colonnes d'une table. Par défaut, si on lui passe un ou plusieurs noms de colonnes, `relocate` les place en début de tableau :
+
+```{r}
+airports %>% relocate(lat, lon)
+```
+ 
+Les arguments supplémentaires `.before` et `.after` permettent de préciser à quel endroit déplacer la ou les colonnes indiquées :
+
+```{r}
+airports %>% relocate(starts_with('tz'), .after = name)
+```
 
 
 ## Tables multiples
@@ -910,14 +964,14 @@ Sélectionner les lignes 100 à 105 du tableau des vols (`flights`).
 slice(flights, 100:105)
 ```
 
-<div class="solution">
 \iffalse
+<div class="solution">
 ```{r eval=FALSE}
 slice(flights, 100:105)
 ```
+</div>
 \fi
 
-</div>
 
 
 **Exercice 1.2**
@@ -928,14 +982,14 @@ Sélectionnez les vols du mois de juillet (variable `month`).
 filter(flights, month == 7)
 ```
 
-<div class="solution">
 \iffalse
+<div class="solution">
 ```{r eval=FALSE}
 filter(flights, month == 7)
 ```
+</div>
 \fi
 
-</div>
 
 
 Sélectionnez les vols avec un retard à l'arrivée (variable `arr_delay`) compris entre 5 et 15 minutes.
@@ -944,14 +998,14 @@ Sélectionnez les vols avec un retard à l'arrivée (variable `arr_delay`) compr
 filter(flights, arr_delay >= 5 & arr_delay <= 15)
 ```
 
-<div class="solution">
 \iffalse
+<div class="solution">
 ```{r eval=FALSE}
 filter(flights, arr_delay >= 5 & arr_delay <= 15)
 ```
+</div>
 \fi
 
-</div>
 
 
 Sélectionnez les vols des compagnies Delta, United et American (codes `DL`, `UA` et `AA` de la variable `carrier`).
@@ -960,14 +1014,14 @@ Sélectionnez les vols des compagnies Delta, United et American (codes `DL`, `UA
 filter(flights, carrier %in% c("AA", "DL", "UA"))
 ```
 
-<div class="solution">
 \iffalse
+<div class="solution">
 ```{r eval=FALSE}
 filter(flights, carrier %in% c("DL", "UA", "AA"))
 ```
+</div>
 \fi
 
-</div>
 
 
 
@@ -979,14 +1033,14 @@ Triez la table `flights` par retard au départ décroissant.
 arrange(flights, desc(dep_delay))
 ```
 
-<div class="solution">
 \iffalse
+<div class="solution">
 ```{r eval=FALSE}
 arrange(flights, desc(dep_delay))
 ```
+</div>
 \fi
 
-</div>
 
 
 **Exercice 1.4**
@@ -997,14 +1051,14 @@ Sélectionnez les colonnes `name`, `lat` et `lon` de la table `airports`
 select(airports, name, lat, lon)
 ```
 
-<div class="solution">
 \iffalse
+<div class="solution">
 ```{r eval=FALSE}
 select(airports, name, lat, lon)
 ```
+</div>
 \fi
 
-</div>
 
 
 Sélectionnez toutes les colonnes de la table `airports` sauf les colonnes `tz` et `tzone`
@@ -1013,14 +1067,14 @@ Sélectionnez toutes les colonnes de la table `airports` sauf les colonnes `tz` 
 select(airports, -tz, -tzone)
 ```
 
-<div class="solution">
 \iffalse
+<div class="solution">
 ```{r eval=FALSE}
 select(airports, -tz, -tzone)
 ```
+</div>
 \fi
 
-</div>
 
 
 Toujours dans la table `airports`, renommez la colonne `lat` en `latitude` et `lon` en `longitude`.
@@ -1029,14 +1083,14 @@ Toujours dans la table `airports`, renommez la colonne `lat` en `latitude` et `l
 rename(airports, latitude = lat, longitude = lon)
 ```
 
-<div class="solution">
 \iffalse
+<div class="solution">
 ```{r eval=FALSE}
 rename(airports, latitude = lat, longitude = lon)
 ```
+</div>
 \fi
 
-</div>
 
 
 **Exercice 1.5**
@@ -1048,15 +1102,15 @@ tmp <- mutate(airports, alt_m = alt / 3.2808)
 select(tmp, alt, alt_m)
 ```
 
-<div class="solution">
 \iffalse
+<div class="solution">
 ```{r eval=FALSE}
 tmp <- mutate(airports, alt_m = alt / 3.2808)
 select(tmp, alt, alt_m)
 ```
+</div>
 \fi
 
-</div>
 
 
 ### Enchaîner des opérations
@@ -1071,16 +1125,16 @@ airports %>%
   select(alt, alt_m)
 ```
 
-<div class="solution">
 \iffalse
+<div class="solution">
 ```{r eval=FALSE}
 airports %>%
   mutate(alt_m = alt / 3.2808) %>%
   select(alt, alt_m)
 ```
+</div>
 \fi
 
-</div>
 
 **Exercice 2.2**
 
@@ -1092,16 +1146,16 @@ flights %>%
   arrange(desc(dep_delay))
 ```
 
-<div class="solution">
 \iffalse
+<div class="solution">
 ```{r eval=FALSE}
 flights %>% 
   filter(dest == "SFO") %>% 
   arrange(desc(dep_delay))
 ```
+</div>
 \fi
 
-</div>
 
 
 **Exercice 2.3**
@@ -1117,8 +1171,8 @@ flights %>%
   slice(1:5)
 ```
 
-<div class="solution">
 \iffalse
+<div class="solution">
 ```{r eval=FALSE}
 flights %>% 
   filter(month %in% c(9, 10)) %>% 
@@ -1127,9 +1181,9 @@ flights %>%
   arrange(desc(retard_h)) %>% 
   slice(1:5)
 ```
+</div>
 \fi
 
-</div>
 
 
 ### `group_by` et `summarise`
@@ -1145,16 +1199,16 @@ flights %>%
   summarise(n = n())
 ```
 
-<div class="solution">
 \iffalse
+<div class="solution">
 ```{r eval=FALSE}
 flights %>% 
   group_by(month) %>% 
   summarise(n = n())
 ```
+</div>
 \fi
 
-</div>
 
 
 Triez la table résultat selon le nombre de vols croissant.
@@ -1166,17 +1220,17 @@ flights %>%
   arrange(n)
 ```
 
-<div class="solution">
 \iffalse
+<div class="solution">
 ```{r eval=FALSE}
 flights %>% 
   group_by(month) %>% 
   summarise(n = n()) %>% 
   arrange(n)
 ```
+</div>
 \fi
 
-</div>
 
 **Exercice 3.2**
 
@@ -1188,16 +1242,16 @@ flights %>%
   summarise(distance_moyenne = mean(distance))
 ```
 
-<div class="solution">
 \iffalse
+<div class="solution">
 ```{r eval=FALSE}
 flights %>%
   group_by(origin) %>% 
   summarise(distance_moyenne = mean(distance))
 ```
+</div>
 \fi
 
-</div>
 
 
 **Exercice 3.3**
@@ -1210,16 +1264,16 @@ flights %>%
   count(month)
 ```
 
-<div class="solution">
 \iffalse
+<div class="solution">
 ```{r eval=FALSE}
 flights %>% 
   filter(dest == "LAX") %>% 
   count(month)
 ```
+</div>
 \fi
 
-</div>
 
 
 **Exercice 3.4**
@@ -1231,15 +1285,15 @@ flights %>%
   count(month, dest)
 ```
 
-<div class="solution">
 \iffalse
+<div class="solution">
 ```{r eval=FALSE}
 flights %>% 
   count(month, dest)
 ```
+</div>
 \fi
 
-</div>
 
 Ne conserver, pour chaque mois, que la destination avec le nombre maximal de vols.
 
@@ -1250,17 +1304,17 @@ flights %>%
   filter(n == max(n))
 ```
 
-<div class="solution">
 \iffalse
+<div class="solution">
 ```{r eval=FALSE}
 flights %>% 
   count(month, dest) %>% 
   group_by(month) %>% 
   filter(n == max(n))
 ```
+</div>
 \fi
 
-</div>
 
 
 **Exercice 3.5**
@@ -1273,16 +1327,15 @@ flights %>%
   mutate(pourcentage = n/sum(n) * 100) 
 ```
 
-<div class="solution">
 \iffalse
+<div class="solution">
 ```{r eval=FALSE}
 flights %>% 
   count(month) %>% 
   mutate(pourcentage = n/sum(n) * 100) 
 ```
-\fi
-
 </div>
+\fi
 
 
 **Exercice 3.6**
@@ -1298,8 +1351,8 @@ flights %>%
   slice(1:3)
 ```
 
-<div class="solution">
 \iffalse
+<div class="solution">
 ```{r eval=FALSE}
 flights %>% 
   group_by(month, dest) %>% 
@@ -1308,9 +1361,9 @@ flights %>%
   arrange(desc(retard_moyen), .by_group = TRUE) %>% 
   slice(1:3)
 ```
+</div>
 \fi
 
-</div>
 
 
 
@@ -1326,15 +1379,15 @@ flights %>%
   left_join(airlines)
 ```
 
-<div class="solution">
 \iffalse
+<div class="solution">
 ```{r eval=FALSE}
 flights %>% 
   left_join(airlines)
 ```
+</div>
 \fi
 
-</div>
 
 
 **Exercice 4.2**
@@ -1349,8 +1402,8 @@ flights %>%
   arrange(desc(retard_moyen))
 ```
 
-<div class="solution">
 \iffalse
+<div class="solution">
 ```{r eval=FALSE}
 flights %>% 
   left_join(airlines) %>% 
@@ -1358,9 +1411,9 @@ flights %>%
   summarise(retard_moyen = mean(dep_delay, na.rm = TRUE)) %>% 
   arrange(desc(retard_moyen))
 ```
+</div>
 \fi
 
-</div>
 
 
 **Exercice 4.3**
@@ -1372,15 +1425,15 @@ flights %>%
   left_join(airports, by = c("dest"="faa"))
 ```
 
-<div class="solution">
 \iffalse
+<div class="solution">
 ```{r eval=FALSE}
 flights %>% 
   left_join(airports, by = c("dest" = "faa"))
 ```
+</div>
 \fi
 
-</div>
 
 
 À partir de cette table, afficher pour chaque mois le nom de l'aéroport de destination ayant eu le plus petit nombre de vol.
@@ -1393,8 +1446,8 @@ flights %>%
   filter(n == min(n))
 ```
 
-<div class="solution">
 \iffalse
+<div class="solution">
 ```{r eval=FALSE}
 flights %>% 
   left_join(airports, by = c("dest" = "faa")) %>% 
@@ -1402,9 +1455,9 @@ flights %>%
   group_by(month) %>% 
   filter(n == min(n))
 ```
+</div>
 \fi
 
-</div>
 
 
 **Exercice 4.4**
@@ -1420,8 +1473,8 @@ flights %>%
   select(orig_name, dest_name)  
 ```
 
-<div class="solution">
 \iffalse
+<div class="solution">
 ```{r eval=FALSE}
 flights %>% 
   left_join(airports, by = c("dest" = "faa")) %>% 
@@ -1430,9 +1483,9 @@ flights %>%
   rename(orig_name = name) %>% 
   select(orig_name, dest_name) 
 ```
+</div>
 \fi
 
-</div>
 
 
 ### Bonus
@@ -1448,16 +1501,16 @@ flights_dest <- flights %>%
 flights_dest
 ```
 
-<div class="solution">
 \iffalse
+<div class="solution">
 ```{r eval=FALSE}
 flights_dest <- flights %>% 
   count(dest) %>% 
   left_join(airports, by = c("dest"="faa"))
 ```
+</div>
 \fi
 
-</div>
 
 
 Créez une carte interactive des résultats avec `leaflet` et le code suivant :
