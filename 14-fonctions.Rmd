@@ -416,6 +416,10 @@ ma_fonction(1:5, correct = FALSE, title = "Titre", size = 12)
 
 Alors `...` contiendra les arguments `title` et `size` et leurs valeurs.
 
+```{block=rmdnote}
+Si on veut accéder à la valeur de `size` dans `...`, on utilise `list(...)$size`.
+```
+
 En général `...` est utilisé pour passer ces arguments à d'autres fonctions. Reprenons notre fonction `my_barplot` définie précédemment :
 
 ```{r}
@@ -618,12 +622,13 @@ Une conséquence de cette règle est qu'il n'est pas possible de modifier un obj
 
 f <- function() {
   ajout <- 10
-  ajout
+  message("Valeur dans la fonction : ", ajout)
 }
 
 ajout <- 3
+message("Valeur avant : ", ajout)
 f()
-ajout
+message("Valeur après : ", ajout)
 
 ```
 
@@ -912,27 +917,241 @@ d$cuisine <- recode_oui_non(d$cuisine)
 
 **Exercice 2.1**
 
-Soit la fonction suivante :
+Réordonner, renommer les arguments de la fonction suivante de manière plus adéquate et leur donner une valeur par défaut :
 
 ```{r echo=FALSE, eval=FALSE}
-
+moyenne_arrondie <- function(d, vecteur_pour_le_calcul, supprimer_les_na) {
+  res <- mean(vecteur_pour_le_calcul, na.rm = supprimer_les_na)
+  res <- round(res, d)
+  return(res)
+}
 ```
+
 
 \iffalse
 <div class="solution-exo">
 ```{r eval=FALSE}
-
+moyenne_arrondie <- function(v, decimales = 2, na.rm = TRUE) {
+  res <- mean(v, na.rm = na.rm)
+  res <- round(res, decimales)
+  return(res)
+}
 ```
 </div>
 \fi
 
 
 
+**Exercice 2.3**
 
-TODO
+Simplifier la fonction suivante pour que son corps ne fasse plus qu'une seule ligne :
 
-différence funct vs funct() pour les fonctions sans argument
+```{r eval=FALSE}
+centrer_reduire <- function(x) {
+  res <- x - mean(x)
+  res <- res / sd(x)
+  return(res)
+}
+```
+
+\iffalse
+<div class="solution-exo">
+```{r eval=FALSE}
+centrer_reduire <- function(x) {
+  (x - mean(x)) / sd(x)
+}
+```
+</div>
+\if
+
 
 ## Portée des variables
 
+**Exercice 3.1**
+
+En lisant les codes suivants, essayer de prévoir quelle va être la valeur affichée par la dernière ligne. Vérifier en exécutant le code :
+
+```{r eval=FALSE}
+f <- function(x = 2) {
+  x
+}
+
+f(3)
+```
+
+```{r eval=FALSE}
+f <- function(x = 2) {
+  x
+}
+
+x <- 5
+f()
+```
+
+```{r eval=FALSE}
+f <- function(x = 2) {
+  x
+}
+
+x <- 5
+f(x)
+```
+
+```{r eval=FALSE}
+x <- 10
+f <- function() {
+  x
+}
+
+f()
+```
+
+
+```{r eval=FALSE}
+f <- function(x = 2) {
+  x <- 10
+  x
+}
+
+f()
+```
+
+
+
+```{r eval=FALSE}
+
+f <- function() {
+  x <- 5
+}
+
+x <- 10
+f()
+x
+```
+
+**Exercice 3.2**
+
+Dans le code suivant, on a essayé de créer une fonction qui filtre uniquement les pommes dans le data.frame `d`. Pourquoi cela ne fonctionne-t-il pas ?
+
+```{r eval=FALSE}
+d <- data.frame(
+  fruit = c("Pomme", "Pomme", "Citron", "Citron"),
+  poids = c(147, 189, 76, 91)
+)
+
+filtre_pommes <- function() {
+  d <- subset(d, fruit == "Pomme")
+}
+
+filtre_pommes()
+d
+```
+
+Réécrire le code pour obtenir le résultat souhaité.
+
+\iffalse
+<div class="solution-exo">
+
+```{r eval=FALSE}
+filtre_pommes <- function(d) {
+  subset(d, fruit == "Pomme")
+}
+
+d <- filtre_pommes(d)
+d
+```
+</div>
+\fi
+
+
 ## Les fonctions comme objets
+
+
+**Exercice 4.1**
+
+Écrire une fonction nommée `bonjour` qui ne prend aucun argument et affiche juste le texte "Bonjour !" dans la console.
+
+\iffalse
+<div class="solution-exo">
+```{r eval=FALSE}
+bonjour <- function() {
+  cat("Bonjour !")
+}
+```
+</div>
+\if
+
+Exécuter dans la console les deux commandes suivantes tour à tour :
+
+- `bonjour()`
+- `bonjour`
+
+Comprenez-vous la différence entre les deux ?
+
+
+**Exercice 4.2**
+
+Construire une fonction `etendue` qui prend en entrée un vecteur numérique et retourne la différence entre la valeur maximale et la valeur minimale de ce vecteur (vous pouvez récupérer le code de l'exercice 1.2 en le simplifiant).
+
+\iffalse
+<div class="solution-exo">
+```{r eval=FALSE}
+etendue <- function(v) {
+  max(v) - min(v)
+}
+```
+</div>
+\if
+
+À l'aide de `tapply`, appliquez la fonction `etendue` à la variable `age` pour chaque valeur de `qualif` dans le jeu de données `hdv2003`.
+
+```{r echo=FALSE}
+library(questionr)
+data(hdv2003)
+
+tapply(hdv2003$age, hdv2003$qualif, etendue)
+```
+
+\iffalse
+<div class="solution-exo">
+
+```{r eval=FALSE}
+library(questionr)
+data(hdv2003)
+
+tapply(hdv2003$age, hdv2003$qualif, etendue)
+```
+</div>
+\if
+
+Réécrire le code précédent en utilisant une fonction anonyme (*ie* en définissant la fonction directement dans le `summarise`).
+
+\iffalse
+<div class="solution-exo">
+```{r eval=FALSE}
+tapply(hdv2003$age, hdv2003$qualif, function(v) {
+  max(v) - min(v)
+})
+```
+</div>
+\if
+
+
+**Exercice 4.3**
+
+Exécutez le code suivant ligne par ligne. Comprenez-vous le résultat obtenu ?
+
+```{r eval=FALSE}
+f <- function(y) {
+  y * 4
+}
+
+body(f)
+f(5)
+
+body(f) <- quote(y + 2)
+body(f)
+f(5)
+```
+
+Intuitivement, à quoi sert la fonction `quote` ?
