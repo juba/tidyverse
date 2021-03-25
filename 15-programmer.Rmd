@@ -1,18 +1,316 @@
 # Programmer avec R
 
+Nous avons dans la partie précédente comment écrire nos propres fonctions. Pour pouvoir aller plus loin nous allons aborder ici de nouveaux types de données et éléments du langage qui permettent de programmer des actions un peu plus complexes.
+
+Les notions décrites dans cette partie s'appliquent pour le développement de fonctions, mais peuvent aussi être mises en oeuvre à tout moment dans un script.
+
+## `if`, `else`, `switch` : exécuter du code sous certaines conditions
+
+### `if`
+
+L'instruction `if` est fondamentale puisqu'elle permet de n'exécuter du code que si une condition est remplie.
+
+![](figures/structure_if.svg)
+
+`if` prend une condition (entre parenthèses) puis un bloc de code (entre accolades) qui n'est exécuté que si la condition est vraie.
+
+Par exemple, dans le code suivant, le message `Bonjour !` ne sera affiché que si la valeur de l'objet `prenom` vaut `"Pierre-Edmond"` :
+
+Prenons tout de suite un exemple :
+
+```{r}
+prenom <- "Pierre-Edmond"
+if (prenom == "Pierre-Edmond") {
+    message("Bonjour !")
+}
+```
+
+On peut utiliser ce code pour créer une passionnante fonction qui a pour objectif de ne dire bonjour qu'aux personnes qui s'appellent Pierre-Edmond :
+
+```{r}
+bonjour_pierre_edmond <- function(prenom) {
+    if (prenom == "Pierre-Edmond") {
+        message("Bonjour !")
+    }
+}
+```
+```{r}
+bonjour_pierre_edmond("Pierre-Edmond")
+```
 
 
+```{r}
+bonjour_pierre_edmond("Valérie-Charlotte")
+```
 
-Pour if : vérifier que les arguments d'une fonction sont du bon type, changer le fonctionnement avec un argument booléen
+Une autre utilisation possible (et un peu plus utile) dans le cadre d'une fonctione est de n'exécuter du code que si un argument a été passé.
+
+```{r}
+moyenne <- function(x, arrondir = TRUE) {
+    res <- mean(x)
+    if (arrondir) {
+        res <- round(res)
+    }
+    res
+}
+
+v <- c(1.4, 2.3, 8.9)
+moyenne(v)
+moyenne(v, arrondir = FALSE)
+```
+
+### `if` / `else`
+
+On utilise souvent `if` en conjonction avec l'instruction `else`. `else` précède un autre bloc de code R qui ne s'exécute que si la condition donnée à `if` est fausse :
+
+![](figures/structure_if_else.svg)
+
+On peut ainsi utiliser `if` / `else` pour une nouvelle fonction fort utile qui nous évitera bien des désagréments météorologiques :
+
+```{r}
+conseil_vestimentaire <- function(temperature) {
+    if (temperature > 15) {
+        message("La polaire n'est pas forcément nécessaire.")
+    } else {
+        message("Vous devriez prendre une petite laine.")
+    }
+}
+
+conseil_vestimentaire(-5)
+```
+
+Plus utile, on peut l'utiliser pour effectuer deux actions différentes en fonction de la valeur d'un paramètre. La fonction suivante génère deux graphiques différents selon le type du vecteur passé en argument :
+
+```{r}
+graph_var <- function(x) {
+    if (is.character(x)) {
+        barplot(table(x))
+    } else {
+        hist(x)
+    }
+}
+
+graph_var(c("Pomme", "Pomme", "Citron"))
+graph_var(c(1,5,10,3,1,4))
+```
+
+On peut évidemment passer des conditions plus complexes. Dans notre fonction, le test `is.character(x)` échoue si `x` est un facteur, alors qu'on souhaiterait quand même réaliser un `barplot`. On peut donc compléter la condition du `if` :
+
+```{r}
+graph_var <- function(x) {
+    if (is.character(x) || is.factor(x)) {
+        barplot(table(x))
+    } else {
+        hist(x)
+    }
+}
+
+graph_var(factor(c("Pomme", "Pomme", "Citron")))
+```
+
+### `if` / `else if` / `else`
+
+Une autre possibilité est de compléter le `if` ... `else` par des blocs supplémentaires `else if` qui permettent d'ajouter de nouvelles conditions. Dès qu'une condition est vraie, le bloc de code correspondant est exécuté. Le dernier bloc `else` est exécuté si aucune des conditions n'est vraie.
+
+On peut donc améliorer encore notre fonction `graph_var` pour tester les différents types explicitement et afficher un message si aucun type géré n'a été reconnu.
+
+```{r}
+graph_var <- function(x) {
+    if (is.character(x) || is.factor(x)) {
+        barplot(table(x))
+    } else if (is.numeric(x)) {
+        hist(x)
+    } else {
+        message("Le type de x n'est pas géré par la fonction")
+    }
+}
+
+graph_var(c(TRUE, FALSE, TRUE))
+```
+
+Attention, seule le bloc de la première condition vraie est exécuté, l'ordre des conditions est donc important. Dans l'exemple suivant, le second bloc n'est jamais exécuté et donc le second message jamais affiché.
+
+```{r}
+test_x <- function(x) {
+    if (x < 100) {
+        message("x est inférieur à 100")
+    } else if (x < 10) {
+        message("x est inférieur à 10")
+    }
+}
+
+test_x(5)
+```
+
+Il est donc important d'ordonner les conditions de la plus spécifique à la plus générale.
+
+### Différence entre `if` / `else` et `ifelse`
+
+Une source fréquente de confusion concerne la différence entre les instructions `if` / `else` et la fonction `ifelse` de R base (ou son équivalent `if_else` de `dplyr`, voir section \@ref{if_else}). Les deux sont pourtant très différentes :
+
+- `if` / `else` s'utilisent quand on teste une seule condition et qu'on veut exécuter des blocs de code différent
+- `ifelse` et `if_else` appliquent un test à un vecteur et retournent un vecteur
+
+Premier cas de figure : on a une seule valeur `x` et on veut afficher un message différent selon si celle-ci est inférieure ou supérieure à 10. Dans ce cas on utilise `if` / `else` :
+
+```{r}
+x <- 5
+
+if (x >= 5) {
+    message(">=5")
+} else {
+    message("<5")
+}
+```
+
+Deuxième cas de figure : `x` est un vecteur et on souhaite recoder chacune de ses valeurs selon le même critère que ci-dessus. Dans ce cas on utilise `ifelse` ou `if_else` :
+
+```{r}
+x <- 1:10
+
+ifelse(x >= 5, ">=5", "<5")
+```
+
+Une erreur fréquente, notamment quand on est dans une fonction, est de passer à `if` une condition appliquée à un vecteur. Dans ce cas R a la bonne idée de mettre un message d'avertissement :
+
+```{r}
+x <- 1:10
+
+if (x >= 5) {
+    message(">=5")
+}
+```
 
 
-### Liste {#listes}
+## Contrôle de l'exécution et gestion des erreurs
+
+L'instruction `if` est souvent utilisée dans des fonctions pour valider les valeurs passées en arguments ou, plus généralement contrôler que l'exécution du code se déroule comme prévu.
+
+### Utilisation de `return` pour sortir de la fonction
+
+Une première utilisation peut être d'utiliser un `return` pour interrompre l'exécution de la fonction et retourner un résultat. On a en effet vu section \ref{resfunc} que dès que R rencontre un `return` dans une fonction, il interrompt immédiatement l'exécution de celle-ci.
+
+La fonction suivante retourne la longueur du mot le plus long dans un vecteur de chaînes de caractères. On ajoute donc un test qui retourne `NA` dans le cas où le vecteur passé en argument serait d'un type différent.
+
+```{r}
+mot_le_plus_long <- function(x) {
+    if (!is.character(x)) {
+        return(NA)
+    }
+    max(nchar(x))
+}
+
+mot_le_plus_long(c("Pomme", "Citron"))
+mot_le_plus_long(1:5)
+```
 
 
+### `warning`
+
+La fonction `warning` fonctionne comme `message` mais permet d'afficher un avertissement. Celui-ci est affiché de manière différente dans la console, de manière à attirer l'attention sur un point particulier. Il indique également la fonction qui a déclenché l'avertissement ce qui peut être utile quand on exécute toute une série d'instructions d'un seul coup.
+
+Ainsi, dans la fonction précédente, on peut ajouter un avertissement dans le cas où le vecteur passé en argument n'est pas de type `character`.
+
+```{r}
+mot_le_plus_long <- function(x) {
+    if (!is.character(x)) {
+        warning("x n'est pas de type character, le résultat vaut NA.")
+        return(NA)
+    }
+    max(nchar(x))
+}
+
+mot_le_plus_long(1:5)
+```
+
+### `stop` et `stopifnot`
+
+`stop` fonctionne comme `warning` mais déclenche une erreur qui interrompt totalement l'exécution du code. Quand R le rencontre dans une fonction, il sort immédiatement de la fonction, ne retourne aucun résultat, et il interrompt également toutes les autres instructions en attente d'exécution.
+
+On peut ainsi considérer, toujours dans la fonction `mot_le_plus_long`, que le fait de ne pas fournir en argument un vecteur de type character est suffisamment "grave" pour interrompre l'exécution en cours et laisser l'utilisateur régler le problème.
+
+```{r}
+mot_le_plus_long <- function(x) {
+    if (!is.character(x)) {
+        stop("x doit être de type character.")
+    }
+    max(nchar(x))
+}
+
+mot_le_plus_long(1:5)
+mot_le_plus_long(c("Pomme", "Citron"))
+```
+
+Dans ce cas on remarque que le deuxième appel `mot_le_plus_long(c("Pomme", "Citron"))` n'est pas exécuté : R a tout interrompu dès qu'il a rencontré l'instruction `stop()`.
+
+```{block=rmdnote}
+Savoir si un "problème" doit être traité comme un avertissement ou comme une erreur relève du choix de la personne qui développe la fonction : chaque cas est particulier et il n'y a pas de réponse générale à cette question.
+```
+
+`stopifnot` est une syntaxe alternative un peu plus compacte qui combien test et message d'erreur. On lui passe en premier argument une condition, et en deuxième argument un message à afficher si la condition est fausse.
+
+On peut donc réécrire notre fonction `mot_le_plus_long` ci-dessus de la manière suivante :
+
+```{r}
+mot_le_plus_long <- function(x) {
+    stopifnot(is.character(x), "x doit être de type character.")
+    max(nchar(x))
+}
+
+mot_le_plus_long(1:5)
+
+```
+
+### Tester la présence d'un argument
+
+Il y a deux méthodes pour tester si l'argument d'une fonction a été défini par l'utilisateur lors de l'appel de cette fonction. La plus courante est de donner à cet argument une valeur par défaut, le plus souvent `NULL`, et de tester cette valeur.
+
+Soit une fonction qui génère un graphique avec un argument `titre` qui permet de définir son titre. On peut mettre par défaut cet argument à `NULL` et ajouter un titre par défaut si l'utilisateur n'en a pas fourni.
+
+```{r}
+histo <- function(x, titre = NULL) {
+    if (is.null(titre)) {
+        titre <- paste("Moyenne : ", mean(x))
+    }
+    hist(x, main = titre)
+}
+
+histo(c(1, 15, 8, 10, 12, 18, 8, 4))
+
+histo(c(1, 15, 8, 10, 12, 18, 8, 4), titre = "Quel bel histogramme")
+```
+
+Quand on ne souhaite pas mettre de valeur par défaut, on peut tester l'absence de l'argument à l'aide de la fonction `missing()`.
+
+```{r}
+moyenne_arrondie <- function(x) {
+    if (missing(x)) stop("x est manquant")
+    round(mean(x))
+}
+
+moyenne_arrondie()
+```
+
+Or certains cas particuliers on ajoute rarement ce genre de tests dans des fonctions, car les arguments sans valeur par défaut sont le plus souvent des valeurs "obligatoires" qui génèrent de toutes manières une erreur quand elles ne sont pas définies :
+
+```{r}
+moyenne_arrondie <- function(x) {
+    round(mean(x))
+}
+
+moyenne_arrondie()
+```
 
 
-### `warning` et `error`
+## `for` et `while` : répéter des instructions dans une boucle
 
-message()
-print()
-warning() et stop()
+
+## Types de données
+
+### Vecteurs
+
+### listes
+
+### data.frame et tibble
+
+
