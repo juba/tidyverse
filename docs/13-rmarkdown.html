@@ -6,7 +6,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>Partie 13 Diffuser et publier avec rmarkdown | Introduction à R et au tidyverse</title>
   <meta name="description" content="Une introduction à R et aux extensions du tidyverse" />
-  <meta name="generator" content="bookdown 0.21 and GitBook 2.6.7" />
+  <meta name="generator" content="bookdown 0.22 and GitBook 2.6.7" />
 
   <meta property="og:title" content="Partie 13 Diffuser et publier avec rmarkdown | Introduction à R et au tidyverse" />
   <meta property="og:type" content="book" />
@@ -24,7 +24,7 @@
 <meta name="author" content="Julien Barnier" />
 
 
-<meta name="date" content="2021-04-19" />
+<meta name="date" content="2021-05-26" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -50,14 +50,16 @@
 
 
 
-<script src="libs/htmlwidgets-1.5.1/htmlwidgets.js"></script>
+<link href="libs/anchor-sections-1.0.1/anchor-sections.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.0.1/anchor-sections.js"></script>
+<script src="libs/htmlwidgets-1.5.3/htmlwidgets.js"></script>
 <link href="libs/leaflet-1.3.1/leaflet.css" rel="stylesheet" />
 <script src="libs/leaflet-1.3.1/leaflet.js"></script>
 <link href="libs/leafletfix-1.0.0/leafletfix.css" rel="stylesheet" />
-<script src="libs/Proj4Leaflet-1.0.1/proj4-compressed.js"></script>
+<script src="libs/proj4-2.6.2/proj4.min.js"></script>
 <script src="libs/Proj4Leaflet-1.0.1/proj4leaflet.js"></script>
 <link href="libs/rstudio_leaflet-1.3.1/rstudio_leaflet.css" rel="stylesheet" />
-<script src="libs/leaflet-binding-2.0.3/leaflet.js"></script>
+<script src="libs/leaflet-binding-2.0.4.1/leaflet.js"></script>
 
 
 <style type="text/css">
@@ -125,6 +127,7 @@ code span.va { color: #0057ae; } /* Variable */
 code span.vs { color: #bf0303; } /* VerbatimString */
 code span.wa { color: #bf0303; } /* Warning */
 </style>
+
 
 <link rel="stylesheet" href="css/tidyverse.css" type="text/css" />
 </head>
@@ -669,8 +672,8 @@ x &lt;- 1:5
 x &lt;- 1:5
 ```</code></pre>
 <p>Une des options la plus utile est l’option <code>echo</code>. Par défaut <code>echo</code> vaut <code>TRUE</code>, et le bloc de code R est inséré dans le document généré, de cette manière :</p>
-<div class="sourceCode" id="cb850"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb850-1" title="1">x &lt;-<span class="st"> </span><span class="dv">1</span><span class="op">:</span><span class="dv">5</span></a>
-<a class="sourceLine" id="cb850-2" title="2"><span class="kw">print</span>(x)</a></code></pre></div>
+<div class="sourceCode" id="cb845"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb845-1" title="1">x &lt;-<span class="st"> </span><span class="dv">1</span><span class="op">:</span><span class="dv">5</span></a>
+<a class="sourceLine" id="cb845-2" title="2"><span class="kw">print</span>(x)</a></code></pre></div>
 <pre><code>[1] 1 2 3 4 5</code></pre>
 <p>Mais si on positionne l’option <code>echo=FALSE</code>, alors le code R n’est plus inséré dans le document, et seul le résultat est visible :</p>
 <pre><code>[1] 1 2 3 4 5</code></pre>
@@ -769,10 +772,10 @@ On peut activer ou désactiver la mise en cache des résultats pour chaque bloc 
 <div id="tableaux-croisés-1" class="section level3">
 <h3><span class="header-section-number">13.5.1</span> Tableaux croisés</h3>
 <p>Par défaut, les tableaux issus de la fonction <code>table</code> sont affichés comme ils apparaissent dans la console de R, en texte brut :</p>
-<div class="sourceCode" id="cb854"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb854-1" title="1"><span class="kw">library</span>(questionr)</a>
-<a class="sourceLine" id="cb854-2" title="2"><span class="kw">data</span>(hdv2003)</a>
-<a class="sourceLine" id="cb854-3" title="3">tab &lt;-<span class="st"> </span><span class="kw">lprop</span>(<span class="kw">table</span>(hdv2003<span class="op">$</span>qualif, hdv2003<span class="op">$</span>sexe))</a>
-<a class="sourceLine" id="cb854-4" title="4">tab</a></code></pre></div>
+<div class="sourceCode" id="cb849"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb849-1" title="1"><span class="kw">library</span>(questionr)</a>
+<a class="sourceLine" id="cb849-2" title="2"><span class="kw">data</span>(hdv2003)</a>
+<a class="sourceLine" id="cb849-3" title="3">tab &lt;-<span class="st"> </span><span class="kw">lprop</span>(<span class="kw">table</span>(hdv2003<span class="op">$</span>qualif, hdv2003<span class="op">$</span>sexe))</a>
+<a class="sourceLine" id="cb849-4" title="4">tab</a></code></pre></div>
 <pre><code>                          
                            Homme Femme Total
   Ouvrier specialise        47.3  52.7 100.0
@@ -784,12 +787,12 @@ On peut activer ou désactiver la mise en cache des résultats pour chaque bloc 
   Autre                     36.2  63.8 100.0
   Ensemble                  44.8  55.2 100.0</code></pre>
 <p>On peut améliorer leur présentation en utilisant la fonction <code>kable</code> de l’extension <code>knitr</code>. Celle-ci fournit un formatage adapté en fonction du format de sortie. On aura donc des tableaux “propres” que ce soit en HTML, PDF ou aux formats traitements de texte :</p>
-<div class="sourceCode" id="cb856"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb856-1" title="1"><span class="kw">library</span>(knitr)</a>
-<a class="sourceLine" id="cb856-2" title="2"><span class="kw">kable</span>(tab)</a></code></pre></div>
+<div class="sourceCode" id="cb851"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb851-1" title="1"><span class="kw">library</span>(knitr)</a>
+<a class="sourceLine" id="cb851-2" title="2"><span class="kw">kable</span>(tab)</a></code></pre></div>
 <table>
 <thead>
 <tr class="header">
-<th></th>
+<th align="left"></th>
 <th align="right">Homme</th>
 <th align="right">Femme</th>
 <th align="right">Total</th>
@@ -797,49 +800,49 @@ On peut activer ou désactiver la mise en cache des résultats pour chaque bloc 
 </thead>
 <tbody>
 <tr class="odd">
-<td>Ouvrier specialise</td>
+<td align="left">Ouvrier specialise</td>
 <td align="right">47.29064</td>
 <td align="right">52.70936</td>
 <td align="right">100</td>
 </tr>
 <tr class="even">
-<td>Ouvrier qualifie</td>
+<td align="left">Ouvrier qualifie</td>
 <td align="right">78.42466</td>
 <td align="right">21.57534</td>
 <td align="right">100</td>
 </tr>
 <tr class="odd">
-<td>Technicien</td>
+<td align="left">Technicien</td>
 <td align="right">76.74419</td>
 <td align="right">23.25581</td>
 <td align="right">100</td>
 </tr>
 <tr class="even">
-<td>Profession intermediaire</td>
+<td align="left">Profession intermediaire</td>
 <td align="right">55.00000</td>
 <td align="right">45.00000</td>
 <td align="right">100</td>
 </tr>
 <tr class="odd">
-<td>Cadre</td>
+<td align="left">Cadre</td>
 <td align="right">55.76923</td>
 <td align="right">44.23077</td>
 <td align="right">100</td>
 </tr>
 <tr class="even">
-<td>Employe</td>
+<td align="left">Employe</td>
 <td align="right">16.16162</td>
 <td align="right">83.83838</td>
 <td align="right">100</td>
 </tr>
 <tr class="odd">
-<td>Autre</td>
+<td align="left">Autre</td>
 <td align="right">36.20690</td>
 <td align="right">63.79310</td>
 <td align="right">100</td>
 </tr>
 <tr class="even">
-<td>Ensemble</td>
+<td align="left">Ensemble</td>
 <td align="right">44.82759</td>
 <td align="right">55.17241</td>
 <td align="right">100</td>
@@ -847,11 +850,11 @@ On peut activer ou désactiver la mise en cache des résultats pour chaque bloc 
 </tbody>
 </table>
 <p>Différents arguments permettent de modifier la sortie de <code>kable</code>. <code>digits</code>, par exemple, permet de spécifier le nombre de chiffres significatifs à afficher dans les colonnes de nombres :</p>
-<div class="sourceCode" id="cb857"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb857-1" title="1"><span class="kw">kable</span>(tab, <span class="dt">digits =</span> <span class="dv">1</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb852"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb852-1" title="1"><span class="kw">kable</span>(tab, <span class="dt">digits =</span> <span class="dv">1</span>)</a></code></pre></div>
 <table>
 <thead>
 <tr class="header">
-<th></th>
+<th align="left"></th>
 <th align="right">Homme</th>
 <th align="right">Femme</th>
 <th align="right">Total</th>
@@ -859,49 +862,49 @@ On peut activer ou désactiver la mise en cache des résultats pour chaque bloc 
 </thead>
 <tbody>
 <tr class="odd">
-<td>Ouvrier specialise</td>
+<td align="left">Ouvrier specialise</td>
 <td align="right">47.3</td>
 <td align="right">52.7</td>
 <td align="right">100</td>
 </tr>
 <tr class="even">
-<td>Ouvrier qualifie</td>
+<td align="left">Ouvrier qualifie</td>
 <td align="right">78.4</td>
 <td align="right">21.6</td>
 <td align="right">100</td>
 </tr>
 <tr class="odd">
-<td>Technicien</td>
+<td align="left">Technicien</td>
 <td align="right">76.7</td>
 <td align="right">23.3</td>
 <td align="right">100</td>
 </tr>
 <tr class="even">
-<td>Profession intermediaire</td>
+<td align="left">Profession intermediaire</td>
 <td align="right">55.0</td>
 <td align="right">45.0</td>
 <td align="right">100</td>
 </tr>
 <tr class="odd">
-<td>Cadre</td>
+<td align="left">Cadre</td>
 <td align="right">55.8</td>
 <td align="right">44.2</td>
 <td align="right">100</td>
 </tr>
 <tr class="even">
-<td>Employe</td>
+<td align="left">Employe</td>
 <td align="right">16.2</td>
 <td align="right">83.8</td>
 <td align="right">100</td>
 </tr>
 <tr class="odd">
-<td>Autre</td>
+<td align="left">Autre</td>
 <td align="right">36.2</td>
 <td align="right">63.8</td>
 <td align="right">100</td>
 </tr>
 <tr class="even">
-<td>Ensemble</td>
+<td align="left">Ensemble</td>
 <td align="right">44.8</td>
 <td align="right">55.2</td>
 <td align="right">100</td>
@@ -1043,6 +1046,7 @@ gitbook.start({
 "weibo": false,
 "instapaper": false,
 "vk": false,
+"whatsapp": false,
 "all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"],
 "instapper": false
 },

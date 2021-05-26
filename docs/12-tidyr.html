@@ -6,7 +6,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>Partie 12 Mettre en ordre avec tidyr | Introduction à R et au tidyverse</title>
   <meta name="description" content="Une introduction à R et aux extensions du tidyverse" />
-  <meta name="generator" content="bookdown 0.21 and GitBook 2.6.7" />
+  <meta name="generator" content="bookdown 0.22 and GitBook 2.6.7" />
 
   <meta property="og:title" content="Partie 12 Mettre en ordre avec tidyr | Introduction à R et au tidyverse" />
   <meta property="og:type" content="book" />
@@ -24,7 +24,7 @@
 <meta name="author" content="Julien Barnier" />
 
 
-<meta name="date" content="2021-04-19" />
+<meta name="date" content="2021-05-26" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -50,14 +50,16 @@
 
 
 
-<script src="libs/htmlwidgets-1.5.1/htmlwidgets.js"></script>
+<link href="libs/anchor-sections-1.0.1/anchor-sections.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.0.1/anchor-sections.js"></script>
+<script src="libs/htmlwidgets-1.5.3/htmlwidgets.js"></script>
 <link href="libs/leaflet-1.3.1/leaflet.css" rel="stylesheet" />
 <script src="libs/leaflet-1.3.1/leaflet.js"></script>
 <link href="libs/leafletfix-1.0.0/leafletfix.css" rel="stylesheet" />
-<script src="libs/Proj4Leaflet-1.0.1/proj4-compressed.js"></script>
+<script src="libs/proj4-2.6.2/proj4.min.js"></script>
 <script src="libs/Proj4Leaflet-1.0.1/proj4leaflet.js"></script>
 <link href="libs/rstudio_leaflet-1.3.1/rstudio_leaflet.css" rel="stylesheet" />
-<script src="libs/leaflet-binding-2.0.3/leaflet.js"></script>
+<script src="libs/leaflet-binding-2.0.4.1/leaflet.js"></script>
 
 
 <style type="text/css">
@@ -125,6 +127,7 @@ code span.va { color: #0057ae; } /* Variable */
 code span.vs { color: #bf0303; } /* VerbatimString */
 code span.wa { color: #bf0303; } /* Warning */
 </style>
+
 
 <link rel="stylesheet" href="css/tidyverse.css" type="text/css" />
 </head>
@@ -525,15 +528,14 @@ code span.wa { color: #bf0303; } /* Warning */
 </tbody>
 </table>
 <p>C’est seulement avec les données dans ce format qu’on peut réaliser le graphique :</p>
-<div class="sourceCode" id="cb799"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb799-1" title="1"><span class="kw">ggplot</span>(d) <span class="op">+</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb799-2" title="2"><span class="st">  </span><span class="kw">geom_line</span>(<span class="kw">aes</span>(<span class="dt">x =</span> annee, <span class="dt">y =</span> population, <span class="dt">color =</span> country)) <span class="op">+</span></a>
-<a class="sourceLine" id="cb799-3" title="3"><span class="st">  </span><span class="kw">scale_x_continuous</span>(<span class="dt">breaks =</span> <span class="kw">unique</span>(d<span class="op">$</span>annee))</a></code></pre></div>
-<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-626-1.svg" width="672" /></p>
+<div class="sourceCode" id="cb795"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb795-1" title="1"><span class="kw">ggplot</span>(d) <span class="op">+</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb795-2" title="2"><span class="st">  </span><span class="kw">geom_line</span>(<span class="kw">aes</span>(<span class="dt">x =</span> annee, <span class="dt">y =</span> population, <span class="dt">color =</span> country)) <span class="op">+</span></a>
+<a class="sourceLine" id="cb795-3" title="3"><span class="st">  </span><span class="kw">scale_x_continuous</span>(<span class="dt">breaks =</span> <span class="kw">unique</span>(d<span class="op">$</span>annee))</a></code></pre></div>
+<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-627-1.svg" width="672" /></p>
 <p>C’est la même chose pour <code>dplyr</code>, par exemple si on voulait calculer la population minimale pour chaque pays avec <code>summarise</code> :</p>
-<div class="sourceCode" id="cb800"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb800-1" title="1">d <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb800-2" title="2"><span class="st">  </span><span class="kw">group_by</span>(country) <span class="op">%&gt;%</span><span class="st">  </span></a>
-<a class="sourceLine" id="cb800-3" title="3"><span class="st">  </span><span class="kw">summarise</span>(<span class="dt">pop_min =</span> <span class="kw">min</span>(population))</a></code></pre></div>
-<pre><code>`summarise()` ungrouping output (override with `.groups` argument)</code></pre>
+<div class="sourceCode" id="cb796"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb796-1" title="1">d <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb796-2" title="2"><span class="st">  </span><span class="kw">group_by</span>(country) <span class="op">%&gt;%</span><span class="st">  </span></a>
+<a class="sourceLine" id="cb796-3" title="3"><span class="st">  </span><span class="kw">summarise</span>(<span class="dt">pop_min =</span> <span class="kw">min</span>(population))</a></code></pre></div>
 <pre><code># A tibble: 3 x 2
   country  pop_min
   &lt;fct&gt;      &lt;int&gt;
@@ -878,7 +880,7 @@ code span.wa { color: #bf0303; } /* Warning */
 </table>
 <p>Dans ce tableau, une même variable (la population) est répartie sur plusieurs colonnes, chacune représentant une observation à un moment différent. On souhaite que la variable ne représente plus qu’une seule colonne, et que les observations soient réparties sur plusieurs lignes.</p>
 <p>Pour cela on va utiliser la fonction <code>pivot_longer</code><a href="#fn20" class="footnote-ref" id="fnref20"><sup>20</sup></a> :</p>
-<div class="sourceCode" id="cb803"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb803-1" title="1">d <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">pivot_longer</span>(<span class="kw">c</span>(<span class="st">`</span><span class="dt">2002</span><span class="st">`</span>,<span class="st">`</span><span class="dt">2007</span><span class="st">`</span>))</a></code></pre></div>
+<div class="sourceCode" id="cb798"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb798-1" title="1">d <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">pivot_longer</span>(<span class="kw">c</span>(<span class="st">`</span><span class="dt">2002</span><span class="st">`</span>,<span class="st">`</span><span class="dt">2007</span><span class="st">`</span>))</a></code></pre></div>
 <pre><code># A tibble: 12 x 3
    country     name     value
    &lt;fct&gt;       &lt;chr&gt;    &lt;int&gt;
@@ -896,7 +898,7 @@ code span.wa { color: #bf0303; } /* Warning */
 12 Switzerland 2007   7554661</code></pre>
 <p>La fonction <code>pivot_longer</code> prend comme premier argument la liste des colonnes à rassembler (ici on a mis <code>2002</code> et <code>2007</code> entre <em>backticks</em> (<code>`2002`</code>) pour indiquer à <code>pivot_longer</code> qu’il s’agit d’un nom de colonne et pas d’un nombre). Ces colonnes peuvent être spécifiées avec la même syntaxe que celle de la fonction <code>select</code> de <code>dplyr</code>.</p>
 <p>Par exemple, il est parfois plus rapide d’indiquer à <code>pivot_longer</code> les colonnes qu’on ne souhaite pas “rassembler”. On peut le faire avec la syntaxe suivante :</p>
-<div class="sourceCode" id="cb805"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb805-1" title="1">d <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">pivot_longer</span>(<span class="op">-</span>country)</a></code></pre></div>
+<div class="sourceCode" id="cb800"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb800-1" title="1">d <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">pivot_longer</span>(<span class="op">-</span>country)</a></code></pre></div>
 <pre><code># A tibble: 12 x 3
    country     name     value
    &lt;fct&gt;       &lt;chr&gt;    &lt;int&gt;
@@ -913,7 +915,7 @@ code span.wa { color: #bf0303; } /* Warning */
 11 Switzerland 2002   7361757
 12 Switzerland 2007   7554661</code></pre>
 <p>Par défaut, les colonnes qui contiennent les noms des colonnes d’origine et leurs valeurs sont nommées <code>name</code> et <code>value</code>. Si cela ne convient pas, on peut indiquer les noms à utiliser via les arguments <code>names_to</code> et <code>values_to</code> :</p>
-<div class="sourceCode" id="cb807"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb807-1" title="1">d <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">pivot_longer</span>(<span class="kw">c</span>(<span class="st">`</span><span class="dt">2002</span><span class="st">`</span>,<span class="st">`</span><span class="dt">2007</span><span class="st">`</span>), <span class="dt">names_to =</span> <span class="st">&quot;annee&quot;</span>, <span class="dt">values_to =</span> <span class="st">&quot;population&quot;</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb802"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb802-1" title="1">d <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">pivot_longer</span>(<span class="kw">c</span>(<span class="st">`</span><span class="dt">2002</span><span class="st">`</span>,<span class="st">`</span><span class="dt">2007</span><span class="st">`</span>), <span class="dt">names_to =</span> <span class="st">&quot;annee&quot;</span>, <span class="dt">values_to =</span> <span class="st">&quot;population&quot;</span>)</a></code></pre></div>
 <pre><code># A tibble: 12 x 3
    country     annee population
    &lt;fct&gt;       &lt;chr&gt;      &lt;int&gt;
@@ -1006,7 +1008,7 @@ code span.wa { color: #bf0303; } /* Warning */
 </table>
 <p>Ce tableau a le problème inverse du précédent : on a deux variables, <code>lifeExp</code> et <code>pop</code> qui, plutôt que d’être réparties en deux colonnes, sont réparties entre plusieurs lignes.</p>
 <p>On va donc utiliser <code>pivot_wider</code> pour répartir ces lignes dans deux colonnes différentes :</p>
-<div class="sourceCode" id="cb809"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb809-1" title="1">d <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">pivot_wider</span>(<span class="dt">names_from =</span> variable, <span class="dt">values_from =</span> value)</a></code></pre></div>
+<div class="sourceCode" id="cb804"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb804-1" title="1">d <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">pivot_wider</span>(<span class="dt">names_from =</span> variable, <span class="dt">values_from =</span> value)</a></code></pre></div>
 <pre><code># A tibble: 4 x 5
   country continent  year lifeExp      pop
   &lt;fct&gt;   &lt;fct&gt;     &lt;int&gt;   &lt;dbl&gt;    &lt;dbl&gt;
@@ -1097,8 +1099,8 @@ code span.wa { color: #bf0303; } /* Warning */
 </tr>
 </tbody>
 </table>
-<div class="sourceCode" id="cb811"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb811-1" title="1">d <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb811-2" title="2"><span class="st">  </span><span class="kw">pivot_wider</span>(<span class="dt">names_from =</span> variable, <span class="dt">values_from =</span> value)</a></code></pre></div>
+<div class="sourceCode" id="cb806"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb806-1" title="1">d <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb806-2" title="2"><span class="st">  </span><span class="kw">pivot_wider</span>(<span class="dt">names_from =</span> variable, <span class="dt">values_from =</span> value)</a></code></pre></div>
 <pre><code># A tibble: 4 x 6
   country continent  year lifeExp      pop density
   &lt;chr&gt;   &lt;chr&gt;     &lt;dbl&gt;   &lt;dbl&gt;    &lt;dbl&gt;   &lt;dbl&gt;
@@ -1106,11 +1108,11 @@ code span.wa { color: #bf0303; } /* Warning */
 2 Belgium Europe     2007    79.4 10392226      NA
 3 France  Europe     2002    79.6 59925035      94
 4 France  Europe     2007    80.7 61083916      NA</code></pre>
-<div class="sourceCode" id="cb813"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb813-1" title="1">d <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb813-2" title="2"><span class="st">  </span><span class="kw">pivot_wider</span>(</a>
-<a class="sourceLine" id="cb813-3" title="3">    <span class="dt">names_from =</span> variable, <span class="dt">values_from =</span> value, </a>
-<a class="sourceLine" id="cb813-4" title="4">    <span class="dt">values_fill =</span> <span class="kw">list</span>(<span class="dt">value =</span> <span class="dv">0</span>)</a>
-<a class="sourceLine" id="cb813-5" title="5">  )</a></code></pre></div>
+<div class="sourceCode" id="cb808"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb808-1" title="1">d <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb808-2" title="2"><span class="st">  </span><span class="kw">pivot_wider</span>(</a>
+<a class="sourceLine" id="cb808-3" title="3">    <span class="dt">names_from =</span> variable, <span class="dt">values_from =</span> value, </a>
+<a class="sourceLine" id="cb808-4" title="4">    <span class="dt">values_fill =</span> <span class="kw">list</span>(<span class="dt">value =</span> <span class="dv">0</span>)</a>
+<a class="sourceLine" id="cb808-5" title="5">  )</a></code></pre></div>
 <pre><code># A tibble: 4 x 6
   country continent  year lifeExp      pop density
   &lt;chr&gt;   &lt;chr&gt;     &lt;dbl&gt;   &lt;dbl&gt;    &lt;dbl&gt;   &lt;dbl&gt;
@@ -1146,7 +1148,7 @@ code span.wa { color: #bf0303; } /* Warning */
 </tbody>
 </table>
 <p><code>separate</code> permet de séparer la colonne <code>note</code> en deux nouvelles colonnes <code>note</code> et <code>note_sur</code> :</p>
-<div class="sourceCode" id="cb815"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb815-1" title="1">df <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">separate</span>(note, <span class="kw">c</span>(<span class="st">&quot;note&quot;</span>, <span class="st">&quot;note_sur&quot;</span>))</a></code></pre></div>
+<div class="sourceCode" id="cb810"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb810-1" title="1">df <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">separate</span>(note, <span class="kw">c</span>(<span class="st">&quot;note&quot;</span>, <span class="st">&quot;note_sur&quot;</span>))</a></code></pre></div>
 <pre><code># A tibble: 3 x 3
   eleve           note  note_sur
   &lt;chr&gt;           &lt;chr&gt; &lt;chr&gt;   
@@ -1154,7 +1156,7 @@ code span.wa { color: #bf0303; } /* Warning */
 2 Raymonde Bidule 6     10      
 3 Martial Truc    87    100     </code></pre>
 <p><code>separate</code> prend deux arguments principaux, le nom de la colonne à séparer et un vecteur indiquant les noms des nouvelles variables à créer. Par défaut <code>separate</code> “sépare” au niveau des caractères non-alphanumérique (espace, symbole, etc.). On peut lui indiquer explicitement le caractère sur lequel séparer avec l’argument <code>sep</code> :</p>
-<div class="sourceCode" id="cb817"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb817-1" title="1">df <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">separate</span>(eleve, <span class="kw">c</span>(<span class="st">&quot;prenom&quot;</span>, <span class="st">&quot;nom&quot;</span>), <span class="dt">sep =</span> <span class="st">&quot; &quot;</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb812"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb812-1" title="1">df <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">separate</span>(eleve, <span class="kw">c</span>(<span class="st">&quot;prenom&quot;</span>, <span class="st">&quot;nom&quot;</span>), <span class="dt">sep =</span> <span class="st">&quot; &quot;</span>)</a></code></pre></div>
 <pre><code># A tibble: 3 x 3
   prenom   nom    note  
   &lt;chr&gt;    &lt;chr&gt;  &lt;chr&gt; 
@@ -1193,7 +1195,7 @@ code span.wa { color: #bf0303; } /* Warning */
 </tbody>
 </table>
 <p>Si on applique <code>separate_rows</code> à la colonne <code>notes</code>, chaque note se retrouve dans une ligne différente (et les autres colonnes sont dupliquées) :</p>
-<div class="sourceCode" id="cb819"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb819-1" title="1"><span class="kw">separate_rows</span>(df, notes)</a></code></pre></div>
+<div class="sourceCode" id="cb814"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb814-1" title="1"><span class="kw">separate_rows</span>(df, notes)</a></code></pre></div>
 <pre><code># A tibble: 6 x 3
   eleve           classe notes
   &lt;chr&gt;           &lt;chr&gt;  &lt;chr&gt;
@@ -1204,7 +1206,7 @@ code span.wa { color: #bf0303; } /* Warning */
 5 Martial Truc    6e     11   
 6 Martial Truc    6e     17   </code></pre>
 <p>Par défaut <code>separate_rows</code> sépare les valeurs dès qu’elle trouve un caractère qui ne soit ni un chiffre ni une lettre, mais on peut spécifier le séparateur à l’aide de l’argument <code>sep</code> (qui accepte une chaîne de caractère ou même une expression régulière) :</p>
-<div class="sourceCode" id="cb821"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb821-1" title="1"><span class="kw">separate_rows</span>(df, notes, <span class="dt">sep =</span> <span class="st">&quot;,&quot;</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb816"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb816-1" title="1"><span class="kw">separate_rows</span>(df, notes, <span class="dt">sep =</span> <span class="st">&quot;,&quot;</span>)</a></code></pre></div>
 </div>
 <div id="unite-regrouper-plusieurs-colonnes-en-une-seule" class="section level3">
 <h3><span class="header-section-number">12.3.5</span> <code>unite</code> : regrouper plusieurs colonnes en une seule</h3>
@@ -1258,7 +1260,7 @@ code span.wa { color: #bf0303; } /* Warning */
 </tbody>
 </table>
 <p>On souhaite reconstruire une colonne <code>code_insee</code> qui indique le code INSEE de la commune, et qui s’obtient en concaténant le code du département et celui de la commune. On peut utiliser <code>unite</code> pour cela :</p>
-<div class="sourceCode" id="cb822"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb822-1" title="1">d <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">unite</span>(code_insee, code_departement, code_commune)</a></code></pre></div>
+<div class="sourceCode" id="cb817"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb817-1" title="1">d <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">unite</span>(code_insee, code_departement, code_commune)</a></code></pre></div>
 <pre><code># A tibble: 6 x 3
   code_insee commune           pop_tot
   &lt;chr&gt;      &lt;chr&gt;               &lt;int&gt;
@@ -1269,18 +1271,18 @@ code span.wa { color: #bf0303; } /* Warning */
 5 01_025     Bâgé-la-Ville        3130
 6 01_027     Balan                2785</code></pre>
 <p>Le résultat n’est pas idéal : par défaut <code>unite</code> ajoute un caractère <code>_</code> entre les deux valeurs concaténées, alors qu’on ne veut aucun séparateur. De plus, on souhaite conserver nos deux colonnes d’origine, qui peuvent nous être utiles. On peut résoudre ces deux problèmes à l’aide des arguments <code>sep</code> et <code>remove</code> :</p>
-<div class="sourceCode" id="cb824"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb824-1" title="1">d <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb824-2" title="2"><span class="st">  </span><span class="kw">unite</span>(code_insee, code_departement, code_commune, </a>
-<a class="sourceLine" id="cb824-3" title="3">        <span class="dt">sep =</span> <span class="st">&quot;&quot;</span>, <span class="dt">remove =</span> <span class="ot">FALSE</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb819"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb819-1" title="1">d <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb819-2" title="2"><span class="st">  </span><span class="kw">unite</span>(code_insee, code_departement, code_commune, </a>
+<a class="sourceLine" id="cb819-3" title="3">        <span class="dt">sep =</span> <span class="st">&quot;&quot;</span>, <span class="dt">remove =</span> <span class="ot">FALSE</span>)</a></code></pre></div>
 <pre><code># A tibble: 6 x 5
-  code_insee code_departement code_commune commune           pop_tot
-  &lt;chr&gt;      &lt;chr&gt;            &lt;chr&gt;        &lt;chr&gt;               &lt;int&gt;
-1 01004      01               004          Ambérieu-en-Bugey   14233
-2 01007      01               007          Ambronay             2437
-3 01014      01               014          Arbent               3440
-4 01024      01               024          Attignat             3110
-5 01025      01               025          Bâgé-la-Ville        3130
-6 01027      01               027          Balan                2785</code></pre>
+  code_insee code_departement code_commune commune      pop_tot
+  &lt;chr&gt;      &lt;chr&gt;            &lt;chr&gt;        &lt;chr&gt;          &lt;int&gt;
+1 01004      01               004          Ambérieu-en…   14233
+2 01007      01               007          Ambronay        2437
+3 01014      01               014          Arbent          3440
+4 01024      01               024          Attignat        3110
+5 01025      01               025          Bâgé-la-Vil…    3130
+6 01027      01               027          Balan           2785</code></pre>
 </div>
 <div id="extract" class="section level3">
 <h3><span class="header-section-number">12.3.6</span> <code>extract</code> : créer de nouvelles colonnes à partir d’une colonne de texte</h3>
@@ -1309,9 +1311,9 @@ code span.wa { color: #bf0303; } /* Warning */
 </tbody>
 </table>
 <p>On peut extraire les noms et prénoms dans deux nouvelles colonnes avec :</p>
-<div class="sourceCode" id="cb826"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb826-1" title="1">df <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">extract</span>(eleve, </a>
-<a class="sourceLine" id="cb826-2" title="2">               <span class="kw">c</span>(<span class="st">&quot;prenom&quot;</span>, <span class="st">&quot;nom&quot;</span>), </a>
-<a class="sourceLine" id="cb826-3" title="3">               <span class="st">&quot;^(.*) (.*)$&quot;</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb821"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb821-1" title="1">df <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">extract</span>(eleve, </a>
+<a class="sourceLine" id="cb821-2" title="2">               <span class="kw">c</span>(<span class="st">&quot;prenom&quot;</span>, <span class="st">&quot;nom&quot;</span>), </a>
+<a class="sourceLine" id="cb821-3" title="3">               <span class="st">&quot;^(.*) (.*)$&quot;</span>)</a></code></pre></div>
 <pre><code># A tibble: 3 x 3
   prenom   nom    note  
   &lt;chr&gt;    &lt;chr&gt;  &lt;chr&gt; 
@@ -1320,10 +1322,10 @@ code span.wa { color: #bf0303; } /* Warning */
 3 Martial  Truc   87/100</code></pre>
 <p>On passe donc à <code>extract</code> trois arguments : la colonne d’où on doit extraire les valeurs, un vecteur avec les noms des nouvelles colonnes à créer, et une expression régulière comportant autant de groupes (identifiés par des parenthèses) que de nouvelles colonnes.</p>
 <p>Par défaut la colonne d’origine n’est pas conservée dans la table résultat. On peut modifier ce comportement avec l’argument <code>remove = FALSE</code>. Ainsi, le code suivant extrait les initiales du prénom et du nom mais conserve la colonne d’origine :</p>
-<div class="sourceCode" id="cb828"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb828-1" title="1">df <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">extract</span>(eleve, </a>
-<a class="sourceLine" id="cb828-2" title="2">               <span class="kw">c</span>(<span class="st">&quot;initiale_prenom&quot;</span>, <span class="st">&quot;initiale_nom&quot;</span>), </a>
-<a class="sourceLine" id="cb828-3" title="3">               <span class="st">&quot;^(.).* (.).*$&quot;</span>, </a>
-<a class="sourceLine" id="cb828-4" title="4">               <span class="dt">remove =</span> <span class="ot">FALSE</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb823"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb823-1" title="1">df <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">extract</span>(eleve, </a>
+<a class="sourceLine" id="cb823-2" title="2">               <span class="kw">c</span>(<span class="st">&quot;initiale_prenom&quot;</span>, <span class="st">&quot;initiale_nom&quot;</span>), </a>
+<a class="sourceLine" id="cb823-3" title="3">               <span class="st">&quot;^(.).* (.).*$&quot;</span>, </a>
+<a class="sourceLine" id="cb823-4" title="4">               <span class="dt">remove =</span> <span class="ot">FALSE</span>)</a></code></pre></div>
 <pre><code># A tibble: 3 x 4
   eleve           initiale_prenom initiale_nom note  
   &lt;chr&gt;           &lt;chr&gt;           &lt;chr&gt;        &lt;chr&gt; 
@@ -1368,7 +1370,7 @@ code span.wa { color: #bf0303; } /* Warning */
 <p>Les élèves Barnabé et Chantal n’ont pas de notes dans toutes les matières. Supposons que c’est parce qu’ils étaient absents et que leur note est en fait un 0. Si on veut calculer les moyennes des élèves, on doit compléter ces notes manquantes.</p>
 <p>La fonction <code>complete</code> est prévue pour ce cas de figure : elle permet de compléter des combinaisons manquantes de valeurs de plusieurs colonnes.</p>
 <p>On peut l’utiliser de cette manière :</p>
-<div class="sourceCode" id="cb830"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb830-1" title="1">df <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">complete</span>(eleve, matiere)</a></code></pre></div>
+<div class="sourceCode" id="cb825"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb825-1" title="1">df <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">complete</span>(eleve, matiere)</a></code></pre></div>
 <pre><code># A tibble: 6 x 3
   eleve   matiere   note
   &lt;chr&gt;   &lt;chr&gt;    &lt;dbl&gt;
@@ -1380,7 +1382,7 @@ code span.wa { color: #bf0303; } /* Warning */
 6 Chantal Maths       NA</code></pre>
 <p>On voit que les combinaisons manquante “Barnabé - Français” et “Chantal - Maths” ont bien été ajoutées par <code>complete</code>.</p>
 <p>Par défaut les lignes insérées récupèrent des valeurs manquantes <code>NA</code> pour les colonnes restantes. On peut néanmoins choisir une autre valeur avec l’argument <code>fill</code>, qui prend la forme d’une liste nommée :</p>
-<div class="sourceCode" id="cb832"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb832-1" title="1">df <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">complete</span>(eleve, matiere, <span class="dt">fill =</span> <span class="kw">list</span>(<span class="dt">note =</span> <span class="dv">0</span>))</a></code></pre></div>
+<div class="sourceCode" id="cb827"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb827-1" title="1">df <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">complete</span>(eleve, matiere, <span class="dt">fill =</span> <span class="kw">list</span>(<span class="dt">note =</span> <span class="dv">0</span>))</a></code></pre></div>
 <pre><code># A tibble: 6 x 3
   eleve   matiere   note
   &lt;chr&gt;   &lt;chr&gt;    &lt;dbl&gt;
@@ -1428,7 +1430,7 @@ code span.wa { color: #bf0303; } /* Warning */
 </tbody>
 </table>
 <p>Si on applique <code>complete</code> comme précédemment, le résultat n’est pas bon car il contient toutes les combinaisons de <code>id</code>, <code>eleve</code> et <code>matiere</code>.</p>
-<div class="sourceCode" id="cb834"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb834-1" title="1">df <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">complete</span>(id, eleve, matiere)</a></code></pre></div>
+<div class="sourceCode" id="cb829"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb829-1" title="1">df <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">complete</span>(id, eleve, matiere)</a></code></pre></div>
 <pre><code># A tibble: 18 x 4
         id eleve   matiere   note
      &lt;dbl&gt; &lt;chr&gt;   &lt;chr&gt;    &lt;dbl&gt;
@@ -1451,7 +1453,7 @@ code span.wa { color: #bf0303; } /* Warning */
 17 1001003 Chantal Français    11
 18 1001003 Chantal Maths       NA</code></pre>
 <p>Dans ce cas, pour signifier à <code>complete</code> que <code>id</code> et <code>eleve</code> sont deux attributs d’un même individu et ne doivent pas être combinés entre eux, on doit les placer dans une fonction <code>nesting</code> :</p>
-<div class="sourceCode" id="cb836"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb836-1" title="1">df <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">complete</span>(<span class="kw">nesting</span>(id, eleve), matiere)</a></code></pre></div>
+<div class="sourceCode" id="cb831"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb831-1" title="1">df <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">complete</span>(<span class="kw">nesting</span>(id, eleve), matiere)</a></code></pre></div>
 <pre><code># A tibble: 6 x 4
        id eleve   matiere   note
     &lt;dbl&gt; &lt;chr&gt;   &lt;chr&gt;    &lt;dbl&gt;
@@ -1508,6 +1510,7 @@ gitbook.start({
 "weibo": false,
 "instapaper": false,
 "vk": false,
+"whatsapp": false,
 "all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"],
 "instapper": false
 },
