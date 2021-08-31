@@ -95,7 +95,7 @@ typeof(Sys.Date())
 
 #### Sélection et modification
 
-On a vu section \ref{vecteurs} que l'opérateur `[]` peut être utilisé pour sélectionner ou modifier des éléments d'un vecteur. Cet opérateur peut comporter :
+On a vu section \@ref{vecteurs} que l'opérateur `[]` peut être utilisé pour sélectionner ou modifier des éléments d'un vecteur. Cet opérateur peut comporter :
 
 - des nombres (qui sélectionnent par position)
 - des chaînes de caractères (qui sélectionnent par nom)
@@ -268,7 +268,7 @@ l[[c(1,3)]] <- 0
 l
 ```
 
-```{block, type="rmdimporant"}
+```{block type='rmdimporant'}
 Attention à ne pas utiliser les crochets doubles pour modifier plusieurs éléments d'une liste. Ceux-ci ne génèreront pas d'erreur mais risquent d'avoir un comportement inattendu.
 ```
 
@@ -297,7 +297,7 @@ res <- indicateurs(x)
 res$moyenne
 ```
 
-On peut également utiliser les listes pour stocker une série d'objets complexes et leur appliquer des fonctions, comme on le verra dans la section \ref{purrr}.
+On peut également utiliser les listes pour stocker une série d'objets complexes et leur appliquer des fonctions, comme on le verra dans la section \@ref{purrr}.
 
 L'exemple fictif suivant récupère les noms de tous les fichiers CSV du répertoire courant et les importent tous en un coup dans une liste à l'aide de `purrr::map`. On pourra ensuite utiliser cette liste de tableaux de données pour leur appliquer des transformations ou les fusionner.
 
@@ -309,7 +309,7 @@ dfs <- purrr::map(files, read_csv)
 
 ### data.frame et tibble
 
-On a déjà abordé les tableaux de données en manipulant des *data frames* ou des *tibbles*. Les seconds sont une variante des premiers, les différences entre les deux ayant été présentées section \ref{tibbles}. On parlera donc ici indistinctement de tableaux de données. 
+On a déjà abordé les tableaux de données en manipulant des *data frames* ou des *tibbles*. Les seconds sont une variante des premiers, les différences entre les deux ayant été présentées section \@ref{tibbles}. On parlera donc ici indistinctement de tableaux de données. 
 
 Un tableau de données est en fait une liste nommée de vecteurs avec une contrainte spécifique : ces vecteurs doivent tous être de même longueur, ce qui garantit le format "tabulaire" des données.
 
@@ -330,7 +330,7 @@ df$fruit
 
 
 
-TODO 
+TODO :
 
 - data.frame est une liste de vecteurs de même longueur et de même type
 - sélection avec [[]]
@@ -377,7 +377,7 @@ bonjour_pierre_edmond("Pierre-Edmond")
 bonjour_pierre_edmond("Valérie-Charlotte")
 ```
 
-Une autre utilisation possible (et un peu plus utile) dans le cadre d'une fonctione est de n'exécuter du code que si un argument a été passé.
+Une autre utilisation possible (et un peu plus utile) dans le cadre d'une fonction est de n'exécuter du code que si un argument a été passé.
 
 ```{r}
 moyenne <- function(x, arrondir = TRUE) {
@@ -522,7 +522,7 @@ L'instruction `if` est souvent utilisée dans des fonctions pour valider les val
 
 ### Utilisation de `return` pour sortir de la fonction
 
-Une première utilisation peut être d'utiliser un `return` pour interrompre l'exécution de la fonction et retourner un résultat. On a en effet vu section \ref{resfunc} que dès que R rencontre un `return` dans une fonction, il interrompt immédiatement l'exécution de celle-ci.
+Une première utilisation peut être d'utiliser un `return` pour interrompre l'exécution de la fonction et retourner un résultat. On a en effet vu section \@ref{resfunc} que dès que R rencontre un `return` dans une fonction, il interrompt immédiatement l'exécution de celle-ci.
 
 La fonction suivante retourne la longueur du mot le plus long dans un vecteur de chaînes de caractères. On ajoute donc un test qui retourne `NA` dans le cas où le vecteur passé en argument serait d'un type différent.
 
@@ -563,7 +563,7 @@ mot_le_plus_long(1:5)
 
 On peut ainsi considérer, toujours dans la fonction `mot_le_plus_long`, que le fait de ne pas fournir en argument un vecteur de type character est suffisamment "grave" pour interrompre l'exécution en cours et laisser la personne qui utilise la fonction régler le problème.
 
-```{r}
+```{r error = TRUE}
 mot_le_plus_long <- function(x) {
     if (!is.character(x)) {
         stop("x doit être de type character.")
@@ -578,14 +578,14 @@ mot_le_plus_long(c("Pomme", "Citron"))
 Dans ce cas on remarque que le deuxième appel `mot_le_plus_long(c("Pomme", "Citron"))` n'est pas exécuté : R a tout interrompu dès qu'il a rencontré l'instruction `stop()`.
 
 ```{block type="rmdnote"}
-Savoir si un "problème" doit être traité comme un avertissement ou comme une erreur relève du choix de la personne qui développe la fonction : chaque cas est particulier et il n'y a pas de réponse générale à cette question.
+Savoir si un "problème" doit être traité comme un avertissement ou comme une erreur relève du choix de la personne qui développe la fonction : chaque cas est particulier.
 ```
 
 `stopifnot` est une syntaxe alternative un peu plus compacte qui combien test et message d'erreur. On lui passe en premier argument une condition, et en deuxième argument un message à afficher si la condition est fausse.
 
 On peut donc réécrire notre fonction `mot_le_plus_long` ci-dessus de la manière suivante :
 
-```{r}
+```{r error = TRUE}
 mot_le_plus_long <- function(x) {
     stopifnot(is.character(x), "x doit être de type character.")
     max(nchar(x))
@@ -616,7 +616,7 @@ histo(c(1, 15, 8, 10, 12, 18, 8, 4), titre = "Quel bel histogramme")
 
 Quand on ne souhaite pas mettre de valeur par défaut, on peut tester l'absence de l'argument à l'aide de la fonction `missing()`.
 
-```{r}
+```{r error = TRUE}
 moyenne_arrondie <- function(x) {
     if (missing(x)) stop("x est manquant")
     round(mean(x))
@@ -627,7 +627,7 @@ moyenne_arrondie()
 
 En dehors de certains cas particuliers on ajoute rarement ce genre de tests dans des fonctions, car les arguments sans valeur par défaut sont le plus souvent des valeurs "obligatoires" qui génèrent de toutes manières une erreur quand elles ne sont pas définies :
 
-```{r}
+```{r error=TRUE}
 moyenne_arrondie <- function(x) {
     round(mean(x))
 }
@@ -638,7 +638,7 @@ moyenne_arrondie()
 
 ## `for` et `while` : répéter des instructions dans une boucle
 
-Un autre type d'instructions de R permettent de répéter du code plusieurs fois, soit en fonction d'une conditions soit selon les éléments d'un vecteur. On verra en complément dans la section \ref{purrr} d'autres fonctions tirées de l'extension `purrr` qui elles permettent d'appliquer une fonction en itérant sur les éléments de plusieurs objets.
+Un autre type d'instructions de R permettent de répéter du code plusieurs fois, soit en fonction d'une condition soit selon les éléments d'un vecteur. En complément, on verra également dans la section \@ref{purrr} d'autres fonctions tirées de l'extension `purrr` qui permettent d'appliquer une fonction en itérant sur les éléments de plusieurs objets.
 
 ### `for`
 
@@ -672,14 +672,14 @@ Exemple un peu plus complexe, la fonction suivante prend en entrée un data fram
 summaries <- function(d, vars) {
     for (var in vars) {
         message("--- ", var, " ---")
-        print(summary(d[,var]))
+        print(summary(d[, var]))
     }
 }
 
 summaries(hdv2003, c("sexe", "age", "heures.tv"))
 ```
 
-Un "pattern" relativement fréquent est de vouloir itérer sur les éléments d'un vecteur par leur position. Il est du coup assez naturel d'utiliser quelque chose comme `for (i in 1:length(x))`. Il est cependant préférable dans ces cas-là d'utiliser la fonction dédiée `seq_along(x)`^[L'intérêt de `seq_along(x)` est notamment qu'elle n'essaie pas d'exécuter le bloc de code si jamais `x` est de longueur nulle. Cf. des explications supplémentaires dans [Advanced R](https://adv-r.hadley.nz/control-flow.html#common-pitfalls)].
+Un "pattern" relativement fréquent est de vouloir itérer sur les éléments d'un vecteur par leur position. Il est du coup assez naturel d'utiliser quelque chose comme `for (i in 1:length(x))`. Il est cependant préférable dans ces cas-là d'utiliser la fonction dédiée `seq_along(x)`^[L'intérêt de `seq_along(x)` est notamment qu'elle n'essaie pas d'exécuter le bloc de code si jamais `x` est de longueur nulle. *Cf.* des explications supplémentaires dans [Advanced R](https://adv-r.hadley.nz/control-flow.html#common-pitfalls)].
 
 Dans l'exemple suivant, la fonction `affiche_dimensions` prend en entrée une liste de data frames et affiche leur nombre de lignes et de colonnes.
 
@@ -688,7 +688,7 @@ affiche_dimensions <- function(dfs) {
     for (i in seq_along(dfs)) {
         name <- names(dfs)[[i]]
         df <- dfs[[i]]
-        message("Dimensions de ", name, " : ", nrow(df), 'x', ncol(df))
+        message("Dimensions de ", name, " : ", nrow(df), "x", ncol(df))
     }
 }
 
@@ -701,7 +701,7 @@ affiche_dimensions(l)
 
 ### `while`
 
-`while` prend en arguments une condition et exécute le bloc de code qui suit tant que la condition est vraie :
+`while` prend en argument une condition et exécute le bloc de code qui suit tant que la condition est vraie :
 
 ![](figures/structure_while.svg)
 
@@ -760,13 +760,12 @@ summaries <- function(d, vars) {
             next
         }
         message("--- ", var, " ---")
-        print(summary(d[,var]))
+        print(summary(d[, var]))
     }
 }
 
 summaries(hdv2003, c("sexe", "diplodocus", "age", "heures.tv"))
 ```
-
 
 ### Quand (ne pas) utiliser des boucles
 
@@ -787,21 +786,19 @@ Et on se contentera d'un beaucoup plus simple `x + 10`.
 De la même manière, la boucle utilisée précédemment pour trouver la première valeur d'un vecteur supérieure à un certain seuil :
 
 ```{r}
-x <- c(1, 25, 4, 110, 41)
-seuil <- 100
+x <- c(1, NA, 4, 110, NA)
+y <- c(20, 30, 40, 50, 60)
 
-for (item in x) {
-     if (item > seuil) break
+for (i in seq_along(x)) {
+    if (is.na(x[i])) x[i] <- y[i]
 }
 
-print(item)
+print(x)
 ```
 
-Peut être remplacée plus simplement par `x[which(x > seuil)]`.
+Peut être remplacée par `x[is.na(x)] <- y[is.na(x)]`.
 
-Un cas particulier où une boucle peut être particulièrement lente est lorsqu'on l'utilise pour créer un nouveau vecteur ou data frame.
-
-Dans l'exemple suivant, on utilise une boucle pour générér une liste de vecteurs de nombres aléatoires dont la longueur est stockée dans [x]. 
+Une boucle peut être particulièrement lente lorsqu'on l'utilise pour créer un nouveau vecteur ou data frame. Dans l'exemple suivant, on utilise une boucle pour générér une liste de vecteurs de nombres aléatoires dont la longueur est stockée dans [x]. 
 
 ```{r}
 x <- c(15, 25, 10, 8)
@@ -812,7 +809,7 @@ for (i in seq_along(x)) {
 }
 ```
 
-Avec cette syntaxe, à chaque ajout d'élément à `l` R procède à une copie de la totalité de `l`. Si le coût en termes de performance est négligeable avec seulement quelques éléments, il peut vite devenir très importants avec un nombre d'éléments élevé.
+Avec cette syntaxe, à chaque ajout d'élément à `l` R procède à une copie de la totalité de `l`. Si le coût en termes de performance est négligeable avec seulement quelques éléments, il peut vite devenir très important.
 
 L'alternative ici, si on veut utiliser une boucle `for`, est de "pré-allouer" l'espace mémoire nécessaire à notre liste avant de la modifier ensuite dans la boucle. On évite ainsi la copie de `l` à chaque itération. Cette préallocation se fait via la fonction `vector`.
 
@@ -823,14 +820,13 @@ l <- vector("list", length(x))
 for (i in seq_along(x)) {
     l[[i]] <- runif(x[i])
 }
-
 ```
 
-On verra cependant dans la section \ref{purrr} que des fonctions permettent de faire ce genre de choses de manière beaucoup plus simple, ici par exemple avec un simple `purrr::map(x, runif)`.
+On verra cependant dans la section \@ref{purrr} que des fonctions permettent de faire ce genre de choses de manière beaucoup plus simple, ici par exemple avec un simple `purrr::map(x, runif)`.
 
 Au final, entre les fonctions vectorisées existantes et les possibilités fournies par `purrr` ou les fonctions de type `apply` de base R, il est assez rare de devoir utiliser une boucle directement dans R.
 
-Pour autant, il ne faut pas non plus tomber dans l'excès inverse et considérer que tout usage de `for` ou `while` est nécessairement et doit être évité : ces fonctions sont parfaitement justifiées dans de nombreux cas de figure, et si vous trouvez une solution qui fonctionne de manière efficace avec une boucle `for`, il n'est pas toujours utile de chercher à la remplacer à tout prix.
+Pour autant, il ne faut pas non plus tomber dans l'excès inverse et considérer que tout usage de `for` ou `while` doit être évité : ces fonctions sont parfaitement justifiées dans de nombreux cas de figure, et si vous trouvez une solution qui fonctionne de manière efficace avec une boucle `for`, il n'est pas toujours utile de chercher à la remplacer à tout prix.
 
 
 ## Ressources
@@ -849,3 +845,4 @@ https://thinkr.fr/comment-faire-des-boucles-en-r-ou-pas/
 https://privefl.github.io/blog/why-loops-are-slow-in-r/
 
 ## Exercices
+
