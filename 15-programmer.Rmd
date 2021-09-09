@@ -15,21 +15,53 @@ data(rp2012)
 
 ## Structures de données
 
-R propose de nombreuses structures de données différentes, et les extensions peuvent en implémenter de nouvelles. Cette section présente les trois structures les plus utilisées : les vecteurs atomiques, les listes et les tableaux de données.
+R propose de nombreuses structures de données différentes, et les extensions peuvent en implémenter de nouvelles. Cette section présente trois structures parmi les plus utilisées : les vecteurs atomiques, les listes et les tableaux de données.
 
 ### Vecteurs atomiques
 
-Les vecteurs atomiques sont des structures qui regroupent plusieurs éléments qui doivent tous être du même type. Ils ont déjà été évoqués section \@ref(vecteurs).
+Les vecteurs atomiques sont des structures qui regroupent plusieurs éléments, avec une contrainte : les éléments doivent tous être du même type, et ils ne peuvent pas contenir d'objets complexes. Les vecteurs atomiques ont déjà été présentés section \@ref(vecteurs).
 
 #### Création d'un vecteur
 
-On construit un vecteur notamment avec l'opérateur `c`.
+On peut construire un vecteur avec la fonction `c()`.
 
 ```{r}
 x <- c(1, 3, 8)
 ```
 
-On peut nommer les éléments d'un vecteur lors de sa création, ou avec la fonction `names`.
+Si on souhaite générer un vecteur de valeurs entières successives, on peut également utiliser l'opérateur `:` ou la fonction `seq_len()`.
+
+```{r}
+2:8
+```
+
+```{r}
+seq_len(5)
+```
+
+La fonction `seq()` permet de générer des séquences régulière plus complexes.
+
+```{r}
+seq(0.5, 2.5, by = 0.5)
+```
+
+```{r}
+seq(0, 4, length.out = 6)
+```
+
+Enfin, la fonction `rep()` permet de répéter un élément ou un vecteur.
+
+```{r}
+rep("Pomme", 6)
+```
+
+```{r}
+rep(1:4, 2)
+```
+
+#### Vecteurs nommés
+
+Les éléments d'un vecteur peuvent être nommés. Ceci peut se faire au moment de la création du vecteur.
 
 ```{r}
 x <- c(e1 = 1, e2 = 3, e3 = 8)
@@ -63,18 +95,46 @@ z <- c(TRUE, FALSE, FALSE)
 typeof(z)
 ```
 
-Parmi les principaux types de données on notera^[Il en existe d'autres, comme `complex` ou `raw`, mais qui sont moins fréquemment utilisés.].
+Parmi les principaux types de données on notera^[Il en existe d'autres, comme `complex` ou `raw`, mais qui sont moins fréquemment utilisés.] :
 
 - les chaîne de caractères (`character`)
 - les nombres flottants (`double`)
-- les nombres entiers (`int`)
+- les nombres entiers (`integer`)
 - les booléens, ou valeurs logiques (`logical`)
 
-Les `double` et les `int` sont des vecteurs de la famille `numeric`. Par défaut les nombres sont considérés comme des nombres flottants (des nombres décimaux avec une virgule) : pour les définir explicitement comme nombres entiers on peut leur ajouter le suffixe `L`.
+Par défaut les nombres sont considérés comme des nombres flottants (des nombres décimaux avec une virgule) : pour les définir explicitement comme nombres entiers on peut leur ajouter le suffixe `L`.
 
 ```{r}
 x <- c(1L, 3L, 8L)
 typeof(x)
+```
+
+On peut tester le type d'un vecteur avec les fonctions `is.character`, `is.double`, `is.logical`... Il existe aussi la fonction `is.numeric` qui teste si un vecteur est de type `double` ou `integer`.
+
+```{r}
+is.character("Chihuahua")
+```
+
+```{r}
+is.logical(3 == 2)
+```
+
+```{r}
+is.numeric(1:5)
+```
+
+Petite spécificité, les facteurs (voir section \@ref(facteurs)) ne sont pas considérés par R comme des `character`, même s'ils comportent des chaînes de caractères. Pour tester si un vecteur est de type facteur, on peut utiliser `is.factor()`. 
+
+```{r}
+fac <- factor(c("rouge", "vert", "rouge"))
+```
+
+```{r}
+is.character(fac)
+```
+
+```{r}
+is.factor(fac)
 ```
 
 Tous les éléments d'un vecteur doivent être du même type. Si ça n'est pas le cas, les éléments seront convertis au type le plus "général", sachant que les `character` sont plus généraux que les `numeric`, qui sont eux-mêmes plus généraux que les `logical`.
@@ -91,12 +151,6 @@ La valeur `NA`, comme on l'a vu, permet d'indiquer une valeur manquante (`Not Av
 c(1, 2, NA_character_)
 ```
 
-Les vecteurs de type `factor` sont en fait basés sur des vecteurs de type entiers, et les vecteurs de type date sur des vecteurs numériques.
-
-```{r}
-typeof(factor(c("a", "b")))
-typeof(Sys.Date())
-```
 
 #### Sélection et modification
 
@@ -113,7 +167,7 @@ x[c("e2", "e4")]
 x[x < 10]
 ```
 
-Utilisé conjointement avec l'opérateur d'assignation `<-`, l'opérateur `[]` permet aussi de remplacer certains éléments d'un vecteur.
+Utilisé conjointement avec l'opérateur d'assignation `<-`, l'opérateur `[]` permet aussi de remplacer certains éléments.
 
 ```{r}
 x[1] <- -1000
@@ -130,9 +184,9 @@ x
 
 ### Listes
 
-Les listes sont une généralisation des vecteurs : elles regroupent également plusieurs éléments, mais ceux-ci peuvent être de n'importe quel type, y compris des objets complexes. Une liste peut donc contenir elle-même des vecteurs, des listes, des tablaux de données, des fonctions, des graphiques `ggplot2` stockés dans un objet, etc.
+Les listes sont une généralisation des vecteurs : elles regroupent également plusieurs éléments, mais ceux-ci peuvent être de n'importe quel type, y compris des objets complexes. Une liste peut donc contenir elle-même des vecteurs, des listes, des tableaux de données, des fonctions, des graphiques `ggplot2` stockés dans un objet, etc.
 
-#### Création et manipulation
+#### Création
 
 On construit une liste avec la fonction `list`.
 
@@ -143,7 +197,7 @@ l
 
 La manière dont R affiche le contenu d'une liste dans la console diffère de celle des vecteurs. Dans le cas d'une liste ses éléments sont affichés les uns en dessous des autres, et séparés par leur indice numérique entre une paire de crochets.
 
-Comme pour les vecteurs, on peut nommer les éléments à la création de la liste ou avec `names` :
+Comme pour les vecteurs, on peut nommer les éléments à la création de la liste ou avec la fonction `names()`.
 
 ```{r}
 l <- list(nombre = 1, char = "foo", vecteur = c("Pomme", "Citron"))
@@ -159,12 +213,12 @@ l <- list(`Élément 1` = 1, `Élément 2` = "foo")
 l
 ```
 
-L'affichage des listes peut vite devenir illisible quand la liste est plus complexe.
+L'affichage des listes peut vite devenir illisible quand la liste est plus complexe^[Pour rappel, la fonction `runif()` renvoit des nombres aléatoires suivant une loi uniforme, par défaut compris entre 0 et 1.].
 
 ```{r}
 l <- list(
-    l2 = list(x = 1:10, y = c("Pomme", "Citron")), 
-    df = data.frame(v1 = 2:5, v2 = LETTERS[2:5]), 
+    l2 = list(x = 1:10, y = c("Pomme", "Citron")),
+    df = data.frame(v1 = 2:5, v2 = LETTERS[2:5]),
     y = runif(20)
 )
 l
@@ -176,21 +230,24 @@ Dans ce cas la fonction `str` peut être utile pour afficher de manière plus co
 str(l)
 ```
 
-Attention, si on souhaite ajouter un nouvel élément à une liste, il ne faut pas utiliser à nouveau `list`, car dans ce cas notre liste de départ est vue comme une "sous-liste" :
+#### Ajout d'éléments
+
+Attention, si on souhaite ajouter un nouvel élément à une liste, il ne faut pas utiliser à nouveau `list()`, car dans ce cas notre liste de départ est vue comme une "sous-liste".
 
 ```{r}
+l <- list(e1 = 1:3, e2 = "Chihuhua")
 l2 <- list(l, nouveau = 100)
 str(l2)
 ```
 
-Il faut à la place utiliser `c`, comme pour les vecteurs :
+Il faut à la place utiliser `c()`, comme pour les vecteurs.
 
 ```{r}
 l3 <- c(l, nouveau = 100)
 str(l3)
 ```
 
-`c` permet aussi de "concaténer" deux listes existantes en une seule :
+`c()` permet aussi de "concaténer" deux listes existantes en une seule.
 
 ```{r}
 l1 <- list(a = 1, b = 2)
@@ -198,10 +255,16 @@ l2 <- list(x = 3, y = 4)
 c(l1, l2)
 ```
 
+On peut aussi utiliser la fonction `append()` qui permet d'ajouter de nouveaux éléments à la fin de la liste ou de les insérer à une position spécifique indiquée par l'argument `after`.
 
-#### Sélection et modification
+```{r}
+append(l, list(nouveau1 = 100, nouveau2 = 102), after = 1)
+```
 
-À la différence des vecteurs, il y a deux opérateurs différents qui permettent de sélectionner ou modifier les éléments d'une liste : les crochets simples `[]` et les crochets doubles `[[]]`. La différence entre les deux opérateurs est souvent source de confusion.
+
+#### Sélection d'éléments
+
+Il y a deux opérateurs différents qui permettent de sélectionner ou modifier les éléments d'une liste : les crochets simples `[]` et les crochets doubles `[[]]`. La différence entre les deux opérateurs est souvent source de confusion.
 
 Partons de la liste suivante :
 
@@ -233,10 +296,17 @@ La différence est importante, mais pas toujours facile à retenir. On peut éve
 - une alternative est de considérer que `[[]]` va chercher "plus profondément" que `[]`.
 ```
 
-Un point important est que si on passe plusieurs éléments à `[[]]`, la sélection se fait d'une manière récursive pas très intuitive et rarement utile. Il est donc conseillé de **toujours utiliser `[[]]` avec un seul argument**, et d'utiliser `[]` si on souhaite sélectionner plusieurs éléments d'une liste.
+Un autre point important est que si on passe plusieurs éléments à `[[]]`, la sélection se fait d'une manière récursive peu intuitive et source d'erreurs. Il est donc conseillé de **toujours utiliser `[[]]` avec un seul argument**, et d'utiliser `[]` si on souhaite sélectionner plusieurs éléments d'une liste.
 
 ```{r}
 l[c(1, 2)]
+```
+
+```{block, type='rmdimportant'}
+En résumé :
+
+- si on souhaite récupérer uniquement le contenu d'un élément d'une liste, on utilise `[[]]` avec un seul argument.
+- si on souhaite récupérer une nouvelle liste en sélectionnant des éléments de notre liste actuelle, on utilise `[]` avec un ou plusieurs arguments.
 ```
 
 Si la liste est nommée, on peut sélectionner des éléments par noms avec les deux opérateurs.
@@ -256,12 +326,21 @@ On peut aussi utiliser l'opérateur `$`, qui équivaut à `[[]]` :
 l$vecteur
 ```
 
-Là aussi, si le nom comporte des caractères spéciaux on doit l'entourer avec des quotes inverses.
+Là aussi, si le nom comporte des espaces, on doit l'entourer avec des quotes inverses.
 
 ```{r}
 l <- list(`Élément 1` = 1, `Élément 2` = "foo")
 l$`Élément 1`
 ```
+
+Attention, `$` effectue ce qu'on appelle du *"partial matching"*, c'est-à-dire qu'il peut récupérer un élément même si on lui a passé seulement le début du nom.
+
+```{r}
+l <- list(nombre = 1, char = "foo")
+l$no
+```
+
+#### Modification
 
 Comme pour les vecteurs, on peut utiliser les opérateurs de sélection pour modifier des éléments. Si on n'en modifie qu'un seul, `[]` et `[[]]` sont équivalents.
 
@@ -272,7 +351,7 @@ l[[2]] <- "second"
 l
 ```
 
-Par contre si on souhaite modifier plusieurs éléments, il faut utiliser les crochets simples.
+Comme pour la sélection, si on souhaite modifier plusieurs éléments, on doit utiliser les crochets simples.
 
 ```{r}
 l <- list(nombre = 1:5, char = "foo", vecteur = c("Pomme", "Citron"))
@@ -289,8 +368,6 @@ Enfin, si on souhaite supprimer un ou plusieurs éléments d'une liste, il faut 
 ```{r}
 l <- list(nombre = 1:5, char = "foo", vecteur = c("Pomme", "Citron"))
 l$char <- NULL
-l
-l[3] <- list(NULL)
 l
 ```
 
@@ -311,7 +388,7 @@ res <- indicateurs(x)
 res$moyenne
 ```
 
-On peut également utiliser les listes pour stocker une série d'objets complexes et leur appliquer des fonctions, comme on le verra dans la section \@ref(purrr).
+On utilise également les listes pour stocker une série d'objets complexes et leur appliquer des fonctions, comme on le verra dans la section \@ref(purrr).
 
 Pour donner un aperçu, l'exemple fictif suivant récupère les noms de tous les fichiers CSV du répertoire courant et les importent tous dans une liste à l'aide de `purrr::map()` et de `read_csv()`. 
 ```{r eval=FALSE}
@@ -324,15 +401,13 @@ On pourra ensuite utiliser cette liste de tableaux pour leur appliquer des trans
 
 ### *data frame* et *tibble*
 
-On a déjà abordé les tableaux de données en manipulant des *data frames* ou des *tibbles*. Les seconds sont une variante des premiers, les différences entre les deux ayant été abordées section \@ref(tibbles). 
+On a déjà utilisé les tableaux de données à de nombreux reprises en manipulant des *data frames* ou des *tibbles*. Les seconds sont une variante des premiers, les différences entre les deux ayant été abordées section \@ref(tibbles). 
 
 Un tableau de données est en fait une liste nommée de vecteurs avec une contrainte spécifique : ces vecteurs doivent tous être de même longueur, ce qui garantit le format "tabulaire" des données.
 
-#### Sélection 
+#### Création
 
-On a déjà vu dans les parties précédentes plusieurs manières de sélectionner des éléments dans un tableau de données. 
-
-On a ainsi vu qu'on peut sélectionner une colonne via l'opérateur `$`.
+Un tableau de données est le plus souvent créé en important des données depuis un fichier au format CSV, tableur ou autre. On peut cependant créer un *data frame* manuellement via la fonction `data.frame()` :
 
 ```{r}
 df <- data.frame(
@@ -340,6 +415,31 @@ df <- data.frame(
     poids = c(154, 167, 92),
     couleur = c("vert", "vert", "jaune")
 )
+```
+
+On peut aussi créer un *tibble* manuellement avec la fonction `tibble()`. La syntaxe est la même que celle de `data.frame()`, mais avec un comportement un peu différent : notamment, les noms comportant des espaces ou des caractères spéciaux sont conservés tels quels.
+
+La fonction `tribble()` permet de créer un tableau manuellement avec une syntaxe "par ligne" qui peut être un peu plus naturelle.
+
+```{r}
+df <- tribble(
+    ~fruit,   ~poids, ~couleur,
+    "Pomme",  154,    "vert",
+    "Pomme",  167,    "vert",
+    "Citron", 92,     "jaune"
+)
+```
+
+Enfin, on peut convertir un *data frame* en *tibble* avec la fonction `as_tibble()`.
+
+
+#### Sélection 
+
+On a déjà vu dans les parties précédentes plusieurs manières de sélectionner des éléments dans un tableau de données. 
+
+Ainsi, on peut sélectionner une colonne via l'opérateur `$`.
+
+```{r}
 
 df$fruit
 ```
@@ -381,10 +481,61 @@ df[, str_detect(names(df), "o")]
 ```
 
 ```{block, type='rmdimportant'}
-Attention, le comportement de `[,]` est différent entre les *tibbles* et les *data frame* lorsqu'on ne sélectionne qu'une seule colonne. Dans le cas d'un *data frame*, le résultat est un vecteur, dans le cas d'un *tibble* le résultat est un tableau à une colonne. Pour les *data frame* on peut forcer le résultat à être un tableau en ajoutant un troisième argument `drop = FALSE` : `df[, "fruit", drop = FALSE]`.
+Attention, le comportement de `[,]` est différent entre les *tibbles* et les *data frame* lorsqu'on ne sélectionne qu'une seule colonne. Dans le cas d'un *data frame*, le résultat est un vecteur, dans le cas d'un *tibble* le résultat est un tableau à une colonne.
 ```
 
-Enfin, on peut utiliser `[[]]` et `[]` avec l'opérateur d'assignation `<-` pour modifier tout ou partie d'un tableau de données.
+Cette différence est assez fréquemment source d'erreurs, il est donc important, notamment quand on développe une fonction qui prend un tableau de données en argument, de savoir si ce tableau est un *data frame* ou un *tibble*.
+
+Par exemple, la fonction suivante prend en arguments un tableau `d` et des noms de variable `vars`, puis retourne la matrice de variance-covariance du sous-tableau correspondant.
+
+```{r}
+tab_cov <- function(d, vars) {
+    cov(d[, vars])
+}
+```
+
+On peut l'appliquer sans souci à deux colonnes d'un *data frame*.
+
+```{r}
+df <- data.frame(x = runif(5), y = runif(5))
+tab_cov(df, c("x", "y"))
+```
+
+Mais si on essaie de l'appliquer à une seule colonne, on obtient une erreur car `d[, vars]` renvoie un vecteur, tandis que `cov()` ne s'applique qu'à un tableau de données.
+
+```{r error = TRUE}
+tab_cov(df, "x")
+```
+
+Si on transforme notre *data frame* en *tibble*, alors on peut appeler `tab_cov()` avec un seul nom de variables, car dans ce cas `d[, vars]` retourne bien un tableau à une colonne, et pas un vecteur.
+
+```{r}
+tib <- as_tibble(df)
+tab_cov(tib, "x")
+```
+
+Pour corriger le problème dans notre fonction, on peut soit convertir l'objet `d` en *tibble* avant d'utiliser `[,]`.
+
+```{r}
+tab_cov <- function(d, vars) {
+    d <- as_tibble(d)
+    cov(d[, vars])
+}
+```
+
+Soit ajouter un troisième argument `drop = FALSE` dans notre appel à `[,]`, qui fait que le résultat sera bien un tableau à une colonne même si `d` est un *data frame*.
+
+```{r}
+tab_cov <- function(d, vars) {
+    tab <- d[, vars, drop = FALSE]
+    cov(tab)
+}
+```
+
+
+#### Modification
+
+On peut utiliser `[[]]` et `[]` avec l'opérateur d'assignation `<-` pour modifier tout ou partie d'un tableau de données.
 
 ```{r}
 df[["poids_kg"]] <- df$poids / 1000
@@ -392,7 +543,7 @@ df[df$fruit == "Citron", "fruit"] <- "Agrume"
 df
 ```
 
-Enfin, `[]` utilisé sans arguments permet de sélectionner et de modifier, l'ensemble des valeurs du tableau. Ainsi les deux instructions suivantes ont des effets très différents.
+Enfin, `[]` utilisé sans arguments permet de sélectionner et de modifier l'ensemble des valeurs du tableau. Ainsi les deux instructions suivantes ont des effets très différents.
 
 ```{r}
 df[] <- "a"
@@ -404,12 +555,7 @@ df <- "a"
 df
 ```
 
-L'utilisation de `[]` sur un tableau de données peut sembler redondante, et moins pratique, que l'utilisation des verbes de `dplyr`. Ils peuvent cependant être utiles lorsqu'on souhaite éviter les complications liées à l'utilisation du tidyverse à l'intérieur de fonctions, comme indiqué section \@ref(programmer-tidyverse).
-
-
-#### Colonnes-listes et colonnes-tableaux
-
-TODO : Ajouter ou non ?
+Pour conclure, on peut noter que l'utilisation des opérateurs `[[]]` et `[]` sur un tableau de données peut sembler redondante, et moins pratique, que l'utilisation des verbes de `dplyr` comme `select()` ou `filter()`. Ils peuvent cependant être utiles lorsqu'on souhaite éviter les complications liées à l'utilisation du tidyverse à l'intérieur de fonctions, comme indiqué section \@ref(programmer-tidyverse).
 
 
 ## `if`, `else`, `switch` : exécuter du code sous certaines conditions
@@ -499,7 +645,7 @@ graph_var <- function(x) {
 }
 
 graph_var(c("Pomme", "Pomme", "Citron"))
-graph_var(c(1,5,10,3,1,4))
+graph_var(c(1, 5, 10, 3, 1, 4))
 ```
 
 On peut évidemment passer des conditions plus complexes. Dans notre fonction, le test `is.character(x)` échoue si `x` est un facteur, alors qu'on souhaiterait quand même réaliser un `barplot`. On peut donc compléter la condition du `if` :
@@ -554,12 +700,12 @@ Il est donc important d'ordonner les conditions de la plus spécifique à la plu
 
 ### Différence entre `if` / `else` et `ifelse`
 
-Une source fréquente de confusion concerne la différence entre les instructions `if` / `else` et la fonction `ifelse` de R base (ou son équivalent `if_else` de `dplyr`, voir section \@ref(if_else)). Les deux sont pourtant très différentes :
+Une source fréquente de confusion concerne la différence entre les instructions `if` / `else` et la fonction `ifelse()` de R base (ou son équivalent `if_else` de `dplyr`, voir section \@ref(if_else)). Les deux sont pourtant très différentes :
 
-- `if` / `else` s'utilisent quand on teste une seule condition et qu'on veut exécuter des blocs de code différent
+- `if` / `else` s'utilisent quand on teste une seule condition et qu'on veut exécuter des blocs de code différents
 - `ifelse` et `if_else` appliquent un test à un vecteur et retournent un vecteur
 
-Premier cas de figure : on a une seule valeur `x` et on veut afficher un message différent selon si celle-ci est inférieure ou supérieure à 10. Dans ce cas on utilise `if` / `else` :
+Premier cas de figure : on a une seule valeur `x` et on veut afficher un message différent selon si celle-ci est inférieure ou supérieure à 10. Dans ce cas on utilise `if` / `else`.
 
 ```{r}
 x <- 5
@@ -571,7 +717,7 @@ if (x >= 5) {
 }
 ```
 
-Deuxième cas de figure : `x` est un vecteur et on souhaite recoder chacune de ses valeurs selon le même critère que ci-dessus. Dans ce cas on utilise `ifelse` ou `if_else` :
+Deuxième cas de figure : `x` est un vecteur et on souhaite recoder chacune de ses valeurs selon le même critère que ci-dessus. Dans ce cas on utilise `ifelse` ou `if_else`.
 
 ```{r}
 x <- 1:10
@@ -579,7 +725,7 @@ x <- 1:10
 ifelse(x >= 5, ">=5", "<5")
 ```
 
-Une erreur fréquente, notamment quand on est dans une fonction, est de passer à `if` une condition appliquée à un vecteur. Dans ce cas R a la bonne idée de mettre un message d'avertissement :
+Une erreur fréquente, notamment quand on est dans une fonction, est de passer à `if` une condition appliquée à un vecteur. Dans ce cas R a la bonne idée de mettre un message d'avertissement.
 
 ```{r}
 x <- 1:10
@@ -589,10 +735,13 @@ if (x >= 5) {
 }
 ```
 
+```{block type='rmdimportant'}
+À retenir donc : quand on utilise l'instruction `if`, la condition qui lui est passée entre parenthèses ne doit renvoyer qu'une seule valeur `TRUE` ou `FALSE`. 
+```
 
 ## Contrôle de l'exécution et gestion des erreurs
 
-L'instruction `if` est souvent utilisée dans des fonctions pour valider les valeurs passées en arguments ou, plus généralement contrôler que l'exécution du code se déroule comme prévu.
+L'instruction `if` est souvent utilisée dans des fonctions pour valider les valeurs passées en arguments, ou plus généralement pour contrôler que l'exécution du code se déroule comme prévu.
 
 ### Utilisation de `return` pour sortir de la fonction
 
@@ -615,7 +764,7 @@ mot_le_plus_long(1:5)
 
 ### `warning`
 
-La fonction `warning` fonctionne comme `message` mais permet d'afficher un avertissement. Celui-ci est affiché de manière différente dans la console, de manière à attirer l'attention sur un point particulier. Il indique également la fonction qui a déclenché l'avertissement ce qui peut être utile quand on exécute toute une série d'instructions d'un seul coup.
+La fonction `warning` fonctionne comme `message` mais permet d'afficher un avertissement. Celui-ci est présenté différemment dans la console de manière à attirer l'attention sur un point particulier. Il indique également la fonction qui a déclenché l'avertissement ce qui peut être utile quand on exécute toute une série d'instructions d'un seul coup.
 
 Ainsi, dans la fonction précédente, on peut ajouter un avertissement dans le cas où le vecteur passé en argument n'est pas de type `character`.
 
@@ -655,7 +804,7 @@ Dans ce cas on remarque que le deuxième appel `mot_le_plus_long(c("Pomme", "Cit
 Savoir si un "problème" doit être traité comme un avertissement ou comme une erreur relève du choix de la personne qui développe la fonction : chaque cas est particulier.
 ```
 
-`stopifnot` est une syntaxe alternative un peu plus compacte qui combien test et message d'erreur. On lui passe en premier argument une condition, et en deuxième argument un message à afficher si la condition est fausse.
+`stopifnot` est une syntaxe alternative un peu plus compacte qui combine test et message d'erreur. On lui passe en premier argument une condition, et en deuxième argument un message à afficher si la condition est fausse.
 
 On peut donc réécrire notre fonction `mot_le_plus_long` ci-dessus de la manière suivante :
 
@@ -666,7 +815,6 @@ mot_le_plus_long <- function(x) {
 }
 
 mot_le_plus_long(1:5)
-
 ```
 
 ### Tester la présence d'un argument
@@ -699,20 +847,20 @@ moyenne_arrondie <- function(x) {
 moyenne_arrondie()
 ```
 
-En dehors de certains cas particuliers on ajoute rarement ce genre de tests dans des fonctions, car les arguments sans valeur par défaut sont le plus souvent des valeurs "obligatoires" qui génèrent de toutes manières une erreur quand elles ne sont pas définies :
+En dehors de certains cas particuliers on ajoute rarement ce genre de tests dans des fonctions, car les arguments sans valeur par défaut sont le plus souvent des valeurs "obligatoires" qui génèrent de toutes manières une erreur quand elles ne sont pas définies.
 
 ```{r error=TRUE}
-moyenne_arrondie <- function(x) {
-    round(mean(x))
+correlation_arrondie <- function(x, y) {
+    round(cor(x, y))
 }
 
-moyenne_arrondie()
+correlation_arrondie(c(10, 15, 8, 12))
 ```
 
 
 ## `for` et `while` : répéter des instructions dans une boucle
 
-Un autre type d'instructions de R permettent de répéter du code plusieurs fois, soit en fonction d'une condition soit selon les éléments d'un vecteur. En complément, on verra également dans la section \@ref(purrr) d'autres fonctions tirées de l'extension `purrr` qui permettent d'appliquer une fonction en itérant sur les éléments de plusieurs objets.
+Les boucles sont un type d'instructions qui permet de répéter du code plusieurs fois, soit en fonction d'une condition soit selon les éléments d'un vecteur^[En complément, on verra également dans la section \@ref(purrr) d'autres fonctions tirées de l'extension `purrr` qui permettent d'appliquer une fonction en itérant sur les éléments de plusieurs objets.].
 
 ### `for`
 
@@ -720,9 +868,9 @@ Le premier type de boucle est défini par l'instruction `for`. Sa structure est 
 
 ![](figures/structure_for.svg)
 
-Le principe est assez simple : on fournit à `for` entre parenthèses une expression du type `item in vecteur`, puis un bloc de code entre accolades. `for` va exécuter le bloc de codes pour chacune des valeurs de `vecteur`, et affectera tour à tour à `item` la valeur courante de `vecteur`.
+Le principe est le suivant : on fournit à `for` entre parenthèses une expression du type `item in vecteur`, puis un bloc de code entre accolades. `for` va exécuter le bloc de codes pour chacune des valeurs de `vecteur`, et affectera tour à tour à `item` la valeur courante de `vecteur`.
 
-Prenons tout de suite un exemple pour mieux comprendre :
+Prenons tout de suite un exemple pour mieux comprendre.
 
 ```{r}
 for (item in 1:5) {
@@ -730,9 +878,9 @@ for (item in 1:5) {
 }
 ```
 
-Ici notre vecteur "source" est constitué des entiers de 1 à 5. `for` va donc exécuter l'instruction `print(i)` 5 fois, en remplaçant la première fois `i` par 1, la seconde fois par 2, etc.
+Ici notre vecteur "source" est constitué des entiers de 1 à 5. `for` va donc exécuter l'instruction `print(item)` 5 fois, en remplaçant la première fois `item` par 1, la seconde fois par 2, etc.
 
-On peut itérer sur tout type d'objet, et le nom `i` peut être remplacé par ce que l'on souhaite :
+On peut itérer sur tout type d'objet, et le nom `item` peut être remplacé par ce que l'on souhaite :
 
 ```{r}
 for (prenom in c("Pierre-Edmond", "Faustine-Charlotte")) {
@@ -773,15 +921,24 @@ l <- list(
 affiche_dimensions(l)
 ```
 
+À noter que quand on sort d'une boucle `for`, l'objet utilisé pour itérer sur les valeurs du vecteur existe toujours, et contient la dernière valeur qu'il a prise.
+
+```{r}
+for (i in 1:3) {
+    print("a")
+}
+print(i)
+```
+
 ### `while`
 
 `while` prend en argument une condition et exécute le bloc de code qui suit tant que la condition est vraie :
 
 ![](figures/structure_while.svg)
 
-Par exemple, la fonction suivante simule un tirage à pile ou face. Elle s'exécute et affiche le résultat tant qu'on obtient "Pile" (et interrompt la boucle au premier "Face") :
+Par exemple, la fonction suivante simule un tirage à pile ou face en tirant un nombre au hasard entre 0 et 1 à l'aide de la fonction `runif()` et en testant si cette valeur est inférieure à 0,5. La simulation de tirage s'exécute et affiche le résultat tant qu'on obtient "Pile" (et interrompt la boucle au premier "Face") :
 
-```{r}
+```{r eval = FALSE}
 resultat <- ""
 while (resultat != "Face") {
     tirage <- runif(1)
@@ -794,38 +951,36 @@ while (resultat != "Face") {
 }
 ```
 
-À noter qu'on peut tout à fait reproduire une boucle `for` à l'aide d'une boucle `while` :
-
-```{r}
-x <- 1:5
-i <- 0
-while (i < length(x)) {
-    i <- i + 1
-    print(i)
-}
 ```
+[1] "Pile"
+[1] "Pile"
+[1] "Face"
+```
+
 
 
 ### `break` et `next`
 
 Il peut arriver qu'on souhaite sortir d'une boucle avant d'avoir terminé toutes ses itérations, notamment dans le cas d'une boucle `for`. C'est ce que permet de faire l'instruction `break`, qui interrompt la boucle et continue à l'instruction suivante.
 
-Par exemple, le code suivant permet de trouver la première valeur d'un vecteur supérieure à un certain seuil. 
+Par exemple, la fonction suivante compte le nombre de valeurs inférieure à un certain seuil au début d'un vecteur.
 
 ```{r}
-x <- c(1, 25, 4, 110, 41)
-seuil <- 100
-
-for (item in x) {
-     if (item > seuil) break
+nb_seuil <- function(x, seuil) {
+    nb_valeurs <- 0
+    for (item in x) {
+        if (item > seuil) break
+        nb_valeurs <- nb_valeurs + 1
+    }
+    nb_valeurs
 }
 
-print(item)
+nb_seuil(c(1, 25, 4, 110, 41), seuil = 100)
 ```
 
 L'instruction `next` a un comportement assez similaire mais plutôt que de sortir de la boucle, elle passe à l'itération suivante.
 
-Dans l'exemple suivant, on réécrit la fonction `summaries` pour prendre en compte le fait qu'un nom de variable non existante puisse être passé en argument. Dans ce cas on passe directement à la variable suivante.
+Dans l'exemple suivant, on réécrit la fonction `summaries` vue précédemment pour prendre en compte le fait qu'un nom de variable non existante puisse être passé en argument. Dans ce cas on passe directement à la variable suivante.
 
 ```{r}
 summaries <- function(d, vars) {
@@ -857,7 +1012,7 @@ for (i in seq_along(x)) {
 
 Et on se contentera d'un beaucoup plus simple `x + 10`.
 
-De la même manière, la boucle utilisée précédemment pour trouver la première valeur d'un vecteur supérieure à un certain seuil :
+Autre exemple, la boucle suivante remplace les valeurs manquantes d'un vecteur par les valeurs correspondantes d'un deuxième vecteur.
 
 ```{r}
 x <- c(1, NA, 4, 110, NA)
@@ -870,7 +1025,15 @@ for (i in seq_along(x)) {
 print(x)
 ```
 
-Peut être remplacée par `x[is.na(x)] <- y[is.na(x)]`.
+Cette boucle sera avantageusement remplacée par une utilisation plus compacte et plus rapide de l'opérateur `[]`.
+
+```{r}
+x <- c(1, NA, 4, 110, NA)
+y <- c(20, 30, 40, 50, 60)
+x[is.na(x)] <- y[is.na(x)]
+x
+```
+
 
 Une boucle peut être particulièrement lente lorsqu'on l'utilise pour créer un nouveau vecteur ou data frame. Dans l'exemple suivant, on utilise une boucle pour générér une liste de vecteurs de nombres aléatoires dont la longueur est stockée dans [x]. 
 
@@ -898,25 +1061,19 @@ for (i in seq_along(x)) {
 
 On verra cependant dans la section \@ref(purrr) que des fonctions permettent de faire ce genre de choses de manière beaucoup plus simple, ici par exemple avec un simple `purrr::map(x, runif)`.
 
-Au final, entre les fonctions vectorisées existantes et les possibilités fournies par `purrr` ou les fonctions de type `apply` de base R, il est assez rare de devoir utiliser une boucle directement dans R.
-
-Pour autant, il ne faut pas non plus tomber dans l'excès inverse et considérer que tout usage de `for` ou `while` doit être évité : ces fonctions sont parfaitement justifiées dans de nombreux cas de figure, et si vous trouvez une solution qui fonctionne de manière efficace avec une boucle `for`, il n'est pas toujours utile de chercher à la remplacer à tout prix.
+Au final, entre les fonctions vectorisées existantes et les possibilités fournies par `purrr` ou les fonctions de type `apply` de base R, il est assez rare de devoir utiliser une boucle directement dans R. Pour autant, il ne faut pas non plus tomber dans l'excès inverse et considérer que tout usage de `for` ou `while` doit être évité : ces fonctions sont parfaitement justifiées dans de nombreux cas de figure, et si vous trouvez une solution qui fonctionne de manière efficace avec une boucle `for`, il n'est pas forcément utile de chercher à la remplacer à tout prix.
 
 
 ## Ressources
 
+L'ouvrage *R for Data Science* (en anglais), accessible en ligne, contient [un chapitre sur les vecteurs atomiques et les listes](https://r4ds.had.co.nz/vectors.html), [un chapitre dédié aux *tibbles*](https://r4ds.had.co.nz/tibbles.html#tibbles), [un chapitre sur les boucles for](https://r4ds.had.co.nz/iteration.html#for-loops), et [un chapitre sur les blocs if / else](https://r4ds.had.co.nz/functions.html#conditional-execution).
 
-https://r4ds.had.co.nz/vectors.html
+Pour aller encore plus loin, l'ouvrage *Advanced R* (également en anglais) aborde de manière approfondie [les structures de données](https://adv-r.hadley.nz/vectors-chap.html), [les opérateurs de sélection `[]`, `[[]]` et `$`](https://adv-r.hadley.nz/subsetting.html), et [les tests et les boucles](https://adv-r.hadley.nz/control-flow.html).
 
-https://adv-r.hadley.nz/vectors-chap.html
+Sur le blog de [ThinkR](https://thinkr.fr/), [un article détaillé sur l'utilisation des boucles](https://thinkr.fr/comment-faire-des-boucles-en-r-ou-pas/) et les alternatives possibles.
 
-https://r4ds.had.co.nz/functions.html#conditional-execution
-
-https://r4ds.had.co.nz/iteration.html
-
-https://thinkr.fr/comment-faire-des-boucles-en-r-ou-pas/
-
-https://privefl.github.io/blog/why-loops-are-slow-in-r/
+Sur le [blog de Florian Privé](https://privefl.github.io/blog/), un [billet approfondi sur les raisons pour lesquelles les boucles peuvent être lentes](https://privefl.github.io/blog/why-loops-are-slow-in-r/) et sur les cas où il est préférable de ne pas les utiliser.
 
 ## Exercices
+
 
