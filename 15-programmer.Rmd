@@ -152,7 +152,7 @@ c(1, 2, NA_character_)
 ```
 
 
-#### Sélection et modification
+#### Sélection d'éléments
 
 On a vu section \@ref(vecteurs) que l'opérateur `[]` peut être utilisé pour sélectionner ou modifier des éléments d'un vecteur. Cet opérateur peut comporter :
 
@@ -166,6 +166,27 @@ x[c(1, 4)]
 x[c("e2", "e4")]
 x[x < 10]
 ```
+
+Si on fournit à `[]` un ou plusieurs nombres négatifs, les valeurs correspondantes seront supprimées plutôt que sélectionnées.
+
+```{r}
+x[-1]
+```
+
+```{r}
+x[c(-2, -4)]
+```
+
+Si on souhaite afficher les premières ou dernières valeurs d'un vecteur, les fonctions `head()` et `tail()` peuvent être utiles.
+
+```{r}
+head(x, 2)
+```
+```{r}
+tail(x, 1)
+```
+
+#### Modification
 
 Utilisé conjointement avec l'opérateur d'assignation `<-`, l'opérateur `[]` permet aussi de remplacer certains éléments.
 
@@ -309,6 +330,10 @@ En résumé :
 - si on souhaite récupérer une nouvelle liste en sélectionnant des éléments de notre liste actuelle, on utilise `[]` avec un ou plusieurs arguments.
 ```
 
+```{block, type='rmdnote'}
+Comme pour les vecteurs, on peut aussi utiliser des nombres négatifs pour exclure des éléments plutôt que les sélectionner, ainsi que les fonctions `head()` et `tail()`.
+```
+
 Si la liste est nommée, on peut sélectionner des éléments par noms avec les deux opérateurs.
 
 ```{r}
@@ -422,7 +447,7 @@ On peut aussi créer un *tibble* manuellement avec la fonction `tibble()`. La sy
 La fonction `tribble()` permet de créer un tableau manuellement avec une syntaxe "par ligne" qui peut être un peu plus naturelle.
 
 ```{r}
-df <- tribble(
+df_tib <- tribble(
     ~fruit,   ~poids, ~couleur,
     "Pomme",  154,    "vert",
     "Pomme",  167,    "vert",
@@ -432,6 +457,28 @@ df <- tribble(
 
 Enfin, on peut convertir un *data frame* en *tibble* avec la fonction `as_tibble()`.
 
+#### Noms de colonnes et de lignes
+
+On peut accéder et modifier les noms des colonnes d'un tableau avec les fonctions `names()` ou `colnames()` (qui sont équivalentes).
+
+```{r}
+names(df)
+colnames(df)
+```
+
+On peut attribuer des noms aux lignes d'un *data frame* à l'aide de la fonction `rownames()`. Attention cependant, les noms de ligne ne sont (volontairement) pas pris en charge par les *tibbles*.
+
+```{r}
+rownames(df) <- c("fruit1", "fruit2", "fruit3")
+rownames(df)
+rownames(as_tibble(df))
+```
+
+Si on souhaite conserver d'éventuels noms de ligne en passant d'un *data frame* à un *tibble*, il faut créer une nouvelle variable spécifique, soit manuellement soit avec la fonction `rownames_to_column()` (qui a l'avantage de placer la nouvelle colonne en première position du tableau).
+
+```{r}
+rownames_to_column(df, "name")
+```
 
 #### Sélection 
 
@@ -440,7 +487,6 @@ On a déjà vu dans les parties précédentes plusieurs manières de sélectionn
 Ainsi, on peut sélectionner une colonne via l'opérateur `$`.
 
 ```{r}
-
 df$fruit
 ```
 
@@ -453,7 +499,7 @@ df$poi
 as_tibble(df)$poi
 ```
 
-Comme un tableau de données est en réalité une liste de colonnes, on peut utiliser l'opérateur `[[]]` pour sélectionner l'une de ces colonnes, par position ou par nom^[Attention, comme pour les listes, à ne pas utiliser `[[]]` avec un argument de longueur supérieur à 1, car cela mène soit à des erreurs soit à des résultats contre-intuitifs.].
+Comme un tableau de données est en réalité une liste de colonnes, on peut utiliser l'opérateur `[[]]` pour sélectionner l'une de ses colonnes, par position ou par nom^[Attention, comme pour les listes, à ne pas utiliser `[[]]` avec un argument de longueur supérieur à 1, car cela mène soit à des erreurs soit à des résultats contre-intuitifs.].
 
 ```{r}
 df[[2]]
@@ -497,26 +543,27 @@ tab_cov <- function(d, vars) {
 On peut l'appliquer sans souci à deux colonnes d'un *data frame*.
 
 ```{r}
-df <- data.frame(x = runif(5), y = runif(5))
-tab_cov(df, c("x", "y"))
+tab <- data.frame(x = runif(5), y = runif(5))
+tab_cov(tab, c("x", "y"))
 ```
 
 Mais si on essaie de l'appliquer à une seule colonne, on obtient une erreur car `d[, vars]` renvoie un vecteur, tandis que `cov()` ne s'applique qu'à un tableau de données.
 
 ```{r error = TRUE}
-tab_cov(df, "x")
+tab_cov(tab, "x")
 ```
 
 Si on transforme notre *data frame* en *tibble*, alors on peut appeler `tab_cov()` avec un seul nom de variables, car dans ce cas `d[, vars]` retourne bien un tableau à une colonne, et pas un vecteur.
 
 ```{r}
-tib <- as_tibble(df)
+tib <- as_tibble(tab)
 tab_cov(tib, "x")
 ```
 
 Pour corriger le problème dans notre fonction, on peut soit convertir l'objet `d` en *tibble* avant d'utiliser `[,]`.
 
 ```{r}
+
 tab_cov <- function(d, vars) {
     d <- as_tibble(d)
     cov(d[, vars])
@@ -558,7 +605,7 @@ df
 Pour conclure, on peut noter que l'utilisation des opérateurs `[[]]` et `[]` sur un tableau de données peut sembler redondante, et moins pratique, que l'utilisation des verbes de `dplyr` comme `select()` ou `filter()`. Ils peuvent cependant être utiles lorsqu'on souhaite éviter les complications liées à l'utilisation du tidyverse à l'intérieur de fonctions, comme indiqué section \@ref(programmer-tidyverse).
 
 
-## `if`, `else`, `switch` : exécuter du code sous certaines conditions
+## `if`, `else` : exécuter du code sous certaines conditions
 
 ### `if`
 
@@ -698,6 +745,42 @@ test_x(5)
 
 Il est donc important d'ordonner les conditions de la plus spécifique à la plus générale.
 
+### Construction de conditions complexes
+
+Pour l'instant on a utilisé des conditions simples ne comportant qu'un seul test. Mais on peut évidemment combiner plusieurs tests avec les opérateurs logiques classiques :
+
+- `&&` est l'opérateur "et", qui est vrai si les deux conditions qu'il réunit sont vraies
+- `||` est l'opérateur "ou", qui est vrai si au moins l'une des deux conditions qu'il réunit sont vraies
+- `!` est l'opérateur "non", qui teste si la condition qu'il précède est fausse.
+
+Ainsi, si on veut qu'une variable `taille` soit comprise entre 100 et 150, on écrira :
+
+```{r eval = FALSE}
+if (taille >= 100 && taille <= 150) 
+```
+
+Si on souhaite que `temperature` soit inférieure à 10 ou que `pluie` soit égale à "averse" :
+
+```{r eval = FALSE}
+if (temperature < 10 || pluie == "averse")
+```
+
+Enfin, si on souhaite que la variable `v` ne soit pas égale à `NULL` :
+
+```{r eval = FALSE}
+if (!is.null(v))
+```
+
+```{block type='rmdnote'}
+On pourra noter qu'il existe deux types d'opérateurs "et" et "ou" dans R :
+
+- `&` et `|` sont des opérateurs *vectorisés*. Ils peuvent s'appliquer à des vecteurs et retourneront un vecteur de `TRUE` et `FALSE`
+- `&&` et `||` ne peuvent retourner qu'une seule valeur, et si on leur fournit un vecteur ils n'utiliseront que leurs premières valeurs
+
+Comme la condition passée à un `if` ne doit retourner qu'une seule valeur (et non un vecteur), on utilisera de préférence `&&` et `||` (et on privilégiera les autres pour les recodages, comme indiqué section \@ref(tests)).
+```
+
+
 ### Différence entre `if` / `else` et `ifelse`
 
 Une source fréquente de confusion concerne la différence entre les instructions `if` / `else` et la fonction `ifelse()` de R base (ou son équivalent `if_else` de `dplyr`, voir section \@ref(if_else)). Les deux sont pourtant très différentes :
@@ -738,6 +821,7 @@ if (x >= 5) {
 ```{block type='rmdimportant'}
 À retenir donc : quand on utilise l'instruction `if`, la condition qui lui est passée entre parenthèses ne doit renvoyer qu'une seule valeur `TRUE` ou `FALSE`. 
 ```
+
 
 ## Contrôle de l'exécution et gestion des erreurs
 
@@ -1077,3 +1161,533 @@ Sur le [blog de Florian Privé](https://privefl.github.io/blog/), un [billet app
 ## Exercices
 
 
+### Vecteurs atomiques
+
+**Exercice 1.1**
+
+À l'aide de `seq()`, créer un vecteur `v` contenant tous les nombres pairs entre 10 et 20.
+
+```{r echo=FALSE}
+v <- seq(10, 20, by = 2)
+```
+
+
+\iffalse
+<div class="solution-exo">
+```{r eval=FALSE}
+v <- seq(10, 20, by = 2)
+```
+</div>
+\fi
+
+Sélectionner les 3 premières valeurs de `v`.
+
+\iffalse
+<div class="solution-exo">
+```{r eval=FALSE}
+v[1:3]
+head(v, 3)
+```
+</div>
+\fi
+
+
+Sélectionner toutes les valeurs de `v` strictement inférieures à 5.
+
+\iffalse
+<div class="solution-exo">
+```{r eval=FALSE}
+v[v < 5]
+```
+</div>
+\fi
+
+Sélectionner toutes les valeurs de `v` sauf la dernière.
+
+\iffalse
+<div class="solution-exo">
+```{r eval=FALSE}
+v[-length(v)]
+head(v, -1)
+```
+</div>
+\fi
+
+
+**Exercice 1.2**
+
+Soit le vecteur nommé `vn` suivant :
+```{r}
+vn <- c(val1 = 10, val2 = 0, val3 = 14)
+```
+
+Sélectionner les valeurs nommées "val1" et "val3".
+
+\iffalse
+<div class="solution-exo">
+```{r eval=FALSE}
+vn[c("val1", "val3")]
+```
+</div>
+\fi
+
+Sélectionner toutes les valeurs sauf celle nommée "val3".
+
+\iffalse
+<div class="solution-exo">
+```{r eval=FALSE}
+vn[names(vn) != "val3"]
+```
+</div>
+\fi
+
+*Facultatif :* comparer les résultats des deux instructions suivantes.
+
+```{r eval = FALSE}
+vn["val1"]
+vn[["val1"]]
+```
+
+
+**Exercice 1.3**
+
+Soit les vecteurs `x` et `y` suivants :
+
+```{r}
+x <- c(1, NA, 3, 4, NA)
+y <- c(10, 20, 30, 40, 50)
+```
+
+À l'aide de l'opérateur `[]`, sélectionner uniquement les valeurs `NA` de `x`.
+
+\iffalse
+<div class="solution-exo">
+```{r eval=FALSE}
+x[is.na(x)]
+```
+</div>
+\fi
+
+De la même manière, sélectionner les valeurs de `y` correspondant aux valeurs `NA` de `x`.
+
+\iffalse
+<div class="solution-exo">
+```{r eval=FALSE}
+y[is.na(x)]
+```
+</div>
+\fi
+
+En utilisant les deux instructions précédentes et l'opérateur d'assignation `<-`, remplacer les valeurs manquantes de `x` par les valeurs correspondantes de `y`.
+
+\iffalse
+<div class="solution-exo">
+```{r eval=FALSE}
+x[is.na(x)] <- y[is.na(x)]
+```
+</div>
+\fi
+
+
+### Listes
+
+**Exercice 2.1**
+
+Créer la liste `l` ayant la structure suivante :
+
+```{r echo = FALSE}
+l <- list(1, "oui", 10:12)
+str(l)
+```
+
+\iffalse
+<div class="solution-exo">
+```{r eval=FALSE}
+l <- list(1, "oui", 10:12)
+```
+</div>
+\fi
+
+Donner les noms suivants aux éléments de la liste : `num`, `reponse` et `vec`.
+
+\iffalse
+<div class="solution-exo">
+```{r eval=FALSE}
+names(l) <- c("num", "reponse", "vec")
+```
+</div>
+\fi
+
+Ajouter un élément nommé `chat` et ayant pour valeur "Ronron" à la fin de `l`.
+
+\iffalse
+<div class="solution-exo">
+```{r eval=FALSE}
+l <- c(l, chat = "Ronron")
+```
+</div>
+\fi
+
+Modifier l'élément `chat` pour lui donner la valeur "Ronpchi".
+
+\iffalse
+<div class="solution-exo">
+```{r eval=FALSE}
+l$chat <- "Ronpchi"
+```
+</div>
+\fi
+
+Supprimer l'élément `vec` de `l`.
+
+\iffalse
+<div class="solution-exo">
+```{r eval=FALSE}
+l$vec <- NULL
+```
+</div>
+\fi
+
+Créer une liste `l2` avec un seul élément nommé `Incroyable élément` et comme valeur 42.
+
+\iffalse
+<div class="solution-exo">
+```{r eval=FALSE}
+l2 <- list(`Incroyable élément` = 42)
+```
+</div>
+\fi
+
+Créer une liste `l3` en concaténant `l` et `l2`.
+
+\iffalse
+<div class="solution-exo">
+```{r eval=FALSE}
+l3 <- c(l, l2)
+```
+</div>
+\fi
+
+
+**Exercice 2.2**
+
+Créer une fonction nommée `extremes` qui prend en argument un vecteur et retourne une liste nommée comportant sa moyenne et sa médiane.
+
+\iffalse
+<div class="solution-exo">
+```{r eval=FALSE}
+extremes <- function(x) {
+    list(min = min(x), max = max(x))
+}
+```
+</div>
+\fi
+
+Appliquer cette fonction à un vecteur de votre choix et utiliser le résultat pour calculer l'étendue (soit la différence entre la valeur maximale et la valeur minimale).
+
+\iffalse
+<div class="solution-exo">
+```{r eval=FALSE}
+v <- runif(10)
+res <- extremes(v)
+res$max - res$min
+```
+</div>
+\fi
+
+
+**Exercice 2.3**
+
+Soit la liste suivante :
+
+```{r}
+l <- list(1:3, runif(5), "youpi")
+```
+
+Sélectionner la sous liste composée des éléments 1 et 3 de `l`.
+
+\iffalse
+<div class="solution-exo">
+```{r eval=FALSE}
+l[c(1, 3)]
+```
+</div>
+\fi
+
+Sélectionner la sous-liste composée du premier élément de `l`.
+
+\iffalse
+<div class="solution-exo">
+```{r eval=FALSE}
+l[1]
+```
+</div>
+\fi
+
+Sélectionner le contenu du premier élément de `l`.
+
+\iffalse
+<div class="solution-exo">
+```{r eval=FALSE}
+l[[1]]
+```
+</div>
+\fi
+
+En enchaînant deux opérations de sélection, sélectionner le deuxième élément du premier élément de `l`.
+
+\iffalse
+<div class="solution-exo">
+```{r eval=FALSE}
+l[[1]][2]
+```
+</div>
+\fi
+
+
+
+### *data frame* et *tibble*
+
+**Exercice 3.1**
+
+Construire le tableau `d_tib` suivant à l'aide de la fonction *tibble*.
+
+```{r echo = FALSE}
+d_tib <- tibble(
+    `var 1` = 1:3,
+    `var 2` = c("rouge", "vert", "rouge")
+)
+d_tib
+```
+
+Le convertir en *data frame* en lui appliquant la fonction `data.frame()` et stocker le résultat dans un objet `d_df`. Que constatez-vous si vous comparez `d_tib` et `d_df` ?
+
+\iffalse
+<div class="solution-exo">
+```{r eval=FALSE}
+d_df <- data.frame(d_tib)
+```
+</div>
+\fi
+
+Sélectionner la colonne `var 1` de `d_tib` à l'aide des opérateurs `[[]]`, `$`, `[,]` et `[]`. Quelles différences constatez-vous ?
+
+\iffalse
+<div class="solution-exo">
+```{r eval=FALSE}
+d_tib[["var 1"]]
+d_tib$`var 1`
+d_tib["var 1"]
+d_tib[, "var 1"]
+```
+</div>
+\fi
+
+Comparer les résultats de `d_tib[, "var 1"]` et `d_df[, "var.1"]`.
+
+
+**Exercice 3.2**
+
+Créer le tableau `df` suivant :
+
+```{r}
+df <- data.frame(
+    fruit = c("Pomme", "Pomme", "Citron"),
+    poids = c(154, 167, 92),
+    couleur = c("vert", "vert", "jaune")
+)
+```
+
+À l'aide de l'opérateur `[,]`, sélectionner :
+
+- les pommes et les colonnes `fruit` et `couleur`
+- les deux dernières lignes
+- les lignes ayant un poids inférieur à 100 et la première colonne
+
+\iffalse
+<div class="solution-exo">
+```{r eval=FALSE}
+df[df$fruit == "Pomme", c("fruit", "couleur")]
+df[2:3, ]
+df[df$poids < 100, 1]
+```
+</div>
+\fi
+
+Faire de même en utilisant les verbes de `dplyr`.
+
+\iffalse
+<div class="solution-exo">
+```{r eval=FALSE}
+df %>% 
+    filter(fruit == "Pomme") %>%
+    select(fruit, couleur)
+df %>% 
+    slice(2:3)
+df %>% 
+    filter(poids < 100) %>% 
+    select(1)
+```
+</div>
+\fi
+
+
+**Exercice 3.3**
+
+Reprendre le tableau `df` de l'exercice précédent.
+
+```{r}
+df <- data.frame(
+    fruit = c("Pomme", "Pomme", "Citron"),
+    poids = c(154, 167, 92),
+    couleur = c("vert", "vert", "jaune")
+)
+```
+
+À l'aide de l'opérateur `[,]`, effectuer les opérations suivantes :
+
+- Créer une nouvelle colonne `id` avec les valeurs 1, 2, 3
+- Remplacer la valeur "jaune" de la variable `couleur` par "jaune citron"
+- Créer une nouvelle colonne `poids_rec` qui vaut "léger" si `poids` est inférieur à 100, et "lourd" sinon
+
+\iffalse
+<div class="solution-exo">
+```{r eval=FALSE}
+df[, "id"] <- 1:3
+df[df$couleur == "jaune", "couleur"] <- "jaune citron"
+df[df$poids < 100, "poids_rec"] <- "léger"
+df[df$poids >= 100, "poids_rec"] <- "lourd"
+# Ou bien :
+df[, "poids_rec"] <- if_else(df$poids < 100, "léger", "lourd")
+```
+</div>
+\fi
+
+Effectuer les mêmes opérations en utilisant les verbes de `dplyr`.
+
+\iffalse
+<div class="solution-exo">
+```{r eval=FALSE}
+df <- df %>% mutate(id = 1:3)
+df <- df %>%
+    mutate(
+        couleur = if_else(couleur == "jaune", "jaune_citron", couleur)
+    )
+# Ou bien :
+library(forcats)
+df <- df %>%
+    mutate(
+        couleur = fct_recode(couleur, "jaune_citron" = "jaune")
+    )
+df <- df %>%
+    mutate(
+        poids_rec = if_else(poids < 100, "léger", "lourd")
+    )
+```
+</div>
+\fi
+
+### `if` et `else`
+
+**Exercice 4.1**
+
+Écrire une fonction `pile_ou_face` qui ne prend aucun argument en entrée et qui effectue les actions suivantes :
+
+- tire un nombre au hasard entre 0 et 1 avec `runif(1)`
+- si ce nombre est inférieur à 0,5, retourne "pile"
+- sinon, retourne "face"
+
+\iffalse
+<div class="solution-exo">
+```{r eval=FALSE}
+pile_ou_face <- function() {
+    x <- runif(1)
+    if (x < 0.5) {
+        result <- "pile"
+    } else {
+        result <- "face"
+    }
+    result
+}
+```
+</div>
+\fi
+
+
+**Exercice 4.2**
+
+Écrire une fonction `avertissement` qui prend deux arguments `pluie` et `parapluie`, avec comme valeurs `FALSE` par défaut, et qui effectue les opérations suivantes :
+
+
+- si `pluie` vaut `TRUE` et `parapluie` vaut `FALSE`, affiche "mouillé"
+- si `pluie` vaut `TRUE` et `parapluie` vaut `TRUE`, affiche "bien vu"
+- si `pluie` vaut `FALSE`, affiche "RAS"
+
+\iffalse
+<div class="solution-exo">
+```{r eval=FALSE}
+avertissement <- function(pluie = FALSE, parapluie = FALSE) {
+    if (pluie && !parapluie) {
+        message("mouillé")
+    }
+    if (pluie && parapluie) {
+        message("bien vu")
+    }
+    if (!pluie) {
+        message("RAS")
+    }
+}
+```
+</div>
+\fi
+
+**Exercice 4.3**
+
+Écrire une fonction `meteo` qui prend un argument nommé `temperature` et effectue les actions suivantes :
+
+- si `temperature` est inférieur à 0, affiche le message "ça caille"
+- si `temperature` est compris entre 0 et 15, affiche le message "fais pas chaud"
+- si `temperature` est compris entre 15 et 30, affiche le message "on est pas mal"
+- si `temperature` est supérieur à 30, affiche le message "tous à Miribel"
+
+\iffalse
+<div class="solution-exo">
+```{r eval=FALSE}
+meteo <- function(temperature) {
+    if (temperature < 0) {
+        message("ça caille")
+    } else if (temperature < 15) {
+        message("fais pas chaud")
+    } else if (temperature < 30) {
+        message("on est pas mal")
+    } else {
+        message("tous à Mriribel")
+    }
+}
+# Ou bien
+meteo <- function(temperature) {
+    if (temperature < 0) {
+        message("ça caille")
+    } 
+    if (temperature >= 0 && temperature < 15) {
+        message("fais pas chaud")
+    } 
+    if (temperature >= 15 && temperature < 30) {
+        message("on est pas mal")
+    } 
+    if (temperature >= 30) {
+        message("tous à Mriribel")
+    }
+}
+```
+</div>
+\fi
+
+
+### Contrôle de l'exécution
+
+**Exercice 5.**
+
+### Boucles
+
+pile ou face vectorisé avec ifelse plutôt qu'avec une boucle for
