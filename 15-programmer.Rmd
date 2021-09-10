@@ -59,6 +59,14 @@ rep("Pomme", 6)
 rep(1:4, 2)
 ```
 
+Il peut parfois être utile de créer des vecteurs "vides". Dans ce cas on peut les initialiser avec les fonctions `vector()`, `character()` ou `numeric()`. Par défaut ces fonctions renvoient un vecteur vide, sans éléments, mais on peut aussi leur indiquer en argument le nombre d'éléments souhaités.
+
+```{r}
+numeric()
+character(2)
+```
+
+
 #### Vecteurs nommés
 
 Les éléments d'un vecteur peuvent être nommés. Ceci peut se faire au moment de la création du vecteur.
@@ -102,7 +110,7 @@ Parmi les principaux types de données on notera^[Il en existe d'autres, comme `
 - les nombres entiers (`integer`)
 - les booléens, ou valeurs logiques (`logical`)
 
-Par défaut les nombres sont considérés comme des nombres flottants (des nombres décimaux avec une virgule) : pour les définir explicitement comme nombres entiers on peut leur ajouter le suffixe `L`.
+À noter que par défaut les nombres sont considérés comme des nombres flottants (des nombres décimaux avec une virgule) : pour les définir explicitement comme nombres entiers on peut leur ajouter le suffixe `L`.
 
 ```{r}
 x <- c(1L, 3L, 8L)
@@ -660,6 +668,21 @@ moyenne(v)
 moyenne(v, arrondir = FALSE)
 ```
 
+À noter que quand le bloc de code qui suit une instruction `if` ne comporte qu'une seule instruction, on peut omettre les accolades qui l'entourent. Les syntaxe suivantes sont donc équivalentes :
+
+```{r}
+if (arrondir) {
+    res <- round(res)
+}
+
+if (arrondir) res <- round(res)
+
+if (arrondir) 
+    res <- round(res)
+```
+
+Pour des raisons de lisibilité, dans ce qui suit on conservera les accolades dans tous les cas.
+
 ### `if` / `else`
 
 On utilise souvent `if` en conjonction avec l'instruction `else`. `else` précède un autre bloc de code R qui ne s'exécute que si la condition donnée à `if` est fausse :
@@ -903,7 +926,7 @@ mot_le_plus_long(1:5)
 
 ### Tester la présence d'un argument
 
-Il y a deux méthodes pour tester si l'argument d'une fonction a été défini lors de l'appel de cette fonction. La plus courante est de donner à cet argument une valeur par défaut, le plus souvent `NULL`, et de tester cette valeur.
+Il existe deux méthodes pour tester si l'argument d'une fonction a été défini lors de l'appel de cette fonction. La plus courante est de donner à cet argument une valeur par défaut, le plus souvent `NULL`, et de tester cette valeur.
 
 Soit une fonction qui génère un graphique avec un argument `titre` qui permet de définir son titre. On peut mettre par défaut cet argument à `NULL` et ajouter un titre par défaut si la personne qui l'utilise n'en a pas fourni.
 
@@ -931,7 +954,7 @@ moyenne_arrondie <- function(x) {
 moyenne_arrondie()
 ```
 
-En dehors de certains cas particuliers on ajoute rarement ce genre de tests dans des fonctions, car les arguments sans valeur par défaut sont le plus souvent des valeurs "obligatoires" qui génèrent de toutes manières une erreur quand elles ne sont pas définies.
+En dehors de certains cas particuliers l'utilisation de `missing()` est assez rare, car les arguments sans valeur par défaut sont le plus souvent des valeurs "obligatoires" qui génèrent de toutes manières une erreur quand elles ne sont pas définies.
 
 ```{r error=TRUE}
 correlation_arrondie <- function(x, y) {
@@ -1086,7 +1109,7 @@ Le mécanisme des boucles, assez intuitif, peut rapidement être utilisé pour b
 
 Avant tout, de nombreuses fonctions R sont "vectorisées" et s'appliquent directement à tous les éléments d'un vecteur. Dans le cas où une fonction vectorisée existe déjà, elle propose en général une syntaxe plus compacte et une exécution plus rapide.
 
-Pour prendre un exemple caricatural, si on souhaite ajouter 10 à chaque élément d'un vecteur on évitera de faire :
+Pour prendre un exemple caricatural, si on souhaite ajouter 10 à chaque élément d'un vecteur on évitera absolument de faire :
 
 ```{r, eval=FALSE}
 for (i in seq_along(x)) {
@@ -1119,31 +1142,51 @@ x
 ```
 
 
-Une boucle peut être particulièrement lente lorsqu'on l'utilise pour créer un nouveau vecteur ou data frame. Dans l'exemple suivant, on utilise une boucle pour générér une liste de vecteurs de nombres aléatoires dont la longueur est stockée dans [x]. 
+Une boucle peut être particulièrement lente lorsqu'on l'utilise pour créer un nouveau vecteur ou data frame. Soit la fonction suivante, qui prend en entrée un vecteur de mots et retourne le nombre total de voyelles qu'il contient.
 
 ```{r}
-x <- c(15, 25, 10, 8)
-l <- list()
-
-for (i in seq_along(x)) {
-    l[[i]] <- runif(x[i])
+library(stringr)
+n_voyelles <- function(mots) {
+    nb <- str_count(mots, "[aeiou]")
+    sum(nb)
 }
+
+n_voyelles(c("le", "chat", "roupille"))
 ```
 
-Avec cette syntaxe, à chaque ajout d'élément à `l` R procède à une copie de la totalité de `l`. Si le coût en termes de performance est négligeable avec seulement quelques éléments, il peut vite devenir très important.
-
-L'alternative ici, si on veut utiliser une boucle `for`, est de "pré-allouer" l'espace mémoire nécessaire à notre liste avant de la modifier ensuite dans la boucle. On évite ainsi la copie de `l` à chaque itération. Cette préallocation se fait via la fonction `vector`.
+Supposons qu'on souhaite appliquer cette fonction à une série de vecteurs de mots contenus dans une liste. On pourrait utiliser une boucle `for` parcourant cette liste, appliquant la fonction, et ajoutant le résultat à un vecteur numérique vide préalablement créé avec  ènumeric(0)`.
 
 ```{r}
-x <- c(15, 25, 10, 8)
-l <- vector("list", length(x))
+phrases <- list(
+    c("le", "chat", "roupille"),
+    c("l'autre", "chat", "roupille", "aussi")
+)
 
-for (i in seq_along(x)) {
-    l[[i]] <- runif(x[i])
+res <- numeric(0)
+for (i in seq_along(phrases)) {
+    res[i] <- n_voyelles(phrases[[i]])
 }
+res
+```
+Avec cette syntaxe, à chaque ajout d'élément à `res` R procède à une copie de la totalité de `res`. Si le coût en termes de performance est négligeable avec seulement quelques éléments, il peut vite devenir très important si notre liste de phrases contient plusieurs milliers d'éléments.
+
+Une alternative ici, si on veut continuer à utiliser une boucle `for`, est soit de "pré-allouer" l'espace mémoire nécessaire à notre vecteur de résultats avant de le modifier ensuite dans la boucle, évitant ainsi la copie de `res` à chaque itération. Cette préallocation se fait simplement en indiquant le nombre d'éléments désirés à la fonction `numeric`.
+
+```{r}
+res <- numeric(length(phrases))
 ```
 
-On verra cependant dans la section \@ref(purrr) que des fonctions permettent de faire ce genre de choses de manière beaucoup plus simple, ici par exemple avec un simple `purrr::map(x, runif)`.
+Une autre possibilité est d'utiliser non pas un vecteur pour stocker nos résultats, mais une liste. Les éléments d'une liste n'étant pas stockés de manière contiguë dans la mémoire vive, l'ajout d'un nouvel élément n'entraîne pas de copie de la liste.
+
+```{r}
+res <- list()
+for (i in seq_along(phrases)) {
+    res[i] <- n_voyelles(phrases[[i]])
+}
+res
+```
+
+On verra cependant dans la section \@ref(purrr) que des fonctions permettent de faire ce genre de choses de manière beaucoup plus simple, ici par exemple avec un simple `purrr::map(phrases, n_voyelles)`.
 
 Au final, entre les fonctions vectorisées existantes et les possibilités fournies par `purrr` ou les fonctions de type `apply` de base R, il est assez rare de devoir utiliser une boucle directement dans R. Pour autant, il ne faut pas non plus tomber dans l'excès inverse et considérer que tout usage de `for` ou `while` doit être évité : ces fonctions sont parfaitement justifiées dans de nombreux cas de figure, et si vous trouvez une solution qui fonctionne de manière efficace avec une boucle `for`, il n'est pas forcément utile de chercher à la remplacer à tout prix.
 
@@ -1601,8 +1644,8 @@ df <- df %>%
 <div class="solution-exo">
 ```{r eval=FALSE}
 pile_ou_face <- function() {
-    x <- runif(1)
-    if (x < 0.5) {
+    alea <- runif(1)
+    if (alea < 0.5) {
         result <- "pile"
     } else {
         result <- "face"
@@ -1615,6 +1658,28 @@ pile_ou_face <- function() {
 
 
 **Exercice 4.2**
+
+Créer une fonction `moyenne_arrondie`, qui prend en argument un vecteur `x`, un argument `na.rm` avec une valeur par défaut à `TRUE`, et un argument facultatif `decimales`. La fonction doit effectuer les opérations suivantes :
+
+- calcule la moyenne du vecteur en tenant compte de l'argument `na.rm` passé à la fonction
+- si `decimales` est défini, on arrondit la moyenne au nombre de décimales correspondant avec la fonction `round()`
+- retourne la moyenne, arrondie ou non
+
+\iffalse
+<div class="solution-exo">
+```{r eval=FALSE}
+moyenne_arrondie <- function(x, na.rm = TRUE, decimales = NULL) {
+    moyenne <- mean(x, na.rm = na.rm)
+    if (!is.null(decimales)) {
+        moyenne <- round(moyenne, decimales)
+    }
+    moyenne
+}
+```
+</div>
+\fi
+
+**Exercice 4.3**
 
 Écrire une fonction `avertissement` qui prend deux arguments `pluie` et `parapluie`, avec comme valeurs `FALSE` par défaut, et qui effectue les opérations suivantes :
 
@@ -1641,7 +1706,7 @@ avertissement <- function(pluie = FALSE, parapluie = FALSE) {
 </div>
 \fi
 
-**Exercice 4.3**
+**Exercice 4.4**
 
 Écrire une fonction `meteo` qui prend un argument nommé `temperature` et effectue les actions suivantes :
 
@@ -1686,8 +1751,291 @@ meteo <- function(temperature) {
 
 ### Contrôle de l'exécution
 
-**Exercice 5.**
+**Exercice 5.1**
+
+Créer une fonction `etendue` qui renvoie la différence entre la plus grande et la plus petite valeur d'un vecteur.
+
+\iffalse
+<div class="solution-exo">
+```{r eval=FALSE}
+etendue <- function(x) {
+    max(x) - min(x)
+}
+```
+</div>
+\fi
+
+Modifier la fonction pour qu'elle retourne `NA` si le vecteur passé en argument n'est pas numérique.
+
+\iffalse
+<div class="solution-exo">
+```{r eval=FALSE}
+etendue <- function(x) {
+    if (!is.numeric(x)) {
+        return(NA)
+    }
+    max(x) - min(x)
+}
+```
+</div>
+\fi
+
+
+Modifier à nouveau la fonction pour qu'elle affiche un avertissement avant de renvoyer la valeur `NA`.
+
+\iffalse
+<div class="solution-exo">
+```{r eval=FALSE}
+etendue <- function(x) {
+    if (!is.numeric(x)) {
+        warning("x doit être numérique")
+        return(NA)
+    }
+    max(x) - min(x)
+}
+```
+</div>
+\fi
+
+
+**Exercice 5.2**
+
+Créer une fonction `proportion` qui prend en argument un vecteur et retourne les valeurs de ce vecteur divisée par leur somme.
+
+\iffalse
+<div class="solution-exo">
+```{r eval=FALSE}
+proportion <- function(x) {
+    x / sum(x)
+}
+```
+</div>
+\fi
+
+Essayer d'exécuter `proportion(c(-2, 1, 1))`. Pourquoi obtient-on ce résultat ?
+
+Modifier la fonction pour qu'elle retourne un message d'erreur si jamais la somme des éléments du vecteur vaut 0.
+
+\iffalse
+<div class="solution-exo">
+```{r eval=FALSE}
+proportion <- function(x) {
+    if (sum(x) == 0) {
+        stop("la somme des éléments de x vaut zéro")
+    }
+    x / sum(x)
+}
+```
+</div>
+\fi
+
 
 ### Boucles
 
-pile ou face vectorisé avec ifelse plutôt qu'avec une boucle for
+**Exercice 6.1**
+
+Charger le jeu de données `hdv2003` de l'extension `questionr` avec :
+
+```{r}
+library(questionr)
+data(hdv2003)
+```
+
+À l'aide d'une boucle `for`, parcourir les noms des variables de `hdv2003`. Si la variable en question est numérique, faire l'histogramme de la variable avec la fonction `hist()`.
+
+\iffalse
+<div class="solution-exo">
+```{r eval=FALSE}
+for (name in names(hdv2003)) {
+    variable <- hdv2003[, name]
+    if (is.numeric(variable)) {
+        hist(variable)
+    }
+}
+```
+</div>
+\fi
+
+Ajouter le nom de la variable comme titre du graphique en utilisant l'argument `main` de `hist()`.
+
+\iffalse
+<div class="solution-exo">
+```{r eval=FALSE}
+for (name in names(hdv2003)) {
+    variable <- hdv2003[, name]
+    if (is.numeric(variable)) {
+        hist(variable, main = name)
+    }
+}
+```
+</div>
+\fi
+
+**Exercice 6.2**
+
+La fonction `readline()` permet de lire une chaîne de caractère saisie au clavier de la manière suivante :
+
+```{r eval = FALSE}
+reponse <- readline("Quelle est votre réponse ?")
+```
+
+Écrire le code qui effectue les opérations suivantes :
+
+- Afficher le message "Quel est le plus grand sociologue de tous les temps ?" et demander la réponse à l'utilisateur
+- Si la réponse saisie est "Tonton Michel", afficher "Bingo !"
+- Sinon, afficher "Nope" et poser à nouveau la question
+
+\iffalse
+<div class="solution-exo">
+```{r eval=FALSE}
+reponse <- ""
+while (reponse != "Tonton Michel") {
+    reponse <- readline("Quel est le plus grand sociologue de tous les temps ?")
+    if (reponse == "Tonton Michel") {
+        message("Bingo !")
+    } else {
+        message("Nope !")
+    }
+}
+```
+</div>
+\fi
+
+
+**Exercice 6.3**
+
+À l'aide d'une boucle `for`, écrire une fonction `somme_positifs` qui prend en argument un vecteur et retourne la somme de tous les nombres positifs qu'il contient.
+
+\iffalse
+<div class="solution-exo">
+```{r eval=FALSE}
+somme_positifs <- function(x) {
+    somme <- 0
+    for (item in x) {
+        if (item > 0) {
+            somme <- somme + item
+        }
+    }
+    somme
+}
+```
+</div>
+\fi
+
+Réécrire cette fonction pour qu'elle retourne le même résultat mais sans utiliser de boucle.
+
+\iffalse
+<div class="solution-exo">
+```{r eval=FALSE}
+somme_positifs <- function(x) {
+    sum(x[x > 0])
+}
+```
+</div>
+\fi
+
+
+**Exercice 6.4**
+
+En utilisant une boucle `for`, créer une fonction `somme_premiers_positifs` qui prend en argument un vecteur et retourne la somme de tous les nombres positifs qu'il contient en partant du début du vecteur et en s'arrêtant au premier élément négatif (on pourra recopier et modifier la première fonction `somme_positifs` de l'exercice précédent).
+
+\iffalse
+<div class="solution-exo">
+```{r eval=FALSE}
+somme_premiers_positifs <- function(x) {
+    somme <- 0
+    for (item in x) {
+        if (item < 0) {
+            break
+        }
+        somme <- somme + item
+    }
+    somme
+}
+```
+</div>
+\fi
+
+*Facultatif :* réécrire la fonction pour qu'elle retourne le même résultat sans utiliser de boucle `for`.
+
+\iffalse
+<div class="solution-exo">
+```{r eval=FALSE}
+somme_premiers_positifs <- function(x) {
+    negatifs <- which(x < 0)
+    if (length(negatifs) == 0) {
+        return(sum(x))
+    }
+    premier_negatif <- min(negatifs)
+    sum(head(x, premier_negatif - 1))
+}
+```
+</div>
+\fi
+
+**Exercice 6.5**
+
+Soit la fonction `pile_ou_face` suivante, qui simule un jet de pièce :
+
+```{r}
+pile_ou_face <- function() {
+    alea <- runif(1)
+    if (alea < 0.5) {
+        result <- "pile"
+    } else {
+        result <- "face"
+    }
+    result
+}
+```
+
+Modifier cette fonction en utilisant une boucle `for` pour qu'elle accepte un argument `n` et retourne un vecteur comprenant le résultat de `n` tirages.
+
+```{r echo=FALSE}
+pile_ou_face <- function(n) {
+    alea <- runif(n)
+    result <- if_else(alea < 0.5, "pile", "face")
+    result
+}
+```
+
+```{r}
+pile_ou_face(4)
+```
+
+\iffalse
+<div class="solution-exo">
+```{r eval=FALSE}
+pile_ou_face <- function(n) {
+    tirages <- character(0)
+    for (i in seq_len(n)) {
+        alea <- runif(1)
+        if (alea < 0.5) {
+            tirages <- c(tirages, "pile")
+        } else {
+            tirages <- c(tirages, "face")
+        }
+    }
+    tirages
+}
+```
+</div>
+\fi
+
+Réécrire la fonction pour qu'elle retourne le même résultat sans utiliser de boucle `for`.
+
+\iffalse
+<div class="solution-exo">
+```{r eval=FALSE}
+pile_ou_face <- function(n) {
+    alea <- runif(n)
+    result <- if_else(alea < 0.5, "pile", "face")
+    result
+}
+# Ou bien, encore plus simple
+pile_ou_face <- function(n) {
+    sample(c("pile", "face"), size = n, replace = TRUE)
+}
+```
+</div>
+\fi
