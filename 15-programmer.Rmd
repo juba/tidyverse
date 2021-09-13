@@ -43,9 +43,6 @@ La fonction `seq()` permet de générer des séquences régulière plus complexe
 
 ```{r}
 seq(0.5, 2.5, by = 0.5)
-```
-
-```{r}
 seq(0, 4, length.out = 6)
 ```
 
@@ -53,9 +50,6 @@ Enfin, la fonction `rep()` permet de répéter un élément ou un vecteur.
 
 ```{r}
 rep("Pomme", 6)
-```
-
-```{r}
 rep(1:4, 2)
 ```
 
@@ -147,13 +141,19 @@ is.factor(fac)
 
 Tous les éléments d'un vecteur doivent être du même type. Si ça n'est pas le cas, les éléments seront convertis au type le plus "général", sachant que les `character` sont plus généraux que les `numeric`, qui sont eux-mêmes plus généraux que les `logical`.
 
+Dans l'exemple suivant, le nombre `1` est transformé en chaîne de caractère `"1"`.
+
 ```{r}
 c(1, "foo")
-c(TRUE, 2)
-c(FALSE, "bar")
 ```
 
-La valeur `NA`, comme on l'a vu, permet d'indiquer une valeur manquante (`Not Available`). Il existe en réalité plusieurs types de `NA`, même si cette distinction est la plupart du temps transparente pour l'utilisateur. On a ainsi notamment des valeur `NA_integer_`, `NA_character_`, `NA_real_`.
+Si on mélange valeurs nombres et valeurs logiques, les `TRUE` sont convertis en `1` et les `FALSE` en `0`.
+
+```{r}
+c(TRUE, 2, FALSE)
+```
+
+Si la valeur `NA`, comme on l'a vu, permet d'indiquer une valeur manquante (`Not Available`), il existe en réalité plusieurs types de `NA`, même si cette distinction est la plupart du temps transparente pour l'utilisateur. On a ainsi notamment des valeur `NA_integer_`, `NA_character_`, `NA_real_`.
 
 ```{r}
 c(1, 2, NA_character_)
@@ -199,6 +199,7 @@ tail(x, 1)
 Utilisé conjointement avec l'opérateur d'assignation `<-`, l'opérateur `[]` permet aussi de remplacer certains éléments.
 
 ```{r}
+x <- c(e1 = 1, e2 = 2, e3 = 8, e4 = 12)
 x[1] <- -1000
 x[x > 10] <- NA
 x
@@ -220,8 +221,7 @@ Les listes sont une généralisation des vecteurs : elles regroupent également 
 On construit une liste avec la fonction `list`.
 
 ```{r}
-l <- list(1, "foo", c("Pomme", "Citron"))
-l
+list(1, "foo", c("Pomme", "Citron"))
 ```
 
 La manière dont R affiche le contenu d'une liste dans la console diffère de celle des vecteurs. Dans le cas d'une liste ses éléments sont affichés les uns en dessous des autres, et séparés par leur indice numérique entre une paire de crochets.
@@ -229,8 +229,7 @@ La manière dont R affiche le contenu d'une liste dans la console diffère de ce
 Comme pour les vecteurs, on peut nommer les éléments à la création de la liste ou avec la fonction `names()`.
 
 ```{r}
-l <- list(nombre = 1, char = "foo", vecteur = c("Pomme", "Citron"))
-l
+list(nombre = 1, char = "foo", vecteur = c("Pomme", "Citron"))
 ```
 
 Dans ce cas l'affichage de la liste dans la console montre ces noms plutôt que les indices numériques.
@@ -238,8 +237,7 @@ Dans ce cas l'affichage de la liste dans la console montre ces noms plutôt que 
 Si les noms comportent des caractères spéciaux comme des espaces, il faut les entourer de quotes inverses.
 
 ```{r}
-l <- list(`Élément 1` = 1, `Élément 2` = "foo")
-l
+list(`Élément 1` = 1, `Élément 2` = "foo")
 ```
 
 L'affichage des listes peut vite devenir illisible quand la liste est plus complexe^[Pour rappel, la fonction `runif()` renvoit des nombres aléatoires suivant une loi uniforme, par défaut compris entre 0 et 1.].
