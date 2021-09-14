@@ -1,14 +1,324 @@
 # `dplyr` avancé
 
-across()
+La partie \@ref(dplyr) a permis de présenter l'extension `dplyr`. On va voir ici comment aller un peu plus loin dans l'utilisation du *package*, notamment en utilisant nos propres fonctions et en appliquant des transformations à des ensembles de colonnes.
 
-Mode de sélection des colonnes
+```{r}
+library(palmerpenguins)
+data(penguins)
+```
 
-c_across()
+## Appliquer ses propres fonctions 
+
+### Exemple avec un `mutate`
+
+Dans le jeu de données `hdv2003` plusieurs variables comprennent les mêmes modalités `Oui` / `Non`. C'est le cas notamment de `cuisine` et `cinema`.
+
+Supposons qu'on souhaite recoder les valeurs de `cuisine` en transformant `Oui` en `O`, `Non` en `N`. On a vu section \@ref(recode) qu'on peut utiliser pour cela la fonction `fct_recode()` de `forcats`.
+
+```{r}
+hdv2003 %>%
+    mutate(
+        cuisine = fct_recode(cuisine,
+            "O" = "Oui",
+            "N" = "Non"
+        )
+    )
+```
+
+Supposons qu'on souhaite également convertir les `NA` éventuelles de `cuisine` en vaeurs explicites `Non réponse`. On peut le faire avec la fonction `fct`explicit_na()` de `forcats`. Notre recodage doit donc se faire en deux étapes, par exemple de la manière suivante :
+
+```{r}
+hdv2003 %>%
+    mutate(
+        cuisine = fct_recode(cuisine,
+            "O" = "Oui",
+            "N" = "Non"
+        ),
+        cuisine = fct_explicit_na(cuisine, "Non réponse")
+    )
+```
+
+Comme notre recodage commence à être un peu complexe, on pourrait l'extraire de notre `mutate` en créant une fonction. On la nomme `recode_oui_non`. Celle-ci prend en entrée un vecteur `v` et retourne le vecteur recodé.
+
+```{r}
+recode_oui_non <- function(v) {
+    v %>%
+        fct_recode(
+            "O" = "Oui",
+            "N" = "Non"
+        ) %>%
+        fct_explicit_na("Manquant")
+}
+```
+
+On peut dès lors simplifier notre `mutate` en appelant notre nouvelle fonction.
+
+```{r}
+hdv2003 %>%
+    mutate(cuisine = recode_oui_non(cuisine))
+```
+
+Premier avantage : on gagne en lisibilité. On a séparé le code d'une opération spécifique dans une fonction avec un nom "parlant", ce qui permet de savoir facilement à quoi elle sert. Et on a simplifié notre `mutate` qui est désormais plus lisible parce qu'il fait apparaître la logique des nos opérations (on veut recoder les valeurs "oui" / "non") sans en inclure les détails.
+
+Le deuxième avantage évidemment, comme pour toute fonction, est qu'on peut la réutiliser pour appliquer ce recodage à plusieurs variables. Ainsi, si on veut recoder de la même manière `cuisine` et `cinema`, il suffit de faire :
+
+```{r}
+hdv2003 %>%
+    mutate(
+        cuisine = recode_oui_non(cuisine),
+        cinema = recode_oui_non(cinema)
+    )
+
+```
+
+Le code est plus court, plus lisible, on évite les erreurs de copier/coller, et si on souhaite modifier le recodage on a à intervenir qu'à un seul endroit.
+
+### Exemple avec un `summarise`
+
+Autre exemple, cette fois sur le jeu de données `rp2012`. Imaginons qu'on souhaite calculer, pour chaque région, le pourcentage de communes dont le nom se termine par une série de caractères donnée.
+
+Comme il ne s'agit pas forcément d'une question triviale, on va décomposer le problème et rappeler (comme vu section \@ref(str-detect)) que la fonction `str_detect()` de l'extension `stringr` permet de détecter quels éléments d'un vecteur de chaînes de caractères correspondent à une expression régulière. Ainsi, si on veut détecter si un nom de commune (variable `rp2012$commune`) se termine par `"ac"`, on utilisera :
+
+```{r}
+library(stringr)
+str_detect(rp2012$commune, "ac$")
+```
+
+Le `$` dans l'expression régulière `"ac$"` correspond à la fin de la chaîne de caractères. Il permet de s'assurer qu'on ne détecte que les noms de communes se terminant par "ac" (comme "Fige**ac**"), et pas ceux contenant "ac" à un autre endroit (comme "Arc**ac**hon").
+
+Si on veut compter le nombre de communes pour lesquelles on a détecté une terminaison en "ac", on peut tout simplement appliquer la fonction `sum()` au résultat précédent : les `TRUE` du résultat du `str_detect` sont alors convertis en 1, les `FALSE` en 0, et le `sum()` renverra donc le nombre de `TRUE`.
+
+```{r}
+sum(str_detect(rp2012$commune, "ac$"))
+```
+
+Si on souhaite convertir ce résultat en pourcentage, il faut qu'on divise par le nombre total de communes, et qu'on multiplie par 100.
+
+```{r}
+sum(str_detect(rp2012$commune, "ac$")) / length(rp2012$commune) * 100
+```
+
+On va créer une fonction nommée `prop_suffixe` qui aura pour objectif d'effectuer ce calcul. Elle prendra en entrée deux arguments, un vecteur de chaînes de cractère, et un "motif" à détecter. On va rajouter nous-mêmes le "$" à la fin du motif en question pour faciliter l'usage de la fonction. Le résultat final est le suivant :
+
+```{r}
+prop_suffixe <- function(v, motif) {
+    # On ajoute $ à la fin du motif pour capturer uniquement les suffixes
+    motif <- paste0(motif, "$")
+    # Détection du motif
+    nb_detect <- sum(str_detect(v, motif))
+    # On retourne le pourcentage
+    nb_detect / length(v) * 100
+}
+```
+
+On peut utiliser notre fonction de la manière suivante :
+
+```{r}
+prop_suffixe(rp2012$commune, "ac")
+```
+
+On a donc dans notre jeu de données `r round(prop_suffixe(rp2012$commune, "ac"), 2)`% de communes dont le nom se termine par "ac"^[Attention, le jeu de données ne comporte que les communes de plus de 2000 habitants.].
+
+Si maintenant on souhaite calculer ce pourcentage pour toutes les régions françaises, il suffit d'appeler notre fonction dans dans un appel à `summarise` :
+
+```{r}
+rp2012 %>%
+    group_by(region) %>%
+    summarise(prop_ac = prop_suffixe(commune, "ac")) %>%
+    arrange(desc(prop_ac))
+```
+
+L'avantage d'avoir créé une fonction pour effectuer cette opération et qu'on peut du coup très facilement faire le même calcul en faisant varier le suffixe recherché.
+
+```{r}
+rp2012 %>%
+    group_by(region) %>%
+    summarise(prop_ac = prop_suffixe(commune, "ieu")) %>%
+    arrange(desc(prop_ac))
+```
+
+En créant une fonction plutôt qu'en mettant notre code directement dans le `summarise` on a un script plus lisible, plus facile à maintenir, et des fonctionnalités facilement réutilisables.
+
+### Exemple avec un `rename_with`
+
+On a vu section \@ref(select-rename) que `dplyr` propose la fonction `rename()` pour renommer des colonnes d'un tableau de données. On peut l'utiliser par exemple pour remplacer un `.` par un `_` dans le nom d'une variable d'`hdv2003`.
+
+```{r}
+hdv2003 %>% rename("lecture_bd" = "lecture.bd")
+```
+
+Supposons maintenant qu'on souhaite appliquer la même transformation à l'ensemble des variables de `hdv2003`. Une solution pour cela est d'utiliser la fonction `rename_with()`, toujours fournie par `dplyr`, qui prend en argument non pas une correspondance `"nouveau nom" = "ancien nom"` mais une fonction qui sera appliquée à l'ensemble des noms de colonnes.
+
+Par exemple, si on souhaite convertir tous les noms de colonnes en majuscules, on peut passer comme argument la fonction `str_to_upper()` de `stringr`.
+
+```{r}
+hdv2003 %>% rename_with(str_to_upper)
+```
+
+Pour remplacer les `.` par des `_`, on va d'abord créer une fonction *ad hoc* qui utilise `str_replace_all`.
+
+```{r}
+remplace_points <- function(v) {
+    str_replace_all(v, fixed("."), "_")
+}
+```
+
+On notera qu'on est obligé d'utiliser ici la fonction `fixed()` pour indiquer que le motif `"."` est bien le caractère `.` et pas une expression régulière.
+
+Dès lors, on peut appliquer cette fonction à l'ensemble de nos noms de variables :
+
+```{r}
+hdv2003 %>% rename_with(remplace_points)
+```
+
+Certain.es lectrices et lecteurs attentives auront peut-être noté que le même résultat peut être obtenu en utilisant `remplace_points()` avec la fonction `names()`. L'avantage de `rename_with()`, comme nous le verrons ci-dessous, c'est qu'elle permet si nécessaire de sélectionner finement les colonnes auxquelles appliquer le renommage.
+
+
+## Appliquer des fonctions à plusieurs colonnes
+
+On a défini précédemment une fonction qui recode les modalités d'une variable "Oui" / "Non" et on a vu comment appliquer ce recodage à deux variables de `hdv2003`.
+
+```{r}
+recode_oui_non <- function(v) {
+    v %>%
+        fct_recode(
+            "O" = "Oui",
+            "N" = "Non"
+        ) %>%
+        fct_explicit_na("Manquant")
+}
+
+hdv2003 %>%
+    mutate(
+        cuisine = recode_oui_non(cuisine),
+        cinema = recode_oui_non(cinema)
+    )
+```
+
+Supposons qu'on souhaite appliquer ce recodage à toutes les variables "Oui" / "Non" de notre tableau. On pourrait évidemment créer autant de lignes que nécessaires dans notre `mutate`, mais on peut aussi utiliser la fonction `across()` de `dplyr`, qui permet justement ce type d'opérations.
+
+`across()` prend deux arguments principaux :
+
+- la définition d'un ensemble de colonnes de notre tableau de données
+- une ou plusieurs fonctions à appliquer aux colonnes sélectionnées
+
+Il existe de nombreuses manières de définir les colonnes qu'on souhaite transformer : celles-ci sont en fait les mêmes que celles offertes par le verbe `select()`. Une première possibilité est d'utiliser `c()` en lui passant les noms des variables (on notera qu'on n'est pas obligés de mettre ces noms entre guillemets).
+
+```{r}
+hdv2003 %>%
+    mutate(
+        across(
+            c(cinema, cuisine, lecture.bd, bricol),
+            recode_oui_non
+        )
+    )
+```
+
+Une autre possibilité est d'utiliser `:`, qui permet de définir une plage de colonnes en lui indiquant la colonne de début et la colonne de fin. Ainsi dans l'exemple suivant notre recodage est appliqué à toutes les colonnes situées entre `hard.rock` et `sport` (incluses).
+
+```{r}
+hdv2003 %>%
+    mutate(
+        across(
+            hard.rock:sport,
+            recode_oui_non
+        )
+    )
+```
+
+Une autre possibilité est de sélectionner les variables via leurs noms. On peut ainsi choisir les variables qui commencent par une certaine chaîne de caractères via la fonction `starts_with()`, celles qui se terminent ou qui contiennent certains caractères avec `ends_with()` et `contains()`.
+
+Dans l'exemple suivant, on effectue un `summarise` qui applique la fonction `max()` à toutes les variables de `rp2012` qui commencent par `dipl`.
+
+```{r}
+rp2012 %>%
+    summarise(
+        across(
+            starts_with("dipl"),
+            max
+        )
+    )
+```
+
+On peut également sélectionner des colonnes via une conditione avec la fonction `where()`. Celle-ci prend elle-même en argument une fonction qui doit renvoyer `TRUE` ou `FALSE`, et ne conserve que les colonnes qui correspondent à des `TRUE`.
+
+Dans l'exemple suivant, on applique la fonction `max` seulement aux colonnes de `hdv2003` pour lesquelles la fonction `is.numeric` renvoie `TRUE`.
+
+```{r}
+hdv2003 %>%
+    summarise(
+        across(
+            where(is.numeric),
+            max
+        )
+    )
+```
+
+Pour des conditions plus complexes, on doit parfois définir soi-même la fonction passée à `where()`. Ainsi, si on souhaite appliquer `recode_oui_non()` à toutes les colonnes de `hdv2003` contenant la modalité "Oui", on peut faire :
+
+```{r}
+detecte_oui <- function(v) {
+    "Oui" %in% v
+}
+
+hdv2003 %>%
+    mutate(
+        across(
+            where(detecte_oui),
+            recode_oui_non
+        )
+    )
+```
+
+Il est même possible, pour les cas les plus complexes, de combiner plusieurs sélections avec les opérateurs `&`, `|` et `!`. L'exemple suivant, applique la fonction `max()` à toutes les colonnes numériques de `hdv2003`, sauf aux colonnes `id` et `poids`.
+
+```{r}
+hdv2003 %>%
+    summarise(
+        across(
+            where(is.numeric) & !c(id, poids),
+            max
+        )
+    )
+```
+
+Enfin, la fonction spéciale `everything()` permet de sélectionner la totalité des colonnes d'un tableau. Dans l'exemple suivant, on applique `n_distinct()` pour afficher le nombre de valeurs distinctes de toutes les variables de `hdv2003`.
+
+```{r}
+hdv2003 %>%
+    summarise(
+        across(
+            everything(),
+            n_distinct
+        )
+    )
+```
+
+Il existe encore d'autres possibilités de sélection des colonnes, pour avoir un aperçu complet on pourra se référer à [la page de documentation de la fonction `select()`](https://dplyr.tidyverse.org/reference/select.html).
+
+
+## Appliquer une transformation ligne par ligne
 
 rowwise()
 
+c_across()
 
+Nom de la commune pour chaque région avec le max de dipl_sup ?
 
 if_any() et if_all() ?
 
+
+## Fonctions anonymes et notations abrégées
+
+Dans les exemples précédents, on a vu que le fait d'extraire une partie de notre code dans une fonction à part permettait de gagner en lisibilité. Pour autant...
+
+On a déjà vu section \@ref{fonctions-anonymes}
+
+
+## Ressources
+
+https://dplyr.tidyverse.org/reference/select.html
+
+https://dplyr.tidyverse.org/articles/colwise.html
+
+https://dplyr.tidyverse.org/articles/rowwise.html
