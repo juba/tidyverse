@@ -951,7 +951,7 @@ hdv2003 %>%
 </div>
 \fi
 
-Ajouter un argument `.names` à `across()` pour que les variables recodées soient stockées dans de nouvelles colonnes nommées avec le suffixe `"_rec"`.
+Ajouter un argument `.names` à `across()` pour que les variables recodées soient stockées dans de nouvelles colonnes nommées avec le suffixe `"_true"`.
 
 \iffalse
 <div class="solution-exo">
@@ -964,7 +964,7 @@ hdv2003 %>%
         across(
             hard.rock:sport,
             detecte_oui,
-            .names = "{.col}_rec"
+            .names = "{.col}_true"
         )
     )
 ```
@@ -976,7 +976,7 @@ hdv2003 %>%
 
 **Exercice 3.1**
 
-On repart du code final de l'exercice 2.3, qui recodait une série de variables de `hdv2003` en valeurs `TRUE`/`FALSE` dans de nouvelles variables avec le suffixe "_rec".
+On repart du code final de l'exercice 2.3, qui recodait une série de variables de `hdv2003` en valeurs `TRUE`/`FALSE` dans de nouvelles variables avec le suffixe "_true".
 
 ```{r}
 detecte_oui <- function(v) {
@@ -987,32 +987,32 @@ hdv2003 <- hdv2003 %>%
         across(
             hard.rock:sport,
             detecte_oui,
-            .names = "{.col}_rec"
+            .names = "{.col}_true"
         )
     )
 ```
 
-Sans utiliser `rowwise()`, calculer le plus simplement possible une nouvelle variable `total` qui contient le nombre total de `TRUE` pour les variables `cinema_rec` et `sport_rec`.
+Sans utiliser `rowwise()`, calculer le plus simplement possible une nouvelle variable `total` qui contient le nombre total de `TRUE` pour les variables `cinema_true` et `sport_true`.
 
 ```{r}
 hdv2003 %>%
-    mutate(total = cuisine_rec + sport_rec)
+    mutate(total = cuisine_true + sport_true)
 ```
 
-En utilisant `rowwise()` et `sum()`, recalculer la variable `total` pour qu'elle contienne le nombre total de `TRUE` pour les variables `bricol_rec`, `cinema_rec` et `sport_rec`.
+En utilisant `rowwise()` et `sum()`, recalculer la variable `total` pour qu'elle contienne le nombre total de `TRUE` pour les variables `bricol_true`, `cinema_true` et `sport_true`.
 
 ```{r}
 hdv2003 %>%
     rowwise() %>%
-    mutate(total = sum(cuisine_rec, sport_rec, bricol_rec))
+    mutate(total = sum(cuisine_true, sport_true, bricol_true))
 ```
 
-En utilisant `rowwise()`, `sum()` et `c_across()`, recalculer la variable `total` pour qu'elle contienne le nombre total de `TRUE` pour toutes les variables se terminant par "_rec".
+En utilisant `rowwise()`, `sum()` et `c_across()`, recalculer la variable `total` pour qu'elle contienne le nombre total de `TRUE` pour toutes les variables se terminant par "_true".
 
 ```{r}
 hdv2003 %>%
     rowwise() %>%
-    mutate(total = sum(c_across(ends_with("_rec"))))
+    mutate(total = sum(c_across(ends_with("_true"))))
 ```
 
 Reprendre le code précédent pour qu'il puisse s'appliquer directement sur les variables `hard.rock`...`sport`, sans passer par le recodage en `TRUE`/`FALSE`. 
