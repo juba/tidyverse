@@ -176,6 +176,8 @@ Certain.es lectrices et lecteurs attentives auront peut-être noté que le même
 
 ## Appliquer des fonctions à plusieurs colonnes
 
+### Appliquer une fonction à plusieurs colonnes
+
 On a défini précédemment une fonction qui recode les modalités d'une variable "Oui" / "Non" et on a vu comment appliquer ce recodage à deux variables de `hdv2003`.
 
 ```{r}
@@ -296,29 +298,324 @@ hdv2003 %>%
 
 Il existe encore d'autres possibilités de sélection des colonnes, pour avoir un aperçu complet on pourra se référer à [la page de documentation de la fonction `select()`](https://dplyr.tidyverse.org/reference/select.html).
 
+### Appliquer plusieurs fonctions à plusieurs colonnes
+
+`across()` offre également la possibilité d'appliquer plusieurs fonctions à un ensemble de colonnes. Dans ce cas, plutôt que de lui passer une seule fonction comme deuxième argument, on lui passe une liste nommée de fonctions.
+
+Le code suivant calcule le minimum et le maximum pour quatre variables de `rp2012`
+
+```{r}
+rp2012 %>%
+    summarise(
+        across(
+            cadres:ouvr,
+            list(min = min, max = max)
+        )
+    )
+```
+
+Par défaut les nouvelles variables sont nommées sous la forme `{nom_variable}_{nom_fonction}`, mais on peut personnaliser cette règle en ajoutant un argument `.names` à `across()`. Cet argument est une chaîne de caractères dans laquelle `{.col}` sera remplacé par le nom de la colonne courante, et `{.fn}` par le nom de la fonction.
+
+```{r}
+rp2012 %>%
+    summarise(
+        across(
+            cadres:ouvr,
+            list(min = min, max = max),
+            .names = "{.fn}-{.col}"
+        )
+    )
+
+```
+
+### Renommer plusieurs colonnes avec une fonctions
+
+On a vu précédemment qu'on peut utiliser `rename_with()` pour renommer les colonnes d'un tableau de données à l'aide d'une fonction.
+
+```{r}
+remplace_points <- function(v) {
+    str_replace_all(v, fixed("."), "_")
+}
+
+hdv2003 %>% rename_with(remplace_points)
+```
+
+Par défaut, `rename_with()` applique la fonction de renommage à l'ensemble des colonnes du tableau. Il est cependant possible de lui indiquer de ne renommer que certaines de ces colonnes. Pour cela, on peut lui ajouter un argument supplémentaire nommé `.cols`, dont la syntaxe est exactement la même que pour `across()` ou `select()`.
+
+Par exemple, le code suivant convertit en majuscule uniquement les noms des colonnes `id` et `poids`.
+
+```{r}
+hdv2003 %>%
+    rename_with(str_to_upper, c(id, poids))
+```
+
+Et le code suivant remplace les `.` par des `_` uniquement pour les colonnes qui ne sont pas numériques.
+
+```{r}
+hdv2003 %>%
+    rename_with(remplace_points, .cols = !where(is.numeric))
+```
+
+
 
 ## Appliquer une transformation ligne par ligne
 
-rowwise()
+Soit le tableau de données d'exemple suivant, qui contient des évaluations de restaurants sur quatre critères différents (on a initialisé les valeurs de chaque critère en tirant au sort des notes entre 0 et 5).
 
-c_across()
+```{r}
+alea <- function(n) {
+    sample(0:5, size = n, replace = TRUE)
+}
 
-Nom de la commune pour chaque région avec le max de dipl_sup ?
+restos <- tibble(
+    nom = c("La bonne fourchette", "La choucroute de l'amer", "L'Hair de rien", "La blanquette de Vaulx"),
+    cuisine = alea(4),
+    decor   = alea(4),
+    accueil = alea(4),
+    prix    = alea(4)
+)
 
-if_any() et if_all() ?
+restos
+```
 
+(Un nom de salon de coiffure s'est glissé dans cette liste de restaurants. Saurez-vous le retrouver ?)
+
+Imaginons qu'on souhaite faire la moyenne, pour chaque restaurant, des critères `decor` et `accueil`. On pourrait être tentés d'utiliser `mean()` de la manière suivante :
+
+```{r}
+restos <- restos %>%
+    mutate(
+        decor_accueil = mean(c(decor, accueil))
+    )
+```
+
+Si on regarde le résultat, on constate qu'il ne correspond pas à ce que l'on souhaite faire puisque toutes les valeurs sont les mêmes.
+
+```{r}
+restos$decor_accueil
+```
+
+Que s'est-il passé ? En fait le `mutate` s'est appliqué sur la totalité du tableau. Ceci signifie que dans `mean(c(decor, accueil))`, les objets `decor` et `accueil` correspondent à la totalité des valeurs de chaque variables. On a donc concaténé ces deux vecteurs et calculé la moyenne, qui est du coup la même pour chaque ligne.
+
+La valeur obtenue correspond aux résultat de :
+
+```{r}
+mean(c(restos$decor, restos$accueil))
+```
+
+Ce que nous souhaitons ici, c'est calculer non pas pour l'ensemble du tableau mais *pour chaque ligne*. Pour cela, on va utiliser la fonction `rowwise()`. Celle-ci est équivalente à un `group_by()` qui créerait autant de groupes qu'il y a de lignes dans notre tableau :
+
+```{r}
+restos %>% rowwise()
+```
+
+Quant notre tableau est groupé via un `rowwise()`, les opérations s'effectuent sur un tableau de données constitué uniquement de la ligne courante. Si on calcule la moyenne précédente, on obtient désormais le bon résultat :
+
+```{r}
+restos <- restos %>%
+    rowwise() %>%
+    mutate(decor_accueil = mean(c(decor, accueil)))
+
+restos$decor_accueil
+```
+
+Supposons qu'on souhaite désormais calculer la moyenne de l'ensemble des critères. On peut évidemment reprendre le code précédent en saisissant toutes les variables concernées.
+
+```{r}
+restos %>%
+    rowwise() %>%
+    mutate(decor_accueil = mean(c(decor, accueil, cuisine, prix)))
+```
+
+Ceci peut cependant être peu pratique si le nombre de variables est important. C'est pourquoi `dplyr` propose la fonction `c_across()` : celle-ci permet de sélectionner des colonnes de la même manière que `select()` ou `across()`, et retourne un vecteur constitué des valeurs concaténées de ces colonnes.
+
+L'exemple suivant calcule la moyenne de toutes les colonnes comprises entre `cuisine` et `prix`, en utilisant l'opérateur `:`.
+
+```{r}
+restos %>%
+    rowwise() %>%
+    mutate(
+        total = mean(c_across(decor:prix))
+    )
+```
+
+Comme pour `across()` ou `select()`, on peut utiliser la fonction `where()` pour calculer la moyenne sur toutes les colonnes numériques.
+
+```{r}
+restos %>%
+    rowwise() %>%
+    mutate(
+        total = mean(
+            c_across(where(is.numeric))
+        )
+    )
+```
+
+
+L'utilisation de `rowwise()` et `c_across()` est intéressante principalement quand il n'existe pas de fonction vectorisée pour la transformation qu'on souhaite appliquer. Quand elle existe, il est en général plus simple et plus rapide de l'utiliser.
+
+Par exemple, pour trouver la valeur la plus élevée par restaurant, on pourrait être tenté d'utiliser le code suivant :
+
+```{r}
+restos %>%
+    rowwise() %>%
+    summarise(note_max = max(c(decor, accueil)))
+```
+
+Il est cependant plus lisible et plus efficace d'utiliser la fonction `pmax`, qui a justement pour objectif de parcourir des vecteurs en parallèle et de ne conserver que la plus grande valeur.
+
+```{r}
+restos %>%
+    summarise(note_max = pmax(decor, accueil))
+```
+
+Une des limites de `pmax` cependant est qu'on ne peut pas l'utiliser avec `c_across()`, et qu'on ne peut donc pas faire de sélection des colonnes : on est obligés de taper leurs noms.
+
+```{r}
+restos %>%
+    summarise(note_max = pmax(cuisine, decor, accueil, prix))
+```
+
+Dans certains cas, notamment lorsque les colonnes sont nombreuses où qu'on ne les a pas identifiées à l'avance, on pourra  utiliser `rowwise()` et `c_across()` même quand des alternatives vectorisées existent.
+
+```{r}
+restos %>%
+    rowwise() %>%
+    summarise(
+        note_max = max(
+            c_across(where(is.numeric))
+        )
+    )
+```
 
 ## Fonctions anonymes et notations abrégées
 
-Dans les exemples précédents, on a vu que le fait d'extraire une partie de notre code dans une fonction à part permettait de gagner en lisibilité. Pour autant...
+Dans les sections précédentes, nous avons rencontré plusieurs fonctions, comme `rename_with()` ou `across()`, qui prennent  une fonction en argument.
 
-On a déjà vu section \@ref{fonctions-anonymes}
+Par exemple, dans l'utilisation suivante de `rename_with()`, on avait créé une fonction `remplace_points()`.
+
+```{r}
+remplace_points <- function(v) {
+    str_replace_all(v, fixed("."), "_")
+}
+
+hdv2003 %>% rename_with(remplace_points)
+```
+
+Le fait de créer une fonction à part pour une opération d'une seule ligne ne se justifie pas forcément, surtout si on n'utilise pas cette fonction ailleurs dans notre code. Dans, ce cas, on peut définir notre fonction directement dans l'appel à `rename_with()` en utilisant une *fonction anonyme*.
+
+```{r}
+hdv2003 %>%
+    rename_with(function(v) {
+        str_replace_all(v, fixed("."), "_")
+    })
+```
+
+Cette notation est assez pratique et souvent utilisée pour les fonctions à unage unique, ne serait-ce que pour s'économiser le fait de devoir lui trouver un nom pertinent.
+
+La notation étant un peu lourde, il existe deux alternatives permettant une définition plus "compacte". 
+
+- La première est propre aux packages du *tidyverse* (notamment `dplyr` et `purrr`), et ne fonctionnera pas pour les fonctions n'appartenant pas à ces packages. Il s'agit d'utiliser une notation de type "formule" : le corps de la formule contient les instructions de la fonction, et les arguments sont nommés `.` s'il n'y en qu'un, `.x` et `.y` s'il y en a deux, et `..1`, `..2`, etc. s'ils sont plus nombreux.
+
+- La deuxième est une notation apparue avec la version 4.1 de R, qui permet de remplacer `function(...)` par le raccourci `\(...)`.
+
+Ainsi les définitions suivantes sont équivalents :
+
+```{r}
+# Fonctionne partout et tout le temps
+function(x) { x + 2 }
+# Fonctionne uniquement dans les fonctions du tidyverse
+~ . + 2
+# Fonctionne uniquement à partir de R 4.1
+\(x) x + 2
+```
+
+De même que les définitions suivantes :
+
+```{r}
+function(v1, v2) {
+    res <- v1 / v2
+    round(res, 1)
+}
+
+~ { 
+    res <- .x / .y
+    round(res, 1) 
+}
+
+\(v1, v2) {
+    res <- v1 / v2
+    round(res, 1)
+}
+```
+
+On pourra du coup, si on le souhaite, utiliser ces notations compactes dans notre `rename_with()` pour définir notre fonction anonyme.
+
+```{r eval = FALSE}
+hdv2003 %>%
+    rename_with(~ str_replace_all(., fixed("."), "_"))
+
+hdv2003 %>%
+    rename_with(\(x) str_replace_all(x, fixed("."), "_"))
+```
+
+Cette notation peut être utilisée partout où on peut passer une fonction comme argument et donc définir des fonctions anonymes. Dans l'exemple suivant déjà vu précédemment, on passe la fonction `detecte_oui` comme argument de `where()`.
+
+```{r eval=FALSE}
+detecte_oui <- function(v) {
+    "Oui" %in% v
+}
+
+hdv2003 %>%
+    mutate(
+        across(
+            where(detecte_oui),
+            recode_oui_non
+        )
+    )
+```
+
+On peut donc remplacer la fonction par une fonction anonyme définie directement dans le `where()`.
+
+```{r eval=FALSE}
+hdv2003 %>%
+    mutate(
+        across(
+            where(function(v) { "Oui" %in% v }),
+            recode_oui_non
+        )
+    )
+```
+
+Et du coup utiliser une des deux notations "compactes".
+
+```{r eval=FALSE}
+hdv2003 %>%
+    mutate(
+        across(
+            where(~ "Oui" %in% .),
+            recode_oui_non
+        )
+    )
+
+hdv2003 %>%
+    mutate(
+        across(
+            where(\(v) "Oui" %in% v),
+            recode_oui_non
+        )
+    )
+```
 
 
 ## Ressources
 
-https://dplyr.tidyverse.org/reference/select.html
+[La page d'aide de la fonction `select`](https://dplyr.tidyverse.org/reference/select.html) (en anglais) liste toutes les possibilités offertes pour spécifier des ensembles de colonnes d'un tableau de données.
 
-https://dplyr.tidyverse.org/articles/colwise.html
+La vignette [Column-wise operations](https://dplyr.tidyverse.org/articles/colwise.html) de `dplyr` (en anglais) présente en détail l'utilisation et les fonctionnalités de `across()`.
 
-https://dplyr.tidyverse.org/articles/rowwise.html
+La vignette [Row-wise operations](https://dplyr.tidyverse.org/articles/rowwise.html) de `dplyr` (toujours en anglais) présente de manière approfondie l'utilisation de `rowwise()` et `c_across()` pour opérer individuellement sur les lignes d'un tableau de données.
+
+
+## Exercices
+
