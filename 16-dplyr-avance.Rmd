@@ -298,6 +298,49 @@ hdv2003 %>%
 
 Il existe encore d'autres possibilités de sélection des colonnes, pour avoir un aperçu complet on pourra se référer à [la page de documentation de la fonction `select()`](https://dplyr.tidyverse.org/reference/select.html).
 
+```{block type='rmdnote'}
+Une erreur de syntaxe fréquente est de mettre la sélection des colonnes dans l'appel à `across()`, mais pas la fonction qu'on souhaite appliquer.
+
+Ainsi le code suivant génèrera une erreur :
+
+`mutate(across(hard.rock:sport), recode_oui_non)`
+
+Il faut donc bien penser à passer la fonction comme argument du `across()`, donc à l'intérieur de ses parenthèses.
+
+`mutate(across(hard.rock:sport, recode_oui_non))`
+```
+
+
+Par défaut, lorsqu'on utilise `across()` dans un `mutate`, les nouvelles colonnes portent le même nom que les colonnes d'origine, ce qui signifie que ces dernières sont "écrasées" par les nouvelles valeurs.
+
+Ainsi dans l'exemple suivant vu précédemment, les valeurs d'origine des colonnes entre `hard.rock` et `sport` ont été écrasées par le résultat du recodage.
+
+```{r}
+hdv2003 %>%
+    mutate(
+        across(
+            hard.rock:sport,
+            recode_oui_non
+        )
+    )
+```
+
+Si on préfère créer de nouvelles colonnes, on doit indiquer la manière de les nommer en utilisant l'argument `.names` de `across()`. Celui prend comme valeur une chaîne de caractère dans laquelle le motif `{.col}` sera remplacé par le nom de la colonne d'origine.
+
+Ainsi, si on souhaite plutôt que les variables recodées soient stockées dans de nouvelles colonnes nommées avec le suffixe `_rec`, on peut utiliser :
+
+```{r}
+hdv2003 %>%
+    mutate(
+        across(
+            hard.rock:sport,
+            recode_oui_non,
+            .names = "{.col}_rec"
+        )
+    )
+```
+
+
 ### Appliquer plusieurs fonctions à plusieurs colonnes
 
 `across()` offre également la possibilité d'appliquer plusieurs fonctions à un ensemble de colonnes. Dans ce cas, plutôt que de lui passer une seule fonction comme deuxième argument, on lui passe une liste nommée de fonctions.
@@ -619,20 +662,527 @@ La vignette [Row-wise operations](https://dplyr.tidyverse.org/articles/rowwise.h
 
 ## Exercices
 
+Pour certains des exercices qui suivent on utilisera le jeu de données `starwars` de `dplyr`. On peut le charger avec les instructions suivantes :
+
+```{r}
+library(dplyr)
+data(starwars)
+```
+
+Le jeu de données contient les caractéristiques de 87 personnages présents dans les films : espèce, âge, planète d'origine, etc.
+
 ### Appliquer ses propres fonctions
 
-**Exercice 1.**
+**Exercice 1.1**
 
-**Exercice 1.**
+Créer une fonction `imc` prend en argument un vecteur `taille` (en cm) et un vecteur `poids` (en kg) et retourne les valeurs correspondante de l'indice de masse corporelle, qui se calcule en divisant le poids en kilos par la taille en mètres au carré.
+
+\iffalse
+<div class="solution-exo">
+```{r eval=FALSE}
+imc <- function(tailles, poids) {
+    tailles_m <- tailles/100
+    poids / tailles_m ^ 2
+}
+```
+</div>
+\fi
+
+Utiliser cette fonction pour ajouter une nouvelle variable `imc` au tableau `starwars`.
+
+\iffalse
+<div class="solution-exo">
+```{r eval=FALSE}
+starwars %>%
+    mutate(imc = imc(height, mass))
+```
+</div>
+\fi
+
+Utiliser à nouveau cette fonction pour calculer l'IMC moyen selon les valeurs de la variable `species`.
+
+\iffalse
+<div class="solution-exo">
+```{r eval=FALSE}
+starwars %>%
+    group_by(species) %>%
+    summarise(
+        imc = mean(imc(height, mass), na.rm = TRUE)
+    )
+```
+</div>
+\fi
+
+**Exercice 1.2**
+
+À l'aide d'un `group_by()` et d'un `summarise()`, calculer pour chaque valeur de la variable `sex` la valeur de l'étendue de la variable `height` du jeu de données `starwars`, c'est-à-dire la différence entre sa valeur maximale et sa valeur minimale.
+
+\iffalse
+<div class="solution-exo">
+```{r eval=FALSE}
+starwars %>%
+    group_by(sex) %>%
+    summarise(etendue_taille = max(height, na.rm = TRUE) - min(height, na.rm = TRUE))
+```
+</div>
+\fi
+
+En partant du code précédent, créer une fonction `etendue` qui prend en argument un vecteur et retourne la différence entre sa valeur maximale et sa valeur minimale. En utilisant cette fonction, calculer pour chaque valeur de `sex` la valeur de l'étendue des variables `height` et `mass`.
+
+\iffalse
+<div class="solution-exo">
+```{r eval=FALSE}
+etendue <- function(v) {
+    max(v, na.rm = TRUE) - min(v, na.rm = TRUE)
+}
+starwars %>%
+    group_by(sex) %>%
+    summarise(
+        etendue_taille = etendue(height),
+        etendue_poids  = etendue(mass)
+    )
+```
+</div>
+\fi
+
+
+**Exercice 1.3**
+
+La liste suivante donne, pour chacun des neuf principaux films de la saga *Star Wars*, la date à laquelle ils se déroulent dans l'univers de la saga.
+
+```{r}
+list(
+    "I"    = -32,
+    "II"   = -22,
+    "III"  = -19,
+    "IV"   =   0,
+    "V"    =   3,
+    "VI"   =   4,
+    "VII"  =  34,
+    "VIII" =  34,
+    "IX"   =  35
+)
+```
+
+Dans le jeu de données `starwars`, la variable `birth_year` indique l'année de naissance du personnage en "années avant l'an zéro" (une valeur de 19 signifie donc une année de naissance de -19).
+
+Créer une fonction `age_film` qui prend en entrée un vecteur d'années de naissance au même format que `birth_year` ainsi que l'identifiant d'un film, et calcule les âges correspondant à ces années de naissance à la date du film en question. 
+
+\iffalse
+<div class="solution-exo">
+```{r eval=FALSE}
+age_film <- function(annees, film) {
+    annees_films <- list(
+        "I"    = -32,
+        "II"   = -22,
+        "III"  = -19,
+        "IV"   =   0,
+        "V"    =   3,
+        "VI"   =   4,
+        "VII"  =  34,
+        "VIII" =  34,
+        "IX"   =  35
+    )
+    annees_naissance <- -annees
+    annee_ref <- annees_films[[film]]
+    annee_ref - annees_naissance
+}
+```
+</div>
+\fi
+
+Modifier la fonction pour qu'elle retourne un message d'erreur si l'identifiant du film n'a pas été reconnu.
+
+\iffalse
+<div class="solution-exo">
+```{r eval=FALSE}
+age_film <- function(annees, film) {
+    annees_films <- list(
+        "I"    = -32,
+        "II"   = -22,
+        "III"  = -19,
+        "IV"   =   0,
+        "V"    =   3,
+        "VI"   =   4,
+        "VII"  =  34,
+        "VIII" =  34,
+        "IX"   =  35
+    )
+    if (!(film %in% names(annees_films))) {
+        stop("L'identifiant du film n'a pas été reconnu")
+    }
+    annees_naissance <- -annees
+    annee_ref <- annees_films[[film]]
+    annee_ref - annees_naissance
+}
+```
+</div>
+\fi
+
+Utiliser la fonction pour ajouter deux nouvelles variables au tableau `starwars` : `age_iv` qui correspond à l'âge (potentiel) au moment du film IV, et `age_ix` qui correspond à l'âge au moment du film IX.
+
+\iffalse
+<div class="solution-exo">
+```{r eval=FALSE}
+starwars %>%
+    mutate(
+        age_iv = age_film(birth_year, "IV"),
+        age_ix = age_film(birth_year, "IX"),
+    )
+```
+</div>
+\fi
+
 
 ### `across()`
 
-**Exercice 2.**
+**Exercice 2.1**
+
+Reprendre la fonction `etendue` de l'exercice 1.2 :
+
+```{r}
+etendue <- function(v) {
+    max(v, na.rm = TRUE) - min(v, na.rm = TRUE)
+}
+```
+
+À l'aide de `across()` calculer l'étendue des variables `height` et `mass` pour chaque valeur de `sex`.
+
+```{r}
+starwars %>%
+    group_by(sex) %>%
+    summarise(
+        across(
+            c(height, mass),
+            etendue
+        )
+    )
+```
+
+Toujours à l'aide d'`across()`, appliquer `etendue` de la même manière à toutes les variables numériques.
+
+```{r}
+starwars %>%
+    group_by(sex) %>%
+    summarise(
+        across(
+            where(is.numeric),
+            etendue
+        )
+    )
+```
+
+En utilisant `&` et `!`, appliquer `etendue` à toutes les variables numériques sauf à celles qui finissent par "year".
+
+```{r}
+starwars %>%
+    group_by(sex) %>%
+    summarise(
+        across(
+            where(is.numeric) & !ends_with("year"),
+            etendue
+        )
+    )
+```
+
+**Exercice 2.2**
+
+Dans le jeu de données `starwars`, appliquer en un seul `summarise` les fonctions `min` et `max` aux variables `height` et `mass`.
+
+```{r}
+starwars %>%
+    summarise(
+        across(
+            c(height, mass),
+            list(min = min, max = max)
+        )
+    )
+```
+
+Modifier le code précédent pour que le calcul des valeurs minimales et maximales ne prennent pas en compte les valeurs manquantes.
+
+\iffalse
+<div class="solution-exo">
+```{r eval=FALSE}
+funs <- list(
+    min = function(v) { min(v, na.rm = TRUE) },
+    max = function(v) { max(v, na.rm = TRUE) }
+)
+starwars %>%
+    summarise(
+        across(
+            c(height, mass),
+            funs
+        )
+    )
+# Autre possibilité : les arguments supplémentaires passés à across() sont
+# transmis aux fonctions appliquées
+starwars %>%
+    summarise(
+        across(
+            c(height, mass),
+            list(min = min, max = max),
+            na.rm = TRUE
+        )
+    )
+```
+</div>
+\fi
+
+
+**Exercice 2.3**
+
+Dans le jeu de données `hdv2003`, utiliser `across()` pour transformer les modalités "Oui" et "Non" en `TRUE` et `FALSE` pour toutes les variables de `hard.rock` à `sport`.
+
+\iffalse
+<div class="solution-exo">
+```{r eval=FALSE}
+detecte_oui <- function(v) {
+    v == "Oui"
+}
+hdv2003 %>%
+    mutate(
+        across(
+            hard.rock:sport,
+            detecte_oui
+        )
+    )
+```
+</div>
+\fi
+
+Ajouter un argument `.names` à `across()` pour que les variables recodées soient stockées dans de nouvelles colonnes nommées avec le suffixe `"_rec"`.
+
+\iffalse
+<div class="solution-exo">
+```{r eval=FALSE}
+detecte_oui <- function(v) {
+    v == "Oui"
+}
+hdv2003 %>%
+    mutate(
+        across(
+            hard.rock:sport,
+            detecte_oui,
+            .names = "{.col}_rec"
+        )
+    )
+```
+</div>
+\fi
+
 
 ### `rowwise()` et `c_across()`
 
-**Exercice 3.**
+**Exercice 3.1**
 
-Exemple avec sum() et rowSums()
+On repart du code final de l'exercice 2.3, qui recodait une série de variables de `hdv2003` en valeurs `TRUE`/`FALSE` dans de nouvelles variables avec le suffixe "_rec".
+
+```{r}
+detecte_oui <- function(v) {
+    v == "Oui"
+}
+hdv2003 <- hdv2003 %>%
+    mutate(
+        across(
+            hard.rock:sport,
+            detecte_oui,
+            .names = "{.col}_rec"
+        )
+    )
+```
+
+Sans utiliser `rowwise()`, calculer le plus simplement possible une nouvelle variable `total` qui contient le nombre total de `TRUE` pour les variables `cinema_rec` et `sport_rec`.
+
+```{r}
+hdv2003 %>%
+    mutate(total = cuisine_rec + sport_rec)
+```
+
+En utilisant `rowwise()` et `sum()`, recalculer la variable `total` pour qu'elle contienne le nombre total de `TRUE` pour les variables `bricol_rec`, `cinema_rec` et `sport_rec`.
+
+```{r}
+hdv2003 %>%
+    rowwise() %>%
+    mutate(total = sum(cuisine_rec, sport_rec, bricol_rec))
+```
+
+En utilisant `rowwise()`, `sum()` et `c_across()`, recalculer la variable `total` pour qu'elle contienne le nombre total de `TRUE` pour toutes les variables se terminant par "_rec".
+
+```{r}
+hdv2003 %>%
+    rowwise() %>%
+    mutate(total = sum(c_across(ends_with("_rec"))))
+```
+
+Reprendre le code précédent pour qu'il puisse s'appliquer directement sur les variables `hard.rock`...`sport`, sans passer par le recodage en `TRUE`/`FALSE`. 
+
+```{r}
+count_oui <- function(v) {
+    sum(v == "Oui")
+}
+hdv2003 %>%
+    rowwise() %>%
+    mutate(
+        total = count_oui(c_across(hard.rock:sport))
+    )
+```
+
+**Exercice 3.2**
+
+Dans le jeu de données `starwars`, la colonne `films` contient la liste des films dans lesquels apparaissent les différents personnages. Cette colonne a une forme un peu particulière puisqu'il s'agit d'une "colonne-liste" : les éléments de cette colonne sont eux-mêmes des listes :
+
+```{r}
+head(starwars$films, 3)
+```
+
+On essaye de calculer le nombre films pour chaque personnage avec le code suivant. Est-ce que ça fonctionne ? Pourquoi ?
+
+```{r}
+starwars %>%
+    mutate(n_films = length(films))
+```
+
+Trouver une manière d'obtenir le résultat attendu.
+
+\iffalse
+<div class="solution-exo">
+```{r eval=FALSE}
+starwars %>%
+    rowwise() %>%
+    mutate(n_films = length(films))
+```
+</div>
+\fi
+
 
 ### Fonctions anonymes et notations abrégées
+
+**Exercice 4.1**
+
+Soit le code suivant, qui renomme les colonnes du tableau `starwars` de type liste en leur ajoutant le préfixe "liste_".
+
+```{r}
+ajoute_prefixe_liste <- function(nom) {
+    paste0("liste_", nom)
+}
+
+starwars %>%
+    rename_with(ajoute_prefixe_liste, .cols = where(is.list))
+```
+
+Réécrire ce code avec une fonction anonyme en utilisant les trois notations : 
+
+- classique (avec `function()`)
+- formule (du *tidyverse*)
+- compacte (à partir de R 4.1)
+
+\iffalse
+<div class="solution-exo">
+```{r eval=FALSE}
+# Classique
+starwars %>%
+    rename_with(function(nom) { paste0("liste_", nom) }, .cols = where(is.list))
+# Formule
+starwars %>%
+    rename_with(~ paste0("liste_", .), .cols = where(is.list))
+# Compacte
+starwars %>%
+    rename_with(\(nom) paste0("liste_", nom), .cols = where(is.list))
+```
+</div>
+\fi
+
+**Exercice 4.2**
+
+Le code suivant indique, pour chaque région du jeu de données `rp2012`, le nom de la commune ayant la valeur maximale pour les variables `dipl_aucun` et `dipl_sup`.
+
+```{r}
+nom_commune_max <- function(valeurs, communes) {
+    communes[which.max(valeurs)]
+}
+rp2012 %>%
+    group_by(region) %>%
+    summarise(
+        across(
+            c(dipl_aucun, dipl_sup),
+            nom_commune_max,
+            commune
+        )
+    )
+```
+
+Réécrire ce code en utilisant une fonction anonyme, avec la syntaxe de votre chois (classique, formule ou compacte).
+
+\iffalse
+<div class="solution-exo">
+```{r eval=FALSE}
+# Classique
+rp2012 %>%
+    group_by(region) %>%
+    summarise(
+        across(
+            c(dipl_aucun, dipl_sup),
+            function(valeurs, communes) { communes[which.max(valeurs)] },
+            commune
+        )
+    )
+# Formule
+rp2012 %>%
+    group_by(region) %>%
+    summarise(
+        across(
+            c(dipl_aucun, dipl_sup),
+            ~ .y[which.max(.x)],
+            commune
+        )
+    )
+# Compacte
+rp2012 %>%
+    group_by(region) %>%
+    summarise(
+        across(
+            c(dipl_aucun, dipl_sup),
+            \(valeurs, communes) communes[which.max(valeurs)],
+            commune
+        )
+    )
+```
+</div>
+\fi
+
+À l'aide d'une fonction anonyme supplémentaire, modifier le code pour qu'il retourne également, pour les mêmes variables, le nom des communes avec les valeurs minimales.
+
+\iffalse
+<div class="solution-exo">
+```{r eval=FALSE}
+# Formule
+rp2012 %>%
+    group_by(region) %>%
+    summarise(
+        across(
+            c(dipl_aucun, dipl_sup),
+            list(
+                max = ~ .y[which.max(.x)],
+                min = ~ .y[which.min(.x)]
+            ),
+            commune
+        )
+    )
+# Compacte
+rp2012 %>%
+    group_by(region) %>%
+    summarise(
+        across(
+            c(dipl_aucun, dipl_sup),
+            list(
+                max = \(valeurs, communes) communes[which.max(valeurs)],
+                min = \(valeurs, communes) communes[which.min(valeurs)]
+            ),
+            commune
+        )
+    )
+```
+</div>
+\fi
+
