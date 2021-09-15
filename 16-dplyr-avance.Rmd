@@ -177,7 +177,7 @@ hdv2003 %>% rename_with(remplace_points)
 Certain.es lectrices et lecteurs attentives auront peut-être noté que le même résultat peut être obtenu en utilisant `remplace_points()` avec la fonction `names()`. L'avantage de `rename_with()`, comme nous le verrons ci-dessous, c'est qu'elle permet si nécessaire de sélectionner finement les colonnes auxquelles appliquer le renommage.
 
 
-## `across()` : appliquer des fonctions à plusieurs colonnes
+## `across()` : appliquer des fonctions à plusieurs colonnes {#across}
 
 ### Appliquer une fonction à plusieurs colonnes
 
@@ -561,7 +561,7 @@ Cette notation est assez pratique et souvent utilisée pour les fonctions à una
 
 La notation étant un peu lourde, il existe deux alternatives permettant une définition plus "compacte". 
 
-- La première est propre aux packages du *tidyverse* (notamment `dplyr` et `purrr`), et ne fonctionnera pas pour les fonctions n'appartenant pas à ces packages. Il s'agit d'utiliser une notation de type "formule" : le corps de la formule contient les instructions de la fonction, et les arguments sont nommés `.` s'il n'y en qu'un, `.x` et `.y` s'il y en a deux, et `..1`, `..2`, etc. s'ils sont plus nombreux.
+- La première est propre aux packages du *tidyverse* (notamment `dplyr` et `purrr`), et ne fonctionnera pas pour les fonctions n'appartenant pas à ces packages. Il s'agit d'utiliser une notation de type "formule" : le corps de la formule contient les instructions de la fonction, et les arguments sont nommés `.x` (ou `.`) s'il n'y en a qu'un, `.x` et `.y` s'il y en a deux, et `..1`, `..2`, etc. s'ils sont plus nombreux.
 
 - La deuxième est une notation apparue avec la version 4.1 de R, qui permet de remplacer `function(...)` par le raccourci `\(...)`.
 
@@ -571,7 +571,7 @@ Ainsi les définitions suivantes sont équivalents :
 # Fonctionne partout et tout le temps
 function(x) { x + 2 }
 # Fonctionne uniquement dans les fonctions du tidyverse
-~ . + 2
+~ .x + 2
 # Fonctionne uniquement à partir de R 4.1
 \(x) x + 2
 ```
@@ -599,7 +599,7 @@ On pourra du coup, si on le souhaite, utiliser ces notations compactes dans notr
 
 ```{r eval = FALSE}
 hdv2003 %>%
-    rename_with(~ str_replace_all(., fixed("."), "_"))
+    rename_with(~ str_replace_all(.x, fixed("."), "_"))
 
 hdv2003 %>%
     rename_with(\(x) str_replace_all(x, fixed("."), "_"))
@@ -1088,7 +1088,7 @@ starwars %>%
     rename_with(function(nom) { paste0("liste_", nom) }, .cols = where(is.list))
 # Formule
 starwars %>%
-    rename_with(~ paste0("liste_", .), .cols = where(is.list))
+    rename_with(~ paste0("liste_", .x), .cols = where(is.list))
 # Compacte
 starwars %>%
     rename_with(\(nom) paste0("liste_", nom), .cols = where(is.list))
@@ -1097,6 +1097,8 @@ starwars %>%
 \fi
 
 **Exercice 4.2**
+
+TODO: which.max ne retourne que la première commune à chaque fois
 
 Le code suivant indique, pour chaque région du jeu de données `rp2012`, le nom de la commune ayant la valeur maximale pour les variables `dipl_aucun` et `dipl_sup`.
 
@@ -1115,7 +1117,7 @@ rp2012 %>%
     )
 ```
 
-Réécrire ce code en utilisant une fonction anonyme, avec la syntaxe de votre chois (classique, formule ou compacte).
+Réécrire ce code en utilisant une fonction anonyme, avec la syntaxe de votre choix (classique, formule ou compacte).
 
 \iffalse
 <div class="solution-exo">
