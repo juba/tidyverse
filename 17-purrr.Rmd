@@ -1,10 +1,338 @@
 # Itérer avec `purrr` {#purrr}
 
-Exemple de constitution d'une liste avec une boucle for.
-Montrer avec lapply
-Montrer avec map
+`purrr` est une extension du *tidyverse* qui fournit des outils pour travailler avec les vecteurs et les fonctions, et notamment pour appliquer des fonctions à l'ensemble des éléments de vecteurs ou de listes.
 
+Dans cette section on aura besoin des extensions du *tidyverse* (dont `purrr` fait partie), que nous chargeons donc immédiatement.
+
+```{r message=FALSE}
+library(tidyverse)
+```
+
+## Exemple d'application
+
+Pour mieux appréhender de quoi il s'agit, supposons que nous avons le vecteur suivant, qui contient des extraits de discours politiques.
+
+```{r}
+discours <- c(
+    "nous privilégierons une intergouvernementalisation sans agir anticonstitutionnellement",
+    "le souffle de la nation est le vent qui agite les drapeaux de nos libertés",
+    "nous devons faire preuve de plus de pédagogie pour cette réforme",
+    "mon compte twitter a été piraté"
+)
+```
+
+On souhaite calculer la longueur de chaque extrait, en nombre de mots. 
+
+On commence par découper chaque extrait en mots en utilisant la fonction `str_split()` de `stringr`.
+
+```{r}
+mots <- str_split(discours, " ")
+str(mots)
+```
+
+L'objet `mots` qui contient le résultat du découpage est une liste constituée de vecteurs de chaînes de caractères qui contiennent les mots des différents discours.
+
+Calculer le nombre de mots de chaque discours, revient à calculer la longueur de chaque élément de `mots`. Pour cela on pourrait vouloir utiliser la fonction `length()` directement :
+
+```{r}
+length(mots)
+```
+
+Ceci ne fonctionne pas, car `length()` nous retourne le nombre d'éléments de `mots`, pas celui de chacun de ses éléments. On a en fait besoin d'appliquer `length()` tour à tour à chacun des éléments de `mots`.
+
+On a vu section \@ref(no-boucle) qu'on peut pour cela utiliser une boucle `for`, par exemple de la manière suivante.
+
+```{r}
+resultat <- list()
+for (item in mots) {
+    resultat <- append(resultat, length(item))
+}
+resultat
+```
+
+Cela fonctionne, mais la syntaxe est un peu "lourde".
+
+La fonction `map()` de `purrr` propose exactement cette fonctionnalité. Elle prend deux arguments principaux :
+
+1. un vecteur ou une liste
+2. une fonction
+
+et elle retourne une liste contenant le résultat de la fonction appliquée à chaque élément du vecteur ou de la liste.
+
+En utilisant `map()` on peut du coup remplacer notre boucle `for` par un simple :
+
+```{r}
+map(mots, length)
+```
+
+À noter qu'on peut évidemment utiliser le *pipe*.
+
+```{r}
+mots %>% map(length)
+```
+
+Ici notre résultat est donné sous forme de liste. Or il pourrait être simplifié sous forme de vecteur atomique, puisque tous ses éléments sont des nombres. Si on souhaitait faire ceci avec une boucle `for`, il faudrait soit convertir le résultat de la boucle précédente en vecteur atomique (avec `unlist()` ou `purrr::flatten_int()`), soit modifier cette boucle pour qu'elle génère plutôt un vecteur numérique. C'est ce que fait le code suivant, en n'oubliant pas de "pré-allouer" le nombre d'éléments nécessaires au vecteur résultat pour éviter des problèmes de performance.
+
+```{r}
+resultat <- numeric(length(discours))
+for (i in seq_along(mots)) {
+    resultat[i] <- length(mots[[i]])
+}
+resultat
+```
+
+`purrr` propose des variantes de la fonction `map` qui permettent justement de s'assurer du type de résultat obtenu. Ainsi, `map_dbl()` renverra toujours un vecteur de nombres flottants, et `map_int()` un vecteur de nombres entiers. Plutôt que la boucle `for` ci-dessus, on peut plutôt utiliser :
+
+```{r}
+mots %>% map_int(length)
+```
+
+
+## `map` et ses variantes
+
+### Modes d'appel de `map`
+
+L'objectif de `map` est donc d'appliquer une fonction à l'ensemble des éléments d'un vecteur ou d'une liste.
+
+On a vu qu'on pouvait l'utiliser pour appliquer la fonction `length` à chacun des vecteurs contenus par la liste `mots`. En utilisant `map_int` on s'assure de récupérer un simple vecteur numérique, plus facile à utiliser par la suite si on souhaite par exemple calculer une moyenne.
+
+```{r}
+mots %>% map_int(length)
+```
+
+Si on souhaitait plutôt extraire le dernier mot de chaque vecteur, on pourrait créer une fonction spécifique et l'appliquer avec `map()`.
+
+```{r}
+dernier_mot <- function(v) {
+    tail(v, 1)
+}
+
+mots %>% map(dernier_mot)
+```
+
+Comme notre résultat est une liste de chaînes de caractères simples, on peut forcer le résultat à être plutôt un vecteur de type *character* en utilisant `map_chr()` :
+
+```{r}
+mots %>% map_chr(dernier_mot)
+```
+
+TODO: ajouter renvoi vers fonctions anonymes
+Comme notre fonction est très courte, on peut aussi préférer utiliser une *fonction anonyme*.
+
+```{r}
+mots %>% map_chr(function(v) { tail(v, 1) })
+```
+
+TODO: renvoi vers notation formule
+On peut aussi utiliser la notation abrégée sous forme de formule, propre aux fonctions du *tidyverse*.
+
+```{r}
+mots %>% map_chr(~ tail(.x, 1) )
+```
+
+On peut également utiliser la notation compacte pour les fonctions anonymes propre aux versions de R à partir de la 4.1.
+
+```{r}
+mots %>% map_chr(\(v) tail(v, 1))
+```
+
+Enfin, si on fournit des arguments supplémentaires à `map`, ils sont passés comme argument à la fonction qu'il applique, on peut donc également utiliser la notation suivante :
+
+```{r}
+mots %>% map_chr(tail, 1)
+```
+
+Dans ce qui suit on utilisera de préférence la notation "formule", mais toutes les versions ci-dessus sont équivalentes et donnent le même résultat.
+
+```{block type='rmdnote'}
+Petite astuce à noter, si on transmet à `map()` autre chose qu'une fonction, elle utilisera cette information pour extraire des éléments. Ainsi, `map(v, 1)` extraiera le premier élément de chaque élément du vecteur `v`, `map(v, "foo")` extraiera les éléments nommés "foo", etc.
+```
+
+### Variantes de `map`
+
+On a vu que `map` propose plusieurs variantes qui permettent de contrôler le type de résultat qu'elle retourne :
+
+- `map()` retourne une liste
+- `map_int()` retourne un vecteur atomique d'entiers
+- `map_dbl()` retourne un vecteur atomique de nombres flottants
+- `map_chr()` retourne un vecteur atomique de chaînes de caractères
+- `map_lgl()` retourne un vecteur atomique de `TRUE` / `FALSE`
+
+Attention, ces variantes sont très strictes dans le sens où si la fonction appelée retourne un résultat qui n'est pas compatible avec le résultat attendu, elle génère une erreur. Ainsi, si dans le code précédent on souhaitait récupérer chaque dernier mot sous forme d'un vecteur de nombres :
+
+```{r error=TRUE}
+mots %>% map_dbl(tail, 1)
+```
+
+Pour pouvoir utiliser ces variantes, chaque résultat retourné par la fonction appliquée doit être de longueur 1. Par exemple, si on souhaitait extraire plutôt la liste des mots contenant un "f" :
+
+```{r}
+mots %>% map(~ str_subset(.x, "f") )
+```
+
+Dans ce cas on ne peut utiliser `map_chr()`  puisque certains vecteurs contiennent plusieurs mots avec un "f", et donc le résultat de `str_subset()` est lui-même un vecteur.
+
+```{r error=TRUE}
+mots %>% map_chr(~ str_subset(.x, "f") )
+```
+
+Dans ce cas, on doit utiliser `map()` et conserver le résultat sous forme de liste. Et, pourquoi pas, enchaîner les `map()` si on veut effectuer des opérations supplémentaires.
+
+```{r}
+mots %>% 
+    map(~ str_subset(.x, "f") ) %>%
+    map_int(length)
+```
+
+### `map_dfr()` et `map_dfc()`
+
+La page suivante contient les données du jeu de données `rp2012` sous la forme de fichiers CSV, avec un fichier par département :
+
+TODO: Mettre à jour avec la branche master
+https://github.com/juba/tidyverse/tree/aller-plus-loin/data/rp2012
+
+À partir de cette page, on peut télécharger les fichiers CSV en utilisant des adresses de la forme :
+
+https://raw.githubusercontent.com/juba/tidyverse/aller-plus-loin/data/rp2012/rp2012_01.csv
+
+En remplaçant "01" par le code du département souhaité.
+
+On peut facilement créer une fonction `genere_url()` qui, à partir d'une liste de codes de départements, retourne les adresses des fichiers correspondant.
+
+```{r}
+genere_url <- function(codes) {
+    paste0(
+        "https://raw.githubusercontent.com/juba/tidyverse/aller-plus-loin/data/rp2012/rp2012_",
+        codes,
+        ".csv"
+    )
+}
+
+genere_url(c("42", "69"))
+```
+
+Grâce à la fonction `read_csv()`, on peut charger directement dans notre session R un fichier en indiquant son URL.
+
+```{r eval=FALSE}
+data69 <- read_csv(genere_url("69"))
+```
+
+Comment faire si l'on souhaite charger les fichiers de plusieurs départements ? La fonction `read_csv()` n'accepte qu'une seule URL à la fois, mais on peut très bien utiliser `map()` pour l'appliquer tour à tour à plusieurs URL.
+
+```{r eval=FALSE}
+departements <- c("38", "42", "69")
+
+l <- genere_url(departements) %>%
+    map(read_csv)
+```
+
+`l` ici est donc une liste de tableaux de données, chacun de ces éléments étant un *tibble* : d'abord celui du fichier CSV correspondant aux données de l'Ain, puis celui de la Loire, etc.
+
+Si on souhaite réunir ces trois *tibbles* en un seul, on peut utiliser la fonction `bind_rows()` de `dplyr`.
+
+```{r}
+df <- genere_url(departements) %>%
+    map(read_csv) %>%
+    bind_rows()
+```
+
+Mais on peut aussi utiliser la variante `map_dfr()` de `map()`, qui considère les résultats obtenus par l'application de la fonction comme les lignes d'un tableau de données qu'elle va automatiquement rassembler en un seul tableau, de la même manière qu'avec un `bind_rows()`.
+
+```{r}
+df <- genere_url(departements) %>%
+    map_dfr(read_csv)
+
+df
+```
+
+Les deux lignes de code ci-dessus partent d'une liste d'identifiants de départements, génèrent les URL des fichiers CSV correspondant, les importent dans R et assemblent le résultat en un seul tableau. Plutôt efficace !
+
+```{block type='rmdnote'}
+Il existe également une variante `map_dfc()`, un peu moins fréquemment utilisée, qui considère les résultats comme des colonnes d'un tableau de données et les rassemble en un seul tableau comme le ferait la fonction `bind_cols()` de `dplyr`.
+```
+
+### Itérer sur les colonnes d'un tableau de données
+
+On a vu section \@ref(data-frame-tibbles) que les tableaux de données (*data frame* ou *tibble*) sont en fait des listes dont les éléments sont les colonnes du tableau. On peut donc tout à fait appliquer `map()` et ses variantes à un tableau, et celle-ci itèrera sur ses colonnes.
+
+Par exemple, on peut appliquer `n_distinct` au jeu de données `starwars` et obtenir le nombre de valeurs distinctes de chacune de ses colonnes.
+
+```{r}
+starwars %>% map_int(n_distinct)
+```
+
+Le résultat est équivalent à celui qu'on obtient en faisant un `summarise()` sur l'ensemble des colonnes, comme vu section \@ref(across), sauf que `map_int()` retourne un vecteur numérique tandis que `summarise()` renvoie un *tibble* à une ligne.
+
+```{r}
+starwars %>%
+    summarise(across(everything(), n_distinct))
+```
+
+De la même manière, si on veut connaître le nombre de valeurs manquantes pour chaquae variables :
+
+```{r}
+starwars %>% map_int(~ sum(is.na(.x)) )
+```
+
+Contrairement à `across()`, on ne peut pas spécifier directement une sélection de colonnes à `map()`. On peut par contre utiliser des fonctions comme `keep()` ou `discard()` qui "filtrent" les éléments d'une liste via une fonction qui renvoie `TRUE` ou `FALSE`.
+
+Dans l'exemple suivant, on utilise `keep()` pour n'appliquer `mean` que sur les variables numériques.
+
+```{r}
+starwars %>%
+    keep(is.numeric) %>%
+    map(mean, na.rm = TRUE)
+```
+
+Ici, on applique `discard()` après le `map()` pour ne conserver que les colonnes ayant au moins une valeur `NA`.
+
+```{r}
+starwars %>%
+    map_int(~ sum(is.na(.x)) ) %>%
+    discard(~ .x == 0 )
+```
+
+## `imap`
+
+
+imap_*
+
+## `walk`
+walk
+
+## `map2` et `pmap` : itérer sur plusieurs vecteurs en parallèle
+
+map2
+
+Évoquer *apply
+
+## Quand ne pas utiliser `map`
+
+`map` s'utilise quand la fonction qu'on souhaite appliquer n'est pas vectorisée (elle ne peut s'appliquer qu'à un seul élément à la fois), ou quand on souhaite appliquer une fonction à chaque élément d'une liste.
+
+Ne pas utiliser quand une fonction est vectorisée (ex de nchar ou genere_url)
+
+map() n'est pas forcément plus rapide qu'une boucle for
+
+## Ressources
 
 https://r4ds.had.co.nz/iteration.html#the-map-functions
 
 https://github.com/rstudio/cheatsheets/blob/master/purrr.pdf
+
+Sur le [blog de Florian Privé](https://privefl.github.io/blog/), un [billet approfondi sur les raisons pour lesquelles les boucles peuvent être lentes](https://privefl.github.io/blog/why-loops-are-slow-in-r/) et sur les cas où il est préférable de ne pas les utiliser.
+
+https://perso.ens-lyon.fr/lise.vaudor/iterer-des-fonctions-avec-purrr/
+
+https://perso.ens-lyon.fr/lise.vaudor/practice-makes-purrr-fect/
+
+## Exercices
+
+
+Utiliser sample pour générer un tirage à pile ou face.
+map pour générer 1000 tirages
+map pour repérer le plus grand nombre de "pile"
+Avec "head_while", mapper pour le plus grand nombre de "pile" avant le premier "face"
+
+
+Faire charger les CSV de l'ain et du rhône. Erreur de code_insee, à corriger en les transformant en character.
