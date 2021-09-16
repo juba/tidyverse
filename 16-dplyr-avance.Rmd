@@ -181,6 +181,8 @@ Certain.es lectrices et lecteurs attentives auront peut-être noté que le même
 
 ### Appliquer une fonction à plusieurs colonnes
 
+#### Sélectionner des colonnes
+
 On a défini précédemment une fonction qui recode les modalités d'une variable "Oui" / "Non" et on a vu comment appliquer ce recodage à deux variables de `hdv2003`.
 
 ```{r}
@@ -313,6 +315,52 @@ Il faut donc bien penser à passer la fonction comme argument du `across()`, don
 `mutate(across(hard.rock:sport, recode_oui_non))`
 ```
 
+#### Passer des arguments supplémentaires à la fonction appliquée
+
+Par défaut, si on passe des arguments supplémentaires à `across()`, ils seront automatiquement transmis comme arguments à la fonction appliquée.
+
+Dans l'exemple vu précédemment, on appliquait `max()` à toutes les variables numériques de `hdv2003`.
+
+```{r eval=FALSE}
+hdv2003 %>%
+    summarise(
+        across(
+            where(is.numeric),
+            max
+        )
+    )
+```
+
+Si on souhaite que `max()` soit appelé avec l'argument `na.rm = TRUE`, on pourrait définir explicitement une fonction à part qui utilise cet argument :
+
+```{r eval=FALSE}
+max_sans_na <- function(x) {
+    max(x, na.rm = TRUE)
+}
+
+hdv2003 %>%
+    summarise(
+        across(
+            where(is.numeric),
+            max_sans_na
+        )
+    )
+```
+
+Mais on peut faire plus simple. Comme tout argument supplémentaire passé à `across()` est transmis à la fonction appelée, on peut faire :
+
+```{r}
+hdv2003 %>%
+    summarise(
+        across(
+            where(is.numeric),
+            max,
+            na.rm = TRUE
+        )
+    )
+```
+
+#### Noms des nouvelles colonnes
 
 Par défaut, lorsqu'on utilise `across()` dans un `mutate`, les nouvelles colonnes portent le même nom que les colonnes d'origine, ce qui signifie que ces dernières sont "écrasées" par les nouvelles valeurs.
 
