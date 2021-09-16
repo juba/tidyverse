@@ -534,7 +534,7 @@ restos %>%
     )
 ```
 
-## Fonctions anonymes et notations abrégées
+## Fonctions anonymes et syntaxes abrégées {syntaxes-abregees}
 
 Dans les sections précédentes, nous avons rencontré plusieurs fonctions, comme `rename_with()` ou `across()`, qui prennent  une fonction en argument.
 
@@ -548,7 +548,7 @@ remplace_points <- function(v) {
 hdv2003 %>% rename_with(remplace_points)
 ```
 
-Le fait de créer une fonction à part pour une opération d'une seule ligne ne se justifie pas forcément, surtout si on n'utilise pas cette fonction ailleurs dans notre code. Dans, ce cas, on peut définir notre fonction directement dans l'appel à `rename_with()` en utilisant une *fonction anonyme*.
+Le fait de créer une fonction à part pour une opération d'une seule ligne ne se justifie pas forcément, surtout si on n'utilise pas cette fonction ailleurs dans notre code. Dans, ce cas, on peut définir notre fonction directement dans l'appel à `rename_with()` en utilisant une *fonction anonyme*, déjà introduites section \@ref(fonctions-anonymes).
 
 ```{r}
 hdv2003 %>%
@@ -557,13 +557,13 @@ hdv2003 %>%
     })
 ```
 
-Cette notation est assez pratique et souvent utilisée pour les fonctions à unage unique, ne serait-ce que pour s'économiser le fait de devoir lui trouver un nom pertinent.
+Cette notation est assez pratique et souvent utilisée pour les fonctions à usage unique, ne serait-ce que pour s'économiser le fait de devoir lui trouver un nom pertinent.
 
-La notation étant un peu lourde, il existe deux alternatives permettant une définition plus "compacte". 
+La syntaxe étant un peu lourde, il existe deux alternatives permettant une définition plus "compacte". 
 
-- La première est propre aux packages du *tidyverse* (notamment `dplyr` et `purrr`), et ne fonctionnera pas pour les fonctions n'appartenant pas à ces packages. Il s'agit d'utiliser une notation de type "formule" : le corps de la formule contient les instructions de la fonction, et les arguments sont nommés `.x` (ou `.`) s'il n'y en a qu'un, `.x` et `.y` s'il y en a deux, et `..1`, `..2`, etc. s'ils sont plus nombreux.
+- La première est propre aux packages du *tidyverse* (notamment `dplyr` et `purrr`), et ne fonctionnera pas pour les fonctions n'appartenant pas à ces packages. Il s'agit d'utiliser une syntaxe de type "formule" : le corps de la formule contient les instructions de la fonction, et les arguments sont nommés `.x` (ou `.`) s'il n'y en a qu'un, `.x` et `.y` s'il y en a deux, et `..1`, `..2`, etc. s'ils sont plus nombreux.
 
-- La deuxième est une notation apparue avec la version 4.1 de R, qui permet de remplacer `function(...)` par le raccourci `\(...)`.
+- La deuxième est une syntaxe apparue avec la version 4.1 de R, qui permet de remplacer `function(...)` par le raccourci `\(...)`.
 
 Ainsi les définitions suivantes sont équivalents :
 
@@ -584,9 +584,9 @@ function(v1, v2) {
     round(res, 1)
 }
 
-~ { 
+~ {
     res <- .x / .y
-    round(res, 1) 
+    round(res, 1)
 }
 
 \(v1, v2) {
@@ -595,7 +595,7 @@ function(v1, v2) {
 }
 ```
 
-On pourra du coup, si on le souhaite, utiliser ces notations compactes dans notre `rename_with()` pour définir notre fonction anonyme.
+On pourra du coup, si on le souhaite, utiliser ces syntaxes compactes dans notre `rename_with()` pour définir notre fonction anonyme.
 
 ```{r eval = FALSE}
 hdv2003 %>%
@@ -605,7 +605,7 @@ hdv2003 %>%
     rename_with(\(x) str_replace_all(x, fixed("."), "_"))
 ```
 
-Cette notation peut être utilisée partout où on peut passer une fonction comme argument et donc définir des fonctions anonymes. Dans l'exemple suivant déjà vu précédemment, on passe la fonction `detecte_oui` comme argument de `where()`.
+Cette syntaxe peut être utilisée partout où on peut passer une fonction comme argument et donc définir des fonctions anonymes. Dans l'exemple suivant déjà vu précédemment, on passe la fonction `detecte_oui` comme argument de `where()`.
 
 ```{r eval=FALSE}
 detecte_oui <- function(v) {
@@ -633,7 +633,7 @@ hdv2003 %>%
     )
 ```
 
-Et du coup utiliser une des deux notations "compactes".
+Et du coup utiliser une des deux syntaxes "compactes".
 
 ```{r eval=FALSE}
 hdv2003 %>%
@@ -1098,13 +1098,11 @@ starwars %>%
 
 **Exercice 4.2**
 
-TODO: which.max ne retourne que la première commune à chaque fois
-
 Le code suivant indique, pour chaque région du jeu de données `rp2012`, le nom de la commune ayant la valeur maximale pour les variables `dipl_aucun` et `dipl_sup`.
 
 ```{r}
 nom_commune_max <- function(valeurs, communes) {
-    communes[which.max(valeurs)]
+    communes[valeurs == max(valeurs)]
 }
 rp2012 %>%
     group_by(region) %>%
@@ -1128,7 +1126,7 @@ rp2012 %>%
     summarise(
         across(
             c(dipl_aucun, dipl_sup),
-            function(valeurs, communes) { communes[which.max(valeurs)] },
+            function(valeurs, communes) { communes[valeurs == max(valeurs)] },
             commune
         )
     )
@@ -1138,7 +1136,7 @@ rp2012 %>%
     summarise(
         across(
             c(dipl_aucun, dipl_sup),
-            ~ .y[which.max(.x)],
+            ~ .y[.x == max(.x)],
             commune
         )
     )
@@ -1148,7 +1146,7 @@ rp2012 %>%
     summarise(
         across(
             c(dipl_aucun, dipl_sup),
-            \(valeurs, communes) communes[which.max(valeurs)],
+            \(valeurs, communes) communes[valeurs == max(valeurs)],
             commune
         )
     )
@@ -1168,8 +1166,8 @@ rp2012 %>%
         across(
             c(dipl_aucun, dipl_sup),
             list(
-                max = ~ .y[which.max(.x)],
-                min = ~ .y[which.min(.x)]
+                max = ~ .y[.x == max(.x)],
+                min = ~ .y[.x == min(.x)]
             ),
             commune
         )
@@ -1181,12 +1179,12 @@ rp2012 %>%
         across(
             c(dipl_aucun, dipl_sup),
             list(
-                max = \(valeurs, communes) communes[which.max(valeurs)],
-                min = \(valeurs, communes) communes[which.min(valeurs)]
+                max = \(valeurs, communes) communes[valeurs == max(valeurs)],
+                min = \(valeurs, communes) communes[valeurs == min(valeurs)]
             ),
             commune
         )
-    )
+    ) %>% View()
 ```
 </div>
 \fi
