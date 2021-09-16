@@ -1111,7 +1111,7 @@ x
 ```
 
 
-Une boucle peut être particulièrement lente lorsqu'on l'utilise pour créer un nouveau vecteur ou data frame. Soit la fonction suivante, qui prend en entrée un vecteur de mots et retourne le nombre total de voyelles qu'il contient.
+En dehors des questions de performance, une boucle peut aussi être moins lisible que certaines alternatives. Soit la fonction suivante, qui prend en entrée un vecteur de mots et retourne le nombre total de voyelles qu'il contient.
 
 ```{r}
 library(stringr)
@@ -1123,7 +1123,7 @@ n_voyelles <- function(mots) {
 n_voyelles(c("le", "chat", "roupille"))
 ```
 
-Supposons qu'on souhaite appliquer cette fonction à une série de vecteurs de mots contenus dans une liste. On pourrait utiliser une boucle `for` parcourant cette liste, appliquant la fonction, et ajoutant le résultat à un vecteur numérique vide préalablement créé avec  ènumeric(0)`.
+Supposons qu'on souhaite appliquer cette fonction à une série de vecteurs de mots contenus dans une liste. On pourrait utiliser une boucle `for` parcourant cette liste, appliquant la fonction, et ajoutant le résultat à un vecteur numérique vide préalablement créé avec  `numeric(0)`.
 
 ```{r}
 phrases <- list(
@@ -1137,27 +1137,18 @@ for (i in seq_along(phrases)) {
 }
 res
 ```
-Avec cette syntaxe, à chaque ajout d'élément à `res` R procède à une copie de la totalité de `res`. Si le coût en termes de performance est négligeable avec seulement quelques éléments, il peut vite devenir très important si notre liste de phrases contient plusieurs milliers d'éléments.
 
-Une alternative ici, si on veut continuer à utiliser une boucle `for`, est soit de "pré-allouer" l'espace mémoire nécessaire à notre vecteur de résultats avant de le modifier ensuite dans la boucle, évitant ainsi la copie de `res` à chaque itération. Cette préallocation se fait simplement en indiquant le nombre d'éléments désirés à la fonction `numeric`.
+On verra cependant dans la section \@ref(purrr) que des fonctions permettent de faire ce genre de choses de manière beaucoup plus simple et plus lisible. Ici par exemple on obtiendrait le même résultat avec un simple :
 
-```{r}
-res <- numeric(length(phrases))
+```{r include=FALSE}
+library(purrr)
 ```
 
-Une autre possibilité est d'utiliser non pas un vecteur pour stocker nos résultats, mais une liste. Les éléments d'une liste n'étant pas stockés de manière contiguë dans la mémoire vive, l'ajout d'un nouvel élément n'entraîne pas de copie de la liste.
-
 ```{r}
-res <- list()
-for (i in seq_along(phrases)) {
-    res[i] <- n_voyelles(phrases[[i]])
-}
-res
+phrases %>% map_int(n_voyelles)
 ```
 
-On verra cependant dans la section \@ref(purrr) que des fonctions permettent de faire ce genre de choses de manière beaucoup plus simple, ici par exemple avec un simple `purrr::map(phrases, n_voyelles)`.
-
-Au final, entre les fonctions vectorisées existantes et les possibilités fournies par `purrr` ou les fonctions de type `apply` de base R, il est assez rare de devoir utiliser une boucle directement dans R. Pour autant, il ne faut pas non plus tomber dans l'excès inverse et considérer que tout usage de `for` ou `while` doit être évité : ces fonctions sont parfaitement justifiées dans de nombreux cas de figure, et si vous trouvez une solution qui fonctionne de manière efficace avec une boucle `for`, il n'est pas forcément utile de chercher à la remplacer à tout prix.
+Au final, entre les fonctions vectorisées existantes et les possibilités fournies par `purrr`, il est assez rare de devoir utiliser une boucle directement dans R. Pour autant, il ne faut pas non plus tomber dans l'excès inverse et considérer que tout usage de `for` ou `while` doit être évité : ces fonctions sont parfaitement justifiées dans de nombreux cas de figure, et si vous trouvez une solution qui fonctionne de manière efficace avec une boucle `for`, il n'est pas forcément utile de chercher à la remplacer à tout prix.
 
 
 ## Ressources
