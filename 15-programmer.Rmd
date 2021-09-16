@@ -141,10 +141,38 @@ Si on mélange valeurs nombres et valeurs logiques, les `TRUE` sont convertis en
 c(TRUE, 2, FALSE)
 ```
 
+```{block, type='rmdnote'}
 Si la valeur `NA`, comme on l'a vu, permet d'indiquer une valeur manquante (`Not Available`), il existe en réalité plusieurs types de `NA`, même si cette distinction est la plupart du temps transparente pour l'utilisateur. On a ainsi notamment des valeur `NA_integer_`, `NA_character_`, `NA_real_`.
+```
+
+
+La conversion automatique d'un type en un autre est à l'origine d'un idiome courant en R. Quand on applique une fonction qui attend un vecteur de nombres à un vecteur de valeurs logiques, celles-ci sont automatiquement converties, les `TRUE` devenant 1 et les `FALSE` devenant 0. Du coup, si on applique `sum()` à un vecteur de valeurs logiques, le résultat est égal au nombre de valeurs `TRUE`.
 
 ```{r}
-c(1, 2, NA_character_)
+sum(c(TRUE, FALSE, TRUE, TRUE, FALSE))
+```
+
+On peut donc aussi appliquer `sum()` à un test, et on obtiendra le nombre de valeurs pour lesquelles le test est vrai.
+
+```{r}
+x <- c(1, 5, 8, 12, 14)
+sum(x > 10)
+```
+
+Ceci fournit un raccourci très pratique. Dans l'exemple suivant, on tire 1000 nombres au hasard entre 0 et 1 et on regarde le nombre de valeurs obtenues inférieures à 0,5.
+
+```{r}
+x <- runif(1000)
+sum(x < 0.5)
+```
+
+Autre raccourci moins utilisé mais potentiellement pratique, appliquer `mean()` au résultat d'un test donne la proportion de valeurs pour lesquelles le test est vrai.
+
+```{r}
+x <- c(1, 5, 8, 12, 14)
+mean(x > 10)
+x <- runif(1000)
+mean(x < 0.5)
 ```
 
 
