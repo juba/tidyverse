@@ -899,6 +899,7 @@ d %>% discard(~ any(is.na(.x)))
 
 ### `imap` et `walk`
 
+
 **Exercice 3.1**
 
 On reprend la liste de notes vue dans un exercice précédent.
@@ -959,6 +960,40 @@ notes %>% imap_dfr(function(notes, matiere) {
 notes %>% imap_dfr(function(notes, matiere) {
     tibble(matiere = matiere, moyenne = mean(notes, na.rm = TRUE))
 })
+```
+</div>
+\fi
+
+**Exercice 3.2**
+
+Lors de la présentation des boucles `for`, on a vu la fonction suivante qui affiche les dimensions de chaque tableau de données contenus dans une liste.
+
+```{r}
+affiche_dimensions <- function(dfs) {
+    for (i in seq_along(dfs)) {
+        name <- names(dfs)[[i]]
+        df <- dfs[[i]]
+        message("Dimensions de ", name, " : ", nrow(df), "x", ncol(df))
+    }
+}
+
+l <- list(
+    hdv = hdv2003,
+    rp = rp2012
+)
+affiche_dimensions(l)
+```
+
+Réécrire et simplifier `affiche_dimensions()` en utilisant `iwalk()`.
+
+\iffalse
+<div class="solution-exo">
+```{r eval=FALSE}
+affiche_dimensions <- function(dfs) {
+    iwalk(dfs, function(df, name) {
+        message("Dimensions de ", name, " : ", nrow(df), "x", ncol(df))
+    })
+}
 ```
 </div>
 \fi
