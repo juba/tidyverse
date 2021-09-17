@@ -254,6 +254,7 @@ Les deux lignes de code ci-dessus partent d'une liste d'identifiants de départe
 Il existe également une variante `map_dfc()`, un peu moins fréquemment utilisée, qui considère les résultats comme des colonnes d'un tableau de données et les rassemble en un seul tableau comme le ferait la fonction `bind_cols()` de `dplyr`.
 ```
 
+
 ## Itérer sur les colonnes d'un tableau de données
 
 On a vu section \@ref(data-frame-tibbles) que les tableaux de données (*data frame* ou *tibble*) sont en fait des listes dont les éléments sont les colonnes du tableau. On peut donc tout à fait appliquer `map()` et ses variantes à un tableau, et celle-ci itèrera sur ses colonnes.
@@ -294,6 +295,7 @@ starwars %>%
     map_int(~ sum(is.na(.x)) ) %>%
     discard(~ .x == 0 )
 ```
+
 
 ## `modify`
 
@@ -881,6 +883,17 @@ d <- d %>% modify_if(is.character, str_to_title)
 </div>
 \fi
 
+À l'aide de la fonction `discard()`, supprimer de `d` les colonnes qui comportent des `NA`.
+
+\iffalse
+<div class="solution-exo">
+```{r eval=FALSE}
+d %>% discard(~ sum(is.na(.x)) > 0)
+# Autre possibilité
+d %>% discard(~ any(is.na(.x)))
+```
+</div>
+\fi
 
 ### `imap` et `walk`
 
@@ -953,16 +966,115 @@ notes %>% imap_dfr(function(notes, matiere) {
 
 **Exercice 4.1**
 
+Soit le tableau de données suivant, qui indique des couples de variables du jeu de données `hdv2003`.
 
+```{r}
+croisements <- tibble(
+    v1 = c("qualif", "qualif", "sexe", "sexe"),
+    v2 = c("clso",   "cinema", "clso", "cinema")
+)
+```
+
+Calculer une liste qui contient tous les tableaux croisés entre les quatre couples de variables de `croisements`.
+
+\iffalse
+<div class="solution-exo">
+```{r eval=FALSE}
+map2(croisements$v1, croisements$v2,
+    ~table(hdv2003[[.x]], hdv2003[[.y]]) 
+)
+```
+</div>
+\fi
+
+Modifier le code précédent pour obtenir, pour chaque croisement, une liste avec les noms des deux variables et le résultat du test du Khi2 sur le tableau croisé.
+
+\iffalse
+<div class="solution-exo">
+```{r eval=FALSE}
+khi2 <- map2(croisements$v1, croisements$v2,
+    ~list(
+        variables = paste(.x, .y),
+        chisq = chisq.test(hdv2003[[.x]], hdv2003[[.y]])
+    )
+)
+```
+</div>
+\fi
+
+Filtrer la liste obtenue à l'étape précédente pour ne conserver que les éléments dont la p-value du test du Khi2 est inférieure à 0.001.
+
+\iffalse
+<div class="solution-exo">
+```{r eval=FALSE}
+khi2 %>% keep(~ .x$chisq$p.value < 0.001)
+```
+</div>
+\fi
 
 **Exercice 4.2**
+
+Pour rappel, on peut simuler un tirage au sort de type "pile ou face" avec la fonction `sample()` de la manière suivante :
+
+```{r}
+sample(
+    c("pile", "face"),
+    size = 10,
+    replace = TRUE,
+    prob = c(0.5, 0.5)
+)
+```
+
+Le tableau de données suivant définit trois types de tirages aléatoires différents. `elements` contient les éléments parmi lesquels on tire, `probas` les probabilités de chaque élément d'être tiré, et `n` le nombre de tirages.
+
+```{r}
+tirages <- list(
+    elements = list(
+        c("pile", "face"),
+        c("boule rouge", "boule noire"),
+        1:6
+    ),
+    probas = list(
+        c(0.5, 0.5),
+        c(0.1, 0.9),
+        rep(1 / 6, 6)
+    ),
+    n = c(1000, 500, 800)
+)
+```
+
+Créer une liste contenant les résultats de ces trois séries de tirages.
+
+\iffalse
+<div class="solution-exo">
+```{r eval=FALSE}
+resultats <- tirages %>%
+    pmap(
+        function(elements, probas, n) {
+            sample(elements, size = n, replace = TRUE, prob = probas)
+        }
+    )
+```
+</div>
+\fi
+
+Représenter avec `barplot()` les résultats obtenus.
+
+\iffalse
+<div class="solution-exo">
+```{r eval=FALSE}
+resultats %>% walk(~barplot(table(.x)))
+```
+</div>
+\fi
+
 
 
 ### Répéter une opération
 
 **Exercice 5.1**
 
-La fonction suivante permet de simuler 20 lancer de pièces et de stocker le résultat dans un vecteur de chaînes de caractères.
+Comme vu précédemment, la fonction suivante permet de simuler 20 lancers de pièces et de stocker le résultat dans un vecteur de chaînes de caractères.
 
 ```{r}
 sample(c("pile", "face"), size = 20, replace = TRUE)
@@ -1039,24 +1151,3 @@ sims %>% map_dbl(~{
 </div>
 \fi
 
-
-
-
-**Exercice 1.**
-TODO : laisser tomber ?
-Soit le texte suivant, tiré de l'ouvrage [L'Art de faire le vin avec les raisins secs](https://www.gutenberg.org/files/42421/42421-h/42421-h.htm) de J.-F. Audibert (1886).
-
-```{r}
-texte <- "Quelques mois se sont à peine écoulés que mes prédictions se sont accomplies au-delà de toute espérance. Le vin de raisins secs, ainsi que toutes les grandes innovations de notre siècle, a eu à subir les épreuves les plus rudes dont il devait forcément sortir victorieux. Vainement on a tenté en haut lieu de lui opposer une infranchissable barrière au moyen d’une circulaire ministérielle. Je me suis constitué son champion, j’ai protesté énergiquement, soit par des conférences publiques, soit par des lettres publiées par la voie des journaux et adressées à MM. les Ministres et à MM. les Députés. Je défendais mon œuvre, mon enfant, en un mot, et ai dépensé là, toute l’énergie dont je pouvais être capable. Enfin, nous avons triomphé. Je dis nous avons triomphé, car le vin de raisins secs et moi avions lié d’une façon indissoluble notre destinée."
-```
-
-Utiliser À l'aide de la fonction `str_split()` de `stringr`, découper ce texte pour obtenir une liste de phrases.
-
-\iffalse
-<div class="solution-exo">
-```{r eval=FALSE}
-library(stringr)
-phrases <- str_split(texte, fixed(". "))
-```
-</div>
-\fi
