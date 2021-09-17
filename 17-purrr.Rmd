@@ -254,7 +254,7 @@ Les deux lignes de code ci-dessus partent d'une liste d'identifiants de départe
 Il existe également une variante `map_dfc()`, un peu moins fréquemment utilisée, qui considère les résultats comme des colonnes d'un tableau de données et les rassemble en un seul tableau comme le ferait la fonction `bind_cols()` de `dplyr`.
 ```
 
-### Itérer sur les colonnes d'un tableau de données
+## Itérer sur les colonnes d'un tableau de données
 
 On a vu section \@ref(data-frame-tibbles) que les tableaux de données (*data frame* ou *tibble*) sont en fait des listes dont les éléments sont les colonnes du tableau. On peut donc tout à fait appliquer `map()` et ses variantes à un tableau, et celle-ci itèrera sur ses colonnes.
 
@@ -293,6 +293,50 @@ Ici, on applique `discard()` après le `map()` pour ne conserver que les colonne
 starwars %>%
     map_int(~ sum(is.na(.x)) ) %>%
     discard(~ .x == 0 )
+```
+
+## `modify`
+
+`modify()` est une variante de `map()` qui a pour particularité de renvoyer un résultat du même type que la liste ou le vecteur donné en entrée.
+
+Ainsi, si on l'applique à un vecteur de chaînes de caractères, le résultat sera aussi un vecteur de chaînes de caractères même si la fonction appliquée retourne un résultat numérique.
+
+```{r}
+v <- c("brouette", "moto", "igloo")
+v %>% modify(length)
+```
+
+Si on l'applique à une liste, le résultat sera aussi une liste.
+
+```{r}
+v <- list("brouette", "moto", "igloo")
+v %>% modify(length)
+```
+
+L'objectif de `modify()` est de permettre de "modifier" une liste ou un vecteur en lui appliquant une fonction tout en étant sûr qu'on ne va pas modifier son type.
+
+L'intérêt est que `modify` propose deux variantes, `modify_if` et `modify_at`, qui permettent de sélectionner les éléments soit via une fonction soit par leur nom ou leur position, et n'appliquent la fonction de transformation qu'aux éléments sélectionnés.
+
+Cela peut être particulièrement utile quand on l'applique à un tableau de données. Par exemple le code suivant transforme uniquement les colonnes de type `factor` de `hdv2003` en `character`, et laisse les autres inchangées.
+
+```{r include=FALSE}
+hdv2003 <- as_tibble(hdv2003)
+```
+
+```{r}
+hdv2003 %>% modify_if(is.factor, as.character)
+```
+
+On notera qu'on obtient le même résultat avec le code suivant qui utilise `across()` de `dplyr`.
+
+```{r}
+hdv2003 %>%
+    mutate(
+        across(
+            where(is.factor),
+            as.character
+        )
+    )
 ```
 
 ## `imap`
@@ -491,49 +535,7 @@ Comme pour `map()` et `map2()`, `pmap()` propose aussi les variantes `pmap_int()
 rp2012 <- rp2012_orig
 ```
 
-## `modify`
 
-`modify()` est une variante de `map()` qui a pour particularité de renvoyer un résultat du même type que la liste ou le vecteur donné en entrée.
-
-Ainsi, si on l'applique à un vecteur de chaînes de caractères, le résultat sera aussi un vecteur de chaînes de caractères même si la fonction appliquée retourne un résultat numérique.
-
-```{r}
-v <- c("brouette", "moto", "igloo")
-v %>% modify(length)
-```
-
-Si on l'applique à une liste, le résultat sera aussi une liste.
-
-```{r}
-v <- list("brouette", "moto", "igloo")
-v %>% modify(length)
-```
-
-L'objectif de `modify()` est de permettre de "modifier" une liste ou un vecteur en lui appliquant une fonction tout en étant sûr qu'on ne va pas modifier son type.
-
-L'intérêt est que `modify` propose deux variantes, `modify_if` et `modify_at`, qui permettent de sélectionner les éléments soit via une fonction soit par leur nom ou leur position, et n'appliquent la fonction de transformation qu'aux éléments sélectionnés.
-
-Cela peut être particulièrement utile quand on l'applique à un tableau de données. Par exemple le code suivant transforme uniquement les colonnes de type `factor` de `hdv2003` en `character`, et laisse les autres inchangées.
-
-```{r include=FALSE}
-hdv2003 <- as_tibble(hdv2003)
-```
-
-```{r}
-hdv2003 %>% modify_if(is.factor, as.character)
-```
-
-On notera qu'on obtient le même résultat avec le code suivant qui utilise `across()` de `dplyr`.
-
-```{r}
-hdv2003 %>% 
-    mutate(
-        across(
-            where(is.factor), 
-            as.character
-        )
-    )
-```
 
 ## Répéter une opération
 
@@ -621,11 +623,440 @@ Sur le blog en français de Lise Vaudor, on trouvera un billet [Itérer des fonc
 
 ## Exercices
 
+### `map` et ses variantes
 
-Utiliser sample pour générer un tirage à pile ou face.
-map pour générer 1000 tirages
-map pour repérer le plus grand nombre de "pile"
-Avec "head_while", mapper pour le plus grand nombre de "pile" avant le premier "face"
+**Exercice 1.1**
+
+La liste suivante rassemble les notes obtenues par un ou une élève dans différentes matières.
+
+```{r}
+notes <- list(
+    maths = c(12, 15, 8, 10),
+    anglais = c(18, 11, 9),
+    sport = c(5, 13),
+    musique = 14
+)
+```
+
+En utilisant `map()`, calculer une liste indiquant la moyenne dans chaque matière.
+
+\iffalse
+<div class="solution-exo">
+```{r eval=FALSE}
+notes %>% map(mean)
+```
+</div>
+\fi
+
+En utilisant une variante de `map()`, simplifier le résultat pour obtenir un vecteur numérique.
+
+\iffalse
+<div class="solution-exo">
+```{r eval=FALSE}
+notes %>% map_dbl(mean)
+```
+</div>
+\fi
+
+On a rajouté à la liste les notes obtenues en technologie, parmi lesquelles une note est manquante.
+
+```{r}
+notes <- list(
+    maths = c(12, 15, 8, 10),
+    anglais = c(18, 11, 9),
+    sport = c(5, 13),
+    musique = 14,
+    techno = c(12, NA)
+)
+```
+
+Calculer à nouveau un vecteur numérique des moyennes par matière, mais sans tenir compte de la valeur manquante.
+
+\iffalse
+<div class="solution-exo">
+```{r eval=FALSE}
+notes %>% map_dbl(~ mean(.x, na.rm = TRUE) )
+# Ou bien
+notes %>% map_dbl(mean, na.rm = TRUE)
+```
+</div>
+\fi
+
+Calculer une liste qui contient pour chaque matière le nombre de notes, leur moyenne et leur écart-type.
+
+\iffalse
+<div class="solution-exo">
+```{r}
+# On peut aussi utiliser list() plutôt que c()
+notes %>%
+    map(~ c(
+            nb_notes = length(.x),
+            moyenne = mean(.x, na.rm = TRUE),
+            ecart_type = sd(.x, na.rm = TRUE)
+        )
+    )
+```
+</div>
+\fi
+
+Calculer et retourner les mêmes résultats, mais cette fois sous la forme d'un tableau de données.
+
+\iffalse
+<div class="solution-exo">
+```{r eval=FALSE}
+notes %>%
+    map_dfr(~ c(
+            nb_notes = length(.x),
+            moyenne = mean(.x, na.rm = TRUE),
+            ecart_type = sd(.x, na.rm = TRUE)
+        )
+    )
+```
+</div>
+\fi
+
+**Exercice 1.2**
+
+La liste suivante comporte les parcours biographiques de 5 personnes sous la forme de vecteurs indiquant leurs communes de résidence successive.
+
+```{r}
+parcours <- list(
+    c("Lyon", "Flixevile", "Saint-Dié-en-Pouilly"),
+    c("Sainte-Gabelle-sur-Sarthe"),
+    c("Décines", "Meyzieu", "Demptezieu"),
+    c("Meyzieu", "Lyon", "Paris", "Flixevile", "Lyon"),
+    c("La Bâtie-Divisin", "Versailles")
+)
+```
+
+À l'aide de `map()`, calculer une nouvelle liste comportant le nombre de villes de résidence pour chaque parcours.
+
+\iffalse
+<div class="solution-exo">
+```{r eval=FALSE}
+parcours %>% map(length)
+```
+</div>
+\fi
+
+Utiliser une variante de `map()` pour simplifier le résultat et obtenir un vecteur numérique plutôt qu'une liste.
+
+\iffalse
+<div class="solution-exo">
+```{r eval=FALSE}
+parcours %>% map_int(length)
+```
+</div>
+\fi
+
+Déterminer pour chaque parcours le nombre de fois où la personne a résidé à Lyon.
+
+\iffalse
+<div class="solution-exo">
+```{r eval=FALSE}
+parcours %>% map_int(~ sum(.x == "Lyon"))
+```
+</div>
+\fi
+
+L'équipe chargée de l'enquête vient de repérer une erreur de saisie : "Flixevile" s'écrit en réalité "Flixeville". Utiliser `map()` pour corriger la liste `parcours`.
+
+\iffalse
+<div class="solution-exo">
+```{r eval=FALSE}
+parcours <- parcours %>% 
+    map(~ ifelse(.x == "Flixevile", "Flixeville", .x))
+```
+</div>
+\fi
 
 
-Faire charger les CSV de l'ain et du rhône. Erreur de code_insee, à corriger en les transformant en character.
+**Exercice 1.3**
+
+Le vecteur suivant contient les adresses de deux fichiers CSV contenant les données de `rp2012` pour les départements de l'Ain et du Rhône :
+
+TODO: aller-plus-loin -> master
+```{r}
+urls <- c(
+    "https://raw.githubusercontent.com/juba/tidyverse/aller-plus-loin/data/rp2012/rp2012_01.csv",
+    "https://raw.githubusercontent.com/juba/tidyverse/aller-plus-loin/data/rp2012/rp2012_69.csv"
+)
+```
+
+Utiliser `map()` pour charger ces deux tableaux de données dans une liste `l`.
+
+\iffalse
+<div class="solution-exo">
+```{r}
+l <- map(urls, read_csv)
+```
+</div>
+\fi
+
+
+Utiliser `map_dfr()` pour charger ces deux tableaux de données et les regrouper en une seule table `d`. Que constatez-vous ? 
+
+\iffalse
+<div class="solution-exo">
+```{r eval=FALSE}
+d <- map_dfr(urls, read_csv)
+```
+</div>
+\fi
+
+Comparer la variable `code_insee` contenue dans les deux tableaux de `l`. D'où vient le problème ?
+
+\iffalse
+<div class="solution-exo">
+```{r eval=FALSE}
+# Une variable a été importée en character, l'autre en numérique
+l %>% map( ~.x$code_insee)
+```
+</div>
+\fi
+
+Trouver une solution pour corriger le problème.
+
+\iffalse
+<div class="solution-exo">
+```{r eval=FALSE}
+# En convertissant manuellement code_insee en character
+d <- map_dfr(urls, ~{
+    tab <- read_csv(.x)
+    tab$code_insee <- as.character(tab$code_insee)
+    tab
+})
+# Ou bien en utilisant l'option col_types de read_csv
+d <- map_dfr(urls, read_csv, col_types = c("code_insee" = "c"))
+```
+</div>
+\fi
+
+
+
+### `modify` et itération sur les colonnes d'un tableau
+
+**Exercice 2.1**
+
+Soit le tableau de données `d` suivant :
+
+```{r}
+d <- tibble(
+    prenom = c("pierre-edmond", "YVONNE", "charlotte-adélaïde"),
+    nom = c("rateau", "de la grappinière", "QUIGNON"),
+    age = c(19, 73, 27),
+    taille = c(151, 182, NA)
+)
+```
+
+Utliser la fonction `typeof()` pour afficher le type de toutes les colonnes de `d`.
+
+\iffalse
+<div class="solution-exo">
+```{r eval=FALSE}
+d %>% map(typeof)
+```
+</div>
+\fi
+
+En utilisant `keep()` et `map()`, calculer la moyenne de toutes les variables numériques de `d`.
+
+\iffalse
+<div class="solution-exo">
+```{r eval=FALSE}
+d %>%
+    keep(is.numeric) %>%
+    map(mean, na.rm = TRUE)
+```
+</div>
+\fi
+
+En utilisant `modify_if()`, appliquer `str_to_title()` à toutes les colonnes de type `character` pour corriger la capitalisation des noms et prénoms.
+
+\iffalse
+<div class="solution-exo">
+```{r eval=FALSE}
+d <- d %>% modify_if(is.character, str_to_title)
+```
+</div>
+\fi
+
+
+### `imap` et `walk`
+
+**Exercice 3.1**
+
+On reprend la liste de notes vue dans un exercice précédent.
+
+```{r}
+notes <- list(
+    maths = c(12, 15, 8, 10),
+    anglais = c(18, 11, 9),
+    sport = c(5, 13),
+    musique = 14,
+    techno = c(12, NA)
+)
+```
+
+Sans utiliser de boucle `for`, afficher avec la fonction `message()` les valeurs de chaque moyenne tour à tour de manière à obtenir le résultat suivant :
+
+```{r echo=FALSE}
+notes %>% walk(~ message(mean(.x, na.rm = TRUE)))
+```
+\iffalse
+<div class="solution-exo">
+```{r eval=FALSE}
+notes %>% walk(~ message(mean(.x, na.rm = TRUE)))
+```
+</div>
+\fi
+
+De la même manière afficher pour chaque matière les messages suivants :
+
+```{r echo=FALSE}
+notes %>% iwalk(function(notes, matiere) {
+    message("Votre moyenne en ", matiere, " est ", mean(notes, na.rm = TRUE))
+})
+```
+
+
+\iffalse
+<div class="solution-exo">
+```{r eval=FALSE}
+notes %>% iwalk(function(notes, matiere) {
+    message("Votre moyenne en ", matiere, " est ", mean(notes, na.rm = TRUE))
+})
+```
+</div>
+\fi
+
+Construire un tableau de données avec une matière par ligne et deux colonnes contenant le nom de la matière et la valeur de la moyenne.
+
+```{r echo=FALSE}
+notes %>% imap_dfr(function(notes, matiere) {
+    tibble(matiere = matiere, moyenne = mean(notes, na.rm = TRUE))
+})
+```
+
+\iffalse
+<div class="solution-exo">
+```{r eval=FALSE}
+notes %>% imap_dfr(function(notes, matiere) {
+    tibble(matiere = matiere, moyenne = mean(notes, na.rm = TRUE))
+})
+```
+</div>
+\fi
+
+
+### `map2` et `pmap`
+
+**Exercice 4.1**
+
+
+
+**Exercice 4.2**
+
+
+### Répéter une opération
+
+**Exercice 5.1**
+
+La fonction suivante permet de simuler 20 lancer de pièces et de stocker le résultat dans un vecteur de chaînes de caractères.
+
+```{r}
+sample(c("pile", "face"), size = 20, replace = TRUE)
+```
+
+À l'aide de `map` et de cette fonction, créer une liste contenant le résultat de 100 simulations de 20 lancers.
+
+\iffalse
+<div class="solution-exo">
+```{r eval=FALSE}
+sims <- map(
+    1:100,
+    ~sample(c("pile", "face"), size = 20, replace = TRUE)
+)
+```
+</div>
+\fi
+
+Toujours à l'aide de `map`, calculer le nombre de "pile" obtenus pour chaque simulation.
+
+\iffalse
+<div class="solution-exo">
+```{r eval=FALSE}
+piles <- sims %>% map_int(~ sum(.x == "pile"))
+```
+</div>
+\fi
+
+Déterminer le nombre minimal et le nombre maximal de "pile" obtenus parmi toutes les simulations.
+
+\iffalse
+<div class="solution-exo">
+```{r eval=FALSE}
+range(piles)
+```
+</div>
+\fi
+
+À l'aide de la fonction [head_while()](https://purrr.tidyverse.org/reference/head_while.html), déterminer pour chaque simulation le nombre de "pile" consécutifs obtenus avant le premier "face".
+
+\iffalse
+<div class="solution-exo">
+```{r eval=FALSE}
+egal_pile <- function(v) { v == "pile"}
+sims %>% map_int(
+    ~ length(head_while(.x, egal_pile))
+)
+# En abrégé, moins lisible
+sims %>% map_int(
+    ~ length(head_while(.x, ~ .x == "pile"))
+)
+```
+</div>
+\fi
+
+
+*Facultatif :* la fonction `rle()` permet de calculer les *run length encoding d'un vecteur.
+
+```{r}
+rle(c("pile", "face", "face", "face","pile", "pile"))
+```
+
+À l'aide de cette fonction, calculer pour chaque simulation la longueur de la plus grande série consécutive de "pile".
+
+\iffalse
+<div class="solution-exo">
+```{r eval=FALSE}
+sims %>% map_dbl(~{
+    r <- rle(.x)
+    longueurs_pile <- r$lengths[r$values == "pile"]
+    max(longueurs_pile)
+})
+```
+</div>
+\fi
+
+
+
+
+**Exercice 1.**
+TODO : laisser tomber ?
+Soit le texte suivant, tiré de l'ouvrage [L'Art de faire le vin avec les raisins secs](https://www.gutenberg.org/files/42421/42421-h/42421-h.htm) de J.-F. Audibert (1886).
+
+```{r}
+texte <- "Quelques mois se sont à peine écoulés que mes prédictions se sont accomplies au-delà de toute espérance. Le vin de raisins secs, ainsi que toutes les grandes innovations de notre siècle, a eu à subir les épreuves les plus rudes dont il devait forcément sortir victorieux. Vainement on a tenté en haut lieu de lui opposer une infranchissable barrière au moyen d’une circulaire ministérielle. Je me suis constitué son champion, j’ai protesté énergiquement, soit par des conférences publiques, soit par des lettres publiées par la voie des journaux et adressées à MM. les Ministres et à MM. les Députés. Je défendais mon œuvre, mon enfant, en un mot, et ai dépensé là, toute l’énergie dont je pouvais être capable. Enfin, nous avons triomphé. Je dis nous avons triomphé, car le vin de raisins secs et moi avions lié d’une façon indissoluble notre destinée."
+```
+
+Utiliser À l'aide de la fonction `str_split()` de `stringr`, découper ce texte pour obtenir une liste de phrases.
+
+\iffalse
+<div class="solution-exo">
+```{r eval=FALSE}
+library(stringr)
+phrases <- str_split(texte, fixed(". "))
+```
+</div>
+\fi
