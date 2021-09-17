@@ -30,7 +30,7 @@ En exécutant ce code, on crée une nouvelle fonction nommée `ajoute2`, que l'o
 ajoute2(3)
 ```
 
-Essayons de décomposer pas à pas la structure de cette première fonction.
+On va décomposer pas à pas la structure de cette première fonction.
 
 D'abord, une fonction est créée en utilisant l'instruction `function`. Celle-ci est suivie d'une paire de parenthèses et d'une paire d'accolades.
 
@@ -40,7 +40,7 @@ function() {
 }
 ```
 
-Dans les parenthèses, on indique les arguments de la fonction, ceux qui devront être indiqués quand nous l'appellerons. Ici notre fonction ne prend qu'un seul argument, que nous avons décidé de nommer `x` :
+Dans les parenthèses, on indique les *arguments* de la fonction, ceux qui devront être indiqués quand nous l'appellerons. Ici notre fonction ne prend qu'un seul argument, que nous avons décidé de nommer `x` :
 
 ```{r eval=FALSE}
 function(x) {
@@ -122,17 +122,18 @@ somme(3, 5)
 
 ### Exemples de fonctions
 
-Prenons un autre exemple : par défaut on sait que la fonction `table` retourne le tri à plat en effectifs d'une variable qualitative. On pourrait dès lors créer notre propre fonction qui renvoie plutôt le tri à plat en pourcentages. Voici une manière de le faire :
+Prenons un autre exemple : on sait que la fonction `table()` retourne le tri à plat en effectifs d'une variable qualitative. On pourrait créer notre propre fonction qui renvoie plutôt le tri à plat en pourcentages. Voici une manière de le faire :
 
 ```{r}
 prop_tab <- function(v) {
   tri <- table(v)
-  tri <- tri / sum(tri) * 100
-  return(tri)
+  effectif_total <- sum(tri)
+  pourcentages <- tri / effectif_total * 100
+  return(pourcentages)
 }
 ```
 
-Notre fonction prend en entrée un argument nomme `v`, en l'occurrence un vecteur représentant une variable qualitative. On commence par faire le tri à plat de ce vecteur avec `table`, puis on calcule la répartition en pourcentages en divisant ce tri à plat par l'effectif total (`sum(tri)`) et en multipliant par 100.
+Notre fonction prend en entrée un argument nommé `v`, en l'occurrence un vecteur représentant une variable qualitative. On commence par faire le tri à plat de ce vecteur avec `table`, puis on calcule la répartition en pourcentages en divisant ce tri à plat par l'effectif total et en multipliant par 100.
 
 Testons sur une variable de `hdv2003` :
 
@@ -142,33 +143,35 @@ data(hdv2003)
 prop_tab(hdv2003$qualif)
 ```
 
-Ça fonctionne, mais l'affichage d'un grand nombre de chiffres après la virgule peut nuire à la lisibilité du résultat. On pourrait donc améliorer notre fonction en arrondissant le résultat avec la fonction `round()` avant de le retourner :
+Ça fonctionne, mais l'affichage d'un grand nombre de chiffres après la virgule n'est pas très lisible. On peut améliorer notre fonction en arrondissant le résultat avec la fonction `round()` avant de le retourner :
 
 ```{r}
 prop_tab <- function(v) {
   tri <- table(v)
-  tri <- tri / sum(tri) * 100
-  tri <- round(tri, 2)
-  return(tri)
+  effectif_total <- sum(tri)
+  pourcentages <- tri / effectif_total * 100
+  pourcentages <- round(pourcentages, 2)
+  return(pourcentages)
 }
 
 prop_tab(hdv2003$qualif)
 ```
 
-```{block type='rmdnote'}
+```{block type='rmdimportant'}
 Quand on modifie une fonction existante, il faut exécuter à nouveau le code correspondant à sa définition pour la "mettre à jour". Ici, si on ne le fait pas l'objet `prop_tab` contiendra toujours l'ancienne définition.
 
 Pour "mettre à jour" une fonction après avoir modifié son code, on peut soit sélectionner le code qui la définit et l'exécuter de la manière habituelle, soit, dans RStudio, se positionner dans le corps de la fonction et utiliser le raccourci clavier `Ctrl + Alt + F`.
 ```
 
-Ça marche ! Cela dit, limiter à 2 chiffres après la virgule ne convient pas forcément dans tous les cas. L'idéal serait d'offrir la possibilité à la personne qui appelle la fonction de choisir elle-même la précision de l'affichage. Comment ? Tout simplement en ajoutant un deuxième argument à la fonction, que nous nommerons `decimales`, et en utilisant cet argument à la place du 2 dans l'appel à `round()` :
+Ça marche ! Cela dit, limiter à deux chiffres après la virgule ne convient pas forcément dans tous les cas. L'idéal serait d'offrir la possibilité à la personne qui appelle la fonction de choisir elle-même la précision de l'affichage. Comment ? Tout simplement en ajoutant un deuxième argument à la fonction, que nous nommerons `decimales`, et en utilisant cet argument à la place du 2 dans l'appel à `round()` :
 
 ```{r}
 prop_tab <- function(v, decimales) {
   tri <- table(v)
-  tri <- tri / sum(tri) * 100
-  tri <- round(tri, decimales)
-  return(tri)
+  effectif_total <- sum(tri)
+  pourcentages <- tri / effectif_total * 100
+  pourcentages <- round(pourcentages, decimales)
+  return(pourcentages)  
 }
 ```
 
@@ -180,13 +183,13 @@ prop_tab(hdv2003$qualif, decimales = 1)
 
 ### Effets de bord
 
-Parfois une fonction n'a pas pour objectif de renvoyer un résultat mais d'accomplir une action, comme générer un graphique. Dans ce cas la fonction peut ne pas inclure d'instruction `return()`. 
+Parfois une fonction n'a pas pour objectif de renvoyer un résultat mais d'accomplir une action, comme générer un graphique, afficher un message, enregistrer un fichier... Dans ce cas la fonction peut ne pas inclure d'instruction `return()`. 
 
 ```{block type='rmdnote'}
 Les actions "visibles" dans notre session R accomplies par une fonction en-dehors du résultat renvoyé sont appelés des *effets de bord*.
 ```
 
-Par exemple la fonction suivante prend en argument un vecteur et génère un diagramme en barres du tri à plat de cette variable (en modifiant la présentation au passage) :
+Par exemple la fonction suivante prend en argument un vecteur et génère un diagramme en barres du tri à plat de cette variable (en modifiant un peu la présentation au passage).
 
 ```{r}
 my_barplot <- function(var) {
@@ -209,7 +212,7 @@ indicateurs <- function(v) {
 indicateurs(hdv2003$age)
 ```
 
-Quand on souhaite seulement afficher une chaîne de caractère, on peut utiliser `cat` qui fournit une sortie plus concise que `print` :
+Quand on souhaite seulement afficher une chaîne de caractère, on peut utiliser `cat()` qui fournit une sortie plus concise que `print` :
 
 ```{r}
 hello <- function(nom) {
@@ -219,7 +222,7 @@ hello <- function(nom) {
 hello("Pierre-Edmond")
 ```
 
-Enfin, on peut aussi utiliser `message` qui, comme son nom l'indique, affiche un message dans la console avec une mise en forme spécifique. En général on l'utilise plutôt pour afficher des informations relatives au déroulement de la fonction :
+Enfin, on peut aussi utiliser `message()` qui, comme son nom l'indique, affiche un message dans la console avec une mise en forme spécifique. En général on l'utilise plutôt pour afficher des informations relatives au déroulement de la fonction :
 
 ```{r}
 pause <- function(delai) {
@@ -237,11 +240,9 @@ pause(2)
 
 Une question légitime est de se demander dans quels cas il est utile de créer une fonction.
 
-Une règle assez courante consiste à dire que dès qu'on a répété le même code plus de deux fois, il est préférable d'en faire une fonction. Celles-ci ont en effet comme avantage d'éviter la duplication du code.
+Une règle courante considère que dès qu'on a répété le même code plus de deux fois, il est préférable d'en faire une fonction. Celles-ci ont en effet comme avantage d'éviter la duplication du code.
 
-Imaginons que vous avez récupéré un jeu de données avec toute une série de variables ayant les modalités `"1"` et `"2"` qui correspondent aux réponses `"Oui"` et `"Non"` à des questions.
-
-On crée un *data frame* fictif comportant quatre variables de ce type :
+Imaginons que vous avez récupéré un jeu de données avec toute une série de variables ayant les modalités `"1"` et `"2"` qui correspondent aux réponses `"Oui"` et `"Non"` à des questions. On crée un *data frame* fictif comportant quatre variables de ce type :
 
 ```{r}
 df <- data.frame(
@@ -254,7 +255,7 @@ df <- data.frame(
 df
 ```
 
-On sait qu'on peut facilement [recoder l'une de ces variables](09-recodages.html#recoder-une-variable-qualitative) à l'aide de la fonction `fct_recode` de l'extension `forcats` :
+On sait qu'on peut facilement [recoder l'une de ces variables](09-recodages.html#recoder-une-variable-qualitative) à l'aide de la fonction `fct_recode()` de l'extension `forcats` :
 
 ```{r, eval = FALSE}
 df$q1 <- fct_recode(df$q1,
@@ -284,7 +285,7 @@ df$q4 <- fct_recode(df$q4,
 )
 ```
 
-Il est toutefois plus judicieux de créer une fonction spécifique pour ce recodage :
+Mais il est plus judicieux dans ce cas de créer une fonction pour ce recodage :
 
 ```{r}
 recode_oui_non <- function(var) {
@@ -296,7 +297,7 @@ recode_oui_non <- function(var) {
 }
 ```
 
-Il est alors très simple d'appliquer ce recodage à plusieurs variables :
+En effet, il est alors très simple d'appliquer ce recodage à plusieurs variables :
 
 ```{r, eval = FALSE}
 df$q1 <- recode_oui_non(df$q1)
@@ -305,11 +306,11 @@ df$q3 <- recode_oui_non(df$q3)
 df$q4 <- recode_oui_non(df$q4)
 ```
 
-Autre avantage, si nous réalisons que nous avons commis une erreur et qu'en fait le code `"1"` correspondait à `"Non"` et le code `"2"` à `"Oui"`, on n'a pas besoin de modifier tous les endroits où l'on a copié/collé notre recodage, mais seulement la définition de la fonction.
+Autre avantage, si on réalise qu'on a commis une erreur et qu'en fait le code `"1"` correspondait à `"Non"` et le code `"2"` à `"Oui"`, on n'a pas besoin de modifier tous les endroits où on a copié/collé notre recodage, mais seulement la définition de la fonction.
 
 Les avantages de procéder ainsi sont donc multiples :
 
-- créer une fonction évite la répétition du code et le rend moins long et plus lisible, surtout si on donne à notre fonction un nom explicite permettant de comprendre immédiatement ce qu'elle fait.
+- créer une fonction évite la répétition du code et le rend moins long et plus lisible, surtout si on donne à notre fonction un nom explicite permettant de comprendre facilement ce qu'elle fait.
 - créer une fonction évite les erreurs de copier/coller du code.
 - une fonction permet de mettre à jour plus facilement son code : si on se rend compte d'une erreur ou si on souhaite améliorer son fonctionnement, on n'a qu'un seul endroit à modifier.
 - enfin, créer des fonctions permet potentiellement de rendre son code réutilisable d'un script à l'autre ou même d'un projet à l'autre. Voire, à terme, de les regrouper dans un *package* pour soi-même ou pour diffusion à d'autres utilisateurs et utilisatrices de R.
@@ -319,7 +320,7 @@ Les avantages de procéder ainsi sont donc multiples :
 
 ### Définition des arguments
 
-Les arguments (ou paramètres) d'une fonction sont ce qu'on lui donne "en entrée", et qui vont soit lui fournir des données, soit modifier son comportement. La liste des arguments acceptés par une fonction est indiquée entre parenthèses de l'appel de `function` :
+Les arguments (ou paramètres) d'une fonction sont ce qu'on lui donne "en entrée", et qui vont soit lui fournir des données, soit modifier son comportement. La liste des arguments acceptés par une fonction est indiquée entre les parenthèses de l'appel de `function()` :
 
 ```{r, eval = FALSE}
 ma_fonction <- function(arg1, arg2, arg3) {
@@ -360,10 +361,11 @@ ma_fonction(x, 12, arg3 = TRUE)
 
 Le plus souvent, les premiers arguments acceptés par une fonction sont les données sur lesquelles elle va travailler, tandis que les arguments suivants sont des paramètres qui vont modifier son comportement. Par exemple, `median` accepte comme premier argument `x`, un vecteur, puis un argument `na.rm` qui va changer sa manière de calculer la médiane des valeurs de `x`.
 
+```{block type='rmdnote'}
 En général on appelle la fonction en passant les paramètres correspondant aux données par position, et les autres en les nommant. C'est ainsi qu'on ne fait ni `median(x = tailles, na.rm = TRUE)` ni `median(tailles, TRUE)`, mais plutôt `median(tailles, na.rm = TRUE)`.
 
-En ce qui concerne le nom des arguments eux-mêmes, en général ceux correspondant aux données transmises à une fonction peuvent avoir des noms relativement génériques (`x`, `y`, `v` pour un vecteur, `data` ou `df` pour un data.frame...). Les autres doivent par contre avoir des noms à la fois courts et explicites : par exemple plutôt `decimales` que `nd` ou `nombre_de_decimales`. 
-
+En ce qui concerne le nom des arguments, en général ceux correspondant aux données transmises à une fonction peuvent avoir des noms relativement génériques (`x`, `y`, `v` pour un vecteur, `data` ou `df` pour un data.frame...). Les autres doivent par contre avoir des noms à la fois courts et explicites : par exemple plutôt `decimales` que `nd` ou `nombre_de_decimales`. 
+```
 
 ### Valeurs par défaut
 
@@ -452,13 +454,17 @@ Ce qui permet d'appeler notre fonction avec tous les arguments possibles de `bar
 
 
 ```{r}
-my_barplot(hdv2003$clso, col = "yellowgreen", main = "Croyez-vous en l'existence des classes sociales ?")
+my_barplot(
+  hdv2003$clso, 
+  col = "yellowgreen", 
+  main = "Croyez-vous en l'existence des classes sociales ?"
+)
 ```
 
 
 ### Résultat d'une fonction {#resfunc}
 
-On l'a vu, l'objectif d'une fonction est en général de renvoyer un résultat. Lors de la définition d'une fonction, le résultat peut être retourné en utilisant la fonction `return` :
+On l'a vu, l'objectif d'une fonction est en général de renvoyer un résultat. Lors de la définition d'une fonction, le résultat peut être retourné en utilisant la fonction `return()` :
 
 ```{r}
 ajoute2 <- function(x) {
@@ -467,7 +473,7 @@ ajoute2 <- function(x) {
 }
 ```
 
-En réalité, l'utilisation de `return` n'est pas obligatoire : une fonction retourne automatiquement le résultat de la dernière instruction qu'elle exécute. On aurait donc pu écrire :
+En réalité, l'utilisation de `return()` n'est pas obligatoire : une fonction retourne automatiquement le résultat de la dernière instruction qu'elle exécute. On aurait donc pu écrire :
 
 ```{r}
 ajoute2 <- function(x) {
@@ -484,7 +490,11 @@ ajoute2 <- function(x) {
 }
 ```
 
-À noter que lorsque R rencontre une instruction `return` dans une fonction, il interrompt immédiatement son exécution et "sort" de la fonction en renvoyant le résultat.
+```{block type='rmdimportant'}
+Dans la suite de ce document on utilisera, lorsque c'est possible, la syntaxe la plus "compacte" qui omet le `return()`.
+```
+
+Un point importnat à noter : lorsque R rencontre une instruction `return()` dans une fonction, il interrompt immédiatement son exécution et "sort" de la fonction en renvoyant le résultat.
 
 Ainsi, dans la fonction suivante :
 
@@ -495,11 +505,11 @@ ajoute2 <- function(x) {
 }
 ```
 
-L'instruction `x * 5` ne sera jamais exécutée car R "sort" de la fonction dès qu'il tombe sur le `return` de la ligne précédente.
+L'instruction `x * 5` ne sera jamais exécutée car R "sort" de la fonction dès qu'il évalue le `return()` de la ligne précédente.
 
-Corrolaire de ce comportement, on ne peut utiliser plusieurs `return` pour renvoyer plusieurs résultats depuis une seule fonction. Est-ce à dire qu'une fonction R ne pourrait renvoyer qu'une seule valeur ? Non, car si elle ne peut retourner qu'un seul objet, celui-ci peut être complexe et comporter plusieurs valeurs.
+Conséquence de ce comportement, on ne peut utiliser plusieurs `return()` pour renvoyer plusieurs résultats depuis une seule fonction. Est-ce à dire qu'une fonction R ne pourrait renvoyer qu'une seule valeur ? Non, car si elle ne peut retourner qu'un seul objet, celui-ci peut être complexe et comporter plusieurs valeurs.
 
-Par exemple, on pourrait créer une fonction `summary` "personnalisée" qui ne retournerait que la moyenne et l'écart-type d'un vecteur numérique. Pour cela, on pourrait renvoyer un vecteur comportant ces deux valeurs :
+Par exemple, on pourrait créer une fonction `summary()` "personnalisée" qui ne retournerait que la moyenne et l'écart-type d'un vecteur numérique. Pour cela, on pourrait renvoyer un vecteur comportant ces deux valeurs :
 
 ```{r}
 resume <- function(x) {
@@ -519,7 +529,7 @@ Mais dans ce cas de figure il est recommandé de retourner plutôt une liste nom
 resume <- function(x) {
   moyenne <- mean(x)
   ecart_type <- sd(x)
-  list(moy = moyenne, et = ecart_type)
+  list(moy = moyenne, ecart_type = ecart_type)
 }
 ```
 
@@ -527,7 +537,7 @@ resume <- function(x) {
 resume(hdv2003$age)
 ```
 
-On a du coup un affichage un peu plus lisible, et surtout on peut accéder aux valeurs renvoyées via leur nom :
+On a du coup un affichage un peu plus lisible, et surtout on peut accéder aux éléments de résultat via leur nom :
 
 ```{r}
 res <- resume(hdv2003$age)
@@ -536,16 +546,19 @@ res$moy
 
 
 
-
 ## Portée des variables
 
-Un point délicat mais important quand on commence à créer ses propres fonctions concerne la *portée des variables*, c'est-à-dire la façon dont les objets créés dans une fonction et en-dehors "cohabitent". C'est une question assez complexe, mais seules quelques grandes règles sont réellement utiles au départ.
+Un point délicat mais important quand on commence à créer ses propres fonctions concerne la *portée des variables*, c'est-à-dire la façon dont les objets créés dans une fonction et ceux existant en-dehors "cohabitent". C'est une question assez complexe, mais seules quelques grandes règles sont réellement utiles au départ.
 
 ### Une fonction peut accéder à un objet extérieur
 
-Si on fait appel dans une fonction à un objet qui n'existe pas et n'a pas été passé comme argument, on obtient évidemment une erreur :
+Si on fait appel dans une fonction à un objet qui n'existe pas et n'a pas été passé comme argument, on obtient une erreur.
 
-```{r, error = TRUE}
+```{r include=FALSE, cache=FALSE}
+if (exists("ajout")) rm("ajout")
+```
+
+```{r, error=TRUE, cache=FALSE}
 f <- function(x) {
   x + ajout
 }
@@ -553,7 +566,7 @@ f <- function(x) {
 f(2)
 ```
 
-On peut évidemment créer cet objet dans notre fonction avant de l'utiliser :
+Si on crée cet objet dans notre fonction avant de l'utiliser, on supprime évidemment l'erreur.
 
 ```{r}
 f <- function(x) {
@@ -564,7 +577,7 @@ f <- function(x) {
 f(2)
 ```
 
-Mais on peut aussi accéder depuis une fonction à un objet qui existe dans notre environnement au moment où la fonction a été appelée :
+Mais on peut aussi accéder depuis une fonction à un objet qui existe dans notre environnement au moment où la fonction a été appelée.
 
 ```{r}
 f <- function(x) {
@@ -575,9 +588,9 @@ ajout <- 3
 f(2)
 ```
 
-Dans cet exemple, au moment de l'exécution de `f`, comme `ajout` n'existe pas au sein de la fonction (il n'a pas été passé comme argument ni défini dans le corps de la fonction), R va chercher dans l'environnement global, celui depuis lequel la fonction a été appelée. Comme il trouve un objet `ajout`, il utilise sa valeur au moment de l'appel de la fonction.
+Dans cet exemple, au moment de l'exécution de `f()`, comme `ajout` n'existe pas au sein de la fonction (il n'a pas été passé comme argument ni défini dans le corps de la fonction), R va chercher dans l'environnement global, celui depuis lequel la fonction a été appelée. Comme il trouve un objet `ajout`, il utilise sa valeur au moment de l'appel de la fonction.
 
-Que se passe-t-il si un objet avec le même nom existe à la fois dans la fonction et dans notre environnement ? Dans ce cas R privilégie l'objet créé dans la fonction :
+Que se passe-t-il si un objet avec le même nom existe à la fois dans la fonction et dans notre environnement global ? Dans ce cas R privilégie l'objet créé dans la fonction.
 
 ```{r}
 f <- function(x) {
@@ -589,7 +602,7 @@ ajout <- 3
 f(2)
 ```
 
-Cette règle s'applique également pour les arguments passés à la fonction :
+Cette règle s'applique également pour les arguments passés à la fonction.
 
 ```{r}
 f <- function(x, ajout) {
@@ -601,7 +614,7 @@ f(2, 20)
 ```
 
 
-À l'inverse, un objet créé à l'intérieur d'une fonction n'est pas accessible à l'extérieur de celle-ci :
+À l'inverse, un objet créé à l'intérieur d'une fonction n'est pas accessible à l'extérieur de celle-ci.
 
 ```{r, error = TRUE}
 f <- function(x) {
@@ -613,10 +626,10 @@ produit
 ```
 
 ```{block type='rmdimportant'}
-Les objets créés dans notre session et qui existent dans notre environnement (tel que visible dans l'onglet *Environment* de RStudio) sont appelés des variables "globales" : elles existent et sont accessibles pour les fonctions appelées depuis cet environnement. Les objets créés lors de la définition d'une fonction sont à l'inverse des variables "locales" : elles n'existent qu'à l'intérieur de la fonction et pour la durée de son exécution. Si deux objets du même nom existent, les objets locaux sont prioritaires par rapport aux objets globaux.
+Les objets créés dans notre session et qui existent dans notre environnement (tel que visible dans l'onglet *Environment* de RStudio) sont appelés des variables "globales" : elles existent et sont accessibles pour les fonctions appelées depuis cet environnement. Les objets créés lors de l'exécution d'une fonction sont à l'inverse des variables "locales" : elles n'existent qu'à l'intérieur de la fonction et pour la durée de son exécution. Si deux objets du même nom existent, les objets locaux sont prioritaires par rapport aux objets globaux.
 ```
 
-Une conséquence de cette règle est qu'il n'est pas possible de modifier un objet de notre environnement global depuis une fonction^[En fait c'est possible avec l'opérateur `<<-`, mais c'est fortement déconseillé dans la très grande majorité des cas.] :
+Une conséquence de cette règle est qu'il n'est pas possible de modifier un objet de notre environnement global depuis une fonction^[En réalité c'est possible avec l'opérateur `<<-`, mais c'est fortement déconseillé dans la très grande majorité des cas.] :
 
 ```{r}
 
@@ -626,15 +639,14 @@ f <- function() {
 }
 
 ajout <- 3
-message("Valeur avant : ", ajout)
+ajout
 f()
-message("Valeur après : ", ajout)
-
+ajout
 ```
 
-Ici on voit que même si pendant l'exécution de la fonction `ajout` vaut bien 10, dès qu'on n'est plus dans la fonction `ajout` vaut toujours sa valeur de départ, c'est-à-dire 3. Dans ce cas, au moment de l'instruction `ajout <- 10` de notre fonction, R crée un objet local qui vaut bien 10, mais qui est distinct de l'objet global dont la valeur est 3. Cet objet local n'existe que le temps de l'exécution de la fonction.
+Ici on voit que si pendant l'exécution de la fonction `ajout` vaut bien 10, dès qu'on n'est plus dans la fonction `ajout` vaut toujours sa valeur de départ, c'est-à-dire 3. Dans ce cas, au moment de l'instruction `ajout <- 10` de notre fonction, R crée un objet local qui vaut bien 10, mais qui est distinct de l'objet global dont la valeur est 3. Cet objet local n'existe que le temps de l'exécution de la fonction.
 
-Si on souhaite modifier un objet, on doit donc le passer comme argument en entrée de notre fonction, et le renvoyer comme résultat en sortie :
+Si on souhaite modifier un objet global, on doit donc le passer comme argument en entrée de notre fonction, et le renvoyer comme résultat en sortie :
 
 ```{r}
 df <- data.frame(x = 1:3)
@@ -669,7 +681,7 @@ f
 
 ### Passer des fonctions comme argument
 
-Certaines fonctions sont prévues pour s'appliquer elles-mêmes à des fonctions, par exemple `formals` et `body` permettent d'afficher spécifiquement les arguments et le corps d'une fonction passée en argument : 
+Certaines fonctions sont prévues pour s'appliquer elles-mêmes à des fonctions. Par exemple, `formals` et `body` permettent d'afficher respectivement les arguments et le corps d'une fonction passée en argument. 
 
 ```{r}
 formals(f)
@@ -679,7 +691,7 @@ formals(f)
 body(f)
 ```
 
-Il est donc possible de passer une fonction comme argument d'une autre fonction, comme dans `body(f)`. On a déjà vu un exemple de ce type de fonctionnement avec la fonction `tapply` dans la partie \@ref(tapply)]. Celle-ci prend trois arguments : un vecteur de valeurs, un facteur, et une fonction. Elle applique ensuite la fonction aux valeurs pour chaque niveau du facteur.
+Il est donc possible de passer une fonction comme argument d'une autre fonction, comme dans `body(f)`. On a déjà vu un exemple de ce type de fonctionnement avec la fonction `tapply` dans la section \@ref(tapply). Celle-ci prend trois arguments : un vecteur de valeurs, un facteur, et une fonction. Elle applique ensuite la fonction aux valeurs pour chaque niveau du facteur.
 
 Par exemple, si on a un data frame avec une liste de fruits et leur poids :
 
@@ -704,6 +716,17 @@ Si on souhaite plutôt calculer le poids maximal, il suffit de passer à `tapply
 tapply(df$poids, df$fruit, max)
 ```
 
+Cette manière de transmettre une fonction à une autre fonction peut être un peu déroutante de prime abord, mais c'est une mécanique qu'on va retrouver très souvent dans les chapitres suivants.
+
+```{block type='rmdimportant'}
+Si `f` est une fonction, il est important de bien faire la différence entre `f` et `f()` :
+
+- `f` est la fonction en elle-même
+- `f()` est le résultat de la fonction quand on l'exécute sans lui passer d'argument
+
+Quand on passe une fonction comme argument à une autre fonction, on utilise donc toujours la notation sans les parenthèses.
+```
+
 ### Fonctions anonymes {#fonctions-anonymes}
 
 Dans le cas où on souhaite calculer quelque chose pour lequel une fonction n'existe pas déjà, on peut créer une nouvelle fonction et la passer en argument :
@@ -724,12 +747,12 @@ tapply(df$poids, df$fruit, function(poids) {
 })
 ```
 
-Dans ce cas on a créé ce qu'on appelle une *fonction anonyme*, qui n'a pas de nom (elle n'a pas été stockée dans un objet) et qui n'existe que le temps de l'appel à `tapply`.
+Dans ce cas on a créé ce qu'on appelle une *fonction anonyme*, qui n'a pas de nom (elle n'a pas été stockée dans un objet), et qui n'existe que le temps de l'appel à `tapply`.
 
 
 ## Ressources
 
-L'ouvrage *R for Data Science* (en anglais), accessible en ligne, contient [un chapitre complet](http://r4ds.had.co.nz/functions.html) d'introduction sur les fonctions.
+L'ouvrage *R for Data Science* (en anglais), accessible en ligne, contient un chapitre complet d'[introduction sur les fonctions](http://r4ds.had.co.nz/functions.html).
 
 L'ouvrage *Advanced R* (également en anglais) aborde de manière très approfondie [les fonctions](https://adv-r.hadley.nz/functions.html) ainsi que la [programmation fonctionnelle](https://adv-r.hadley.nz/fp.html).
 
@@ -743,7 +766,9 @@ Le manuel officiel *Introduction to R* (toujours en anglais) contient une partie
 
 **Exercice 1.1**
 
-Écrire une fonction nommée `perimetre` qui prend en entrée un argument nommé `r` et retourne le périmètre d'un cercle de rayon `r`, c'est-à-dire `2 * pi * r` (`pi` est un objet R qui contient la valeur de $\pi$). Vérifier avec l'appel suivant :
+Écrire une fonction nommée `perimetre` qui prend en entrée un argument nommé `r` et retourne le périmètre d'un cercle de rayon `r`, c'est-à-dire `2 * pi * r` (`pi` est un objet R qui contient la valeur de $\pi$). 
+
+Vérifier avec l'appel suivant :
 
 ```{r echo=FALSE}
 perimetre <- function(r) {
@@ -770,6 +795,8 @@ perimetre <- function(r) {
 **Exercice 1.2**
 
 Écrire une fonction `etendue` qui prend en entrée un vecteur numérique et retourne la différence entre la valeur maximale et la valeur minimale de ce vecteur.
+
+Vérifier avec l'appel suivant :
 
 ```{r echo=FALSE}
 etendue <- function(v) {
@@ -809,10 +836,10 @@ etendue <- function(v) {
 <div class="solution-exo">
 ```{r eval=FALSE}
 alea <- function() {
-  nombre <- runif(1)
-  nombre <- nombre * 100
-  nombre <- round(nombre)
-  return(nombre)
+  n <- runif(1)
+  n <- n * 100
+  n <- round(n)
+  return(n)
 }
 ```
 </div>
@@ -824,25 +851,25 @@ Modifier cette fonction pour qu'elle accepte un argument `max` et qu'elle génè
 <div class="solution-exo">
 ```{r eval=FALSE}
 alea <- function(max) {
-  nombre <- runif(1)
-  nombre <- nombre * max
-  nombre <- round(nombre)
-  return(nombre)
+  n <- runif(1)
+  n <- n * max
+  n <- round(n)
+  return(n)
 }
 ```
 </div>
 \fi
 
-**Facultatif :** Modifier à nouveau la fonction pour qu'elle accepte deux arguments `min` et `max` et qu'elle génère un nombre entier au hasard compris entre `min` et `max`.
+*Facultatif :* Modifier à nouveau la fonction pour qu'elle accepte deux arguments `min` et `max` et qu'elle génère un nombre entier au hasard compris entre `min` et `max`.
 
 \iffalse
 <div class="solution-exo">
 ```{r eval=FALSE}
 alea <- function(min, max) {
-  nombre <- runif(1)
-  nombre <- nombre * (max - min) + min
-  nombre <- round(nombre)
-  return(nombre)
+  n <- runif(1)
+  n <- n * (max - min) + min
+  n <- round(n)
+  return(n)
 }
 ```
 </div>
@@ -889,7 +916,7 @@ d$lecture.bd <- fct_recode(d$lecture.bd, "o" = "Oui", "n" = "Non")
 d$lecture.bd <- fct_explicit_na(d$lecture.bd, "Manquant")
 ```
 
-Utiliser ce code de reodage pour créer une nouvelle fonction `recode_oui_non`, et appliquer cette fonction à `hard.rock`, `lecture.bd` et `couture`.
+Modifier ce code en créant une fonction `recode_oui_non`, et en l'appliquant à `hard.rock`, `lecture.bd` et `couture`.
 
 
 \iffalse
@@ -915,9 +942,9 @@ d$cuisine <- recode_oui_non(d$cuisine)
 
 **Exercice 2.1**
 
-Réordonner, renommer les arguments de la fonction suivante de manière plus adéquate et leur donner une valeur par défaut :
+Réordonner et renommer les arguments de la fonction suivante de manière plus adéquate et leur donner une valeur par défaut :
 
-```{r echo=FALSE, eval=FALSE}
+```{r}
 moyenne_arrondie <- function(d, vecteur_pour_le_calcul, supprimer_les_na) {
   res <- mean(vecteur_pour_le_calcul, na.rm = supprimer_les_na)
   res <- round(res, d)
@@ -938,6 +965,18 @@ moyenne_arrondie <- function(v, decimales = 2, na.rm = TRUE) {
 </div>
 \fi
 
+Simplifier la fonction en utilisant la syntaxe plus compacte qui ne fait pas appel à `return()`.
+
+\iffalse
+<div class="solution-exo">
+```{r eval=FALSE}
+moyenne_arrondie <- function(v, decimales = 2, na.rm = TRUE) {
+  res <- mean(v, na.rm = na.rm)
+  round(res, decimales)
+}
+```
+</div>
+\fi
 
 
 **Exercice 2.2**
@@ -1029,7 +1068,7 @@ x
 
 **Exercice 3.2**
 
-Dans le code suivant, on a essayé de créer une fonction qui filtre uniquement les pommes dans le data.frame `d`. Pourquoi cela ne fonctionne-t-il pas ?
+Dans le code suivant, on a essayé de créer une fonction qui filtre uniquement les pommes dans le *data frame* `d`. Pourquoi cela ne fonctionne-t-il pas ?
 
 ```{r eval=FALSE}
 d <- data.frame(
@@ -1045,7 +1084,7 @@ filtre_pommes()
 d
 ```
 
-Réécrire le code pour obtenir le résultat souhaité.
+Modifier le code pour obtenir le résultat souhaité.
 
 \iffalse
 <div class="solution-exo">
@@ -1089,7 +1128,7 @@ Comprenez-vous la différence entre les deux ?
 
 **Exercice 4.2**
 
-Construire une fonction `etendue` qui prend en entrée un vecteur numérique et retourne la différence entre la valeur maximale et la valeur minimale de ce vecteur (vous pouvez récupérer le code de l'exercice 1.2 en le simplifiant).
+Construire une fonction `etendue()` qui prend en entrée un vecteur numérique et retourne la différence entre la valeur maximale et la valeur minimale de ce vecteur (vous pouvez récupérer le code de l'exercice 1.2 en le simplifiant).
 
 \iffalse
 <div class="solution-exo">
@@ -1101,7 +1140,7 @@ etendue <- function(v) {
 </div>
 \fi
 
-À l'aide de `tapply`, appliquez la fonction `etendue` à la variable `age` pour chaque valeur de `qualif` dans le jeu de données `hdv2003`.
+À l'aide de `tapply()`, appliquez la fonction `etendue()` à la variable `age` pour chaque valeur de `qualif` dans le jeu de données `hdv2003`.
 
 ```{r echo=FALSE}
 library(questionr)
