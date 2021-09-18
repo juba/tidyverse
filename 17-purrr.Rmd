@@ -1111,6 +1111,42 @@ resultats %>% walk(~barplot(table(.x)))
 
 **Exercice 5.1**
 
+La fonction suivante simule le lancer de `n` dés à 6 faces.
+
+```{r}
+lancer_de <- function(n) {
+    sample(1:6, size = n, replace = TRUE)
+}
+
+lancer_de(3)
+```
+
+On souhaite utiliser cette fonction pour générer 10 lancers de 4 dés. On essaie avec le code suivant :
+
+```{r eval=FALSE}
+map(1:10, lancer_de, 4)
+```
+
+Est-ce que cela fonctionne ? Pourquoi ?
+
+\iffalse
+<div class="solution-exo">
+Ça ne fonctionne pas car `lancer_de()` est appelée à chaque itération avec deux arguments : la valeur courante de l'itérateur, et 4. Ainsi dans sa première itération, `map()` exécute `alancer_de(1, 4)`, ce qui génère un message d'erreur puisque `lancer_de()` n'accepte qu'un argument.
+</div>
+\fi
+
+Trouver une solution en corrigeant le code.
+
+\iffalse
+<div class="solution-exo">
+```{r eval=FALSE}
+map(1:10, ~lancer_de(4))
+```
+</div>
+\fi
+
+**Exercice 5.2**
+
 Comme vu précédemment, la fonction suivante permet de simuler 20 lancers de pièces et de stocker le résultat dans un vecteur de chaînes de caractères.
 
 ```{r}
