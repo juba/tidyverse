@@ -124,7 +124,7 @@ prop_suffixe(rp2012$commune, "ac")
 
 On a donc dans notre jeu de données `r round(prop_suffixe(rp2012$commune, "ac"), 2)`% de communes dont le nom se termine par "ac"^[Attention, le jeu de données ne comporte que les communes de plus de 2000 habitants.].
 
-Si maintenant on souhaite calculer ce pourcentage pour toutes les régions françaises, il suffit d'appeler notre fonction dans dans un appel à `summarise` :
+Si maintenant on souhaite calculer ce pourcentage pour toutes les régions françaises, il suffit d'appeler notre fonction dans un `summarise` :
 
 ```{r}
 rp2012 %>%
@@ -409,13 +409,13 @@ hdv2003 %>%
 
 `across()` offre également la possibilité d'appliquer plusieurs fonctions à un ensemble de colonnes. Dans ce cas, plutôt que de lui passer une seule fonction comme deuxième argument, on lui passe une liste nommée de fonctions.
 
-Le code suivant calcule le minimum et le maximum pour quatre variables de `rp2012`
+Le code suivant calcule le minimum et le maximum pour trois variables de `rp2012`
 
 ```{r}
 rp2012 %>%
     summarise(
         across(
-            cadres:ouvr,
+            cadres:empl,
             list(min = min, max = max)
         )
     )
@@ -630,9 +630,9 @@ Ainsi les définitions suivantes sont équivalents :
 # Fonctionne partout et tout le temps
 function(x) { x + 2 }
 # Fonctionne uniquement dans les fonctions du tidyverse
-~ .x + 2
+~ { .x + 2 }
 # Fonctionne uniquement à partir de R 4.1
-\(x) x + 2
+\(x) { x + 2 }
 ```
 
 De même que les définitions suivantes :
@@ -654,17 +654,25 @@ function(v1, v2) {
 }
 ```
 
+Quand la fonction anonyme est constituée d'une seule instruction, on peut supprimer les accolades dans sa définition.
+
+```{r eval=FALSE}
+function(x) x + 2
+~ .x + 2
+\(x) x + 2
+```
+
 On pourra du coup, si on le souhaite, utiliser ces syntaxes compactes dans notre `rename_with()` pour définir notre fonction anonyme.
 
 ```{r eval = FALSE}
 hdv2003 %>%
-    rename_with(~ str_replace_all(.x, fixed("."), "_"))
+    rename_with(~ str_replace_all(.x, fixed("."), "_") )
 
 hdv2003 %>%
-    rename_with(\(x) str_replace_all(x, fixed("."), "_"))
+    rename_with( \(x) str_replace_all(x, fixed("."), "_") )
 ```
 
-Cette syntaxe peut être utilisée partout où on peut passer une fonction comme argument et donc définir des fonctions anonymes. Dans l'exemple suivant déjà vu précédemment, on passe la fonction `detecte_oui` comme argument de `where()`.
+Cette syntaxe peut être utilisée partout où on peut passer une fonction comme argument et donc définir des fonctions anonymes. Dans cet exemple déjà vu précédemment, on passe la fonction `detecte_oui` comme argument de `where()`.
 
 ```{r eval=FALSE}
 detecte_oui <- function(v) {
@@ -680,7 +688,7 @@ hdv2003 %>%
     )
 ```
 
-On peut donc remplacer la fonction par une fonction anonyme définie directement dans le `where()`.
+On peut donc remplacer la fonction `detecte_oui` par une fonction anonyme définie directement dans le `where()`.
 
 ```{r eval=FALSE}
 hdv2003 %>%
@@ -698,7 +706,7 @@ Et du coup utiliser une des deux syntaxes "compactes".
 hdv2003 %>%
     mutate(
         across(
-            where(~ "Oui" %in% .),
+            where(~ "Oui" %in% .x),
             recode_oui_non
         )
     )
