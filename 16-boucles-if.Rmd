@@ -418,7 +418,7 @@ print(i)
 
 ### `while`
 
-`while` prend en argument une condition et un bloc de code, et exécute le bloc tant que la condition est vraie :
+`while` prend en argument une condition et est suivi d'un bloc de code entre accolades. Elle exécute le bloc tant que la condition est vraie :
 
 ![](figures/structure_while)
 
@@ -438,6 +438,11 @@ while (resultat != "Face") {
 [1] "Face"
 ```
 
+Le déroulement de la boucle est le suivant :
+
+1. la première instruction initialise la valeur de la variable `resultat` avec une chaîne vide
+2. à la première entrée dans le `while`, `resultat` vaut `""`, elle est donc différente de `"Face"` et le bloc de code est donc exécuté
+3. à la fin de cette exécution, `resultat` voit soit `"Pile"` soit `"Face"`. On entre alors une deuxième fois dans le `while`. Si `resultat` vaut `"Pile"`, la condition du `while` n'est pas vraie, on n'exécute donc pas le bloc de code et on sort de la boucle. Si `resultat` vaut `"Face"`, la condition est vraie, on n'exécute le bloc de code et on rentre ensuite une troisième fois dans le `while`, etc.
 
 
 ### `break` et `next`
@@ -461,7 +466,7 @@ nb_seuil(c(1, 25, 4, 110, 41), seuil = 100)
 
 L'instruction `next` a un comportement assez similaire mais plutôt que de sortir de la boucle, elle passe à l'itération suivante.
 
-Dans l'exemple suivant, on réécrit la fonction `summaries` vue précédemment pour prendre en compte le fait qu'un nom de variable non existante puisse être passé en argument. Dans ce cas on passe directement à la variable suivante.
+Dans l'exemple suivant, on réécrit la fonction `summaries` vue précédemment pour prendre en compte le fait qu'un nom de variable non existante puisse être passé en argument. Si c'est le cas on passe directement à la variable suivante.
 
 ```{r}
 summaries <- function(d, vars) {
@@ -493,7 +498,23 @@ for (i in seq_along(x)) {
 
 Et on se contentera d'un beaucoup plus simple `x + 10`.
 
-Autre exemple, la boucle suivante remplace les valeurs manquantes d'un vecteur par les valeurs correspondantes d'un deuxième vecteur.
+Autre exemple, si on souhaite remplacer dans tous les éléments d'un vecteur de chaînes de caractères le caractère "µ" par le caractère "o", on pourrait être tenter de faire une boucle du type :
+
+```{r}
+mots <- c("brµuette", "mµtµ", "iglµµ")
+for (i in seq_along(mots)) {
+    mots[i] <- str_replace_all(mots[i], "µ", "o")
+}
+```
+
+Or c'est tout à fait inutile car `str_replace_all()` étant vectorisée, on peut l'appliquer directement à un vecteur sans utiliser de boucle.
+
+```{r}
+mots <- c("brµuette", "mµtµ", "iglµµ")
+mots <- str_replace_all(mots, "µ", "o")
+```
+
+Dernier exemple, la boucle suivante remplace les valeurs manquantes d'un vecteur par les valeurs correspondantes d'un deuxième vecteur.
 
 ```{r}
 x <- c(1, NA, 4, 110, NA)
@@ -503,7 +524,7 @@ for (i in seq_along(x)) {
     if (is.na(x[i])) x[i] <- y[i]
 }
 
-print(x)
+x
 ```
 
 Cette boucle sera avantageusement remplacée par une utilisation plus compacte et plus rapide de l'opérateur `[]`.
@@ -514,7 +535,6 @@ y <- c(20, 30, 40, 50, 60)
 x[is.na(x)] <- y[is.na(x)]
 x
 ```
-
 
 En dehors des questions de performance, une boucle peut aussi être moins lisible que certaines alternatives. Soit la fonction suivante, qui prend en entrée un vecteur de mots et retourne le nombre total de voyelles qu'il contient.
 
@@ -528,7 +548,7 @@ n_voyelles <- function(mots) {
 n_voyelles(c("le", "chat", "roupille"))
 ```
 
-Supposons qu'on souhaite appliquer cette fonction à une série de vecteurs de mots contenus dans une liste. On pourrait utiliser une boucle `for` parcourant cette liste, appliquant la fonction, et ajoutant le résultat à un vecteur numérique vide préalablement créé avec  `numeric(0)`.
+Supposons qu'on souhaite appliquer cette fonction à une série de vecteurs de mots contenus dans une liste. On pourrait utiliser une boucle `for` parcourant cette liste, appliquant la fonction, et ajoutant le résultat à un vecteur numérique vide préalablement créé avec  `numeric()`.
 
 ```{r}
 phrases <- list(
@@ -536,7 +556,7 @@ phrases <- list(
     c("l'autre", "chat", "roupille", "aussi")
 )
 
-res <- numeric(0)
+res <- numeric()
 for (i in seq_along(phrases)) {
     res[i] <- n_voyelles(phrases[[i]])
 }
@@ -567,6 +587,7 @@ Sur le blog de [ThinkR](https://thinkr.fr/), [un article détaillé sur l'utilis
 Sur le [blog de Florian Privé](https://privefl.github.io/blog/), un [billet approfondi sur les raisons pour lesquelles les boucles peuvent être lentes](https://privefl.github.io/blog/why-loops-are-slow-in-r/) et sur les cas où il est préférable de ne pas les utiliser.
 
 
+## Exercices
 
 ### `if` et `else`
 
@@ -575,7 +596,7 @@ Sur le [blog de Florian Privé](https://privefl.github.io/blog/), un [billet app
 Écrire une fonction `pile_ou_face` qui ne prend aucun argument en entrée et qui effectue les actions suivantes :
 
 - tire un nombre au hasard entre 0 et 1 avec `runif(1)`
-- si ce nombre est inférieur à 0,5, retourne "pile"
+- si ce nombre est inférieur à 0.5, retourne "pile"
 - sinon, retourne "face"
 
 \iffalse
@@ -599,9 +620,9 @@ pile_ou_face <- function() {
 
 Créer une fonction `moyenne_arrondie`, qui prend en argument un vecteur `x`, un argument `na.rm` avec une valeur par défaut à `TRUE`, et un argument facultatif `decimales`. La fonction doit effectuer les opérations suivantes :
 
-- calcule la moyenne du vecteur en tenant compte de l'argument `na.rm` passé à la fonction
-- si `decimales` est défini, on arrondit la moyenne au nombre de décimales correspondant avec la fonction `round()`
-- retourne la moyenne, arrondie ou non
+- calculer la moyenne du vecteur en tenant compte de l'argument `na.rm` passé à la fonction
+- si `decimales` est défini, arrondir la moyenne au nombre de décimales correspondant avec la fonction `round()`
+- retourner le résultat
 
 \iffalse
 <div class="solution-exo">
@@ -648,10 +669,10 @@ avertissement <- function(pluie = FALSE, parapluie = FALSE) {
 
 Écrire une fonction `meteo` qui prend un argument nommé `temperature` et effectue les actions suivantes :
 
-- si `temperature` est inférieur à 0, affiche le message "ça caille"
-- si `temperature` est compris entre 0 et 15, affiche le message "fais pas chaud"
-- si `temperature` est compris entre 15 et 30, affiche le message "on est pas mal"
-- si `temperature` est supérieur à 30, affiche le message "tous à Miribel"
+- si `temperature` est inférieure à 0, affiche le message "ça caille"
+- si `temperature` est comprise entre 0 et 15, affiche le message "fais pas chaud"
+- si `temperature` est comprise entre 15 et 30, affiche le message "on est pas mal"
+- si `temperature` est supérieure à 30, affiche le message "tous à Miribel"
 
 \iffalse
 <div class="solution-exo">
@@ -664,7 +685,7 @@ meteo <- function(temperature) {
     } else if (temperature < 30) {
         message("on est pas mal")
     } else {
-        message("tous à Mriribel")
+        message("tous à Miribel")
     }
 }
 # Ou bien
@@ -752,7 +773,13 @@ proportion <- function(x) {
 
 Essayer d'exécuter `proportion(c(-2, 1, 1))`. Pourquoi obtient-on ce résultat ?
 
-Modifier la fonction pour qu'elle retourne un message d'erreur si jamais la somme des éléments du vecteur vaut 0.
+\iffalse
+<div class="solution-exo">
+Comme la somme des éléments du vecteur vaut 0, lorsqu'on divise chaque élément par cette valeur on obtient l'infini (`Inf`), soit négatif soit positif selon le signe de l'élément divisé.
+</div>
+\fi
+
+Modifier la fonction pour qu'elle retourne un message d'erreur si la somme des éléments du vecteur vaut 0.
 
 \iffalse
 <div class="solution-exo">
@@ -932,7 +959,7 @@ Modifier cette fonction en utilisant une boucle `for` pour qu'elle accepte un ar
 ```{r echo=FALSE}
 pile_ou_face <- function(n) {
     alea <- runif(n)
-    result <- if_else(alea < 0.5, "pile", "face")
+    result <- ifelse(alea < 0.5, "pile", "face")
     result
 }
 ```
@@ -945,7 +972,7 @@ pile_ou_face(4)
 <div class="solution-exo">
 ```{r eval=FALSE}
 pile_ou_face <- function(n) {
-    tirages <- character(0)
+    tirages <- character()
     for (i in seq_len(n)) {
         alea <- runif(1)
         if (alea < 0.5) {
@@ -967,7 +994,7 @@ Réécrire la fonction pour qu'elle retourne le même résultat sans utiliser de
 ```{r eval=FALSE}
 pile_ou_face <- function(n) {
     alea <- runif(n)
-    result <- if_else(alea < 0.5, "pile", "face")
+    result <- ifelse(alea < 0.5, "pile", "face")
     result
 }
 # Ou bien, encore plus simple
