@@ -2,9 +2,10 @@
 
 La partie \@ref(dplyr) a permis de présenter l'extension `dplyr`. On va voir ici comment aller un peu plus loin dans l'utilisation du *package*, notamment en utilisant nos propres fonctions et en appliquant des transformations à des ensembles de colonnes.
 
-On charge les jeux de données `hdv2003` et `rp2012` depuis l'extension `questionr`.
+On commence par charger les extensions du *tidyverse* ainsi que les jeux de données `hdv2003` et `rp2012` de l'extension `questionr`.
 
 ```{r}
+library(tidyverse)
 library(questionr)
 data(hdv2003)
 data(rp2012)
@@ -12,13 +13,13 @@ data(rp2012)
 
 ## Appliquer ses propres fonctions 
 
-### Exemple avec un `mutate`
+### Exemple avec `mutate`
 
 Dans le jeu de données `hdv2003` plusieurs variables comprennent les mêmes modalités `Oui` / `Non`. C'est le cas notamment de `cuisine` et `cinema`.
 
 Supposons qu'on souhaite recoder les valeurs de `cuisine` en transformant `Oui` en `O`, `Non` en `N`. On a vu section \@ref(recode) qu'on peut utiliser pour cela la fonction `fct_recode()` de `forcats`.
 
-```{r}
+```{r results="hide"}
 hdv2003 %>%
     mutate(
         cuisine = fct_recode(cuisine,
@@ -28,9 +29,9 @@ hdv2003 %>%
     )
 ```
 
-Supposons qu'on souhaite également convertir les `NA` éventuelles de `cuisine` en vaeurs explicites `Non réponse`. On peut le faire avec la fonction `fct`explicit_na()` de `forcats`. Notre recodage doit donc se faire en deux étapes, par exemple de la manière suivante :
+Supposons qu'on souhaite également convertir les `NA` éventuelles de `cuisine` en vaeurs explicites `Non réponse`. On peut le faire avec la fonction `fct_explicit_na()` de `forcats`. Notre recodage doit donc se faire en deux étapes, par exemple de la manière suivante :
 
-```{r}
+```{r results="hide"}
 hdv2003 %>%
     mutate(
         cuisine = fct_recode(cuisine,
@@ -41,7 +42,7 @@ hdv2003 %>%
     )
 ```
 
-Comme notre recodage commence à être un peu complexe, on pourrait l'extraire de notre `mutate` en créant une fonction. On la nomme `recode_oui_non`. Celle-ci prend en entrée un vecteur `v` et retourne le vecteur recodé.
+Comme notre recodage commence à être un peu complexe, on décide de l'extraire de notre `mutate` en créant une fonction dédiée. On la nomme `recode_oui_non`. Celle-ci prend en entrée un vecteur `v` et retourne le vecteur recodé.
 
 ```{r}
 recode_oui_non <- function(v) {
@@ -56,16 +57,16 @@ recode_oui_non <- function(v) {
 
 On peut dès lors simplifier notre `mutate` en appelant notre nouvelle fonction.
 
-```{r}
+```{r results="hide"}
 hdv2003 %>%
     mutate(cuisine = recode_oui_non(cuisine))
 ```
 
 Premier avantage : on gagne en lisibilité. On a séparé le code d'une opération spécifique dans une fonction avec un nom "parlant", ce qui permet de savoir facilement à quoi elle sert. Et on a simplifié notre `mutate` qui est désormais plus lisible parce qu'il fait apparaître la logique des nos opérations (on veut recoder les valeurs "oui" / "non") sans en inclure les détails.
 
-Le deuxième avantage évidemment, comme pour toute fonction, est qu'on peut la réutiliser pour appliquer ce recodage à plusieurs variables. Ainsi, si on veut recoder de la même manière `cuisine` et `cinema`, il suffit de faire :
+Le deuxième avantage évident, comme pour toute fonction, est qu'on peut la réutiliser pour appliquer ce recodage à plusieurs variables. Ainsi, si on veut recoder de la même manière `cuisine` et `cinema`, il suffit de faire :
 
-```{r}
+```{r results="hide"}
 hdv2003 %>%
     mutate(
         cuisine = recode_oui_non(cuisine),
@@ -74,20 +75,21 @@ hdv2003 %>%
 
 ```
 
-Le code est plus court, plus lisible, on évite les erreurs de copier/coller, et si on souhaite modifier le recodage on a à intervenir qu'à un seul endroit.
+Le code est plus court, plus lisible, on évite les erreurs de copier/coller, et si on souhaite modifier le recodage on n'a à intervenir qu'à un seul endroit.
 
-### Exemple avec un `summarise`
+### Exemple avec `summarise`
 
 Autre exemple, cette fois sur le jeu de données `rp2012`. Imaginons qu'on souhaite calculer, pour chaque région, le pourcentage de communes dont le nom se termine par une série de caractères donnée.
 
 Comme il ne s'agit pas forcément d'une question triviale, on va décomposer le problème et rappeler (comme vu section \@ref(str-detect)) que la fonction `str_detect()` de l'extension `stringr` permet de détecter quels éléments d'un vecteur de chaînes de caractères correspondent à une expression régulière. Ainsi, si on veut détecter si un nom de commune (variable `rp2012$commune`) se termine par `"ac"`, on utilisera :
 
-```{r}
-library(stringr)
+```{r results="hide"}
 str_detect(rp2012$commune, "ac$")
 ```
 
-Le `$` dans l'expression régulière `"ac$"` correspond à la fin de la chaîne de caractères. Il permet de s'assurer qu'on ne détecte que les noms de communes se terminant par "ac" (comme "Fige**ac**"), et pas ceux contenant "ac" à un autre endroit (comme "Arc**ac**hon").
+```{block type='rmdnote'}
+Le symbole \\$ dans l'expression régulière `"ac$"` représente la fin de la chaîne de caractères. Il permet de s'assurer qu'on ne détecte que les noms de communes se terminant par "ac" (comme "Fige**ac**"), et pas ceux contenant "ac" à un autre endroit (comme "Arc**ac**hon").
+```
 
 Si on veut compter le nombre de communes pour lesquelles on a détecté une terminaison en "ac", on peut tout simplement appliquer la fonction `sum()` au résultat précédent : les `TRUE` du résultat du `str_detect` sont alors convertis en 1, les `FALSE` en 0, et le `sum()` renverra donc le nombre de `TRUE`.
 
@@ -101,7 +103,7 @@ Si on souhaite convertir ce résultat en pourcentage, il faut qu'on divise par l
 sum(str_detect(rp2012$commune, "ac$")) / length(rp2012$commune) * 100
 ```
 
-On va créer une fonction nommée `prop_suffixe` qui aura pour objectif d'effectuer ce calcul. Elle prendra en entrée deux arguments, un vecteur de chaînes de cractère, et un "motif" à détecter. On va rajouter nous-mêmes le "$" à la fin du motif en question pour faciliter l'usage de la fonction. Le résultat final est le suivant :
+On crée une fonction nommée `prop_suffixe` qui a pour objectif d'effectuer ce calcul. Elle prend en entrée deux arguments : un vecteur de chaînes de caractères et un "motif" à détecter. On rajoute nous-mêmes le "$" à la fin du motif en question pour faciliter l'usage de la fonction. Le résultat final est le suivant :
 
 ```{r}
 prop_suffixe <- function(v, motif) {
@@ -142,11 +144,11 @@ rp2012 %>%
 
 En créant une fonction plutôt qu'en mettant notre code directement dans le `summarise` on a un script plus lisible, plus facile à maintenir, et des fonctionnalités facilement réutilisables.
 
-### Exemple avec un `rename_with`
+### Exemple avec `rename_with`
 
 On a vu section \@ref(select-rename) que `dplyr` propose la fonction `rename()` pour renommer des colonnes d'un tableau de données. On peut l'utiliser par exemple pour remplacer un `.` par un `_` dans le nom d'une variable d'`hdv2003`.
 
-```{r}
+```{r results="hide"}
 hdv2003 %>% rename("lecture_bd" = "lecture.bd")
 ```
 
@@ -166,7 +168,9 @@ remplace_points <- function(v) {
 }
 ```
 
+```{block type='rmdnote'}
 On notera qu'on est obligé d'utiliser ici la fonction `fixed()` pour indiquer que le motif `"."` est bien le caractère `.` et pas une expression régulière.
+```
 
 Dès lors, on peut appliquer cette fonction à l'ensemble de nos noms de variables :
 
@@ -174,7 +178,13 @@ Dès lors, on peut appliquer cette fonction à l'ensemble de nos noms de variabl
 hdv2003 %>% rename_with(remplace_points)
 ```
 
-Certain.es lectrices et lecteurs attentives auront peut-être noté que le même résultat peut être obtenu en utilisant `remplace_points()` avec la fonction `names()`. L'avantage de `rename_with()`, comme nous le verrons ci-dessous, c'est qu'elle permet si nécessaire de sélectionner finement les colonnes auxquelles appliquer le renommage.
+Certain.es lectrices et lecteurs attentives auront peut-être noté que le même résultat peut être obtenu en utilisant `remplace_points()` avec la fonction `names()`. 
+
+```{r eval=FALSE}
+names(hdv2003) <- remplace_points(names(hdv2003))
+```
+
+L'avantage de `rename_with()`, comme nous allons le voir ci-dessous, c'est qu'elle permet si nécessaire de n'appliquer cette transformation qu'à certaines colonnes seulement.
 
 
 ## `across()` : appliquer des fonctions à plusieurs colonnes {#across}
@@ -185,7 +195,7 @@ Certain.es lectrices et lecteurs attentives auront peut-être noté que le même
 
 On a défini précédemment une fonction qui recode les modalités d'une variable "Oui" / "Non" et on a vu comment appliquer ce recodage à deux variables de `hdv2003`.
 
-```{r}
+```{r results="hide"}
 recode_oui_non <- function(v) {
     v %>%
         fct_recode(
@@ -195,6 +205,7 @@ recode_oui_non <- function(v) {
         fct_explicit_na("Manquant")
 }
 
+data(hdv2003)
 hdv2003 %>%
     mutate(
         cuisine = recode_oui_non(cuisine),
@@ -209,9 +220,11 @@ Supposons qu'on souhaite appliquer ce recodage à toutes les variables "Oui" / "
 - la définition d'un ensemble de colonnes de notre tableau de données
 - une ou plusieurs fonctions à appliquer aux colonnes sélectionnées
 
-Il existe de nombreuses manières de définir les colonnes qu'on souhaite transformer : celles-ci sont en fait les mêmes que celles offertes par le verbe `select()`. Une première possibilité est d'utiliser `c()` en lui passant les noms des variables (on notera qu'on n'est pas obligés de mettre ces noms entre guillemets).
+Il existe de nombreuses manières de définir les colonnes qu'on souhaite transformer : celles-ci sont en fait les mêmes que celles offertes par le verbe `select()`. 
 
-```{r}
+Une première possibilité est d'utiliser `c()` en lui passant les noms des variables (on notera qu'on n'est pas obligés de mettre ces noms entre guillemets).
+
+```{r results="hide"}
 hdv2003 %>%
     mutate(
         across(
@@ -223,7 +236,7 @@ hdv2003 %>%
 
 Une autre possibilité est d'utiliser `:`, qui permet de définir une plage de colonnes en lui indiquant la colonne de début et la colonne de fin. Ainsi dans l'exemple suivant notre recodage est appliqué à toutes les colonnes situées entre `hard.rock` et `sport` (incluses).
 
-```{r}
+```{r results="hide"}
 hdv2003 %>%
     mutate(
         across(
@@ -233,7 +246,7 @@ hdv2003 %>%
     )
 ```
 
-Une autre possibilité est de sélectionner les variables via leurs noms. On peut ainsi choisir les variables qui commencent par une certaine chaîne de caractères via la fonction `starts_with()`, celles qui se terminent ou qui contiennent certains caractères avec `ends_with()` et `contains()`.
+On peut aussi sélectionner les variables via leurs noms. On peut ainsi choisir les variables qui commencent par une certaine chaîne de caractères via la fonction `starts_with()`, celles qui se terminent ou qui contiennent certains caractères avec `ends_with()` et `contains()`.
 
 Dans l'exemple suivant, on effectue un `summarise` qui applique la fonction `max()` à toutes les variables de `rp2012` qui commencent par `dipl`.
 
@@ -247,7 +260,7 @@ rp2012 %>%
     )
 ```
 
-On peut également sélectionner des colonnes via une conditione avec la fonction `where()`. Celle-ci prend elle-même en argument une fonction qui doit renvoyer `TRUE` ou `FALSE`, et ne conserve que les colonnes qui correspondent à des `TRUE`.
+On peut également sélectionner des colonnes via une condition avec la fonction `where()`. Celle-ci prend elle-même en argument une fonction qui doit renvoyer `TRUE` ou `FALSE`, et ne conserve que les colonnes qui correspondent à des `TRUE`.
 
 Dans l'exemple suivant, on applique la fonction `max` seulement aux colonnes de `hdv2003` pour lesquelles la fonction `is.numeric` renvoie `TRUE`.
 
@@ -263,7 +276,7 @@ hdv2003 %>%
 
 Pour des conditions plus complexes, on doit parfois définir soi-même la fonction passée à `where()`. Ainsi, si on souhaite appliquer `recode_oui_non()` à toutes les colonnes de `hdv2003` contenant la modalité "Oui", on peut faire :
 
-```{r}
+```{r results="hide"}
 detecte_oui <- function(v) {
     "Oui" %in% v
 }
@@ -277,7 +290,7 @@ hdv2003 %>%
     )
 ```
 
-Il est même possible, pour les cas les plus complexes, de combiner plusieurs sélections avec les opérateurs `&`, `|` et `!`. L'exemple suivant, applique la fonction `max()` à toutes les colonnes numériques de `hdv2003`, sauf aux colonnes `id` et `poids`.
+Il est même possible, pour les cas les plus complexes, de combiner plusieurs sélections avec les opérateurs `&`, `|` et `!`. L'exemple suivant applique la fonction `max()` à toutes les colonnes numériques de `hdv2003`, sauf aux colonnes `id` et `poids`.
 
 ```{r}
 hdv2003 %>%
@@ -301,7 +314,7 @@ hdv2003 %>%
     )
 ```
 
-Il existe encore d'autres possibilités de sélection des colonnes, pour avoir un aperçu complet on pourra se référer à [la page de documentation de la fonction `select()`](https://dplyr.tidyverse.org/reference/select.html).
+Il existe encore d'autres possibilités de sélection des colonnes, pour avoir un aperçu complet on pourra se référer à [la page de documentation de la fonction select()](https://dplyr.tidyverse.org/reference/select.html).
 
 ```{block type='rmdnote'}
 Une erreur de syntaxe fréquente est de mettre la sélection des colonnes dans l'appel à `across()`, mais pas la fonction qu'on souhaite appliquer.
@@ -310,7 +323,7 @@ Ainsi le code suivant génèrera une erreur :
 
 `mutate(across(hard.rock:sport), recode_oui_non)`
 
-Il faut donc bien penser à passer la fonction comme argument du `across()`, donc à l'intérieur de ses parenthèses.
+Il faut bien penser à passer la fonction comme argument du `across()`, donc à l'intérieur de ses parenthèses.
 
 `mutate(across(hard.rock:sport, recode_oui_non))`
 ```
@@ -347,7 +360,7 @@ hdv2003 %>%
     )
 ```
 
-Mais on peut faire plus simple. Comme tout argument supplémentaire passé à `across()` est transmis à la fonction appelée, on peut faire :
+Mais on peut faire plus simple, car tout argument supplémentaire passé à `across()` est transmis directement à la fonction appelée. Il est donc possible de faire :
 
 ```{r}
 hdv2003 %>%
@@ -364,9 +377,9 @@ hdv2003 %>%
 
 Par défaut, lorsqu'on utilise `across()` dans un `mutate`, les nouvelles colonnes portent le même nom que les colonnes d'origine, ce qui signifie que ces dernières sont "écrasées" par les nouvelles valeurs.
 
-Ainsi dans l'exemple suivant vu précédemment, les valeurs d'origine des colonnes entre `hard.rock` et `sport` ont été écrasées par le résultat du recodage.
+Ainsi dans l'exemple suivant, les valeurs d'origine des colonnes entre `hard.rock` et `sport` ont été écrasées par le résultat du recodage.
 
-```{r}
+```{r eval=FALSE}
 hdv2003 %>%
     mutate(
         across(
@@ -422,11 +435,11 @@ rp2012 %>%
 
 ```
 
-### Renommer plusieurs colonnes avec une fonctions
+### Renommer plusieurs colonnes avec une fonction
 
 On a vu précédemment qu'on peut utiliser `rename_with()` pour renommer les colonnes d'un tableau de données à l'aide d'une fonction.
 
-```{r}
+```{r results="hide"}
 remplace_points <- function(v) {
     str_replace_all(v, fixed("."), "_")
 }
@@ -454,7 +467,7 @@ hdv2003 %>%
 
 ## `rowwise()` et `c_across()` : appliquer une transformation ligne par ligne
 
-Soit le tableau de données d'exemple suivant, qui contient des évaluations de restaurants sur quatre critères différents (on a initialisé les valeurs de chaque critère en tirant au sort des notes entre 0 et 5).
+Soit le tableau de données suivant, qui contient des évaluations de restaurants sur quatre critères différents (on a initialisé les valeurs de chaque critère en tirant au sort des notes entre 0 et 5)^[Un nom de salon de coiffure s'est glissé dans cette liste de restaurants. Saurez-vous le retrouver ?].
 
 ```{r}
 alea <- function(n) {
@@ -462,7 +475,12 @@ alea <- function(n) {
 }
 
 restos <- tibble(
-    nom = c("La bonne fourchette", "La choucroute de l'amer", "L'Hair de rien", "La blanquette de Vaulx"),
+    nom = c(
+        "La bonne fourchette",
+        "La choucroute de l'amer",
+        "L'Hair de rien",
+        "La blanquette de Vaulx"
+    ),
     cuisine = alea(4),
     decor   = alea(4),
     accueil = alea(4),
@@ -472,24 +490,18 @@ restos <- tibble(
 restos
 ```
 
-(Un nom de salon de coiffure s'est glissé dans cette liste de restaurants. Saurez-vous le retrouver ?)
-
 Imaginons qu'on souhaite faire la moyenne, pour chaque restaurant, des critères `decor` et `accueil`. On pourrait être tentés d'utiliser `mean()` de la manière suivante :
 
 ```{r}
-restos <- restos %>%
+restos %>%
     mutate(
         decor_accueil = mean(c(decor, accueil))
     )
 ```
 
-Si on regarde le résultat, on constate qu'il ne correspond pas à ce que l'on souhaite faire puisque toutes les valeurs sont les mêmes.
+Si on regarde le résultat, on constate qu'il ne correspond pas à ce que l'on souhaite puisque toutes les valeurs sont les mêmes.
 
-```{r}
-restos$decor_accueil
-```
-
-Que s'est-il passé ? En fait le `mutate` s'est appliqué sur la totalité du tableau. Ceci signifie que dans `mean(c(decor, accueil))`, les objets `decor` et `accueil` correspondent à la totalité des valeurs de chaque variables. On a donc concaténé ces deux vecteurs et calculé la moyenne, qui est du coup la même pour chaque ligne.
+Que s'est-il passé ? En fait le `mutate` s'est appliqué sur la totalité du tableau. Ceci signifie que dans `mean(c(decor, accueil))`, les objets `decor` et `accueil` correspondent à la totalité des valeurs de chaque variable. On a donc concaténé ces deux vecteurs et calculé la moyenne, qui est du coup la même pour chaque ligne.
 
 La valeur obtenue correspond aux résultat de :
 
@@ -497,21 +509,20 @@ La valeur obtenue correspond aux résultat de :
 mean(c(restos$decor, restos$accueil))
 ```
 
-Ce que nous souhaitons ici, c'est calculer non pas pour l'ensemble du tableau mais *pour chaque ligne*. Pour cela, on va utiliser la fonction `rowwise()`. Celle-ci est équivalente à un `group_by()` qui créerait autant de groupes qu'il y a de lignes dans notre tableau :
+Ce que nous souhaitons ici, c'est calculer la moyenne non pas pour l'ensemble du tableau mais *pour chaque ligne*. Pour cela, on va utiliser la fonction `rowwise()`. Celle-ci est équivalente à un `group_by()` qui créerait autant de groupes qu'il y a de lignes dans notre tableau.
 
-```{r}
-restos %>% rowwise()
+```{r cache=FALSE}
+restos %>% rowwise() 
 ```
 
-Quant notre tableau est groupé via un `rowwise()`, les opérations s'effectuent sur un tableau de données constitué uniquement de la ligne courante. Si on calcule la moyenne précédente, on obtient désormais le bon résultat :
+Quant notre tableau est groupé via un `rowwise()`, les opérations s'effectuent sur un tableau constitué uniquement de la ligne courante. Si on calcule la moyenne précédente, on obtient désormais le bon résultat.
 
 ```{r}
-restos <- restos %>%
+restos %>%
     rowwise() %>%
     mutate(decor_accueil = mean(c(decor, accueil)))
-
-restos$decor_accueil
 ```
+
 
 Supposons qu'on souhaite désormais calculer la moyenne de l'ensemble des critères. On peut évidemment reprendre le code précédent en saisissant toutes les variables concernées.
 
@@ -521,9 +532,9 @@ restos %>%
     mutate(decor_accueil = mean(c(decor, accueil, cuisine, prix)))
 ```
 
-Ceci peut cependant être peu pratique si le nombre de variables est important. C'est pourquoi `dplyr` propose la fonction `c_across()` : celle-ci permet de sélectionner des colonnes de la même manière que `select()` ou `across()`, et retourne un vecteur constitué des valeurs concaténées de ces colonnes.
+Lister les variables de cette manière peut vite devenir pénible si le nombre de variables est important. C'est pourquoi `dplyr` propose la fonction `c_across()` : celle-ci permet de sélectionner des colonnes de la même manière que `select()` ou `across()`, et retourne un vecteur constitué des valeurs concaténées de ces colonnes.
 
-L'exemple suivant calcule la moyenne de toutes les colonnes comprises entre `cuisine` et `prix`, en utilisant l'opérateur `:`.
+L'exemple suivant calcule la moyenne de toutes les colonnes comprises entre `decor` et `prix`, en utilisant l'opérateur `:`.
 
 ```{r}
 restos %>%
@@ -563,14 +574,14 @@ restos %>%
     summarise(note_max = pmax(decor, accueil))
 ```
 
-Une des limites de `pmax` cependant est qu'on ne peut pas l'utiliser avec `c_across()`, et qu'on ne peut donc pas faire de sélection des colonnes : on est obligés de taper leurs noms.
+Une des limites de `pmax` cependant est qu'on ne peut pas l'utiliser avec `c_across()`, et qu'on ne peut donc pas faire de sélection des colonnes : on est obligés de saisir leurs noms.
 
 ```{r}
 restos %>%
     summarise(note_max = pmax(cuisine, decor, accueil, prix))
 ```
 
-Dans certains cas, notamment lorsque les colonnes sont nombreuses où qu'on ne les a pas identifiées à l'avance, on pourra  utiliser `rowwise()` et `c_across()` même quand des alternatives vectorisées existent.
+Dans certains cas, notamment lorsque les colonnes sont nombreuses ou qu'on ne les a pas identifiées à l'avance, on pourra  utiliser `rowwise()` et `c_across()` même quand des alternatives vectorisées existent.
 
 ```{r}
 restos %>%
@@ -588,7 +599,7 @@ Dans les sections précédentes, nous avons rencontré plusieurs fonctions, comm
 
 Par exemple, dans l'utilisation suivante de `rename_with()`, on avait créé une fonction `remplace_points()`.
 
-```{r}
+```{r eval=FALSE}
 remplace_points <- function(v) {
     str_replace_all(v, fixed("."), "_")
 }
@@ -598,7 +609,7 @@ hdv2003 %>% rename_with(remplace_points)
 
 Le fait de créer une fonction à part pour une opération d'une seule ligne ne se justifie pas forcément, surtout si on n'utilise pas cette fonction ailleurs dans notre code. Dans, ce cas, on peut définir notre fonction directement dans l'appel à `rename_with()` en utilisant une *fonction anonyme*, déjà introduites section \@ref(fonctions-anonymes).
 
-```{r}
+```{r eval=FALSE}
 hdv2003 %>%
     rename_with(function(v) {
         str_replace_all(v, fixed("."), "_")
@@ -609,13 +620,13 @@ Cette notation est assez pratique et souvent utilisée pour les fonctions à usa
 
 La syntaxe étant un peu lourde, il existe deux alternatives permettant une définition plus "compacte". 
 
-- La première est propre aux packages du *tidyverse* (notamment `dplyr` et `purrr`), et ne fonctionnera pas pour les fonctions n'appartenant pas à ces packages. Il s'agit d'utiliser une syntaxe de type "formule" : le corps de la formule contient les instructions de la fonction, et les arguments sont nommés `.x` (ou `.`) s'il n'y en a qu'un, `.x` et `.y` s'il y en a deux, et `..1`, `..2`, etc. s'ils sont plus nombreux.
+- La première alternative est propre aux packages du *tidyverse* (notamment `dplyr` et `purrr`), et ne fonctionnera pas pour les fonctions n'appartenant pas à ces packages. Il s'agit d'utiliser une syntaxe de type "formule" : le corps de la formule contient les instructions de la fonction, et les arguments sont nommés `.x` (ou `.`) s'il n'y en a qu'un, `.x` et `.y` s'il y en a deux, et `..1`, `..2`, etc. s'ils sont plus nombreux.
 
-- La deuxième est une syntaxe apparue avec la version 4.1 de R, qui permet de remplacer `function(...)` par le raccourci `\(...)`.
+- La deuxième alternative est une syntaxe apparue avec la version 4.1 de R, qui permet de remplacer `function(...)` par le raccourci `\(...)`.
 
 Ainsi les définitions suivantes sont équivalents :
 
-```{r}
+```{r eval=FALSE}
 # Fonctionne partout et tout le temps
 function(x) { x + 2 }
 # Fonctionne uniquement dans les fonctions du tidyverse
@@ -626,7 +637,7 @@ function(x) { x + 2 }
 
 De même que les définitions suivantes :
 
-```{r}
+```{r eval=FALSE}
 function(v1, v2) {
     res <- v1 / v2
     round(res, 1)
@@ -704,7 +715,7 @@ hdv2003 %>%
 
 ## Ressources
 
-[La page d'aide de la fonction `select`](https://dplyr.tidyverse.org/reference/select.html) (en anglais) liste toutes les possibilités offertes pour spécifier des ensembles de colonnes d'un tableau de données.
+[La page d'aide de la fonction select](https://dplyr.tidyverse.org/reference/select.html) (en anglais) liste toutes les possibilités offertes pour spécifier des ensembles de colonnes d'un tableau de données.
 
 La vignette [Column-wise operations](https://dplyr.tidyverse.org/articles/colwise.html) de `dplyr` (en anglais) présente en détail l'utilisation et les fonctionnalités de `across()`.
 
@@ -726,13 +737,13 @@ Le jeu de données contient les caractéristiques de 87 personnages présents da
 
 **Exercice 1.1**
 
-Créer une fonction `imc` prend en argument un vecteur `taille` (en cm) et un vecteur `poids` (en kg) et retourne les valeurs correspondante de l'indice de masse corporelle, qui se calcule en divisant le poids en kilos par la taille en mètres au carré.
+Créer une fonction `imc` qui prend en argument un vecteur `taille` (en cm) et un vecteur `poids` (en kg) et retourne les valeurs correspondantes de l'indice de masse corporelle, qui se calcule en divisant le poids en kilos par la taille en mètres au carré.
 
 \iffalse
 <div class="solution-exo">
 ```{r eval=FALSE}
 imc <- function(tailles, poids) {
-    tailles_m <- tailles/100
+    tailles_m <- tailles / 100
     poids / tailles_m ^ 2
 }
 ```
@@ -773,7 +784,9 @@ starwars %>%
 ```{r eval=FALSE}
 starwars %>%
     group_by(sex) %>%
-    summarise(etendue_taille = max(height, na.rm = TRUE) - min(height, na.rm = TRUE))
+    summarise(
+        etendue_taille = max(height, na.rm = TRUE) - min(height, na.rm = TRUE)
+    )
 ```
 </div>
 \fi
@@ -801,7 +814,7 @@ starwars %>%
 
 La liste suivante donne, pour chacun des neuf principaux films de la saga *Star Wars*, la date à laquelle ils se déroulent dans l'univers de la saga.
 
-```{r}
+```{r results="hide"}
 list(
     "I"    = -32,
     "II"   = -22,
@@ -817,7 +830,7 @@ list(
 
 Dans le jeu de données `starwars`, la variable `birth_year` indique l'année de naissance du personnage en "années avant l'an zéro" (une valeur de 19 signifie donc une année de naissance de -19).
 
-Créer une fonction `age_film` qui prend en entrée un vecteur d'années de naissance au même format que `birth_year` ainsi que l'identifiant d'un film, et calcule les âges correspondant à ces années de naissance à la date du film en question. 
+Créer une fonction `age_film` qui prend en entrée un vecteur d'années de naissance au même format que `birth_year` ainsi que l'identifiant d'un film, et calcule les âges à la date du film. 
 
 \iffalse
 <div class="solution-exo">
@@ -899,7 +912,9 @@ etendue <- function(v) {
 
 À l'aide de `across()` calculer l'étendue des variables `height` et `mass` pour chaque valeur de `sex`.
 
-```{r}
+\iffalse
+<div class="solution-exo">
+```{r eval=FALSE}
 starwars %>%
     group_by(sex) %>%
     summarise(
@@ -909,10 +924,14 @@ starwars %>%
         )
     )
 ```
+</div>
+\fi
 
 Toujours à l'aide d'`across()`, appliquer `etendue` de la même manière à toutes les variables numériques.
 
-```{r}
+\iffalse
+<div class="solution-exo">
+```{r eval=FALSE}
 starwars %>%
     group_by(sex) %>%
     summarise(
@@ -922,10 +941,14 @@ starwars %>%
         )
     )
 ```
+</div>
+\fi
 
 En utilisant `&` et `!`, appliquer `etendue` à toutes les variables numériques sauf à celles qui finissent par "year".
 
-```{r}
+\iffalse
+<div class="solution-exo">
+```{r eval=FALSE}
 starwars %>%
     group_by(sex) %>%
     summarise(
@@ -935,12 +958,17 @@ starwars %>%
         )
     )
 ```
+</div>
+\fi
+
 
 **Exercice 2.2**
 
 Dans le jeu de données `starwars`, appliquer en un seul `summarise` les fonctions `min` et `max` aux variables `height` et `mass`.
 
-```{r}
+\iffalse
+<div class="solution-exo">
+```{r eval=FALSE}
 starwars %>%
     summarise(
         across(
@@ -949,6 +977,8 @@ starwars %>%
         )
     )
 ```
+</div>
+\fi
 
 Modifier le code précédent pour que le calcul des valeurs minimales et maximales ne prennent pas en compte les valeurs manquantes.
 
@@ -1043,32 +1073,47 @@ hdv2003 <- hdv2003 %>%
     )
 ```
 
-Sans utiliser `rowwise()`, calculer le plus simplement possible une nouvelle variable `total` qui contient le nombre total de `TRUE` pour les variables `cinema_true` et `sport_true`.
+Sans utiliser `rowwise()`, calculer le plus simplement possible une nouvelle variable `total` qui contient, pour chaque ligne, le nombre de valeurs `TRUE` des deux variables `cinema_true` et `sport_true` (si une ligne contient `TRUE` pour ces deux variables, `total` doit valoir 2, etc.)
 
-```{r}
+\iffalse
+<div class="solution-exo">
+```{r eval=FALSE}
 hdv2003 %>%
     mutate(total = cuisine_true + sport_true)
 ```
+</div>
+\fi
 
-En utilisant `rowwise()` et `sum()`, recalculer la variable `total` pour qu'elle contienne le nombre total de `TRUE` pour les variables `bricol_true`, `cinema_true` et `sport_true`.
+En utilisant `rowwise()` et `sum()`, recalculer la variable `total` pour qu'elle contienne le nombre de `TRUE` par ligne pour les variables `bricol_true`, `cinema_true` et `sport_true`.
 
-```{r}
+\iffalse
+<div class="solution-exo">
+```{r eval=FALSE}
 hdv2003 %>%
     rowwise() %>%
     mutate(total = sum(cuisine_true, sport_true, bricol_true))
 ```
+</div>
+\fi
 
-En utilisant `rowwise()`, `sum()` et `c_across()`, recalculer la variable `total` pour qu'elle contienne le nombre total de `TRUE` pour toutes les variables se terminant par "_true".
+En utilisant `rowwise()`, `sum()` et `c_across()`, recalculer la variable `total` pour qu'elle contienne le nombre de `TRUE` par ligne pour toutes les variables se terminant par "_true".
 
-```{r}
+\iffalse
+<div class="solution-exo">
+```{r eval=FALSE}
 hdv2003 %>%
     rowwise() %>%
     mutate(total = sum(c_across(ends_with("_true"))))
 ```
+</div>
+\fi
+
 
 Reprendre le code précédent pour qu'il puisse s'appliquer directement sur les variables `hard.rock`...`sport`, sans passer par le recodage en `TRUE`/`FALSE`. 
 
-```{r}
+\iffalse
+<div class="solution-exo">
+```{r eval=FALSE}
 count_oui <- function(v) {
     sum(v == "Oui")
 }
@@ -1078,18 +1123,21 @@ hdv2003 %>%
         total = count_oui(c_across(hard.rock:sport))
     )
 ```
+</div>
+\fi
+
 
 **Exercice 3.2**
 
-Dans le jeu de données `starwars`, la colonne `films` contient la liste des films dans lesquels apparaissent les différents personnages. Cette colonne a une forme un peu particulière puisqu'il s'agit d'une "colonne-liste" : les éléments de cette colonne sont eux-mêmes des listes :
+Dans le jeu de données `starwars`, la colonne `films` contient la liste des films dans lesquels apparaissent les différents personnages. Cette colonne a une forme un peu particulière puisqu'il s'agit d'une "colonne-liste" : les éléments de cette colonne sont eux-mêmes des listes.
 
 ```{r}
 head(starwars$films, 3)
 ```
 
-On essaye de calculer le nombre films pour chaque personnage avec le code suivant. Est-ce que ça fonctionne ? Pourquoi ?
+On essaye de calculer le nombre de films pour chaque personnage avec le code suivant. Est-ce que ça fonctionne ? Pourquoi ?
 
-```{r}
+```{r eval=FALSE}
 starwars %>%
     mutate(n_films = length(films))
 ```
@@ -1113,7 +1161,7 @@ starwars %>%
 
 Soit le code suivant, qui renomme les colonnes du tableau `starwars` de type liste en leur ajoutant le préfixe "liste_".
 
-```{r}
+```{r eval=FALSE}
 ajoute_prefixe_liste <- function(nom) {
     paste0("liste_", nom)
 }
@@ -1133,13 +1181,22 @@ Réécrire ce code avec une fonction anonyme en utilisant les trois notations :
 ```{r eval=FALSE}
 # Classique
 starwars %>%
-    rename_with(function(nom) { paste0("liste_", nom) }, .cols = where(is.list))
+    rename_with(
+        function(nom) { paste0("liste_", nom) },
+        .cols = where(is.list)
+    )
 # Formule
 starwars %>%
-    rename_with(~ paste0("liste_", .x), .cols = where(is.list))
+    rename_with(
+        ~ paste0("liste_", .x),
+        .cols = where(is.list)
+    )
 # Compacte
 starwars %>%
-    rename_with(\(nom) paste0("liste_", nom), .cols = where(is.list))
+    rename_with(
+        \(nom) paste0("liste_", nom),
+        .cols = where(is.list)
+    )
 ```
 </div>
 \fi
