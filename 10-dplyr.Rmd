@@ -263,9 +263,9 @@ Le résultat final est le même avec les deux syntaxes, mais avec le *pipe* l'or
 Si la liste des fonctions enchaînées est longue, on peut les répartir sur plusieurs lignes à condition que l'opérateur `%>%` soit en fin de ligne :
 
 ```{r, eval=FALSE}
-flights %>% 
-  filter(dest == "LAX") %>% 
-  select(dep_delay, arr_delay) %>% 
+flights %>%
+  filter(dest == "LAX") %>%
+  select(dep_delay, arr_delay) %>%
   arrange(dep_delay)
 ```
 
@@ -302,6 +302,25 @@ delay_la <- (flights %>% filter(dest == "LAX") %>% select(dep_delay, arr_delay))
 
 ```{block type='rmdnote'}
 L'utilisation du *pipe* n'est pas obligatoire, mais elle rend les scripts plus lisibles et plus rapides à saisir. On l'utilisera donc dans ce qui suit.
+```
+
+
+```{block type='rmdimportant'}
+Depuis la version 4.1, R propose un *pipe* "natif", qui fonctionne partout, même si on n'utilise pas les extensions du *tidyverse*. Celui-ci est noté `|>`.
+
+Il s'utilise de la même manière que `%>%` :
+
+`flights |> filter(dest == "LAX")`
+
+Ce *pipe* natif est à la fois un peu plus rapide et un peu moins souple. Par exemple, il est possible avec `%>%` d'appeler une fonction sans mettre de parenthèses :
+
+`df %>% View` 
+
+Ce n'est pas possible d'omettre les parenthèses avec `|>`, on doit obligatoirement faire :
+
+`df |> View()`
+
+Dans la suite de ce document on privilégiera (pour l'instant) le *pipe* du *tidyverse* `%>%`, pour des raisons de compatibilité avec des versions de R moins récentes.
 ```
 
 
