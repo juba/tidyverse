@@ -15,7 +15,7 @@ data(starwars)
 Les notions et fonctions abordées dans cette partie sont propres aux extensions du *tidyverse*. Elles ne seront en général pas utilisables ailleurs dans R.
 ```
 
-## Problèmes et solutions
+## Spécificités du *tidyverse*
 
 Les extensions du *tidyverse* fournissent une syntaxe lisible et agréable à utiliser lorsqu'on appelle ces fonctions de manière interactive. Par exemple, si on veut filtrer les lignes et les colonnes d'un tableau de données en base R, on utilise quelque chose comme :
 
@@ -31,7 +31,7 @@ starwars %>%
     select(height, mass)
 ```
 
-L'avantage de `dplyr` ici est double :
+L'avantage de `dplyr` est double :
 
 1. dans `filter`, on sait qu'on travaille à l'intérieur du tableau de données, on indique donc juste `species` et pas `starwars$species`
 2. dans `select`, on peut indiquer les noms de colonnes en omettant les guillemets
@@ -45,8 +45,8 @@ On part du tableau de données d'exemple suivant^[Effectivement, un salon de coi
 ```{r}
 restos <- tibble(
     nom = c("Chez Jojo", "Vertige des sens", "Le Crousse", "Le bouchon coréen", "Le lampad'hair"),
-    style = c("traditionnel", "gastronomique", "traditionnel", "gastronomique", "coiffure"),
-    ville = c("Villeurbanne", "Lyon", "Lyon", "Lyon", "Villeurbanne"),
+    style = c("tradi", "gastro", "tradi", "gastro", "coiffure"),
+    ville = c("Ecully", "Lyon", "Lyon", "Lyon", "Ecully"),
     evaluation = c(4.6, 3.2, 3.3, 4.1, 1.2),
     places = c(28, 32, 94, 18, 8),
     note = c("Pas mal", "Cher", "Ambiance jeune", "Original", "Euh ?")
@@ -122,7 +122,7 @@ restos %>% filtre_nom(c("Chez Jojo", "Le Crousse"))
 ```
 
   
-### Arguments de fonctions
+### Utilisation dans des fonctions
 
 Une autre difficulté survient quand les noms de colonnes du tableau ne sont pas saisis directement mais proviennent d'un argument de fonction.
 
@@ -134,7 +134,7 @@ summarise_min <- function(df, col) {
 }
 ```
 
-On voudrait pouvoir appeler cette fonction de la même manière qu'on utilise `summarise` de manière interactive, mais cela ne fonctionne pas :
+On voudrait pouvoir appeler cette fonction de la même manière qu'on utilise `summarise`, mais cela ne fonctionne pas :
 
 ```{r error=TRUE}
 summarise_min(restos, evaluation)
@@ -477,10 +477,15 @@ facet_points <- function(facet_row, facet_col) {
 facet_points(ville, style)
 ```
 
-
 ## Aide-mémoire
 
+On essaie de récapituler ici les points importants à garder en tête et à retrouver facilement.
 
+Premier point important : les spécificités vues ici ne s'appliquent que quand on veut utiliser certaines fonctions du *tidyverse*  à l'intérieur d'autres fonctions. Plus spécifiquement, elles sont à prendre en compte quand on souhaite passer en argument d'une fonction des noms de colonnes qui seront utilisées par des fonctions du *tidyverse*.
+
+```{block type='rmdimportant'}
+
+```
 
 ## Ressources
 
@@ -494,3 +499,5 @@ https://adv-r.hadley.nz/metaprogramming.html
 
 
 ## Exercices
+
+### 
