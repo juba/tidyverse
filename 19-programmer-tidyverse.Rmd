@@ -479,23 +479,108 @@ facet_points(ville, style)
 
 ## Aide-mémoire
 
-On essaie de récapituler ici les points importants à garder en tête et à retrouver facilement.
-
-Premier point important : les spécificités vues ici ne s'appliquent que quand on veut utiliser certaines fonctions du *tidyverse*  à l'intérieur d'autres fonctions. Plus spécifiquement, elles sont à prendre en compte quand on souhaite passer en argument d'une fonction des noms de colonnes qui seront utilisées par des fonctions du *tidyverse*.
+On essaie de récapituler ici les points importants à garder en tête, pour pouvoir les retrouver facilement.
 
 ```{block type='rmdimportant'}
+Premier point important : les spécificités vues ici ne s'appliquent que quand on veut utiliser certaines fonctions du *tidyverse* (`dplyr`, `tidyr`, `ggplot2`) à l'intérieur d'autres fonctions. Plus spécifiquement, elles sont à prendre en compte quand on souhaite passer en argument d'une fonction des noms de colonnes qui seront utilisées par des fonctions du *tidyverse*.
 
+Elles ne s'appliquent pas si on passe en arguments d'autres paramètres comme le tableau de données qu'on souhaite utiliser, des valeurs numériques ou des chaînes de caractères qu'on souhaite récupérer telles quelles, etc.
+```
+
+1. Dans le cas où deux objets du même nom pourraient exister à la fois comme colonne de notre tableau de données (objet *data*) et comme objet de notre environnement (objet *env*), on peut expliciter lequel on souhaite utiliser avec les pronoms `.data$var` et `.env$var`
+
+2. Si on récupère comme argument une colonnes passée sous la forme de symbole (`var`), on doit l'encadrer de l'opérateur *curly curly*.
+
+```{r eval=FALSE}
+summarise_col <- function(df, col) {
+    df %>% summarise(moyenne = mean({{ col }}, na.rm = TRUE))
+}
+
+summarise_col(starwars, height)
+```
+
+3. Si on récupère comme argument un nom de colonne passée sous la forme d'une chaîne de caractères (`"var"`), on y accède avec le pronom `.data` :
+
+```{r eval=FALSE}
+summarise_col <- function(df, col_name) {
+    df %>% summarise(moyenne = mean(.data[[col_name]], na.rm = TRUE))
+}
+
+summarise_col(starwars, "height")
+```
+
+4. Si on indique une spécification de plusieurs colonnes pour application d'une même transformation, on utilise `across()` et l'opérateur *curly curly* :
+
+```{r eval=FALSE}
+summarise_col_by <- function(df, col_by, col_var) {
+    df %>%
+        group_by(
+            across({{ col_by }})
+        ) %>%
+        summarise(
+            across(
+                {{ col_var }},
+                ~mean(.x, na.rm = TRUE)
+            )
+        )
+}
+
+summarise_col_by(starwars, c(gender, sex), where(is.numeric))
+```
+
+5. Si on indique une spécification de plusieurs colonnes pour utilisation dans un `select`, on l'encadre de l'opérateur *curly curly* :
+
+```{r eval=FALSE}
+select_cols <- function(df, cols) {
+    df %>% select({{ cols }})
+}
+
+select_cols(starwars, !where(is.list))
+```
+
+6. Si on indique une spécification de plusieurs colonnes pour utilisation dans un `select` ou un `across` sous la forme d'un vecteur de chaînes de caractères, on utilise `all_of()` ou `any_of()` :
+
+```{r eval=FALSE}
+select_cols <- function(df, col_names) {
+    df %>% select(all_of(col_names))
+}
+
+select_cols(starwars, c("height", "mass"))
+```
+
+6. Si on souhaite passer en argument un nom de nouvelle colonne que l'on souhaite créer, on l'utilise sous la forme d'une chaîne de caractères, entouré d'une paire d'accolades et avec l'opérateur `:=` :
+
+```{r eval=FALSE}
+add_mean_by_species <- function(col_var) {
+    starwars %>%
+        group_by(species) %>%
+        mutate("moyenne_{{col_var}}" := mean({{ col_var}}))
+}
+
+add_mean_by_species(height)
+```
+
+7. Si on souhaite passer des variables pour du faceting dans un graphique `ggplot2`, on les place dans l'appel à `vars()` en les encadrant de l'opérateur *curly curly* :
+
+```{r eval=FALSE}
+graph_mean_by <- function(col_by, col_var) {
+    ggplot(starwars) +
+        geom_histogram(aes(x = {{ col_var }})) +
+        facet_wrap(vars({{ col_by }}))
+}
+
+graph_mean_by(gender, height)
 ```
 
 ## Ressources
 
-`rlang`
+Pour plus de détails sur la programmation avec les fonctions de `dplyr`, on pourra se reporter à la vignette [Programming with dplyr](https://dplyr.tidyverse.org/articles/programming.html).
 
-Programming with dplyr : https://dplyr.tidyverse.org/articles/programming.html
+De la même manière, pour l'utilisation de `ggplot2` dans des fonctions, on trouvera plus de détails dans la vignette [Using ggplot2 in packages](https://ggplot2.tidyverse.org/articles/ggplot2-in-packages.html).
 
-Using ggplot2 in packages : https://ggplot2.tidyverse.org/articles/ggplot2-in-packages.html
+Les mécanismes d'évaluation et de métaprogrammation propres aux packages du *tidyverse* sont implémentés en grande partie dans le package [rlang](https://rlang.r-lib.org/).
 
-https://adv-r.hadley.nz/metaprogramming.html
+Enfin, pour une présentation approfondie des possibilités de métaprogrammation dans R en général, on pourra consulter le chapitre [Metaprogramming](https://adv-r.hadley.nz/metaprogramming.html) de l'ouvrage en ligne *Advanced R*.
 
 
 ## Exercices
