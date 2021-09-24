@@ -1,8 +1,8 @@
 # Programmer avec le *tidyverse* {#programmer-tidyverse}
 
-Dans les parties précédentes, nous avons vu comment créer et utiliser nos propres fonctions. Cependant, un lectorat attentif aura remarqué que nous avons rigoureusement évité d'utiliser des fonctions du *tidyverse*, notamment de `dplyr`, de `tidyr` et de `ggplot2`, dans nos fonctions.
+Dans les parties précédentes, nous avons vu comment créer et utiliser nos propres fonctions. Cependant, un lectorat attentif aura remarqué que nous avons rigoureusement évité d'utiliser des fonctions du *tidyverse*, notamment de `dplyr`, de `tidyr` et de `ggplot2`, dans les fonctions que nous avons créées jusqu'ici.
 
-Nous allons voir dans cette section les spécificités et les manières d'utiliser ces extensions pour programmer et les inclure dans nos propres fonctions.
+Nous allons voir dans cette section les spécificités liées à certaines fonctions du *tidyverse* et les manières de les utiliser pour programmer et les inclure dans nos propres fonctions.
 
 On commence avant toute chose par charger le *tidyverse* et le jeu de données `starwars` de `dplyr`.
 
@@ -17,7 +17,7 @@ Les notions et fonctions abordées dans cette partie sont propres aux extensions
 
 ## Spécificités du *tidyverse*
 
-Les extensions du *tidyverse* fournissent une syntaxe lisible et agréable à utiliser lorsqu'on appelle ces fonctions de manière interactive. Par exemple, si on veut filtrer les lignes et les colonnes d'un tableau de données en base R, on utilise quelque chose comme :
+Les extensions du *tidyverse* fournissent une syntaxe lisible et agréable à utiliser lorsqu'on les utilise de manière interactive. Par exemple, si on veut filtrer les lignes et les colonnes d'un tableau de données en base R, on utilise quelque chose comme :
 
 ```{r results="hide"}
 starwars[starwars$species == "Droid" & starwars$eye_color == "red" , c("height", "mass")]
@@ -65,7 +65,7 @@ Dans cette expression, `note` ne se réfère pas à un objet `note` de notre env
 
 Que se passe-t-il si on passe à `select` non pas une colonne du tableau mais bien un objet de notre environnement ?
 
-```{r}
+```{r message=FALSE}
 x <- "note"
 restos %>% select(x)
 ```
@@ -81,7 +81,7 @@ restos %>% select(note)
 
 Dans ce cas, c'est la colonne du tableau qui a la priorité. On dit que `dplyr` fait du *data masking* : les objets de notre environnement sont "masqués" par les colonnes du même nom de notre tableau de données. On retrouve ce *data masking* dans d'autres fonctions comme `filter()`, `mutate()` ou `summarise()`, mais aussi dans la sélection des variables avec `aes()` pour les fonctions de `ggplot2`.
 
-Dans certains cas de figure, on peut vouloir outrepasser ce *data masking*. Par exemple, dans le cas suivant, la nouvelle colonner `note_michelin` n'est pas créée à partir des nouvelles données de l'objet `note`, mais à partir de celles de la colonne `note`.
+Dans certains cas de figure, on peut vouloir outrepasser ce *data masking*. Par exemple, dans le cas suivant, la nouvelle colonne `note_michelin` n'est pas créée à partir des nouvelles données de l'objet `note`, mais à partir de celles de la colonne `note`.
 
 ```{r}
 note <- c(12, 14, 9, 15, NA)
@@ -96,7 +96,7 @@ filtre_nom <- function(df, valeurs) {
 }
 ```
 
-Rien ne nous assure dans ce cas que le tableau `df` ne contient pas déjà une colonne nommée `valeurs` qui "masquerait" alors l'objet `valeurs` passé en argument...
+Rien ne nous assure dans ce cas que le tableau `df` ne contient pas déjà une colonne nommée `valeurs` qui "masquerait" l'objet `valeurs` passé en argument...
 
 Pour pallier à ce problème, à chaque fois qu'on est dans un environnement où du *data masking* se produit, on peut utiliser deux "pronoms" spécifiques nommés `.data` et `.env` :
 
@@ -111,21 +111,19 @@ restos %>% mutate(note_michelin = .env$note)
 restos %>% mutate(note = str_to_upper(.data$note))
 ```
 
-De même, en utilisant `.env`, on peut s'assurer que notre fonction `filtre_nom` va bien prendre les valeurs dans notre environnement, donc dans l'argument passé à la fonction, et pas dans une éventuelle colonne qui porterait le même nom.
+En utilisant `.env`, on peut donc s'assurer que notre fonction `filtre_nom()` ci-dessus va bien prendre les valeurs dans notre environnement, donc dans l'argument passé à la fonction, et pas dans une éventuelle colonne qui porterait le même nom.
 
 ```{r}
 filtre_nom <- function(df, valeurs) {
     df %>% filter(nom %in% .env$valeurs)
 }
 
-restos %>% filtre_nom(c("Chez Jojo", "Le Crousse"))
+filtre_nom(restos, c("Chez Jojo", "Le Crousse"))
 ```
 
 ### *tidy selection* {#tidy-selection}
 
-Certaines fonctions du *tidyverse* permettant de sélectionner des colonnes acceptent des expressions spécifiques
-
-Une autre spécificité de certaines fonctions du *tidyverse* réside dans le mode de sélection des colonnes à base d'un "mini-langage" permettant des expressions comme :
+Une autre spécificité de certaines fonctions du *tidyverse* réside dans le mode de sélection des colonnes basé sur un "mini-langage" permettant des expressions comme :
 
 ```{r eval=FALSE}
 c(height, mass)
@@ -136,7 +134,7 @@ where(is.numeric) & !contains(id)
 Cette méthode de sélection de colonnes est appelée *tidy selection* et on la retrouve dans plusieurs fonctions de `dplyr` et `tidyr`, comme `select()`, `across()`, `c_across()`, `pull()`, `pivot_longer()`, etc.
 
 ```{block type='rmdnote'}
-La *tidy selection* est implémentée par le package [tidyselect](https://tidyselect.r-lib.org/index.html) et on peut retrouver les différentes possibilités de ce mini-langage dans la vignette [Selection language](https://tidyselect.r-lib.org/reference/language.html)
+La *tidy selection* est implémentée par le package [tidyselect](https://tidyselect.r-lib.org/index.html) et on peut retrouver les différentes possibilités de ce mini-langage dans la vignette [Selection language](https://tidyselect.r-lib.org/reference/language.html).
 ```
 
 On notera que la *tidy selection* fait appel au *data masking*, tout en y ajoutant des fonctions spécifiques.
@@ -144,7 +142,7 @@ On notera que la *tidy selection* fait appel au *data masking*, tout en y ajouta
 
 ### Utilisation dans des fonctions
 
-Une difficulté survient quand les noms de colonnes du tableau ne sont pas saisis directement mais proviennent d'un argument de fonction.
+Une difficulté liée au *data masking* survient quand les colonnes du tableau ne sont pas saisies directement mais proviennent d'un argument de fonction.
 
 Soit la fonction suivante qui prend en entrée un tableau de données et une colonne et retourne le résultat d'un `summmarise`.
 
@@ -165,11 +163,11 @@ Le message d'erreur nous dit que l'objet `evaluation` est introuvable. La raison
 Comme la *tidy selection* fait appel au *data masking*, elle génère le même type d'erreur :
 
 ```{r error=TRUE}
-select_cols <- function(df, cols) {
-    df %>% select(cols)
+select_col <- function(df, col) {
+    df %>% select(col)
 }
 
-restos %>% select_cols(c(evaluation, places))
+select_col(restos, evaluation)
 ```
 
 
@@ -203,21 +201,9 @@ summarise_min(restos, .env$evaluation)
 
 ### Utiliser une colonne passée en argument
 
-Une opération courante quand on utilise les fonctions de `dplyr` ou `tidyr` dans une fonction est de prendre en argument des colonnes auxquelles on souhaite accéder. La règle dans ce cas est d'utiliser l'opérateur *curly curly* et d'entourer les utilisations de l'argument dans les fonctions du *tidyverse* par une paire d'accolades.
+Une opération courante quand on utilise les fonctions de `dplyr` ou `tidyr` dans une fonction est de prendre en argument une colonne à laquelle on souhaite accéder. Dans ce cas on doit utiliser l'opérateur *curly curly* et entourer les utilisations de l'argument contenant la colonne par une paire d'accolades.
 
-On a déjà vu un exemple précédemment avec `summarise`.
-
-```{r}
-resume <- function(df, col) {
-    df %>% summarise(
-        moyenne = mean({{ col }}),
-        min = min({{ col }}),
-        max = max({{ col }})
-    )
-}
-
-resume(restos, evaluation)
-```
+On a déjà vu un exemple précédemment avec `summarise()`.
 
 ```{r}
 resume <- function(df, col) {
@@ -231,8 +217,7 @@ resume <- function(df, col) {
 resume(restos, evaluation)
 ```
 
-
-On peut aussi l'utiliser dans un `group_by` :
+C'est le cas dans toutes les fonctions qui font du *data masking*, comme `group_by()` :
 
 ```{r}
 resume_groupe <- function(df, col_group, col_var) {
@@ -252,7 +237,7 @@ resume_groupe(restos, style, evaluation)
 
 ### Utiliser une série de colonnes passées en arguments
 
-Dans l'exemple précédent, on a utilisé à chaque fois une seule colonne, que ce soit dans le `group_by` ou dans le `summarise`. Si on souhaite grouper ou appliquer une fonction sur une série de colonnes, il faut alors utiliser `across()`.
+Dans la section précédente, on a utilisé à chaque fois une seule colonne. Si on souhaite grouper ou appliquer une fonction sur une série de colonnes, il faut alors utiliser `across()`.
 
 ```{r}
 resume_groupe <- function(df, cols_group, cols_var) {
@@ -263,11 +248,7 @@ resume_groupe <- function(df, cols_group, cols_var) {
         summarise(
             across(
                 {{ cols_var }},
-                list(
-                    moyenne = mean,
-                    min = min,
-                    max = max
-                )
+                mean
             )
         )
 }
@@ -279,7 +260,7 @@ On peut du coup utiliser tous les modes de sélection de colonnes permises par l
 resume_groupe(restos, c(style, ville), where(is.numeric))
 ```
 
-De la même manière, si on utilise un argument de fonction pour sélectionner des variables avec `select()`, on doit l'entourer avec l'opérateur *curly curly*, et on peut dès lors utiliser toutes les possibilités de *tidy selection*.
+De la même manière, si on utilise un argument de fonction pour sélectionner des variables avec `select()`, on doit l'entourer avec l'opérateur *curly curly*, et on peut dès lors utiliser toutes les possibilités de la *tidy selection*.
 
 ```{r}
 select_cols <- function(df, cols) {
@@ -291,9 +272,9 @@ restos %>% select_cols(where(is.character) & !c(nom, note))
 
 ### Créer de nouvelles colonnes avec des noms passés en argument
 
-Pour l'instant on a vu comment utiliser des colonnes passées en argument pour accéder à leur contenu. On peut aussi vouloir passer en argument des noms de colonnes qu'on souhaite créer, par exemple avec un `mutate`.
+On a vu comment utiliser des colonnes passées en argument pour accéder à leur contenu. On peut aussi vouloir passer en argument des noms de colonnes qu'on souhaite créer, par exemple avec un `mutate()`.
 
-On pourrait essayer directement de la manière suivante, mais évidemment ce la ne fonctionne pas puisque la nouvelle colonne créée s'appelle "col_new", et pas la valeur de l'argument `col_new`.
+On pourrait essayer directement de la manière suivante, mais cela ne fonctionne pas car dans ce cas la colonne créée s'appelle "col_new", et pas la valeur de l'argument `col_new`.
 
 ```{r}
 calcule_pourcentage <- function(df, col_new, col_var) {
@@ -303,10 +284,10 @@ calcule_pourcentage <- function(df, col_new, col_var) {
         )
 }
 
-calcule_pourcentage(restos, pourcentage_places, places)
+calcule_pourcentage(restos, prop_places, places)
 ```
 
-Dans ces cas-là, la syntaxe à utiliser est un peu plus complexe :
+Dans ce cas de figure, la syntaxe à utiliser est un peu plus complexe :
 
 - on remplace l'opérateur `=` du `mutate()` par l'opérateur `:=`
 - on place à gauche du `:=` une chaîne de caractères dans laquelle notre argument contenant le nom de la nouvelle variable est entouré d'une paire d'accolades.
@@ -324,7 +305,7 @@ calcule_pourcentage <- function(df, col_new, col_var) {
 calcule_pourcentage(restos, prop_places, places)
 ```
 
-Cette syntaxe est un peu complexe de prime abord, mais elle à l'avantage d'être souple : notamment, on peut placer le texte que l'on souhaite dans la chaîne de caractères en plus des noms de variables entre double accolades. 
+Cette syntaxe est un peu complexe de prime abord, mais elle à l'avantage d'être souple : en particulier, on peut placer le texte que l'on souhaite dans la chaîne de caractères en plus des noms de variables entre double accolades. 
 
 Cela permet par exemple de générer le nom d'une nouvelle variable automatiquement à partir de l'ancienne.
 
@@ -332,7 +313,7 @@ Cela permet par exemple de générer le nom d'une nouvelle variable automatiquem
 calcule_pourcentage <- function(df, col_var) {
     df %>%
         mutate(
-            "pourcentage_{{col_var}}" := {{ col_var }} / sum({{ col_var }}) * 100
+            "prop_{{col_var}}" := {{ col_var }} / sum({{ col_var }}) * 100
         )
 }
 
@@ -355,7 +336,7 @@ resume(restos, places)
 
 ### Désambiguiser data / env
 
-Lorsqu'on utilise des fonctions de `dplyr` ou `tidyr` dans d'autres, fonction, il peut être utile de préciser, quand on accède à un objet dont on connaît le nom (c'est-à-dire dont le nom n'est pas passé en argument), si c'est un objet de type "data" (une colonne du tableau de données dans lequel on travaille) ou de type "env" (un objet de l'environnement dans lequel on travaille).
+Lorsqu'on utilise des fonctions de `dplyr` ou `tidyr` dans d'autres fonctions, il peut être utile de préciser, quand on accède à un objet dont on connaît le nom (c'est-à-dire dont le nom n'est pas passé en argument), si c'est un objet de type "data" (une colonne du tableau de données dans lequel on travaille) ou de type "env" (un objet de l'environnement dans lequel on travaille).
 
 Dans la fonction suivante, on calcule la moyenne d'une colonne numérique de `restos` selon les valeurs de la colonne `ville`, et on ne conserve que les villes pour lesquelles cette moyenne est supérieure à un certain seuil.
 
@@ -371,28 +352,28 @@ stat_par_ville(evaluation, seuil = 0)
 stat_par_ville(evaluation, seuil = 3)
 ```
 
-On sait que l'objet `ville` du `group_by` est toujours la colonne du tableau `restos` nommée `ville`, on peut donc s'assurer que c'est bien le cas en l'explicitant avec `.data$ville`. À l'inverse, on sait que la valeur `seuil` du `filter` celle de l'argument du même nom, donc d'un objet de l'environnement. On peut s'en assurer en indiquant `.env$seuil`.
+On veut que l'objet `ville` du `group_by` soit toujours la colonne du tableau `restos` nommée `ville`, on peut donc s'assurer que c'est bien le cas en l'explicitant avec `.data$ville`. À l'inverse, on veut que la valeur `seuil` du `filter` soit celle de l'argument du même nom, donc d'un objet de l'environnement. On peut s'en assurer en indiquant `.env$seuil`.
 
 Cette explicitation ne paraît pas forcément utile à première vue, mais elle peut éviter des problèmes à terme, notamment si on ajoute de nouvelles colonnes à un tableau de données et qu'on finit par avoir des objets "data" et des objets "env" avec le même nom.
 
 
 ### Quand les arguments sont des chaînes de caractères
 
-Dans tous les exemples jusqu'à présent, les arguments de fonction étaient passés sous la forme d'expressions ou de symboles :
+Jusqu'ici, on a passé les arguments de fonction sous la forme d'expressions ou de symboles.
 
 ```{r eval=FALSE}
 resume(restos, places)
 summarise_min(restos, evaluation * 4)
 ```
 
-Mais il arrive que les arguments comportent des noms de colonnes passés plutôt en chaînes de caractères :
+Mais il arrive que des noms de colonnes soient passés plutôt sous forme de chaînes de caractères.
 
 ```{r eval=FALSE}
 resume(restos, "places")
 summarise_min(restos, "evaluation")
 ```
 
-Dans ce cas on ne peut pas utiliser l'opérateur *curly curly*, par contre on peut utiliser le pronom `.data` pour accéder aux colonnes à partir de leur nom.
+On ne peut pas dans ce cas utiliser l'opérateur *curly curly*, par contre on peut utiliser le pronom `.data` pour accéder aux colonnes à partir de leur nom.
 
 ```{r}
 summarise_min <- function(df, col) {
@@ -402,7 +383,7 @@ summarise_min <- function(df, col) {
 summarise_min(restos, "evaluation")
 ```
 
-Quand on veut plutôt sélectionner des colonnes avec `select()` ou `across()` et qu'on récupère les noms de ces colonnes dans un vecteur de chaînes de caractères, on peut alors utiliser les fonctions `all_of()` ou `any_of()`.
+Quand on veut plutôt sélectionner des colonnes avec `select()` ou `across()` et qu'on récupère les noms de ces colonnes dans un vecteur de chaînes de caractères, on doit utiliser les fonctions `all_of()` ou `any_of()`.
 
 ```{r}
 evaluation_par_groupe <- function(cols_group) {
@@ -414,18 +395,12 @@ evaluation_par_groupe <- function(cols_group) {
 }
 
 evaluation_par_groupe("ville")
+
 evaluation_par_groupe(c("ville", "style"))
 ```
 
-La différence entre `all_of()` et `any_of()` et que `all_of()` produira une erreur si l'une des variables n'est pas trouvée.
+La différence entre `all_of()` et `any_of()` est que `all_of()` produira une erreur si l'une des variables n'est pas trouvée.
 
-```{r}
-select_any_cols <- function(cols) {
-    restos %>% select(any_of(cols))
-}
-
-select_any_cols(c("ville", "evaluation", "igloo"))
-```
 ```{r error=TRUE}
 select_all_cols <- function(cols) {
     restos %>% select(all_of(cols))
@@ -434,13 +409,24 @@ select_all_cols <- function(cols) {
 select_all_cols(c("ville", "evaluation", "igloo"))
 ```
 
+Tandis qu'`any_off()` renverra uniquement les colonnes existantes, sans générer d'erreur.
+
+```{r}
+select_any_cols <- function(cols) {
+    restos %>% select(any_of(cols))
+}
+
+select_any_cols(c("ville", "evaluation", "igloo"))
+```
+
+
 ## Programmer avec `ggplot2`
 
 ### Sélection de colonnes avec `aes()`
 
-Les règles pour sélectionner des colonnes dans un appel à `aes()` à partir d'arguments passés à une fonction sont les mêmes que celles vues précédemment pour `dplyr` et `tidyr` :
+Les règles pour sélectionner des colonnes dans un graphique `ggplot2` à partir d'arguments passés à une fonction sont les mêmes que celles vues précédemment pour `dplyr` et `tidyr` :
 
-- si les noms sont passés sous forme de symboles ou d'expressions, on utilise l'opérateur *curly curly* (`{{}}`)
+- si les noms sont passés sous forme de symboles ou d'expressions, on utilise l'opérateur *curly curly* (`{{ }}`)
 
 ```{r}
 bar_graph <- function(df, col) {
@@ -464,36 +450,31 @@ bar_graph(restos, "ville")
 
 ### Faceting
 
-Il y a une petite spécificité quand on utilise `facet_wrap()` ou `facet_grid()` : les variables utilisées pour faire le *faceting* étant spécifiées sous la forme d'une formule, leur spécification à partir d'arguments de fonction n'est pas directe.
-
-`ggplot2` propose donc la fonction `vars()` pour 
-faciliter cette opération.
-
-Si la variable de faceting est donnée sous forme d'un symbole, on utilise `vars()` en conjonction avec l'opérateur *curly curly*.
+Quand on utilise `facet_wrap()` ou `facet_grid()`, si la variable de faceting est donnée sous forme d'un symbole, on utilise `vars()` en conjonction avec l'opérateur *curly curly*.
 
 ```{r}
-facet_evaluation <- function(facet) {
+facet_points <- function(facet) {
     ggplot(restos) +
-        geom_density(aes(x = .data$evaluation)) +
+        geom_point(aes(x = .data$evaluation, y = .data$places)) +
         facet_wrap(vars({{ facet }}))
 }
 
-facet_evaluation(ville)
+facet_points(ville)
 ```
 
 Si la variable de faceting est donnée sous forme d'une chaîne de caractères , on utilise `vars()` en conjonction avec le pronom `.data`.
 
 ```{r}
-facet_evaluation <- function(facet) {
+facet_points <- function(facet) {
     ggplot(restos) +
-        geom_density(aes(x = .data$evaluation)) +
+        geom_point(aes(x = .data$evaluation, y = .data$places)) +
         facet_wrap(vars(.data[[facet]]))
 }
 
-facet_evaluation("ville")
+facet_points("ville")
 ```
 
-Si on utilise `facet_grid()`, la fonction doit accepter deux variables de faceting comme arguments. Celles-ci peuvent ensuite être passées à `facet_grid` via ses paramètres `rows` et `cols`.
+Si on utilise `facet_grid()`, la fonction doit accepter deux variables de faceting comme arguments. Celles-ci peuvent ensuite être passées à `facet_grid()` via ses paramètres `rows` et `cols`.
 
 ```{r}
 facet_points <- function(facet_row, facet_col) {
@@ -520,7 +501,7 @@ Elles ne s'appliquent pas si on passe en arguments d'autres paramètres comme le
 
 1. Dans le cas où deux objets du même nom pourraient exister à la fois comme colonne de notre tableau de données (objet *data*) et comme objet de notre environnement (objet *env*), on peut expliciter lequel on souhaite utiliser avec les pronoms `.data$var` et `.env$var`
 
-2. Si on récupère comme argument une colonnes passée sous la forme de symbole (`var`), on doit l'encadrer de l'opérateur *curly curly*.
+2. Si un argument est une colonne passée sous la forme d'un symbole (`var`), on doit l'encadrer de l'opérateur *curly curly*.
 
 ```{r eval=FALSE}
 summarise_col <- function(df, col) {
@@ -530,7 +511,7 @@ summarise_col <- function(df, col) {
 summarise_col(starwars, height)
 ```
 
-3. Si on récupère comme argument un nom de colonne passée sous la forme d'une chaîne de caractères (`"var"`), on y accède avec le pronom `.data` :
+3. Si un argument est un nom de colonne passé sous la forme d'une chaîne de caractères (`"var"`), on y accède avec le pronom `.data` :
 
 ```{r eval=FALSE}
 summarise_col <- function(df, col_name) {
@@ -540,7 +521,18 @@ summarise_col <- function(df, col_name) {
 summarise_col(starwars, "height")
 ```
 
-4. Si on indique une spécification de plusieurs colonnes pour application d'une même transformation, on utilise `across()` et l'opérateur *curly curly* :
+
+4. Si on utilise la *tidy selection* dans un `select()`, un `across()` ou une autre fonction, on l'encadre de l'opérateur *curly curly* :
+
+```{r eval=FALSE}
+select_cols <- function(df, cols) {
+    df %>% select({{ cols }})
+}
+
+select_cols(starwars, !where(is.list))
+```
+
+5. Si on souhaite grouper ou appliquer une même transformation sur plusieurs colonnes, on utilise `across()` et l'opérateur *curly curly* :
 
 ```{r eval=FALSE}
 summarise_col_by <- function(df, col_by, col_var) {
@@ -559,17 +551,7 @@ summarise_col_by <- function(df, col_by, col_var) {
 summarise_col_by(starwars, c(gender, sex), where(is.numeric))
 ```
 
-5. Si on indique une spécification de plusieurs colonnes via la *tidy selection* pour utilisation dans un `select`, un `across` ou une autre fonction, on l'encadre de l'opérateur *curly curly* :
-
-```{r eval=FALSE}
-select_cols <- function(df, cols) {
-    df %>% select({{ cols }})
-}
-
-select_cols(starwars, !where(is.list))
-```
-
-6. Si on indique une spécification de plusieurs colonnes pour utilisation dans un `select` ou un `across` sous la forme d'un vecteur de chaînes de caractères, on utilise `all_of()` ou `any_of()` :
+6. Si on indique les noms de plusieurs colonnes sous la forme d'un vecteur de chaînes de caractères pour utilisation dans un `select()`, un `across()` ou une autre fonction acceptant la *tidy selection*, on utilise `all_of()` ou `any_of()` :
 
 ```{r eval=FALSE}
 select_cols <- function(df, col_names) {
@@ -579,7 +561,7 @@ select_cols <- function(df, col_names) {
 select_cols(starwars, c("height", "mass"))
 ```
 
-6. Si on souhaite passer en argument un nom de nouvelle colonne que l'on souhaite créer, on l'utilise sous la forme d'une chaîne de caractères, entouré d'une paire d'accolades et avec l'opérateur `:=` :
+7. Si on souhaite créer une nouvelle colonne à partir du nom contenu dans un argument, on l'utilise sous la forme d'une chaîne de caractères, entouré d'une paire d'accolades et avec l'opérateur `:=` :
 
 ```{r eval=FALSE}
 add_mean_by_species <- function(col_var) {
@@ -591,7 +573,7 @@ add_mean_by_species <- function(col_var) {
 add_mean_by_species(height)
 ```
 
-7. Si on souhaite passer des variables pour du faceting dans un graphique `ggplot2`, on les place dans l'appel à `vars()` en les encadrant de l'opérateur *curly curly* :
+8. Si on souhaite passer des variables dans un graphique `ggplot2`, que ce soit dans `aes()` ou pour du faceting, on les encadre avec l'opérateur *curly curly* :
 
 ```{r eval=FALSE}
 graph_mean_by <- function(col_by, col_var) {
@@ -607,7 +589,7 @@ graph_mean_by(gender, height)
 
 Pour plus de détails sur la programmation avec les fonctions de `dplyr`, on pourra se reporter à la vignette [Programming with dplyr](https://dplyr.tidyverse.org/articles/programming.html).
 
-De la même manière, pour l'utilisation de `ggplot2` dans des fonctions, on trouvera plus de détails dans la vignette [Using ggplot2 in packages](https://ggplot2.tidyverse.org/articles/ggplot2-in-packages.html).
+Pour l'utilisation de `ggplot2` dans des fonctions, on trouvera plus de détails dans la vignette [Using ggplot2 in packages](https://ggplot2.tidyverse.org/articles/ggplot2-in-packages.html).
 
 Les mécanismes d'évaluation et de métaprogrammation propres aux packages du *tidyverse* sont implémentés en grande partie dans le package [rlang](https://rlang.r-lib.org/).
 
@@ -620,7 +602,7 @@ Enfin, pour une présentation approfondie des possibilités de métaprogrammatio
 
 **Exercice 1.1**
 
-Créer une fonction `my_table` qui prend en arguments un tableau de données `df` et une variable `var` et qui renvoit le résultat de `count()` sur la variable `var` de `df`. 
+Créer une fonction `my_table` qui prend en arguments un tableau de données `df` et une variable `var` et qui renvoie le résultat de `count()` sur cette variable. 
 
 Vérifier avec :
 
@@ -634,14 +616,13 @@ my_table(starwars, gender)
 <div class="solution-exo">
 ```{r progtidy-1-1-1, eval=FALSE}
 my_table <- function(df, var) {
-    df %>%
-        count({{ var }})
+    df %>% count({{ var }})
 }
 ```
 </div>
 \fi
 
-Modifier `my_table` pour qu'elle accepte trois arguments `df`, `by` et `var`, et qu'elle retourne le résultat du count appliqué à `by` et à `var`.
+Modifier `my_table` pour qu'elle accepte trois arguments `df`, `var1` et `var2`, et qu'elle retourne le résultat du count appliqué à `by` et à `var`.
 
 ```{r echo=FALSE, ref.label="progtidy-1-1-2"}
 ```
@@ -653,9 +634,8 @@ my_table(starwars, gender, sex)
 \iffalse
 <div class="solution-exo">
 ```{r progtidy-1-1-2, eval=FALSE}
-my_table <- function(df, by, var) {
-    df %>%
-        count({{ by }}, {{ var }})
+my_table <- function(df, var1, var2) {
+    df %>% count({{ var1 }}, {{ var2 }})
 }
 ```
 </div>
@@ -686,7 +666,7 @@ my_table <- function(df, vars) {
 **Exercice 1.2**
 
 
-Le code suivant ajoute une nouvelle colonne `diff_height` au tableau `starwars`, qui contient la différence entre la valeur de `height` et la moyenne de `height` selon les valeurs de `species`.
+Le code suivant ajoute une nouvelle colonne `diff_height` au tableau `starwars`, qui contient la différence entre la valeur de `height` et sa moyenne selon les valeurs de `species`.
 
 ```{r eval=FALSE}
 starwars %>%
@@ -722,7 +702,7 @@ diff_mean <- function(by, var) {
 </div>
 \fi
 
-Modifier la fonction pour que le nom de la colonne ajoutée ne soit pas `diff_mean` mais le nom de la variable `var` suivi d'un suffixe de votre choix.
+Modifier la fonction pour que le nom de la colonne ajoutée ne soit pas `diff_mean` mais le nom de la variable passée dans `var` suivi du suffixe "_diff_mean".
 
 \iffalse
 <div class="solution-exo">
@@ -736,7 +716,7 @@ diff_mean <- function(by, var) {
 </div>
 \fi
 
-Modifier à nouveau `diff_mean` pour pouvoir passer à `by` une sélection de variables.
+Modifier à nouveau `diff_mean` pour pouvoir passer à `by` plusieurs variables en utilisant la *tidy selection*.
 
 \iffalse
 <div class="solution-exo">
@@ -755,13 +735,13 @@ diff_mean <- function(by, var) {
 
 La fonction `unnest()` de `tidyr` permet de transformer une colonne contenant des valeurs de type liste en colonne "normale" en dupliquant les lignes autant de fois qu'il y a d'éléments dans chaque liste :
 
-```{r eval=FALSE}
+```{r}
 starwars %>% 
     unnest(films) %>%
     select(name, films)
 ```
 
-Créer une fonction `freq_liste` qui prend en entrée un argument `var` et retourne grâce à `count` le tri à plat de toutes les valeurs de la variable correspondant à `var` dans `starwars`, même si cette variable contient des listes.
+Créer une fonction `freq_liste()` qui prend en entrée un argument `var` et retourne grâce à `count` le tri à plat de toutes les valeurs de la variable correspondant à `var` dans `starwars`, même si cette variable contient des listes.
 
 ```{r ref.label="progtidy-1-3", echo=FALSE}
 ```
@@ -832,9 +812,9 @@ graph_bar <- function(df, var, facet_var) {
 
 **Exercice 2.2**
 
-Créer une fonction `graph_points` qui prend en arguments un tableau de données et deux variables, et raffiche le nuage de points de ces deux variables.
+Créer une fonction `graph_points` qui prend en arguments un tableau de données et deux variables, et affiche le nuage de points de ces deux variables.
 
-```{r echo=FALSE, ref.label='progtidy-2-2a'}
+```{r echo=FALSE, ref.label='progtidy-2-2a', warning=FALSE}
 ```
 
 ```{r}
@@ -852,9 +832,9 @@ graph_points <- function(df, var_x, var_y) {
 </div>
 \fi
 
-Ajouter un quatrième argument `color` à la fonction `graph_points()`, qui permet de spécifier la couleur des points (la même couleur pour tous les points).
+Ajouter un quatrième argument `color` à la fonction `graph_points()`, qui permet de spécifier la couleur des points (la même couleur pour tous).
 
-```{r echo=FALSE, ref.label='progtidy-2-2b'}
+```{r echo=FALSE, ref.label='progtidy-2-2b', warning=FALSE}
 ```
 
 ```{r}
@@ -874,7 +854,7 @@ graph_points <- function(df, var_x, var_y, color) {
 
 Modifier `graph_points()` pour que l'argument `color` corresponde non pas à une couleur fixe mais à une variable dont les valeurs déterminent la couleur des points.
 
-```{r echo=FALSE, ref.label='progtidy-2-2c'}
+```{r echo=FALSE, ref.label='progtidy-2-2c', warning=FALSE}
 ```
 
 ```{r}
@@ -892,26 +872,15 @@ graph_points <- function(df, var_x, var_y, color) {
 </div>
 \fi
 
-*Facultatif :* modifier `graph_points()` pour que l'argument `color` puisse accepter aussi bien une variable qu'une couleur fixe. On pourra tester si la valeur passée à `color` est bien une colonne du tableau de données.
+*Facultatif :* modifier `graph_points()` pour que l'argument `color` puisse accepter aussi bien une variable qu'une couleur fixe.
 
-Indication : on pourra s'aider du résultat de la fonction suivante.
+Indication : en s'aidant du résultat de la fonction suivante, on pourra tester si la valeur passée à `color` est bien une colonne du tableau de données.
 
 ```{r}
 f <- function(x) {
     deparse(substitute(x))
 }
 f(igloo)
-```
-
-```{r echo=FALSE, ref.label='progtidy-2-2d'}
-```
-
-```{r}
-graph_points(starwars, height, mass, color = sex)
-```
-
-```{r}
-graph_points(starwars, height, mass, color = "#F46789")
 ```
 
 
@@ -945,17 +914,14 @@ La fonction `readline()` permet de lire une chaîne de caractères entrée au cl
 v <- readline("Votre choix : ")
 ```
 
-Créer une fonction `affiche_planete` qui affiche le message "Nom de la planète", lit la réponse de l'utilisateur, et affiche à l'aide d'un `fliter()` les lignes du tableau `starwars` pour lesquelles la variable `homeworld` correspond au nom saisi.
+Créer une fonction `affiche_planete` qui affiche le message "Nom de la planète", lit la réponse de l'utilisateur, et affiche à l'aide d'un `filter()` les lignes du tableau `starwars` pour lesquelles la variable `homeworld` correspond au nom saisi.
 
 \iffalse
 <div class="solution-exo">
 ```{r eval=FALSE}
 affiche_planete <- function() {
     var <- readline("Nom de la planète : ")
-    starwars %>%
-        filter(
-            homeworld == var
-        )
+    starwars %>% filter(homeworld == var)
 }
 ```
 </div>
@@ -979,7 +945,7 @@ affiche_barplot <- function() {
 
 Créer une fonction `affiche_colonnes` qui affiche le message "Noms des variables séparés par des virgules", lit la réponse de l'utilisateur, et affiche uniquement les colonnes saisies du tableau `starwars`.
 
-*Conseil :* pour récupérer un vecteur de colonnes à partir de la saisie de l'utilisateur, on pourra utiliser les fonctions `str_split()` et `str_trim()`.
+*Conseil :* pour récupérer un vecteur de colonnes à partir de la saisie de l'utilisateur, on pourra utiliser les fonctions `str_split()` et `str_trim()` de `stringr`.
 
 \iffalse
 <div class="solution-exo">
@@ -988,8 +954,7 @@ affiche_colonnes <- function() {
     vars <- readline("Noms des variables séparés par des virgules : ")
     vars <- str_split(vars, ",")[[1]]
     vars <- str_trim(vars)
-    starwars %>%
-        select(all_of(vars))
+    starwars %>% select(all_of(vars))
 }
 ```
 </div>
@@ -1000,7 +965,7 @@ affiche_colonnes <- function() {
 
 **Exercice 4.1**
 
-Créer une fonction `filter_height` qui prend en argument trois paramètres `df`, `height_var` et `height`, et qui retourne les lignes de `df` pour laquelle la variable correspondant à `height_var` sont supérieures à `height`. Créer cette fonction sans utiliser `dplyr` mais avec l'opérateur `[,]`.
+Créer une fonction `filter_height()` qui prend en argument trois paramètres `df`, `height_var` et `height`, et qui retourne les lignes de `df` pour laquelle la variable correspondant à `height_var` sont supérieures à `height`. Créer cette fonction sans utiliser `dplyr` mais avec l'opérateur `[,]`.
 
 ```{r echo=FALSE, ref.label='progtidy-4-1'}
 ```
