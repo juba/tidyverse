@@ -1,6 +1,6 @@
 ---
 output: html_document
-editor_options: 
+editor_options:
   chunk_output_type: console
 ---
 # Manipuler les données avec `dplyr` {#dplyr}
@@ -129,7 +129,7 @@ rename(airports, longitude = lon, latitude = lat)
 Si les noms de colonnes comportent des espaces ou des caractères spéciaux, on peut les entourer de guillemets (`"`) ou de quotes inverses (`` ` ``) :
 
 ```{r}
-tmp <- rename(flights, 
+tmp <- rename(flights,
               "retard départ" = dep_delay,
               "retard arrivée" = arr_delay)
 select(tmp, `retard départ`, `retard arrivée`)
@@ -164,7 +164,7 @@ arrange(flights, desc(dep_delay))
 Combiné avec `slice`, `arrange` permet par exemple de sélectionner les trois vols ayant eu le plus de retard :
 
 ```{r}
-tmp <- arrange(flights, desc(dep_delay)) 
+tmp <- arrange(flights, desc(dep_delay))
 slice(tmp, 1:3)
 ```
 
@@ -183,7 +183,7 @@ select(flights, air_time, duree_h)
 On peut créer plusieurs nouvelles colonnes en une seule commande, et les expressions successives peuvent prendre en compte les résultats des calculs précédents. L'exemple suivant convertit d'abord la durée en heures dans une variable `duree_h` et la distance en kilomètres dans une variable `distance_km`, puis utilise ces nouvelles colonnes pour calculer la vitesse en km/h.
 
 ```{r}
-flights <- mutate(flights, 
+flights <- mutate(flights,
                   duree_h = air_time / 60,
                   distance_km = distance / 0.62137,
                   vitesse = distance_km / duree_h)
@@ -233,7 +233,7 @@ arrange(tmp, dep_delay)
 C'est nettement plus lisible, l'ordre des opérations est le bon, et les paramètres sont bien rattachés à leur fonction. Par contre, ça reste un peu "verbeux", et on crée un objet temporaire `tmp` dont on n'a pas réellement besoin.
 
 
-Pour simplifier et améliorer encore la lisibilité du code, on va utiliser un nouvel opérateur, baptisé *pipe*^[Le *pipe* a été  introduit à l'origine par l'extension `magrittr`, et repris par `dplyr`]. Le *pipe* se note `%>%`, et son fonctionnement est le suivant : si j'exécute `expr %>% f`, alors le résultat de l'expression `expr`, à gauche du *pipe*, sera passé comme premier argument à la fonction `f`, à droite du *pipe*, ce qui revient à exécuter `f(expr)`. 
+Pour simplifier et améliorer encore la lisibilité du code, on va utiliser un nouvel opérateur, baptisé *pipe*^[Le *pipe* a été  introduit à l'origine par l'extension `magrittr`, et repris par `dplyr`]. Le *pipe* se note `%>%`, et son fonctionnement est le suivant : si j'exécute `expr %>% f`, alors le résultat de l'expression `expr`, à gauche du *pipe*, sera passé comme premier argument à la fonction `f`, à droite du *pipe*, ce qui revient à exécuter `f(expr)`.
 
 Ainsi les deux expressions suivantes sont rigoureusement équivalentes :
 
@@ -276,9 +276,9 @@ On appelle une suite d'instructions de ce type un *pipeline*.
 Évidemment, il est naturel de vouloir récupérer le résultat final d'un *pipeline* pour le stocker dans un objet. Par exemple, on peut stocker le résultat du *pipeline* ci-dessus dans un nouveau tableau `delay_la` de la manière suivante :
 
 ```{r}
-delay_la <- flights %>% 
-  filter(dest == "LAX") %>% 
-  select(dep_delay, arr_delay) %>% 
+delay_la <- flights %>%
+  filter(dest == "LAX") %>%
+  select(dep_delay, arr_delay) %>%
   arrange(dep_delay)
 ```
 
@@ -289,8 +289,8 @@ Cette notation n'est pas forcément très intuitive au départ. Il faut bien com
 Une manière de le comprendre peut être de voir que la notation suivante :
 
 ```{r}
-delay_la <- flights %>% 
-  filter(dest == "LAX") %>% 
+delay_la <- flights %>%
+  filter(dest == "LAX") %>%
   select(dep_delay, arr_delay)
 ```
 
@@ -314,7 +314,7 @@ Il s'utilise de la même manière que `%>%` :
 
 Ce *pipe* natif est à la fois un peu plus rapide et un peu moins souple. Par exemple, il est possible avec `%>%` d'appeler une fonction sans mettre de parenthèses :
 
-`df %>% View` 
+`df %>% View`
 
 Ce n'est pas possible d'omettre les parenthèses avec `|>`, on doit obligatoirement faire :
 
@@ -345,28 +345,28 @@ flights %>% group_by(month) %>% slice(1)
 Idem pour `mutate` : les opérations appliquées lors du calcul des valeurs des nouvelles colonnes sont appliquées groupe de lignes par groupe de lignes. Dans l'exemple suivant, on ajoute une nouvelle colonne qui contient le retard moyen *pour chaque compagnie aérienne*. Cette valeur est donc différente d'une compagnie à une autre, mais identique pour tous les vols d'une même compagnie :
 
 ```{r}
-flights %>% 
-  group_by(carrier) %>% 
-  mutate(mean_delay_carrier = mean(dep_delay, na.rm = TRUE)) %>% 
+flights %>%
+  group_by(carrier) %>%
+  mutate(mean_delay_carrier = mean(dep_delay, na.rm = TRUE)) %>%
   select(dep_delay, month, mean_delay_carrier)
 ```
 
 Ceci peut permettre, par exemple, de déterminer si un retard donné est supérieur ou inférieur au retard médian de la compagnie :
 
 ```{r}
-flights %>% 
-  group_by(carrier) %>% 
+flights %>%
+  group_by(carrier) %>%
   mutate(median_delay = median(dep_delay, na.rm = TRUE),
          delay_carrier = if_else(dep_delay > median_delay,
-                                  "Supérieur", "Inférieur ou égal")) %>% 
+                                  "Supérieur", "Inférieur ou égal")) %>%
   select(dep_delay, month, median_delay, delay_carrier)
 ```
 
 `group_by` peut aussi être utile avec `filter`, par exemple pour sélectionner les vols avec le retard au départ le plus important *pour chaque mois* :
 
 ```{r}
-flights %>% 
-  group_by(month) %>% 
+flights %>%
+  group_by(month) %>%
   filter(dep_delay == max(dep_delay, na.rm = TRUE))
 ```
 
@@ -378,15 +378,15 @@ flights %>%
 On peut voir la différence en comparant les deux résultats suivants :
 
 ```{r}
-flights %>% 
-  group_by(month) %>% 
+flights %>%
+  group_by(month) %>%
   arrange(desc(dep_delay))
 ```
 
 
 ```{r}
-flights %>% 
-  group_by(month) %>% 
+flights %>%
+  group_by(month) %>%
   arrange(desc(dep_delay), .by_group = TRUE)
 ```
 
@@ -397,7 +397,7 @@ flights %>%
 `summarise` permet d'agréger les lignes du tableau en effectuant une opération "résumée" sur une ou plusieurs colonnes. Par exemple, si on souhaite connaître les retards moyens au départ et à l'arrivée pour l'ensemble des vols du tableau `flights` :
 
 ```{r}
-flights %>% 
+flights %>%
   summarise(retard_dep = mean(dep_delay, na.rm=TRUE),
             retard_arr = mean(arr_delay, na.rm=TRUE))
 ```
@@ -434,31 +434,31 @@ Lorsque la variable de groupage est un facteur et que certaines valeurs du facte
 Par exemple, si on transforme la variable `origin` en facteur pour conserver la liste de ses modalités, et qu'on ne garde que les vols à destination de San Francisco (code `SFO`) :
 
 ```{r}
-ff <- flights %>% 
-  mutate(origin = factor(origin)) %>% 
+ff <- flights %>%
+  mutate(origin = factor(origin)) %>%
   filter(dest == "SFO")
 ```
 
 Par défaut, si on compte le nombre de vols selon l'aéroport de départ, La Guardia n'apparaît pas car il ne compte aucun vol :
 
 ```{r}
-ff %>% 
-  group_by(origin) %>% 
+ff %>%
+  group_by(origin) %>%
   summarise(n = n())
 ```
 
 Si on souhaite faire apparaître cette information dans la sortie du `summarise`, on peut ajouter l'argument `.drop = FALSE` au `group_by` :
 
 ```{r}
-ff %>% 
-  group_by(origin, .drop = FALSE) %>% 
+ff %>%
+  group_by(origin, .drop = FALSE) %>%
   summarise(n = n())
 ```
 
 Cet argument fonctionne aussi avec `count` :
 
 ```{r}
-ff %>% 
+ff %>%
   count(origin, .drop = FALSE)
 ```
 
@@ -478,12 +478,12 @@ flights %>%
 On peut également utiliser `count` sur plusieurs variables. Les commandes suivantes comptent le nombre de vols pour chaque couple aéroport de départ / aéroport d'arrivée, et trie le résultat par nombre de vols décroissant. Ici la colonne qui contient le nombre de vols, créée par `count`, s'appelle `n` par défaut :
 
 ```{r}
-flights %>% 
-  count(origin, dest) %>% 
+flights %>%
+  count(origin, dest) %>%
   arrange(desc(n))
 ```
 
-On peut utiliser plusieurs opérations de groupage dans le même *pipeline*. Ainsi, si on souhaite déterminer le triplet compagnie aérienne / aéroport de départ / aéroport d'arrivée ayant le plus grand nombre de vols selon le mois de l'année, on devra procéder en deux étapes : 
+On peut utiliser plusieurs opérations de groupage dans le même *pipeline*. Ainsi, si on souhaite déterminer le triplet compagnie aérienne / aéroport de départ / aéroport d'arrivée ayant le plus grand nombre de vols selon le mois de l'année, on devra procéder en deux étapes :
 
 - d'abord grouper selon mois, compagnie, aéroports d'origine et d'arrivée pour calculer le nombre de vols
 - puis grouper uniquement selon le mois pour sélectionner la ligne avec la valeur maximale.
@@ -511,7 +511,7 @@ Cela peut permettre "d'enchaîner" les opérations groupées. Dans l'exemple sui
 ```{r}
 flights %>%
   group_by(month, dest) %>%
-  summarise(nb = n()) %>% 
+  summarise(nb = n()) %>%
   mutate(pourcentage = nb / sum(nb) * 100)
 ```
 
@@ -520,15 +520,15 @@ On peut à tout moment "dégrouper" un tableau à l'aide de `ungroup`. Ce serait
 ```{r}
 flights %>%
   group_by(month, dest) %>%
-  summarise(nb = n()) %>% 
-  ungroup() %>% 
+  summarise(nb = n()) %>%
+  ungroup() %>%
   mutate(pourcentage = nb / sum(nb) * 100)
 ```
 
 À noter que `count`, par contre, renvoie un tableau non groupé :
 
 ```{r}
-flights %>% 
+flights %>%
   count(month, dest)
 ```
 
@@ -541,7 +541,7 @@ flights %>%
 
 ### `slice_sample`
 
-Ce verbe permet de sélectionner aléatoirement un nombre de lignes (avec l'argument `n`) ou une fraction des lignes (avec l'argument `prop`) d'un tableau. 
+Ce verbe permet de sélectionner aléatoirement un nombre de lignes (avec l'argument `n`) ou une fraction des lignes (avec l'argument `prop`) d'un tableau.
 
 Ainsi si on veut choisir 5 lignes au hasard dans le tableau `airports` :
 
@@ -592,7 +592,7 @@ On notera que le tableau renvoyé par `slice_min` et `slice_max` est trié selon
 
 ### `lead` et `lag`
 
-`lead` et `lag` permettent de décaler les observations d'une variable d'un cran vers l'arrière (pour `lead`) ou vers l'avant (pour `lag`). 
+`lead` et `lag` permettent de décaler les observations d'une variable d'un cran vers l'arrière (pour `lead`) ou vers l'avant (pour `lag`).
 
 ```{r}
 lead(1:5)
@@ -631,29 +631,29 @@ L'option `.keep_all` permet, dans l'opération précédente, de conserver l'ense
 
 ```{r}
 flights %>%
-  distinct(month, day, .keep_all = TRUE) 
+  distinct(month, day, .keep_all = TRUE)
 ```
 
-La fonction `n_distinct`, elle, renvoie le nombre de valeurs distinctes d'un vecteur. On peut notamment l'utiliser dans un `summarise`. 
+La fonction `n_distinct`, elle, renvoie le nombre de valeurs distinctes d'un vecteur. On peut notamment l'utiliser dans un `summarise`.
 
 Dans l'exemple qui suit on calcule, pour les trois aéroports de départ de la table `flights` le nombre de valeurs distinctes de l'aéroport d'arrivée :
 
 ```{r}
-flights %>% 
-  group_by(origin) %>% 
+flights %>%
+  group_by(origin) %>%
   summarise(n_dest = n_distinct(dest))
 ```
 
 
 
 ### `relocate`
- 
+
 `relocate` peut être utilisé pour réordonner les colonnes d'une table. Par défaut, si on lui passe un ou plusieurs noms de colonnes, `relocate` les place en début de tableau :
 
 ```{r}
 airports %>% relocate(lat, lon)
 ```
- 
+
 Les arguments supplémentaires `.before` et `.after` permettent de préciser à quel endroit déplacer la ou les colonnes indiquées :
 
 ```{r}
@@ -674,21 +674,21 @@ Les fonctions `bind_rows` et `bind_cols` permettent d'ajouter des lignes (respec
 L'exemple suivant (certes très artificiel) montre l'utilisation de `bind_rows`. On commence par créer trois tableaux `t1`, `t2` et `t3` :
 
 ```{r}
-t1 <- airports %>% 
-  select(faa, name, lat, lon) %>% 
+t1 <- airports %>%
+  select(faa, name, lat, lon) %>%
   slice(1:2)
 t1
 ```
 ```{r}
-t2 <- airports %>% 
-  select(faa, name, lat, lon) %>% 
+t2 <- airports %>%
+  select(faa, name, lat, lon) %>%
   slice(5:6)
 
 t2
 ```
 ```{r}
-t3 <- airports %>% 
-  select(faa, name) %>% 
+t3 <- airports %>%
+  select(faa, name) %>%
   slice(100:101)
 t3
 ```
@@ -699,7 +699,7 @@ On concaténe ensuite les trois tables avec `bind_rows` :
 bind_rows(t1, t2, t3)
 ```
 
-On remarquera que si des colonnes sont manquantes pour certaines tables, comme les colonnes `lat` et `lon` de `t3`, des `NA` sont automatiquement insérées. 
+On remarquera que si des colonnes sont manquantes pour certaines tables, comme les colonnes `lat` et `lon` de `t3`, des `NA` sont automatiquement insérées.
 
 Il peut être utile, quand on concatène des lignes, de garder une trace du tableau d'origine de chacune des lignes dans le tableau final. C'est possible grâce à l'argument `.id` de `bind_rows`. On passe à cet argument le nom d'une colonne qui contiendra l'indicateur d'origine des lignes :
 
@@ -751,14 +751,14 @@ left_join(flights, airlines)
 Pour faciliter la lecture, on va afficher seulement certaines colonnes du résultat :
 
 ```{r}
-left_join(flights, airlines) %>% 
+left_join(flights, airlines) %>%
   select(month, day, carrier, name)
 ```
 
 On voit que la table résultat est bien la fusion des deux tables d'origine selon les valeurs des deux colonnes clés `carrier`. On est parti de la table `flights`, et pour chaque ligne on a ajouté les colonnes de `airlines` pour lesquelles la valeur de `carrier` est la même. On a donc bien une nouvelle colonne `name` dans notre table résultat, avec le nom complet de la compagnie aérienne.
 
 ```{block type='rmdnote'}
-À noter qu'on peut tout à fait utiliser le *pipe* avec les fonctions de jointure : 
+À noter qu'on peut tout à fait utiliser le *pipe* avec les fonctions de jointure :
 
 `flights %>% left_join(airlines)`.
 ```
@@ -795,7 +795,7 @@ On constate que les deux nouvelles colonnes `name` et `alt` contiennent bien les
 On va stocker le résultat de cette jointure dans la table `flights_ex` :
 
 ```{r}
-flights_ex <- flights_ex %>% 
+flights_ex <- flights_ex %>%
   left_join(airports_ex, by = c("origin" = "faa"))
 ```
 
@@ -810,8 +810,8 @@ Cela fonctionne, les informations de l'aéroport d'arrivée ont bien été ajout
 C'est pratique, mais pas forcément très parlant. On pourrait renommer manuellement les colonnes avec `rename` avant de faire la jointure pour avoir des intitulés plus explicites, mais on peut aussi utiliser l'argument `suffix` de `left_join`, qui permet d'indiquer les suffixes à ajouter aux colonnes. Ainsi, on peut faire :
 
 ```{r}
-left_join(flights_ex, airports_ex, 
-          by = c("dest" = "faa"), 
+left_join(flights_ex, airports_ex,
+          by = c("dest" = "faa"),
           suffix = c("_depart", "_arrivee"))
 ```
 
@@ -948,7 +948,7 @@ kable(anti_join(personnes, voitures))
 
 Toutes les ressources ci-dessous sont en anglais...
 
-Le livre *R for data science*, librement accessible en ligne, contient plusieurs chapitres très complets sur la manipulation des données, notamment : 
+Le livre *R for data science*, librement accessible en ligne, contient plusieurs chapitres très complets sur la manipulation des données, notamment :
 
 - [Data transformation](http://r4ds.had.co.nz/transform.html) pour les manipulations
 - [Relational data](http://r4ds.had.co.nz/relational-data.html) pour les tables multiples
@@ -979,13 +979,12 @@ data(airlines)
 
 Sélectionner les lignes 100 à 105 du tableau des vols (`flights`).
 
-```{r echo=FALSE}
-slice(flights, 100:105)
+```{r echo=FALSE, ref.label='dp11'}
 ```
 
 \iffalse
 <div class="solution-exo">
-```{r eval=FALSE}
+```{r dp11, eval=FALSE}
 slice(flights, 100:105)
 ```
 </div>
@@ -997,13 +996,12 @@ slice(flights, 100:105)
 
 Sélectionnez les vols du mois de juillet (variable `month`).
 
-```{r echo = FALSE}
-filter(flights, month == 7)
+```{r echo = FALSE, ref.label='dp12'}
 ```
 
 \iffalse
 <div class="solution-exo">
-```{r eval=FALSE}
+```{r dp12, eval=FALSE}
 filter(flights, month == 7)
 ```
 </div>
@@ -1013,13 +1011,12 @@ filter(flights, month == 7)
 
 Sélectionnez les vols avec un retard à l'arrivée (variable `arr_delay`) compris entre 5 et 15 minutes.
 
-```{r echo = FALSE}
-filter(flights, arr_delay >= 5 & arr_delay <= 15)
+```{r echo = FALSE, ref.label='dp12b'}
 ```
 
 \iffalse
 <div class="solution-exo">
-```{r eval=FALSE}
+```{r dp12b, eval=FALSE}
 filter(flights, arr_delay >= 5 & arr_delay <= 15)
 ```
 </div>
@@ -1029,13 +1026,12 @@ filter(flights, arr_delay >= 5 & arr_delay <= 15)
 
 Sélectionnez les vols des compagnies Delta, United et American (codes `DL`, `UA` et `AA` de la variable `carrier`).
 
-```{r echo=FALSE}
-filter(flights, carrier %in% c("AA", "DL", "UA"))
+```{r echo=FALSE, ref.label='dp12c'}
 ```
 
 \iffalse
 <div class="solution-exo">
-```{r eval=FALSE}
+```{r dp12c, eval=FALSE}
 filter(flights, carrier %in% c("DL", "UA", "AA"))
 ```
 </div>
@@ -1048,13 +1044,12 @@ filter(flights, carrier %in% c("DL", "UA", "AA"))
 
 Triez la table `flights` par retard au départ décroissant.
 
-```{r echo = FALSE}
-arrange(flights, desc(dep_delay))
+```{r echo = FALSE, ref.label='dp13'}
 ```
 
 \iffalse
 <div class="solution-exo">
-```{r eval=FALSE}
+```{r dp13, eval=FALSE}
 arrange(flights, desc(dep_delay))
 ```
 </div>
@@ -1066,13 +1061,12 @@ arrange(flights, desc(dep_delay))
 
 Sélectionnez les colonnes `name`, `lat` et `lon` de la table `airports`
 
-```{r, echo = FALSE}
-select(airports, name, lat, lon)
+```{r, echo = FALSE, ref.label='dp14'}
 ```
 
 \iffalse
 <div class="solution-exo">
-```{r eval=FALSE}
+```{r dp14, eval=FALSE}
 select(airports, name, lat, lon)
 ```
 </div>
@@ -1082,13 +1076,12 @@ select(airports, name, lat, lon)
 
 Sélectionnez toutes les colonnes de la table `airports` sauf les colonnes `tz` et `tzone`
 
-```{r, echo = FALSE}
-select(airports, -tz, -tzone)
+```{r, echo = FALSE, ref.label='dp14b'}
 ```
 
 \iffalse
 <div class="solution-exo">
-```{r eval=FALSE}
+```{r dp14b, eval=FALSE}
 select(airports, -tz, -tzone)
 ```
 </div>
@@ -1098,13 +1091,12 @@ select(airports, -tz, -tzone)
 
 Toujours dans la table `airports`, renommez la colonne `lat` en `latitude` et `lon` en `longitude`.
 
-```{r, echo = FALSE}
-rename(airports, latitude = lat, longitude = lon)
+```{r, echo = FALSE, ref.label='dp14c'}
 ```
 
 \iffalse
 <div class="solution-exo">
-```{r eval=FALSE}
+```{r dp14c, eval=FALSE}
 rename(airports, latitude = lat, longitude = lon)
 ```
 </div>
@@ -1116,14 +1108,12 @@ rename(airports, latitude = lat, longitude = lon)
 
 Dans la table `airports`, la colonne `alt` contient l'altitude de l'aéroport en pieds. Créer une nouvelle variable `alt_m` contenant l'altitude en mètres (on convertit des pieds en mètres en les divisant par 3.2808). Sélectionner dans la table obtenue uniquement les deux colonnes `alt` et `alt_m`.
 
-```{r echo=FALSE}
-tmp <- mutate(airports, alt_m = alt / 3.2808)
-select(tmp, alt, alt_m)
+```{r echo=FALSE, ref.label='dp15'}
 ```
 
 \iffalse
 <div class="solution-exo">
-```{r eval=FALSE}
+```{r dp15, eval=FALSE}
 tmp <- mutate(airports, alt_m = alt / 3.2808)
 select(tmp, alt, alt_m)
 ```
@@ -1138,15 +1128,12 @@ select(tmp, alt, alt_m)
 
 Réécrire le code de l'exercice précédent en utilisant le *pipe* `%>%`.
 
-```{r echo=FALSE, eval=FALSE}
-airports %>%
-  mutate(alt_m = alt / 3.2808) %>%
-  select(alt, alt_m)
+```{r echo=FALSE, eval=FALSE, ref.label='dp21'}
 ```
 
 \iffalse
 <div class="solution-exo">
-```{r eval=FALSE}
+```{r dp21, eval=FALSE}
 airports %>%
   mutate(alt_m = alt / 3.2808) %>%
   select(alt, alt_m)
@@ -1159,17 +1146,14 @@ airports %>%
 
 En utilisant le *pipe*, sélectionnez les vols à destination de San Francico (code `SFO` de la variable `dest`) et triez-les selon le retard au départ décroissant (variable `dep_delay`).
 
-```{r echo=FALSE}
-flights %>% 
-  filter(dest == "SFO") %>% 
-  arrange(desc(dep_delay))
+```{r echo=FALSE, ref.label='dp22'}
 ```
 
 \iffalse
 <div class="solution-exo">
-```{r eval=FALSE}
-flights %>% 
-  filter(dest == "SFO") %>% 
+```{r dp22, eval=FALSE}
+flights %>%
+  filter(dest == "SFO") %>%
   arrange(desc(dep_delay))
 ```
 </div>
@@ -1181,23 +1165,17 @@ flights %>%
 
 Sélectionnez les vols des mois de septembre et octobre, conservez les colonnes `dest` et `dep_delay`, créez une nouvelle variable `retard_h` contenant le retard au départ en heures, triez selon `retard_h` par ordre décroissant et conservez uniquement les 5 premières lignes.
 
-```{r echo=FALSE}
-flights %>% 
-  filter(month %in% c(9, 10)) %>% 
-  select(dest, dep_delay) %>% 
-  mutate(retard_h = dep_delay / 60) %>% 
-  arrange(desc(retard_h)) %>% 
-  slice(1:5)
+```{r echo=FALSE, ref.label='dp23'}
 ```
 
 \iffalse
 <div class="solution-exo">
-```{r eval=FALSE}
-flights %>% 
-  filter(month %in% c(9, 10)) %>% 
-  select(dest, dep_delay) %>% 
-  mutate(retard_h = dep_delay / 60) %>% 
-  arrange(desc(retard_h)) %>% 
+```{r dp23, eval=FALSE}
+flights %>%
+  filter(month %in% c(9, 10)) %>%
+  select(dest, dep_delay) %>%
+  mutate(retard_h = dep_delay / 60) %>%
+  arrange(desc(retard_h)) %>%
   slice(1:5)
 ```
 </div>
@@ -1212,17 +1190,14 @@ flights %>%
 
 Affichez le nombre de vols par mois.
 
-```{r echo = FALSE}
-flights %>% 
-  group_by(month) %>% 
-  summarise(n = n())
+```{r echo = FALSE, ref.label='dp31'}
 ```
 
 \iffalse
 <div class="solution-exo">
-```{r eval=FALSE}
-flights %>% 
-  group_by(month) %>% 
+```{r dp31, eval=FALSE}
+flights %>%
+  group_by(month) %>%
   summarise(n = n())
 ```
 </div>
@@ -1232,19 +1207,15 @@ flights %>%
 
 Triez la table résultat selon le nombre de vols croissant.
 
-```{r echo = FALSE}
-flights %>% 
-  group_by(month) %>% 
-  summarise(n = n()) %>% 
-  arrange(n)
+```{r echo = FALSE, ref.label='dp31b'}
 ```
 
 \iffalse
 <div class="solution-exo">
-```{r eval=FALSE}
-flights %>% 
-  group_by(month) %>% 
-  summarise(n = n()) %>% 
+```{r dp31b, eval=FALSE}
+flights %>%
+  group_by(month) %>%
+  summarise(n = n()) %>%
   arrange(n)
 ```
 </div>
@@ -1255,17 +1226,14 @@ flights %>%
 
 Calculer la distance moyenne des vols selon l'aéroport de départ.
 
-```{r echo=FALSE}
-flights %>%
-  group_by(origin) %>% 
-  summarise(distance_moyenne = mean(distance))
+```{r echo=FALSE, ref.label='dp32'}
 ```
 
 \iffalse
 <div class="solution-exo">
-```{r eval=FALSE}
+```{r dp32, eval=FALSE}
 flights %>%
-  group_by(origin) %>% 
+  group_by(origin) %>%
   summarise(distance_moyenne = mean(distance))
 ```
 </div>
@@ -1277,17 +1245,14 @@ flights %>%
 
 Calculer le nombre de vols à destination de Los Angeles (code `LAX`) pour chaque mois de l'année.
 
-```{r echo = FALSE}
-flights %>% 
-  filter(dest == "LAX") %>% 
-  count(month)
+```{r echo = FALSE, ref.label='dp33'}
 ```
 
 \iffalse
 <div class="solution-exo">
-```{r eval=FALSE}
-flights %>% 
-  filter(dest == "LAX") %>% 
+```{r dp33, eval=FALSE}
+flights %>%
+  filter(dest == "LAX") %>%
   count(month)
 ```
 </div>
@@ -1297,17 +1262,15 @@ flights %>%
 
 **Exercice 3.4**
 
-Calculer le nombre de vols selon le mois et la destination. 
+Calculer le nombre de vols selon le mois et la destination.
 
-```{r echo = FALSE}
-flights %>% 
-  count(month, dest)
+```{r echo = FALSE, ref.label='dp34'}
 ```
 
 \iffalse
 <div class="solution-exo">
-```{r eval=FALSE}
-flights %>% 
+```{r dp34, eval=FALSE}
+flights %>%
   count(month, dest)
 ```
 </div>
@@ -1316,19 +1279,15 @@ flights %>%
 
 Ne conserver, pour chaque mois, que la destination avec le nombre maximal de vols.
 
-```{r echo = FALSE}
-flights %>% 
-  count(month, dest) %>% 
-  group_by(month) %>% 
-  filter(n == max(n))
+```{r echo = FALSE, ref.label='dp34b'}
 ```
 
 \iffalse
 <div class="solution-exo">
-```{r eval=FALSE}
-flights %>% 
-  count(month, dest) %>% 
-  group_by(month) %>% 
+```{r dp34b, eval=FALSE}
+flights %>%
+  count(month, dest) %>%
+  group_by(month) %>%
   filter(n == max(n))
 ```
 </div>
@@ -1340,18 +1299,15 @@ flights %>%
 
 Calculer le nombre de vols selon le mois. Ajouter une colonne comportant le pourcentage de vols annuels réalisés par mois.
 
-```{r echo = FALSE}
-flights %>% 
-  count(month) %>% 
-  mutate(pourcentage = n/sum(n) * 100) 
+```{r echo = FALSE, ref.label='dp35'}
 ```
 
 \iffalse
 <div class="solution-exo">
-```{r eval=FALSE}
-flights %>% 
-  count(month) %>% 
-  mutate(pourcentage = n/sum(n) * 100) 
+```{r dp35, eval=FALSE}
+flights %>%
+  count(month) %>%
+  mutate(pourcentage = n/sum(n) * 100)
 ```
 </div>
 \fi
@@ -1361,23 +1317,17 @@ flights %>%
 
 Calculer, pour chaque destination et chaque mois, le retard moyen à l'arrivée. Pour chaque mois, trier les destinations selon ce retard moyen décroissant, et (toujours pour chaque mois) ne conserver que les trois destinations avec le retard le plus important.
 
-```{r echo = FALSE}
-flights %>% 
-  group_by(month, dest) %>% 
-  summarise(retard_moyen = mean(arr_delay, na.rm = TRUE)) %>% 
-  group_by(month) %>% 
-  arrange(desc(retard_moyen), .by_group = TRUE) %>% 
-  slice(1:3)
+```{r echo = FALSE, ref.label='dp36'}
 ```
 
 \iffalse
 <div class="solution-exo">
-```{r eval=FALSE}
-flights %>% 
-  group_by(month, dest) %>% 
-  summarise(retard_moyen = mean(arr_delay, na.rm = TRUE)) %>% 
-  group_by(month) %>% 
-  arrange(desc(retard_moyen), .by_group = TRUE) %>% 
+```{r dp36, eval=FALSE}
+flights %>%
+  group_by(month, dest) %>%
+  summarise(retard_moyen = mean(arr_delay, na.rm = TRUE)) %>%
+  group_by(month) %>%
+  arrange(desc(retard_moyen), .by_group = TRUE) %>%
   slice(1:3)
 ```
 </div>
@@ -1393,15 +1343,13 @@ flights %>%
 
 Faire la jointure de la table `airlines` sur la table `flights` à l'aide de `left_join`.
 
-```{r echo = FALSE, message=FALSE}
-flights %>% 
-  left_join(airlines)
+```{r echo = FALSE, message=FALSE, ref.label='dp41'}
 ```
 
 \iffalse
 <div class="solution-exo">
-```{r eval=FALSE}
-flights %>% 
+```{r dp41, eval=FALSE}
+flights %>%
   left_join(airlines)
 ```
 </div>
@@ -1413,21 +1361,16 @@ flights %>%
 
 À partir de la table résultat de l'exercice précédent, calculer le retard moyen au départ pour chaque compagnie, trier selon ce retard décroissant et ne conserver que le nom de la compagnie et le retard correspondant.
 
-```{r echo = FALSE, message=FALSE}
-flights %>% 
-  left_join(airlines) %>% 
-  group_by(name) %>% 
-  summarise(retard_moyen = mean(dep_delay, na.rm = TRUE)) %>% 
-  arrange(desc(retard_moyen))
+```{r echo = FALSE, message=FALSE, ref.label='dp42'}
 ```
 
 \iffalse
 <div class="solution-exo">
-```{r eval=FALSE}
-flights %>% 
-  left_join(airlines) %>% 
-  group_by(name) %>% 
-  summarise(retard_moyen = mean(dep_delay, na.rm = TRUE)) %>% 
+```{r dp42, eval=FALSE}
+flights %>%
+  left_join(airlines) %>%
+  group_by(name) %>%
+  summarise(retard_moyen = mean(dep_delay, na.rm = TRUE)) %>%
   arrange(desc(retard_moyen))
 ```
 </div>
@@ -1439,15 +1382,13 @@ flights %>%
 
 Faire la jointure de la table `airports` sur la table `flights` en utilisant comme clé le code de l'aéroport de destination.
 
-```{r echo = FALSE}
-flights %>% 
-  left_join(airports, by = c("dest"="faa"))
+```{r echo = FALSE, ref.label='dp43'}
 ```
 
 \iffalse
 <div class="solution-exo">
-```{r eval=FALSE}
-flights %>% 
+```{r dp43, eval=FALSE}
+flights %>%
   left_join(airports, by = c("dest" = "faa"))
 ```
 </div>
@@ -1457,21 +1398,16 @@ flights %>%
 
 À partir de cette table, afficher pour chaque mois le nom de l'aéroport de destination ayant eu le plus petit nombre de vol.
 
-```{r echo = FALSE}
-flights %>% 
-  left_join(airports, by = c("dest"="faa")) %>% 
-  count(month, name) %>% 
-  group_by(month) %>% 
-  filter(n == min(n))
+```{r echo = FALSE, ref.label='dp43b'}
 ```
 
 \iffalse
 <div class="solution-exo">
-```{r eval=FALSE}
-flights %>% 
-  left_join(airports, by = c("dest" = "faa")) %>% 
-  count(month, name) %>% 
-  group_by(month) %>% 
+```{r dp43b, eval=FALSE}
+flights %>%
+  left_join(airports, by = c("dest" = "faa")) %>%
+  count(month, name) %>%
+  group_by(month) %>%
   filter(n == min(n))
 ```
 </div>
@@ -1483,24 +1419,18 @@ flights %>%
 
 Créer une table indiquant, pour chaque trajet, le nom de l'aéroport de départ et celui de l'aéroport d'arrivée.
 
-```{r echo=FALSE}
-flights %>% 
-  left_join(airports, by = c("dest" = "faa")) %>% 
-  rename(dest_name = name) %>% 
-  left_join(airports, by = c("origin" = "faa")) %>% 
-  rename(orig_name = name) %>% 
-  select(orig_name, dest_name)  
+```{r echo=FALSE, ref.label='dp44'}
 ```
 
 \iffalse
 <div class="solution-exo">
-```{r eval=FALSE}
-flights %>% 
-  left_join(airports, by = c("dest" = "faa")) %>% 
-  rename(dest_name = name) %>% 
-  left_join(airports, by = c("origin" = "faa")) %>% 
-  rename(orig_name = name) %>% 
-  select(orig_name, dest_name) 
+```{r dp44, eval=FALSE}
+flights %>%
+  left_join(airports, by = c("dest" = "faa")) %>%
+  rename(dest_name = name) %>%
+  left_join(airports, by = c("origin" = "faa")) %>%
+  rename(orig_name = name) %>%
+  select(orig_name, dest_name)
 ```
 </div>
 \fi
@@ -1511,20 +1441,16 @@ flights %>%
 
 **Exercice 5.1**
 
-Calculer le nombre de vols selon l'aéroport de destination, et fusionnez la table `airports` sur le résultat avec `left_join`. Stocker le résultat final dans un objet nommé `flights_dest`. 
+Calculer le nombre de vols selon l'aéroport de destination, et fusionnez la table `airports` sur le résultat avec `left_join`. Stocker le résultat final dans un objet nommé `flights_dest`.
 
-```{r echo = FALSE}
-flights_dest <- flights %>% 
-  count(dest) %>% 
-  left_join(airports, by = c("dest"="faa"))
-flights_dest
+```{r echo = FALSE, ref.label='dp51'}
 ```
 
 \iffalse
 <div class="solution-exo">
-```{r eval=FALSE}
-flights_dest <- flights %>% 
-  count(dest) %>% 
+```{r dp51, eval=FALSE}
+flights_dest <- flights %>%
+  count(dest) %>%
   left_join(airports, by = c("dest"="faa"))
 ```
 </div>

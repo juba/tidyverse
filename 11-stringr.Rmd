@@ -273,13 +273,12 @@ kable(d)
 
 Capitalisez les noms des personnes avec `str_to_title` :
 
-```{r echo = FALSE}
-str_to_title(d$nom)
+```{r echo = FALSE, ref.label='str1'}
 ```
 
 \iffalse
 <div class="solution-exo">
-```{r eval=FALSE}
+```{r str1, eval=FALSE}
 str_to_title(d$nom)
 ```
 </div>
@@ -291,13 +290,12 @@ str_to_title(d$nom)
 
 Dans la variable `profession`, remplacer toutes les occurrences de l'abbréviation "agric" par "agricole" :
 
-```{r echo = FALSE}
-str_replace(d$profession, "agric", "agricole")
+```{r echo = FALSE, ref.label='str2'}
 ```
 
 \iffalse
 <div class="solution-exo">
-```{r eval=FALSE}
+```{r str2, eval=FALSE}
 str_replace(d$profession, "agric", "agricole")
 ```
 </div>
@@ -309,13 +307,12 @@ str_replace(d$profession, "agric", "agricole")
 
 À l'aide de `str_detect`, identifier les personnes de catégorie professionnelle "Ouvrier". Indication : pensez au modificateur `ignore_case`.
 
-```{r echo = FALSE}
-str_detect(d$profession, regex("Ouvr", ignore_case = TRUE))
+```{r echo = FALSE, ref.label='str3'}
 ```
 
 \iffalse
 <div class="solution-exo">
-```{r eval=FALSE}
+```{r str3, eval=FALSE}
 str_detect(d$profession, regex("Ouvr", ignore_case = TRUE))
 ```
 </div>
@@ -327,17 +324,12 @@ str_detect(d$profession, regex("Ouvr", ignore_case = TRUE))
 
 À l'aide de `case_when` et de `str_detect`, créer une nouvelle variable `sexe` identifiant le sexe de chaque personne en fonction de la présence de `M.` ou de `Mme` dans son nom.
 
-```{r echo = FALSE}
-d %>% 
-  mutate(sexe = case_when(
-            str_detect(nom, fixed("Mme")) ~ "Femme",
-            str_detect(nom, fixed("M.")) ~ "Homme")) %>% 
-  select(nom, sexe, everything())
+```{r echo = FALSE, ref.label='str4'}
 ```
 
 \iffalse
 <div class="solution-exo">
-```{r eval=FALSE}
+```{r str4, eval=FALSE}
 d %>% 
   mutate(sexe = case_when(
             str_detect(nom, fixed("Mme")) ~ "Femme",
@@ -354,13 +346,12 @@ Extraire l'année de naissance de chaque individu avec `str_extract`. Vous pouve
 
 Vous devez obtenir le vecteur suivant :
 
-```{r echo = FALSE}
-str_extract(d$naissance, "\\d\\d\\d\\d")
+```{r echo = FALSE, ref.label='str5'}
 ```
 
 \iffalse
 <div class="solution-exo">
-```{r eval=FALSE}
+```{r str5, eval=FALSE}
 str_extract(d$naissance, "\\d\\d\\d\\d")
 ```
 </div>
@@ -370,15 +361,12 @@ str_extract(d$naissance, "\\d\\d\\d\\d")
 
 À l'aide de la fonction `extract` de l'extension `tidyr` et du regex précédent, créez une nouvelle variable `annee` dans le tableau, qui contient l'année de naissance (pour plus d'informations sur `extract`, voir la section \@ref(extract)).
 
-```{r echo = FALSE}
-library(tidyr)
-d %>% 
-  extract(naissance, "annee", "(\\d\\d\\d\\d)", remove = FALSE)
+```{r echo = FALSE, ref.label='str5b'}
 ```
 
 \iffalse
 <div class="solution-exo">
-```{r eval=FALSE}
+```{r str5b, eval=FALSE}
 library(tidyr)
 d %>% 
   extract(naissance, "annee", "(\\d\\d\\d\\d)", remove = FALSE)
