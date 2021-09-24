@@ -624,7 +624,7 @@ Créer une fonction `my_table` qui prend en arguments un tableau de données `df
 
 Vérifier avec :
 
-```{r echo=FALSE, ref.labe="progtidy-1-1-1"}
+```{r echo=FALSE, ref.labell="progtidy-1-1-1"}
 ```
 ```{r}
 my_table(starwars, gender)
@@ -643,7 +643,7 @@ my_table <- function(df, var) {
 
 Modifier `my_table` pour qu'elle accepte trois arguments `df`, `by` et `var`, et qu'elle retourne le résultat du count appliqué à `by` et à `var`.
 
-```{r echo=FALSE, ref.labe="progtidy-1-1-2"}
+```{r echo=FALSE, ref.label="progtidy-1-1-2"}
 ```
 
 ```{r}
@@ -663,7 +663,7 @@ my_table <- function(df, by, var) {
 
 Modifier `my_table` pour qu'elle accepte deux arguments `df` et `vars`, et qu'elle applique le `count` à toutes les variables indiquées dans `vars`.
 
-```{r echo=FALSE, ref.labe="progtidy-1-1-3"}
+```{r echo=FALSE, ref.label="progtidy-1-1-3"}
 ```
 
 ```{r}
@@ -819,7 +819,7 @@ graph_bar(starwars, sex, gender)
 
 \iffalse
 <div class="solution-exo">
-```{r progtidy-2-1-2b, eval=FALSE}
+```{r progtidy-2-1b, eval=FALSE}
 graph_bar <- function(df, var, facet_var) {
     ggplot(df) +
         geom_bar(aes(x = {{ var }})) +
@@ -832,6 +832,7 @@ graph_bar <- function(df, var, facet_var) {
 
 **Exercice 2.2**
 
+Créer une fonction `graph_points` qui prend en arguments un tableau de données et deux variables, et raffiche le nuage de points de ces deux variables.
 
 ```{r echo=FALSE, ref.label='progtidy-2-2a'}
 ```
@@ -851,12 +852,13 @@ graph_points <- function(df, var_x, var_y) {
 </div>
 \fi
 
+Ajouter un quatrième argument `color` à la fonction `graph_points()`, qui permet de spécifier la couleur des points (la même couleur pour tous les points).
 
 ```{r echo=FALSE, ref.label='progtidy-2-2b'}
 ```
 
 ```{r}
-graph_points(starwars, height, mass, "red")
+graph_points(starwars, height, mass, color = "red")
 ```
 
 \iffalse
@@ -870,12 +872,13 @@ graph_points <- function(df, var_x, var_y, color) {
 </div>
 \fi
 
+Modifier `graph_points()` pour que l'argument `color` corresponde non pas à une couleur fixe mais à une variable dont les valeurs déterminent la couleur des points.
 
 ```{r echo=FALSE, ref.label='progtidy-2-2c'}
 ```
 
 ```{r}
-graph_points(starwars, height, mass, sex)
+graph_points(starwars, height, mass, color = sex)
 ```
 
 \iffalse
@@ -889,35 +892,47 @@ graph_points <- function(df, var_x, var_y, color) {
 </div>
 \fi
 
+*Facultatif :* modifier `graph_points()` pour que l'argument `color` puisse accepter aussi bien une variable qu'une couleur fixe. On pourra tester si la valeur passée à `color` est bien une colonne du tableau de données.
+
+Indication : on pourra s'aider du résultat de la fonction suivante.
+
 ```{r}
 f <- function(x) {
     deparse(substitute(x))
 }
-f(foocd)
-f("yo")
+f(igloo)
 ```
 
 ```{r echo=FALSE, ref.label='progtidy-2-2d'}
 ```
 
 ```{r}
-graph_points(starwars, height, mass, sex)
+graph_points(starwars, height, mass, color = sex)
 ```
+
+```{r}
+graph_points(starwars, height, mass, color = "#F46789")
+```
+
 
 \iffalse
 <div class="solution-exo">
 ```{r progtidy-2-2d, eval=FALSE}
 graph_points <- function(df, var_x, var_y, color) {
-
-    aesthetics <- aes(x = {{var_x}}, y = {{var_y}}, color = {{color}})
-    ggplot(df) +
-        geom_point(aesthetics)
+    color_value <- deparse(substitute(color))
+    g <- ggplot(df)
+    if (color_value %in% names(df)) {
+        g <- g +
+            geom_point(aes(x = {{var_x}}, y = {{var_y}}, color = {{color}}))
+    } else {
+        g <- g +
+            geom_point(aes(x = {{var_x}}, y = {{var_y}}), color = color)
+    }
+    g
 }
 ```
 </div>
 \fi
-
-
 
 
 ### Noms de colonnes en chaînes de caractères
@@ -1043,7 +1058,7 @@ Quels sont les avantages et inconvénients des deux méthodes ?
 <div class="solution-exo">
 La fonction utilisant `filter()` est plus compacte et plus lisible, et elle gère les `NA` de la manière attendue sans condition supplémentaire.
 
-La fonction utilisant `[,]` évite d'avoir à utiliser l'opérateur *curly curly*, ainsi que l'ambiguïté liée à la présence d'un argument `height` et d'une colonne `height`.
+La fonction utilisant `[,]` évite d'avoir à utiliser l'opérateur *curly curly*, ainsi que l'ambiguïté liée à la présence simultanée d'un argument `height` et d'une colonne `height`.
 </div>
 \fi
 
