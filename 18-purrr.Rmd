@@ -961,12 +961,12 @@ notes <- list(
 
 Sans utiliser de boucle `for`, afficher avec la fonction `message()` les valeurs de chaque moyenne tour à tour de manière à obtenir le résultat suivant :
 
-```{r echo=FALSE}
-notes %>% walk(~ message(mean(.x, na.rm = TRUE)))
+```{r echo=FALSE, ref.label='pur31b'}
 ```
+
 \iffalse
 <div class="solution-exo">
-```{r eval=FALSE}
+```{r pur31b, eval=FALSE}
 notes %>% walk(~ message(mean(.x, na.rm = TRUE)))
 ```
 </div>
@@ -974,16 +974,13 @@ notes %>% walk(~ message(mean(.x, na.rm = TRUE)))
 
 De la même manière afficher pour chaque matière les messages suivants :
 
-```{r echo=FALSE}
-notes %>% iwalk(function(notes, matiere) {
-    message("Votre moyenne en ", matiere, " est ", mean(notes, na.rm = TRUE))
-})
+```{r echo=FALSE, ref.label='pur32'}
 ```
 
 
 \iffalse
 <div class="solution-exo">
-```{r eval=FALSE}
+```{r pur32, eval=FALSE}
 notes %>% iwalk(function(notes, matiere) {
     message("Votre moyenne en ", matiere, " est ", mean(notes, na.rm = TRUE))
 })
@@ -993,15 +990,12 @@ notes %>% iwalk(function(notes, matiere) {
 
 Construire un tableau de données avec une matière par ligne et deux colonnes contenant le nom de la matière et la valeur de la moyenne.
 
-```{r echo=FALSE}
-notes %>% imap_dfr(function(notes, matiere) {
-    tibble(matiere = matiere, moyenne = mean(notes, na.rm = TRUE))
-})
+```{r echo=FALSE, ref.label='pur31c'}
 ```
 
 \iffalse
 <div class="solution-exo">
-```{r eval=FALSE}
+```{r pur31c, eval=FALSE}
 notes %>% imap_dfr(function(notes, matiere) {
     tibble(matiere = matiere, moyenne = mean(notes, na.rm = TRUE))
 })
@@ -1026,6 +1020,7 @@ l <- list(
     hdv = hdv2003,
     rp = rp2012
 )
+
 affiche_dimensions(l)
 ```
 
@@ -1173,7 +1168,7 @@ tirages <- list(
     probas = list(
         c(0.5, 0.5),
         c(0.1, 0.9),
-        rep(1 / 6, 6)
+        rep(1/6, 6)
     ),
     n = c(1000, 500, 800)
 )
@@ -1213,24 +1208,24 @@ resultats %>% walk(~barplot(table(.x)))
 La fonction suivante simule le lancer de `n` dés à 6 faces.
 
 ```{r}
-lancer_de <- function(n) {
+lancer_des <- function(n) {
     sample(1:6, size = n, replace = TRUE)
 }
 
-lancer_de(3)
+lancer_des(3)
 ```
 
 On souhaite utiliser cette fonction pour générer 10 lancers de 4 dés. On essaie avec le code suivant :
 
 ```{r eval=FALSE}
-map(1:10, lancer_de, 4)
+map(1:10, lancer_des, 4)
 ```
 
 Est-ce que cela fonctionne ? Pourquoi ?
 
 \iffalse
 <div class="solution-exo">
-Ça ne fonctionne pas car `lancer_de()` est appelée à chaque itération avec deux arguments : la valeur courante de l'itérateur, et 4. Ainsi dans sa première itération, `map()` exécute `alancer_de(1, 4)`, ce qui génère un message d'erreur puisque `lancer_de()` n'accepte qu'un argument.
+Ça ne fonctionne pas car `lancer_des()` est appelée à chaque itération avec deux arguments : la valeur courante de l'itérateur, et 4. Ainsi dans sa première itération, `map()` exécute `lancer_des(1, 4)`, ce qui génère un message d'erreur puisque `lancer_des()` n'accepte qu'un argument.
 </div>
 \fi
 
@@ -1239,7 +1234,7 @@ Trouver une solution en corrigeant le code.
 \iffalse
 <div class="solution-exo">
 ```{r eval=FALSE}
-map(1:10, ~lancer_de(4))
+map(1:10, ~lancer_des(4))
 ```
 </div>
 \fi
