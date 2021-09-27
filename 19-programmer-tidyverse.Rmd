@@ -235,7 +235,7 @@ resume_groupe(restos, style, evaluation)
 
 
 
-### Utiliser une série de colonnes passées en arguments
+### Utiliser une sélection de colonnes passées en arguments
 
 Dans la section précédente, on a utilisé à chaque fois une seule colonne. Si on souhaite grouper ou appliquer une fonction sur une série de colonnes, il faut alors utiliser `across()`.
 
@@ -270,9 +270,9 @@ select_cols <- function(df, cols) {
 restos %>% select_cols(where(is.character) & !c(nom, note))
 ```
 
-### Créer de nouvelles colonnes avec des noms passés en argument
+### Nommer de nouvelles colonnes à partir d'un argument
 
-On a vu comment utiliser des colonnes passées en argument pour accéder à leur contenu. On peut aussi vouloir passer en argument des noms de colonnes qu'on souhaite créer, par exemple avec un `mutate()`.
+On a vu comment utiliser des colonnes passées en argument pour accéder à leur contenu. On peut aussi vouloir passer en argument des noms de colonnes qu'on souhaite créer, par exemple avec un `mutate()` ou un `summarise()`.
 
 On pourrait essayer directement de la manière suivante, mais cela ne fonctionne pas car dans ce cas la colonne créée s'appelle "col_new", et pas la valeur de l'argument `col_new`.
 
@@ -289,7 +289,7 @@ calcule_pourcentage(restos, prop_places, places)
 
 Dans ce cas de figure, la syntaxe à utiliser est un peu plus complexe :
 
-- on remplace l'opérateur `=` du `mutate()` par l'opérateur `:=`
+- on remplace l'opérateur `=` du `mutate()` par l'opérateur `:=` (appelé *walrus operator*)
 - on place à gauche du `:=` une chaîne de caractères dans laquelle notre argument contenant le nom de la nouvelle variable est entouré d'une paire d'accolades.
 
 Voici ce que ça donne pour l'exemple ci-dessus :
@@ -334,7 +334,7 @@ resume <- function(df, col) {
 resume(restos, places)
 ```
 
-### Désambiguiser data / env
+### Désambiguïser data et env
 
 Lorsqu'on utilise des fonctions de `dplyr` ou `tidyr` dans d'autres fonctions, il peut être utile de préciser, quand on accède à un objet dont on connaît le nom (c'est-à-dire dont le nom n'est pas passé en argument), si c'est un objet de type "data" (une colonne du tableau de données dans lequel on travaille) ou de type "env" (un objet de l'environnement dans lequel on travaille).
 
@@ -378,6 +378,16 @@ On ne peut pas dans ce cas utiliser l'opérateur *curly curly*, par contre on pe
 ```{r}
 summarise_min <- function(df, col) {
     df %>% summarise(min = min(.data[[col]]))
+}
+
+summarise_min(restos, "evaluation")
+```
+
+Si dans l'exemple précédent on souhaite personnaliser le nom de la colonne créée en utilisant la valeur de notre paramètre `evaluation`, on place le nom de notre objet dans une chaîne de caractère en l'entourant d'accolades simples, et on utilise le *walrus operator* `:=`.
+
+```{r}
+summarise_min <- function(df, col) {
+    df %>% summarise("min_{col}" := min(.data[[col]]))
 }
 
 summarise_min(restos, "evaluation")
@@ -491,7 +501,7 @@ facet_points(ville, style)
 
 ## Aide-mémoire
 
-On essaie de récapituler ici les points importants à garder en tête, pour pouvoir les retrouver facilement.
+On essaie de récapituler ici les points importants pour pouvoir les retrouver facilement.
 
 ```{block type='rmdimportant'}
 Premier point important : les spécificités vues ici ne s'appliquent que quand on veut utiliser certaines fonctions du *tidyverse* (`dplyr`, `tidyr`, `ggplot2`) à l'intérieur d'autres fonctions. Plus spécifiquement, elles sont à prendre en compte quand on souhaite passer en argument d'une fonction des noms de colonnes qui seront utilisées par des fonctions du *tidyverse*.
@@ -532,26 +542,7 @@ select_cols <- function(df, cols) {
 select_cols(starwars, !where(is.list))
 ```
 
-5. Si on souhaite grouper ou appliquer une même transformation sur plusieurs colonnes, on utilise `across()` et l'opérateur *curly curly* :
-
-```{r eval=FALSE}
-summarise_col_by <- function(df, col_by, col_var) {
-    df %>%
-        group_by(
-            across({{ col_by }})
-        ) %>%
-        summarise(
-            across(
-                {{ col_var }},
-                ~mean(.x, na.rm = TRUE)
-            )
-        )
-}
-
-summarise_col_by(starwars, c(gender, sex), where(is.numeric))
-```
-
-6. Si on indique les noms de plusieurs colonnes sous la forme d'un vecteur de chaînes de caractères pour utilisation dans un `select()`, un `across()` ou une autre fonction acceptant la *tidy selection*, on utilise `all_of()` ou `any_of()` :
+5. Si on indique les noms de plusieurs colonnes sous la forme d'un vecteur de chaînes de caractères pour utilisation dans un `select()`, un `across()` ou une autre fonction acceptant la *tidy selection*, on utilise `all_of()` ou `any_of()` :
 
 ```{r eval=FALSE}
 select_cols <- function(df, col_names) {
@@ -561,7 +552,7 @@ select_cols <- function(df, col_names) {
 select_cols(starwars, c("height", "mass"))
 ```
 
-7. Si on souhaite créer une nouvelle colonne à partir du nom contenu dans un argument, on l'utilise sous la forme d'une chaîne de caractères, entouré d'une paire d'accolades et avec l'opérateur `:=` :
+6. Si on souhaite créer une nouvelle colonne à partir de la valeur d'un argument, on l'utilise sous la forme d'une chaîne de caractères avec l'opérateur *walrus* `:=`. Si l'argument est un symbole on l'entoure avec `{{ }}`, si c'est une chaîne de caractères on l'entoure avec `{}` :
 
 ```{r eval=FALSE}
 add_mean_by_species <- function(col_var) {
@@ -573,17 +564,10 @@ add_mean_by_species <- function(col_var) {
 add_mean_by_species(height)
 ```
 
-8. Si on souhaite passer des variables dans un graphique `ggplot2`, que ce soit dans `aes()` ou pour du faceting, on les encadre avec l'opérateur *curly curly* :
+Le schéma suivant récapitule les points précédents :
 
-```{r eval=FALSE}
-graph_mean_by <- function(col_by, col_var) {
-    ggplot(starwars) +
-        geom_histogram(aes(x = {{ col_var }})) +
-        facet_wrap(vars({{ col_by }}))
-}
+![](figures/tidyeval.png)
 
-graph_mean_by(gender, height)
-```
 
 ## Ressources
 
