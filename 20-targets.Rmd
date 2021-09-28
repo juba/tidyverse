@@ -17,13 +17,33 @@ library(targets)
 # On se place à la racine du projet d'exemple
 knitr::opts_knit$set(root.dir = "resources/targets_sample_project/")
 options(crayon.enabled = FALSE)
+```
 
+```{r cache=FALSE, echo=FALSE, include=FALSE}
 # On supprime le cache
 targets::tar_destroy("all")
 ```
 
 
 ### Projet d'exemple
+
+```{r cache=FALSE, echo=FALSE, include=FALSE}
+targets_content <- readLines("_targets.R", encoding = "UTF-8")
+file.rename("_targets.R", "_targets.R.orig")
+
+targets_content <- targets_content %>%
+    discard(~str_detect(.x, "# Génération rapport")) %>%
+    discard(~str_detect(.x, "tar_render")) %>%
+    str_replace_all(fixed("calcule_evo(min_n = 1000),"), "calcule_evo(min_n = 1000)")
+writeLines(targets_content, "_targets.R")
+
+calculs_content <- readLines("R/fonctions_calculs.R", encoding = "UTF-8")
+file.rename("R/fonctions_calculs.R", "R/fonctions_calculs.R.orig")
+
+calculs_content <- calculs_content %>%
+        str_replace_all(fixed("round(evo / `2019` * 100, 1)"), "round(evo / `2019` * 100, 2)")
+writeLines(calculs_content, "R/fonctions_calculs.R")
+```
 
 Pour illustrer la suite nous allons partir d'un projet très simple : à partir du [fichier national des prénoms donnés à la naissance](https://www.insee.fr/fr/statistiques/2540004), diffusé par l'INSEE, on souhaite produire un document indiquant les prénoms ayant les évolutions les plus fortes (à la hausse ou à la baisse) entre 2019 et 2020.
 
@@ -35,8 +55,6 @@ data/
 R/
 ├── fonctions_recode.R
 └── fonctions_calculs.R
-reports/
-└── evolution.Rmd
 _targets.R
 ```
 
@@ -53,51 +71,13 @@ Le fichier `R/fonctions_recode.R` contient deux fonctions de traitement et de re
 
 Le fichier `R/fonctions_calculs.R` contient une seule fonction qui calcule les variables d'évolution 2019-2020.
 
-```{r eval=FALSE, code=readLines('resources/targets_sample_project/R/fonctions_calculs.R')}
+```{r eval=FALSE, cache=FALSE, code=readLines('resources/targets_sample_project/R/fonctions_calculs.R')}
 ```
 
 
 ### `_targets.R`
 
-```{r echo=FALSE, cache=FALSE, eval=FALSE}
-# tar_script({
-# # Packages nécessaires pour ce script
-# library(targets)
-# library(tarchetypes)
-
-# # Chargement des fonctions
-# source("R/fonctions_recode.R")
-# source("R/fonctions_calculs.R")
-
-# # Options pour les différentes étapes
-# options(tidyverse.quiet = TRUE)
-# tar_option_set(packages = "tidyverse")
-
-# # Définition du pipeline
-# tar_plan(
-#     tar_file(csv_file, "data/nat2020.csv"),
-#     donnees_brutes = read_csv2(csv_file),
-
-#     donnees = donnees_brutes %>%
-#         filter_data() %>%
-#         pivot_2019_2020(),
-
-#     donnees_evo = donnees %>%
-#         calcule_evo(min_n = 1000)
-# )
-# })
-```
-
-```{r cache=FALSE}
-targets_content_orig <- readLines("_targets.R", encoding = "UTF-8")
-
-targets_content <- targets_content_orig[targets_content_orig != "    # Génération rapport"]
-targets_content <- targets_content_orig[targets_content_orig != '    tar_render(report_evo, "reports/evolution.Rmd")']
-file.rename("_targets.R", "_targets.R.orig")
-writeLines(targets_content, "_targets.R")
-```
-
-Le fichier `_targets.R`, situé à la racine du dossier, constitue le coeur du projet. C'est là qu'on va définir le *pipeline* constitué de toutes les étapes de notre traitement : chargement et manipulation des données, calculs, génération de rapports, etc.
+C'est dans le fichier `_targets.R`, situé à la racine du dossier, qu'on va définir le *pipeline* constitué de toutes les étapes de notre traitement : chargement et manipulation des données, calculs, génération de rapports, etc. Ces étapes sont également appelées *cibles* (*targets*).
 
 ```{block type='rmdnote'}
 La syntaxe présentée ici est celle proposée par l'extension `tarchetypes`, qui est un peu plus facile à prendre en main et plus lisible que la syntaxe native de `targets`.
@@ -111,7 +91,7 @@ library(targets)
 library(tarchetypes)
 ```
 
-On va ensuite utiliser `source()` pour charger le contenu des deux fichiers `R/fonctions_recode.R` et `R/fonctions_calculs.R`, ce qui permet de rendre les fonctions qu'ils définissent disponibles par la suite.
+On va ensuite utiliser `source()` pour charger le contenu des deux fichiers `R/fonctions_recode.R` et `R/fonctions_calculs.R`, pour pouvoir utiliser par la suite les fonctions qu'ils définissent.
 
 ```{r eval=FALSE}
 # Chargement des fonctions
@@ -119,7 +99,7 @@ source("R/fonctions_recode.R")
 source("R/fonctions_calculs.R")
 ```
 
-On définit ensuite des options globales pour notre *pipeline*. Via la fonction `tar_option_set()`, on fixe l'option `packages` qui contient une liste d'extensions à charger systématiquement avant le lancement de chaque étape du *pipeline*. Ici on s'assure que l'extension `tidyverse` est bien chargée et disponible.
+On définit ensuite des options globales pour notre *pipeline*. L'option `packages` de `tar_option_set()`, permet de spécifier une liste d'extensions à charger systématiquement avant le lancement de chaque étape du *pipeline*. Ici on s'assure que l'extension `tidyverse` est bien chargée et disponible.
 
 ```{r eval=FALSE}
 # Options pour les différentes étapes
@@ -192,49 +172,166 @@ tar_plan(
 
 Au final, notre fichier `_targets.R` est donc le suivant :
 
-```{r eval=FALSE, code=readLines('resources/targets_sample_project/_targets.R')}
+```{r eval=FALSE, code=readLines('resources/targets_sample_project/_targets.R'), cache=FALSE}
 ```
 
 ## Exécution du pipeline
+
+Une fois défini, `targets` fournit des outils permettant de visualiser la structure de notre pipeline et son état.
 
 ```{r cache=FALSE}
 tar_visnetwork()
 ```
 
-Pour lancer et exécuter notre pipeline, on utilise simplement la fonction `tar_make()`.
+Les différentes cibles apparaissent sous forme de cercles, tandis que les fonctions qui leur sont appliquées sont symbolisées par des triangles. Les flèches montrent que `targets` a créé un réseau de *dépendances* entre cibles et fonctions, ainsi la cible `donnees` dépend des fonctions `filter_data`, `pivot_2019_2020` et de la cible `donnees_brutes`, qui elle-même dépend de la cible `csv_file`.
 
-```{r}
+La couleur des différents éléments montrent que ceux-ci sont à l'état *outdated* : ils ne sont pas à jour.
+
+On va donc exécuter notre pipeline, en utilisant la fonction `tar_make()`.
+
+```{r cache=FALSE}
 tar_make()
 ```
 
-Lorsqu'on exécute le *pipeline*, `targets` va lancer une nouvelle session R (pour éviter des problèmes liés à l'existence d'objets dans notre session actuelle), charger les extensions définie via `tar_option_set()`, et exécuter les cibles définies avec `tar_plan()`.
+Lorsqu'on utilise `tar_make()`, `targets` va lancer une nouvelle session R (pour éviter tout problème lié à l'état de notre session actuelle), charger les extensions définie via `tar_option_set()`, et exécuter les cibles définies avec `tar_plan()`.
 
-À chaque étape, `targets` a conservé une copie de chacun des objets correspondants aux différentes cibles. On peut charger et inspecter ces objets avec les fonctions `tar_read()` et `tar_load()`^[Ces données sont stockées dans le répertoire `_targets` à la racine du projet.].
+On peut visualiser à nouveau l'état de notre pipeline.
+
+```{r cache=FALSE}
+tar_visnetwork()
+```
+
+On voit que toutes les cibles sont passées à l'état *up to date*.
+
+À chaque étape, `targets` a créé et stocké dans un cache chacun des objets correspondants aux différentes cibles (`donnees_brutes`, `donnees`, etc.). On peut charger et ces objets dans notre session avec la fonction `tar_load()`^[Ces données sont stockées dans le répertoire `_targets` à la racine du projet.].
 
 ```{r}
-tar_read(donnees)
+tar_load(donnees_evo)
+donnees_evo
 ```
 
-```{r eval=FALSE}
-tar_load(donnees)
+On peut aussi utiliser `tar_read()`, qui lit et retourne les résultats d'une des cibles, permettant de les stocker dans un nouvel objet.
+
+```{r}
+evo <- tar_read(donnees_evo)
 ```
 
 
+## Modification du pipeline
 
-## Modifications du pipeline
+Essayons de lancer à nouveau notre pipeline :
+
+```{r cache=FALSE}
+tar_make()
+```
+
+On voit que toutes les cibles ont été "skippées" : quand on lance `tar_make()`, seules les cibles qui sont à l'état *outdated* sont recalculées. Les résultats des autres sont conservés tels quels.
+
+On va maintenant modifier légèrement notre fichier `R/fonctions_calculs.R` : plutôt que d'arrondir les évolutions en pourcentages à deux décimale, on n'en conserve plus qu'une.
+
+```{r echo=FALSE, include=FALSE, cache=FALSE}
+file.remove("R/fonctions_calculs.R")
+file.rename("R/fonctions_calculs.R.orig", "R/fonctions_calculs.R")
+```
+
+```{r eval=FALSE, cache=FALSE, code=readLines('resources/targets_sample_project/R/fonctions_calculs.R')}
+```
+
+On visualise à nouveau l'état de notre pipeline :
+
+```{r cache=FALSE}
+tar_visnetwork()
+```
+
+Grâce à sa gestion interne des dépendances entre les cibles, `targets` voit que la fonction `calcule_evo` a été modifiée (elle est passée en statut *outdated*), et comme la cible `donnees_evo` dépend de cette fonction, celle-ci a également placée en *outdated*. On peut obtenir directement une liste des cibles qui ne sont plus à jour à l'aide de la fonction `tar_outdated()` :
+
+```{r cache=FALSE}
+tar_outdated()
+```
+
+On relance notre pipeline :
+
+```{r cache=FALSE}
+tar_make()
+```
+
+On voit que les cibles `csv_file`, `donnees_brutes` et `donnees` ont été "skippées", `targets` est allé prendre directement leurs valeurs déjà stockées en cache. Par contre `donnees_evo` a bien été recalculée.
+
+On peut vérifier que notre pipeline est désormais entièrement à jour :
+
+```{r cache=FALSE}
+tar_visnetwork()
+```
+
+```{block type='rmdnote'}
+À noter que `targets` gère aussi les modifications des fichiers externes. Ainsi, si on modifie le contenu de `nat2020.csv`, la cible `csv_file` passerait en *outdated*, tout comme l'ensemble des autres cibles puisqu'elles dépendent directement ou indirectement de celle-ci. Dans ce cas, un `tar_make()` aurait pour effet de recalculer l'intégralité du pipeline.
+```
+
 
 ## RMarkdown
 
-```{r cache=FALSE}
+```{r cache=FALSE, echo=FALSE, include=FALSE}
+# Retour aux fichiers d'origine
 file.remove("_targets.R")
 file.rename("_targets.R.orig", "_targets.R")
 ```
+
+Imaginons maintenant qu'on souhaite générer un rapport à partir d'un document RMarkdown en utilisant les données d'évolution calculées par notre pipeline. On crée donc un nouveau fichier `evolution.Rmd` dans un dossier `reports`.
+
+```
+data/
+└── nat2020.csv
+R/
+├── fonctions_recode.R
+└── fonctions_calculs.R
+reports/
+└── evolution.Rmd
+_targets.R
+```
+
+Quand on utilise un document RMarkdown dans un pipeline, il faut faire attention de bien accéder aux données utilisées via les fonctions `tar_read()` ou `tar_load()` : ceci permet de s'assurer qu'on récupère les données "à jour", et cela permet aussi à `targets` de déterminer un lien de dépendance entre le document et les données.
+
+Comme on souhaite utiliser les données de `donnees_evo`, on devra donc utiliser quelque chose comme :
+
+```{r eval=FALSE}
+d <- tar_read(donnees_evo)
+```
+
+Au final, le contenu de notre fichier RMarkdown est le suivant :
+
+```{r echo=FALSE, comment=""}
+cat(htmltools::includeText("reports/evolution.Rmd"))
+```
+
+Pour ajouter ce rapport à notre pipeline, il suffit de créer une nouvelle cible dans `_targets.R` en utilisant la fonction `tar_render()`.
+
+```{r cache=FALSE, eval=FALSE, code=readLines("resources/targets_sample_project/_targets.R")}
+```
+
+
+Visualisons notre pipeline modifié :
+
+```{r cache=FALSE}
+tar_visnetwork()
+```
+
+On voit que notre nouvelle cible `report_evo` a bien été prise en compte, qu'elle dépend bien de `donnees_evo` et qu'elle est à l'état *outdated*. 
+
+Si on exécute notre pipeline :
+
+```{r cache=FALSE}
+tar_make()
+```
+
+On voit que la cible `report_evo` a bien été calculée, et on devrait retrouver notre rapport compilé au format HTML dans le dossier `reports`.
 
 
 ## Gestion des données en cache
 
 tar_delete()
 tar_destroy("all")
+
+## Avantages et inconvénients
 
 ## Ressources
 
