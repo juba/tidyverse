@@ -1,13 +1,14 @@
 # Organiser ses traitements avec `targets`
 
-[targets](https://docs.ropensci.org/targets/) est une extension R développée par [Will Landau](https://twitter.com/wmlandau) qui permet d'organiser un projet sous la forme d'un *pipeline* de traitements^[Pour les personnes habituées au développement, il s'agit d'un équivalent à [GNU Make](https://www.gnu.org/software/make/) pour R.]. Cette organisation a plusieurs avantages :
+[targets](https://docs.ropensci.org/targets/) est une extension R développée par [Will Landau](https://twitter.com/wmlandau) qui permet d'organiser un projet sous la forme d'un *pipeline* de traitements, composé de différentes étapes, et gérant automatiquement les dépendances entre celles-ci^[Pour les personnes habituées au développement, il s'agit d'un équivalent à [GNU Make](https://www.gnu.org/software/make/) pour R.]. Cette organisation a plusieurs avantages :
 
-- elle permet une description de toutes les étapes du *pipeline* dans un fichier dédié, et force à séparer ces différentes étapes dans des fonctions à part, ce qui facilite la lisibilité et la maintenance du projet
+- elle permet une description de toutes les étapes du pipeline dans un fichier dédié, et force à séparer ces différentes étapes dans des fonctions à part, ce qui facilite la lisibilité et la maintenance du projet
 - elle facilite la reproductibilité des traitements, car elle garantit que toutes les étapes ont bien été effectuées dans le bon ordre et dans un nouvel environnement
-- elle optimise les temps de calcul, car en cas de une modification seules les étapes qui le nécessitent sont relancées
+- elle optimise les temps de calcul, car en cas de modification seules les étapes qui le nécessitent sont relancées
 
 L'utilisation de `targets` dans des petits projets peut être vue comme une complexité supplémentaire pas toujours très utile, mais elle peut être très bénéfique pour des projets plus complexes ou comportant des temps de calculs importants à certaines étapes.
 
+`targets` fait partie de l'initiative [rOpenSci](https://ropensci.org/).
 
 ## Définition du pipeline
 
@@ -77,7 +78,7 @@ Le fichier `R/fonctions_calculs.R` contient une seule fonction qui calcule les v
 
 ### `_targets.R`
 
-C'est dans le fichier `_targets.R`, situé à la racine du dossier, qu'on va définir le *pipeline* constitué de toutes les étapes de notre traitement : chargement et manipulation des données, calculs, génération de rapports, etc. Ces étapes sont également appelées *cibles* (*targets*).
+C'est dans le fichier `_targets.R`, situé à la racine du dossier, qu'on va définir le pipeline constitué de toutes les étapes de notre traitement : chargement et manipulation des données, calculs, génération de rapports, etc. Ces étapes sont également appelées *cibles* (*targets*).
 
 ```{block type='rmdnote'}
 La syntaxe présentée ici est celle proposée par l'extension `tarchetypes`, qui est un peu plus facile à prendre en main et plus lisible que la syntaxe native de `targets`.
@@ -99,7 +100,7 @@ source("R/fonctions_recode.R")
 source("R/fonctions_calculs.R")
 ```
 
-On définit ensuite des options globales pour notre *pipeline*. L'option `packages` de `tar_option_set()`, permet de spécifier une liste d'extensions à charger systématiquement avant le lancement de chaque étape du *pipeline*. Ici on s'assure que l'extension `tidyverse` est bien chargée et disponible.
+On définit ensuite des options globales pour notre pipeline. L'option `packages` de `tar_option_set()`, permet de spécifier une liste d'extensions à charger systématiquement avant le lancement de chaque étape du pipeline. Ici on s'assure que l'extension `tidyverse` est bien chargée et disponible.
 
 ```{r eval=FALSE}
 # Options pour les différentes étapes
@@ -107,9 +108,9 @@ options(tidyverse.quiet = TRUE)
 tar_option_set(packages = "tidyverse")
 ```
 
-Vient enfin la définition de notre *pipeline* proprement dit. Celle-ci se fait via la fonction `tar_plan()` de `tarchetypes`.
+Vient enfin la définition de notre pipeline proprement dit. Celle-ci se fait via la fonction `tar_plan()` de `tarchetypes`.
 
-La première opération que l'on souhaite effectuer est de charger les données contenues dans `data/nat2020.csv`. Pour cela on va d'abord créer une première étape de *pipeline* qui consiste à *référencer* notre fichier CSV à l'aide de la fonction `tar_file()`.
+La première opération que l'on souhaite effectuer est de charger les données contenues dans `data/nat2020.csv`. Pour cela on va d'abord créer une première étape de pipeline qui consiste à *référencer* notre fichier CSV à l'aide de la fonction `tar_file()`.
 
 ```{r eval=FALSE}
 tar_plan(
@@ -166,8 +167,12 @@ tar_plan(
 )
 ```
 
+```{block type='rmdimportant'}
+On notera que les cibles doivent toutes avoir des noms différents. Si on exécute plusieurs étapes de transformations ou de calculs sur un tableau de données par exemple, on devra donner un nom distinct à ces cibles et aux objets qui correspondent.
+```
+
 ```{block type='rmdnote'}
-`targets` offre aussi la possibilité de définir notre *pipeline* directement dans un fichier RMarkdown, ce qui peut permettre notamment de mieux le documenter. Pour plus d'information on pourra se référer au chapitre [Target Markdown](https://books.ropensci.org/targets/markdown.html) du manuel en ligne.
+`targets` offre aussi la possibilité de définir notre pipeline directement dans un fichier RMarkdown, ce qui peut permettre notamment de mieux le documenter. Pour plus d'information on pourra se référer au chapitre [Target Markdown](https://books.ropensci.org/targets/markdown.html) du manuel en ligne.
 ```
 
 Au final, notre fichier `_targets.R` est donc le suivant :
@@ -323,23 +328,58 @@ Si on exécute notre pipeline :
 tar_make()
 ```
 
-On voit que la cible `report_evo` a bien été calculée, et on devrait retrouver notre rapport compilé au format HTML dans le dossier `reports`.
+La cible `report_evo` a bien été calculée, et on devrait retrouver notre rapport compilé au format HTML dans le dossier `reports`.
 
 
 ## Gestion des données en cache
 
-tar_delete()
-tar_destroy("all")
+`targets` garde une copie des objets correspondant aux cibles du pipeline dans un cache, en fait sous forme de fichiers placés dans un sous-dossier `_targets`. 
 
-## Avantages et inconvénients
+On a vu qu'on peut récupérer ces objets dans notre session via les fonctions `tar_read()` et `tar_load()`. La différence entre les deux fonctions est que `tar_load(donnees)` crée directement un objet `donnees` dans notre environnement (comme le fais `load()`) tandis que `tar_read()` retourne son contenu.
+
+`targets` propose plusieurs fonctions pour gérer les données et métadonnées en cache :
+
+- `tar_destroy()` supprimme la totalite du répertoire `_targets`. Elle permet donc de "repartir de zéro", sans aucun cache et avec toutes les cibles à recalculer.
+- `tar_delete(donnees)` supprime l'objet `donnees` du cache et place l'état de la cible correspondante à *outdated*. Elle permet de forcer le recalcul d'une cible et de celles qui en dépendent. À noter qu'on peut sélectionner plusieurs cibles en utilisant la syntaxe de la *tidy selection*.
+- `tar_prune()` permet de supprimer les cibles qui ne sont plus présentes dans le pipeline. Elle permet donc de "faire le ménage" quand on a supprimé des étapes dans `_targets.R`.
+
+
+## Avantages et limites
+
+### Avantages
+
+On peut voir dans cette introduction que l'utilisation de `targets` présente de nombreux avantages :
+
+- le fichier `_targets.R` fournit une description détaillée de notre pipeline et force à le définir clairement sous forme d'étapes. Cela facilite notamment les choses quand on revient sur un projet et qu'on n'a plus forcément tous les détails en tête.
+- chaque cible du pipeline est définie via des fonctions, ce qui garantit une séparation et une encapsulation de ces différentes étapes.
+- l'utilisation de `tar_make()` garantit que toutes les cibles du pipeline sont recalculées dans le bon ordre : pas de risque de lancer un script sur des données qui ne seraient pas complètement à jour parce qu'on a oublié de relancer certains recodages par exemple.
+- `tar_make()` s'exécute toujours dans un environnement vide, ce qui élimine les problèmes liés à l'état de notre session en cours et garantit la reproductibilité des résultats.
+- comme `targets` conserve une copie des résultats des cibles en cache, pas besoin de tout recalculer quand on relance le projet, on peut récupérer directement les résultats et savoir si ils sont à jour.
+- `tar_make()` ne recalcule que les cibles qui le nécessitent, les temps de calcul et d'exécution sont optimisés.
+
+Parmi les inconvénients liés à l'utilisation de `targets`, on notera que le débogage est un peu plus complexe, même si l'extension [fournit plusieurs outils](https://books.ropensci.org/targets/debugging.html) pour faciliter le travail.
+
+### Interactivité et développement du pipeline
+
+Une des limitations de `targets` est que le pipeline ne permet pas l'utilisation de fonctions "interactives". Par exemple, on pourrait ajouter une étape affichant un graphique dans `tar_plan()` :
+
+```{r eval=FALSE}
+graphique = ggplot(donnees_evo) +
+        geom_histogram(aes(x = evo))
+```
+
+Ceci fonctionne, mais ne provoque pas l'affichage du graphique. Il faut faire un `tar_read(graphique)` pour pouvoir le visualiser.
+
+De la même manière, on ne peut pas utiliser d'interfaces interactives comme celles vues pour faciliter les recodages de variables (par exemple section \@ref(irec)). Il est donc souvent pratique de commencer à développer des transformations, calculs ou analyses de façon "interactive", via un script classique dans lequel on importe les données nécessaires via `tar_read()`. Une fois qu'on obtient le résultat souhaité, on transforme ce code en une ou plusieurs fonctions et on les intègre au pipeline de `targets`.
+
+On notera que les documents RMarkdown s'utilisent très bien avec `targets`, car ils permettent à la fois une utilisation "interactive" pendant leur écriture, et à une intégration directe sans modification dans un pipeline avec `tar_render()` du moment qu'on charge les données avec `tar_read()` ou `tar_load()`.
+
 
 ## Ressources
 
-Nous n'avons vu ici qu'un petit aperçu des fonctionnalités de `targets`, qui propose 
+Nous n'avons vu ici qu'un petit aperçu des fonctionnalités de `targets`, qui est une extension extrêmement riche. 
 
-https://docs.ropensci.org/targets
+Le *package* bénéficie d'une excellente documentation en anglais. On pourra donc se référer aux sites officiels de [targets](https://docs.ropensci.org/targets) et [tarchetypes](https://docs.ropensci.org/tarchetypes), mais surtout à l'ouvrage en ligne [The targets R Package User Manual](https://books.ropensci.org/targets/), très clair et très complet.
 
-https://milesmcbain.xyz/the-drake-post/
-
-https://books.ropensci.org/targets/
+Le groupe des utilisateurs de R de Lille a récemment accueilli une intervention (toujours en anglais) de Will Landau, l'auteur de `targets`. Celle-ci est disponible [en vidéo sur YouTube](https://www.youtube.com/watch?v=FODSavXGjYg).
 
