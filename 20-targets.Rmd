@@ -63,7 +63,7 @@ _targets.R
 À noter que `targets` n'impose aucune structure de projet particulière en-dehors de la présence du fichier `_targets.R`. On aurait donc pu avoir une organisation tout à fait différente.
 ```
 
-Le fichier `data/nat2020.csv` contient les données brutes téléchargées depuis le site de l'INSEE.
+Le fichier `data/nat2020.csv` contient les données brutes [téléchargées depuis le site de l'INSEE](https://www.insee.fr/fr/statistiques/2540004).
 
 Le fichier `R/fonctions_recode.R` contient deux fonctions de traitement et de remise en forme des données.
 
@@ -100,7 +100,7 @@ source("R/fonctions_recode.R")
 source("R/fonctions_calculs.R")
 ```
 
-On définit ensuite des options globales pour notre pipeline. L'option `packages` de `tar_option_set()`, permet de spécifier une liste d'extensions à charger systématiquement avant le lancement de chaque étape du pipeline. Ici on s'assure que l'extension `tidyverse` est bien chargée et disponible.
+On définit ensuite des options globales pour le pipeline. L'option `packages` de `tar_option_set()`, permet de spécifier une liste d'extensions à charger systématiquement avant le lancement de chaque étape. Ici on s'assure que l'extension `tidyverse` est bien chargée et disponible.
 
 ```{r eval=FALSE}
 # Options pour les différentes étapes
@@ -108,9 +108,9 @@ options(tidyverse.quiet = TRUE)
 tar_option_set(packages = "tidyverse")
 ```
 
-Vient enfin la définition de notre pipeline proprement dit. Celle-ci se fait via la fonction `tar_plan()` de `tarchetypes`.
+Vient enfin la définition du pipeline proprement dit. Celle-ci se fait via la fonction `tar_plan()` de `tarchetypes`.
 
-La première opération que l'on souhaite effectuer est de charger les données contenues dans `data/nat2020.csv`. Pour cela on va d'abord créer une première étape de pipeline qui consiste à *référencer* notre fichier CSV à l'aide de la fonction `tar_file()`.
+La première opération que l'on souhaite effectuer est de charger les données contenues dans `data/nat2020.csv`. Pour cela on va d'abord créer une première étape qui consiste à *référencer* notre fichier CSV à l'aide de la fonction `tar_file()`.
 
 ```{r eval=FALSE}
 tar_plan(
@@ -131,7 +131,7 @@ tar_plan(
 )
 ```
 
-Cette étape définit une nouvelle cible nommée `donnees_brutes`. Cette cible correspond au nom d'une étape, mais aussi à un objet : dans ce qui suit, `donnees_brutes` correspond au tableau de données résultat du `read_csv2()`.
+Cette nouvelle étape définit une deuxième cible nommée `donnees_brutes`. Cette cible correspond au nom d'une étape, mais aussi à un objet : dans ce qui suit, `donnees_brutes` correspond au tableau de données résultat du `read_csv2()`.
 
 On va utiliser cet objet dans une troisième étape qui lui applique nos deux fonctions de filtrage et transformation définies dans `R/fonctions_recode.R`.
 
@@ -148,7 +148,7 @@ tar_plan(
 )
 ```
 
-Ici aussi, `donnees` est à la fois le nom d'une cible et un objet contenant nos données retravaillées. On utilise cet objet dans une nouvelle étape qui utilise la fonction de `R/fonctions_calculs.R` pour calculer les variables d'évolution.
+Ici aussi, `donnees` est à la fois le nom d'une cible et un objet contenant nos données retravaillées. On utilise cet objet dans une  étape supplémentaire qui utilise la fonction de `R/fonctions_calculs.R` pour calculer les variables d'évolution.
 
 ```{r eval=FALSE}
 tar_plan(
@@ -168,11 +168,7 @@ tar_plan(
 ```
 
 ```{block type='rmdimportant'}
-On notera que les cibles doivent toutes avoir des noms différents. Si on exécute plusieurs étapes de transformations ou de calculs sur un tableau de données par exemple, on devra donner un nom distinct à ces cibles et aux objets qui correspondent.
-```
-
-```{block type='rmdnote'}
-`targets` offre aussi la possibilité de définir notre pipeline directement dans un fichier RMarkdown, ce qui peut permettre notamment de mieux le documenter. Pour plus d'information on pourra se référer au chapitre [Target Markdown](https://books.ropensci.org/targets/markdown.html) du manuel en ligne.
+On notera que les cibles doivent toutes avoir des noms différents. Si on exécute plusieurs étapes de transformations ou de calculs sur un tableau de données, on devra donner un nom distinct à ces cibles et aux objets qui correspondent.
 ```
 
 Au final, notre fichier `_targets.R` est donc le suivant :
@@ -180,15 +176,20 @@ Au final, notre fichier `_targets.R` est donc le suivant :
 ```{r eval=FALSE, code=readLines('resources/targets_sample_project/_targets.R'), cache=FALSE}
 ```
 
+```{block type='rmdnote'}
+`targets` offre aussi la possibilité de définir notre pipeline directement dans un fichier RMarkdown, ce qui peut permettre notamment de mieux le documenter. Pour plus d'information on pourra se référer au chapitre [Target Markdown](https://books.ropensci.org/targets/markdown.html) du manuel en ligne.
+```
+
+
 ## Exécution du pipeline
 
-Une fois défini, `targets` fournit des outils permettant de visualiser la structure de notre pipeline et son état.
+Une fois notre pipeline défini, `targets` fournit des outils permettant de visualiser sa structure et son état, notamment la fonction `tar_visnetwork()`.
 
 ```{r cache=FALSE}
 tar_visnetwork()
 ```
 
-Les différentes cibles apparaissent sous forme de cercles, tandis que les fonctions qui leur sont appliquées sont symbolisées par des triangles. Les flèches montrent que `targets` a créé un réseau de *dépendances* entre cibles et fonctions, ainsi la cible `donnees` dépend des fonctions `filter_data`, `pivot_2019_2020` et de la cible `donnees_brutes`, qui elle-même dépend de la cible `csv_file`.
+Les différentes cibles apparaissent sous forme de cercles, et les fonctions qui leur sont appliquées sous forme de triangles. Les flèches indiquent que `targets` a automatiquement créé un réseau de *dépendances* entre cibles et fonctions : ainsi la cible `donnees` dépend des fonctions `filter_data`, `pivot_2019_2020` et de la cible `donnees_brutes`, qui elle-même dépend de la cible `csv_file`.
 
 La couleur des différents éléments montrent que ceux-ci sont à l'état *outdated* : ils ne sont pas à jour.
 
@@ -198,17 +199,15 @@ On va donc exécuter notre pipeline, en utilisant la fonction `tar_make()`.
 tar_make()
 ```
 
-Lorsqu'on utilise `tar_make()`, `targets` va lancer une nouvelle session R (pour éviter tout problème lié à l'état de notre session actuelle), charger les extensions définie via `tar_option_set()`, et exécuter les cibles définies avec `tar_plan()`.
+Lorsqu'on utilise `tar_make()`, `targets` lance une nouvelle session R (pour éviter tout problème ou conflit lié à l'état de notre session actuelle), charge les extensions définie via `tar_option_set()`, et exécute les cibles définies avec `tar_plan()`.
 
-On peut visualiser à nouveau l'état de notre pipeline.
+On visualise le nouvel état de notre pipeline, et on voit que toutes les cibles sont passées à l'état *up to date*.
 
 ```{r cache=FALSE}
 tar_visnetwork()
 ```
 
-On voit que toutes les cibles sont passées à l'état *up to date*.
-
-À chaque étape, `targets` a créé et stocké dans un cache chacun des objets correspondants aux différentes cibles (`donnees_brutes`, `donnees`, etc.). On peut charger et ces objets dans notre session avec la fonction `tar_load()`^[Ces données sont stockées dans le répertoire `_targets` à la racine du projet.].
+À chaque étape, `targets` crée et stocke dans un cache chacun des objets correspondants aux différentes cibles (`donnees_brutes`, `donnees`, etc.). On peut charger à tout moment ces objets dans notre session avec la fonction `tar_load()`^[Ces données sont stockées dans le répertoire `_targets` à la racine du projet.].
 
 ```{r}
 tar_load(donnees_evo)
@@ -248,7 +247,7 @@ On visualise à nouveau l'état de notre pipeline :
 tar_visnetwork()
 ```
 
-Grâce à sa gestion interne des dépendances entre les cibles, `targets` voit que la fonction `calcule_evo` a été modifiée (elle est passée en statut *outdated*), et comme la cible `donnees_evo` dépend de cette fonction, celle-ci a également placée en *outdated*. On peut obtenir directement une liste des cibles qui ne sont plus à jour à l'aide de la fonction `tar_outdated()` :
+Grâce à sa gestion interne des dépendances entre les cibles, `targets` a vu que la fonction `calcule_evo` a été modifiée (elle est passée en statut *outdated*), et comme la cible `donnees_evo` dépend de cette fonction, celle-ci a également été placée en *outdated*. On peut obtenir directement une liste des cibles qui ne sont plus à jour à l'aide de la fonction `tar_outdated()` :
 
 ```{r cache=FALSE}
 tar_outdated()
@@ -260,7 +259,7 @@ On relance notre pipeline :
 tar_make()
 ```
 
-On voit que les cibles `csv_file`, `donnees_brutes` et `donnees` ont été "skippées", `targets` est allé prendre directement leurs valeurs déjà stockées en cache. Par contre `donnees_evo` a bien été recalculée.
+On voit que les cibles `csv_file`, `donnees_brutes` et `donnees` ont été "skippées" : `targets` est allé prendre directement leurs valeurs déjà stockées en cache. Par contre `donnees_evo` a bien été recalculée.
 
 On peut vérifier que notre pipeline est désormais entièrement à jour :
 
@@ -294,7 +293,7 @@ reports/
 _targets.R
 ```
 
-Quand on utilise un document RMarkdown dans un pipeline, il faut faire attention de bien accéder aux données utilisées via les fonctions `tar_read()` ou `tar_load()` : ceci permet de s'assurer qu'on récupère les données "à jour", et cela permet aussi à `targets` de déterminer un lien de dépendance entre le document et les données.
+Quand on utilise un document RMarkdown dans un pipeline, il faut accéder aux données utilisées via les fonctions `tar_read()` ou `tar_load()` : ceci permet de s'assurer qu'on récupère les données "à jour", et cela permet aussi à `targets` de déterminer un lien de dépendance entre le document et les données.
 
 Comme on souhaite utiliser les données de `donnees_evo`, on devra donc utiliser quelque chose comme :
 
@@ -308,11 +307,10 @@ Au final, le contenu de notre fichier RMarkdown est le suivant :
 cat(htmltools::includeText("reports/evolution.Rmd"))
 ```
 
-Pour ajouter ce rapport à notre pipeline, il suffit de créer une nouvelle cible dans `_targets.R` en utilisant la fonction `tar_render()`.
+Pour ajouter ce rapport à notre pipeline, on crée une nouvelle cible dans le `tar_plan()` de  `_targets.R`. Comme il s'agit d'un document RMarkodnw, on utilise la fonction `tar_render()`.
 
 ```{r cache=FALSE, eval=FALSE, code=readLines("resources/targets_sample_project/_targets.R")}
 ```
-
 
 Visualisons notre pipeline modifié :
 
@@ -335,9 +333,7 @@ La cible `report_evo` a bien été calculée, et on devrait retrouver notre rapp
 
 `targets` garde une copie des objets correspondant aux cibles du pipeline dans un cache, en fait sous forme de fichiers placés dans un sous-dossier `_targets`. 
 
-On a vu qu'on peut récupérer ces objets dans notre session via les fonctions `tar_read()` et `tar_load()`. La différence entre les deux fonctions est que `tar_load(donnees)` crée directement un objet `donnees` dans notre environnement (comme le fais `load()`) tandis que `tar_read()` retourne son contenu.
-
-`targets` propose plusieurs fonctions pour gérer les données et métadonnées en cache :
+On a vu qu'on peut récupérer ces objets dans notre session via les fonctions `tar_read()` et `tar_load()`. `targets` propose également plusieurs fonctions pour gérer les données et métadonnées en cache :
 
 - `tar_destroy()` supprimme la totalite du répertoire `_targets`. Elle permet donc de "repartir de zéro", sans aucun cache et avec toutes les cibles à recalculer.
 - `tar_delete(donnees)` supprime l'objet `donnees` du cache et place l'état de la cible correspondante à *outdated*. Elle permet de forcer le recalcul d'une cible et de celles qui en dépendent. À noter qu'on peut sélectionner plusieurs cibles en utilisant la syntaxe de la *tidy selection*.
@@ -348,14 +344,14 @@ On a vu qu'on peut récupérer ces objets dans notre session via les fonctions `
 
 ### Avantages
 
-On peut voir dans cette introduction que l'utilisation de `targets` présente de nombreux avantages :
+On peut voir dans cette introduction rapide que l'utilisation de `targets` présente de nombreux avantages :
 
-- le fichier `_targets.R` fournit une description détaillée de notre pipeline et force à le définir clairement sous forme d'étapes. Cela facilite notamment les choses quand on revient sur un projet et qu'on n'a plus forcément tous les détails en tête.
-- chaque cible du pipeline est définie via des fonctions, ce qui garantit une séparation et une encapsulation de ces différentes étapes.
-- l'utilisation de `tar_make()` garantit que toutes les cibles du pipeline sont recalculées dans le bon ordre : pas de risque de lancer un script sur des données qui ne seraient pas complètement à jour parce qu'on a oublié de relancer certains recodages par exemple.
-- `tar_make()` s'exécute toujours dans un environnement vide, ce qui élimine les problèmes liés à l'état de notre session en cours et garantit la reproductibilité des résultats.
-- comme `targets` conserve une copie des résultats des cibles en cache, pas besoin de tout recalculer quand on relance le projet, on peut récupérer directement les résultats et savoir si ils sont à jour.
-- `tar_make()` ne recalcule que les cibles qui le nécessitent, les temps de calcul et d'exécution sont optimisés.
+1. le fichier `_targets.R` fournit une description détaillée des étapes du projet. Cela facilite les choses quand on revient dessus après un certain temps et qu'on n'a plus tous les détails en tête, ou si on le partage avec quelqu'un.
+2. chaque cible du pipeline est définie via des fonctions, ce qui garantit une séparation et une encapsulation des différentes étapes.
+3. l'utilisation de `tar_make()` garantit que toutes les cibles du pipeline sont recalculées dans le bon ordre : pas de risque de lancer un script sur des données qui ne seraient pas complètement à jour parce qu'on a oublié de relancer certains recodages par exemple.
+4. `tar_make()` s'exécute toujours dans un environnement vide, ce qui élimine les problèmes liés à l'état de notre session en cours et garantit la reproductibilité des résultats.
+5. comme `targets` conserve une copie des résultats des cibles en cache, pas besoin de tout recalculer quand on relance le projet, on peut récupérer directement les résultats et savoir si ils sont à jour.
+6. `tar_make()` ne recalcule que les cibles qui le nécessitent, les temps de calcul et d'exécution sont optimisés.
 
 Parmi les inconvénients liés à l'utilisation de `targets`, on notera que le débogage est un peu plus complexe, même si l'extension [fournit plusieurs outils](https://books.ropensci.org/targets/debugging.html) pour faciliter le travail.
 
@@ -364,20 +360,21 @@ Parmi les inconvénients liés à l'utilisation de `targets`, on notera que le d
 Une des limitations de `targets` est que le pipeline ne permet pas l'utilisation de fonctions "interactives". Par exemple, on pourrait ajouter une étape affichant un graphique dans `tar_plan()` :
 
 ```{r eval=FALSE}
-graphique = ggplot(donnees_evo) +
-        geom_histogram(aes(x = evo))
+graphique = ggplot(donnees_evo) + geom_histogram(aes(x = evo))
 ```
 
 Ceci fonctionne, mais ne provoque pas l'affichage du graphique. Il faut faire un `tar_read(graphique)` pour pouvoir le visualiser.
 
 De la même manière, on ne peut pas utiliser d'interfaces interactives comme celles vues pour faciliter les recodages de variables (par exemple section \@ref(irec)). Il est donc souvent pratique de commencer à développer des transformations, calculs ou analyses de façon "interactive", via un script classique dans lequel on importe les données nécessaires via `tar_read()`. Une fois qu'on obtient le résultat souhaité, on transforme ce code en une ou plusieurs fonctions et on les intègre au pipeline de `targets`.
 
-On notera que les documents RMarkdown s'utilisent très bien avec `targets`, car ils permettent à la fois une utilisation "interactive" pendant leur écriture, et à une intégration directe sans modification dans un pipeline avec `tar_render()` du moment qu'on charge les données avec `tar_read()` ou `tar_load()`.
+```{block type='rmdnote'}
+On notera que les documents RMarkdown s'utilisent très bien avec `targets` : du moment qu'on charge les données avec `tar_read()` ou `tar_load()`, ils permettent à la fois une utilisation "interactive" pendant leur écriture, et une intégration directe sans modification dans un pipeline avec `tar_render()`. 
+```
 
 
 ## Ressources
 
-Nous n'avons vu ici qu'un petit aperçu des fonctionnalités de `targets`, qui est une extension extrêmement riche. 
+Nous n'avons vu ici qu'un petit aperçu des fonctionnalités de `targets`, qui est une extension extrêmement riche. Celle-ci propose de nombreuses autres possibilités, comme la parallélisation des calculs, la gestion des versions de paquets via `renv`, la création programmatique de cibles...
 
 Le *package* bénéficie d'une excellente documentation en anglais. On pourra donc se référer aux sites officiels de [targets](https://docs.ropensci.org/targets) et [tarchetypes](https://docs.ropensci.org/tarchetypes), mais surtout à l'ouvrage en ligne [The targets R Package User Manual](https://books.ropensci.org/targets/), très clair et très complet.
 
