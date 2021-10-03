@@ -310,12 +310,26 @@ On peut donc réécrire notre fonction `longueur_max` ci-dessus de la manière s
 
 ```{r error = TRUE}
 longueur_max <- function(x) {
-    stopifnot(is.character(x), "x doit être de type character.")
+    stopifnot(is.character(x))
     max(nchar(x))
 }
 
 longueur_max(1:5)
 ```
+
+Si on souhaite un message d'erreur personnalisé il faut le passer comme nom de la condition.
+
+```{r error = TRUE}
+longueur_max <- function(x) {
+    stopifnot(
+        "x doit être de type character" = is.character(x)
+    )
+    max(nchar(x))
+}
+
+longueur_max(1:5)
+```
+
 
 ### Tester la présence d'un argument
 
