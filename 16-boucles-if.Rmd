@@ -172,30 +172,51 @@ On peut combiner plusieurs tests avec les opérateurs logiques classiques :
 - `||` est l'opérateur "ou", qui est vrai si au moins l'une des deux conditions qu'il réunit sont vraies
 - `!` est l'opérateur "non", qui teste si la condition qu'il précède est fausse
 
-Ainsi, si on veut qu'une variable `taille` soit comprise entre 100 et 150, on écrira :
+Ainsi, si on veut qu'une variable `temperature` soit comprise entre 15 et 25, on écrira :
 
 ```{r eval = FALSE}
-if (taille >= 100 && taille <= 150) { }
+verifie_temperature <- function(temperature) {
+    if (temperature >= 15 && temperature <= 25) {
+        message("Température ok")
+    }
+}
+verifie_temperature(20)
 ```
 
-Si on souhaite que `temperature` soit inférieure à 10 ou que `pluie` soit égale à "averse" :
+Si on souhaite tester que `temperature` est inférieure à 15 ou supérieure à 25 :
 
 ```{r eval = FALSE}
-if (temperature < 10 || pluie == "averse") { }
+verifie_temperature <- function(temperature) {
+    if (temperature < 15 || temperature > 25) {
+        message("Température pas glop")
+    }
+}
+verifie_temperature(10)
 ```
 
-Enfin, si on souhaite que la variable `v` ne soit pas égale à `NULL` :
+Enfin, si on souhaite tester que `temperature` n'est pas égale à `NULL` :
 
 ```{r eval = FALSE}
-if (!is.null(v)) { }
+verifie_temperature <- function(temperature = NULL) {
+    if (!is.null(temperature)) {
+        message("Merci d'avoir indiqué une température")
+    }
+}
+verifie_temperature(15)
 ```
 
-```{block type='rmdnote'}
 On pourra noter qu'il existe deux types d'opérateurs "et" et "ou" dans R :
 
 - `&` et `|` sont des opérateurs *vectorisés*. Ils peuvent s'appliquer à des vecteurs et retourneront un vecteur de `TRUE` et `FALSE`
 - `&&` et `||` ne peuvent retourner qu'une seule valeur, et si on leur fournit des vecteurs ils n'utiliseront que leurs premières valeurs
 
+```{r}
+x <- 1:5
+x > 0 & x <=2
+x > 0 && x <=2
+```
+
+```{block type='rmdimportant'}
 Comme la condition passée à un `if` ne doit retourner qu'une seule valeur (et non un vecteur), on utilisera de préférence `&&` et `||`.
 ```
 
@@ -512,20 +533,20 @@ for (i in seq_along(x)) {
 
 Et on se contentera d'un beaucoup plus simple `x + 10`.
 
-Autre exemple, si on souhaite remplacer dans tous les éléments d'un vecteur de chaînes de caractères le caractère "µ" par le caractère "o", on pourrait être tenter de faire une boucle du type :
+Autre exemple, si on souhaite remplacer dans tous les éléments d'un vecteur de chaînes de caractères le caractère "X" par le caractère "o", on pourrait être tenter de faire une boucle du type :
 
 ```{r}
-mots <- c("brµuette", "mµtµ", "iglµµ")
+mots <- c("brXuette", "mXtX", "iglXX")
 for (i in seq_along(mots)) {
-    mots[i] <- str_replace_all(mots[i], "µ", "o")
+    mots[i] <- str_replace_all(mots[i], "X", "o")
 }
 ```
 
 Or c'est tout à fait inutile car `str_replace_all()` étant vectorisée, on peut l'appliquer directement à un vecteur sans utiliser de boucle.
 
 ```{r}
-mots <- c("brµuette", "mµtµ", "iglµµ")
-mots <- str_replace_all(mots, "µ", "o")
+mots <- c("brXuette", "mXtX", "iglXX")
+mots <- str_replace_all(mots, "X", "o")
 ```
 
 Dernier exemple, la boucle suivante remplace les valeurs manquantes d'un vecteur par les valeurs correspondantes d'un deuxième vecteur.
