@@ -152,7 +152,7 @@ mots %>% map_chr(tail, 1)
 Dans ce qui suit on utilisera de préférence la notation "formule", mais toutes les versions ci-dessus sont équivalentes et donnent le même résultat.
 
 ```{block type='rmdnote'}
-Petite astuce à noter, si on transmet à `map()` autre chose qu'une fonction, elle utilisera cette information pour extraire des éléments. Ainsi, `map(v, 1)` extraiera le premier élément de chaque élément du vecteur `v`, `map(v, "foo")` extraiera les éléments nommés "foo", etc.
+Petite astuce à noter, si on transmet à `map()` autre chose qu'une fonction, elle utilisera cette information pour extraire des éléments. Ainsi, `v %>% map(1)` extraiera le premier élément de chaque élément du vecteur `v`, `v %>% map("foo")` extraiera les éléments nommés "foo", etc.
 ```
 
 ### Variantes de `map`
@@ -422,7 +422,7 @@ restos %>% imap_dfr(~ {
 ```
 
 ```{block type='rmdnote'}
-Si on utilise `imap()` sur une liste ou un vecteur qui n'a pas de nom, le deuxième argument passé à la fonction appliquée sera l'indice de l'élément courant : 1 pour le premier, 2 pour le deuxième, etc.
+Si on utilise `imap()` sur une liste ou un vecteur qui n'a pas de noms, le deuxième argument passé à la fonction appliquée sera l'indice de l'élément courant : 1 pour le premier, 2 pour le deuxième, etc.
 ```
 
 ## `walk`
@@ -432,7 +432,7 @@ Si on utilise `imap()` sur une liste ou un vecteur qui n'a pas de nom, le deuxi�
 Par exemple, le code suivant génère quatre diagrammes en barre indiquant la répartition des notes des différents restaurants vus dans la section précédente^[L'utilisation de `par()` permet ici de placer les graphiques sur une grille de deux lignes et deux colonnes.].
 
 ```{r}
-par(mfrow = c(2,2))
+par(mfrow = c(2, 2))
 walk(restos, ~{
     barplot(table(.x))
 })
@@ -441,7 +441,7 @@ walk(restos, ~{
 Comme pour `map()`, la variante `iwalk()` permet d'itérer à la fois sur les valeurs et sur les noms des éléments du vecteur ou de la liste. Ceci permet par exemple d'afficher le nom du restaurant comme titre de chaque graphique.
 
 ```{r}
-par(mfrow = c(2,2))
+par(mfrow = c(2, 2))
 iwalk(restos, ~{
     barplot(table(.x), main = .y)
 })
@@ -611,7 +611,7 @@ De la même manière, si on s'intéresse juste aux effets de bord, on pourra rem
 ```
 
 
-## Quand ne pas utiliser `map`
+## Quand (ne pas) utiliser `map`
 
 Une fois qu'on a compris la logique de `map()` et de ses variantes, on peut être tenté.es de l'appliquer un peu systématiquement. Il faut cependant garder en tête que son usage n'est pas toujours conseillé notamment dans les cas où il existe déjà une fonction vectorisée qui permet d'obtenir le même résultat.
 
