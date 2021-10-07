@@ -29,7 +29,7 @@ hdv2003 %>%
     )
 ```
 
-Supposons qu'on souhaite également convertir les `NA` éventuelles de `cuisine` en vaeurs explicites `Non réponse`. On peut le faire avec la fonction `fct_explicit_na()` de `forcats`. Notre recodage doit donc se faire en deux étapes, par exemple de la manière suivante :
+Supposons qu'on souhaite également convertir les `NA` éventuelles de `cuisine` en valeurs explicites `Non réponse`. On peut le faire avec la fonction `fct_explicit_na()` de `forcats`. Notre recodage doit donc se faire en deux étapes, par exemple de la manière suivante :
 
 ```{r results="hide"}
 hdv2003 %>%
@@ -191,8 +191,6 @@ L'avantage de `rename_with()`, comme nous allons le voir ci-dessous, c'est qu'el
 
 ### Appliquer une fonction à plusieurs colonnes
 
-#### Sélectionner des colonnes
-
 On a défini précédemment une fonction qui recode les modalités d'une variable "Oui" / "Non" et on a vu comment appliquer ce recodage à deux variables de `hdv2003`.
 
 ```{r results="hide"}
@@ -334,7 +332,7 @@ Il faut bien penser à passer la fonction comme argument du `across()`, donc à 
 `mutate(across(hard.rock:sport, recode_oui_non))`
 ```
 
-#### Passer des arguments supplémentaires à la fonction appliquée
+### Passer des arguments supplémentaires à la fonction appliquée
 
 Par défaut, si on passe des arguments supplémentaires à `across()`, ils seront automatiquement transmis comme arguments à la fonction appliquée.
 
@@ -379,7 +377,7 @@ hdv2003 %>%
     )
 ```
 
-#### Noms des nouvelles colonnes
+### Noms des nouvelles colonnes
 
 Par défaut, lorsqu'on utilise `across()` dans un `mutate`, les nouvelles colonnes portent le même nom que les colonnes d'origine, ce qui signifie que ces dernières sont "écrasées" par les nouvelles valeurs.
 
@@ -459,7 +457,7 @@ Par exemple, le code suivant convertit en majuscule uniquement les noms des colo
 
 ```{r}
 hdv2003 %>%
-    rename_with(str_to_upper, c(id, poids))
+    rename_with(str_to_upper, .cols = c(id, poids))
 ```
 
 Et le code suivant remplace les `.` par des `_` uniquement pour les colonnes qui ne sont pas numériques.
@@ -1087,7 +1085,7 @@ hdv2003 <- hdv2003 %>%
     )
 ```
 
-Sans utiliser `rowwise()`, calculer le plus simplement possible une nouvelle variable `total` qui contient, pour chaque ligne, le nombre de valeurs `TRUE` des deux variables `cinema_true` et `sport_true` (si une ligne contient `TRUE` pour ces deux variables, `total` doit valoir 2, etc.)
+Calculer le plus simplement possible une nouvelle variable `total` qui contient, pour chaque ligne, le nombre de valeurs `TRUE` des deux variables `cinema_true` et `sport_true` (si une ligne contient `TRUE` pour ces deux variables, `total` doit valoir 2, etc.)
 
 \iffalse
 <div class="solution-exo">
@@ -1098,7 +1096,7 @@ hdv2003 %>%
 </div>
 \fi
 
-En utilisant `rowwise()` et `sum()`, recalculer la variable `total` pour qu'elle contienne le nombre de `TRUE` par ligne pour les variables `bricol_true`, `cinema_true` et `sport_true`.
+Recalculer la variable `total` pour qu'elle contienne le nombre de `TRUE` par ligne pour les variables `bricol_true`, `cinema_true` et `sport_true`.
 
 \iffalse
 <div class="solution-exo">
@@ -1110,7 +1108,7 @@ hdv2003 %>%
 </div>
 \fi
 
-En utilisant `rowwise()`, `sum()` et `c_across()`, recalculer la variable `total` pour qu'elle contienne le nombre de `TRUE` par ligne pour toutes les variables se terminant par "_true".
+Recalculer la variable `total` pour qu'elle contienne le nombre de `TRUE` par ligne pour toutes les variables se terminant par "_true".
 
 \iffalse
 <div class="solution-exo">
@@ -1127,10 +1125,12 @@ Reprendre le code précédent pour qu'il puisse s'appliquer directement sur les 
 
 \iffalse
 <div class="solution-exo">
+
 ```{r eval=FALSE}
 count_oui <- function(v) {
     sum(v == "Oui")
 }
+
 hdv2003 %>%
     rowwise() %>%
     mutate(
