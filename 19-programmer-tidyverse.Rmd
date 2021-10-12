@@ -606,7 +606,7 @@ my_table <- function(df, var) {
 </div>
 \fi
 
-Modifier `my_table` pour qu'elle accepte trois arguments `df`, `var1` et `var2`, et qu'elle retourne le résultat du count appliqué à `by` et à `var`.
+Modifier `my_table` pour qu'elle accepte trois arguments `df`, `var1` et `var2`, et qu'elle retourne le résultat du count appliqué à `var1` et à `var2`.
 
 ```{r echo=FALSE, ref.label="progtidy-1-1-2"}
 ```
@@ -625,7 +625,7 @@ my_table <- function(df, var1, var2) {
 </div>
 \fi
 
-Modifier `my_table` pour qu'elle accepte deux arguments `df` et `vars`, et qu'elle applique le `count` à toutes les variables indiquées dans `vars`.
+Modifier `my_table` pour qu'elle accepte deux arguments `df` et `vars`, et qu'elle applique le `count` à toutes les variables indiquées dans `vars` en utilisant la *tidy selection*.
 
 ```{r echo=FALSE, ref.label="progtidy-1-1-3"}
 ```
@@ -658,7 +658,7 @@ starwars %>%
     mutate(diff_height = height - mean(height, na.rm = TRUE))
 ```
 
-Créer une fonction `diff_mean_height` qui accepte un seul argument `by` et qui ajoute à `starwars` une colonne `diff_height` calculée de la même manière, mais en appliquant le `group_by` au `by` passé en paramètre.
+En utilisant ce code, créer une fonction `diff_mean_height` qui accepte un seul argument `by` et qui ajoute à `starwars` une colonne `diff_height` calculée de la même manière, mais en appliquant le `group_by` au `by` passé en paramètre.
 
 \iffalse
 <div class="solution-exo">
@@ -747,9 +747,136 @@ freq_liste <- function(var) {
 \fi
 
 
-### `ggplot2`
+### Noms de colonnes en chaînes de caractères
 
 **Exercice 2.1**
+
+La fonction `readline()` permet de lire une chaîne de caractères entrée au clavier par l'utilisateur :
+
+```{r eval=FALSE}
+v <- readline("Votre choix : ")
+```
+
+Créer une fonction `affiche_planete` qui affiche le message "Nom de la planète", lit la réponse de l'utilisateur, et affiche à l'aide d'un `filter()` les lignes du tableau `starwars` pour lesquelles la variable `homeworld` correspond au nom saisi.
+
+\iffalse
+<div class="solution-exo">
+```{r eval=FALSE}
+affiche_planete <- function() {
+    var <- readline("Nom de la planète : ")
+    starwars %>% filter(homeworld == var)
+}
+```
+</div>
+\fi
+
+
+Créer une fonction `affiche_barplot` qui affiche le message "Nom de la variable", lit la réponse de l'utilisateur, et affiche le diagramme en barres de la variable correspondante du tableau `starwars`.
+
+\iffalse
+<div class="solution-exo">
+```{r eval=FALSE}
+affiche_barplot <- function() {
+    var <- readline("Nom de la variable : ")
+    ggplot(starwars) +
+        geom_bar(aes(x = .data[[var]]))
+}
+```
+</div>
+\fi
+
+
+Créer une fonction `affiche_colonnes` qui affiche le message "Noms des variables séparés par des virgules", lit la réponse de l'utilisateur, et affiche uniquement les colonnes saisies du tableau `starwars`.
+
+*Conseil :* pour récupérer un vecteur de colonnes à partir de la saisie de l'utilisateur, on pourra utiliser les fonctions `str_split()` et `str_trim()` de `stringr`.
+
+\iffalse
+<div class="solution-exo">
+```{r eval=FALSE}
+affiche_colonnes <- function() {
+    vars <- readline("Noms des variables séparés par des virgules : ")
+    vars <- str_split(vars, ",")[[1]]
+    vars <- str_trim(vars)
+    starwars %>% select(all_of(vars))
+}
+```
+</div>
+\fi
+
+
+### Ambiguïté `data` / `env`
+
+**Exercice 3.1**
+
+Créer une fonction `filter_height()` qui accepte un argument nommé `height`, et qui retourne les lignes de `starwars` pour lesquelles les valeurs de la variable `height` sont  supérieures à celles de l'argument `height`. Créer cette fonction sans utiliser `dplyr` mais avec l'opérateur `[,]`.
+
+```{r echo=FALSE, ref.label='progtidy-4-1'}
+```
+```{r}
+filter_height(200)
+```
+
+
+\iffalse
+<div class="solution-exo">
+```{r progtidy-4-1, eval=FALSE}
+filter_height <- function(height) {
+    starwars[starwars$height > height, ]
+}
+```
+</div>
+\fi
+
+Améliorer la fonction pour qu'elle ne retourne pas les lignes pour lesquelles la variable correspondant à `height_var` vaut `NA`.
+
+```{r echo=FALSE,ref.label='progtidy-4-1b'}
+```
+
+```{r}
+filter_height(200)
+```
+
+
+\iffalse
+<div class="solution-exo">
+```{r progtidy-4-1b, eval=FALSE}
+filter_height <- function(height) {
+    starwars[starwars$height > height & !is.na(starwars$height), ]
+}
+```
+</div>
+\fi
+
+Écrire la même fonction, cette fois en utilisant `filter()` à la place de `[,]`.
+
+\iffalse
+<div class="solution-exo">
+```{r eval=FALSE}
+filter_height <- function(height) {
+    starwars %>%
+        filter(.data$height > .env$height)
+}
+```
+</div>
+\fi
+
+Quels sont les avantages et inconvénients des deux méthodes ?
+
+\iffalse
+<div class="solution-exo">
+La fonction utilisant `filter()` est plus compacte et plus lisible, et elle gère les `NA` de la manière attendue sans condition supplémentaire.
+
+La fonction utilisant `[,]` évite l'ambiguïté liée à la présence simultanée d'un argument `height` et d'une colonne `height`.
+</div>
+\fi
+
+
+
+
+
+### `ggplot2`
+
+**Exercice 4.1**
 
 Créer une fonction `graph_bar` qui prend en argument un tableau de données `df` et une variable `var` et qui retourne le diagramme en barre de la variable correspondante.
 
@@ -794,7 +921,7 @@ graph_bar <- function(df, var, facet_var) {
 \fi
 
 
-**Exercice 2.2**
+**Exercice 4.2**
 
 Créer une fonction `graph_points` qui prend en arguments un tableau de données et deux variables, et affiche le nuage de points de ces deux variables.
 
@@ -884,130 +1011,6 @@ graph_points <- function(df, var_x, var_y, color) {
     g
 }
 ```
-</div>
-\fi
-
-
-### Noms de colonnes en chaînes de caractères
-
-**Exercice 3.1**
-
-La fonction `readline()` permet de lire une chaîne de caractères entrée au clavier par l'utilisateur :
-
-```{r eval=FALSE}
-v <- readline("Votre choix : ")
-```
-
-Créer une fonction `affiche_planete` qui affiche le message "Nom de la planète", lit la réponse de l'utilisateur, et affiche à l'aide d'un `filter()` les lignes du tableau `starwars` pour lesquelles la variable `homeworld` correspond au nom saisi.
-
-\iffalse
-<div class="solution-exo">
-```{r eval=FALSE}
-affiche_planete <- function() {
-    var <- readline("Nom de la planète : ")
-    starwars %>% filter(homeworld == var)
-}
-```
-</div>
-\fi
-
-
-Créer une fonction `affiche_barplot` qui affiche le message "Nom de la variable", lit la réponse de l'utilisateur, et affiche le diagramme en barres de la variable correspondante du tableau `starwars`.
-
-\iffalse
-<div class="solution-exo">
-```{r eval=FALSE}
-affiche_barplot <- function() {
-    var <- readline("Nom de la variable : ")
-    ggplot(starwars) +
-        geom_bar(aes(x = .data[[var]]))
-}
-```
-</div>
-\fi
-
-
-Créer une fonction `affiche_colonnes` qui affiche le message "Noms des variables séparés par des virgules", lit la réponse de l'utilisateur, et affiche uniquement les colonnes saisies du tableau `starwars`.
-
-*Conseil :* pour récupérer un vecteur de colonnes à partir de la saisie de l'utilisateur, on pourra utiliser les fonctions `str_split()` et `str_trim()` de `stringr`.
-
-\iffalse
-<div class="solution-exo">
-```{r eval=FALSE}
-affiche_colonnes <- function() {
-    vars <- readline("Noms des variables séparés par des virgules : ")
-    vars <- str_split(vars, ",")[[1]]
-    vars <- str_trim(vars)
-    starwars %>% select(all_of(vars))
-}
-```
-</div>
-\fi
-
-
-### Ambiguïté `data` / `env`
-
-**Exercice 4.1**
-
-Créer une fonction `filter_height()` qui prend en argument trois paramètres `df`, `height_var` et `height`, et qui retourne les lignes de `df` pour laquelle la variable correspondant à `height_var` sont supérieures à `height`. Créer cette fonction sans utiliser `dplyr` mais avec l'opérateur `[,]`.
-
-```{r echo=FALSE, ref.label='progtidy-4-1'}
-```
-```{r}
-filter_height(starwars, "height", 200)
-```
-
-
-\iffalse
-<div class="solution-exo">
-```{r progtidy-4-1, eval=FALSE}
-filter_height <- function(df, height_var, height) {
-    df[df[[height_var]] > height, ]
-}
-```
-</div>
-\fi
-
-Améliorer la fonction pour qu'elle ne retourne pas les lignes pour lesquelles la variable correspondant à `height_var` vaut `NA`.
-
-```{r echo=FALSE,ref.label='progtidy-4-1b'}
-```
-
-```{r}
-filter_height(starwars, "height", 200)
-```
-
-
-\iffalse
-<div class="solution-exo">
-```{r progtidy-4-1b, eval=FALSE}
-filter_height <- function(df, height_var, height) {
-    df[df[[height_var]] > height & !is.na(df[[height_var]]), ]
-}
-```
-</div>
-\fi
-
-Écrire la même fonction, cette fois en utilisant `filter()` à la place de `[,]`.
-
-\iffalse
-<div class="solution-exo">
-```{r eval=FALSE}
-filter_height <- function(df, height_var, height) {
-    df %>%
-        filter({{ height_var }} > .env$height)
-}
-```
-</div>
-\fi
-
-Quels sont les avantages et inconvénients des deux méthodes ?
-
-\iffalse
-<div class="solution-exo">
-La fonction utilisant `filter()` est plus compacte et plus lisible, et elle gère les `NA` de la manière attendue sans condition supplémentaire.
-
-La fonction utilisant `[,]` évite d'avoir à utiliser l'opérateur *curly curly*, ainsi que l'ambiguïté liée à la présence simultanée d'un argument `height` et d'une colonne `height`.
 </div>
 \fi
 
