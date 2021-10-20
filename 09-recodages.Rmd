@@ -236,98 +236,84 @@ Un exemple :
 
 ```{r}
 f <- c("Pomme", "Poire", "Pomme", "Cerise")
-f <- fct_recode(f,
-           "Fraise" = "Pomme",
-           "Ananas" = "Poire")
+f <- fct_recode(
+    f,
+    "Fraise" = "Pomme",
+    "Ananas" = "Poire"
+)
 f
 ```
 
 Autre exemple sur une "vraie" variable :
 
-```{r eval=FALSE}
+```{r}
 freq(hdv2003$qualif)
 ```
-```{r echo=FALSE}
-print(freq(hdv2003$qualif))
-```
-
 
 ```{r}
-hdv2003$qualif5 <- fct_recode(hdv2003$qualif,
-                             "Ouvrier" = "Ouvrier specialise",
-                             "Ouvrier" = "Ouvrier qualifie",
-                             "Interm" = "Technicien",
-                             "Interm" = "Profession intermediaire")
-```
-```{r eval=FALSE}
+hdv2003$qualif5 <- fct_recode(
+    hdv2003$qualif,
+    "Ouvrier" = "Ouvrier specialise",
+    "Ouvrier" = "Ouvrier qualifie",
+    "Interm" = "Technicien",
+    "Interm" = "Profession intermediaire"
+)
+
 freq(hdv2003$qualif5)
-```
-```{r echo=FALSE}
-print(freq(hdv2003$qualif5))
 ```
 
 
 Attention, les anciennes valeurs saisies doivent être exactement égales aux valeurs des modalités de la variable recodée : toute différence d'accent ou d'espace fera que ce recodage ne sera pas pris en compte. Dans ce cas, `forcats` affiche un avertissement nous indiquant qu'une valeur saisie n'a pas été trouvée dans les modalités de la variable :
 
 ```{r}
-hdv2003$qualif_test <- fct_recode(hdv2003$qualif,
-                                  "Ouvrier" = "Ouvrier spécialisé",
-                                  "Ouvrier" = "Ouvrier qualifié")
+hdv2003$qualif_test <- fct_recode(
+    hdv2003$qualif,
+    "Ouvrier" = "Ouvrier spécialisé",
+    "Ouvrier" = "Ouvrier qualifié"
+)
 ```
 
 Si on souhaite recoder une modalité de la variable en `NA`, il faut (contre intuitivement) lui assigner la valeur `NULL` :
 
 ```{r}
-hdv2003$qualif_rec <- fct_recode(hdv2003$qualif, NULL = "Autre")
-```
-```{r eval=FALSE}
+hdv2003$qualif_rec <- fct_recode(
+    hdv2003$qualif, 
+    NULL = "Autre"
+)
+
 freq(hdv2003$qualif_rec)
 ```
-```{r echo=FALSE}
-print(freq(hdv2003$qualif_rec))
-```
-
 
 À l'inverse, si on souhaite recoder les `NA` d'une variable, on utilisera la fonction `fct_explicit_na`, qui convertit toutes les valeurs manquantes (`NA`) d'un facteur en une modalité spécifique :
 
 ```{r}
 hdv2003$qualif_rec <- fct_explicit_na(hdv2003$qualif, na_level = "(Manquant)")
-```
-```{r eval=FALSE}
+
 freq(hdv2003$qualif_rec)
 ```
-```{r echo=FALSE}
-print(freq(hdv2003$qualif_rec))
-```
-
 
 D'autres fonctions sont proposées par `forcats` pour faciliter certains recodage, comme `fct_collapse`, qui propose une autre syntaxe pratique quand on doit regrouper ensemble des modalités :
 
 ```{r}
-hdv2003$qualif_rec <- fct_collapse(hdv2003$qualif,
-                                  "Ouvrier" = c("Ouvrier specialise", "Ouvrier qualifie"),
-                                  "Interm" = c("Technicien", "Profession intermediaire"))
-```
-```{r eval=FALSE}
+hdv2003$qualif_rec <- fct_collapse(
+    hdv2003$qualif,
+    "Ouvrier" = c("Ouvrier specialise", "Ouvrier qualifie"),
+    "Interm" = c("Technicien", "Profession intermediaire")
+)
+
 freq(hdv2003$qualif_rec)
-```
-```{r echo=FALSE}
-print(freq(hdv2003$qualif_rec))
 ```
 
 
 `fct_other`, qui regroupe une liste de modalités en une seule modalité "Other" :
 
 ```{r}
-hdv2003$qualif_rec <- fct_other(hdv2003$qualif,
-                                drop = c("Ouvrier specialise", "Ouvrier qualifie", 
-                                         "Cadre", "Autre"))
-```
-```{r eval=FALSE}
+hdv2003$qualif_rec <- fct_other(
+    hdv2003$qualif,
+    drop = c("Ouvrier specialise", "Ouvrier qualifie", "Cadre", "Autre")
+)
+
 freq(hdv2003$qualif_rec)
-```
-```{r echo=FALSE}
-print(freq(hdv2003$qualif_rec))
 ```
 
 
@@ -335,16 +321,9 @@ print(freq(hdv2003$qualif_rec))
 
 ```{r}
 hdv2003$qualif_rec <- fct_lump(hdv2003$qualif)
-```
-```{r eval=FALSE}
+
 freq(hdv2003$qualif_rec)
 ```
-```{r echo=FALSE}
-print(freq(hdv2003$qualif_rec))
-```
-
-
-
 
 
 
@@ -375,26 +354,23 @@ L'avantage des facteurs (par rapport aux vecteurs de type `character`) est que l
 On peut ordonner les modalités d'un facteur manuellement, par exemple avec la fonction `fct_relevel()` de l'extension `forcats` :
 
 ```{r}
-hdv2003$qualif_rec <- fct_relevel(hdv2003$qualif,
-                                  "Cadre", "Profession intermediaire", "Technicien", 
-                                  "Employe", "Ouvrier qualifie", "Ouvrier specialise",
-                                  "Autre")
-```
-```{r eval=FALSE}
+hdv2003$qualif_rec <- fct_relevel(
+    hdv2003$qualif,
+    "Cadre", "Profession intermediaire", "Technicien", 
+    "Employe", "Ouvrier qualifie", "Ouvrier specialise",
+    "Autre"
+)
+
 freq(hdv2003$qualif_rec)
 ```
-```{r echo=FALSE}
-print(freq(hdv2003$qualif_rec))
-```
-
 
 
 Une autre possibilité est d'ordonner les modalités d'un facteur selon les valeurs d'une autre variable. Par exemple, si on représente le boxplot de la répartition de l'âge selon le statut d'occupation :
 
 ```{r warning=FALSE}
 library(ggplot2)
-ggplot(hdv2003) + 
-  geom_boxplot(aes(x=occup, y=age))
+ggplot(hdv2003) +
+  geom_boxplot(aes(x = occup, y = age))
 ```
 
 Le graphique pourrait être plus lisible si les modalités étaient triées par âge median croissant. Ceci est possible en utilisant `fct_reorder`. Celle-ci prend 3 arguments : le facteur à réordonner, la variable dont les valeurs doivent être utilisées pour ce réordonnancement, et enfin une fonction à appliquer à cette deuxième variable.
@@ -402,15 +378,15 @@ Le graphique pourrait être plus lisible si les modalités étaient triées par 
 ```{r warning=FALSE} 
 hdv2003$occup_age <- fct_reorder(hdv2003$occup, hdv2003$age, median)
 
-ggplot(hdv2003) + 
+ggplot(hdv2003) +
   geom_boxplot(aes(x = occup_age, y = age))
 ```
 
 On peut aussi effectuer le réordonnancement directement dans l'appel à `ggplot2`, sans créer de nouvelle variable :
 
 ```{r eval=FALSE}
-ggplot(hdv2003) + 
-  geom_boxplot(aes(x = fct_reorder(occup, age, median), 
+ggplot(hdv2003) +
+  geom_boxplot(aes(x = fct_reorder(occup, age, median),
                    y = age))
 
 ```
@@ -451,15 +427,13 @@ if_else(v > 10, "Supérieur à 10", "Inférieur à 10")
 La fonction devient plus intéressante avec des tests combinant plusieurs variables. Par exemple, imaginons qu'on souhaite créer une nouvelle variable indiquant les hommes de plus de 60 ans :
 
 ```{r}
-hdv2003$statut <- if_else(hdv2003$sexe == "Homme" & hdv2003$age > 60,
-                          "Homme de plus de 60 ans",
-                          "Autre")
-```
-```{r eval=FALSE}
+hdv2003$statut <- if_else(
+    hdv2003$sexe == "Homme" & hdv2003$age > 60,
+    "Homme de plus de 60 ans",
+    "Autre"
+)
+
 freq(hdv2003$statut)
-```
-```{r echo=FALSE}
-print(freq(hdv2003$statut))
 ```
 
 
@@ -473,14 +447,12 @@ Imaginons qu'on souhaite créer une nouvelle variable permettant d'identifier le
 hdv2003$statut <- case_when(
     hdv2003$age > 60 & hdv2003$sexe == "Homme" ~ "Homme de plus de 60 ans",
     hdv2003$age > 60 & hdv2003$sexe == "Femme" ~ "Femme de plus de 60 ans",
-    TRUE ~ "Autre")
-```
-```{r eval=FALSE}
+    TRUE ~ "Autre"
+)
+
 freq(hdv2003$statut)
 ```
-```{r echo=FALSE}
-print(freq(hdv2003$statut))
-```
+
 
 `case_when` prend en arguments une série d'instructions sous la forme `condition ~ valeur`. Il les exécute une par une, et dès qu'une `condition` est vraie, il renvoie la `valeur` associée.
 
@@ -497,13 +469,10 @@ Par exemple le recodage suivant ne fonctionne pas :
 hdv2003$statut <- case_when(
     hdv2003$sexe == "Homme" ~ "Homme",
     hdv2003$sexe == "Homme" & hdv2003$age > 60 ~ "Homme de plus de 60 ans",
-    TRUE ~ "Autre")
-```
-```{r eval=FALSE}
+    TRUE ~ "Autre"
+)
+
 freq(hdv2003$statut)
-```
-```{r echo=FALSE}
-print(freq(hdv2003$statut))
 ```
 
 
@@ -515,14 +484,12 @@ Pour que ce recodage fonctionne il faut donc changer l'ordre des conditions pour
 hdv2003$statut <- case_when(
     hdv2003$sexe == "Homme" & hdv2003$age > 60 ~ "Homme de plus de 60 ans",
     hdv2003$sexe == "Homme" ~ "Homme",
-    TRUE ~ "Autre")
-```
-```{r eval=FALSE}
+    TRUE ~ "Autre"
+)
+
 freq(hdv2003$statut)
 ```
-```{r echo=FALSE}
-print(freq(hdv2003$statut))
-```
+
 
 ## Découper une variable numérique en classes
 
@@ -532,26 +499,20 @@ On utilise pour cela la fonction `cut()` :
 
 ```{r}
 hdv2003$agecl <- cut(hdv2003$age, breaks = 5)
-```
-```{r eval=FALSE}
+
 freq(hdv2003$agecl)
-```
-```{r echo=FALSE}
-print(freq(hdv2003$agecl))
 ```
 
 Si on donne un nombre entier à l'argument `breaks`, un nombre correspondant de classes d'amplitudes égales sont automatiquement calculées. Il est souvent préférable cependant d'avoir des limites "rondes", on peut alors spécifier ces dernières manuellement en passant un vecteur à `breaks` :
 
 ```{r}
-hdv2003$agecl <- cut(hdv2003$age, 
-                     breaks = c(18, 25, 35, 45, 55, 65, 97), 
-                     include.lowest = TRUE)
-```
-```{r eval=FALSE}
+hdv2003$agecl <- cut(
+    hdv2003$age, 
+    breaks = c(18, 25, 35, 45, 55, 65, 97), 
+    include.lowest = TRUE
+)
+
 freq(hdv2003$agecl)
-```
-```{r echo=FALSE}
-print(freq(hdv2003$agecl))
 ```
 
 
@@ -600,12 +561,9 @@ x <- c("12", "3.5", "421", "2,4")
 
 Et le convertir en vecteur numérique. Que remarquez-vous ?
 
-```{r, eval = FALSE, echo=FALSE}
-as.numeric(x)
-```
-
 \iffalse
 <div class="solution-exo">
+
 ```{r eval=FALSE}
 as.numeric(x)
 
@@ -680,6 +638,7 @@ Recoder le vecteur à l'aide de la fonction `fct_recode` pour obtenir le résult
 
 \iffalse
 <div class="solution-exo">
+
 ```{r rec21, eval=FALSE}
 f <- fct_recode(f,
           "Janvier" = "Jan",
@@ -697,24 +656,20 @@ f
 
 À l'aide de l'interface graphique de `questionr`, recoder la variable `relig` du jeu de données `hdv2003` pour obtenir le tri à plat suivant (il se peut que l'ordre des modalités dans le tri à plat soit différent) :
 
-```{r, echo = FALSE}
-hdv2003$relig_rec <- fct_recode(hdv2003$relig,
-               "Pratiquant" = "Pratiquant regulier",
-               "Pratiquant" = "Pratiquant occasionnel",
-               "Appartenance" = "Appartenance sans pratique",
-               "NSP" = "NSP ou NVPR")
-               
-print(freq(hdv2003$relig_rec))
+```{r echo = FALSE, ref.label='rec22'}
 ```
 
 \iffalse
 <div class="solution-exo">
+
 ```{r rec22, eval=FALSE}
-hdv2003$relig_rec <- fct_recode(hdv2003$relig,
-               "Pratiquant" = "Pratiquant regulier",
-               "Pratiquant" = "Pratiquant occasionnel",
-               "Appartenance" = "Appartenance sans pratique",
-               "NSP" = "NSP ou NVPR")
+hdv2003$relig_rec <- fct_recode(
+    hdv2003$relig,
+    "Pratiquant" = "Pratiquant regulier",
+    "Pratiquant" = "Pratiquant occasionnel",
+    "Appartenance" = "Appartenance sans pratique",
+    "NSP" = "NSP ou NVPR"
+)
 
 freq(hdv2003$relig_rec)
 ```
@@ -726,26 +681,21 @@ freq(hdv2003$relig_rec)
 
 À l'aide de l'interface graphique de `questionr`, recoder la variable `nivetud` pour obtenir le tri à plat suivant (il se peut que l'ordre des modalités dans le tri à plat soit différent) :
 
-```{r, echo=FALSE}
-hdv2003$nivetud_rec <- fct_recode(hdv2003$nivetud,
-               "Études primaires" = "A arrete ses etudes, avant la derniere annee d'etudes primaires",
-               "Études primaires" = "Derniere annee d'etudes primaires",
-               "Enseignement technique ou professionnel" = "Enseignement technique ou professionnel court",
-               "Enseignement technique ou professionnel" = "Enseignement technique ou professionnel long",
-               "Enseignement superieur" = "Enseignement superieur y compris technique superieur")
-
-print(freq(hdv2003$nivetud_rec))
+```{r echo = FALSE, ref.label='rec23'}
 ```
 
 \iffalse
 <div class="solution-exo">
+
 ```{r rec23, eval=FALSE}
-hdv2003$nivetud_rec <- fct_recode(hdv2003$nivetud,
-               "Études primaires" = "A arrete ses etudes, avant la derniere annee d'etudes primaires",
-               "Études primaires" = "Derniere annee d'etudes primaires",
-               "Enseignement technique ou professionnel" = "Enseignement technique ou professionnel court",
-               "Enseignement technique ou professionnel" = "Enseignement technique ou professionnel long",
-               "Enseignement superieur" = "Enseignement superieur y compris technique superieur")
+hdv2003$nivetud_rec <- fct_recode(
+    hdv2003$nivetud,
+    "Études primaires" = "A arrete ses etudes, avant la derniere annee d'etudes primaires",
+    "Études primaires" = "Derniere annee d'etudes primaires",
+    "Enseignement technique ou professionnel" = "Enseignement technique ou professionnel court",
+    "Enseignement technique ou professionnel" = "Enseignement technique ou professionnel long",
+    "Enseignement superieur" = "Enseignement superieur y compris technique superieur"
+)
 
 freq(hdv2003$nivetud_rec)
 ```
@@ -756,20 +706,12 @@ freq(hdv2003$nivetud_rec)
 
 Toujours à l'aide de l'interface graphique, réordonner les modalités de cette variable recodée pour obtenir le tri à plat suivant :
 
-```{r echo=FALSE}
-hdv2003$nivetud_rec <- factor(
-  hdv2003$nivetud_rec, 
-  levels = c(
-    "Enseignement superieur", "Enseignement technique ou professionnel", 
-    "2eme cycle", "1er cycle", "Études primaires", "N'a jamais fait d'etudes"
-  )
-)
-
-print(freq(hdv2003$nivetud_rec))
+```{r echo = FALSE, ref.label='rec23b'}
 ```
 
 \iffalse
 <div class="solution-exo">
+
 ```{r rec23b, eval=FALSE}
 hdv2003$nivetud_rec <- factor(
   hdv2003$nivetud_rec, 
@@ -783,7 +725,6 @@ freq(hdv2003$nivetud_rec)
 ```
 </div>
 \fi
-
 
 
 **Exercice 2.4**
@@ -814,22 +755,18 @@ ggplot(hdv2003) + geom_boxplot(aes(x = relig, y = age))
 
 Vous devriez obtenir le tri à plat suivant pour cette nouvelle variable :
 
-```{r echo=FALSE}
-hdv2003$cinema_bd <- if_else(
-  hdv2003$cinema == "Oui" & hdv2003$lecture.bd == "Oui", 
-  "Cinéma et BD", 
-  "Autre")
-
-print(freq(hdv2003$cinema_bd))
+```{r echo = FALSE, ref.label='rec31'}
 ```
 
 \iffalse
 <div class="solution-exo">
+
 ```{r rec31, eval=FALSE}
 hdv2003$cinema_bd <- if_else(
-  hdv2003$cinema == "Oui" & hdv2003$lecture.bd == "Oui", 
-  "Cinéma et BD", 
-  "Autre")
+  hdv2003$cinema == "Oui" & hdv2003$lecture.bd == "Oui",
+  "Cinéma et BD",
+  "Autre"
+)
 
 freq(hdv2003$cinema_bd)
 ```
@@ -848,25 +785,18 @@ freq(hdv2003$cinema_bd)
 
 Vous devriez obtenir le tri à plat suivant :
 
-
-```{r echo=FALSE}
-hdv2003$groupe <- case_when(
-    hdv2003$sexe == "Homme" & hdv2003$freres.soeurs > 2 ~ "Homme ayant plus de 2 frères et soeurs",
-    hdv2003$sexe == "Femme" & hdv2003$freres.soeurs > 2 ~ "Femme ayant plus de 2 frères et soeurs",
-    TRUE ~ "Autre"
-  )
-
-print(freq(hdv2003$groupe))
+```{r echo = FALSE, ref.label='rec32'}
 ```
 
 \iffalse
 <div class="solution-exo">
+
 ```{r rec32, eval=FALSE}
 hdv2003$groupe <- case_when(
     hdv2003$sexe == "Homme" & hdv2003$freres.soeurs > 2 ~ "Homme ayant plus de 2 frères et soeurs",
     hdv2003$sexe == "Femme" & hdv2003$freres.soeurs > 2 ~ "Femme ayant plus de 2 frères et soeurs",
     TRUE ~ "Autre"
-  )
+)
 
 freq(hdv2003$groupe)
 ```
@@ -887,19 +817,12 @@ freq(hdv2003$groupe)
 
 Vous devriez obtenir le tri à plat suivant :
 
-```{r echo=FALSE}
-hdv2003$groupe <- case_when(
-    hdv2003$sexe == "Homme" & hdv2003$age > 40 & hdv2003$trav.satisf == "Satisfaction" ~ "Homme de plus de 40 ans satisfait par son travail",
-    hdv2003$sexe == "Homme" & hdv2003$age > 30 ~ "Homme de plus de 30 ans",
-    hdv2003$sexe == "Femme" & (hdv2003$sport == "Oui" | hdv2003$bricol == "Oui") ~ "Femme pratiquant le sport ou le bricolage",
-    TRUE ~ "Autre"
-)
-
-print(freq(hdv2003$groupe))
+```{r echo = FALSE, ref.label='rec33'}
 ```
 
 \iffalse
 <div class="solution-exo">
+
 ```{r rec33, eval=FALSE}
 hdv2003$groupe <- case_when(
     hdv2003$sexe == "Homme" & hdv2003$age > 40 & hdv2003$trav.satisf == "Satisfaction" ~ "Homme de plus de 40 ans satisfait par son travail",
@@ -921,21 +844,19 @@ freq(hdv2003$groupe)
 
 Dans le jeu de données `hdv2003`, découper la variable `heures.tv` en classes de manière à obtenir au final le tri à plat suivant :
 
-```{r, echo=FALSE}
-hdv2003$tv_cl <- cut(hdv2003$heures.tv, 
-                     include.lowest=TRUE,  
-                     right=TRUE,
-                     breaks=c(0, 1, 2, 4, 6, 12))
-print(freq(hdv2003$tv_cl))
+```{r echo = FALSE, ref.label='rec41'}
 ```
 
 \iffalse
 <div class="solution-exo">
+
 ```{r rec41, eval=FALSE}
-hdv2003$tv_cl <- cut(hdv2003$heures.tv, 
-                     include.lowest=TRUE,  
-                     right=TRUE,
-                     breaks=c(0, 1, 2, 4, 6, 12))
+hdv2003$tv_cl <- cut(
+    hdv2003$heures.tv,
+    include.lowest = TRUE,
+    right = TRUE,
+    breaks = c(0, 1, 2, 4, 6, 12)
+)
 
 freq(hdv2003$tv_cl)
 ```

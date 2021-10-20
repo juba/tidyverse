@@ -129,13 +129,13 @@ rename(airports, longitude = lon, latitude = lat)
 Si les noms de colonnes comportent des espaces ou des caractères spéciaux, on peut les entourer de guillemets (`"`) ou de quotes inverses (`` ` ``) :
 
 ```{r}
-tmp <- rename(flights,
-              "retard départ" = dep_delay,
-              "retard arrivée" = arr_delay)
+tmp <- rename(
+    flights,
+    "retard départ" = dep_delay,
+    "retard arrivée" = arr_delay
+)
 select(tmp, `retard départ`, `retard arrivée`)
 ```
-
-
 
 
 
@@ -177,16 +177,20 @@ Par exemple, la table `flights` contient la durée du vol en minutes.. Si on veu
 
 ```{r}
 flights <- mutate(flights, duree_h = air_time / 60)
+
 select(flights, air_time, duree_h)
 ```
 
 On peut créer plusieurs nouvelles colonnes en une seule commande, et les expressions successives peuvent prendre en compte les résultats des calculs précédents. L'exemple suivant convertit d'abord la durée en heures dans une variable `duree_h` et la distance en kilomètres dans une variable `distance_km`, puis utilise ces nouvelles colonnes pour calculer la vitesse en km/h.
 
 ```{r}
-flights <- mutate(flights,
-                  duree_h = air_time / 60,
-                  distance_km = distance / 0.62137,
-                  vitesse = distance_km / duree_h)
+flights <- mutate(
+    flights,
+    duree_h = air_time / 60,
+    distance_km = distance / 0.62137,
+    vitesse = distance_km / duree_h
+)
+
 select(flights, air_time, duree_h, distance, distance_km, vitesse)
 ```
 
@@ -195,12 +199,15 @@ select(flights, air_time, duree_h, distance, distance_km, vitesse)
 L'avantage d'utiliser `mutate` est double. D'abord il permet d'éviter d'avoir à saisir le nom du tableau de données dans les conditions d'un `if_else` ou d'un `case_when` :
 
 ```{r, eval=FALSE}
-flights <- mutate(flights,
-                  type_retard = case_when(
-                    dep_delay > 0 & arr_delay > 0 ~ "Retard départ et arrivée",
-                    dep_delay > 0 & arr_delay <= 0 ~ "Retard départ",
-                    dep_delay <= 0 & arr_delay > 0 ~ "Retard arrivée",
-                    TRUE ~ "Aucun retard"))
+flights <- mutate(
+    flights,
+    type_retard = case_when(
+        dep_delay > 0 & arr_delay > 0 ~ "Retard départ et arrivée",
+        dep_delay > 0 & arr_delay <= 0 ~ "Retard départ",
+        dep_delay <= 0 & arr_delay > 0 ~ "Retard arrivée",
+        TRUE ~ "Aucun retard"
+    )
+)
 ```
 
 Ensuite, il permet aussi d'intégrer ces recodages dans un *pipeline* de traitement de données, concept présenté dans la section suivante.
@@ -356,9 +363,14 @@ Ceci peut permettre, par exemple, de déterminer si un retard donné est supéri
 ```{r}
 flights %>%
   group_by(carrier) %>%
-  mutate(median_delay = median(dep_delay, na.rm = TRUE),
-         delay_carrier = if_else(dep_delay > median_delay,
-                                  "Supérieur", "Inférieur ou égal")) %>%
+  mutate(
+      median_delay = median(dep_delay, na.rm = TRUE),
+      delay_carrier = if_else(
+          dep_delay > median_delay,
+          "Supérieur", 
+          "Inférieur ou égal"
+      )
+  ) %>%
   select(dep_delay, month, median_delay, delay_carrier)
 ```
 
@@ -398,8 +410,10 @@ flights %>%
 
 ```{r}
 flights %>%
-  summarise(retard_dep = mean(dep_delay, na.rm=TRUE),
-            retard_arr = mean(arr_delay, na.rm=TRUE))
+  summarise(
+      retard_dep = mean(dep_delay, na.rm = TRUE),
+      retard_arr = mean(arr_delay, na.rm = TRUE)
+  )
 ```
 
 Cette fonction est en général utilisée avec `group_by`, puisqu'elle permet du coup d'agréger et résumer les lignes du tableau groupe par groupe. Si on souhaite calculer le délai maximum, le délai minimum et le délai moyen au départ pour chaque mois, on pourra faire :
@@ -407,9 +421,11 @@ Cette fonction est en général utilisée avec `group_by`, puisqu'elle permet du
 ```{r}
 flights %>%
   group_by(month) %>%
-  summarise(max_delay = max(dep_delay, na.rm=TRUE),
-            min_delay = min(dep_delay, na.rm=TRUE),
-            mean_delay = mean(dep_delay, na.rm=TRUE))
+  summarise(
+      max_delay = max(dep_delay, na.rm = TRUE),
+      min_delay = min(dep_delay, na.rm = TRUE),
+      mean_delay = mean(dep_delay, na.rm = TRUE)
+  )
 ```
 
 `summarise` dispose d'un opérateur spécial, `n()`, qui retourne le nombre de lignes du groupe. Ainsi si on veut le nombre de vols par destination, on peut utiliser :
@@ -603,8 +619,10 @@ Ceci peut être utile pour des données de type "séries temporelles". Par exemp
 
 ```{r}
 flights %>%
-  mutate(dep_delay_prev = lag(dep_delay),
-         dep_delay_diff = dep_delay - dep_delay_prev) %>%
+  mutate(
+      dep_delay_prev = lag(dep_delay),
+      dep_delay_diff = dep_delay - dep_delay_prev
+  ) %>%
   select(dep_delay_prev, dep_delay, dep_delay_diff)
 ```
 
@@ -825,8 +843,10 @@ Jusqu'à présent nous avons utilisé la fonction `left_join`, mais il existe pl
 Partons de deux tables d'exemple, `personnes` et `voitures` :
 
 ```{r}
-personnes <- tibble(nom = c("Sylvie", "Sylvie", "Monique", "Gunter", "Rayan", "Rayan"),
-                    voiture = c("Twingo", "Ferrari", "Scenic", "Lada", "Twingo", "Clio"))
+personnes <- tibble(
+    nom = c("Sylvie", "Sylvie", "Monique", "Gunter", "Rayan", "Rayan"),
+    voiture = c("Twingo", "Ferrari", "Scenic", "Lada", "Twingo", "Clio")
+)
 ```
 
 ```{r, echo=FALSE, eval=TRUE}
@@ -835,8 +855,10 @@ kable(personnes)
 
 
 ```{r}
-voitures <- tibble(voiture = c("Twingo", "Ferrari", "Clio", "Lada", "208"),
-                   vitesse = c("140", "280", "160", "85", "160"))
+voitures <- tibble(
+    voiture = c("Twingo", "Ferrari", "Clio", "Lada", "208"),
+    vitesse = c("140", "280", "160", "85", "160")
+)
 ```
 
 ```{r, echo=FALSE, eval=TRUE}
@@ -1464,7 +1486,7 @@ Créez une carte interactive des résultats avec `leaflet` et le code suivant :
 library(leaflet)
 leaflet(data = flights_dest) %>%
   addTiles %>%
-  addCircles(lng=~lon, lat=~lat, radius=~n * 10, popup=~name)
+  addCircles(lng = ~lon, lat = ~lat, radius = ~n * 10, popup = ~name)
 ```
 
 
