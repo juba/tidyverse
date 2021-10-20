@@ -1,0 +1,1597 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Partie 19 Programmer avec le tidyverse | Introduction à R et au tidyverse</title>
+  <meta name="description" content="Une introduction à R et aux extensions du tidyverse" />
+  <meta name="generator" content="bookdown 0.24 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="Partie 19 Programmer avec le tidyverse | Introduction à R et au tidyverse" />
+  <meta property="og:type" content="book" />
+  
+  
+  <meta property="og:description" content="Une introduction à R et aux extensions du tidyverse" />
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Partie 19 Programmer avec le tidyverse | Introduction à R et au tidyverse" />
+  
+  <meta name="twitter:description" content="Une introduction à R et aux extensions du tidyverse" />
+  
+
+<meta name="author" content="Julien Barnier" />
+
+
+<meta name="date" content="2021-10-21" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="18-purrr.html"/>
+<link rel="next" href="20-targets.html"/>
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+<link href="libs/anchor-sections-1.0.1/anchor-sections.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.0.1/anchor-sections.js"></script>
+<script src="libs/htmlwidgets-1.5.4/htmlwidgets.js"></script>
+<link href="libs/leaflet-1.3.1/leaflet.css" rel="stylesheet" />
+<script src="libs/leaflet-1.3.1/leaflet.js"></script>
+<link href="libs/leafletfix-1.0.0/leafletfix.css" rel="stylesheet" />
+<script src="libs/proj4-2.6.2/proj4.min.js"></script>
+<script src="libs/Proj4Leaflet-1.0.1/proj4leaflet.js"></script>
+<link href="libs/rstudio_leaflet-1.3.1/rstudio_leaflet.css" rel="stylesheet" />
+<script src="libs/leaflet-binding-2.0.4.1/leaflet.js"></script>
+<link href="libs/vis-9.1.0/vis-network.min.css" rel="stylesheet" />
+<script src="libs/vis-9.1.0/vis-network.min.js"></script>
+<script src="libs/visNetwork-binding-2.1.0/visNetwork.js"></script>
+
+
+<style type="text/css">
+a.sourceLine { display: inline-block; line-height: 1.25; }
+a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
+a.sourceLine:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode { white-space: pre; position: relative; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+code.sourceCode { white-space: pre-wrap; }
+a.sourceLine { text-indent: -1em; padding-left: 1em; }
+}
+pre.numberSource a.sourceLine
+  { position: relative; left: -4em; }
+pre.numberSource a.sourceLine::before
+  { content: attr(title);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; pointer-events: all; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    background-color: #ffffff;
+    color: #a0a0a0;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #a0a0a0;  padding-left: 4px; }
+div.sourceCode
+  { color: #1f1c1b; background-color: #ffffff; }
+@media screen {
+a.sourceLine::before { text-decoration: underline; }
+}
+code span. { color: #1f1c1b; } /* Normal */
+code span.al { color: #bf0303; background-color: #f7e6e6; font-weight: bold; } /* Alert */
+code span.an { color: #ca60ca; } /* Annotation */
+code span.at { color: #0057ae; } /* Attribute */
+code span.bn { color: #b08000; } /* BaseN */
+code span.bu { color: #644a9b; font-weight: bold; } /* BuiltIn */
+code span.cf { color: #1f1c1b; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #924c9d; } /* Char */
+code span.cn { color: #aa5500; } /* Constant */
+code span.co { color: #898887; } /* Comment */
+code span.cv { color: #0095ff; } /* CommentVar */
+code span.do { color: #607880; } /* Documentation */
+code span.dt { color: #0057ae; } /* DataType */
+code span.dv { color: #b08000; } /* DecVal */
+code span.er { color: #bf0303; text-decoration: underline; } /* Error */
+code span.ex { color: #0095ff; font-weight: bold; } /* Extension */
+code span.fl { color: #b08000; } /* Float */
+code span.fu { color: #644a9b; } /* Function */
+code span.im { color: #ff5500; } /* Import */
+code span.in { color: #b08000; } /* Information */
+code span.kw { color: #1f1c1b; font-weight: bold; } /* Keyword */
+code span.op { color: #1f1c1b; } /* Operator */
+code span.ot { color: #006e28; } /* Other */
+code span.pp { color: #006e28; } /* Preprocessor */
+code span.re { color: #0057ae; background-color: #e0e9f8; } /* RegionMarker */
+code span.sc { color: #3daee9; } /* SpecialChar */
+code span.ss { color: #ff5500; } /* SpecialString */
+code span.st { color: #bf0303; } /* String */
+code span.va { color: #0057ae; } /* Variable */
+code span.vs { color: #bf0303; } /* VerbatimString */
+code span.wa { color: #bf0303; } /* Warning */
+</style>
+
+
+<link rel="stylesheet" href="css/tidyverse.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./index.html">Introduction à R et au <em>tidyverse</em></a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>À propos de ce document</a><ul>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html#remerciements"><i class="fa fa-check"></i>Remerciements</a></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html#licence"><i class="fa fa-check"></i>Licence</a></li>
+</ul></li>
+<li class="chapter" data-level="1" data-path="01-presentation.html"><a href="01-presentation.html"><i class="fa fa-check"></i><b>1</b> Présentation</a><ul>
+<li class="chapter" data-level="1.1" data-path="01-presentation.html"><a href="01-presentation.html#à-propos-de-r"><i class="fa fa-check"></i><b>1.1</b> À propos de R</a></li>
+<li class="chapter" data-level="1.2" data-path="01-presentation.html"><a href="01-presentation.html#rstudio"><i class="fa fa-check"></i><b>1.2</b> À propos de RStudio</a></li>
+<li class="chapter" data-level="1.3" data-path="01-presentation.html"><a href="01-presentation.html#à-propos-du-tidyverse"><i class="fa fa-check"></i><b>1.3</b> À propos du <em>tidyverse</em></a></li>
+<li class="chapter" data-level="1.4" data-path="01-presentation.html"><a href="01-presentation.html#structure-du-document"><i class="fa fa-check"></i><b>1.4</b> Structure du document</a></li>
+<li class="chapter" data-level="1.5" data-path="01-presentation.html"><a href="01-presentation.html#prérequis"><i class="fa fa-check"></i><b>1.5</b> Prérequis</a></li>
+</ul></li>
+<li class="part"><span><b>I Introduction à R</b></span></li>
+<li class="chapter" data-level="2" data-path="02-prise_en_main.html"><a href="02-prise_en_main.html"><i class="fa fa-check"></i><b>2</b> Prise en main</a><ul>
+<li class="chapter" data-level="2.1" data-path="02-prise_en_main.html"><a href="02-prise_en_main.html#la-console"><i class="fa fa-check"></i><b>2.1</b> La console</a><ul>
+<li class="chapter" data-level="2.1.1" data-path="02-prise_en_main.html"><a href="02-prise_en_main.html#linvite-de-commandes"><i class="fa fa-check"></i><b>2.1.1</b> L’invite de commandes</a></li>
+<li class="chapter" data-level="2.1.2" data-path="02-prise_en_main.html"><a href="02-prise_en_main.html#précisions-concernant-la-saisie-des-commandes"><i class="fa fa-check"></i><b>2.1.2</b> Précisions concernant la saisie des commandes</a></li>
+</ul></li>
+<li class="chapter" data-level="2.2" data-path="02-prise_en_main.html"><a href="02-prise_en_main.html#objets"><i class="fa fa-check"></i><b>2.2</b> Objets</a><ul>
+<li class="chapter" data-level="2.2.1" data-path="02-prise_en_main.html"><a href="02-prise_en_main.html#objets-simples"><i class="fa fa-check"></i><b>2.2.1</b> Objets simples</a></li>
+<li class="chapter" data-level="2.2.2" data-path="02-prise_en_main.html"><a href="02-prise_en_main.html#introvecteurs"><i class="fa fa-check"></i><b>2.2.2</b> Vecteurs</a></li>
+</ul></li>
+<li class="chapter" data-level="2.3" data-path="02-prise_en_main.html"><a href="02-prise_en_main.html#fonctions"><i class="fa fa-check"></i><b>2.3</b> Fonctions</a><ul>
+<li class="chapter" data-level="2.3.1" data-path="02-prise_en_main.html"><a href="02-prise_en_main.html#principe"><i class="fa fa-check"></i><b>2.3.1</b> Principe</a></li>
+<li class="chapter" data-level="2.3.2" data-path="02-prise_en_main.html"><a href="02-prise_en_main.html#arguments"><i class="fa fa-check"></i><b>2.3.2</b> Arguments</a></li>
+<li class="chapter" data-level="2.3.3" data-path="02-prise_en_main.html"><a href="02-prise_en_main.html#aide-sur-une-fonction"><i class="fa fa-check"></i><b>2.3.3</b> Aide sur une fonction</a></li>
+</ul></li>
+<li class="chapter" data-level="2.4" data-path="02-prise_en_main.html"><a href="02-prise_en_main.html#regrouper-ses-commandes-dans-des-scripts"><i class="fa fa-check"></i><b>2.4</b> Regrouper ses commandes dans des scripts</a><ul>
+<li class="chapter" data-level="2.4.1" data-path="02-prise_en_main.html"><a href="02-prise_en_main.html#commentaires"><i class="fa fa-check"></i><b>2.4.1</b> Commentaires</a></li>
+</ul></li>
+<li class="chapter" data-level="2.5" data-path="02-prise_en_main.html"><a href="02-prise_en_main.html#packages"><i class="fa fa-check"></i><b>2.5</b> Installer et charger des extensions (<em>packages</em>)</a></li>
+<li class="chapter" data-level="2.6" data-path="02-prise_en_main.html"><a href="02-prise_en_main.html#exercices"><i class="fa fa-check"></i><b>2.6</b> Exercices</a></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="03-premier_travail.html"><a href="03-premier_travail.html"><i class="fa fa-check"></i><b>3</b> Premier travail avec des données</a><ul>
+<li class="chapter" data-level="3.1" data-path="03-premier_travail.html"><a href="03-premier_travail.html#jeu-de-données-dexemple"><i class="fa fa-check"></i><b>3.1</b> Jeu de données d’exemple</a></li>
+<li class="chapter" data-level="3.2" data-path="03-premier_travail.html"><a href="03-premier_travail.html#tableau-de-données-data-frame"><i class="fa fa-check"></i><b>3.2</b> Tableau de données (<em>data frame</em>)</a><ul>
+<li class="chapter" data-level="3.2.1" data-path="03-premier_travail.html"><a href="03-premier_travail.html#structure-du-tableau"><i class="fa fa-check"></i><b>3.2.1</b> Structure du tableau</a></li>
+<li class="chapter" data-level="3.2.2" data-path="03-premier_travail.html"><a href="03-premier_travail.html#accéder-aux-variables-dun-tableau"><i class="fa fa-check"></i><b>3.2.2</b> Accéder aux variables d’un tableau</a></li>
+<li class="chapter" data-level="3.2.3" data-path="03-premier_travail.html"><a href="03-premier_travail.html#créer-une-nouvelle-variable"><i class="fa fa-check"></i><b>3.2.3</b> Créer une nouvelle variable</a></li>
+</ul></li>
+<li class="chapter" data-level="3.3" data-path="03-premier_travail.html"><a href="03-premier_travail.html#analyse-univariée"><i class="fa fa-check"></i><b>3.3</b> Analyse univariée</a><ul>
+<li class="chapter" data-level="3.3.1" data-path="03-premier_travail.html"><a href="03-premier_travail.html#analyser-une-variable-quantitative"><i class="fa fa-check"></i><b>3.3.1</b> Analyser une variable quantitative</a></li>
+<li class="chapter" data-level="3.3.2" data-path="03-premier_travail.html"><a href="03-premier_travail.html#analyser-une-variable-qualitative"><i class="fa fa-check"></i><b>3.3.2</b> Analyser une variable qualitative</a></li>
+</ul></li>
+<li class="chapter" data-level="3.4" data-path="03-premier_travail.html"><a href="03-premier_travail.html#exercices-1"><i class="fa fa-check"></i><b>3.4</b> Exercices</a></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="04-bivarie.html"><a href="04-bivarie.html"><i class="fa fa-check"></i><b>4</b> Analyse bivariée</a><ul>
+<li class="chapter" data-level="4.1" data-path="04-bivarie.html"><a href="04-bivarie.html#croisement-de-deux-variables-qualitatives"><i class="fa fa-check"></i><b>4.1</b> Croisement de deux variables qualitatives</a><ul>
+<li class="chapter" data-level="4.1.1" data-path="04-bivarie.html"><a href="04-bivarie.html#tableaux-croisés"><i class="fa fa-check"></i><b>4.1.1</b> Tableaux croisés</a></li>
+<li class="chapter" data-level="4.1.2" data-path="04-bivarie.html"><a href="04-bivarie.html#test-du-χ²"><i class="fa fa-check"></i><b>4.1.2</b> Test du χ²</a></li>
+<li class="chapter" data-level="4.1.3" data-path="04-bivarie.html"><a href="04-bivarie.html#représentation-graphique-1"><i class="fa fa-check"></i><b>4.1.3</b> Représentation graphique</a></li>
+</ul></li>
+<li class="chapter" data-level="4.2" data-path="04-bivarie.html"><a href="04-bivarie.html#croisement-dune-variable-quantitative-et-dune-variable-qualitative"><i class="fa fa-check"></i><b>4.2</b> Croisement d’une variable quantitative et d’une variable qualitative</a><ul>
+<li class="chapter" data-level="4.2.1" data-path="04-bivarie.html"><a href="04-bivarie.html#représentation-graphique-2"><i class="fa fa-check"></i><b>4.2.1</b> Représentation graphique</a></li>
+<li class="chapter" data-level="4.2.2" data-path="04-bivarie.html"><a href="04-bivarie.html#tapply"><i class="fa fa-check"></i><b>4.2.2</b> Calculs d’indicateurs</a></li>
+<li class="chapter" data-level="4.2.3" data-path="04-bivarie.html"><a href="04-bivarie.html#tests-statistiques"><i class="fa fa-check"></i><b>4.2.3</b> Tests statistiques</a></li>
+</ul></li>
+<li class="chapter" data-level="4.3" data-path="04-bivarie.html"><a href="04-bivarie.html#croisement-de-deux-variables-quantitatives"><i class="fa fa-check"></i><b>4.3</b> Croisement de deux variables quantitatives</a><ul>
+<li class="chapter" data-level="4.3.1" data-path="04-bivarie.html"><a href="04-bivarie.html#représentation-graphique-3"><i class="fa fa-check"></i><b>4.3.1</b> Représentation graphique</a></li>
+<li class="chapter" data-level="4.3.2" data-path="04-bivarie.html"><a href="04-bivarie.html#calcul-dindicateurs"><i class="fa fa-check"></i><b>4.3.2</b> Calcul d’indicateurs</a></li>
+<li class="chapter" data-level="4.3.3" data-path="04-bivarie.html"><a href="04-bivarie.html#régression-linéaire"><i class="fa fa-check"></i><b>4.3.3</b> Régression linéaire</a></li>
+</ul></li>
+<li class="chapter" data-level="4.4" data-path="04-bivarie.html"><a href="04-bivarie.html#exercices-2"><i class="fa fa-check"></i><b>4.4</b> Exercices</a></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="05-organiser.html"><a href="05-organiser.html"><i class="fa fa-check"></i><b>5</b> Organiser ses scripts</a><ul>
+<li class="chapter" data-level="5.1" data-path="05-organiser.html"><a href="05-organiser.html#projets"><i class="fa fa-check"></i><b>5.1</b> Les projets dans RStudio</a></li>
+<li class="chapter" data-level="5.2" data-path="05-organiser.html"><a href="05-organiser.html#créer-des-sections-dans-un-script"><i class="fa fa-check"></i><b>5.2</b> Créer des sections dans un script</a></li>
+<li class="chapter" data-level="5.3" data-path="05-organiser.html"><a href="05-organiser.html#répartir-son-travail-entre-plusieurs-scripts"><i class="fa fa-check"></i><b>5.3</b> Répartir son travail entre plusieurs scripts</a></li>
+<li class="chapter" data-level="5.4" data-path="05-organiser.html"><a href="05-organiser.html#désactiver-la-sauvegarde-de-lespace-de-travail"><i class="fa fa-check"></i><b>5.4</b> Désactiver la sauvegarde de l’espace de travail</a></li>
+</ul></li>
+<li class="part"><span><b>II Introduction au tidyverse</b></span></li>
+<li class="chapter" data-level="6" data-path="06-tidyverse.html"><a href="06-tidyverse.html"><i class="fa fa-check"></i><b>6</b> Le tidyverse</a><ul>
+<li class="chapter" data-level="6.1" data-path="06-tidyverse.html"><a href="06-tidyverse.html#extensions"><i class="fa fa-check"></i><b>6.1</b> Extensions</a></li>
+<li class="chapter" data-level="6.2" data-path="06-tidyverse.html"><a href="06-tidyverse.html#installation"><i class="fa fa-check"></i><b>6.2</b> Installation</a></li>
+<li class="chapter" data-level="6.3" data-path="06-tidyverse.html"><a href="06-tidyverse.html#tidydata"><i class="fa fa-check"></i><b>6.3</b> tidy data</a></li>
+<li class="chapter" data-level="6.4" data-path="06-tidyverse.html"><a href="06-tidyverse.html#tibbles"><i class="fa fa-check"></i><b>6.4</b> tibbles</a></li>
+</ul></li>
+<li class="chapter" data-level="7" data-path="07-import.html"><a href="07-import.html"><i class="fa fa-check"></i><b>7</b> Importer et exporter des données</a><ul>
+<li class="chapter" data-level="7.1" data-path="07-import.html"><a href="07-import.html#import-de-fichiers-textes"><i class="fa fa-check"></i><b>7.1</b> Import de fichiers textes</a><ul>
+<li class="chapter" data-level="7.1.1" data-path="07-import.html"><a href="07-import.html#interface-interactive-dimport-de-fichiers"><i class="fa fa-check"></i><b>7.1.1</b> Interface interactive d’import de fichiers</a></li>
+</ul></li>
+<li class="chapter" data-level="7.2" data-path="07-import.html"><a href="07-import.html#import-depuis-un-fichier-excel"><i class="fa fa-check"></i><b>7.2</b> Import depuis un fichier Excel</a></li>
+<li class="chapter" data-level="7.3" data-path="07-import.html"><a href="07-import.html#import-de-fichiers-sas-spss-et-stata"><i class="fa fa-check"></i><b>7.3</b> Import de fichiers SAS, SPSS et Stata</a></li>
+<li class="chapter" data-level="7.4" data-path="07-import.html"><a href="07-import.html#import-de-fichiers-dbase"><i class="fa fa-check"></i><b>7.4</b> Import de fichiers dBase</a></li>
+<li class="chapter" data-level="7.5" data-path="07-import.html"><a href="07-import.html#connexion-à-des-bases-de-données"><i class="fa fa-check"></i><b>7.5</b> Connexion à des bases de données</a><ul>
+<li class="chapter" data-level="7.5.1" data-path="07-import.html"><a href="07-import.html#interfaçage-via-lextension-dbi"><i class="fa fa-check"></i><b>7.5.1</b> Interfaçage via l’extension <code>DBI</code></a></li>
+<li class="chapter" data-level="7.5.2" data-path="07-import.html"><a href="07-import.html#utilisation-de-dplyr-et-dbplyr"><i class="fa fa-check"></i><b>7.5.2</b> Utilisation de <code>dplyr</code> et <code>dbplyr</code></a></li>
+<li class="chapter" data-level="7.5.3" data-path="07-import.html"><a href="07-import.html#ressources"><i class="fa fa-check"></i><b>7.5.3</b> Ressources</a></li>
+</ul></li>
+<li class="chapter" data-level="7.6" data-path="07-import.html"><a href="07-import.html#export-de-données"><i class="fa fa-check"></i><b>7.6</b> Export de données</a><ul>
+<li class="chapter" data-level="7.6.1" data-path="07-import.html"><a href="07-import.html#export-de-tableaux-de-données"><i class="fa fa-check"></i><b>7.6.1</b> Export de tableaux de données</a></li>
+<li class="chapter" data-level="7.6.2" data-path="07-import.html"><a href="07-import.html#sauvegarder-des-objets"><i class="fa fa-check"></i><b>7.6.2</b> Sauvegarder des objets</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="8" data-path="08-ggplot2.html"><a href="08-ggplot2.html"><i class="fa fa-check"></i><b>8</b> Visualiser avec <code>ggplot2</code></a><ul>
+<li class="chapter" data-level="8.1" data-path="08-ggplot2.html"><a href="08-ggplot2.html#préparation"><i class="fa fa-check"></i><b>8.1</b> Préparation</a></li>
+<li class="chapter" data-level="8.2" data-path="08-ggplot2.html"><a href="08-ggplot2.html#initialisation"><i class="fa fa-check"></i><b>8.2</b> Initialisation</a></li>
+<li class="chapter" data-level="8.3" data-path="08-ggplot2.html"><a href="08-ggplot2.html#exemples-de-geom"><i class="fa fa-check"></i><b>8.3</b> Exemples de <code>geom</code></a><ul>
+<li class="chapter" data-level="8.3.1" data-path="08-ggplot2.html"><a href="08-ggplot2.html#geom_boxplot"><i class="fa fa-check"></i><b>8.3.1</b> <code>geom_boxplot</code></a></li>
+<li class="chapter" data-level="8.3.2" data-path="08-ggplot2.html"><a href="08-ggplot2.html#geom_violin"><i class="fa fa-check"></i><b>8.3.2</b> <code>geom_violin</code></a></li>
+<li class="chapter" data-level="8.3.3" data-path="08-ggplot2.html"><a href="08-ggplot2.html#geom_bar"><i class="fa fa-check"></i><b>8.3.3</b> <code>geom_bar</code></a></li>
+<li class="chapter" data-level="8.3.4" data-path="08-ggplot2.html"><a href="08-ggplot2.html#geom_text"><i class="fa fa-check"></i><b>8.3.4</b> <code>geom_text</code></a></li>
+<li class="chapter" data-level="8.3.5" data-path="08-ggplot2.html"><a href="08-ggplot2.html#geom_label"><i class="fa fa-check"></i><b>8.3.5</b> <code>geom_label</code></a></li>
+<li class="chapter" data-level="8.3.6" data-path="08-ggplot2.html"><a href="08-ggplot2.html#geom_density"><i class="fa fa-check"></i><b>8.3.6</b> <code>geom_density</code></a></li>
+<li class="chapter" data-level="8.3.7" data-path="08-ggplot2.html"><a href="08-ggplot2.html#geom_line"><i class="fa fa-check"></i><b>8.3.7</b> <code>geom_line</code></a></li>
+</ul></li>
+<li class="chapter" data-level="8.4" data-path="08-ggplot2.html"><a href="08-ggplot2.html#mappages"><i class="fa fa-check"></i><b>8.4</b> Mappages</a><ul>
+<li class="chapter" data-level="8.4.1" data-path="08-ggplot2.html"><a href="08-ggplot2.html#exemples-de-mappages"><i class="fa fa-check"></i><b>8.4.1</b> Exemples de mappages</a></li>
+<li class="chapter" data-level="8.4.2" data-path="08-ggplot2.html"><a href="08-ggplot2.html#aes-or-not-aes"><i class="fa fa-check"></i><b>8.4.2</b> <code>aes()</code> or not <code>aes()</code> ?</a></li>
+<li class="chapter" data-level="8.4.3" data-path="08-ggplot2.html"><a href="08-ggplot2.html#geom_bar-et-position"><i class="fa fa-check"></i><b>8.4.3</b> <code>geom_bar</code> et <code>position</code></a></li>
+</ul></li>
+<li class="chapter" data-level="8.5" data-path="08-ggplot2.html"><a href="08-ggplot2.html#représentation-de-plusieurs-geom"><i class="fa fa-check"></i><b>8.5</b> Représentation de plusieurs <code>geom</code></a><ul>
+<li class="chapter" data-level="8.5.1" data-path="08-ggplot2.html"><a href="08-ggplot2.html#plusieurs-sources-de-données"><i class="fa fa-check"></i><b>8.5.1</b> Plusieurs sources de données</a></li>
+</ul></li>
+<li class="chapter" data-level="8.6" data-path="08-ggplot2.html"><a href="08-ggplot2.html#faceting"><i class="fa fa-check"></i><b>8.6</b> Faceting</a></li>
+<li class="chapter" data-level="8.7" data-path="08-ggplot2.html"><a href="08-ggplot2.html#scales"><i class="fa fa-check"></i><b>8.7</b> Scales</a><ul>
+<li class="chapter" data-level="8.7.1" data-path="08-ggplot2.html"><a href="08-ggplot2.html#scale_size"><i class="fa fa-check"></i><b>8.7.1</b> <code>scale_size</code></a></li>
+<li class="chapter" data-level="8.7.2" data-path="08-ggplot2.html"><a href="08-ggplot2.html#scale_x-scale_y"><i class="fa fa-check"></i><b>8.7.2</b> <code>scale_x</code>, <code>scale_y</code></a></li>
+<li class="chapter" data-level="8.7.3" data-path="08-ggplot2.html"><a href="08-ggplot2.html#scalecolor"><i class="fa fa-check"></i><b>8.7.3</b> <code>scale_color</code>, <code>scale_fill</code></a></li>
+</ul></li>
+<li class="chapter" data-level="8.8" data-path="08-ggplot2.html"><a href="08-ggplot2.html#thèmes"><i class="fa fa-check"></i><b>8.8</b> Thèmes</a></li>
+<li class="chapter" data-level="8.9" data-path="08-ggplot2.html"><a href="08-ggplot2.html#ladd-in-esquisse"><i class="fa fa-check"></i><b>8.9</b> L’add-in <code>esquisse</code></a></li>
+<li class="chapter" data-level="8.10" data-path="08-ggplot2.html"><a href="08-ggplot2.html#ressources-1"><i class="fa fa-check"></i><b>8.10</b> Ressources</a></li>
+<li class="chapter" data-level="8.11" data-path="08-ggplot2.html"><a href="08-ggplot2.html#exercices-3"><i class="fa fa-check"></i><b>8.11</b> Exercices</a></li>
+</ul></li>
+<li class="chapter" data-level="9" data-path="09-recodages.html"><a href="09-recodages.html"><i class="fa fa-check"></i><b>9</b> Recoder des variables</a><ul>
+<li class="chapter" data-level="9.1" data-path="09-recodages.html"><a href="09-recodages.html#vecteurs"><i class="fa fa-check"></i><b>9.1</b> Rappel sur les variables et les vecteurs</a></li>
+<li class="chapter" data-level="9.2" data-path="09-recodages.html"><a href="09-recodages.html#tests"><i class="fa fa-check"></i><b>9.2</b> Tests et comparaison</a></li>
+<li class="chapter" data-level="9.3" data-path="09-recodages.html"><a href="09-recodages.html#recoder-une-variable-qualitative"><i class="fa fa-check"></i><b>9.3</b> Recoder une variable qualitative</a><ul>
+<li class="chapter" data-level="9.3.1" data-path="09-recodages.html"><a href="09-recodages.html#facteurs"><i class="fa fa-check"></i><b>9.3.1</b> Facteurs et <code>forcats</code></a></li>
+<li class="chapter" data-level="9.3.2" data-path="09-recodages.html"><a href="09-recodages.html#recode"><i class="fa fa-check"></i><b>9.3.2</b> Modifier les modalités d’une variable qualitative</a></li>
+<li class="chapter" data-level="9.3.3" data-path="09-recodages.html"><a href="09-recodages.html#ordonner-les-modalités-dune-variable-qualitative"><i class="fa fa-check"></i><b>9.3.3</b> Ordonner les modalités d’une variable qualitative</a></li>
+</ul></li>
+<li class="chapter" data-level="9.4" data-path="09-recodages.html"><a href="09-recodages.html#combiner-plusieurs-variables"><i class="fa fa-check"></i><b>9.4</b> Combiner plusieurs variables</a><ul>
+<li class="chapter" data-level="9.4.1" data-path="09-recodages.html"><a href="09-recodages.html#if-else"><i class="fa fa-check"></i><b>9.4.1</b> <code>if_else</code></a></li>
+<li class="chapter" data-level="9.4.2" data-path="09-recodages.html"><a href="09-recodages.html#case_when"><i class="fa fa-check"></i><b>9.4.2</b> <code>case_when</code></a></li>
+</ul></li>
+<li class="chapter" data-level="9.5" data-path="09-recodages.html"><a href="09-recodages.html#découper-une-variable-numérique-en-classes"><i class="fa fa-check"></i><b>9.5</b> Découper une variable numérique en classes</a><ul>
+<li class="chapter" data-level="9.5.1" data-path="09-recodages.html"><a href="09-recodages.html#interface-graphique"><i class="fa fa-check"></i><b>9.5.1</b> Interface graphique</a></li>
+</ul></li>
+<li class="chapter" data-level="9.6" data-path="09-recodages.html"><a href="09-recodages.html#exercices-4"><i class="fa fa-check"></i><b>9.6</b> Exercices</a><ul>
+<li class="chapter" data-level="9.6.1" data-path="09-recodages.html"><a href="09-recodages.html#préparation-1"><i class="fa fa-check"></i><b>9.6.1</b> Préparation</a></li>
+<li class="chapter" data-level="9.6.2" data-path="09-recodages.html"><a href="09-recodages.html#vecteurs-et-tests"><i class="fa fa-check"></i><b>9.6.2</b> Vecteurs et tests</a></li>
+<li class="chapter" data-level="9.6.3" data-path="09-recodages.html"><a href="09-recodages.html#recodages-de-variable-qualitative"><i class="fa fa-check"></i><b>9.6.3</b> Recodages de variable qualitative</a></li>
+<li class="chapter" data-level="9.6.4" data-path="09-recodages.html"><a href="09-recodages.html#combiner-plusieurs-variables-1"><i class="fa fa-check"></i><b>9.6.4</b> Combiner plusieurs variables</a></li>
+<li class="chapter" data-level="9.6.5" data-path="09-recodages.html"><a href="09-recodages.html#découper-une-variable-numérique"><i class="fa fa-check"></i><b>9.6.5</b> Découper une variable numérique</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="10" data-path="10-dplyr.html"><a href="10-dplyr.html"><i class="fa fa-check"></i><b>10</b> Manipuler les données avec <code>dplyr</code></a><ul>
+<li class="chapter" data-level="10.1" data-path="10-dplyr.html"><a href="10-dplyr.html#préparation-2"><i class="fa fa-check"></i><b>10.1</b> Préparation</a></li>
+<li class="chapter" data-level="10.2" data-path="10-dplyr.html"><a href="10-dplyr.html#les-verbes-de-dplyr"><i class="fa fa-check"></i><b>10.2</b> Les verbes de <code>dplyr</code></a><ul>
+<li class="chapter" data-level="10.2.1" data-path="10-dplyr.html"><a href="10-dplyr.html#slice"><i class="fa fa-check"></i><b>10.2.1</b> <code>slice</code></a></li>
+<li class="chapter" data-level="10.2.2" data-path="10-dplyr.html"><a href="10-dplyr.html#filter"><i class="fa fa-check"></i><b>10.2.2</b> <code>filter</code></a></li>
+<li class="chapter" data-level="10.2.3" data-path="10-dplyr.html"><a href="10-dplyr.html#select-rename"><i class="fa fa-check"></i><b>10.2.3</b> <code>select</code> et <code>rename</code></a></li>
+<li class="chapter" data-level="10.2.4" data-path="10-dplyr.html"><a href="10-dplyr.html#arrange"><i class="fa fa-check"></i><b>10.2.4</b> <code>arrange</code></a></li>
+<li class="chapter" data-level="10.2.5" data-path="10-dplyr.html"><a href="10-dplyr.html#mutate"><i class="fa fa-check"></i><b>10.2.5</b> <code>mutate</code></a></li>
+</ul></li>
+<li class="chapter" data-level="10.3" data-path="10-dplyr.html"><a href="10-dplyr.html#pipe"><i class="fa fa-check"></i><b>10.3</b> Enchaîner les opérations avec le <em>pipe</em></a></li>
+<li class="chapter" data-level="10.4" data-path="10-dplyr.html"><a href="10-dplyr.html#opérations-groupées"><i class="fa fa-check"></i><b>10.4</b> Opérations groupées</a><ul>
+<li class="chapter" data-level="10.4.1" data-path="10-dplyr.html"><a href="10-dplyr.html#group_by"><i class="fa fa-check"></i><b>10.4.1</b> <code>group_by</code></a></li>
+<li class="chapter" data-level="10.4.2" data-path="10-dplyr.html"><a href="10-dplyr.html#summarise-et-count"><i class="fa fa-check"></i><b>10.4.2</b> <code>summarise</code> et <code>count</code></a></li>
+<li class="chapter" data-level="10.4.3" data-path="10-dplyr.html"><a href="10-dplyr.html#grouper-selon-plusieurs-variables"><i class="fa fa-check"></i><b>10.4.3</b> Grouper selon plusieurs variables</a></li>
+</ul></li>
+<li class="chapter" data-level="10.5" data-path="10-dplyr.html"><a href="10-dplyr.html#autres-fonctions-utiles"><i class="fa fa-check"></i><b>10.5</b> Autres fonctions utiles</a><ul>
+<li class="chapter" data-level="10.5.1" data-path="10-dplyr.html"><a href="10-dplyr.html#slice_sample"><i class="fa fa-check"></i><b>10.5.1</b> <code>slice_sample</code></a></li>
+<li class="chapter" data-level="10.5.2" data-path="10-dplyr.html"><a href="10-dplyr.html#slice_head-slice_tail-slice_min-slice_max"><i class="fa fa-check"></i><b>10.5.2</b> <code>slice_head</code>, <code>slice_tail</code>, <code>slice_min</code>, <code>slice_max</code></a></li>
+<li class="chapter" data-level="10.5.3" data-path="10-dplyr.html"><a href="10-dplyr.html#lead-et-lag"><i class="fa fa-check"></i><b>10.5.3</b> <code>lead</code> et <code>lag</code></a></li>
+<li class="chapter" data-level="10.5.4" data-path="10-dplyr.html"><a href="10-dplyr.html#distinct-et-n_distinct"><i class="fa fa-check"></i><b>10.5.4</b> <code>distinct</code> et <code>n_distinct</code></a></li>
+<li class="chapter" data-level="10.5.5" data-path="10-dplyr.html"><a href="10-dplyr.html#relocate"><i class="fa fa-check"></i><b>10.5.5</b> <code>relocate</code></a></li>
+</ul></li>
+<li class="chapter" data-level="10.6" data-path="10-dplyr.html"><a href="10-dplyr.html#tables-multiples"><i class="fa fa-check"></i><b>10.6</b> Tables multiples</a><ul>
+<li class="chapter" data-level="10.6.1" data-path="10-dplyr.html"><a href="10-dplyr.html#concaténation-bind_rows-et-bind_cols"><i class="fa fa-check"></i><b>10.6.1</b> Concaténation : <code>bind_rows</code> et <code>bind_cols</code></a></li>
+<li class="chapter" data-level="10.6.2" data-path="10-dplyr.html"><a href="10-dplyr.html#jointures"><i class="fa fa-check"></i><b>10.6.2</b> Jointures</a></li>
+<li class="chapter" data-level="10.6.3" data-path="10-dplyr.html"><a href="10-dplyr.html#types-de-jointures"><i class="fa fa-check"></i><b>10.6.3</b> Types de jointures</a></li>
+</ul></li>
+<li class="chapter" data-level="10.7" data-path="10-dplyr.html"><a href="10-dplyr.html#ressources-2"><i class="fa fa-check"></i><b>10.7</b> Ressources</a></li>
+<li class="chapter" data-level="10.8" data-path="10-dplyr.html"><a href="10-dplyr.html#exercices-5"><i class="fa fa-check"></i><b>10.8</b> Exercices</a><ul>
+<li class="chapter" data-level="10.8.1" data-path="10-dplyr.html"><a href="10-dplyr.html#les-verbes-de-base-de-dplyr"><i class="fa fa-check"></i><b>10.8.1</b> Les verbes de base de <code>dplyr</code></a></li>
+<li class="chapter" data-level="10.8.2" data-path="10-dplyr.html"><a href="10-dplyr.html#enchaîner-des-opérations"><i class="fa fa-check"></i><b>10.8.2</b> Enchaîner des opérations</a></li>
+<li class="chapter" data-level="10.8.3" data-path="10-dplyr.html"><a href="10-dplyr.html#group_by-et-summarise"><i class="fa fa-check"></i><b>10.8.3</b> <code>group_by</code> et <code>summarise</code></a></li>
+<li class="chapter" data-level="10.8.4" data-path="10-dplyr.html"><a href="10-dplyr.html#jointures-1"><i class="fa fa-check"></i><b>10.8.4</b> Jointures</a></li>
+<li class="chapter" data-level="10.8.5" data-path="10-dplyr.html"><a href="10-dplyr.html#bonus"><i class="fa fa-check"></i><b>10.8.5</b> Bonus</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="11" data-path="11-stringr.html"><a href="11-stringr.html"><i class="fa fa-check"></i><b>11</b> Manipuler du texte avec <code>stringr</code></a><ul>
+<li class="chapter" data-level="11.1" data-path="11-stringr.html"><a href="11-stringr.html#expressions-régulières"><i class="fa fa-check"></i><b>11.1</b> Expressions régulières</a></li>
+<li class="chapter" data-level="11.2" data-path="11-stringr.html"><a href="11-stringr.html#concat"><i class="fa fa-check"></i><b>11.2</b> Concaténer des chaînes</a></li>
+<li class="chapter" data-level="11.3" data-path="11-stringr.html"><a href="11-stringr.html#convertir-en-majuscules-minuscules"><i class="fa fa-check"></i><b>11.3</b> Convertir en majuscules / minuscules</a></li>
+<li class="chapter" data-level="11.4" data-path="11-stringr.html"><a href="11-stringr.html#découper-des-chaînes"><i class="fa fa-check"></i><b>11.4</b> Découper des chaînes</a></li>
+<li class="chapter" data-level="11.5" data-path="11-stringr.html"><a href="11-stringr.html#extraire-des-sous-chaînes-par-position"><i class="fa fa-check"></i><b>11.5</b> Extraire des sous-chaînes par position</a></li>
+<li class="chapter" data-level="11.6" data-path="11-stringr.html"><a href="11-stringr.html#str-detect"><i class="fa fa-check"></i><b>11.6</b> Détecter des motifs</a></li>
+<li class="chapter" data-level="11.7" data-path="11-stringr.html"><a href="11-stringr.html#extraire-des-motifs"><i class="fa fa-check"></i><b>11.7</b> Extraire des motifs</a></li>
+<li class="chapter" data-level="11.8" data-path="11-stringr.html"><a href="11-stringr.html#remplacer-des-motifs"><i class="fa fa-check"></i><b>11.8</b> Remplacer des motifs</a></li>
+<li class="chapter" data-level="11.9" data-path="11-stringr.html"><a href="11-stringr.html#modificateurs"><i class="fa fa-check"></i><b>11.9</b> Modificateurs de motifs</a></li>
+<li class="chapter" data-level="11.10" data-path="11-stringr.html"><a href="11-stringr.html#ressources-3"><i class="fa fa-check"></i><b>11.10</b> Ressources</a></li>
+<li class="chapter" data-level="11.11" data-path="11-stringr.html"><a href="11-stringr.html#exercices-6"><i class="fa fa-check"></i><b>11.11</b> Exercices</a></li>
+</ul></li>
+<li class="chapter" data-level="12" data-path="12-tidyr.html"><a href="12-tidyr.html"><i class="fa fa-check"></i><b>12</b> Mettre en ordre avec <code>tidyr</code></a><ul>
+<li class="chapter" data-level="12.1" data-path="12-tidyr.html"><a href="12-tidyr.html#tidy-data"><i class="fa fa-check"></i><b>12.1</b> Tidy data</a></li>
+<li class="chapter" data-level="12.2" data-path="12-tidyr.html"><a href="12-tidyr.html#trois-règles-pour-des-données-bien-rangées"><i class="fa fa-check"></i><b>12.2</b> Trois règles pour des données bien rangées</a></li>
+<li class="chapter" data-level="12.3" data-path="12-tidyr.html"><a href="12-tidyr.html#les-verbes-de-tidyr"><i class="fa fa-check"></i><b>12.3</b> Les verbes de <code>tidyr</code></a><ul>
+<li class="chapter" data-level="12.3.1" data-path="12-tidyr.html"><a href="12-tidyr.html#pivot_longer-transformer-des-colonnes-en-lignes"><i class="fa fa-check"></i><b>12.3.1</b> <code>pivot_longer</code> : transformer des colonnes en lignes</a></li>
+<li class="chapter" data-level="12.3.2" data-path="12-tidyr.html"><a href="12-tidyr.html#pivot_wider-transformer-des-lignes-en-colonnes"><i class="fa fa-check"></i><b>12.3.2</b> <code>pivot_wider</code> : transformer des lignes en colonnes</a></li>
+<li class="chapter" data-level="12.3.3" data-path="12-tidyr.html"><a href="12-tidyr.html#separate"><i class="fa fa-check"></i><b>12.3.3</b> <code>separate</code> : séparer une colonne en plusieurs colonnes</a></li>
+<li class="chapter" data-level="12.3.4" data-path="12-tidyr.html"><a href="12-tidyr.html#separate-rows"><i class="fa fa-check"></i><b>12.3.4</b> <code>separate_rows</code> : séparer une colonne en plusieurs lignes</a></li>
+<li class="chapter" data-level="12.3.5" data-path="12-tidyr.html"><a href="12-tidyr.html#unite-regrouper-plusieurs-colonnes-en-une-seule"><i class="fa fa-check"></i><b>12.3.5</b> <code>unite</code> : regrouper plusieurs colonnes en une seule</a></li>
+<li class="chapter" data-level="12.3.6" data-path="12-tidyr.html"><a href="12-tidyr.html#extract"><i class="fa fa-check"></i><b>12.3.6</b> <code>extract</code> : créer de nouvelles colonnes à partir d’une colonne de texte</a></li>
+<li class="chapter" data-level="12.3.7" data-path="12-tidyr.html"><a href="12-tidyr.html#complete-compléter-des-combinaisons-de-variables-manquantes"><i class="fa fa-check"></i><b>12.3.7</b> <code>complete</code> : compléter des combinaisons de variables manquantes</a></li>
+</ul></li>
+<li class="chapter" data-level="12.4" data-path="12-tidyr.html"><a href="12-tidyr.html#ressources-4"><i class="fa fa-check"></i><b>12.4</b> Ressources</a></li>
+</ul></li>
+<li class="chapter" data-level="13" data-path="13-rmarkdown.html"><a href="13-rmarkdown.html"><i class="fa fa-check"></i><b>13</b> Diffuser et publier avec <code>rmarkdown</code></a><ul>
+<li class="chapter" data-level="13.1" data-path="13-rmarkdown.html"><a href="13-rmarkdown.html#créer-un-nouveau-document"><i class="fa fa-check"></i><b>13.1</b> Créer un nouveau document</a></li>
+<li class="chapter" data-level="13.2" data-path="13-rmarkdown.html"><a href="13-rmarkdown.html#éléments-dun-document-r-markdown"><i class="fa fa-check"></i><b>13.2</b> Éléments d’un document R Markdown</a><ul>
+<li class="chapter" data-level="13.2.1" data-path="13-rmarkdown.html"><a href="13-rmarkdown.html#en-tête-préambule"><i class="fa fa-check"></i><b>13.2.1</b> En-tête (préambule)</a></li>
+<li class="chapter" data-level="13.2.2" data-path="13-rmarkdown.html"><a href="13-rmarkdown.html#texte-du-document"><i class="fa fa-check"></i><b>13.2.2</b> Texte du document</a></li>
+<li class="chapter" data-level="13.2.3" data-path="13-rmarkdown.html"><a href="13-rmarkdown.html#blocs-de-code-r"><i class="fa fa-check"></i><b>13.2.3</b> Blocs de code R</a></li>
+<li class="chapter" data-level="13.2.4" data-path="13-rmarkdown.html"><a href="13-rmarkdown.html#compiler-un-document-knit"><i class="fa fa-check"></i><b>13.2.4</b> Compiler un document (<em>Knit</em>)</a></li>
+</ul></li>
+<li class="chapter" data-level="13.3" data-path="13-rmarkdown.html"><a href="13-rmarkdown.html#personnaliser-le-document-généré"><i class="fa fa-check"></i><b>13.3</b> Personnaliser le document généré</a></li>
+<li class="chapter" data-level="13.4" data-path="13-rmarkdown.html"><a href="13-rmarkdown.html#options-des-blocs-de-code-r"><i class="fa fa-check"></i><b>13.4</b> Options des blocs de code R</a><ul>
+<li class="chapter" data-level="13.4.1" data-path="13-rmarkdown.html"><a href="13-rmarkdown.html#nom-du-bloc"><i class="fa fa-check"></i><b>13.4.1</b> Nom du bloc</a></li>
+<li class="chapter" data-level="13.4.2" data-path="13-rmarkdown.html"><a href="13-rmarkdown.html#options"><i class="fa fa-check"></i><b>13.4.2</b> Options</a></li>
+<li class="chapter" data-level="13.4.3" data-path="13-rmarkdown.html"><a href="13-rmarkdown.html#modifier-les-options"><i class="fa fa-check"></i><b>13.4.3</b> Modifier les options</a></li>
+<li class="chapter" data-level="13.4.4" data-path="13-rmarkdown.html"><a href="13-rmarkdown.html#options-globales"><i class="fa fa-check"></i><b>13.4.4</b> Options globales</a></li>
+<li class="chapter" data-level="13.4.5" data-path="13-rmarkdown.html"><a href="13-rmarkdown.html#mise-en-cache-des-résultats"><i class="fa fa-check"></i><b>13.4.5</b> Mise en cache des résultats</a></li>
+</ul></li>
+<li class="chapter" data-level="13.5" data-path="13-rmarkdown.html"><a href="13-rmarkdown.html#rendu-des-tableaux"><i class="fa fa-check"></i><b>13.5</b> Rendu des tableaux</a><ul>
+<li class="chapter" data-level="13.5.1" data-path="13-rmarkdown.html"><a href="13-rmarkdown.html#tableaux-croisés-1"><i class="fa fa-check"></i><b>13.5.1</b> Tableaux croisés</a></li>
+<li class="chapter" data-level="13.5.2" data-path="13-rmarkdown.html"><a href="13-rmarkdown.html#tableaux-de-données-et-tris-à-plat"><i class="fa fa-check"></i><b>13.5.2</b> Tableaux de données et tris à plat</a></li>
+</ul></li>
+<li class="chapter" data-level="13.6" data-path="13-rmarkdown.html"><a href="13-rmarkdown.html#templates"><i class="fa fa-check"></i><b>13.6</b> Modèles de documents</a><ul>
+<li class="chapter" data-level="13.6.1" data-path="13-rmarkdown.html"><a href="13-rmarkdown.html#slides"><i class="fa fa-check"></i><b>13.6.1</b> Slides</a></li>
+<li class="chapter" data-level="13.6.2" data-path="13-rmarkdown.html"><a href="13-rmarkdown.html#templates-1"><i class="fa fa-check"></i><b>13.6.2</b> Templates</a></li>
+</ul></li>
+<li class="chapter" data-level="13.7" data-path="13-rmarkdown.html"><a href="13-rmarkdown.html#ressources-5"><i class="fa fa-check"></i><b>13.7</b> Ressources</a></li>
+</ul></li>
+<li class="part"><span><b>III Aller plus loin</b></span></li>
+<li class="chapter" data-level="14" data-path="14-fonctions.html"><a href="14-fonctions.html"><i class="fa fa-check"></i><b>14</b> Écrire ses propres fonctions</a><ul>
+<li class="chapter" data-level="14.1" data-path="14-fonctions.html"><a href="14-fonctions.html#introduction-et-exemples"><i class="fa fa-check"></i><b>14.1</b> Introduction et exemples</a><ul>
+<li class="chapter" data-level="14.1.1" data-path="14-fonctions.html"><a href="14-fonctions.html#structure-dune-fonction"><i class="fa fa-check"></i><b>14.1.1</b> Structure d’une fonction</a></li>
+<li class="chapter" data-level="14.1.2" data-path="14-fonctions.html"><a href="14-fonctions.html#exemple-de-fonction"><i class="fa fa-check"></i><b>14.1.2</b> Exemple de fonction</a></li>
+<li class="chapter" data-level="14.1.3" data-path="14-fonctions.html"><a href="14-fonctions.html#effets-de-bord-et-affichage-de-messages"><i class="fa fa-check"></i><b>14.1.3</b> Effets de bord et affichage de messages</a></li>
+<li class="chapter" data-level="14.1.4" data-path="14-fonctions.html"><a href="14-fonctions.html#utilité-des-fonctions"><i class="fa fa-check"></i><b>14.1.4</b> Utilité des fonctions</a></li>
+</ul></li>
+<li class="chapter" data-level="14.2" data-path="14-fonctions.html"><a href="14-fonctions.html#arguments-et-résultat-dune-fonction"><i class="fa fa-check"></i><b>14.2</b> Arguments et résultat d’une fonction</a><ul>
+<li class="chapter" data-level="14.2.1" data-path="14-fonctions.html"><a href="14-fonctions.html#définition-des-arguments"><i class="fa fa-check"></i><b>14.2.1</b> Définition des arguments</a></li>
+<li class="chapter" data-level="14.2.2" data-path="14-fonctions.html"><a href="14-fonctions.html#valeurs-par-défaut"><i class="fa fa-check"></i><b>14.2.2</b> Valeurs par défaut</a></li>
+<li class="chapter" data-level="14.2.3" data-path="14-fonctions.html"><a href="14-fonctions.html#largument-..."><i class="fa fa-check"></i><b>14.2.3</b> L’argument <code>...</code></a></li>
+<li class="chapter" data-level="14.2.4" data-path="14-fonctions.html"><a href="14-fonctions.html#resfunc"><i class="fa fa-check"></i><b>14.2.4</b> Résultat d’une fonction</a></li>
+</ul></li>
+<li class="chapter" data-level="14.3" data-path="14-fonctions.html"><a href="14-fonctions.html#portée-des-variables"><i class="fa fa-check"></i><b>14.3</b> Portée des variables</a><ul>
+<li class="chapter" data-level="14.3.1" data-path="14-fonctions.html"><a href="14-fonctions.html#une-fonction-peut-accéder-à-un-objet-extérieur"><i class="fa fa-check"></i><b>14.3.1</b> Une fonction peut accéder à un objet extérieur</a></li>
+<li class="chapter" data-level="14.3.2" data-path="14-fonctions.html"><a href="14-fonctions.html#les-arguments-et-les-objets-créés-dans-la-fonction-sont-prioritaires"><i class="fa fa-check"></i><b>14.3.2</b> Les arguments et les objets créés dans la fonction sont prioritaires</a></li>
+<li class="chapter" data-level="14.3.3" data-path="14-fonctions.html"><a href="14-fonctions.html#un-objet-créé-dans-une-fonction-nexiste-que-dans-cette-fonction"><i class="fa fa-check"></i><b>14.3.3</b> Un objet créé dans une fonction n’existe que dans cette fonction</a></li>
+<li class="chapter" data-level="14.3.4" data-path="14-fonctions.html"><a href="14-fonctions.html#on-ne-peut-pas-modifier-un-objet-global-dans-une-fonction"><i class="fa fa-check"></i><b>14.3.4</b> On ne peut pas modifier un objet global dans une fonction</a></li>
+</ul></li>
+<li class="chapter" data-level="14.4" data-path="14-fonctions.html"><a href="14-fonctions.html#les-fonctions-comme-objets"><i class="fa fa-check"></i><b>14.4</b> Les fonctions comme objets</a><ul>
+<li class="chapter" data-level="14.4.1" data-path="14-fonctions.html"><a href="14-fonctions.html#passer-des-fonctions-comme-argument"><i class="fa fa-check"></i><b>14.4.1</b> Passer des fonctions comme argument</a></li>
+<li class="chapter" data-level="14.4.2" data-path="14-fonctions.html"><a href="14-fonctions.html#fonctions-anonymes"><i class="fa fa-check"></i><b>14.4.2</b> Fonctions anonymes</a></li>
+</ul></li>
+<li class="chapter" data-level="14.5" data-path="14-fonctions.html"><a href="14-fonctions.html#ressources-6"><i class="fa fa-check"></i><b>14.5</b> Ressources</a></li>
+<li class="chapter" data-level="14.6" data-path="14-fonctions.html"><a href="14-fonctions.html#exercices-7"><i class="fa fa-check"></i><b>14.6</b> Exercices</a><ul>
+<li class="chapter" data-level="14.6.1" data-path="14-fonctions.html"><a href="14-fonctions.html#introduction-et-exemples-1"><i class="fa fa-check"></i><b>14.6.1</b> Introduction et exemples</a></li>
+<li class="chapter" data-level="14.6.2" data-path="14-fonctions.html"><a href="14-fonctions.html#arguments-et-résultats"><i class="fa fa-check"></i><b>14.6.2</b> Arguments et résultats</a></li>
+<li class="chapter" data-level="14.6.3" data-path="14-fonctions.html"><a href="14-fonctions.html#portée-des-variables-1"><i class="fa fa-check"></i><b>14.6.3</b> Portée des variables</a></li>
+<li class="chapter" data-level="14.6.4" data-path="14-fonctions.html"><a href="14-fonctions.html#les-fonctions-comme-objets-1"><i class="fa fa-check"></i><b>14.6.4</b> Les fonctions comme objets</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="15" data-path="15-structures-donnees.html"><a href="15-structures-donnees.html"><i class="fa fa-check"></i><b>15</b> Structures de données</a><ul>
+<li class="chapter" data-level="15.1" data-path="15-structures-donnees.html"><a href="15-structures-donnees.html#vecteurs-atomiques"><i class="fa fa-check"></i><b>15.1</b> Vecteurs atomiques</a><ul>
+<li class="chapter" data-level="15.1.1" data-path="15-structures-donnees.html"><a href="15-structures-donnees.html#création-dun-vecteur"><i class="fa fa-check"></i><b>15.1.1</b> Création d’un vecteur</a></li>
+<li class="chapter" data-level="15.1.2" data-path="15-structures-donnees.html"><a href="15-structures-donnees.html#vecteurs-nommés"><i class="fa fa-check"></i><b>15.1.2</b> Vecteurs nommés</a></li>
+<li class="chapter" data-level="15.1.3" data-path="15-structures-donnees.html"><a href="15-structures-donnees.html#types-de-vecteurs"><i class="fa fa-check"></i><b>15.1.3</b> Types de vecteurs</a></li>
+<li class="chapter" data-level="15.1.4" data-path="15-structures-donnees.html"><a href="15-structures-donnees.html#sélection-déléments"><i class="fa fa-check"></i><b>15.1.4</b> Sélection d’éléments</a></li>
+<li class="chapter" data-level="15.1.5" data-path="15-structures-donnees.html"><a href="15-structures-donnees.html#modification"><i class="fa fa-check"></i><b>15.1.5</b> Modification</a></li>
+</ul></li>
+<li class="chapter" data-level="15.2" data-path="15-structures-donnees.html"><a href="15-structures-donnees.html#listes"><i class="fa fa-check"></i><b>15.2</b> Listes</a><ul>
+<li class="chapter" data-level="15.2.1" data-path="15-structures-donnees.html"><a href="15-structures-donnees.html#création"><i class="fa fa-check"></i><b>15.2.1</b> Création</a></li>
+<li class="chapter" data-level="15.2.2" data-path="15-structures-donnees.html"><a href="15-structures-donnees.html#ajout-déléments"><i class="fa fa-check"></i><b>15.2.2</b> Ajout d’éléments</a></li>
+<li class="chapter" data-level="15.2.3" data-path="15-structures-donnees.html"><a href="15-structures-donnees.html#sélection-déléments-1"><i class="fa fa-check"></i><b>15.2.3</b> Sélection d’éléments</a></li>
+<li class="chapter" data-level="15.2.4" data-path="15-structures-donnees.html"><a href="15-structures-donnees.html#modification-1"><i class="fa fa-check"></i><b>15.2.4</b> Modification</a></li>
+<li class="chapter" data-level="15.2.5" data-path="15-structures-donnees.html"><a href="15-structures-donnees.html#utilisation"><i class="fa fa-check"></i><b>15.2.5</b> Utilisation</a></li>
+</ul></li>
+<li class="chapter" data-level="15.3" data-path="15-structures-donnees.html"><a href="15-structures-donnees.html#data-frame-tibbles"><i class="fa fa-check"></i><b>15.3</b> Tableaux de données (<em>data frame</em> et <em>tibble</em>)</a><ul>
+<li class="chapter" data-level="15.3.1" data-path="15-structures-donnees.html"><a href="15-structures-donnees.html#création-1"><i class="fa fa-check"></i><b>15.3.1</b> Création</a></li>
+<li class="chapter" data-level="15.3.2" data-path="15-structures-donnees.html"><a href="15-structures-donnees.html#noms-de-colonnes-et-de-lignes"><i class="fa fa-check"></i><b>15.3.2</b> Noms de colonnes et de lignes</a></li>
+<li class="chapter" data-level="15.3.3" data-path="15-structures-donnees.html"><a href="15-structures-donnees.html#sélection-de-lignes-et-de-colonnes"><i class="fa fa-check"></i><b>15.3.3</b> Sélection de lignes et de colonnes</a></li>
+<li class="chapter" data-level="15.3.4" data-path="15-structures-donnees.html"><a href="15-structures-donnees.html#modification-2"><i class="fa fa-check"></i><b>15.3.4</b> Modification</a></li>
+</ul></li>
+<li class="chapter" data-level="15.4" data-path="15-structures-donnees.html"><a href="15-structures-donnees.html#ressources-7"><i class="fa fa-check"></i><b>15.4</b> Ressources</a></li>
+<li class="chapter" data-level="15.5" data-path="15-structures-donnees.html"><a href="15-structures-donnees.html#exercices-8"><i class="fa fa-check"></i><b>15.5</b> Exercices</a><ul>
+<li class="chapter" data-level="15.5.1" data-path="15-structures-donnees.html"><a href="15-structures-donnees.html#vecteurs-atomiques-1"><i class="fa fa-check"></i><b>15.5.1</b> Vecteurs atomiques</a></li>
+<li class="chapter" data-level="15.5.2" data-path="15-structures-donnees.html"><a href="15-structures-donnees.html#listes-1"><i class="fa fa-check"></i><b>15.5.2</b> Listes</a></li>
+<li class="chapter" data-level="15.5.3" data-path="15-structures-donnees.html"><a href="15-structures-donnees.html#tableaux-de-données"><i class="fa fa-check"></i><b>15.5.3</b> Tableaux de données</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="16" data-path="16-boucles-if.html"><a href="16-boucles-if.html"><i class="fa fa-check"></i><b>16</b> Boucles et exécution conditionnelle</a><ul>
+<li class="chapter" data-level="16.1" data-path="16-boucles-if.html"><a href="16-boucles-if.html#if-else-exécuter-du-code-sous-certaines-conditions"><i class="fa fa-check"></i><b>16.1</b> <code>if</code>, <code>else</code> : exécuter du code sous certaines conditions</a><ul>
+<li class="chapter" data-level="16.1.1" data-path="16-boucles-if.html"><a href="16-boucles-if.html#if"><i class="fa fa-check"></i><b>16.1.1</b> <code>if</code></a></li>
+<li class="chapter" data-level="16.1.2" data-path="16-boucles-if.html"><a href="16-boucles-if.html#if-else-1"><i class="fa fa-check"></i><b>16.1.2</b> <code>if</code> / <code>else</code></a></li>
+<li class="chapter" data-level="16.1.3" data-path="16-boucles-if.html"><a href="16-boucles-if.html#if-else-if-else"><i class="fa fa-check"></i><b>16.1.3</b> “<code>if</code>” / “<code>else if</code>” / “<code>else</code>”</a></li>
+<li class="chapter" data-level="16.1.4" data-path="16-boucles-if.html"><a href="16-boucles-if.html#construction-de-conditions-complexes"><i class="fa fa-check"></i><b>16.1.4</b> Construction de conditions complexes</a></li>
+<li class="chapter" data-level="16.1.5" data-path="16-boucles-if.html"><a href="16-boucles-if.html#différence-entre-if-else-et-ifelse"><i class="fa fa-check"></i><b>16.1.5</b> Différence entre <code>if</code> / <code>else</code> et <code>ifelse</code></a></li>
+</ul></li>
+<li class="chapter" data-level="16.2" data-path="16-boucles-if.html"><a href="16-boucles-if.html#contrôle-de-lexécution-et-gestion-des-erreurs"><i class="fa fa-check"></i><b>16.2</b> Contrôle de l’exécution et gestion des erreurs</a><ul>
+<li class="chapter" data-level="16.2.1" data-path="16-boucles-if.html"><a href="16-boucles-if.html#utilisation-de-return-pour-sortir-de-la-fonction"><i class="fa fa-check"></i><b>16.2.1</b> Utilisation de <code>return</code> pour sortir de la fonction</a></li>
+<li class="chapter" data-level="16.2.2" data-path="16-boucles-if.html"><a href="16-boucles-if.html#warning"><i class="fa fa-check"></i><b>16.2.2</b> <code>warning</code></a></li>
+<li class="chapter" data-level="16.2.3" data-path="16-boucles-if.html"><a href="16-boucles-if.html#stop-et-stopifnot"><i class="fa fa-check"></i><b>16.2.3</b> <code>stop</code> et <code>stopifnot</code></a></li>
+<li class="chapter" data-level="16.2.4" data-path="16-boucles-if.html"><a href="16-boucles-if.html#tester-la-présence-dun-argument"><i class="fa fa-check"></i><b>16.2.4</b> Tester la présence d’un argument</a></li>
+</ul></li>
+<li class="chapter" data-level="16.3" data-path="16-boucles-if.html"><a href="16-boucles-if.html#for-et-while-répéter-des-instructions-dans-une-boucle"><i class="fa fa-check"></i><b>16.3</b> <code>for</code> et <code>while</code> : répéter des instructions dans une boucle</a><ul>
+<li class="chapter" data-level="16.3.1" data-path="16-boucles-if.html"><a href="16-boucles-if.html#for"><i class="fa fa-check"></i><b>16.3.1</b> <code>for</code></a></li>
+<li class="chapter" data-level="16.3.2" data-path="16-boucles-if.html"><a href="16-boucles-if.html#while"><i class="fa fa-check"></i><b>16.3.2</b> <code>while</code></a></li>
+<li class="chapter" data-level="16.3.3" data-path="16-boucles-if.html"><a href="16-boucles-if.html#next-et-break"><i class="fa fa-check"></i><b>16.3.3</b> <code>next</code> et <code>break</code></a></li>
+<li class="chapter" data-level="16.3.4" data-path="16-boucles-if.html"><a href="16-boucles-if.html#no-boucles"><i class="fa fa-check"></i><b>16.3.4</b> Quand (ne pas) utiliser des boucles</a></li>
+</ul></li>
+<li class="chapter" data-level="16.4" data-path="16-boucles-if.html"><a href="16-boucles-if.html#débugguer-une-fonction"><i class="fa fa-check"></i><b>16.4</b> Débugguer une fonction</a><ul>
+<li class="chapter" data-level="16.4.1" data-path="16-boucles-if.html"><a href="16-boucles-if.html#print"><i class="fa fa-check"></i><b>16.4.1</b> print()</a></li>
+<li class="chapter" data-level="16.4.2" data-path="16-boucles-if.html"><a href="16-boucles-if.html#localiser-une-erreur"><i class="fa fa-check"></i><b>16.4.2</b> Localiser une erreur</a></li>
+<li class="chapter" data-level="16.4.3" data-path="16-boucles-if.html"><a href="16-boucles-if.html#browser"><i class="fa fa-check"></i><b>16.4.3</b> browser()</a></li>
+</ul></li>
+<li class="chapter" data-level="16.5" data-path="16-boucles-if.html"><a href="16-boucles-if.html#ressources-boucles"><i class="fa fa-check"></i><b>16.5</b> Ressources</a></li>
+<li class="chapter" data-level="16.6" data-path="16-boucles-if.html"><a href="16-boucles-if.html#exercices-9"><i class="fa fa-check"></i><b>16.6</b> Exercices</a><ul>
+<li class="chapter" data-level="16.6.1" data-path="16-boucles-if.html"><a href="16-boucles-if.html#if-et-else"><i class="fa fa-check"></i><b>16.6.1</b> <code>if</code> et <code>else</code></a></li>
+<li class="chapter" data-level="16.6.2" data-path="16-boucles-if.html"><a href="16-boucles-if.html#contrôle-de-lexécution"><i class="fa fa-check"></i><b>16.6.2</b> Contrôle de l’exécution</a></li>
+<li class="chapter" data-level="16.6.3" data-path="16-boucles-if.html"><a href="16-boucles-if.html#boucles"><i class="fa fa-check"></i><b>16.6.3</b> Boucles</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="17" data-path="17-dplyr-avance.html"><a href="17-dplyr-avance.html"><i class="fa fa-check"></i><b>17</b> <code>dplyr</code> avancé</a><ul>
+<li class="chapter" data-level="17.1" data-path="17-dplyr-avance.html"><a href="17-dplyr-avance.html#appliquer-ses-propres-fonctions"><i class="fa fa-check"></i><b>17.1</b> Appliquer ses propres fonctions</a><ul>
+<li class="chapter" data-level="17.1.1" data-path="17-dplyr-avance.html"><a href="17-dplyr-avance.html#exemple-avec-mutate"><i class="fa fa-check"></i><b>17.1.1</b> Exemple avec <code>mutate</code></a></li>
+<li class="chapter" data-level="17.1.2" data-path="17-dplyr-avance.html"><a href="17-dplyr-avance.html#exemple-avec-summarise"><i class="fa fa-check"></i><b>17.1.2</b> Exemple avec <code>summarise</code></a></li>
+<li class="chapter" data-level="17.1.3" data-path="17-dplyr-avance.html"><a href="17-dplyr-avance.html#exemple-avec-rename_with"><i class="fa fa-check"></i><b>17.1.3</b> Exemple avec <code>rename_with</code></a></li>
+</ul></li>
+<li class="chapter" data-level="17.2" data-path="17-dplyr-avance.html"><a href="17-dplyr-avance.html#across"><i class="fa fa-check"></i><b>17.2</b> <code>across()</code> : appliquer des fonctions à plusieurs colonnes</a><ul>
+<li class="chapter" data-level="17.2.1" data-path="17-dplyr-avance.html"><a href="17-dplyr-avance.html#appliquer-une-fonction-à-plusieurs-colonnes"><i class="fa fa-check"></i><b>17.2.1</b> Appliquer une fonction à plusieurs colonnes</a></li>
+<li class="chapter" data-level="17.2.2" data-path="17-dplyr-avance.html"><a href="17-dplyr-avance.html#passer-des-arguments-supplémentaires-à-la-fonction-appliquée"><i class="fa fa-check"></i><b>17.2.2</b> Passer des arguments supplémentaires à la fonction appliquée</a></li>
+<li class="chapter" data-level="17.2.3" data-path="17-dplyr-avance.html"><a href="17-dplyr-avance.html#noms-des-nouvelles-colonnes"><i class="fa fa-check"></i><b>17.2.3</b> Noms des nouvelles colonnes</a></li>
+<li class="chapter" data-level="17.2.4" data-path="17-dplyr-avance.html"><a href="17-dplyr-avance.html#appliquer-plusieurs-fonctions-à-plusieurs-colonnes"><i class="fa fa-check"></i><b>17.2.4</b> Appliquer plusieurs fonctions à plusieurs colonnes</a></li>
+<li class="chapter" data-level="17.2.5" data-path="17-dplyr-avance.html"><a href="17-dplyr-avance.html#renommer-plusieurs-colonnes-avec-une-fonction"><i class="fa fa-check"></i><b>17.2.5</b> Renommer plusieurs colonnes avec une fonction</a></li>
+</ul></li>
+<li class="chapter" data-level="17.3" data-path="17-dplyr-avance.html"><a href="17-dplyr-avance.html#rowwise-et-c_across-appliquer-une-transformation-ligne-par-ligne"><i class="fa fa-check"></i><b>17.3</b> <code>rowwise()</code> et <code>c_across()</code> : appliquer une transformation ligne par ligne</a></li>
+<li class="chapter" data-level="17.4" data-path="17-dplyr-avance.html"><a href="17-dplyr-avance.html#syntaxes-abregees"><i class="fa fa-check"></i><b>17.4</b> Fonctions anonymes et syntaxes abrégées</a></li>
+<li class="chapter" data-level="17.5" data-path="17-dplyr-avance.html"><a href="17-dplyr-avance.html#ressources-8"><i class="fa fa-check"></i><b>17.5</b> Ressources</a></li>
+<li class="chapter" data-level="17.6" data-path="17-dplyr-avance.html"><a href="17-dplyr-avance.html#exercices-10"><i class="fa fa-check"></i><b>17.6</b> Exercices</a><ul>
+<li class="chapter" data-level="17.6.1" data-path="17-dplyr-avance.html"><a href="17-dplyr-avance.html#appliquer-ses-propres-fonctions-1"><i class="fa fa-check"></i><b>17.6.1</b> Appliquer ses propres fonctions</a></li>
+<li class="chapter" data-level="17.6.2" data-path="17-dplyr-avance.html"><a href="17-dplyr-avance.html#across-1"><i class="fa fa-check"></i><b>17.6.2</b> <code>across()</code></a></li>
+<li class="chapter" data-level="17.6.3" data-path="17-dplyr-avance.html"><a href="17-dplyr-avance.html#rowwise-et-c_across"><i class="fa fa-check"></i><b>17.6.3</b> <code>rowwise()</code> et <code>c_across()</code></a></li>
+<li class="chapter" data-level="17.6.4" data-path="17-dplyr-avance.html"><a href="17-dplyr-avance.html#fonctions-anonymes-et-notations-abrégées"><i class="fa fa-check"></i><b>17.6.4</b> Fonctions anonymes et notations abrégées</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="18" data-path="18-purrr.html"><a href="18-purrr.html"><i class="fa fa-check"></i><b>18</b> Itérer avec <code>purrr</code></a><ul>
+<li class="chapter" data-level="18.1" data-path="18-purrr.html"><a href="18-purrr.html#exemple-dapplication"><i class="fa fa-check"></i><b>18.1</b> Exemple d’application</a></li>
+<li class="chapter" data-level="18.2" data-path="18-purrr.html"><a href="18-purrr.html#map-et-ses-variantes"><i class="fa fa-check"></i><b>18.2</b> <code>map</code> et ses variantes</a><ul>
+<li class="chapter" data-level="18.2.1" data-path="18-purrr.html"><a href="18-purrr.html#modes-dappel-de-map"><i class="fa fa-check"></i><b>18.2.1</b> Modes d’appel de <code>map</code></a></li>
+<li class="chapter" data-level="18.2.2" data-path="18-purrr.html"><a href="18-purrr.html#variantes-de-map"><i class="fa fa-check"></i><b>18.2.2</b> Variantes de <code>map</code></a></li>
+<li class="chapter" data-level="18.2.3" data-path="18-purrr.html"><a href="18-purrr.html#map_dfr-et-map_dfc"><i class="fa fa-check"></i><b>18.2.3</b> <code>map_dfr()</code> et <code>map_dfc()</code></a></li>
+</ul></li>
+<li class="chapter" data-level="18.3" data-path="18-purrr.html"><a href="18-purrr.html#itérer-sur-les-colonnes-dun-tableau-de-données"><i class="fa fa-check"></i><b>18.3</b> Itérer sur les colonnes d’un tableau de données</a></li>
+<li class="chapter" data-level="18.4" data-path="18-purrr.html"><a href="18-purrr.html#modify"><i class="fa fa-check"></i><b>18.4</b> <code>modify</code></a></li>
+<li class="chapter" data-level="18.5" data-path="18-purrr.html"><a href="18-purrr.html#imap"><i class="fa fa-check"></i><b>18.5</b> <code>imap</code></a></li>
+<li class="chapter" data-level="18.6" data-path="18-purrr.html"><a href="18-purrr.html#walk"><i class="fa fa-check"></i><b>18.6</b> <code>walk</code></a></li>
+<li class="chapter" data-level="18.7" data-path="18-purrr.html"><a href="18-purrr.html#map2-et-pmap-itérer-sur-plusieurs-vecteurs-en-parallèle"><i class="fa fa-check"></i><b>18.7</b> <code>map2</code> et <code>pmap</code> : itérer sur plusieurs vecteurs en parallèle</a></li>
+<li class="chapter" data-level="18.8" data-path="18-purrr.html"><a href="18-purrr.html#répéter-une-opération"><i class="fa fa-check"></i><b>18.8</b> Répéter une opération</a></li>
+<li class="chapter" data-level="18.9" data-path="18-purrr.html"><a href="18-purrr.html#quand-ne-pas-utiliser-map"><i class="fa fa-check"></i><b>18.9</b> Quand (ne pas) utiliser <code>map</code></a></li>
+<li class="chapter" data-level="18.10" data-path="18-purrr.html"><a href="18-purrr.html#purrr-vs-apply"><i class="fa fa-check"></i><b>18.10</b> <code>purrr</code> vs <code>*apply</code></a></li>
+<li class="chapter" data-level="18.11" data-path="18-purrr.html"><a href="18-purrr.html#ressources-9"><i class="fa fa-check"></i><b>18.11</b> Ressources</a></li>
+<li class="chapter" data-level="18.12" data-path="18-purrr.html"><a href="18-purrr.html#exercices-11"><i class="fa fa-check"></i><b>18.12</b> Exercices</a><ul>
+<li class="chapter" data-level="18.12.1" data-path="18-purrr.html"><a href="18-purrr.html#map-et-ses-variantes-1"><i class="fa fa-check"></i><b>18.12.1</b> <code>map</code> et ses variantes</a></li>
+<li class="chapter" data-level="18.12.2" data-path="18-purrr.html"><a href="18-purrr.html#modify-et-itération-sur-les-colonnes-dun-tableau"><i class="fa fa-check"></i><b>18.12.2</b> <code>modify</code> et itération sur les colonnes d’un tableau</a></li>
+<li class="chapter" data-level="18.12.3" data-path="18-purrr.html"><a href="18-purrr.html#imap-et-walk"><i class="fa fa-check"></i><b>18.12.3</b> <code>imap</code> et <code>walk</code></a></li>
+<li class="chapter" data-level="18.12.4" data-path="18-purrr.html"><a href="18-purrr.html#map2-et-pmap"><i class="fa fa-check"></i><b>18.12.4</b> <code>map2</code> et <code>pmap</code></a></li>
+<li class="chapter" data-level="18.12.5" data-path="18-purrr.html"><a href="18-purrr.html#répéter-une-opération-1"><i class="fa fa-check"></i><b>18.12.5</b> Répéter une opération</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="19" data-path="19-programmer-tidyverse.html"><a href="19-programmer-tidyverse.html"><i class="fa fa-check"></i><b>19</b> Programmer avec le <em>tidyverse</em></a><ul>
+<li class="chapter" data-level="19.1" data-path="19-programmer-tidyverse.html"><a href="19-programmer-tidyverse.html#spécificités-du-tidyverse"><i class="fa fa-check"></i><b>19.1</b> Spécificités du <em>tidyverse</em></a><ul>
+<li class="chapter" data-level="19.1.1" data-path="19-programmer-tidyverse.html"><a href="19-programmer-tidyverse.html#data-masking"><i class="fa fa-check"></i><b>19.1.1</b> <em>data masking</em></a></li>
+<li class="chapter" data-level="19.1.2" data-path="19-programmer-tidyverse.html"><a href="19-programmer-tidyverse.html#tidy-selection"><i class="fa fa-check"></i><b>19.1.2</b> <em>tidy selection</em></a></li>
+<li class="chapter" data-level="19.1.3" data-path="19-programmer-tidyverse.html"><a href="19-programmer-tidyverse.html#utilisation-dans-des-fonctions"><i class="fa fa-check"></i><b>19.1.3</b> Utilisation dans des fonctions</a></li>
+</ul></li>
+<li class="chapter" data-level="19.2" data-path="19-programmer-tidyverse.html"><a href="19-programmer-tidyverse.html#programmer-avec-dplyr-et-tidyr"><i class="fa fa-check"></i><b>19.2</b> Programmer avec <code>dplyr</code> et <code>tidyr</code></a><ul>
+<li class="chapter" data-level="19.2.1" data-path="19-programmer-tidyverse.html"><a href="19-programmer-tidyverse.html#utiliser-une-colonne-passée-en-argument"><i class="fa fa-check"></i><b>19.2.1</b> Utiliser une colonne passée en argument</a></li>
+<li class="chapter" data-level="19.2.2" data-path="19-programmer-tidyverse.html"><a href="19-programmer-tidyverse.html#utiliser-une-sélection-de-colonnes-passée-en-argument"><i class="fa fa-check"></i><b>19.2.2</b> Utiliser une sélection de colonnes passée en argument</a></li>
+<li class="chapter" data-level="19.2.3" data-path="19-programmer-tidyverse.html"><a href="19-programmer-tidyverse.html#nommer-de-nouvelles-colonnes-à-partir-dun-argument"><i class="fa fa-check"></i><b>19.2.3</b> Nommer de nouvelles colonnes à partir d’un argument</a></li>
+<li class="chapter" data-level="19.2.4" data-path="19-programmer-tidyverse.html"><a href="19-programmer-tidyverse.html#désambiguïser-data-et-env"><i class="fa fa-check"></i><b>19.2.4</b> Désambiguïser data et env</a></li>
+<li class="chapter" data-level="19.2.5" data-path="19-programmer-tidyverse.html"><a href="19-programmer-tidyverse.html#quand-les-arguments-sont-des-chaînes-de-caractères"><i class="fa fa-check"></i><b>19.2.5</b> Quand les arguments sont des chaînes de caractères</a></li>
+</ul></li>
+<li class="chapter" data-level="19.3" data-path="19-programmer-tidyverse.html"><a href="19-programmer-tidyverse.html#programmer-avec-ggplot2"><i class="fa fa-check"></i><b>19.3</b> Programmer avec <code>ggplot2</code></a><ul>
+<li class="chapter" data-level="19.3.1" data-path="19-programmer-tidyverse.html"><a href="19-programmer-tidyverse.html#sélection-de-colonnes-avec-aes"><i class="fa fa-check"></i><b>19.3.1</b> Sélection de colonnes avec <code>aes()</code></a></li>
+<li class="chapter" data-level="19.3.2" data-path="19-programmer-tidyverse.html"><a href="19-programmer-tidyverse.html#faceting-1"><i class="fa fa-check"></i><b>19.3.2</b> Faceting</a></li>
+</ul></li>
+<li class="chapter" data-level="19.4" data-path="19-programmer-tidyverse.html"><a href="19-programmer-tidyverse.html#aide-mémoire"><i class="fa fa-check"></i><b>19.4</b> Aide-mémoire</a></li>
+<li class="chapter" data-level="19.5" data-path="19-programmer-tidyverse.html"><a href="19-programmer-tidyverse.html#ressources-10"><i class="fa fa-check"></i><b>19.5</b> Ressources</a></li>
+<li class="chapter" data-level="19.6" data-path="19-programmer-tidyverse.html"><a href="19-programmer-tidyverse.html#exercices-12"><i class="fa fa-check"></i><b>19.6</b> Exercices</a><ul>
+<li class="chapter" data-level="19.6.1" data-path="19-programmer-tidyverse.html"><a href="19-programmer-tidyverse.html#dplyr-et-tidyr"><i class="fa fa-check"></i><b>19.6.1</b> <code>dplyr</code> et <code>tidyr</code></a></li>
+<li class="chapter" data-level="19.6.2" data-path="19-programmer-tidyverse.html"><a href="19-programmer-tidyverse.html#noms-de-colonnes-en-chaînes-de-caractères"><i class="fa fa-check"></i><b>19.6.2</b> Noms de colonnes en chaînes de caractères</a></li>
+<li class="chapter" data-level="19.6.3" data-path="19-programmer-tidyverse.html"><a href="19-programmer-tidyverse.html#ambiguïté-data-env"><i class="fa fa-check"></i><b>19.6.3</b> Ambiguïté <code>data</code> / <code>env</code></a></li>
+<li class="chapter" data-level="19.6.4" data-path="19-programmer-tidyverse.html"><a href="19-programmer-tidyverse.html#ggplot2-1"><i class="fa fa-check"></i><b>19.6.4</b> <code>ggplot2</code></a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="20" data-path="20-targets.html"><a href="20-targets.html"><i class="fa fa-check"></i><b>20</b> Organiser un projet avec <code>targets</code></a><ul>
+<li class="chapter" data-level="20.1" data-path="20-targets.html"><a href="20-targets.html#définition-du-pipeline"><i class="fa fa-check"></i><b>20.1</b> Définition du pipeline</a><ul>
+<li class="chapter" data-level="20.1.1" data-path="20-targets.html"><a href="20-targets.html#projet-dexemple"><i class="fa fa-check"></i><b>20.1.1</b> Projet d’exemple</a></li>
+<li class="chapter" data-level="20.1.2" data-path="20-targets.html"><a href="20-targets.html#targets.r"><i class="fa fa-check"></i><b>20.1.2</b> <code>_targets.R</code></a></li>
+</ul></li>
+<li class="chapter" data-level="20.2" data-path="20-targets.html"><a href="20-targets.html#exécution-du-pipeline"><i class="fa fa-check"></i><b>20.2</b> Exécution du pipeline</a></li>
+<li class="chapter" data-level="20.3" data-path="20-targets.html"><a href="20-targets.html#modification-du-pipeline"><i class="fa fa-check"></i><b>20.3</b> Modification du pipeline</a></li>
+<li class="chapter" data-level="20.4" data-path="20-targets.html"><a href="20-targets.html#rmarkdown"><i class="fa fa-check"></i><b>20.4</b> RMarkdown</a></li>
+<li class="chapter" data-level="20.5" data-path="20-targets.html"><a href="20-targets.html#gestion-des-données-en-cache"><i class="fa fa-check"></i><b>20.5</b> Gestion des données en cache</a></li>
+<li class="chapter" data-level="20.6" data-path="20-targets.html"><a href="20-targets.html#avantages-et-limites"><i class="fa fa-check"></i><b>20.6</b> Avantages et limites</a><ul>
+<li class="chapter" data-level="20.6.1" data-path="20-targets.html"><a href="20-targets.html#avantages"><i class="fa fa-check"></i><b>20.6.1</b> Avantages</a></li>
+<li class="chapter" data-level="20.6.2" data-path="20-targets.html"><a href="20-targets.html#interactivité-et-développement-du-pipeline"><i class="fa fa-check"></i><b>20.6.2</b> Interactivité et développement du pipeline</a></li>
+</ul></li>
+<li class="chapter" data-level="20.7" data-path="20-targets.html"><a href="20-targets.html#ressources-11"><i class="fa fa-check"></i><b>20.7</b> Ressources</a></li>
+</ul></li>
+<li class="appendix"><span><b>Annexes</b></span></li>
+<li class="chapter" data-level="A" data-path="21-ressources.html"><a href="21-ressources.html"><i class="fa fa-check"></i><b>A</b> Ressources</a><ul>
+<li class="chapter" data-level="A.1" data-path="21-ressources.html"><a href="21-ressources.html#aide"><i class="fa fa-check"></i><b>A.1</b> Aide</a><ul>
+<li class="chapter" data-level="A.1.1" data-path="21-ressources.html"><a href="21-ressources.html#aide-de-r-et-rstudio"><i class="fa fa-check"></i><b>A.1.1</b> Aide de R et RStudio</a></li>
+<li class="chapter" data-level="A.1.2" data-path="21-ressources.html"><a href="21-ressources.html#aide-en-ligne"><i class="fa fa-check"></i><b>A.1.2</b> Aide en ligne</a></li>
+<li class="chapter" data-level="A.1.3" data-path="21-ressources.html"><a href="21-ressources.html#antisèches"><i class="fa fa-check"></i><b>A.1.3</b> Antisèches</a></li>
+<li class="chapter" data-level="A.1.4" data-path="21-ressources.html"><a href="21-ressources.html#où-poser-des-questions"><i class="fa fa-check"></i><b>A.1.4</b> Où poser des questions</a></li>
+</ul></li>
+<li class="chapter" data-level="A.2" data-path="21-ressources.html"><a href="21-ressources.html#ouvrages-blogs-moocs"><i class="fa fa-check"></i><b>A.2</b> Ouvrages, blogs, MOOCs…</a><ul>
+<li class="chapter" data-level="A.2.1" data-path="21-ressources.html"><a href="21-ressources.html#francophones"><i class="fa fa-check"></i><b>A.2.1</b> Francophones</a></li>
+<li class="chapter" data-level="A.2.2" data-path="21-ressources.html"><a href="21-ressources.html#anglophones"><i class="fa fa-check"></i><b>A.2.2</b> Anglophones</a></li>
+</ul></li>
+<li class="chapter" data-level="A.3" data-path="21-ressources.html"><a href="21-ressources.html#extensions-1"><i class="fa fa-check"></i><b>A.3</b> Extensions</a><ul>
+<li class="chapter" data-level="A.3.1" data-path="21-ressources.html"><a href="21-ressources.html#où-trouver-des-extensions-intéressantes"><i class="fa fa-check"></i><b>A.3.1</b> Où trouver des extensions intéressantes ?</a></li>
+<li class="chapter" data-level="A.3.2" data-path="21-ressources.html"><a href="21-ressources.html#lextension-questionr"><i class="fa fa-check"></i><b>A.3.2</b> L’extension <code>questionr</code></a></li>
+</ul></li>
+</ul></li>
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Introduction à R et au tidyverse</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="programmer-tidyverse" class="section level1">
+<h1><span class="header-section-number">Partie 19</span> Programmer avec le <em>tidyverse</em></h1>
+<p>Dans les parties précédentes, nous avons vu comment créer et utiliser nos propres fonctions. Cependant, un lectorat attentif aura remarqué que nous avons rigoureusement évité d’utiliser des fonctions du <em>tidyverse</em>, notamment de <code>dplyr</code>, de <code>tidyr</code> et de <code>ggplot2</code>, dans les fonctions que nous avons créées jusqu’ici.</p>
+<p>Nous allons voir dans cette section les spécificités liées à certaines fonctions du <em>tidyverse</em> et les manières de les utiliser pour programmer et les inclure dans nos propres fonctions.</p>
+<p>On commence avant toute chose par charger le <em>tidyverse</em> et le jeu de données <code>starwars</code> de <code>dplyr</code>.</p>
+<div class="sourceCode" id="cb1082"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1082-1" title="1"><span class="kw">library</span>(tidyverse)</a>
+<a class="sourceLine" id="cb1082-2" title="2"><span class="kw">data</span>(starwars)</a></code></pre></div>
+<div class="rmdnote">
+<p>
+Les notions et fonctions abordées dans cette partie sont propres aux extensions du <em>tidyverse</em>. Elles ne seront en général pas utilisables ailleurs dans R.
+</p>
+</div>
+<div id="spécificités-du-tidyverse" class="section level2">
+<h2><span class="header-section-number">19.1</span> Spécificités du <em>tidyverse</em></h2>
+<p>Les extensions du <em>tidyverse</em> fournissent une syntaxe lisible et agréable à utiliser lorsqu’on les utilise de manière interactive. Par exemple, si on veut filtrer les lignes et les colonnes d’un tableau de données en base R, on utilise quelque chose comme :</p>
+<div class="sourceCode" id="cb1083"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1083-1" title="1">starwars[starwars<span class="op">$</span>species <span class="op">==</span><span class="st"> &quot;Droid&quot;</span> <span class="op">&amp;</span><span class="st"> </span>starwars<span class="op">$</span>eye_color <span class="op">==</span><span class="st"> &quot;red&quot;</span>, <span class="kw">c</span>(<span class="st">&quot;height&quot;</span>, <span class="st">&quot;mass&quot;</span>)]</a></code></pre></div>
+<p>Tandis qu’avec <code>dplyr</code> on peut faire :</p>
+<div class="sourceCode" id="cb1084"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1084-1" title="1">starwars <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb1084-2" title="2"><span class="st">    </span><span class="kw">filter</span>(species <span class="op">==</span><span class="st"> &quot;Droid&quot;</span> <span class="op">&amp;</span><span class="st"> </span>eye_color <span class="op">==</span><span class="st"> &quot;red&quot;</span>) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb1084-3" title="3"><span class="st">    </span><span class="kw">select</span>(height, mass)</a></code></pre></div>
+<p>L’avantage de <code>dplyr</code> est double :</p>
+<ol style="list-style-type: decimal">
+<li>dans <code>filter</code>, on sait qu’on travaille à l’intérieur du tableau de données, on indique donc juste <code>species</code> et pas <code>starwars$species</code></li>
+<li>dans <code>select</code>, on peut indiquer les noms de colonnes en omettant les guillemets</li>
+</ol>
+<p>Cette simplification pour une utilisation interactive, la plus fréquente, entraîne cependant une complexification lorsqu’on souhaite utiliser ces fonctions pour programmer, notamment quand on veut les utiliser à l’intérieur d’autres fonctions.</p>
+<div id="data-masking" class="section level3">
+<h3><span class="header-section-number">19.1.1</span> <em>data masking</em></h3>
+<p>On part du tableau de données d’exemple suivant<a href="#fn38" class="footnote-ref" id="fnref38"><sup>38</sup></a>.</p>
+<div class="sourceCode" id="cb1085"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1085-1" title="1">restos &lt;-<span class="st"> </span><span class="kw">tibble</span>(</a>
+<a class="sourceLine" id="cb1085-2" title="2">    <span class="dt">nom =</span> <span class="kw">c</span>(<span class="st">&quot;Chez Jojo&quot;</span>, <span class="st">&quot;Vertige des sens&quot;</span>, <span class="st">&quot;Le Crousse&quot;</span>, <span class="st">&quot;Le bouchon coréen&quot;</span>, <span class="st">&quot;Le lampad&#39;hair&quot;</span>),</a>
+<a class="sourceLine" id="cb1085-3" title="3">    <span class="dt">style =</span> <span class="kw">c</span>(<span class="st">&quot;tradi&quot;</span>, <span class="st">&quot;gastro&quot;</span>, <span class="st">&quot;tradi&quot;</span>, <span class="st">&quot;gastro&quot;</span>, <span class="st">&quot;coiffure&quot;</span>),</a>
+<a class="sourceLine" id="cb1085-4" title="4">    <span class="dt">ville =</span> <span class="kw">c</span>(<span class="st">&quot;Ecully&quot;</span>, <span class="st">&quot;Lyon&quot;</span>, <span class="st">&quot;Lyon&quot;</span>, <span class="st">&quot;Lyon&quot;</span>, <span class="st">&quot;Ecully&quot;</span>),</a>
+<a class="sourceLine" id="cb1085-5" title="5">    <span class="dt">evaluation =</span> <span class="kw">c</span>(<span class="fl">4.6</span>, <span class="fl">3.2</span>, <span class="fl">3.3</span>, <span class="fl">4.1</span>, <span class="fl">1.2</span>),</a>
+<a class="sourceLine" id="cb1085-6" title="6">    <span class="dt">places =</span> <span class="kw">c</span>(<span class="dv">28</span>, <span class="dv">32</span>, <span class="dv">94</span>, <span class="dv">18</span>, <span class="dv">8</span>),</a>
+<a class="sourceLine" id="cb1085-7" title="7">    <span class="dt">note =</span> <span class="kw">c</span>(<span class="st">&quot;Pas mal&quot;</span>, <span class="st">&quot;Cher&quot;</span>, <span class="st">&quot;Ambiance jeune&quot;</span>, <span class="st">&quot;Original&quot;</span>, <span class="st">&quot;Euh ?&quot;</span>)</a>
+<a class="sourceLine" id="cb1085-8" title="8">)</a>
+<a class="sourceLine" id="cb1085-9" title="9"></a>
+<a class="sourceLine" id="cb1085-10" title="10">restos</a>
+<a class="sourceLine" id="cb1085-11" title="11"><span class="co">#&gt; # A tibble: 5 × 6</span></a>
+<a class="sourceLine" id="cb1085-12" title="12"><span class="co">#&gt;   nom               style    ville  evaluation places note          </span></a>
+<a class="sourceLine" id="cb1085-13" title="13"><span class="co">#&gt;   &lt;chr&gt;             &lt;chr&gt;    &lt;chr&gt;       &lt;dbl&gt;  &lt;dbl&gt; &lt;chr&gt;         </span></a>
+<a class="sourceLine" id="cb1085-14" title="14"><span class="co">#&gt; 1 Chez Jojo         tradi    Ecully        4.6     28 Pas mal       </span></a>
+<a class="sourceLine" id="cb1085-15" title="15"><span class="co">#&gt; 2 Vertige des sens  gastro   Lyon          3.2     32 Cher          </span></a>
+<a class="sourceLine" id="cb1085-16" title="16"><span class="co">#&gt; 3 Le Crousse        tradi    Lyon          3.3     94 Ambiance jeune</span></a>
+<a class="sourceLine" id="cb1085-17" title="17"><span class="co">#&gt; 4 Le bouchon coréen gastro   Lyon          4.1     18 Original      </span></a>
+<a class="sourceLine" id="cb1085-18" title="18"><span class="co">#&gt; 5 Le lampad&#39;hair    coiffure Ecully        1.2      8 Euh ?</span></a></code></pre></div>
+<p>Avec <code>dplyr</code>, on peut sélectionner une colonne du tableau avec :</p>
+<div class="sourceCode" id="cb1086"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1086-1" title="1">restos <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(note)</a>
+<a class="sourceLine" id="cb1086-2" title="2"><span class="co">#&gt; # A tibble: 5 × 1</span></a>
+<a class="sourceLine" id="cb1086-3" title="3"><span class="co">#&gt;   note          </span></a>
+<a class="sourceLine" id="cb1086-4" title="4"><span class="co">#&gt;   &lt;chr&gt;         </span></a>
+<a class="sourceLine" id="cb1086-5" title="5"><span class="co">#&gt; 1 Pas mal       </span></a>
+<a class="sourceLine" id="cb1086-6" title="6"><span class="co">#&gt; 2 Cher          </span></a>
+<a class="sourceLine" id="cb1086-7" title="7"><span class="co">#&gt; 3 Ambiance jeune</span></a>
+<a class="sourceLine" id="cb1086-8" title="8"><span class="co">#&gt; 4 Original      </span></a>
+<a class="sourceLine" id="cb1086-9" title="9"><span class="co">#&gt; 5 Euh ?</span></a></code></pre></div>
+<p>Dans cette expression, <code>note</code> ne se réfère pas à un objet <code>note</code> de notre environnement, mais à une variable du tableau de données <code>restos</code>.</p>
+<p>Que se passe-t-il si on passe à <code>select</code> non pas une colonne du tableau mais bien un objet de notre environnement ?</p>
+<div class="sourceCode" id="cb1087"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1087-1" title="1">x &lt;-<span class="st"> &quot;note&quot;</span></a>
+<a class="sourceLine" id="cb1087-2" title="2">restos <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(x)</a>
+<a class="sourceLine" id="cb1087-3" title="3"><span class="co">#&gt; # A tibble: 5 × 1</span></a>
+<a class="sourceLine" id="cb1087-4" title="4"><span class="co">#&gt;   note          </span></a>
+<a class="sourceLine" id="cb1087-5" title="5"><span class="co">#&gt;   &lt;chr&gt;         </span></a>
+<a class="sourceLine" id="cb1087-6" title="6"><span class="co">#&gt; 1 Pas mal       </span></a>
+<a class="sourceLine" id="cb1087-7" title="7"><span class="co">#&gt; 2 Cher          </span></a>
+<a class="sourceLine" id="cb1087-8" title="8"><span class="co">#&gt; 3 Ambiance jeune</span></a>
+<a class="sourceLine" id="cb1087-9" title="9"><span class="co">#&gt; 4 Original      </span></a>
+<a class="sourceLine" id="cb1087-10" title="10"><span class="co">#&gt; 5 Euh ?</span></a></code></pre></div>
+<p>Ça fonctionne aussi : en l’absence de colonne nommée <code>x</code>, <code>select</code> va aller chercher le <code>x</code> de notre environnement et utiliser sa valeur pour sélectionner la colonne par nom.</p>
+<p>Mais que se passe-t-il s’il existe à la fois une colonne du tableau et un objet de notre environnement du même nom ?</p>
+<div class="sourceCode" id="cb1088"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1088-1" title="1">note &lt;-<span class="st"> &quot;nom&quot;</span></a>
+<a class="sourceLine" id="cb1088-2" title="2">restos <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(note)</a>
+<a class="sourceLine" id="cb1088-3" title="3"><span class="co">#&gt; # A tibble: 5 × 1</span></a>
+<a class="sourceLine" id="cb1088-4" title="4"><span class="co">#&gt;   note          </span></a>
+<a class="sourceLine" id="cb1088-5" title="5"><span class="co">#&gt;   &lt;chr&gt;         </span></a>
+<a class="sourceLine" id="cb1088-6" title="6"><span class="co">#&gt; 1 Pas mal       </span></a>
+<a class="sourceLine" id="cb1088-7" title="7"><span class="co">#&gt; 2 Cher          </span></a>
+<a class="sourceLine" id="cb1088-8" title="8"><span class="co">#&gt; 3 Ambiance jeune</span></a>
+<a class="sourceLine" id="cb1088-9" title="9"><span class="co">#&gt; 4 Original      </span></a>
+<a class="sourceLine" id="cb1088-10" title="10"><span class="co">#&gt; 5 Euh ?</span></a></code></pre></div>
+<p>Dans ce cas, c’est la colonne du tableau qui a la priorité. On dit que <code>dplyr</code> fait du <em>data masking</em> : les objets de notre environnement sont “masqués” par les colonnes du même nom de notre tableau de données. On retrouve ce <em>data masking</em> dans d’autres fonctions comme <code>filter()</code>, <code>mutate()</code> ou <code>summarise()</code>, mais aussi dans la sélection des variables avec <code>aes()</code> pour les fonctions de <code>ggplot2</code>.</p>
+<p>Dans certains cas de figure, on peut vouloir outrepasser ce <em>data masking</em>. Par exemple, dans le cas suivant, la nouvelle colonne <code>note_michelin</code> n’est pas créée à partir des nouvelles données de l’objet <code>note</code>, mais à partir de celles de la colonne <code>note</code>.</p>
+<div class="sourceCode" id="cb1089"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1089-1" title="1">note &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">12</span>, <span class="dv">14</span>, <span class="dv">9</span>, <span class="dv">15</span>, <span class="ot">NA</span>)</a>
+<a class="sourceLine" id="cb1089-2" title="2">restos <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">mutate</span>(<span class="dt">note_michelin =</span> note)</a>
+<a class="sourceLine" id="cb1089-3" title="3"><span class="co">#&gt; # A tibble: 5 × 7</span></a>
+<a class="sourceLine" id="cb1089-4" title="4"><span class="co">#&gt;   nom               style    ville  evaluation places note           note_michelin</span></a>
+<a class="sourceLine" id="cb1089-5" title="5"><span class="co">#&gt;   &lt;chr&gt;             &lt;chr&gt;    &lt;chr&gt;       &lt;dbl&gt;  &lt;dbl&gt; &lt;chr&gt;          &lt;chr&gt;        </span></a>
+<a class="sourceLine" id="cb1089-6" title="6"><span class="co">#&gt; 1 Chez Jojo         tradi    Ecully        4.6     28 Pas mal        Pas mal      </span></a>
+<a class="sourceLine" id="cb1089-7" title="7"><span class="co">#&gt; 2 Vertige des sens  gastro   Lyon          3.2     32 Cher           Cher         </span></a>
+<a class="sourceLine" id="cb1089-8" title="8"><span class="co">#&gt; 3 Le Crousse        tradi    Lyon          3.3     94 Ambiance jeune Ambiance jeu…</span></a>
+<a class="sourceLine" id="cb1089-9" title="9"><span class="co">#&gt; 4 Le bouchon coréen gastro   Lyon          4.1     18 Original       Original     </span></a>
+<a class="sourceLine" id="cb1089-10" title="10"><span class="co">#&gt; 5 Le lampad&#39;hair    coiffure Ecully        1.2      8 Euh ?          Euh ?</span></a></code></pre></div>
+<p><em>“Il suffit de changer le nom de l’objet note pour qu’il ne corresponde à aucune colonne !”</em>, s’exclamera la lectrice ou le lecteur attentif.ve. Mais, outre que cela peut être source d’erreur, il est des cas où on ne connaît pas le nom des colonnes du tableau, par exemple quand l’opération se déroule dans une fonction et que le tableau est passé en paramètre :</p>
+<div class="sourceCode" id="cb1090"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1090-1" title="1">filtre_nom &lt;-<span class="st"> </span><span class="cf">function</span>(df, valeurs) {</a>
+<a class="sourceLine" id="cb1090-2" title="2">    df <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">filter</span>(nom <span class="op">==</span><span class="st"> </span>valeurs)</a>
+<a class="sourceLine" id="cb1090-3" title="3">}</a></code></pre></div>
+<p>Rien ne nous assure dans ce cas que le tableau <code>df</code> ne contient pas déjà une colonne nommée <code>valeurs</code> qui “masquerait” l’objet <code>valeurs</code> passé en argument…</p>
+<p>Pour pallier à ce problème, à chaque fois qu’on est dans un environnement où du <em>data masking</em> se produit, on peut utiliser deux “pronoms” spécifiques nommés <code>.data</code> et <code>.env</code> :</p>
+<ul>
+<li><code>.data$var</code> ou <code>.data[["var"]]</code> pointe vers l’objet <code>var</code> correspondant à une colonne du tableau de données</li>
+<li><code>.env$var</code> ou <code>.env[["var"]]</code> pointe vers l’objet <code>var</code> correspondant à un objet de notre environnement</li>
+</ul>
+<p>Avec ces deux outils, on peut donc explicitement choisir d’où viennent les données qu’on utilise.</p>
+<div class="sourceCode" id="cb1091"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1091-1" title="1">note &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">12</span>, <span class="dv">14</span>, <span class="dv">9</span>, <span class="dv">15</span>, <span class="ot">NA</span>)</a>
+<a class="sourceLine" id="cb1091-2" title="2">restos <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">mutate</span>(<span class="dt">note_michelin =</span> .env<span class="op">$</span>note)</a>
+<a class="sourceLine" id="cb1091-3" title="3"><span class="co">#&gt; # A tibble: 5 × 7</span></a>
+<a class="sourceLine" id="cb1091-4" title="4"><span class="co">#&gt;   nom               style    ville  evaluation places note           note_michelin</span></a>
+<a class="sourceLine" id="cb1091-5" title="5"><span class="co">#&gt;   &lt;chr&gt;             &lt;chr&gt;    &lt;chr&gt;       &lt;dbl&gt;  &lt;dbl&gt; &lt;chr&gt;                  &lt;dbl&gt;</span></a>
+<a class="sourceLine" id="cb1091-6" title="6"><span class="co">#&gt; 1 Chez Jojo         tradi    Ecully        4.6     28 Pas mal                   12</span></a>
+<a class="sourceLine" id="cb1091-7" title="7"><span class="co">#&gt; 2 Vertige des sens  gastro   Lyon          3.2     32 Cher                      14</span></a>
+<a class="sourceLine" id="cb1091-8" title="8"><span class="co">#&gt; 3 Le Crousse        tradi    Lyon          3.3     94 Ambiance jeune             9</span></a>
+<a class="sourceLine" id="cb1091-9" title="9"><span class="co">#&gt; 4 Le bouchon coréen gastro   Lyon          4.1     18 Original                  15</span></a>
+<a class="sourceLine" id="cb1091-10" title="10"><span class="co">#&gt; 5 Le lampad&#39;hair    coiffure Ecully        1.2      8 Euh ?                     NA</span></a>
+<a class="sourceLine" id="cb1091-11" title="11">restos <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">mutate</span>(<span class="dt">note =</span> <span class="kw">str_to_upper</span>(.data<span class="op">$</span>note))</a>
+<a class="sourceLine" id="cb1091-12" title="12"><span class="co">#&gt; # A tibble: 5 × 6</span></a>
+<a class="sourceLine" id="cb1091-13" title="13"><span class="co">#&gt;   nom               style    ville  evaluation places note          </span></a>
+<a class="sourceLine" id="cb1091-14" title="14"><span class="co">#&gt;   &lt;chr&gt;             &lt;chr&gt;    &lt;chr&gt;       &lt;dbl&gt;  &lt;dbl&gt; &lt;chr&gt;         </span></a>
+<a class="sourceLine" id="cb1091-15" title="15"><span class="co">#&gt; 1 Chez Jojo         tradi    Ecully        4.6     28 PAS MAL       </span></a>
+<a class="sourceLine" id="cb1091-16" title="16"><span class="co">#&gt; 2 Vertige des sens  gastro   Lyon          3.2     32 CHER          </span></a>
+<a class="sourceLine" id="cb1091-17" title="17"><span class="co">#&gt; 3 Le Crousse        tradi    Lyon          3.3     94 AMBIANCE JEUNE</span></a>
+<a class="sourceLine" id="cb1091-18" title="18"><span class="co">#&gt; 4 Le bouchon coréen gastro   Lyon          4.1     18 ORIGINAL      </span></a>
+<a class="sourceLine" id="cb1091-19" title="19"><span class="co">#&gt; 5 Le lampad&#39;hair    coiffure Ecully        1.2      8 EUH ?</span></a></code></pre></div>
+<p>En utilisant <code>.env</code>, on peut donc s’assurer que notre fonction <code>filtre_nom()</code> ci-dessus va bien prendre les valeurs dans notre environnement, donc dans l’argument passé à la fonction, et pas dans une éventuelle colonne qui porterait le même nom.</p>
+<div class="sourceCode" id="cb1092"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1092-1" title="1">filtre_nom &lt;-<span class="st"> </span><span class="cf">function</span>(df, valeurs) {</a>
+<a class="sourceLine" id="cb1092-2" title="2">    df <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">filter</span>(nom <span class="op">%in%</span><span class="st"> </span>.env<span class="op">$</span>valeurs)</a>
+<a class="sourceLine" id="cb1092-3" title="3">}</a>
+<a class="sourceLine" id="cb1092-4" title="4"></a>
+<a class="sourceLine" id="cb1092-5" title="5"><span class="kw">filtre_nom</span>(restos, <span class="kw">c</span>(<span class="st">&quot;Chez Jojo&quot;</span>, <span class="st">&quot;Le Crousse&quot;</span>))</a>
+<a class="sourceLine" id="cb1092-6" title="6"><span class="co">#&gt; # A tibble: 2 × 6</span></a>
+<a class="sourceLine" id="cb1092-7" title="7"><span class="co">#&gt;   nom        style ville  evaluation places note          </span></a>
+<a class="sourceLine" id="cb1092-8" title="8"><span class="co">#&gt;   &lt;chr&gt;      &lt;chr&gt; &lt;chr&gt;       &lt;dbl&gt;  &lt;dbl&gt; &lt;chr&gt;         </span></a>
+<a class="sourceLine" id="cb1092-9" title="9"><span class="co">#&gt; 1 Chez Jojo  tradi Ecully        4.6     28 Pas mal       </span></a>
+<a class="sourceLine" id="cb1092-10" title="10"><span class="co">#&gt; 2 Le Crousse tradi Lyon          3.3     94 Ambiance jeune</span></a></code></pre></div>
+</div>
+<div id="tidy-selection" class="section level3">
+<h3><span class="header-section-number">19.1.2</span> <em>tidy selection</em></h3>
+<p>Une autre spécificité de certaines fonctions du <em>tidyverse</em> réside dans le mode de sélection des colonnes basé sur un “mini-langage” permettant des expressions comme :</p>
+<div class="sourceCode" id="cb1093"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1093-1" title="1"><span class="kw">c</span>(height, mass)</a>
+<a class="sourceLine" id="cb1093-2" title="2">q1<span class="op">:</span>q10</a>
+<a class="sourceLine" id="cb1093-3" title="3"><span class="kw">where</span>(is.numeric) <span class="op">&amp;</span><span class="st"> </span><span class="op">!</span><span class="kw">contains</span>(id)</a></code></pre></div>
+<p>Cette méthode de sélection de colonnes est appelée <em>tidy selection</em> et on la retrouve dans plusieurs fonctions de <code>dplyr</code> et <code>tidyr</code>, comme <code>select()</code>, <code>across()</code>, <code>c_across()</code>, <code>pull()</code>, <code>pivot_longer()</code>, etc.</p>
+<div class="rmdnote">
+<p>
+La <em>tidy selection</em> est implémentée par le package <a href="https://tidyselect.r-lib.org/index.html">tidyselect</a> et on peut retrouver les différentes possibilités de ce mini-langage dans la vignette <a href="https://tidyselect.r-lib.org/reference/language.html">Selection language</a>.
+</p>
+</div>
+<p>On notera que la <em>tidy selection</em> fait appel au <em>data masking</em>, tout en y ajoutant des fonctions spécifiques.</p>
+</div>
+<div id="utilisation-dans-des-fonctions" class="section level3">
+<h3><span class="header-section-number">19.1.3</span> Utilisation dans des fonctions</h3>
+<p>Une difficulté liée au <em>data masking</em> survient quand les colonnes du tableau ne sont pas saisies directement mais proviennent d’un argument de fonction.</p>
+<p>Soit la fonction suivante qui prend en entrée un tableau de données et une colonne et retourne le résultat d’un <code>summmarise</code>.</p>
+<div class="sourceCode" id="cb1094"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1094-1" title="1">summarise_min &lt;-<span class="st"> </span><span class="cf">function</span>(df, col) {</a>
+<a class="sourceLine" id="cb1094-2" title="2">    df <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">summarise</span>(<span class="dt">min =</span> <span class="kw">min</span>(col))</a>
+<a class="sourceLine" id="cb1094-3" title="3">}</a></code></pre></div>
+<p>On voudrait pouvoir appeler cette fonction de la même manière qu’on utilise <code>summarise</code>, mais cela ne fonctionne pas :</p>
+<div class="sourceCode" id="cb1095"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1095-1" title="1"><span class="kw">summarise_min</span>(restos, evaluation)</a>
+<a class="sourceLine" id="cb1095-2" title="2"><span class="co">#&gt; Error: Problem with `summarise()` column `min`.</span></a>
+<a class="sourceLine" id="cb1095-3" title="3"><span class="co">#&gt; ℹ `min = min(col)`.</span></a>
+<a class="sourceLine" id="cb1095-4" title="4"><span class="co">#&gt; ✖ objet &#39;evaluation&#39; introuvable</span></a></code></pre></div>
+<p>Le message d’erreur nous dit que l’objet <code>evaluation</code> est introuvable. La raison n’est pas triviale, elle repose sur plusieurs mécanismes assez complexes liés à l’évaluation des expressions dans R, mais on pourrait résumer en disant que les fonctions du <em>tidyverse</em> utilisent leur propre mécanisme d’évaluation qui tient compte notamment du <em>data masking</em>. Or, quand on utilise l’argument <code>col</code> dans le <code>summarise</code> de notre fonction, c’est l’évaluation “normale” de R qui est utilisée : le <em>data masking</em> n’étant pas pris en compte, l’objet <code>evaluation</code> est recherché dans notre environnement plutôt que dans notre tableau, ce qui génère une erreur puisqu’aucun objet de ce nom n’existe en-dehors du tableau.</p>
+<p>Comme la <em>tidy selection</em> fait appel au <em>data masking</em>, elle génère le même type d’erreur :</p>
+<div class="sourceCode" id="cb1096"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1096-1" title="1">select_col &lt;-<span class="st"> </span><span class="cf">function</span>(df, col) {</a>
+<a class="sourceLine" id="cb1096-2" title="2">    df <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(col)</a>
+<a class="sourceLine" id="cb1096-3" title="3">}</a>
+<a class="sourceLine" id="cb1096-4" title="4"></a>
+<a class="sourceLine" id="cb1096-5" title="5"><span class="kw">select_col</span>(restos, evaluation)</a>
+<a class="sourceLine" id="cb1096-6" title="6"><span class="co">#&gt; Error: objet &#39;evaluation&#39; introuvable</span></a></code></pre></div>
+<p>C’est pourquoi les packages du <em>tidyverse</em> fournissent un opérateur permettant de “forcer” l’évaluation d’expressions selon la manière qu’elles attendent. Cet opérateur prend la forme de double accolades <code>{{ }}</code> et se nomme <em>curly curly</em>.</p>
+<p>Pour résoudre le problème de notre fonction <code>summarise_min()</code>, on peut donc simplement faire passer notre argument <code>col</code> dans l’opérateur <em>curly curly</em> :</p>
+<div class="sourceCode" id="cb1097"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1097-1" title="1">summarise_min &lt;-<span class="st"> </span><span class="cf">function</span>(df, col) {</a>
+<a class="sourceLine" id="cb1097-2" title="2">    df <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">summarise</span>(<span class="dt">min =</span> <span class="kw">min</span>({{ col }}))</a>
+<a class="sourceLine" id="cb1097-3" title="3">}</a>
+<a class="sourceLine" id="cb1097-4" title="4"></a>
+<a class="sourceLine" id="cb1097-5" title="5"><span class="kw">summarise_min</span>(restos, evaluation)</a>
+<a class="sourceLine" id="cb1097-6" title="6"><span class="co">#&gt; # A tibble: 1 × 1</span></a>
+<a class="sourceLine" id="cb1097-7" title="7"><span class="co">#&gt;     min</span></a>
+<a class="sourceLine" id="cb1097-8" title="8"><span class="co">#&gt;   &lt;dbl&gt;</span></a>
+<a class="sourceLine" id="cb1097-9" title="9"><span class="co">#&gt; 1   1.2</span></a></code></pre></div>
+<p>À noter que <em>curly curly</em> permet de passer en argument toute expression qui serait acceptée directement par les fonctions appelées. On peut donc combiner plusieurs colonnes, effectuer des opérations, etc.</p>
+<div class="sourceCode" id="cb1098"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1098-1" title="1"><span class="kw">summarise_min</span>(restos, evaluation <span class="op">*</span><span class="st"> </span><span class="dv">4</span>)</a>
+<a class="sourceLine" id="cb1098-2" title="2"><span class="co">#&gt; # A tibble: 1 × 1</span></a>
+<a class="sourceLine" id="cb1098-3" title="3"><span class="co">#&gt;     min</span></a>
+<a class="sourceLine" id="cb1098-4" title="4"><span class="co">#&gt;   &lt;dbl&gt;</span></a>
+<a class="sourceLine" id="cb1098-5" title="5"><span class="co">#&gt; 1   4.8</span></a></code></pre></div>
+<p>Et on peut même utiliser les pronoms <code>.data</code> et <code>.env</code> :</p>
+<div class="sourceCode" id="cb1099"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1099-1" title="1">evaluation &lt;-<span class="st"> </span><span class="dv">0</span><span class="op">:</span><span class="dv">5</span></a>
+<a class="sourceLine" id="cb1099-2" title="2"><span class="kw">summarise_min</span>(restos, .env<span class="op">$</span>evaluation)</a>
+<a class="sourceLine" id="cb1099-3" title="3"><span class="co">#&gt; # A tibble: 1 × 1</span></a>
+<a class="sourceLine" id="cb1099-4" title="4"><span class="co">#&gt;     min</span></a>
+<a class="sourceLine" id="cb1099-5" title="5"><span class="co">#&gt;   &lt;int&gt;</span></a>
+<a class="sourceLine" id="cb1099-6" title="6"><span class="co">#&gt; 1     0</span></a></code></pre></div>
+</div>
+</div>
+<div id="programmer-avec-dplyr-et-tidyr" class="section level2">
+<h2><span class="header-section-number">19.2</span> Programmer avec <code>dplyr</code> et <code>tidyr</code></h2>
+<div id="utiliser-une-colonne-passée-en-argument" class="section level3">
+<h3><span class="header-section-number">19.2.1</span> Utiliser une colonne passée en argument</h3>
+<p>Une opération courante quand on utilise les fonctions de <code>dplyr</code> ou <code>tidyr</code> dans une fonction est de prendre en argument une colonne à laquelle on souhaite accéder. Dans ce cas on doit utiliser l’opérateur <em>curly curly</em> et entourer les utilisations de l’argument contenant la colonne par une paire d’accolades.</p>
+<p>On a déjà vu un exemple précédemment avec <code>summarise()</code>.</p>
+<div class="sourceCode" id="cb1100"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1100-1" title="1">resume &lt;-<span class="st"> </span><span class="cf">function</span>(df, col) {</a>
+<a class="sourceLine" id="cb1100-2" title="2">    df <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">summarise</span>(</a>
+<a class="sourceLine" id="cb1100-3" title="3">        <span class="dt">moyenne =</span> <span class="kw">mean</span>({{ col }}),</a>
+<a class="sourceLine" id="cb1100-4" title="4">        <span class="dt">min =</span> <span class="kw">min</span>({{ col }}),</a>
+<a class="sourceLine" id="cb1100-5" title="5">        <span class="dt">max =</span> <span class="kw">max</span>({{ col }})</a>
+<a class="sourceLine" id="cb1100-6" title="6">    )</a>
+<a class="sourceLine" id="cb1100-7" title="7">}</a>
+<a class="sourceLine" id="cb1100-8" title="8"></a>
+<a class="sourceLine" id="cb1100-9" title="9"><span class="kw">resume</span>(restos, evaluation)</a>
+<a class="sourceLine" id="cb1100-10" title="10"><span class="co">#&gt; # A tibble: 1 × 3</span></a>
+<a class="sourceLine" id="cb1100-11" title="11"><span class="co">#&gt;   moyenne   min   max</span></a>
+<a class="sourceLine" id="cb1100-12" title="12"><span class="co">#&gt;     &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;</span></a>
+<a class="sourceLine" id="cb1100-13" title="13"><span class="co">#&gt; 1    3.28   1.2   4.6</span></a></code></pre></div>
+<p>C’est le cas dans toutes les fonctions qui font du <em>data masking</em>, comme <code>group_by()</code> :</p>
+<div class="sourceCode" id="cb1101"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1101-1" title="1">resume_groupe &lt;-<span class="st"> </span><span class="cf">function</span>(df, col_group, col_var) {</a>
+<a class="sourceLine" id="cb1101-2" title="2">    df <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb1101-3" title="3"><span class="st">        </span><span class="kw">group_by</span>({{ col_group }}) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb1101-4" title="4"><span class="st">        </span><span class="kw">summarise</span>(</a>
+<a class="sourceLine" id="cb1101-5" title="5">            <span class="dt">moyenne =</span> <span class="kw">mean</span>({{col_var}}),</a>
+<a class="sourceLine" id="cb1101-6" title="6">            <span class="dt">min =</span> <span class="kw">min</span>({{ col_var }}),</a>
+<a class="sourceLine" id="cb1101-7" title="7">            <span class="dt">max =</span> <span class="kw">max</span>({{ col_var }})</a>
+<a class="sourceLine" id="cb1101-8" title="8">        )</a>
+<a class="sourceLine" id="cb1101-9" title="9">}</a>
+<a class="sourceLine" id="cb1101-10" title="10"></a>
+<a class="sourceLine" id="cb1101-11" title="11"><span class="kw">resume_groupe</span>(restos, style, evaluation)</a>
+<a class="sourceLine" id="cb1101-12" title="12"><span class="co">#&gt; # A tibble: 3 × 4</span></a>
+<a class="sourceLine" id="cb1101-13" title="13"><span class="co">#&gt;   style    moyenne   min   max</span></a>
+<a class="sourceLine" id="cb1101-14" title="14"><span class="co">#&gt;   &lt;chr&gt;      &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;</span></a>
+<a class="sourceLine" id="cb1101-15" title="15"><span class="co">#&gt; 1 coiffure    1.2    1.2   1.2</span></a>
+<a class="sourceLine" id="cb1101-16" title="16"><span class="co">#&gt; 2 gastro      3.65   3.2   4.1</span></a>
+<a class="sourceLine" id="cb1101-17" title="17"><span class="co">#&gt; 3 tradi       3.95   3.3   4.6</span></a></code></pre></div>
+</div>
+<div id="utiliser-une-sélection-de-colonnes-passée-en-argument" class="section level3">
+<h3><span class="header-section-number">19.2.2</span> Utiliser une sélection de colonnes passée en argument</h3>
+<p>Dans la section précédente, on a utilisé à chaque fois une seule colonne. Si on souhaite grouper ou appliquer une fonction sur une série de colonnes, il faut alors utiliser <code>across()</code>.</p>
+<div class="sourceCode" id="cb1102"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1102-1" title="1">resume_groupe &lt;-<span class="st"> </span><span class="cf">function</span>(df, cols_group, cols_var) {</a>
+<a class="sourceLine" id="cb1102-2" title="2">    df <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb1102-3" title="3"><span class="st">        </span><span class="kw">group_by</span>(</a>
+<a class="sourceLine" id="cb1102-4" title="4">            <span class="kw">across</span>({{ cols_group }})</a>
+<a class="sourceLine" id="cb1102-5" title="5">        ) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb1102-6" title="6"><span class="st">        </span><span class="kw">summarise</span>(</a>
+<a class="sourceLine" id="cb1102-7" title="7">            <span class="kw">across</span>(</a>
+<a class="sourceLine" id="cb1102-8" title="8">                {{ cols_var }},</a>
+<a class="sourceLine" id="cb1102-9" title="9">                mean</a>
+<a class="sourceLine" id="cb1102-10" title="10">            )</a>
+<a class="sourceLine" id="cb1102-11" title="11">        )</a>
+<a class="sourceLine" id="cb1102-12" title="12">}</a></code></pre></div>
+<p>On peut du coup utiliser tous les modes de sélection de colonnes permises par la <em>tidy selection</em>.</p>
+<div class="sourceCode" id="cb1103"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1103-1" title="1"><span class="kw">resume_groupe</span>(restos, <span class="kw">c</span>(style, ville), <span class="kw">where</span>(is.numeric))</a>
+<a class="sourceLine" id="cb1103-2" title="2"><span class="co">#&gt; `summarise()` has grouped output by &#39;style&#39;. You can override using the `.groups` argument.</span></a>
+<a class="sourceLine" id="cb1103-3" title="3"><span class="co">#&gt; # A tibble: 4 × 4</span></a>
+<a class="sourceLine" id="cb1103-4" title="4"><span class="co">#&gt; # Groups:   style [3]</span></a>
+<a class="sourceLine" id="cb1103-5" title="5"><span class="co">#&gt;   style    ville  evaluation places</span></a>
+<a class="sourceLine" id="cb1103-6" title="6"><span class="co">#&gt;   &lt;chr&gt;    &lt;chr&gt;       &lt;dbl&gt;  &lt;dbl&gt;</span></a>
+<a class="sourceLine" id="cb1103-7" title="7"><span class="co">#&gt; 1 coiffure Ecully       1.2       8</span></a>
+<a class="sourceLine" id="cb1103-8" title="8"><span class="co">#&gt; 2 gastro   Lyon         3.65     25</span></a>
+<a class="sourceLine" id="cb1103-9" title="9"><span class="co">#&gt; 3 tradi    Ecully       4.6      28</span></a>
+<a class="sourceLine" id="cb1103-10" title="10"><span class="co">#&gt; 4 tradi    Lyon         3.3      94</span></a></code></pre></div>
+<p>De la même manière, si on utilise un argument de fonction pour sélectionner des variables avec <code>select()</code>, on doit l’entourer avec l’opérateur <em>curly curly</em>, et on peut dès lors utiliser toutes les possibilités de la <em>tidy selection</em>.</p>
+<div class="sourceCode" id="cb1104"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1104-1" title="1">select_cols &lt;-<span class="st"> </span><span class="cf">function</span>(df, cols) {</a>
+<a class="sourceLine" id="cb1104-2" title="2">    df <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>({{ cols }})</a>
+<a class="sourceLine" id="cb1104-3" title="3">}</a>
+<a class="sourceLine" id="cb1104-4" title="4"></a>
+<a class="sourceLine" id="cb1104-5" title="5">restos <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select_cols</span>(<span class="kw">where</span>(is.character) <span class="op">&amp;</span><span class="st"> </span><span class="op">!</span><span class="kw">c</span>(nom, note))</a>
+<a class="sourceLine" id="cb1104-6" title="6"><span class="co">#&gt; # A tibble: 5 × 2</span></a>
+<a class="sourceLine" id="cb1104-7" title="7"><span class="co">#&gt;   style    ville </span></a>
+<a class="sourceLine" id="cb1104-8" title="8"><span class="co">#&gt;   &lt;chr&gt;    &lt;chr&gt; </span></a>
+<a class="sourceLine" id="cb1104-9" title="9"><span class="co">#&gt; 1 tradi    Ecully</span></a>
+<a class="sourceLine" id="cb1104-10" title="10"><span class="co">#&gt; 2 gastro   Lyon  </span></a>
+<a class="sourceLine" id="cb1104-11" title="11"><span class="co">#&gt; 3 tradi    Lyon  </span></a>
+<a class="sourceLine" id="cb1104-12" title="12"><span class="co">#&gt; 4 gastro   Lyon  </span></a>
+<a class="sourceLine" id="cb1104-13" title="13"><span class="co">#&gt; 5 coiffure Ecully</span></a></code></pre></div>
+</div>
+<div id="nommer-de-nouvelles-colonnes-à-partir-dun-argument" class="section level3">
+<h3><span class="header-section-number">19.2.3</span> Nommer de nouvelles colonnes à partir d’un argument</h3>
+<p>On a vu comment utiliser des colonnes passées en argument pour accéder à leur contenu. On peut aussi vouloir passer en argument des noms de colonnes qu’on souhaite créer, par exemple avec un <code>mutate()</code> ou un <code>summarise()</code>.</p>
+<p>On pourrait essayer directement de la manière suivante, mais cela ne fonctionne pas car dans ce cas la colonne créée s’appelle “col_new”, et pas la valeur de l’argument <code>col_new</code>.</p>
+<div class="sourceCode" id="cb1105"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1105-1" title="1">calcule_pourcentage &lt;-<span class="st"> </span><span class="cf">function</span>(df, col_new, col_var) {</a>
+<a class="sourceLine" id="cb1105-2" title="2">    df <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb1105-3" title="3"><span class="st">        </span><span class="kw">mutate</span>(</a>
+<a class="sourceLine" id="cb1105-4" title="4">            <span class="dt">col_new =</span> {{ col_var }} <span class="op">/</span><span class="st"> </span><span class="kw">sum</span>({{ col_var }}) <span class="op">*</span><span class="st"> </span><span class="dv">100</span></a>
+<a class="sourceLine" id="cb1105-5" title="5">        )</a>
+<a class="sourceLine" id="cb1105-6" title="6">}</a>
+<a class="sourceLine" id="cb1105-7" title="7"></a>
+<a class="sourceLine" id="cb1105-8" title="8"><span class="kw">calcule_pourcentage</span>(restos, prop_places, places)</a>
+<a class="sourceLine" id="cb1105-9" title="9"><span class="co">#&gt; # A tibble: 5 × 7</span></a>
+<a class="sourceLine" id="cb1105-10" title="10"><span class="co">#&gt;   nom               style    ville  evaluation places note           col_new</span></a>
+<a class="sourceLine" id="cb1105-11" title="11"><span class="co">#&gt;   &lt;chr&gt;             &lt;chr&gt;    &lt;chr&gt;       &lt;dbl&gt;  &lt;dbl&gt; &lt;chr&gt;            &lt;dbl&gt;</span></a>
+<a class="sourceLine" id="cb1105-12" title="12"><span class="co">#&gt; 1 Chez Jojo         tradi    Ecully        4.6     28 Pas mal          15.6 </span></a>
+<a class="sourceLine" id="cb1105-13" title="13"><span class="co">#&gt; 2 Vertige des sens  gastro   Lyon          3.2     32 Cher             17.8 </span></a>
+<a class="sourceLine" id="cb1105-14" title="14"><span class="co">#&gt; 3 Le Crousse        tradi    Lyon          3.3     94 Ambiance jeune   52.2 </span></a>
+<a class="sourceLine" id="cb1105-15" title="15"><span class="co">#&gt; 4 Le bouchon coréen gastro   Lyon          4.1     18 Original         10   </span></a>
+<a class="sourceLine" id="cb1105-16" title="16"><span class="co">#&gt; 5 Le lampad&#39;hair    coiffure Ecully        1.2      8 Euh ?             4.44</span></a></code></pre></div>
+<p>Dans ce cas de figure, la syntaxe à utiliser est un peu plus complexe :</p>
+<ul>
+<li>on remplace l’opérateur <code>=</code> du <code>mutate()</code> par l’opérateur <code>:=</code> (appelé <em>walrus operator</em>)</li>
+<li>on place à gauche du <code>:=</code> une chaîne de caractères dans laquelle notre argument contenant le nom de la nouvelle variable est entouré d’une paire d’accolades.</li>
+</ul>
+<p>Voici ce que ça donne pour l’exemple ci-dessus :</p>
+<div class="sourceCode" id="cb1106"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1106-1" title="1">calcule_pourcentage &lt;-<span class="st"> </span><span class="cf">function</span>(df, col_new, col_var) {</a>
+<a class="sourceLine" id="cb1106-2" title="2">    df <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb1106-3" title="3"><span class="st">        </span><span class="kw">mutate</span>(</a>
+<a class="sourceLine" id="cb1106-4" title="4">            <span class="st">&quot;{{col_new}}&quot;</span> <span class="op">:</span><span class="er">=</span><span class="st"> </span>{{ col_var }} <span class="op">/</span><span class="st"> </span><span class="kw">sum</span>({{ col_var }}) <span class="op">*</span><span class="st"> </span><span class="dv">100</span></a>
+<a class="sourceLine" id="cb1106-5" title="5">        )</a>
+<a class="sourceLine" id="cb1106-6" title="6">}</a>
+<a class="sourceLine" id="cb1106-7" title="7"></a>
+<a class="sourceLine" id="cb1106-8" title="8"><span class="kw">calcule_pourcentage</span>(restos, prop_places, places)</a>
+<a class="sourceLine" id="cb1106-9" title="9"><span class="co">#&gt; # A tibble: 5 × 7</span></a>
+<a class="sourceLine" id="cb1106-10" title="10"><span class="co">#&gt;   nom               style    ville  evaluation places note           prop_places</span></a>
+<a class="sourceLine" id="cb1106-11" title="11"><span class="co">#&gt;   &lt;chr&gt;             &lt;chr&gt;    &lt;chr&gt;       &lt;dbl&gt;  &lt;dbl&gt; &lt;chr&gt;                &lt;dbl&gt;</span></a>
+<a class="sourceLine" id="cb1106-12" title="12"><span class="co">#&gt; 1 Chez Jojo         tradi    Ecully        4.6     28 Pas mal              15.6 </span></a>
+<a class="sourceLine" id="cb1106-13" title="13"><span class="co">#&gt; 2 Vertige des sens  gastro   Lyon          3.2     32 Cher                 17.8 </span></a>
+<a class="sourceLine" id="cb1106-14" title="14"><span class="co">#&gt; 3 Le Crousse        tradi    Lyon          3.3     94 Ambiance jeune       52.2 </span></a>
+<a class="sourceLine" id="cb1106-15" title="15"><span class="co">#&gt; 4 Le bouchon coréen gastro   Lyon          4.1     18 Original             10   </span></a>
+<a class="sourceLine" id="cb1106-16" title="16"><span class="co">#&gt; 5 Le lampad&#39;hair    coiffure Ecully        1.2      8 Euh ?                 4.44</span></a></code></pre></div>
+<p>Cette syntaxe est un peu complexe de prime abord, mais elle à l’avantage d’être souple : en particulier, on peut placer le texte que l’on souhaite dans la chaîne de caractères en plus des noms de variables entre double accolades.</p>
+<p>Cela permet par exemple de générer le nom d’une nouvelle variable automatiquement à partir de l’ancienne.</p>
+<div class="sourceCode" id="cb1107"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1107-1" title="1">calcule_pourcentage &lt;-<span class="st"> </span><span class="cf">function</span>(df, col_var) {</a>
+<a class="sourceLine" id="cb1107-2" title="2">    df <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb1107-3" title="3"><span class="st">        </span><span class="kw">mutate</span>(</a>
+<a class="sourceLine" id="cb1107-4" title="4">            <span class="st">&quot;prop_{{col_var}}&quot;</span> <span class="op">:</span><span class="er">=</span><span class="st"> </span>{{ col_var }} <span class="op">/</span><span class="st"> </span><span class="kw">sum</span>({{ col_var }}) <span class="op">*</span><span class="st"> </span><span class="dv">100</span></a>
+<a class="sourceLine" id="cb1107-5" title="5">        )</a>
+<a class="sourceLine" id="cb1107-6" title="6">}</a>
+<a class="sourceLine" id="cb1107-7" title="7"></a>
+<a class="sourceLine" id="cb1107-8" title="8"><span class="kw">calcule_pourcentage</span>(restos, places)</a>
+<a class="sourceLine" id="cb1107-9" title="9"><span class="co">#&gt; # A tibble: 5 × 7</span></a>
+<a class="sourceLine" id="cb1107-10" title="10"><span class="co">#&gt;   nom               style    ville  evaluation places note           prop_places</span></a>
+<a class="sourceLine" id="cb1107-11" title="11"><span class="co">#&gt;   &lt;chr&gt;             &lt;chr&gt;    &lt;chr&gt;       &lt;dbl&gt;  &lt;dbl&gt; &lt;chr&gt;                &lt;dbl&gt;</span></a>
+<a class="sourceLine" id="cb1107-12" title="12"><span class="co">#&gt; 1 Chez Jojo         tradi    Ecully        4.6     28 Pas mal              15.6 </span></a>
+<a class="sourceLine" id="cb1107-13" title="13"><span class="co">#&gt; 2 Vertige des sens  gastro   Lyon          3.2     32 Cher                 17.8 </span></a>
+<a class="sourceLine" id="cb1107-14" title="14"><span class="co">#&gt; 3 Le Crousse        tradi    Lyon          3.3     94 Ambiance jeune       52.2 </span></a>
+<a class="sourceLine" id="cb1107-15" title="15"><span class="co">#&gt; 4 Le bouchon coréen gastro   Lyon          4.1     18 Original             10   </span></a>
+<a class="sourceLine" id="cb1107-16" title="16"><span class="co">#&gt; 5 Le lampad&#39;hair    coiffure Ecully        1.2      8 Euh ?                 4.44</span></a></code></pre></div>
+<p>Ou de personnaliser les noms de colonnes dans un <code>summarise()</code>.</p>
+<div class="sourceCode" id="cb1108"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1108-1" title="1">resume &lt;-<span class="st"> </span><span class="cf">function</span>(df, col) {</a>
+<a class="sourceLine" id="cb1108-2" title="2">    df <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">summarise</span>(</a>
+<a class="sourceLine" id="cb1108-3" title="3">        <span class="st">&quot;{{col}}_moyenne&quot;</span> <span class="op">:</span><span class="er">=</span><span class="st"> </span><span class="kw">mean</span>({{ col }}),</a>
+<a class="sourceLine" id="cb1108-4" title="4">        <span class="st">&quot;{{col}}_min&quot;</span> <span class="op">:</span><span class="er">=</span><span class="st"> </span><span class="kw">min</span>({{ col }}),</a>
+<a class="sourceLine" id="cb1108-5" title="5">        <span class="st">&quot;{{col}}_max&quot;</span> <span class="op">:</span><span class="er">=</span><span class="st"> </span><span class="kw">max</span>({{ col }})</a>
+<a class="sourceLine" id="cb1108-6" title="6">    )</a>
+<a class="sourceLine" id="cb1108-7" title="7">}</a>
+<a class="sourceLine" id="cb1108-8" title="8"></a>
+<a class="sourceLine" id="cb1108-9" title="9"><span class="kw">resume</span>(restos, places)</a>
+<a class="sourceLine" id="cb1108-10" title="10"><span class="co">#&gt; # A tibble: 1 × 3</span></a>
+<a class="sourceLine" id="cb1108-11" title="11"><span class="co">#&gt;   places_moyenne places_min places_max</span></a>
+<a class="sourceLine" id="cb1108-12" title="12"><span class="co">#&gt;            &lt;dbl&gt;      &lt;dbl&gt;      &lt;dbl&gt;</span></a>
+<a class="sourceLine" id="cb1108-13" title="13"><span class="co">#&gt; 1             36          8         94</span></a></code></pre></div>
+</div>
+<div id="désambiguïser-data-et-env" class="section level3">
+<h3><span class="header-section-number">19.2.4</span> Désambiguïser data et env</h3>
+<p>Lorsqu’on utilise des fonctions de <code>dplyr</code> ou <code>tidyr</code> dans d’autres fonctions, il peut être utile de préciser, quand on accède à un objet dont on connaît le nom (c’est-à-dire dont le nom n’est pas passé en argument), si c’est un objet de type “data” (une colonne du tableau de données dans lequel on travaille) ou de type “env” (un objet de l’environnement dans lequel on travaille).</p>
+<p>Dans la fonction suivante, on calcule la moyenne d’une colonne numérique de <code>restos</code> selon les valeurs de la colonne <code>ville</code>, et on ne conserve que les villes pour lesquelles cette moyenne est supérieure à un certain seuil.</p>
+<div class="sourceCode" id="cb1109"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1109-1" title="1">stat_par_ville &lt;-<span class="st"> </span><span class="cf">function</span>(col_var, <span class="dt">seuil =</span> <span class="ot">NULL</span>) {</a>
+<a class="sourceLine" id="cb1109-2" title="2">    res &lt;-<span class="st"> </span>restos <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb1109-3" title="3"><span class="st">        </span><span class="kw">group_by</span>(.data<span class="op">$</span>ville) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb1109-4" title="4"><span class="st">        </span><span class="kw">summarise</span>(<span class="dt">moyenne =</span> <span class="kw">mean</span>({{col_var}})) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb1109-5" title="5"><span class="st">        </span><span class="kw">filter</span>(moyenne <span class="op">&gt;</span><span class="st"> </span>.env<span class="op">$</span>seuil)</a>
+<a class="sourceLine" id="cb1109-6" title="6">}</a>
+<a class="sourceLine" id="cb1109-7" title="7"></a>
+<a class="sourceLine" id="cb1109-8" title="8"><span class="kw">stat_par_ville</span>(evaluation, <span class="dt">seuil =</span> <span class="dv">0</span>)</a>
+<a class="sourceLine" id="cb1109-9" title="9"><span class="kw">stat_par_ville</span>(evaluation, <span class="dt">seuil =</span> <span class="dv">3</span>)</a></code></pre></div>
+<p>On veut que l’objet <code>ville</code> du <code>group_by</code> soit toujours la colonne du tableau <code>restos</code> nommée <code>ville</code>, on peut donc s’assurer que c’est bien le cas en l’explicitant avec <code>.data$ville</code>. À l’inverse, on veut que la valeur <code>seuil</code> du <code>filter</code> soit celle de l’argument du même nom, donc d’un objet de l’environnement. On peut s’en assurer en indiquant <code>.env$seuil</code>.</p>
+<p>Cette explicitation ne paraît pas forcément utile à première vue, mais elle peut éviter des problèmes à terme, notamment si on ajoute de nouvelles colonnes à un tableau de données et qu’on finit par avoir des objets “data” et des objets “env” avec le même nom.</p>
+</div>
+<div id="quand-les-arguments-sont-des-chaînes-de-caractères" class="section level3">
+<h3><span class="header-section-number">19.2.5</span> Quand les arguments sont des chaînes de caractères</h3>
+<p>Jusqu’ici, on a passé les arguments de fonction sous la forme d’expressions ou de symboles.</p>
+<div class="sourceCode" id="cb1110"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1110-1" title="1"><span class="kw">resume</span>(restos, places)</a>
+<a class="sourceLine" id="cb1110-2" title="2"><span class="kw">summarise_min</span>(restos, evaluation <span class="op">*</span><span class="st"> </span><span class="dv">4</span>)</a></code></pre></div>
+<p>Mais il arrive que des noms de colonnes soient passés plutôt sous forme de chaînes de caractères.</p>
+<div class="sourceCode" id="cb1111"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1111-1" title="1"><span class="kw">resume</span>(restos, <span class="st">&quot;places&quot;</span>)</a>
+<a class="sourceLine" id="cb1111-2" title="2"><span class="kw">summarise_min</span>(restos, <span class="st">&quot;evaluation&quot;</span>)</a></code></pre></div>
+<p>On ne peut pas dans ce cas utiliser l’opérateur <em>curly curly</em>, par contre on peut utiliser le pronom <code>.data</code> pour accéder aux colonnes à partir de leur nom.</p>
+<div class="sourceCode" id="cb1112"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1112-1" title="1">summarise_min &lt;-<span class="st"> </span><span class="cf">function</span>(df, col) {</a>
+<a class="sourceLine" id="cb1112-2" title="2">    df <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">summarise</span>(<span class="dt">min =</span> <span class="kw">min</span>(.data[[col]]))</a>
+<a class="sourceLine" id="cb1112-3" title="3">}</a>
+<a class="sourceLine" id="cb1112-4" title="4"></a>
+<a class="sourceLine" id="cb1112-5" title="5"><span class="kw">summarise_min</span>(restos, <span class="st">&quot;evaluation&quot;</span>)</a>
+<a class="sourceLine" id="cb1112-6" title="6"><span class="co">#&gt; # A tibble: 1 × 1</span></a>
+<a class="sourceLine" id="cb1112-7" title="7"><span class="co">#&gt;     min</span></a>
+<a class="sourceLine" id="cb1112-8" title="8"><span class="co">#&gt;   &lt;dbl&gt;</span></a>
+<a class="sourceLine" id="cb1112-9" title="9"><span class="co">#&gt; 1   1.2</span></a></code></pre></div>
+<p>Si dans l’exemple précédent on souhaite personnaliser le nom de la colonne créée en utilisant la valeur de notre paramètre <code>evaluation</code>, on place le nom de notre objet dans une chaîne de caractère en l’entourant d’accolades simples, et on utilise le <em>walrus operator</em> <code>:=</code>.</p>
+<div class="sourceCode" id="cb1113"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1113-1" title="1">summarise_min &lt;-<span class="st"> </span><span class="cf">function</span>(df, col) {</a>
+<a class="sourceLine" id="cb1113-2" title="2">    df <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">summarise</span>(<span class="st">&quot;min_{col}&quot;</span> <span class="op">:</span><span class="er">=</span><span class="st"> </span><span class="kw">min</span>(.data[[col]]))</a>
+<a class="sourceLine" id="cb1113-3" title="3">}</a>
+<a class="sourceLine" id="cb1113-4" title="4"></a>
+<a class="sourceLine" id="cb1113-5" title="5"><span class="kw">summarise_min</span>(restos, <span class="st">&quot;evaluation&quot;</span>)</a>
+<a class="sourceLine" id="cb1113-6" title="6"><span class="co">#&gt; # A tibble: 1 × 1</span></a>
+<a class="sourceLine" id="cb1113-7" title="7"><span class="co">#&gt;   min_evaluation</span></a>
+<a class="sourceLine" id="cb1113-8" title="8"><span class="co">#&gt;            &lt;dbl&gt;</span></a>
+<a class="sourceLine" id="cb1113-9" title="9"><span class="co">#&gt; 1            1.2</span></a></code></pre></div>
+<p>Quand on veut plutôt sélectionner des colonnes avec <code>select()</code> ou <code>across()</code> et qu’on récupère les noms de ces colonnes dans un vecteur de chaînes de caractères, on doit utiliser les fonctions <code>all_of()</code> ou <code>any_of()</code>.</p>
+<div class="sourceCode" id="cb1114"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1114-1" title="1">evaluation_par_groupe &lt;-<span class="st"> </span><span class="cf">function</span>(cols_group) {</a>
+<a class="sourceLine" id="cb1114-2" title="2">    restos <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb1114-3" title="3"><span class="st">        </span><span class="kw">group_by</span>(</a>
+<a class="sourceLine" id="cb1114-4" title="4">            <span class="kw">across</span>(<span class="kw">all_of</span>(cols_group))</a>
+<a class="sourceLine" id="cb1114-5" title="5">        ) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb1114-6" title="6"><span class="st">        </span><span class="kw">summarise</span>(<span class="dt">evaluation =</span> <span class="kw">mean</span>(.data<span class="op">$</span>evaluation))</a>
+<a class="sourceLine" id="cb1114-7" title="7">}</a>
+<a class="sourceLine" id="cb1114-8" title="8"></a>
+<a class="sourceLine" id="cb1114-9" title="9"><span class="kw">evaluation_par_groupe</span>(<span class="st">&quot;ville&quot;</span>)</a>
+<a class="sourceLine" id="cb1114-10" title="10"><span class="co">#&gt; # A tibble: 2 × 2</span></a>
+<a class="sourceLine" id="cb1114-11" title="11"><span class="co">#&gt;   ville  evaluation</span></a>
+<a class="sourceLine" id="cb1114-12" title="12"><span class="co">#&gt;   &lt;chr&gt;       &lt;dbl&gt;</span></a>
+<a class="sourceLine" id="cb1114-13" title="13"><span class="co">#&gt; 1 Ecully       2.9 </span></a>
+<a class="sourceLine" id="cb1114-14" title="14"><span class="co">#&gt; 2 Lyon         3.53</span></a>
+<a class="sourceLine" id="cb1114-15" title="15"></a>
+<a class="sourceLine" id="cb1114-16" title="16"><span class="kw">evaluation_par_groupe</span>(<span class="kw">c</span>(<span class="st">&quot;ville&quot;</span>, <span class="st">&quot;style&quot;</span>))</a>
+<a class="sourceLine" id="cb1114-17" title="17"><span class="co">#&gt; `summarise()` has grouped output by &#39;ville&#39;. You can override using the `.groups` argument.</span></a>
+<a class="sourceLine" id="cb1114-18" title="18"><span class="co">#&gt; # A tibble: 4 × 3</span></a>
+<a class="sourceLine" id="cb1114-19" title="19"><span class="co">#&gt; # Groups:   ville [2]</span></a>
+<a class="sourceLine" id="cb1114-20" title="20"><span class="co">#&gt;   ville  style    evaluation</span></a>
+<a class="sourceLine" id="cb1114-21" title="21"><span class="co">#&gt;   &lt;chr&gt;  &lt;chr&gt;         &lt;dbl&gt;</span></a>
+<a class="sourceLine" id="cb1114-22" title="22"><span class="co">#&gt; 1 Ecully coiffure       1.2 </span></a>
+<a class="sourceLine" id="cb1114-23" title="23"><span class="co">#&gt; 2 Ecully tradi          4.6 </span></a>
+<a class="sourceLine" id="cb1114-24" title="24"><span class="co">#&gt; 3 Lyon   gastro         3.65</span></a>
+<a class="sourceLine" id="cb1114-25" title="25"><span class="co">#&gt; 4 Lyon   tradi          3.3</span></a></code></pre></div>
+<p>La différence entre <code>all_of()</code> et <code>any_of()</code> est que <code>all_of()</code> produira une erreur si l’une des variables n’est pas trouvée.</p>
+<div class="sourceCode" id="cb1115"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1115-1" title="1">select_all_cols &lt;-<span class="st"> </span><span class="cf">function</span>(cols) {</a>
+<a class="sourceLine" id="cb1115-2" title="2">    restos <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(<span class="kw">all_of</span>(cols))</a>
+<a class="sourceLine" id="cb1115-3" title="3">}</a>
+<a class="sourceLine" id="cb1115-4" title="4"></a>
+<a class="sourceLine" id="cb1115-5" title="5"><span class="kw">select_all_cols</span>(<span class="kw">c</span>(<span class="st">&quot;ville&quot;</span>, <span class="st">&quot;evaluation&quot;</span>, <span class="st">&quot;igloo&quot;</span>))</a>
+<a class="sourceLine" id="cb1115-6" title="6"><span class="co">#&gt; Error: Can&#39;t subset columns that don&#39;t exist.</span></a>
+<a class="sourceLine" id="cb1115-7" title="7"><span class="co">#&gt; ✖ Column `igloo` doesn&#39;t exist.</span></a></code></pre></div>
+<p>Tandis qu’<code>any_off()</code> renverra uniquement les colonnes existantes, sans générer d’erreur.</p>
+<div class="sourceCode" id="cb1116"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1116-1" title="1">select_any_cols &lt;-<span class="st"> </span><span class="cf">function</span>(cols) {</a>
+<a class="sourceLine" id="cb1116-2" title="2">    restos <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(<span class="kw">any_of</span>(cols))</a>
+<a class="sourceLine" id="cb1116-3" title="3">}</a>
+<a class="sourceLine" id="cb1116-4" title="4"></a>
+<a class="sourceLine" id="cb1116-5" title="5"><span class="kw">select_any_cols</span>(<span class="kw">c</span>(<span class="st">&quot;ville&quot;</span>, <span class="st">&quot;evaluation&quot;</span>, <span class="st">&quot;igloo&quot;</span>))</a>
+<a class="sourceLine" id="cb1116-6" title="6"><span class="co">#&gt; # A tibble: 5 × 2</span></a>
+<a class="sourceLine" id="cb1116-7" title="7"><span class="co">#&gt;   ville  evaluation</span></a>
+<a class="sourceLine" id="cb1116-8" title="8"><span class="co">#&gt;   &lt;chr&gt;       &lt;dbl&gt;</span></a>
+<a class="sourceLine" id="cb1116-9" title="9"><span class="co">#&gt; 1 Ecully        4.6</span></a>
+<a class="sourceLine" id="cb1116-10" title="10"><span class="co">#&gt; 2 Lyon          3.2</span></a>
+<a class="sourceLine" id="cb1116-11" title="11"><span class="co">#&gt; 3 Lyon          3.3</span></a>
+<a class="sourceLine" id="cb1116-12" title="12"><span class="co">#&gt; 4 Lyon          4.1</span></a>
+<a class="sourceLine" id="cb1116-13" title="13"><span class="co">#&gt; 5 Ecully        1.2</span></a></code></pre></div>
+</div>
+</div>
+<div id="programmer-avec-ggplot2" class="section level2">
+<h2><span class="header-section-number">19.3</span> Programmer avec <code>ggplot2</code></h2>
+<div id="sélection-de-colonnes-avec-aes" class="section level3">
+<h3><span class="header-section-number">19.3.1</span> Sélection de colonnes avec <code>aes()</code></h3>
+<p>Les règles pour sélectionner des colonnes dans un graphique <code>ggplot2</code> à partir d’arguments passés à une fonction sont les mêmes que celles vues précédemment pour <code>dplyr</code> et <code>tidyr</code> :</p>
+<ul>
+<li>si les noms sont passés sous forme de symboles ou d’expressions, on utilise l’opérateur <em>curly curly</em> (<code>{{ }}</code>)</li>
+</ul>
+<div class="sourceCode" id="cb1117"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1117-1" title="1">bar_graph &lt;-<span class="st"> </span><span class="cf">function</span>(df, col) {</a>
+<a class="sourceLine" id="cb1117-2" title="2">    <span class="kw">ggplot</span>(df) <span class="op">+</span></a>
+<a class="sourceLine" id="cb1117-3" title="3"><span class="st">        </span><span class="kw">geom_bar</span>(<span class="kw">aes</span>(<span class="dt">x =</span> {{ col }}), <span class="dt">fill =</span> <span class="st">&quot;skyblue&quot;</span>)</a>
+<a class="sourceLine" id="cb1117-4" title="4">}</a>
+<a class="sourceLine" id="cb1117-5" title="5"></a>
+<a class="sourceLine" id="cb1117-6" title="6"><span class="kw">bar_graph</span>(restos, ville)</a></code></pre></div>
+<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-1159-1.svg" width="672" /></p>
+<ul>
+<li>si les noms sont passés sous forme de chaînes de caractères, on utilise le pronom <code>.data</code></li>
+</ul>
+<div class="sourceCode" id="cb1118"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1118-1" title="1">bar_graph &lt;-<span class="st"> </span><span class="cf">function</span>(df, col) {</a>
+<a class="sourceLine" id="cb1118-2" title="2">    <span class="kw">ggplot</span>(df) <span class="op">+</span></a>
+<a class="sourceLine" id="cb1118-3" title="3"><span class="st">        </span><span class="kw">geom_bar</span>(<span class="kw">aes</span>(<span class="dt">x =</span> .data[[col]]), <span class="dt">fill =</span> <span class="st">&quot;skyblue&quot;</span>)</a>
+<a class="sourceLine" id="cb1118-4" title="4">}</a>
+<a class="sourceLine" id="cb1118-5" title="5"></a>
+<a class="sourceLine" id="cb1118-6" title="6"><span class="kw">bar_graph</span>(restos, <span class="st">&quot;ville&quot;</span>)</a></code></pre></div>
+<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-1160-1.svg" width="672" /></p>
+</div>
+<div id="faceting-1" class="section level3">
+<h3><span class="header-section-number">19.3.2</span> Faceting</h3>
+<p>Quand on utilise <code>facet_wrap()</code> ou <code>facet_grid()</code>, si la variable de faceting est donnée sous forme d’un symbole, on utilise <code>vars()</code> en conjonction avec l’opérateur <em>curly curly</em>.</p>
+<div class="sourceCode" id="cb1119"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1119-1" title="1">facet_points &lt;-<span class="st"> </span><span class="cf">function</span>(facet) {</a>
+<a class="sourceLine" id="cb1119-2" title="2">    <span class="kw">ggplot</span>(restos) <span class="op">+</span></a>
+<a class="sourceLine" id="cb1119-3" title="3"><span class="st">        </span><span class="kw">geom_point</span>(<span class="kw">aes</span>(<span class="dt">x =</span> .data<span class="op">$</span>evaluation, <span class="dt">y =</span> .data<span class="op">$</span>places)) <span class="op">+</span></a>
+<a class="sourceLine" id="cb1119-4" title="4"><span class="st">        </span><span class="kw">facet_wrap</span>(<span class="kw">vars</span>({{ facet }}))</a>
+<a class="sourceLine" id="cb1119-5" title="5">}</a>
+<a class="sourceLine" id="cb1119-6" title="6"></a>
+<a class="sourceLine" id="cb1119-7" title="7"><span class="kw">facet_points</span>(ville)</a></code></pre></div>
+<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-1161-1.svg" width="672" /></p>
+<p>Si la variable de faceting est donnée sous forme d’une chaîne de caractères , on utilise <code>vars()</code> en conjonction avec le pronom <code>.data</code>.</p>
+<div class="sourceCode" id="cb1120"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1120-1" title="1">facet_points &lt;-<span class="st"> </span><span class="cf">function</span>(facet) {</a>
+<a class="sourceLine" id="cb1120-2" title="2">    <span class="kw">ggplot</span>(restos) <span class="op">+</span></a>
+<a class="sourceLine" id="cb1120-3" title="3"><span class="st">        </span><span class="kw">geom_point</span>(<span class="kw">aes</span>(<span class="dt">x =</span> .data<span class="op">$</span>evaluation, <span class="dt">y =</span> .data<span class="op">$</span>places)) <span class="op">+</span></a>
+<a class="sourceLine" id="cb1120-4" title="4"><span class="st">        </span><span class="kw">facet_wrap</span>(<span class="kw">vars</span>(.data[[facet]]))</a>
+<a class="sourceLine" id="cb1120-5" title="5">}</a>
+<a class="sourceLine" id="cb1120-6" title="6"></a>
+<a class="sourceLine" id="cb1120-7" title="7"><span class="kw">facet_points</span>(<span class="st">&quot;ville&quot;</span>)</a></code></pre></div>
+<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-1162-1.svg" width="672" /></p>
+<p>Si on utilise <code>facet_grid()</code>, la fonction doit accepter deux variables de faceting comme arguments. Celles-ci peuvent ensuite être passées à <code>facet_grid()</code> via ses paramètres <code>rows</code> et <code>cols</code>.</p>
+<div class="sourceCode" id="cb1121"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1121-1" title="1">facet_points &lt;-<span class="st"> </span><span class="cf">function</span>(facet_row, facet_col) {</a>
+<a class="sourceLine" id="cb1121-2" title="2">    <span class="kw">ggplot</span>(restos) <span class="op">+</span></a>
+<a class="sourceLine" id="cb1121-3" title="3"><span class="st">        </span><span class="kw">geom_point</span>(<span class="kw">aes</span>(<span class="dt">x =</span> .data<span class="op">$</span>evaluation, <span class="dt">y =</span> .data<span class="op">$</span>places)) <span class="op">+</span></a>
+<a class="sourceLine" id="cb1121-4" title="4"><span class="st">        </span><span class="kw">facet_grid</span>(</a>
+<a class="sourceLine" id="cb1121-5" title="5">            <span class="dt">rows =</span> <span class="kw">vars</span>({{ facet_row }}),</a>
+<a class="sourceLine" id="cb1121-6" title="6">            <span class="dt">cols =</span> <span class="kw">vars</span>({{ facet_col }})</a>
+<a class="sourceLine" id="cb1121-7" title="7">        )</a>
+<a class="sourceLine" id="cb1121-8" title="8">}</a>
+<a class="sourceLine" id="cb1121-9" title="9"></a>
+<a class="sourceLine" id="cb1121-10" title="10"><span class="kw">facet_points</span>(ville, style)</a></code></pre></div>
+<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-1163-1.svg" width="672" /></p>
+</div>
+</div>
+<div id="aide-mémoire" class="section level2">
+<h2><span class="header-section-number">19.4</span> Aide-mémoire</h2>
+<p>On essaie de récapituler ici les points importants pour pouvoir les retrouver facilement.</p>
+<div class="rmdimportant">
+<p>
+Premier point important : les spécificités vues ici ne s’appliquent que quand on veut utiliser certaines fonctions du <em>tidyverse</em> (<code>dplyr</code>, <code>tidyr</code>, <code>ggplot2</code>) à l’intérieur d’autres fonctions. Plus spécifiquement, elles sont à prendre en compte quand on souhaite passer en argument d’une fonction des noms de colonnes qui seront utilisées par des fonctions du <em>tidyverse</em>.
+</p>
+<p>
+Elles ne s’appliquent pas si on passe en arguments d’autres paramètres comme le tableau de données qu’on souhaite utiliser, des valeurs numériques ou des chaînes de caractères qu’on souhaite récupérer telles quelles, etc.
+</p>
+</div>
+<ol style="list-style-type: decimal">
+<li><p>Dans le cas où deux objets du même nom pourraient exister à la fois comme colonne de notre tableau de données (objet <em>data</em>) et comme objet de notre environnement (objet <em>env</em>), on peut expliciter lequel on souhaite utiliser avec les pronoms <code>.data$var</code> et <code>.env$var</code></p></li>
+<li><p>Si un argument est une colonne passée sous la forme d’un symbole (<code>var</code>), on doit l’encadrer de l’opérateur <em>curly curly</em>.</p></li>
+</ol>
+<div class="sourceCode" id="cb1122"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1122-1" title="1">summarise_col &lt;-<span class="st"> </span><span class="cf">function</span>(df, col) {</a>
+<a class="sourceLine" id="cb1122-2" title="2">    df <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">summarise</span>(<span class="dt">moyenne =</span> <span class="kw">mean</span>({{ col }}, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>))</a>
+<a class="sourceLine" id="cb1122-3" title="3">}</a>
+<a class="sourceLine" id="cb1122-4" title="4"></a>
+<a class="sourceLine" id="cb1122-5" title="5"><span class="kw">summarise_col</span>(starwars, height)</a></code></pre></div>
+<ol start="3" style="list-style-type: decimal">
+<li>Si un argument est un nom de colonne passé sous la forme d’une chaîne de caractères (<code>"var"</code>), on y accède avec le pronom <code>.data</code> :</li>
+</ol>
+<div class="sourceCode" id="cb1123"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1123-1" title="1">summarise_col &lt;-<span class="st"> </span><span class="cf">function</span>(df, col_name) {</a>
+<a class="sourceLine" id="cb1123-2" title="2">    df <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">summarise</span>(<span class="dt">moyenne =</span> <span class="kw">mean</span>(.data[[col_name]], <span class="dt">na.rm =</span> <span class="ot">TRUE</span>))</a>
+<a class="sourceLine" id="cb1123-3" title="3">}</a>
+<a class="sourceLine" id="cb1123-4" title="4"></a>
+<a class="sourceLine" id="cb1123-5" title="5"><span class="kw">summarise_col</span>(starwars, <span class="st">&quot;height&quot;</span>)</a></code></pre></div>
+<ol start="4" style="list-style-type: decimal">
+<li>Si on utilise la <em>tidy selection</em> dans un <code>select()</code>, un <code>across()</code> ou une autre fonction, on l’encadre de l’opérateur <em>curly curly</em> :</li>
+</ol>
+<div class="sourceCode" id="cb1124"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1124-1" title="1">select_cols &lt;-<span class="st"> </span><span class="cf">function</span>(df, cols) {</a>
+<a class="sourceLine" id="cb1124-2" title="2">    df <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>({{ cols }})</a>
+<a class="sourceLine" id="cb1124-3" title="3">}</a>
+<a class="sourceLine" id="cb1124-4" title="4"></a>
+<a class="sourceLine" id="cb1124-5" title="5"><span class="kw">select_cols</span>(starwars, <span class="op">!</span><span class="kw">where</span>(is.list))</a></code></pre></div>
+<ol start="5" style="list-style-type: decimal">
+<li>Si on indique les noms de plusieurs colonnes sous la forme d’un vecteur de chaînes de caractères pour utilisation dans un <code>select()</code>, un <code>across()</code> ou une autre fonction acceptant la <em>tidy selection</em>, on utilise <code>all_of()</code> ou <code>any_of()</code> :</li>
+</ol>
+<div class="sourceCode" id="cb1125"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1125-1" title="1">select_cols &lt;-<span class="st"> </span><span class="cf">function</span>(df, col_names) {</a>
+<a class="sourceLine" id="cb1125-2" title="2">    df <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(<span class="kw">all_of</span>(col_names))</a>
+<a class="sourceLine" id="cb1125-3" title="3">}</a>
+<a class="sourceLine" id="cb1125-4" title="4"></a>
+<a class="sourceLine" id="cb1125-5" title="5"><span class="kw">select_cols</span>(starwars, <span class="kw">c</span>(<span class="st">&quot;height&quot;</span>, <span class="st">&quot;mass&quot;</span>))</a></code></pre></div>
+<ol start="6" style="list-style-type: decimal">
+<li>Si on souhaite créer une nouvelle colonne à partir de la valeur d’un argument, on l’utilise sous la forme d’une chaîne de caractères avec l’opérateur <em>walrus</em> <code>:=</code>. Si l’argument est un symbole on l’entoure avec <code>{{ }}</code>, si c’est une chaîne de caractères on l’entoure avec <code>{}</code> :</li>
+</ol>
+<div class="sourceCode" id="cb1126"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1126-1" title="1">add_mean_by_species &lt;-<span class="st"> </span><span class="cf">function</span>(col_var) {</a>
+<a class="sourceLine" id="cb1126-2" title="2">    starwars <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb1126-3" title="3"><span class="st">        </span><span class="kw">group_by</span>(species) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb1126-4" title="4"><span class="st">        </span><span class="kw">mutate</span>(<span class="st">&quot;moyenne_{{col_var}}&quot;</span> <span class="op">:</span><span class="er">=</span><span class="st"> </span><span class="kw">mean</span>({{ col_var}}))</a>
+<a class="sourceLine" id="cb1126-5" title="5">}</a>
+<a class="sourceLine" id="cb1126-6" title="6"></a>
+<a class="sourceLine" id="cb1126-7" title="7"><span class="kw">add_mean_by_species</span>(height)</a></code></pre></div>
+<p>Le schéma suivant récapitule les points précédents :</p>
+<p><img src="resources/figures/tidyeval.png" /></p>
+</div>
+<div id="ressources-10" class="section level2">
+<h2><span class="header-section-number">19.5</span> Ressources</h2>
+<p>Pour plus de détails sur la programmation avec les fonctions de <code>dplyr</code>, on pourra se reporter à la vignette <a href="https://dplyr.tidyverse.org/articles/programming.html">Programming with dplyr</a>.</p>
+<p>Pour l’utilisation de <code>ggplot2</code> dans des fonctions, on trouvera plus de détails dans la vignette <a href="https://ggplot2.tidyverse.org/articles/ggplot2-in-packages.html">Using ggplot2 in packages</a>.</p>
+<p>Les mécanismes d’évaluation et de métaprogrammation propres aux packages du <em>tidyverse</em> sont implémentés en grande partie dans le package <a href="https://rlang.r-lib.org/">rlang</a>.</p>
+<p>Enfin, pour une présentation approfondie des possibilités de métaprogrammation dans R en général, on pourra consulter le chapitre <a href="https://adv-r.hadley.nz/metaprogramming.html">Metaprogramming</a> de l’ouvrage en ligne <em>Advanced R</em>.</p>
+</div>
+<div id="exercices-12" class="section level2">
+<h2><span class="header-section-number">19.6</span> Exercices</h2>
+<div id="dplyr-et-tidyr" class="section level3">
+<h3><span class="header-section-number">19.6.1</span> <code>dplyr</code> et <code>tidyr</code></h3>
+<p><strong>Exercice 1.1</strong></p>
+<p>Créer une fonction <code>my_table</code> qui prend en arguments un tableau de données <code>df</code> et une variable <code>var</code> et qui renvoie le résultat de <code>count()</code> sur cette variable.</p>
+<p>Vérifier avec :</p>
+<div class="sourceCode" id="cb1127"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1127-1" title="1"><span class="kw">my_table</span>(starwars, gender)</a>
+<a class="sourceLine" id="cb1127-2" title="2"><span class="co">#&gt; # A tibble: 3 × 2</span></a>
+<a class="sourceLine" id="cb1127-3" title="3"><span class="co">#&gt;   gender        n</span></a>
+<a class="sourceLine" id="cb1127-4" title="4"><span class="co">#&gt;   &lt;chr&gt;     &lt;int&gt;</span></a>
+<a class="sourceLine" id="cb1127-5" title="5"><span class="co">#&gt; 1 feminine     17</span></a>
+<a class="sourceLine" id="cb1127-6" title="6"><span class="co">#&gt; 2 masculine    66</span></a>
+<a class="sourceLine" id="cb1127-7" title="7"><span class="co">#&gt; 3 &lt;NA&gt;          4</span></a></code></pre></div>
+
+<div class="solution-exo">
+<div class="sourceCode" id="cb1128"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1128-1" title="1">my_table &lt;-<span class="st"> </span><span class="cf">function</span>(df, var) {</a>
+<a class="sourceLine" id="cb1128-2" title="2">    df <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">count</span>({{ var }})</a>
+<a class="sourceLine" id="cb1128-3" title="3">}</a></code></pre></div>
+</div>
+
+<p>Modifier <code>my_table</code> pour qu’elle accepte trois arguments <code>df</code>, <code>var1</code> et <code>var2</code>, et qu’elle retourne le résultat du count appliqué à <code>var1</code> et à <code>var2</code>.</p>
+<div class="sourceCode" id="cb1129"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1129-1" title="1"><span class="kw">my_table</span>(starwars, gender, sex)</a>
+<a class="sourceLine" id="cb1129-2" title="2"><span class="co">#&gt; # A tibble: 6 × 3</span></a>
+<a class="sourceLine" id="cb1129-3" title="3"><span class="co">#&gt;   gender    sex                n</span></a>
+<a class="sourceLine" id="cb1129-4" title="4"><span class="co">#&gt;   &lt;chr&gt;     &lt;chr&gt;          &lt;int&gt;</span></a>
+<a class="sourceLine" id="cb1129-5" title="5"><span class="co">#&gt; 1 feminine  female            16</span></a>
+<a class="sourceLine" id="cb1129-6" title="6"><span class="co">#&gt; 2 feminine  none               1</span></a>
+<a class="sourceLine" id="cb1129-7" title="7"><span class="co">#&gt; 3 masculine hermaphroditic     1</span></a>
+<a class="sourceLine" id="cb1129-8" title="8"><span class="co">#&gt; 4 masculine male              60</span></a>
+<a class="sourceLine" id="cb1129-9" title="9"><span class="co">#&gt; 5 masculine none               5</span></a>
+<a class="sourceLine" id="cb1129-10" title="10"><span class="co">#&gt; 6 &lt;NA&gt;      &lt;NA&gt;               4</span></a></code></pre></div>
+
+<div class="solution-exo">
+<div class="sourceCode" id="cb1130"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1130-1" title="1">my_table &lt;-<span class="st"> </span><span class="cf">function</span>(df, var1, var2) {</a>
+<a class="sourceLine" id="cb1130-2" title="2">    df <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">count</span>({{ var1 }}, {{ var2 }})</a>
+<a class="sourceLine" id="cb1130-3" title="3">}</a></code></pre></div>
+</div>
+
+<p>Modifier <code>my_table</code> pour qu’elle accepte deux arguments <code>df</code> et <code>vars</code>, et qu’elle applique le <code>count</code> à toutes les variables indiquées dans <code>vars</code> en utilisant la <em>tidy selection</em>.</p>
+<div class="sourceCode" id="cb1131"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1131-1" title="1"><span class="kw">my_table</span>(starwars, <span class="kw">c</span>(gender, sex))</a>
+<a class="sourceLine" id="cb1131-2" title="2"><span class="co">#&gt; # A tibble: 6 × 3</span></a>
+<a class="sourceLine" id="cb1131-3" title="3"><span class="co">#&gt;   gender    sex                n</span></a>
+<a class="sourceLine" id="cb1131-4" title="4"><span class="co">#&gt;   &lt;chr&gt;     &lt;chr&gt;          &lt;int&gt;</span></a>
+<a class="sourceLine" id="cb1131-5" title="5"><span class="co">#&gt; 1 feminine  female            16</span></a>
+<a class="sourceLine" id="cb1131-6" title="6"><span class="co">#&gt; 2 feminine  none               1</span></a>
+<a class="sourceLine" id="cb1131-7" title="7"><span class="co">#&gt; 3 masculine hermaphroditic     1</span></a>
+<a class="sourceLine" id="cb1131-8" title="8"><span class="co">#&gt; 4 masculine male              60</span></a>
+<a class="sourceLine" id="cb1131-9" title="9"><span class="co">#&gt; 5 masculine none               5</span></a>
+<a class="sourceLine" id="cb1131-10" title="10"><span class="co">#&gt; 6 &lt;NA&gt;      &lt;NA&gt;               4</span></a></code></pre></div>
+
+<div class="solution-exo">
+<div class="sourceCode" id="cb1132"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1132-1" title="1">my_table &lt;-<span class="st"> </span><span class="cf">function</span>(df, vars) {</a>
+<a class="sourceLine" id="cb1132-2" title="2">    df <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb1132-3" title="3"><span class="st">        </span><span class="kw">count</span>(<span class="kw">across</span>({{ vars }}))</a>
+<a class="sourceLine" id="cb1132-4" title="4">}</a></code></pre></div>
+</div>
+
+<p><strong>Exercice 1.2</strong></p>
+<p>Le code suivant ajoute une nouvelle colonne <code>diff_height</code> au tableau <code>starwars</code>, qui contient la différence entre la valeur de <code>height</code> et sa moyenne selon les valeurs de <code>species</code>.</p>
+<div class="sourceCode" id="cb1133"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1133-1" title="1">starwars <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb1133-2" title="2"><span class="st">    </span><span class="kw">group_by</span>(species) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb1133-3" title="3"><span class="st">    </span><span class="kw">mutate</span>(<span class="dt">diff_height =</span> height <span class="op">-</span><span class="st"> </span><span class="kw">mean</span>(height, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>))</a></code></pre></div>
+<p>En utilisant ce code, créer une fonction <code>diff_mean_height</code> qui accepte un seul argument <code>by</code> et qui ajoute à <code>starwars</code> une colonne <code>diff_height</code> calculée de la même manière, mais en appliquant le <code>group_by</code> au <code>by</code> passé en paramètre.</p>
+
+<div class="solution-exo">
+<div class="sourceCode" id="cb1134"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1134-1" title="1">diff_mean_height &lt;-<span class="st"> </span><span class="cf">function</span>(by) {</a>
+<a class="sourceLine" id="cb1134-2" title="2">    starwars <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb1134-3" title="3"><span class="st">        </span><span class="kw">group_by</span>({{ by }}) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb1134-4" title="4"><span class="st">        </span><span class="kw">mutate</span>(<span class="dt">diff_height =</span> height <span class="op">-</span><span class="st"> </span><span class="kw">mean</span>(height, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>))</a>
+<a class="sourceLine" id="cb1134-5" title="5">}</a></code></pre></div>
+</div>
+
+<p>Modifier la fonction précédente en une nouvelle fonction <code>diff_mean</code>, qui prend deux arguments <code>by</code> et <code>var</code>, et qui applique la même transformation non pas à <code>height</code> mais à la variable passée dans <code>var</code>.</p>
+
+<div class="solution-exo">
+<div class="sourceCode" id="cb1135"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1135-1" title="1">diff_mean &lt;-<span class="st"> </span><span class="cf">function</span>(by, var) {</a>
+<a class="sourceLine" id="cb1135-2" title="2">    starwars <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb1135-3" title="3"><span class="st">        </span><span class="kw">group_by</span>({{ by }}) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb1135-4" title="4"><span class="st">        </span><span class="kw">mutate</span>(<span class="dt">diff_mean =</span> {{ var }} <span class="op">-</span><span class="st"> </span><span class="kw">mean</span>({{ var }}, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>))</a>
+<a class="sourceLine" id="cb1135-5" title="5">}</a></code></pre></div>
+</div>
+
+<p>Modifier la fonction pour que le nom de la colonne ajoutée ne soit pas <code>diff_mean</code> mais le nom de la variable passée dans <code>var</code> suivi du suffixe "_diff_mean".</p>
+
+<div class="solution-exo">
+<div class="sourceCode" id="cb1136"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1136-1" title="1">diff_mean &lt;-<span class="st"> </span><span class="cf">function</span>(by, var) {</a>
+<a class="sourceLine" id="cb1136-2" title="2">    starwars <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb1136-3" title="3"><span class="st">        </span><span class="kw">group_by</span>({{ by }}) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb1136-4" title="4"><span class="st">        </span><span class="kw">mutate</span>(<span class="st">&quot;{{var}}_diff_mean&quot;</span> <span class="op">:</span><span class="er">=</span><span class="st"> </span>{{ var }} <span class="op">-</span><span class="st"> </span><span class="kw">mean</span>({{ var }}, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>))</a>
+<a class="sourceLine" id="cb1136-5" title="5">}</a></code></pre></div>
+</div>
+
+<p>Modifier à nouveau <code>diff_mean</code> pour pouvoir passer à <code>by</code> plusieurs variables en utilisant la <em>tidy selection</em>.</p>
+
+<div class="solution-exo">
+<div class="sourceCode" id="cb1137"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1137-1" title="1">diff_mean &lt;-<span class="st"> </span><span class="cf">function</span>(by, var) {</a>
+<a class="sourceLine" id="cb1137-2" title="2">    starwars <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb1137-3" title="3"><span class="st">        </span><span class="kw">group_by</span>(<span class="kw">across</span>({{ by }})) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb1137-4" title="4"><span class="st">        </span><span class="kw">mutate</span>(<span class="st">&quot;{{var}}_diff_mean&quot;</span> <span class="op">:</span><span class="er">=</span><span class="st"> </span>{{ var }} <span class="op">-</span><span class="st"> </span><span class="kw">mean</span>({{ var }}, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>))</a>
+<a class="sourceLine" id="cb1137-5" title="5">}</a></code></pre></div>
+</div>
+
+<p><strong>Exercice 1.3</strong></p>
+<p>La fonction <code>unnest()</code> de <code>tidyr</code> permet de transformer une colonne contenant des valeurs de type liste en colonne “normale” en dupliquant les lignes autant de fois qu’il y a d’éléments dans chaque liste :</p>
+<div class="sourceCode" id="cb1138"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1138-1" title="1">starwars <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb1138-2" title="2"><span class="st">    </span><span class="kw">unnest</span>(films) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb1138-3" title="3"><span class="st">    </span><span class="kw">select</span>(name, films)</a>
+<a class="sourceLine" id="cb1138-4" title="4"><span class="co">#&gt; # A tibble: 173 × 2</span></a>
+<a class="sourceLine" id="cb1138-5" title="5"><span class="co">#&gt;    name           films                  </span></a>
+<a class="sourceLine" id="cb1138-6" title="6"><span class="co">#&gt;    &lt;chr&gt;          &lt;chr&gt;                  </span></a>
+<a class="sourceLine" id="cb1138-7" title="7"><span class="co">#&gt;  1 Luke Skywalker The Empire Strikes Back</span></a>
+<a class="sourceLine" id="cb1138-8" title="8"><span class="co">#&gt;  2 Luke Skywalker Revenge of the Sith    </span></a>
+<a class="sourceLine" id="cb1138-9" title="9"><span class="co">#&gt;  3 Luke Skywalker Return of the Jedi     </span></a>
+<a class="sourceLine" id="cb1138-10" title="10"><span class="co">#&gt;  4 Luke Skywalker A New Hope             </span></a>
+<a class="sourceLine" id="cb1138-11" title="11"><span class="co">#&gt;  5 Luke Skywalker The Force Awakens      </span></a>
+<a class="sourceLine" id="cb1138-12" title="12"><span class="co">#&gt;  6 C-3PO          The Empire Strikes Back</span></a>
+<a class="sourceLine" id="cb1138-13" title="13"><span class="co">#&gt;  7 C-3PO          Attack of the Clones   </span></a>
+<a class="sourceLine" id="cb1138-14" title="14"><span class="co">#&gt;  8 C-3PO          The Phantom Menace     </span></a>
+<a class="sourceLine" id="cb1138-15" title="15"><span class="co">#&gt;  9 C-3PO          Revenge of the Sith    </span></a>
+<a class="sourceLine" id="cb1138-16" title="16"><span class="co">#&gt; 10 C-3PO          Return of the Jedi     </span></a>
+<a class="sourceLine" id="cb1138-17" title="17"><span class="co">#&gt; # … with 163 more rows</span></a></code></pre></div>
+<p>Créer une fonction <code>freq_liste()</code> qui prend en entrée un argument <code>var</code> et retourne grâce à <code>count</code> le tri à plat de toutes les valeurs de la variable correspondant à <code>var</code> dans <code>starwars</code>, même si cette variable contient des listes.</p>
+<div class="sourceCode" id="cb1139"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1139-1" title="1"><span class="kw">freq_liste</span>(films)</a>
+<a class="sourceLine" id="cb1139-2" title="2"><span class="co">#&gt; # A tibble: 7 × 2</span></a>
+<a class="sourceLine" id="cb1139-3" title="3"><span class="co">#&gt;   films                       n</span></a>
+<a class="sourceLine" id="cb1139-4" title="4"><span class="co">#&gt;   &lt;chr&gt;                   &lt;int&gt;</span></a>
+<a class="sourceLine" id="cb1139-5" title="5"><span class="co">#&gt; 1 A New Hope                 18</span></a>
+<a class="sourceLine" id="cb1139-6" title="6"><span class="co">#&gt; 2 Attack of the Clones       40</span></a>
+<a class="sourceLine" id="cb1139-7" title="7"><span class="co">#&gt; 3 Return of the Jedi         20</span></a>
+<a class="sourceLine" id="cb1139-8" title="8"><span class="co">#&gt; 4 Revenge of the Sith        34</span></a>
+<a class="sourceLine" id="cb1139-9" title="9"><span class="co">#&gt; 5 The Empire Strikes Back    16</span></a>
+<a class="sourceLine" id="cb1139-10" title="10"><span class="co">#&gt; 6 The Force Awakens          11</span></a>
+<a class="sourceLine" id="cb1139-11" title="11"><span class="co">#&gt; 7 The Phantom Menace         34</span></a></code></pre></div>
+
+<div class="solution-exo">
+<div class="sourceCode" id="cb1140"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1140-1" title="1">freq_liste &lt;-<span class="st"> </span><span class="cf">function</span>(var) {</a>
+<a class="sourceLine" id="cb1140-2" title="2">    starwars <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb1140-3" title="3"><span class="st">        </span><span class="kw">unnest</span>({{ var }}) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb1140-4" title="4"><span class="st">        </span><span class="kw">count</span>({{ var }})</a>
+<a class="sourceLine" id="cb1140-5" title="5">}</a></code></pre></div>
+</div>
+
+</div>
+<div id="noms-de-colonnes-en-chaînes-de-caractères" class="section level3">
+<h3><span class="header-section-number">19.6.2</span> Noms de colonnes en chaînes de caractères</h3>
+<p><strong>Exercice 2.1</strong></p>
+<p>La fonction <code>readline()</code> permet de lire une chaîne de caractères entrée au clavier par l’utilisateur :</p>
+<div class="sourceCode" id="cb1141"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1141-1" title="1">v &lt;-<span class="st"> </span><span class="kw">readline</span>(<span class="st">&quot;Votre choix : &quot;</span>)</a></code></pre></div>
+<p>Créer une fonction <code>affiche_planete</code> qui affiche le message “Nom de la planète”, lit la réponse de l’utilisateur, et affiche à l’aide d’un <code>filter()</code> les lignes du tableau <code>starwars</code> pour lesquelles la variable <code>homeworld</code> correspond au nom saisi.</p>
+
+<div class="solution-exo">
+<div class="sourceCode" id="cb1142"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1142-1" title="1">affiche_planete &lt;-<span class="st"> </span><span class="cf">function</span>() {</a>
+<a class="sourceLine" id="cb1142-2" title="2">    var &lt;-<span class="st"> </span><span class="kw">readline</span>(<span class="st">&quot;Nom de la planète : &quot;</span>)</a>
+<a class="sourceLine" id="cb1142-3" title="3">    starwars <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">filter</span>(homeworld <span class="op">==</span><span class="st"> </span>var)</a>
+<a class="sourceLine" id="cb1142-4" title="4">}</a></code></pre></div>
+</div>
+
+<p>Créer une fonction <code>affiche_barplot</code> qui affiche le message “Nom de la variable”, lit la réponse de l’utilisateur, et affiche le diagramme en barres de la variable correspondante du tableau <code>starwars</code>.</p>
+
+<div class="solution-exo">
+<div class="sourceCode" id="cb1143"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1143-1" title="1">affiche_barplot &lt;-<span class="st"> </span><span class="cf">function</span>() {</a>
+<a class="sourceLine" id="cb1143-2" title="2">    var &lt;-<span class="st"> </span><span class="kw">readline</span>(<span class="st">&quot;Nom de la variable : &quot;</span>)</a>
+<a class="sourceLine" id="cb1143-3" title="3">    <span class="kw">ggplot</span>(starwars) <span class="op">+</span></a>
+<a class="sourceLine" id="cb1143-4" title="4"><span class="st">        </span><span class="kw">geom_bar</span>(<span class="kw">aes</span>(<span class="dt">x =</span> .data[[var]]))</a>
+<a class="sourceLine" id="cb1143-5" title="5">}</a></code></pre></div>
+</div>
+
+<p>Créer une fonction <code>affiche_colonnes</code> qui affiche le message “Noms des variables séparés par des virgules”, lit la réponse de l’utilisateur, et affiche uniquement les colonnes saisies du tableau <code>starwars</code>.</p>
+<p><em>Conseil :</em> pour récupérer un vecteur de colonnes à partir de la saisie de l’utilisateur, on pourra utiliser les fonctions <code>str_split()</code> et <code>str_trim()</code> de <code>stringr</code>.</p>
+
+<div class="solution-exo">
+<div class="sourceCode" id="cb1144"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1144-1" title="1">affiche_colonnes &lt;-<span class="st"> </span><span class="cf">function</span>() {</a>
+<a class="sourceLine" id="cb1144-2" title="2">    vars &lt;-<span class="st"> </span><span class="kw">readline</span>(<span class="st">&quot;Noms des variables séparés par des virgules : &quot;</span>)</a>
+<a class="sourceLine" id="cb1144-3" title="3">    vars &lt;-<span class="st"> </span><span class="kw">str_split</span>(vars, <span class="st">&quot;,&quot;</span>)[[<span class="dv">1</span>]]</a>
+<a class="sourceLine" id="cb1144-4" title="4">    vars &lt;-<span class="st"> </span><span class="kw">str_trim</span>(vars)</a>
+<a class="sourceLine" id="cb1144-5" title="5">    starwars <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(<span class="kw">all_of</span>(vars))</a>
+<a class="sourceLine" id="cb1144-6" title="6">}</a></code></pre></div>
+</div>
+
+</div>
+<div id="ambiguïté-data-env" class="section level3">
+<h3><span class="header-section-number">19.6.3</span> Ambiguïté <code>data</code> / <code>env</code></h3>
+<p><strong>Exercice 3.1</strong></p>
+<p>Créer une fonction <code>filter_height()</code> qui accepte un argument nommé <code>height</code>, et qui retourne les lignes de <code>starwars</code> pour lesquelles les valeurs de la variable <code>height</code> sont supérieures à celles de l’argument <code>height</code>. Créer cette fonction sans utiliser <code>dplyr</code> mais avec l’opérateur <code>[,]</code>.</p>
+<div class="sourceCode" id="cb1145"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1145-1" title="1"><span class="kw">filter_height</span>(<span class="dv">200</span>)</a>
+<a class="sourceLine" id="cb1145-2" title="2"><span class="co">#&gt; # A tibble: 16 × 14</span></a>
+<a class="sourceLine" id="cb1145-3" title="3"><span class="co">#&gt;    name    height  mass hair_color skin_color  eye_color birth_year sex   gender</span></a>
+<a class="sourceLine" id="cb1145-4" title="4"><span class="co">#&gt;    &lt;chr&gt;    &lt;int&gt; &lt;dbl&gt; &lt;chr&gt;      &lt;chr&gt;       &lt;chr&gt;          &lt;dbl&gt; &lt;chr&gt; &lt;chr&gt; </span></a>
+<a class="sourceLine" id="cb1145-5" title="5"><span class="co">#&gt;  1 Darth …    202   136 none       white       yellow          41.9 male  mascu…</span></a>
+<a class="sourceLine" id="cb1145-6" title="6"><span class="co">#&gt;  2 Chewba…    228   112 brown      unknown     blue           200   male  mascu…</span></a>
+<a class="sourceLine" id="cb1145-7" title="7"><span class="co">#&gt;  3 &lt;NA&gt;        NA    NA &lt;NA&gt;       &lt;NA&gt;        &lt;NA&gt;            NA   &lt;NA&gt;  &lt;NA&gt;  </span></a>
+<a class="sourceLine" id="cb1145-8" title="8"><span class="co">#&gt;  4 Roos T…    224    82 none       grey        orange          NA   male  mascu…</span></a>
+<a class="sourceLine" id="cb1145-9" title="9"><span class="co">#&gt;  5 Rugor …    206    NA none       green       orange          NA   male  mascu…</span></a>
+<a class="sourceLine" id="cb1145-10" title="10"><span class="co">#&gt;  6 Yarael…    264    NA none       white       yellow          NA   male  mascu…</span></a>
+<a class="sourceLine" id="cb1145-11" title="11"><span class="co">#&gt;  7 Lama Su    229    88 none       grey        black           NA   male  mascu…</span></a>
+<a class="sourceLine" id="cb1145-12" title="12"><span class="co">#&gt;  8 Taun We    213    NA none       grey        black           NA   fema… femin…</span></a>
+<a class="sourceLine" id="cb1145-13" title="13"><span class="co">#&gt;  9 Grievo…    216   159 none       brown, whi… green, y…       NA   male  mascu…</span></a>
+<a class="sourceLine" id="cb1145-14" title="14"><span class="co">#&gt; 10 Tarfful    234   136 brown      brown       blue            NA   male  mascu…</span></a>
+<a class="sourceLine" id="cb1145-15" title="15"><span class="co">#&gt; 11 Tion M…    206    80 none       grey        black           NA   male  mascu…</span></a>
+<a class="sourceLine" id="cb1145-16" title="16"><span class="co">#&gt; 12 &lt;NA&gt;        NA    NA &lt;NA&gt;       &lt;NA&gt;        &lt;NA&gt;            NA   &lt;NA&gt;  &lt;NA&gt;  </span></a>
+<a class="sourceLine" id="cb1145-17" title="17"><span class="co">#&gt; 13 &lt;NA&gt;        NA    NA &lt;NA&gt;       &lt;NA&gt;        &lt;NA&gt;            NA   &lt;NA&gt;  &lt;NA&gt;  </span></a>
+<a class="sourceLine" id="cb1145-18" title="18"><span class="co">#&gt; 14 &lt;NA&gt;        NA    NA &lt;NA&gt;       &lt;NA&gt;        &lt;NA&gt;            NA   &lt;NA&gt;  &lt;NA&gt;  </span></a>
+<a class="sourceLine" id="cb1145-19" title="19"><span class="co">#&gt; 15 &lt;NA&gt;        NA    NA &lt;NA&gt;       &lt;NA&gt;        &lt;NA&gt;            NA   &lt;NA&gt;  &lt;NA&gt;  </span></a>
+<a class="sourceLine" id="cb1145-20" title="20"><span class="co">#&gt; 16 &lt;NA&gt;        NA    NA &lt;NA&gt;       &lt;NA&gt;        &lt;NA&gt;            NA   &lt;NA&gt;  &lt;NA&gt;  </span></a>
+<a class="sourceLine" id="cb1145-21" title="21"><span class="co">#&gt; # … with 5 more variables: homeworld &lt;chr&gt;, species &lt;chr&gt;, films &lt;list&gt;,</span></a>
+<a class="sourceLine" id="cb1145-22" title="22"><span class="co">#&gt; #   vehicles &lt;list&gt;, starships &lt;list&gt;</span></a></code></pre></div>
+
+<div class="solution-exo">
+<div class="sourceCode" id="cb1146"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1146-1" title="1">filter_height &lt;-<span class="st"> </span><span class="cf">function</span>(height) {</a>
+<a class="sourceLine" id="cb1146-2" title="2">    starwars[starwars<span class="op">$</span>height <span class="op">&gt;</span><span class="st"> </span>height, ]</a>
+<a class="sourceLine" id="cb1146-3" title="3">}</a></code></pre></div>
+</div>
+
+<p>Améliorer la fonction pour qu’elle ne retourne pas les lignes pour lesquelles la variable correspondant à <code>height_var</code> vaut <code>NA</code>.</p>
+<div class="sourceCode" id="cb1147"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1147-1" title="1"><span class="kw">filter_height</span>(<span class="dv">200</span>)</a>
+<a class="sourceLine" id="cb1147-2" title="2"><span class="co">#&gt; # A tibble: 10 × 14</span></a>
+<a class="sourceLine" id="cb1147-3" title="3"><span class="co">#&gt;    name    height  mass hair_color skin_color  eye_color birth_year sex   gender</span></a>
+<a class="sourceLine" id="cb1147-4" title="4"><span class="co">#&gt;    &lt;chr&gt;    &lt;int&gt; &lt;dbl&gt; &lt;chr&gt;      &lt;chr&gt;       &lt;chr&gt;          &lt;dbl&gt; &lt;chr&gt; &lt;chr&gt; </span></a>
+<a class="sourceLine" id="cb1147-5" title="5"><span class="co">#&gt;  1 Darth …    202   136 none       white       yellow          41.9 male  mascu…</span></a>
+<a class="sourceLine" id="cb1147-6" title="6"><span class="co">#&gt;  2 Chewba…    228   112 brown      unknown     blue           200   male  mascu…</span></a>
+<a class="sourceLine" id="cb1147-7" title="7"><span class="co">#&gt;  3 Roos T…    224    82 none       grey        orange          NA   male  mascu…</span></a>
+<a class="sourceLine" id="cb1147-8" title="8"><span class="co">#&gt;  4 Rugor …    206    NA none       green       orange          NA   male  mascu…</span></a>
+<a class="sourceLine" id="cb1147-9" title="9"><span class="co">#&gt;  5 Yarael…    264    NA none       white       yellow          NA   male  mascu…</span></a>
+<a class="sourceLine" id="cb1147-10" title="10"><span class="co">#&gt;  6 Lama Su    229    88 none       grey        black           NA   male  mascu…</span></a>
+<a class="sourceLine" id="cb1147-11" title="11"><span class="co">#&gt;  7 Taun We    213    NA none       grey        black           NA   fema… femin…</span></a>
+<a class="sourceLine" id="cb1147-12" title="12"><span class="co">#&gt;  8 Grievo…    216   159 none       brown, whi… green, y…       NA   male  mascu…</span></a>
+<a class="sourceLine" id="cb1147-13" title="13"><span class="co">#&gt;  9 Tarfful    234   136 brown      brown       blue            NA   male  mascu…</span></a>
+<a class="sourceLine" id="cb1147-14" title="14"><span class="co">#&gt; 10 Tion M…    206    80 none       grey        black           NA   male  mascu…</span></a>
+<a class="sourceLine" id="cb1147-15" title="15"><span class="co">#&gt; # … with 5 more variables: homeworld &lt;chr&gt;, species &lt;chr&gt;, films &lt;list&gt;,</span></a>
+<a class="sourceLine" id="cb1147-16" title="16"><span class="co">#&gt; #   vehicles &lt;list&gt;, starships &lt;list&gt;</span></a></code></pre></div>
+
+<div class="solution-exo">
+<div class="sourceCode" id="cb1148"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1148-1" title="1">filter_height &lt;-<span class="st"> </span><span class="cf">function</span>(height) {</a>
+<a class="sourceLine" id="cb1148-2" title="2">    starwars[starwars<span class="op">$</span>height <span class="op">&gt;</span><span class="st"> </span>height <span class="op">&amp;</span><span class="st"> </span><span class="op">!</span><span class="kw">is.na</span>(starwars<span class="op">$</span>height), ]</a>
+<a class="sourceLine" id="cb1148-3" title="3">}</a></code></pre></div>
+</div>
+
+<p>Écrire la même fonction, cette fois en utilisant <code>filter()</code> à la place de <code>[,]</code>.</p>
+
+<div class="solution-exo">
+<div class="sourceCode" id="cb1149"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1149-1" title="1">filter_height &lt;-<span class="st"> </span><span class="cf">function</span>(height) {</a>
+<a class="sourceLine" id="cb1149-2" title="2">    starwars <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb1149-3" title="3"><span class="st">        </span><span class="kw">filter</span>(.data<span class="op">$</span>height <span class="op">&gt;</span><span class="st"> </span>.env<span class="op">$</span>height)</a>
+<a class="sourceLine" id="cb1149-4" title="4">}</a></code></pre></div>
+</div>
+
+<p>Quels sont les avantages et inconvénients des deux méthodes ?</p>
+
+<div class="solution-exo">
+<p>La fonction utilisant <code>filter()</code> est plus compacte et plus lisible, et elle gère les <code>NA</code> de la manière attendue sans condition supplémentaire.</p>
+<p>La fonction utilisant <code>[,]</code> évite l’ambiguïté liée à la présence simultanée d’un argument <code>height</code> et d’une colonne <code>height</code>.</p>
+</div>
+
+</div>
+<div id="ggplot2-1" class="section level3">
+<h3><span class="header-section-number">19.6.4</span> <code>ggplot2</code></h3>
+<p><strong>Exercice 4.1</strong></p>
+<p>Créer une fonction <code>graph_bar</code> qui prend en argument un tableau de données <code>df</code> et une variable <code>var</code> et qui retourne le diagramme en barre de la variable correspondante.</p>
+<div class="sourceCode" id="cb1150"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1150-1" title="1"><span class="kw">graph_bar</span>(starwars, gender)</a></code></pre></div>
+<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-1194-1.svg" width="672" /></p>
+
+<div class="solution-exo">
+<div class="sourceCode" id="cb1151"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1151-1" title="1">graph_bar &lt;-<span class="st"> </span><span class="cf">function</span>(df, var) {</a>
+<a class="sourceLine" id="cb1151-2" title="2">    <span class="kw">ggplot</span>(df) <span class="op">+</span></a>
+<a class="sourceLine" id="cb1151-3" title="3"><span class="st">        </span><span class="kw">geom_bar</span>(<span class="kw">aes</span>(<span class="dt">x =</span> {{ var }}))</a>
+<a class="sourceLine" id="cb1151-4" title="4">}</a></code></pre></div>
+</div>
+
+<p>Modifier la fonction <code>graph_bar</code> pour qu’elle accepte un troisième argument nommé <code>facet_var</code> et qu’elle retourne le diagramme en barre de <code>var</code> pour chaque valeur de <code>facet_var</code>.</p>
+<div class="sourceCode" id="cb1152"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1152-1" title="1"><span class="kw">graph_bar</span>(starwars, sex, gender)</a></code></pre></div>
+<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-1196-1.svg" width="672" /></p>
+
+<div class="solution-exo">
+<div class="sourceCode" id="cb1153"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1153-1" title="1">graph_bar &lt;-<span class="st"> </span><span class="cf">function</span>(df, var, facet_var) {</a>
+<a class="sourceLine" id="cb1153-2" title="2">    <span class="kw">ggplot</span>(df) <span class="op">+</span></a>
+<a class="sourceLine" id="cb1153-3" title="3"><span class="st">        </span><span class="kw">geom_bar</span>(<span class="kw">aes</span>(<span class="dt">x =</span> {{ var }})) <span class="op">+</span></a>
+<a class="sourceLine" id="cb1153-4" title="4"><span class="st">        </span><span class="kw">facet_wrap</span>(<span class="kw">vars</span>({{ facet_var }}))</a>
+<a class="sourceLine" id="cb1153-5" title="5">}</a></code></pre></div>
+</div>
+
+<p><strong>Exercice 4.2</strong></p>
+<p>Créer une fonction <code>graph_points</code> qui prend en arguments un tableau de données et deux variables, et affiche le nuage de points de ces deux variables.</p>
+<div class="sourceCode" id="cb1154"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1154-1" title="1"><span class="kw">graph_points</span>(starwars, height, mass)</a>
+<a class="sourceLine" id="cb1154-2" title="2"><span class="co">#&gt; Warning: Removed 28 rows containing missing values (geom_point).</span></a></code></pre></div>
+<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-1198-1.svg" width="672" /></p>
+
+<div class="solution-exo">
+<div class="sourceCode" id="cb1155"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1155-1" title="1">graph_points &lt;-<span class="st"> </span><span class="cf">function</span>(df, var_x, var_y) {</a>
+<a class="sourceLine" id="cb1155-2" title="2">    <span class="kw">ggplot</span>(df) <span class="op">+</span></a>
+<a class="sourceLine" id="cb1155-3" title="3"><span class="st">        </span><span class="kw">geom_point</span>(<span class="kw">aes</span>(<span class="dt">x =</span> {{var_x}}, <span class="dt">y =</span> {{var_y}}))</a>
+<a class="sourceLine" id="cb1155-4" title="4">}</a></code></pre></div>
+</div>
+
+<p>Ajouter un quatrième argument <code>color</code> à la fonction <code>graph_points()</code>, qui permet de spécifier la couleur des points (la même couleur pour tous).</p>
+<div class="sourceCode" id="cb1156"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1156-1" title="1"><span class="kw">graph_points</span>(starwars, height, mass, <span class="dt">color =</span> <span class="st">&quot;red&quot;</span>)</a>
+<a class="sourceLine" id="cb1156-2" title="2"><span class="co">#&gt; Warning: Removed 28 rows containing missing values (geom_point).</span></a></code></pre></div>
+<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-1200-1.svg" width="672" /></p>
+
+<div class="solution-exo">
+<div class="sourceCode" id="cb1157"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1157-1" title="1">graph_points &lt;-<span class="st"> </span><span class="cf">function</span>(df, var_x, var_y, color) {</a>
+<a class="sourceLine" id="cb1157-2" title="2">    <span class="kw">ggplot</span>(df) <span class="op">+</span></a>
+<a class="sourceLine" id="cb1157-3" title="3"><span class="st">        </span><span class="kw">geom_point</span>(<span class="kw">aes</span>(<span class="dt">x =</span> {{var_x}}, <span class="dt">y =</span> {{var_y}}), <span class="dt">color =</span> color)</a>
+<a class="sourceLine" id="cb1157-4" title="4">}</a></code></pre></div>
+</div>
+
+<p>Modifier <code>graph_points()</code> pour que l’argument <code>color</code> corresponde non pas à une couleur fixe mais à une variable dont les valeurs déterminent la couleur des points.</p>
+<div class="sourceCode" id="cb1158"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1158-1" title="1"><span class="kw">graph_points</span>(starwars, height, mass, <span class="dt">color =</span> sex)</a>
+<a class="sourceLine" id="cb1158-2" title="2"><span class="co">#&gt; Warning: Removed 28 rows containing missing values (geom_point).</span></a></code></pre></div>
+<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-1202-1.svg" width="672" /></p>
+
+<div class="solution-exo">
+<div class="sourceCode" id="cb1159"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1159-1" title="1">graph_points &lt;-<span class="st"> </span><span class="cf">function</span>(df, var_x, var_y, color) {</a>
+<a class="sourceLine" id="cb1159-2" title="2">    <span class="kw">ggplot</span>(df) <span class="op">+</span></a>
+<a class="sourceLine" id="cb1159-3" title="3"><span class="st">        </span><span class="kw">geom_point</span>(<span class="kw">aes</span>(<span class="dt">x =</span> {{var_x}}, <span class="dt">y =</span> {{var_y}}, <span class="dt">color =</span> {{color}}))</a>
+<a class="sourceLine" id="cb1159-4" title="4">}</a></code></pre></div>
+</div>
+
+<p><em>Facultatif :</em> modifier <code>graph_points()</code> pour que l’argument <code>color</code> puisse accepter aussi bien une variable qu’une couleur fixe.</p>
+<p>Indication : en s’aidant du résultat de la fonction suivante, on pourra tester si la valeur passée à <code>color</code> est bien une colonne du tableau de données.</p>
+<div class="sourceCode" id="cb1160"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1160-1" title="1">f &lt;-<span class="st"> </span><span class="cf">function</span>(x) {</a>
+<a class="sourceLine" id="cb1160-2" title="2">    <span class="kw">deparse</span>(<span class="kw">substitute</span>(x))</a>
+<a class="sourceLine" id="cb1160-3" title="3">}</a>
+<a class="sourceLine" id="cb1160-4" title="4"><span class="kw">f</span>(igloo)</a>
+<a class="sourceLine" id="cb1160-5" title="5"><span class="co">#&gt; [1] &quot;igloo&quot;</span></a></code></pre></div>
+
+<div class="solution-exo">
+<div class="sourceCode" id="cb1161"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1161-1" title="1">graph_points &lt;-<span class="st"> </span><span class="cf">function</span>(df, var_x, var_y, color) {</a>
+<a class="sourceLine" id="cb1161-2" title="2">    color_value &lt;-<span class="st"> </span><span class="kw">deparse</span>(<span class="kw">substitute</span>(color))</a>
+<a class="sourceLine" id="cb1161-3" title="3">    g &lt;-<span class="st"> </span><span class="kw">ggplot</span>(df)</a>
+<a class="sourceLine" id="cb1161-4" title="4">    <span class="cf">if</span> (color_value <span class="op">%in%</span><span class="st"> </span><span class="kw">names</span>(df)) {</a>
+<a class="sourceLine" id="cb1161-5" title="5">        g &lt;-<span class="st"> </span>g <span class="op">+</span></a>
+<a class="sourceLine" id="cb1161-6" title="6"><span class="st">            </span><span class="kw">geom_point</span>(<span class="kw">aes</span>(<span class="dt">x =</span> {{var_x}}, <span class="dt">y =</span> {{var_y}}, <span class="dt">color =</span> {{color}}))</a>
+<a class="sourceLine" id="cb1161-7" title="7">    } <span class="cf">else</span> {</a>
+<a class="sourceLine" id="cb1161-8" title="8">        g &lt;-<span class="st"> </span>g <span class="op">+</span></a>
+<a class="sourceLine" id="cb1161-9" title="9"><span class="st">            </span><span class="kw">geom_point</span>(<span class="kw">aes</span>(<span class="dt">x =</span> {{var_x}}, <span class="dt">y =</span> {{var_y}}), <span class="dt">color =</span> color)</a>
+<a class="sourceLine" id="cb1161-10" title="10">    }</a>
+<a class="sourceLine" id="cb1161-11" title="11">    g</a>
+<a class="sourceLine" id="cb1161-12" title="12">}</a></code></pre></div>
+</div>
+
+
+</div>
+</div>
+</div>
+<div class="footnotes">
+<hr />
+<ol start="38">
+<li id="fn38"><p>Effectivement, un salon de coiffure s’est à nouveau glissé dans ce jeu de données.<a href="19-programmer-tidyverse.html#fnref38" class="footnote-back">↩</a></p></li>
+</ol>
+</div>
+<script src="js/tidyverse.js"></script>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="18-purrr.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="20-targets.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": false,
+"twitter": true,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"whatsapp": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"],
+"instapper": false
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": "https://github.com/juba/tidyverse/blob/main/19-programmer-tidyverse.Rmd",
+"text": "Source"
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": ["introduction_au_tidyverse.epub", "introduction_au_tidyverse.pdf"],
+"search": {
+"engine": "fuse",
+"options": null
+},
+"toc": {
+"collapse": "section"
+}
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>

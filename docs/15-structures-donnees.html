@@ -1,0 +1,1647 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Partie 15 Structures de données | Introduction à R et au tidyverse</title>
+  <meta name="description" content="Une introduction à R et aux extensions du tidyverse" />
+  <meta name="generator" content="bookdown 0.24 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="Partie 15 Structures de données | Introduction à R et au tidyverse" />
+  <meta property="og:type" content="book" />
+  
+  
+  <meta property="og:description" content="Une introduction à R et aux extensions du tidyverse" />
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Partie 15 Structures de données | Introduction à R et au tidyverse" />
+  
+  <meta name="twitter:description" content="Une introduction à R et aux extensions du tidyverse" />
+  
+
+<meta name="author" content="Julien Barnier" />
+
+
+<meta name="date" content="2021-10-21" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="14-fonctions.html"/>
+<link rel="next" href="16-boucles-if.html"/>
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+<link href="libs/anchor-sections-1.0.1/anchor-sections.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.0.1/anchor-sections.js"></script>
+<script src="libs/htmlwidgets-1.5.4/htmlwidgets.js"></script>
+<link href="libs/leaflet-1.3.1/leaflet.css" rel="stylesheet" />
+<script src="libs/leaflet-1.3.1/leaflet.js"></script>
+<link href="libs/leafletfix-1.0.0/leafletfix.css" rel="stylesheet" />
+<script src="libs/proj4-2.6.2/proj4.min.js"></script>
+<script src="libs/Proj4Leaflet-1.0.1/proj4leaflet.js"></script>
+<link href="libs/rstudio_leaflet-1.3.1/rstudio_leaflet.css" rel="stylesheet" />
+<script src="libs/leaflet-binding-2.0.4.1/leaflet.js"></script>
+<link href="libs/vis-9.1.0/vis-network.min.css" rel="stylesheet" />
+<script src="libs/vis-9.1.0/vis-network.min.js"></script>
+<script src="libs/visNetwork-binding-2.1.0/visNetwork.js"></script>
+
+
+<style type="text/css">
+a.sourceLine { display: inline-block; line-height: 1.25; }
+a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
+a.sourceLine:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode { white-space: pre; position: relative; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+code.sourceCode { white-space: pre-wrap; }
+a.sourceLine { text-indent: -1em; padding-left: 1em; }
+}
+pre.numberSource a.sourceLine
+  { position: relative; left: -4em; }
+pre.numberSource a.sourceLine::before
+  { content: attr(title);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; pointer-events: all; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    background-color: #ffffff;
+    color: #a0a0a0;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #a0a0a0;  padding-left: 4px; }
+div.sourceCode
+  { color: #1f1c1b; background-color: #ffffff; }
+@media screen {
+a.sourceLine::before { text-decoration: underline; }
+}
+code span. { color: #1f1c1b; } /* Normal */
+code span.al { color: #bf0303; background-color: #f7e6e6; font-weight: bold; } /* Alert */
+code span.an { color: #ca60ca; } /* Annotation */
+code span.at { color: #0057ae; } /* Attribute */
+code span.bn { color: #b08000; } /* BaseN */
+code span.bu { color: #644a9b; font-weight: bold; } /* BuiltIn */
+code span.cf { color: #1f1c1b; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #924c9d; } /* Char */
+code span.cn { color: #aa5500; } /* Constant */
+code span.co { color: #898887; } /* Comment */
+code span.cv { color: #0095ff; } /* CommentVar */
+code span.do { color: #607880; } /* Documentation */
+code span.dt { color: #0057ae; } /* DataType */
+code span.dv { color: #b08000; } /* DecVal */
+code span.er { color: #bf0303; text-decoration: underline; } /* Error */
+code span.ex { color: #0095ff; font-weight: bold; } /* Extension */
+code span.fl { color: #b08000; } /* Float */
+code span.fu { color: #644a9b; } /* Function */
+code span.im { color: #ff5500; } /* Import */
+code span.in { color: #b08000; } /* Information */
+code span.kw { color: #1f1c1b; font-weight: bold; } /* Keyword */
+code span.op { color: #1f1c1b; } /* Operator */
+code span.ot { color: #006e28; } /* Other */
+code span.pp { color: #006e28; } /* Preprocessor */
+code span.re { color: #0057ae; background-color: #e0e9f8; } /* RegionMarker */
+code span.sc { color: #3daee9; } /* SpecialChar */
+code span.ss { color: #ff5500; } /* SpecialString */
+code span.st { color: #bf0303; } /* String */
+code span.va { color: #0057ae; } /* Variable */
+code span.vs { color: #bf0303; } /* VerbatimString */
+code span.wa { color: #bf0303; } /* Warning */
+</style>
+
+
+<link rel="stylesheet" href="css/tidyverse.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./index.html">Introduction à R et au <em>tidyverse</em></a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>À propos de ce document</a><ul>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html#remerciements"><i class="fa fa-check"></i>Remerciements</a></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html#licence"><i class="fa fa-check"></i>Licence</a></li>
+</ul></li>
+<li class="chapter" data-level="1" data-path="01-presentation.html"><a href="01-presentation.html"><i class="fa fa-check"></i><b>1</b> Présentation</a><ul>
+<li class="chapter" data-level="1.1" data-path="01-presentation.html"><a href="01-presentation.html#à-propos-de-r"><i class="fa fa-check"></i><b>1.1</b> À propos de R</a></li>
+<li class="chapter" data-level="1.2" data-path="01-presentation.html"><a href="01-presentation.html#rstudio"><i class="fa fa-check"></i><b>1.2</b> À propos de RStudio</a></li>
+<li class="chapter" data-level="1.3" data-path="01-presentation.html"><a href="01-presentation.html#à-propos-du-tidyverse"><i class="fa fa-check"></i><b>1.3</b> À propos du <em>tidyverse</em></a></li>
+<li class="chapter" data-level="1.4" data-path="01-presentation.html"><a href="01-presentation.html#structure-du-document"><i class="fa fa-check"></i><b>1.4</b> Structure du document</a></li>
+<li class="chapter" data-level="1.5" data-path="01-presentation.html"><a href="01-presentation.html#prérequis"><i class="fa fa-check"></i><b>1.5</b> Prérequis</a></li>
+</ul></li>
+<li class="part"><span><b>I Introduction à R</b></span></li>
+<li class="chapter" data-level="2" data-path="02-prise_en_main.html"><a href="02-prise_en_main.html"><i class="fa fa-check"></i><b>2</b> Prise en main</a><ul>
+<li class="chapter" data-level="2.1" data-path="02-prise_en_main.html"><a href="02-prise_en_main.html#la-console"><i class="fa fa-check"></i><b>2.1</b> La console</a><ul>
+<li class="chapter" data-level="2.1.1" data-path="02-prise_en_main.html"><a href="02-prise_en_main.html#linvite-de-commandes"><i class="fa fa-check"></i><b>2.1.1</b> L’invite de commandes</a></li>
+<li class="chapter" data-level="2.1.2" data-path="02-prise_en_main.html"><a href="02-prise_en_main.html#précisions-concernant-la-saisie-des-commandes"><i class="fa fa-check"></i><b>2.1.2</b> Précisions concernant la saisie des commandes</a></li>
+</ul></li>
+<li class="chapter" data-level="2.2" data-path="02-prise_en_main.html"><a href="02-prise_en_main.html#objets"><i class="fa fa-check"></i><b>2.2</b> Objets</a><ul>
+<li class="chapter" data-level="2.2.1" data-path="02-prise_en_main.html"><a href="02-prise_en_main.html#objets-simples"><i class="fa fa-check"></i><b>2.2.1</b> Objets simples</a></li>
+<li class="chapter" data-level="2.2.2" data-path="02-prise_en_main.html"><a href="02-prise_en_main.html#introvecteurs"><i class="fa fa-check"></i><b>2.2.2</b> Vecteurs</a></li>
+</ul></li>
+<li class="chapter" data-level="2.3" data-path="02-prise_en_main.html"><a href="02-prise_en_main.html#fonctions"><i class="fa fa-check"></i><b>2.3</b> Fonctions</a><ul>
+<li class="chapter" data-level="2.3.1" data-path="02-prise_en_main.html"><a href="02-prise_en_main.html#principe"><i class="fa fa-check"></i><b>2.3.1</b> Principe</a></li>
+<li class="chapter" data-level="2.3.2" data-path="02-prise_en_main.html"><a href="02-prise_en_main.html#arguments"><i class="fa fa-check"></i><b>2.3.2</b> Arguments</a></li>
+<li class="chapter" data-level="2.3.3" data-path="02-prise_en_main.html"><a href="02-prise_en_main.html#aide-sur-une-fonction"><i class="fa fa-check"></i><b>2.3.3</b> Aide sur une fonction</a></li>
+</ul></li>
+<li class="chapter" data-level="2.4" data-path="02-prise_en_main.html"><a href="02-prise_en_main.html#regrouper-ses-commandes-dans-des-scripts"><i class="fa fa-check"></i><b>2.4</b> Regrouper ses commandes dans des scripts</a><ul>
+<li class="chapter" data-level="2.4.1" data-path="02-prise_en_main.html"><a href="02-prise_en_main.html#commentaires"><i class="fa fa-check"></i><b>2.4.1</b> Commentaires</a></li>
+</ul></li>
+<li class="chapter" data-level="2.5" data-path="02-prise_en_main.html"><a href="02-prise_en_main.html#packages"><i class="fa fa-check"></i><b>2.5</b> Installer et charger des extensions (<em>packages</em>)</a></li>
+<li class="chapter" data-level="2.6" data-path="02-prise_en_main.html"><a href="02-prise_en_main.html#exercices"><i class="fa fa-check"></i><b>2.6</b> Exercices</a></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="03-premier_travail.html"><a href="03-premier_travail.html"><i class="fa fa-check"></i><b>3</b> Premier travail avec des données</a><ul>
+<li class="chapter" data-level="3.1" data-path="03-premier_travail.html"><a href="03-premier_travail.html#jeu-de-données-dexemple"><i class="fa fa-check"></i><b>3.1</b> Jeu de données d’exemple</a></li>
+<li class="chapter" data-level="3.2" data-path="03-premier_travail.html"><a href="03-premier_travail.html#tableau-de-données-data-frame"><i class="fa fa-check"></i><b>3.2</b> Tableau de données (<em>data frame</em>)</a><ul>
+<li class="chapter" data-level="3.2.1" data-path="03-premier_travail.html"><a href="03-premier_travail.html#structure-du-tableau"><i class="fa fa-check"></i><b>3.2.1</b> Structure du tableau</a></li>
+<li class="chapter" data-level="3.2.2" data-path="03-premier_travail.html"><a href="03-premier_travail.html#accéder-aux-variables-dun-tableau"><i class="fa fa-check"></i><b>3.2.2</b> Accéder aux variables d’un tableau</a></li>
+<li class="chapter" data-level="3.2.3" data-path="03-premier_travail.html"><a href="03-premier_travail.html#créer-une-nouvelle-variable"><i class="fa fa-check"></i><b>3.2.3</b> Créer une nouvelle variable</a></li>
+</ul></li>
+<li class="chapter" data-level="3.3" data-path="03-premier_travail.html"><a href="03-premier_travail.html#analyse-univariée"><i class="fa fa-check"></i><b>3.3</b> Analyse univariée</a><ul>
+<li class="chapter" data-level="3.3.1" data-path="03-premier_travail.html"><a href="03-premier_travail.html#analyser-une-variable-quantitative"><i class="fa fa-check"></i><b>3.3.1</b> Analyser une variable quantitative</a></li>
+<li class="chapter" data-level="3.3.2" data-path="03-premier_travail.html"><a href="03-premier_travail.html#analyser-une-variable-qualitative"><i class="fa fa-check"></i><b>3.3.2</b> Analyser une variable qualitative</a></li>
+</ul></li>
+<li class="chapter" data-level="3.4" data-path="03-premier_travail.html"><a href="03-premier_travail.html#exercices-1"><i class="fa fa-check"></i><b>3.4</b> Exercices</a></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="04-bivarie.html"><a href="04-bivarie.html"><i class="fa fa-check"></i><b>4</b> Analyse bivariée</a><ul>
+<li class="chapter" data-level="4.1" data-path="04-bivarie.html"><a href="04-bivarie.html#croisement-de-deux-variables-qualitatives"><i class="fa fa-check"></i><b>4.1</b> Croisement de deux variables qualitatives</a><ul>
+<li class="chapter" data-level="4.1.1" data-path="04-bivarie.html"><a href="04-bivarie.html#tableaux-croisés"><i class="fa fa-check"></i><b>4.1.1</b> Tableaux croisés</a></li>
+<li class="chapter" data-level="4.1.2" data-path="04-bivarie.html"><a href="04-bivarie.html#test-du-χ²"><i class="fa fa-check"></i><b>4.1.2</b> Test du χ²</a></li>
+<li class="chapter" data-level="4.1.3" data-path="04-bivarie.html"><a href="04-bivarie.html#représentation-graphique-1"><i class="fa fa-check"></i><b>4.1.3</b> Représentation graphique</a></li>
+</ul></li>
+<li class="chapter" data-level="4.2" data-path="04-bivarie.html"><a href="04-bivarie.html#croisement-dune-variable-quantitative-et-dune-variable-qualitative"><i class="fa fa-check"></i><b>4.2</b> Croisement d’une variable quantitative et d’une variable qualitative</a><ul>
+<li class="chapter" data-level="4.2.1" data-path="04-bivarie.html"><a href="04-bivarie.html#représentation-graphique-2"><i class="fa fa-check"></i><b>4.2.1</b> Représentation graphique</a></li>
+<li class="chapter" data-level="4.2.2" data-path="04-bivarie.html"><a href="04-bivarie.html#tapply"><i class="fa fa-check"></i><b>4.2.2</b> Calculs d’indicateurs</a></li>
+<li class="chapter" data-level="4.2.3" data-path="04-bivarie.html"><a href="04-bivarie.html#tests-statistiques"><i class="fa fa-check"></i><b>4.2.3</b> Tests statistiques</a></li>
+</ul></li>
+<li class="chapter" data-level="4.3" data-path="04-bivarie.html"><a href="04-bivarie.html#croisement-de-deux-variables-quantitatives"><i class="fa fa-check"></i><b>4.3</b> Croisement de deux variables quantitatives</a><ul>
+<li class="chapter" data-level="4.3.1" data-path="04-bivarie.html"><a href="04-bivarie.html#représentation-graphique-3"><i class="fa fa-check"></i><b>4.3.1</b> Représentation graphique</a></li>
+<li class="chapter" data-level="4.3.2" data-path="04-bivarie.html"><a href="04-bivarie.html#calcul-dindicateurs"><i class="fa fa-check"></i><b>4.3.2</b> Calcul d’indicateurs</a></li>
+<li class="chapter" data-level="4.3.3" data-path="04-bivarie.html"><a href="04-bivarie.html#régression-linéaire"><i class="fa fa-check"></i><b>4.3.3</b> Régression linéaire</a></li>
+</ul></li>
+<li class="chapter" data-level="4.4" data-path="04-bivarie.html"><a href="04-bivarie.html#exercices-2"><i class="fa fa-check"></i><b>4.4</b> Exercices</a></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="05-organiser.html"><a href="05-organiser.html"><i class="fa fa-check"></i><b>5</b> Organiser ses scripts</a><ul>
+<li class="chapter" data-level="5.1" data-path="05-organiser.html"><a href="05-organiser.html#projets"><i class="fa fa-check"></i><b>5.1</b> Les projets dans RStudio</a></li>
+<li class="chapter" data-level="5.2" data-path="05-organiser.html"><a href="05-organiser.html#créer-des-sections-dans-un-script"><i class="fa fa-check"></i><b>5.2</b> Créer des sections dans un script</a></li>
+<li class="chapter" data-level="5.3" data-path="05-organiser.html"><a href="05-organiser.html#répartir-son-travail-entre-plusieurs-scripts"><i class="fa fa-check"></i><b>5.3</b> Répartir son travail entre plusieurs scripts</a></li>
+<li class="chapter" data-level="5.4" data-path="05-organiser.html"><a href="05-organiser.html#désactiver-la-sauvegarde-de-lespace-de-travail"><i class="fa fa-check"></i><b>5.4</b> Désactiver la sauvegarde de l’espace de travail</a></li>
+</ul></li>
+<li class="part"><span><b>II Introduction au tidyverse</b></span></li>
+<li class="chapter" data-level="6" data-path="06-tidyverse.html"><a href="06-tidyverse.html"><i class="fa fa-check"></i><b>6</b> Le tidyverse</a><ul>
+<li class="chapter" data-level="6.1" data-path="06-tidyverse.html"><a href="06-tidyverse.html#extensions"><i class="fa fa-check"></i><b>6.1</b> Extensions</a></li>
+<li class="chapter" data-level="6.2" data-path="06-tidyverse.html"><a href="06-tidyverse.html#installation"><i class="fa fa-check"></i><b>6.2</b> Installation</a></li>
+<li class="chapter" data-level="6.3" data-path="06-tidyverse.html"><a href="06-tidyverse.html#tidydata"><i class="fa fa-check"></i><b>6.3</b> tidy data</a></li>
+<li class="chapter" data-level="6.4" data-path="06-tidyverse.html"><a href="06-tidyverse.html#tibbles"><i class="fa fa-check"></i><b>6.4</b> tibbles</a></li>
+</ul></li>
+<li class="chapter" data-level="7" data-path="07-import.html"><a href="07-import.html"><i class="fa fa-check"></i><b>7</b> Importer et exporter des données</a><ul>
+<li class="chapter" data-level="7.1" data-path="07-import.html"><a href="07-import.html#import-de-fichiers-textes"><i class="fa fa-check"></i><b>7.1</b> Import de fichiers textes</a><ul>
+<li class="chapter" data-level="7.1.1" data-path="07-import.html"><a href="07-import.html#interface-interactive-dimport-de-fichiers"><i class="fa fa-check"></i><b>7.1.1</b> Interface interactive d’import de fichiers</a></li>
+</ul></li>
+<li class="chapter" data-level="7.2" data-path="07-import.html"><a href="07-import.html#import-depuis-un-fichier-excel"><i class="fa fa-check"></i><b>7.2</b> Import depuis un fichier Excel</a></li>
+<li class="chapter" data-level="7.3" data-path="07-import.html"><a href="07-import.html#import-de-fichiers-sas-spss-et-stata"><i class="fa fa-check"></i><b>7.3</b> Import de fichiers SAS, SPSS et Stata</a></li>
+<li class="chapter" data-level="7.4" data-path="07-import.html"><a href="07-import.html#import-de-fichiers-dbase"><i class="fa fa-check"></i><b>7.4</b> Import de fichiers dBase</a></li>
+<li class="chapter" data-level="7.5" data-path="07-import.html"><a href="07-import.html#connexion-à-des-bases-de-données"><i class="fa fa-check"></i><b>7.5</b> Connexion à des bases de données</a><ul>
+<li class="chapter" data-level="7.5.1" data-path="07-import.html"><a href="07-import.html#interfaçage-via-lextension-dbi"><i class="fa fa-check"></i><b>7.5.1</b> Interfaçage via l’extension <code>DBI</code></a></li>
+<li class="chapter" data-level="7.5.2" data-path="07-import.html"><a href="07-import.html#utilisation-de-dplyr-et-dbplyr"><i class="fa fa-check"></i><b>7.5.2</b> Utilisation de <code>dplyr</code> et <code>dbplyr</code></a></li>
+<li class="chapter" data-level="7.5.3" data-path="07-import.html"><a href="07-import.html#ressources"><i class="fa fa-check"></i><b>7.5.3</b> Ressources</a></li>
+</ul></li>
+<li class="chapter" data-level="7.6" data-path="07-import.html"><a href="07-import.html#export-de-données"><i class="fa fa-check"></i><b>7.6</b> Export de données</a><ul>
+<li class="chapter" data-level="7.6.1" data-path="07-import.html"><a href="07-import.html#export-de-tableaux-de-données"><i class="fa fa-check"></i><b>7.6.1</b> Export de tableaux de données</a></li>
+<li class="chapter" data-level="7.6.2" data-path="07-import.html"><a href="07-import.html#sauvegarder-des-objets"><i class="fa fa-check"></i><b>7.6.2</b> Sauvegarder des objets</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="8" data-path="08-ggplot2.html"><a href="08-ggplot2.html"><i class="fa fa-check"></i><b>8</b> Visualiser avec <code>ggplot2</code></a><ul>
+<li class="chapter" data-level="8.1" data-path="08-ggplot2.html"><a href="08-ggplot2.html#préparation"><i class="fa fa-check"></i><b>8.1</b> Préparation</a></li>
+<li class="chapter" data-level="8.2" data-path="08-ggplot2.html"><a href="08-ggplot2.html#initialisation"><i class="fa fa-check"></i><b>8.2</b> Initialisation</a></li>
+<li class="chapter" data-level="8.3" data-path="08-ggplot2.html"><a href="08-ggplot2.html#exemples-de-geom"><i class="fa fa-check"></i><b>8.3</b> Exemples de <code>geom</code></a><ul>
+<li class="chapter" data-level="8.3.1" data-path="08-ggplot2.html"><a href="08-ggplot2.html#geom_boxplot"><i class="fa fa-check"></i><b>8.3.1</b> <code>geom_boxplot</code></a></li>
+<li class="chapter" data-level="8.3.2" data-path="08-ggplot2.html"><a href="08-ggplot2.html#geom_violin"><i class="fa fa-check"></i><b>8.3.2</b> <code>geom_violin</code></a></li>
+<li class="chapter" data-level="8.3.3" data-path="08-ggplot2.html"><a href="08-ggplot2.html#geom_bar"><i class="fa fa-check"></i><b>8.3.3</b> <code>geom_bar</code></a></li>
+<li class="chapter" data-level="8.3.4" data-path="08-ggplot2.html"><a href="08-ggplot2.html#geom_text"><i class="fa fa-check"></i><b>8.3.4</b> <code>geom_text</code></a></li>
+<li class="chapter" data-level="8.3.5" data-path="08-ggplot2.html"><a href="08-ggplot2.html#geom_label"><i class="fa fa-check"></i><b>8.3.5</b> <code>geom_label</code></a></li>
+<li class="chapter" data-level="8.3.6" data-path="08-ggplot2.html"><a href="08-ggplot2.html#geom_density"><i class="fa fa-check"></i><b>8.3.6</b> <code>geom_density</code></a></li>
+<li class="chapter" data-level="8.3.7" data-path="08-ggplot2.html"><a href="08-ggplot2.html#geom_line"><i class="fa fa-check"></i><b>8.3.7</b> <code>geom_line</code></a></li>
+</ul></li>
+<li class="chapter" data-level="8.4" data-path="08-ggplot2.html"><a href="08-ggplot2.html#mappages"><i class="fa fa-check"></i><b>8.4</b> Mappages</a><ul>
+<li class="chapter" data-level="8.4.1" data-path="08-ggplot2.html"><a href="08-ggplot2.html#exemples-de-mappages"><i class="fa fa-check"></i><b>8.4.1</b> Exemples de mappages</a></li>
+<li class="chapter" data-level="8.4.2" data-path="08-ggplot2.html"><a href="08-ggplot2.html#aes-or-not-aes"><i class="fa fa-check"></i><b>8.4.2</b> <code>aes()</code> or not <code>aes()</code> ?</a></li>
+<li class="chapter" data-level="8.4.3" data-path="08-ggplot2.html"><a href="08-ggplot2.html#geom_bar-et-position"><i class="fa fa-check"></i><b>8.4.3</b> <code>geom_bar</code> et <code>position</code></a></li>
+</ul></li>
+<li class="chapter" data-level="8.5" data-path="08-ggplot2.html"><a href="08-ggplot2.html#représentation-de-plusieurs-geom"><i class="fa fa-check"></i><b>8.5</b> Représentation de plusieurs <code>geom</code></a><ul>
+<li class="chapter" data-level="8.5.1" data-path="08-ggplot2.html"><a href="08-ggplot2.html#plusieurs-sources-de-données"><i class="fa fa-check"></i><b>8.5.1</b> Plusieurs sources de données</a></li>
+</ul></li>
+<li class="chapter" data-level="8.6" data-path="08-ggplot2.html"><a href="08-ggplot2.html#faceting"><i class="fa fa-check"></i><b>8.6</b> Faceting</a></li>
+<li class="chapter" data-level="8.7" data-path="08-ggplot2.html"><a href="08-ggplot2.html#scales"><i class="fa fa-check"></i><b>8.7</b> Scales</a><ul>
+<li class="chapter" data-level="8.7.1" data-path="08-ggplot2.html"><a href="08-ggplot2.html#scale_size"><i class="fa fa-check"></i><b>8.7.1</b> <code>scale_size</code></a></li>
+<li class="chapter" data-level="8.7.2" data-path="08-ggplot2.html"><a href="08-ggplot2.html#scale_x-scale_y"><i class="fa fa-check"></i><b>8.7.2</b> <code>scale_x</code>, <code>scale_y</code></a></li>
+<li class="chapter" data-level="8.7.3" data-path="08-ggplot2.html"><a href="08-ggplot2.html#scalecolor"><i class="fa fa-check"></i><b>8.7.3</b> <code>scale_color</code>, <code>scale_fill</code></a></li>
+</ul></li>
+<li class="chapter" data-level="8.8" data-path="08-ggplot2.html"><a href="08-ggplot2.html#thèmes"><i class="fa fa-check"></i><b>8.8</b> Thèmes</a></li>
+<li class="chapter" data-level="8.9" data-path="08-ggplot2.html"><a href="08-ggplot2.html#ladd-in-esquisse"><i class="fa fa-check"></i><b>8.9</b> L’add-in <code>esquisse</code></a></li>
+<li class="chapter" data-level="8.10" data-path="08-ggplot2.html"><a href="08-ggplot2.html#ressources-1"><i class="fa fa-check"></i><b>8.10</b> Ressources</a></li>
+<li class="chapter" data-level="8.11" data-path="08-ggplot2.html"><a href="08-ggplot2.html#exercices-3"><i class="fa fa-check"></i><b>8.11</b> Exercices</a></li>
+</ul></li>
+<li class="chapter" data-level="9" data-path="09-recodages.html"><a href="09-recodages.html"><i class="fa fa-check"></i><b>9</b> Recoder des variables</a><ul>
+<li class="chapter" data-level="9.1" data-path="09-recodages.html"><a href="09-recodages.html#vecteurs"><i class="fa fa-check"></i><b>9.1</b> Rappel sur les variables et les vecteurs</a></li>
+<li class="chapter" data-level="9.2" data-path="09-recodages.html"><a href="09-recodages.html#tests"><i class="fa fa-check"></i><b>9.2</b> Tests et comparaison</a></li>
+<li class="chapter" data-level="9.3" data-path="09-recodages.html"><a href="09-recodages.html#recoder-une-variable-qualitative"><i class="fa fa-check"></i><b>9.3</b> Recoder une variable qualitative</a><ul>
+<li class="chapter" data-level="9.3.1" data-path="09-recodages.html"><a href="09-recodages.html#facteurs"><i class="fa fa-check"></i><b>9.3.1</b> Facteurs et <code>forcats</code></a></li>
+<li class="chapter" data-level="9.3.2" data-path="09-recodages.html"><a href="09-recodages.html#recode"><i class="fa fa-check"></i><b>9.3.2</b> Modifier les modalités d’une variable qualitative</a></li>
+<li class="chapter" data-level="9.3.3" data-path="09-recodages.html"><a href="09-recodages.html#ordonner-les-modalités-dune-variable-qualitative"><i class="fa fa-check"></i><b>9.3.3</b> Ordonner les modalités d’une variable qualitative</a></li>
+</ul></li>
+<li class="chapter" data-level="9.4" data-path="09-recodages.html"><a href="09-recodages.html#combiner-plusieurs-variables"><i class="fa fa-check"></i><b>9.4</b> Combiner plusieurs variables</a><ul>
+<li class="chapter" data-level="9.4.1" data-path="09-recodages.html"><a href="09-recodages.html#if-else"><i class="fa fa-check"></i><b>9.4.1</b> <code>if_else</code></a></li>
+<li class="chapter" data-level="9.4.2" data-path="09-recodages.html"><a href="09-recodages.html#case_when"><i class="fa fa-check"></i><b>9.4.2</b> <code>case_when</code></a></li>
+</ul></li>
+<li class="chapter" data-level="9.5" data-path="09-recodages.html"><a href="09-recodages.html#découper-une-variable-numérique-en-classes"><i class="fa fa-check"></i><b>9.5</b> Découper une variable numérique en classes</a><ul>
+<li class="chapter" data-level="9.5.1" data-path="09-recodages.html"><a href="09-recodages.html#interface-graphique"><i class="fa fa-check"></i><b>9.5.1</b> Interface graphique</a></li>
+</ul></li>
+<li class="chapter" data-level="9.6" data-path="09-recodages.html"><a href="09-recodages.html#exercices-4"><i class="fa fa-check"></i><b>9.6</b> Exercices</a><ul>
+<li class="chapter" data-level="9.6.1" data-path="09-recodages.html"><a href="09-recodages.html#préparation-1"><i class="fa fa-check"></i><b>9.6.1</b> Préparation</a></li>
+<li class="chapter" data-level="9.6.2" data-path="09-recodages.html"><a href="09-recodages.html#vecteurs-et-tests"><i class="fa fa-check"></i><b>9.6.2</b> Vecteurs et tests</a></li>
+<li class="chapter" data-level="9.6.3" data-path="09-recodages.html"><a href="09-recodages.html#recodages-de-variable-qualitative"><i class="fa fa-check"></i><b>9.6.3</b> Recodages de variable qualitative</a></li>
+<li class="chapter" data-level="9.6.4" data-path="09-recodages.html"><a href="09-recodages.html#combiner-plusieurs-variables-1"><i class="fa fa-check"></i><b>9.6.4</b> Combiner plusieurs variables</a></li>
+<li class="chapter" data-level="9.6.5" data-path="09-recodages.html"><a href="09-recodages.html#découper-une-variable-numérique"><i class="fa fa-check"></i><b>9.6.5</b> Découper une variable numérique</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="10" data-path="10-dplyr.html"><a href="10-dplyr.html"><i class="fa fa-check"></i><b>10</b> Manipuler les données avec <code>dplyr</code></a><ul>
+<li class="chapter" data-level="10.1" data-path="10-dplyr.html"><a href="10-dplyr.html#préparation-2"><i class="fa fa-check"></i><b>10.1</b> Préparation</a></li>
+<li class="chapter" data-level="10.2" data-path="10-dplyr.html"><a href="10-dplyr.html#les-verbes-de-dplyr"><i class="fa fa-check"></i><b>10.2</b> Les verbes de <code>dplyr</code></a><ul>
+<li class="chapter" data-level="10.2.1" data-path="10-dplyr.html"><a href="10-dplyr.html#slice"><i class="fa fa-check"></i><b>10.2.1</b> <code>slice</code></a></li>
+<li class="chapter" data-level="10.2.2" data-path="10-dplyr.html"><a href="10-dplyr.html#filter"><i class="fa fa-check"></i><b>10.2.2</b> <code>filter</code></a></li>
+<li class="chapter" data-level="10.2.3" data-path="10-dplyr.html"><a href="10-dplyr.html#select-rename"><i class="fa fa-check"></i><b>10.2.3</b> <code>select</code> et <code>rename</code></a></li>
+<li class="chapter" data-level="10.2.4" data-path="10-dplyr.html"><a href="10-dplyr.html#arrange"><i class="fa fa-check"></i><b>10.2.4</b> <code>arrange</code></a></li>
+<li class="chapter" data-level="10.2.5" data-path="10-dplyr.html"><a href="10-dplyr.html#mutate"><i class="fa fa-check"></i><b>10.2.5</b> <code>mutate</code></a></li>
+</ul></li>
+<li class="chapter" data-level="10.3" data-path="10-dplyr.html"><a href="10-dplyr.html#pipe"><i class="fa fa-check"></i><b>10.3</b> Enchaîner les opérations avec le <em>pipe</em></a></li>
+<li class="chapter" data-level="10.4" data-path="10-dplyr.html"><a href="10-dplyr.html#opérations-groupées"><i class="fa fa-check"></i><b>10.4</b> Opérations groupées</a><ul>
+<li class="chapter" data-level="10.4.1" data-path="10-dplyr.html"><a href="10-dplyr.html#group_by"><i class="fa fa-check"></i><b>10.4.1</b> <code>group_by</code></a></li>
+<li class="chapter" data-level="10.4.2" data-path="10-dplyr.html"><a href="10-dplyr.html#summarise-et-count"><i class="fa fa-check"></i><b>10.4.2</b> <code>summarise</code> et <code>count</code></a></li>
+<li class="chapter" data-level="10.4.3" data-path="10-dplyr.html"><a href="10-dplyr.html#grouper-selon-plusieurs-variables"><i class="fa fa-check"></i><b>10.4.3</b> Grouper selon plusieurs variables</a></li>
+</ul></li>
+<li class="chapter" data-level="10.5" data-path="10-dplyr.html"><a href="10-dplyr.html#autres-fonctions-utiles"><i class="fa fa-check"></i><b>10.5</b> Autres fonctions utiles</a><ul>
+<li class="chapter" data-level="10.5.1" data-path="10-dplyr.html"><a href="10-dplyr.html#slice_sample"><i class="fa fa-check"></i><b>10.5.1</b> <code>slice_sample</code></a></li>
+<li class="chapter" data-level="10.5.2" data-path="10-dplyr.html"><a href="10-dplyr.html#slice_head-slice_tail-slice_min-slice_max"><i class="fa fa-check"></i><b>10.5.2</b> <code>slice_head</code>, <code>slice_tail</code>, <code>slice_min</code>, <code>slice_max</code></a></li>
+<li class="chapter" data-level="10.5.3" data-path="10-dplyr.html"><a href="10-dplyr.html#lead-et-lag"><i class="fa fa-check"></i><b>10.5.3</b> <code>lead</code> et <code>lag</code></a></li>
+<li class="chapter" data-level="10.5.4" data-path="10-dplyr.html"><a href="10-dplyr.html#distinct-et-n_distinct"><i class="fa fa-check"></i><b>10.5.4</b> <code>distinct</code> et <code>n_distinct</code></a></li>
+<li class="chapter" data-level="10.5.5" data-path="10-dplyr.html"><a href="10-dplyr.html#relocate"><i class="fa fa-check"></i><b>10.5.5</b> <code>relocate</code></a></li>
+</ul></li>
+<li class="chapter" data-level="10.6" data-path="10-dplyr.html"><a href="10-dplyr.html#tables-multiples"><i class="fa fa-check"></i><b>10.6</b> Tables multiples</a><ul>
+<li class="chapter" data-level="10.6.1" data-path="10-dplyr.html"><a href="10-dplyr.html#concaténation-bind_rows-et-bind_cols"><i class="fa fa-check"></i><b>10.6.1</b> Concaténation : <code>bind_rows</code> et <code>bind_cols</code></a></li>
+<li class="chapter" data-level="10.6.2" data-path="10-dplyr.html"><a href="10-dplyr.html#jointures"><i class="fa fa-check"></i><b>10.6.2</b> Jointures</a></li>
+<li class="chapter" data-level="10.6.3" data-path="10-dplyr.html"><a href="10-dplyr.html#types-de-jointures"><i class="fa fa-check"></i><b>10.6.3</b> Types de jointures</a></li>
+</ul></li>
+<li class="chapter" data-level="10.7" data-path="10-dplyr.html"><a href="10-dplyr.html#ressources-2"><i class="fa fa-check"></i><b>10.7</b> Ressources</a></li>
+<li class="chapter" data-level="10.8" data-path="10-dplyr.html"><a href="10-dplyr.html#exercices-5"><i class="fa fa-check"></i><b>10.8</b> Exercices</a><ul>
+<li class="chapter" data-level="10.8.1" data-path="10-dplyr.html"><a href="10-dplyr.html#les-verbes-de-base-de-dplyr"><i class="fa fa-check"></i><b>10.8.1</b> Les verbes de base de <code>dplyr</code></a></li>
+<li class="chapter" data-level="10.8.2" data-path="10-dplyr.html"><a href="10-dplyr.html#enchaîner-des-opérations"><i class="fa fa-check"></i><b>10.8.2</b> Enchaîner des opérations</a></li>
+<li class="chapter" data-level="10.8.3" data-path="10-dplyr.html"><a href="10-dplyr.html#group_by-et-summarise"><i class="fa fa-check"></i><b>10.8.3</b> <code>group_by</code> et <code>summarise</code></a></li>
+<li class="chapter" data-level="10.8.4" data-path="10-dplyr.html"><a href="10-dplyr.html#jointures-1"><i class="fa fa-check"></i><b>10.8.4</b> Jointures</a></li>
+<li class="chapter" data-level="10.8.5" data-path="10-dplyr.html"><a href="10-dplyr.html#bonus"><i class="fa fa-check"></i><b>10.8.5</b> Bonus</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="11" data-path="11-stringr.html"><a href="11-stringr.html"><i class="fa fa-check"></i><b>11</b> Manipuler du texte avec <code>stringr</code></a><ul>
+<li class="chapter" data-level="11.1" data-path="11-stringr.html"><a href="11-stringr.html#expressions-régulières"><i class="fa fa-check"></i><b>11.1</b> Expressions régulières</a></li>
+<li class="chapter" data-level="11.2" data-path="11-stringr.html"><a href="11-stringr.html#concat"><i class="fa fa-check"></i><b>11.2</b> Concaténer des chaînes</a></li>
+<li class="chapter" data-level="11.3" data-path="11-stringr.html"><a href="11-stringr.html#convertir-en-majuscules-minuscules"><i class="fa fa-check"></i><b>11.3</b> Convertir en majuscules / minuscules</a></li>
+<li class="chapter" data-level="11.4" data-path="11-stringr.html"><a href="11-stringr.html#découper-des-chaînes"><i class="fa fa-check"></i><b>11.4</b> Découper des chaînes</a></li>
+<li class="chapter" data-level="11.5" data-path="11-stringr.html"><a href="11-stringr.html#extraire-des-sous-chaînes-par-position"><i class="fa fa-check"></i><b>11.5</b> Extraire des sous-chaînes par position</a></li>
+<li class="chapter" data-level="11.6" data-path="11-stringr.html"><a href="11-stringr.html#str-detect"><i class="fa fa-check"></i><b>11.6</b> Détecter des motifs</a></li>
+<li class="chapter" data-level="11.7" data-path="11-stringr.html"><a href="11-stringr.html#extraire-des-motifs"><i class="fa fa-check"></i><b>11.7</b> Extraire des motifs</a></li>
+<li class="chapter" data-level="11.8" data-path="11-stringr.html"><a href="11-stringr.html#remplacer-des-motifs"><i class="fa fa-check"></i><b>11.8</b> Remplacer des motifs</a></li>
+<li class="chapter" data-level="11.9" data-path="11-stringr.html"><a href="11-stringr.html#modificateurs"><i class="fa fa-check"></i><b>11.9</b> Modificateurs de motifs</a></li>
+<li class="chapter" data-level="11.10" data-path="11-stringr.html"><a href="11-stringr.html#ressources-3"><i class="fa fa-check"></i><b>11.10</b> Ressources</a></li>
+<li class="chapter" data-level="11.11" data-path="11-stringr.html"><a href="11-stringr.html#exercices-6"><i class="fa fa-check"></i><b>11.11</b> Exercices</a></li>
+</ul></li>
+<li class="chapter" data-level="12" data-path="12-tidyr.html"><a href="12-tidyr.html"><i class="fa fa-check"></i><b>12</b> Mettre en ordre avec <code>tidyr</code></a><ul>
+<li class="chapter" data-level="12.1" data-path="12-tidyr.html"><a href="12-tidyr.html#tidy-data"><i class="fa fa-check"></i><b>12.1</b> Tidy data</a></li>
+<li class="chapter" data-level="12.2" data-path="12-tidyr.html"><a href="12-tidyr.html#trois-règles-pour-des-données-bien-rangées"><i class="fa fa-check"></i><b>12.2</b> Trois règles pour des données bien rangées</a></li>
+<li class="chapter" data-level="12.3" data-path="12-tidyr.html"><a href="12-tidyr.html#les-verbes-de-tidyr"><i class="fa fa-check"></i><b>12.3</b> Les verbes de <code>tidyr</code></a><ul>
+<li class="chapter" data-level="12.3.1" data-path="12-tidyr.html"><a href="12-tidyr.html#pivot_longer-transformer-des-colonnes-en-lignes"><i class="fa fa-check"></i><b>12.3.1</b> <code>pivot_longer</code> : transformer des colonnes en lignes</a></li>
+<li class="chapter" data-level="12.3.2" data-path="12-tidyr.html"><a href="12-tidyr.html#pivot_wider-transformer-des-lignes-en-colonnes"><i class="fa fa-check"></i><b>12.3.2</b> <code>pivot_wider</code> : transformer des lignes en colonnes</a></li>
+<li class="chapter" data-level="12.3.3" data-path="12-tidyr.html"><a href="12-tidyr.html#separate"><i class="fa fa-check"></i><b>12.3.3</b> <code>separate</code> : séparer une colonne en plusieurs colonnes</a></li>
+<li class="chapter" data-level="12.3.4" data-path="12-tidyr.html"><a href="12-tidyr.html#separate-rows"><i class="fa fa-check"></i><b>12.3.4</b> <code>separate_rows</code> : séparer une colonne en plusieurs lignes</a></li>
+<li class="chapter" data-level="12.3.5" data-path="12-tidyr.html"><a href="12-tidyr.html#unite-regrouper-plusieurs-colonnes-en-une-seule"><i class="fa fa-check"></i><b>12.3.5</b> <code>unite</code> : regrouper plusieurs colonnes en une seule</a></li>
+<li class="chapter" data-level="12.3.6" data-path="12-tidyr.html"><a href="12-tidyr.html#extract"><i class="fa fa-check"></i><b>12.3.6</b> <code>extract</code> : créer de nouvelles colonnes à partir d’une colonne de texte</a></li>
+<li class="chapter" data-level="12.3.7" data-path="12-tidyr.html"><a href="12-tidyr.html#complete-compléter-des-combinaisons-de-variables-manquantes"><i class="fa fa-check"></i><b>12.3.7</b> <code>complete</code> : compléter des combinaisons de variables manquantes</a></li>
+</ul></li>
+<li class="chapter" data-level="12.4" data-path="12-tidyr.html"><a href="12-tidyr.html#ressources-4"><i class="fa fa-check"></i><b>12.4</b> Ressources</a></li>
+</ul></li>
+<li class="chapter" data-level="13" data-path="13-rmarkdown.html"><a href="13-rmarkdown.html"><i class="fa fa-check"></i><b>13</b> Diffuser et publier avec <code>rmarkdown</code></a><ul>
+<li class="chapter" data-level="13.1" data-path="13-rmarkdown.html"><a href="13-rmarkdown.html#créer-un-nouveau-document"><i class="fa fa-check"></i><b>13.1</b> Créer un nouveau document</a></li>
+<li class="chapter" data-level="13.2" data-path="13-rmarkdown.html"><a href="13-rmarkdown.html#éléments-dun-document-r-markdown"><i class="fa fa-check"></i><b>13.2</b> Éléments d’un document R Markdown</a><ul>
+<li class="chapter" data-level="13.2.1" data-path="13-rmarkdown.html"><a href="13-rmarkdown.html#en-tête-préambule"><i class="fa fa-check"></i><b>13.2.1</b> En-tête (préambule)</a></li>
+<li class="chapter" data-level="13.2.2" data-path="13-rmarkdown.html"><a href="13-rmarkdown.html#texte-du-document"><i class="fa fa-check"></i><b>13.2.2</b> Texte du document</a></li>
+<li class="chapter" data-level="13.2.3" data-path="13-rmarkdown.html"><a href="13-rmarkdown.html#blocs-de-code-r"><i class="fa fa-check"></i><b>13.2.3</b> Blocs de code R</a></li>
+<li class="chapter" data-level="13.2.4" data-path="13-rmarkdown.html"><a href="13-rmarkdown.html#compiler-un-document-knit"><i class="fa fa-check"></i><b>13.2.4</b> Compiler un document (<em>Knit</em>)</a></li>
+</ul></li>
+<li class="chapter" data-level="13.3" data-path="13-rmarkdown.html"><a href="13-rmarkdown.html#personnaliser-le-document-généré"><i class="fa fa-check"></i><b>13.3</b> Personnaliser le document généré</a></li>
+<li class="chapter" data-level="13.4" data-path="13-rmarkdown.html"><a href="13-rmarkdown.html#options-des-blocs-de-code-r"><i class="fa fa-check"></i><b>13.4</b> Options des blocs de code R</a><ul>
+<li class="chapter" data-level="13.4.1" data-path="13-rmarkdown.html"><a href="13-rmarkdown.html#nom-du-bloc"><i class="fa fa-check"></i><b>13.4.1</b> Nom du bloc</a></li>
+<li class="chapter" data-level="13.4.2" data-path="13-rmarkdown.html"><a href="13-rmarkdown.html#options"><i class="fa fa-check"></i><b>13.4.2</b> Options</a></li>
+<li class="chapter" data-level="13.4.3" data-path="13-rmarkdown.html"><a href="13-rmarkdown.html#modifier-les-options"><i class="fa fa-check"></i><b>13.4.3</b> Modifier les options</a></li>
+<li class="chapter" data-level="13.4.4" data-path="13-rmarkdown.html"><a href="13-rmarkdown.html#options-globales"><i class="fa fa-check"></i><b>13.4.4</b> Options globales</a></li>
+<li class="chapter" data-level="13.4.5" data-path="13-rmarkdown.html"><a href="13-rmarkdown.html#mise-en-cache-des-résultats"><i class="fa fa-check"></i><b>13.4.5</b> Mise en cache des résultats</a></li>
+</ul></li>
+<li class="chapter" data-level="13.5" data-path="13-rmarkdown.html"><a href="13-rmarkdown.html#rendu-des-tableaux"><i class="fa fa-check"></i><b>13.5</b> Rendu des tableaux</a><ul>
+<li class="chapter" data-level="13.5.1" data-path="13-rmarkdown.html"><a href="13-rmarkdown.html#tableaux-croisés-1"><i class="fa fa-check"></i><b>13.5.1</b> Tableaux croisés</a></li>
+<li class="chapter" data-level="13.5.2" data-path="13-rmarkdown.html"><a href="13-rmarkdown.html#tableaux-de-données-et-tris-à-plat"><i class="fa fa-check"></i><b>13.5.2</b> Tableaux de données et tris à plat</a></li>
+</ul></li>
+<li class="chapter" data-level="13.6" data-path="13-rmarkdown.html"><a href="13-rmarkdown.html#templates"><i class="fa fa-check"></i><b>13.6</b> Modèles de documents</a><ul>
+<li class="chapter" data-level="13.6.1" data-path="13-rmarkdown.html"><a href="13-rmarkdown.html#slides"><i class="fa fa-check"></i><b>13.6.1</b> Slides</a></li>
+<li class="chapter" data-level="13.6.2" data-path="13-rmarkdown.html"><a href="13-rmarkdown.html#templates-1"><i class="fa fa-check"></i><b>13.6.2</b> Templates</a></li>
+</ul></li>
+<li class="chapter" data-level="13.7" data-path="13-rmarkdown.html"><a href="13-rmarkdown.html#ressources-5"><i class="fa fa-check"></i><b>13.7</b> Ressources</a></li>
+</ul></li>
+<li class="part"><span><b>III Aller plus loin</b></span></li>
+<li class="chapter" data-level="14" data-path="14-fonctions.html"><a href="14-fonctions.html"><i class="fa fa-check"></i><b>14</b> Écrire ses propres fonctions</a><ul>
+<li class="chapter" data-level="14.1" data-path="14-fonctions.html"><a href="14-fonctions.html#introduction-et-exemples"><i class="fa fa-check"></i><b>14.1</b> Introduction et exemples</a><ul>
+<li class="chapter" data-level="14.1.1" data-path="14-fonctions.html"><a href="14-fonctions.html#structure-dune-fonction"><i class="fa fa-check"></i><b>14.1.1</b> Structure d’une fonction</a></li>
+<li class="chapter" data-level="14.1.2" data-path="14-fonctions.html"><a href="14-fonctions.html#exemple-de-fonction"><i class="fa fa-check"></i><b>14.1.2</b> Exemple de fonction</a></li>
+<li class="chapter" data-level="14.1.3" data-path="14-fonctions.html"><a href="14-fonctions.html#effets-de-bord-et-affichage-de-messages"><i class="fa fa-check"></i><b>14.1.3</b> Effets de bord et affichage de messages</a></li>
+<li class="chapter" data-level="14.1.4" data-path="14-fonctions.html"><a href="14-fonctions.html#utilité-des-fonctions"><i class="fa fa-check"></i><b>14.1.4</b> Utilité des fonctions</a></li>
+</ul></li>
+<li class="chapter" data-level="14.2" data-path="14-fonctions.html"><a href="14-fonctions.html#arguments-et-résultat-dune-fonction"><i class="fa fa-check"></i><b>14.2</b> Arguments et résultat d’une fonction</a><ul>
+<li class="chapter" data-level="14.2.1" data-path="14-fonctions.html"><a href="14-fonctions.html#définition-des-arguments"><i class="fa fa-check"></i><b>14.2.1</b> Définition des arguments</a></li>
+<li class="chapter" data-level="14.2.2" data-path="14-fonctions.html"><a href="14-fonctions.html#valeurs-par-défaut"><i class="fa fa-check"></i><b>14.2.2</b> Valeurs par défaut</a></li>
+<li class="chapter" data-level="14.2.3" data-path="14-fonctions.html"><a href="14-fonctions.html#largument-..."><i class="fa fa-check"></i><b>14.2.3</b> L’argument <code>...</code></a></li>
+<li class="chapter" data-level="14.2.4" data-path="14-fonctions.html"><a href="14-fonctions.html#resfunc"><i class="fa fa-check"></i><b>14.2.4</b> Résultat d’une fonction</a></li>
+</ul></li>
+<li class="chapter" data-level="14.3" data-path="14-fonctions.html"><a href="14-fonctions.html#portée-des-variables"><i class="fa fa-check"></i><b>14.3</b> Portée des variables</a><ul>
+<li class="chapter" data-level="14.3.1" data-path="14-fonctions.html"><a href="14-fonctions.html#une-fonction-peut-accéder-à-un-objet-extérieur"><i class="fa fa-check"></i><b>14.3.1</b> Une fonction peut accéder à un objet extérieur</a></li>
+<li class="chapter" data-level="14.3.2" data-path="14-fonctions.html"><a href="14-fonctions.html#les-arguments-et-les-objets-créés-dans-la-fonction-sont-prioritaires"><i class="fa fa-check"></i><b>14.3.2</b> Les arguments et les objets créés dans la fonction sont prioritaires</a></li>
+<li class="chapter" data-level="14.3.3" data-path="14-fonctions.html"><a href="14-fonctions.html#un-objet-créé-dans-une-fonction-nexiste-que-dans-cette-fonction"><i class="fa fa-check"></i><b>14.3.3</b> Un objet créé dans une fonction n’existe que dans cette fonction</a></li>
+<li class="chapter" data-level="14.3.4" data-path="14-fonctions.html"><a href="14-fonctions.html#on-ne-peut-pas-modifier-un-objet-global-dans-une-fonction"><i class="fa fa-check"></i><b>14.3.4</b> On ne peut pas modifier un objet global dans une fonction</a></li>
+</ul></li>
+<li class="chapter" data-level="14.4" data-path="14-fonctions.html"><a href="14-fonctions.html#les-fonctions-comme-objets"><i class="fa fa-check"></i><b>14.4</b> Les fonctions comme objets</a><ul>
+<li class="chapter" data-level="14.4.1" data-path="14-fonctions.html"><a href="14-fonctions.html#passer-des-fonctions-comme-argument"><i class="fa fa-check"></i><b>14.4.1</b> Passer des fonctions comme argument</a></li>
+<li class="chapter" data-level="14.4.2" data-path="14-fonctions.html"><a href="14-fonctions.html#fonctions-anonymes"><i class="fa fa-check"></i><b>14.4.2</b> Fonctions anonymes</a></li>
+</ul></li>
+<li class="chapter" data-level="14.5" data-path="14-fonctions.html"><a href="14-fonctions.html#ressources-6"><i class="fa fa-check"></i><b>14.5</b> Ressources</a></li>
+<li class="chapter" data-level="14.6" data-path="14-fonctions.html"><a href="14-fonctions.html#exercices-7"><i class="fa fa-check"></i><b>14.6</b> Exercices</a><ul>
+<li class="chapter" data-level="14.6.1" data-path="14-fonctions.html"><a href="14-fonctions.html#introduction-et-exemples-1"><i class="fa fa-check"></i><b>14.6.1</b> Introduction et exemples</a></li>
+<li class="chapter" data-level="14.6.2" data-path="14-fonctions.html"><a href="14-fonctions.html#arguments-et-résultats"><i class="fa fa-check"></i><b>14.6.2</b> Arguments et résultats</a></li>
+<li class="chapter" data-level="14.6.3" data-path="14-fonctions.html"><a href="14-fonctions.html#portée-des-variables-1"><i class="fa fa-check"></i><b>14.6.3</b> Portée des variables</a></li>
+<li class="chapter" data-level="14.6.4" data-path="14-fonctions.html"><a href="14-fonctions.html#les-fonctions-comme-objets-1"><i class="fa fa-check"></i><b>14.6.4</b> Les fonctions comme objets</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="15" data-path="15-structures-donnees.html"><a href="15-structures-donnees.html"><i class="fa fa-check"></i><b>15</b> Structures de données</a><ul>
+<li class="chapter" data-level="15.1" data-path="15-structures-donnees.html"><a href="15-structures-donnees.html#vecteurs-atomiques"><i class="fa fa-check"></i><b>15.1</b> Vecteurs atomiques</a><ul>
+<li class="chapter" data-level="15.1.1" data-path="15-structures-donnees.html"><a href="15-structures-donnees.html#création-dun-vecteur"><i class="fa fa-check"></i><b>15.1.1</b> Création d’un vecteur</a></li>
+<li class="chapter" data-level="15.1.2" data-path="15-structures-donnees.html"><a href="15-structures-donnees.html#vecteurs-nommés"><i class="fa fa-check"></i><b>15.1.2</b> Vecteurs nommés</a></li>
+<li class="chapter" data-level="15.1.3" data-path="15-structures-donnees.html"><a href="15-structures-donnees.html#types-de-vecteurs"><i class="fa fa-check"></i><b>15.1.3</b> Types de vecteurs</a></li>
+<li class="chapter" data-level="15.1.4" data-path="15-structures-donnees.html"><a href="15-structures-donnees.html#sélection-déléments"><i class="fa fa-check"></i><b>15.1.4</b> Sélection d’éléments</a></li>
+<li class="chapter" data-level="15.1.5" data-path="15-structures-donnees.html"><a href="15-structures-donnees.html#modification"><i class="fa fa-check"></i><b>15.1.5</b> Modification</a></li>
+</ul></li>
+<li class="chapter" data-level="15.2" data-path="15-structures-donnees.html"><a href="15-structures-donnees.html#listes"><i class="fa fa-check"></i><b>15.2</b> Listes</a><ul>
+<li class="chapter" data-level="15.2.1" data-path="15-structures-donnees.html"><a href="15-structures-donnees.html#création"><i class="fa fa-check"></i><b>15.2.1</b> Création</a></li>
+<li class="chapter" data-level="15.2.2" data-path="15-structures-donnees.html"><a href="15-structures-donnees.html#ajout-déléments"><i class="fa fa-check"></i><b>15.2.2</b> Ajout d’éléments</a></li>
+<li class="chapter" data-level="15.2.3" data-path="15-structures-donnees.html"><a href="15-structures-donnees.html#sélection-déléments-1"><i class="fa fa-check"></i><b>15.2.3</b> Sélection d’éléments</a></li>
+<li class="chapter" data-level="15.2.4" data-path="15-structures-donnees.html"><a href="15-structures-donnees.html#modification-1"><i class="fa fa-check"></i><b>15.2.4</b> Modification</a></li>
+<li class="chapter" data-level="15.2.5" data-path="15-structures-donnees.html"><a href="15-structures-donnees.html#utilisation"><i class="fa fa-check"></i><b>15.2.5</b> Utilisation</a></li>
+</ul></li>
+<li class="chapter" data-level="15.3" data-path="15-structures-donnees.html"><a href="15-structures-donnees.html#data-frame-tibbles"><i class="fa fa-check"></i><b>15.3</b> Tableaux de données (<em>data frame</em> et <em>tibble</em>)</a><ul>
+<li class="chapter" data-level="15.3.1" data-path="15-structures-donnees.html"><a href="15-structures-donnees.html#création-1"><i class="fa fa-check"></i><b>15.3.1</b> Création</a></li>
+<li class="chapter" data-level="15.3.2" data-path="15-structures-donnees.html"><a href="15-structures-donnees.html#noms-de-colonnes-et-de-lignes"><i class="fa fa-check"></i><b>15.3.2</b> Noms de colonnes et de lignes</a></li>
+<li class="chapter" data-level="15.3.3" data-path="15-structures-donnees.html"><a href="15-structures-donnees.html#sélection-de-lignes-et-de-colonnes"><i class="fa fa-check"></i><b>15.3.3</b> Sélection de lignes et de colonnes</a></li>
+<li class="chapter" data-level="15.3.4" data-path="15-structures-donnees.html"><a href="15-structures-donnees.html#modification-2"><i class="fa fa-check"></i><b>15.3.4</b> Modification</a></li>
+</ul></li>
+<li class="chapter" data-level="15.4" data-path="15-structures-donnees.html"><a href="15-structures-donnees.html#ressources-7"><i class="fa fa-check"></i><b>15.4</b> Ressources</a></li>
+<li class="chapter" data-level="15.5" data-path="15-structures-donnees.html"><a href="15-structures-donnees.html#exercices-8"><i class="fa fa-check"></i><b>15.5</b> Exercices</a><ul>
+<li class="chapter" data-level="15.5.1" data-path="15-structures-donnees.html"><a href="15-structures-donnees.html#vecteurs-atomiques-1"><i class="fa fa-check"></i><b>15.5.1</b> Vecteurs atomiques</a></li>
+<li class="chapter" data-level="15.5.2" data-path="15-structures-donnees.html"><a href="15-structures-donnees.html#listes-1"><i class="fa fa-check"></i><b>15.5.2</b> Listes</a></li>
+<li class="chapter" data-level="15.5.3" data-path="15-structures-donnees.html"><a href="15-structures-donnees.html#tableaux-de-données"><i class="fa fa-check"></i><b>15.5.3</b> Tableaux de données</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="16" data-path="16-boucles-if.html"><a href="16-boucles-if.html"><i class="fa fa-check"></i><b>16</b> Boucles et exécution conditionnelle</a><ul>
+<li class="chapter" data-level="16.1" data-path="16-boucles-if.html"><a href="16-boucles-if.html#if-else-exécuter-du-code-sous-certaines-conditions"><i class="fa fa-check"></i><b>16.1</b> <code>if</code>, <code>else</code> : exécuter du code sous certaines conditions</a><ul>
+<li class="chapter" data-level="16.1.1" data-path="16-boucles-if.html"><a href="16-boucles-if.html#if"><i class="fa fa-check"></i><b>16.1.1</b> <code>if</code></a></li>
+<li class="chapter" data-level="16.1.2" data-path="16-boucles-if.html"><a href="16-boucles-if.html#if-else-1"><i class="fa fa-check"></i><b>16.1.2</b> <code>if</code> / <code>else</code></a></li>
+<li class="chapter" data-level="16.1.3" data-path="16-boucles-if.html"><a href="16-boucles-if.html#if-else-if-else"><i class="fa fa-check"></i><b>16.1.3</b> “<code>if</code>” / “<code>else if</code>” / “<code>else</code>”</a></li>
+<li class="chapter" data-level="16.1.4" data-path="16-boucles-if.html"><a href="16-boucles-if.html#construction-de-conditions-complexes"><i class="fa fa-check"></i><b>16.1.4</b> Construction de conditions complexes</a></li>
+<li class="chapter" data-level="16.1.5" data-path="16-boucles-if.html"><a href="16-boucles-if.html#différence-entre-if-else-et-ifelse"><i class="fa fa-check"></i><b>16.1.5</b> Différence entre <code>if</code> / <code>else</code> et <code>ifelse</code></a></li>
+</ul></li>
+<li class="chapter" data-level="16.2" data-path="16-boucles-if.html"><a href="16-boucles-if.html#contrôle-de-lexécution-et-gestion-des-erreurs"><i class="fa fa-check"></i><b>16.2</b> Contrôle de l’exécution et gestion des erreurs</a><ul>
+<li class="chapter" data-level="16.2.1" data-path="16-boucles-if.html"><a href="16-boucles-if.html#utilisation-de-return-pour-sortir-de-la-fonction"><i class="fa fa-check"></i><b>16.2.1</b> Utilisation de <code>return</code> pour sortir de la fonction</a></li>
+<li class="chapter" data-level="16.2.2" data-path="16-boucles-if.html"><a href="16-boucles-if.html#warning"><i class="fa fa-check"></i><b>16.2.2</b> <code>warning</code></a></li>
+<li class="chapter" data-level="16.2.3" data-path="16-boucles-if.html"><a href="16-boucles-if.html#stop-et-stopifnot"><i class="fa fa-check"></i><b>16.2.3</b> <code>stop</code> et <code>stopifnot</code></a></li>
+<li class="chapter" data-level="16.2.4" data-path="16-boucles-if.html"><a href="16-boucles-if.html#tester-la-présence-dun-argument"><i class="fa fa-check"></i><b>16.2.4</b> Tester la présence d’un argument</a></li>
+</ul></li>
+<li class="chapter" data-level="16.3" data-path="16-boucles-if.html"><a href="16-boucles-if.html#for-et-while-répéter-des-instructions-dans-une-boucle"><i class="fa fa-check"></i><b>16.3</b> <code>for</code> et <code>while</code> : répéter des instructions dans une boucle</a><ul>
+<li class="chapter" data-level="16.3.1" data-path="16-boucles-if.html"><a href="16-boucles-if.html#for"><i class="fa fa-check"></i><b>16.3.1</b> <code>for</code></a></li>
+<li class="chapter" data-level="16.3.2" data-path="16-boucles-if.html"><a href="16-boucles-if.html#while"><i class="fa fa-check"></i><b>16.3.2</b> <code>while</code></a></li>
+<li class="chapter" data-level="16.3.3" data-path="16-boucles-if.html"><a href="16-boucles-if.html#next-et-break"><i class="fa fa-check"></i><b>16.3.3</b> <code>next</code> et <code>break</code></a></li>
+<li class="chapter" data-level="16.3.4" data-path="16-boucles-if.html"><a href="16-boucles-if.html#no-boucles"><i class="fa fa-check"></i><b>16.3.4</b> Quand (ne pas) utiliser des boucles</a></li>
+</ul></li>
+<li class="chapter" data-level="16.4" data-path="16-boucles-if.html"><a href="16-boucles-if.html#débugguer-une-fonction"><i class="fa fa-check"></i><b>16.4</b> Débugguer une fonction</a><ul>
+<li class="chapter" data-level="16.4.1" data-path="16-boucles-if.html"><a href="16-boucles-if.html#print"><i class="fa fa-check"></i><b>16.4.1</b> print()</a></li>
+<li class="chapter" data-level="16.4.2" data-path="16-boucles-if.html"><a href="16-boucles-if.html#localiser-une-erreur"><i class="fa fa-check"></i><b>16.4.2</b> Localiser une erreur</a></li>
+<li class="chapter" data-level="16.4.3" data-path="16-boucles-if.html"><a href="16-boucles-if.html#browser"><i class="fa fa-check"></i><b>16.4.3</b> browser()</a></li>
+</ul></li>
+<li class="chapter" data-level="16.5" data-path="16-boucles-if.html"><a href="16-boucles-if.html#ressources-boucles"><i class="fa fa-check"></i><b>16.5</b> Ressources</a></li>
+<li class="chapter" data-level="16.6" data-path="16-boucles-if.html"><a href="16-boucles-if.html#exercices-9"><i class="fa fa-check"></i><b>16.6</b> Exercices</a><ul>
+<li class="chapter" data-level="16.6.1" data-path="16-boucles-if.html"><a href="16-boucles-if.html#if-et-else"><i class="fa fa-check"></i><b>16.6.1</b> <code>if</code> et <code>else</code></a></li>
+<li class="chapter" data-level="16.6.2" data-path="16-boucles-if.html"><a href="16-boucles-if.html#contrôle-de-lexécution"><i class="fa fa-check"></i><b>16.6.2</b> Contrôle de l’exécution</a></li>
+<li class="chapter" data-level="16.6.3" data-path="16-boucles-if.html"><a href="16-boucles-if.html#boucles"><i class="fa fa-check"></i><b>16.6.3</b> Boucles</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="17" data-path="17-dplyr-avance.html"><a href="17-dplyr-avance.html"><i class="fa fa-check"></i><b>17</b> <code>dplyr</code> avancé</a><ul>
+<li class="chapter" data-level="17.1" data-path="17-dplyr-avance.html"><a href="17-dplyr-avance.html#appliquer-ses-propres-fonctions"><i class="fa fa-check"></i><b>17.1</b> Appliquer ses propres fonctions</a><ul>
+<li class="chapter" data-level="17.1.1" data-path="17-dplyr-avance.html"><a href="17-dplyr-avance.html#exemple-avec-mutate"><i class="fa fa-check"></i><b>17.1.1</b> Exemple avec <code>mutate</code></a></li>
+<li class="chapter" data-level="17.1.2" data-path="17-dplyr-avance.html"><a href="17-dplyr-avance.html#exemple-avec-summarise"><i class="fa fa-check"></i><b>17.1.2</b> Exemple avec <code>summarise</code></a></li>
+<li class="chapter" data-level="17.1.3" data-path="17-dplyr-avance.html"><a href="17-dplyr-avance.html#exemple-avec-rename_with"><i class="fa fa-check"></i><b>17.1.3</b> Exemple avec <code>rename_with</code></a></li>
+</ul></li>
+<li class="chapter" data-level="17.2" data-path="17-dplyr-avance.html"><a href="17-dplyr-avance.html#across"><i class="fa fa-check"></i><b>17.2</b> <code>across()</code> : appliquer des fonctions à plusieurs colonnes</a><ul>
+<li class="chapter" data-level="17.2.1" data-path="17-dplyr-avance.html"><a href="17-dplyr-avance.html#appliquer-une-fonction-à-plusieurs-colonnes"><i class="fa fa-check"></i><b>17.2.1</b> Appliquer une fonction à plusieurs colonnes</a></li>
+<li class="chapter" data-level="17.2.2" data-path="17-dplyr-avance.html"><a href="17-dplyr-avance.html#passer-des-arguments-supplémentaires-à-la-fonction-appliquée"><i class="fa fa-check"></i><b>17.2.2</b> Passer des arguments supplémentaires à la fonction appliquée</a></li>
+<li class="chapter" data-level="17.2.3" data-path="17-dplyr-avance.html"><a href="17-dplyr-avance.html#noms-des-nouvelles-colonnes"><i class="fa fa-check"></i><b>17.2.3</b> Noms des nouvelles colonnes</a></li>
+<li class="chapter" data-level="17.2.4" data-path="17-dplyr-avance.html"><a href="17-dplyr-avance.html#appliquer-plusieurs-fonctions-à-plusieurs-colonnes"><i class="fa fa-check"></i><b>17.2.4</b> Appliquer plusieurs fonctions à plusieurs colonnes</a></li>
+<li class="chapter" data-level="17.2.5" data-path="17-dplyr-avance.html"><a href="17-dplyr-avance.html#renommer-plusieurs-colonnes-avec-une-fonction"><i class="fa fa-check"></i><b>17.2.5</b> Renommer plusieurs colonnes avec une fonction</a></li>
+</ul></li>
+<li class="chapter" data-level="17.3" data-path="17-dplyr-avance.html"><a href="17-dplyr-avance.html#rowwise-et-c_across-appliquer-une-transformation-ligne-par-ligne"><i class="fa fa-check"></i><b>17.3</b> <code>rowwise()</code> et <code>c_across()</code> : appliquer une transformation ligne par ligne</a></li>
+<li class="chapter" data-level="17.4" data-path="17-dplyr-avance.html"><a href="17-dplyr-avance.html#syntaxes-abregees"><i class="fa fa-check"></i><b>17.4</b> Fonctions anonymes et syntaxes abrégées</a></li>
+<li class="chapter" data-level="17.5" data-path="17-dplyr-avance.html"><a href="17-dplyr-avance.html#ressources-8"><i class="fa fa-check"></i><b>17.5</b> Ressources</a></li>
+<li class="chapter" data-level="17.6" data-path="17-dplyr-avance.html"><a href="17-dplyr-avance.html#exercices-10"><i class="fa fa-check"></i><b>17.6</b> Exercices</a><ul>
+<li class="chapter" data-level="17.6.1" data-path="17-dplyr-avance.html"><a href="17-dplyr-avance.html#appliquer-ses-propres-fonctions-1"><i class="fa fa-check"></i><b>17.6.1</b> Appliquer ses propres fonctions</a></li>
+<li class="chapter" data-level="17.6.2" data-path="17-dplyr-avance.html"><a href="17-dplyr-avance.html#across-1"><i class="fa fa-check"></i><b>17.6.2</b> <code>across()</code></a></li>
+<li class="chapter" data-level="17.6.3" data-path="17-dplyr-avance.html"><a href="17-dplyr-avance.html#rowwise-et-c_across"><i class="fa fa-check"></i><b>17.6.3</b> <code>rowwise()</code> et <code>c_across()</code></a></li>
+<li class="chapter" data-level="17.6.4" data-path="17-dplyr-avance.html"><a href="17-dplyr-avance.html#fonctions-anonymes-et-notations-abrégées"><i class="fa fa-check"></i><b>17.6.4</b> Fonctions anonymes et notations abrégées</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="18" data-path="18-purrr.html"><a href="18-purrr.html"><i class="fa fa-check"></i><b>18</b> Itérer avec <code>purrr</code></a><ul>
+<li class="chapter" data-level="18.1" data-path="18-purrr.html"><a href="18-purrr.html#exemple-dapplication"><i class="fa fa-check"></i><b>18.1</b> Exemple d’application</a></li>
+<li class="chapter" data-level="18.2" data-path="18-purrr.html"><a href="18-purrr.html#map-et-ses-variantes"><i class="fa fa-check"></i><b>18.2</b> <code>map</code> et ses variantes</a><ul>
+<li class="chapter" data-level="18.2.1" data-path="18-purrr.html"><a href="18-purrr.html#modes-dappel-de-map"><i class="fa fa-check"></i><b>18.2.1</b> Modes d’appel de <code>map</code></a></li>
+<li class="chapter" data-level="18.2.2" data-path="18-purrr.html"><a href="18-purrr.html#variantes-de-map"><i class="fa fa-check"></i><b>18.2.2</b> Variantes de <code>map</code></a></li>
+<li class="chapter" data-level="18.2.3" data-path="18-purrr.html"><a href="18-purrr.html#map_dfr-et-map_dfc"><i class="fa fa-check"></i><b>18.2.3</b> <code>map_dfr()</code> et <code>map_dfc()</code></a></li>
+</ul></li>
+<li class="chapter" data-level="18.3" data-path="18-purrr.html"><a href="18-purrr.html#itérer-sur-les-colonnes-dun-tableau-de-données"><i class="fa fa-check"></i><b>18.3</b> Itérer sur les colonnes d’un tableau de données</a></li>
+<li class="chapter" data-level="18.4" data-path="18-purrr.html"><a href="18-purrr.html#modify"><i class="fa fa-check"></i><b>18.4</b> <code>modify</code></a></li>
+<li class="chapter" data-level="18.5" data-path="18-purrr.html"><a href="18-purrr.html#imap"><i class="fa fa-check"></i><b>18.5</b> <code>imap</code></a></li>
+<li class="chapter" data-level="18.6" data-path="18-purrr.html"><a href="18-purrr.html#walk"><i class="fa fa-check"></i><b>18.6</b> <code>walk</code></a></li>
+<li class="chapter" data-level="18.7" data-path="18-purrr.html"><a href="18-purrr.html#map2-et-pmap-itérer-sur-plusieurs-vecteurs-en-parallèle"><i class="fa fa-check"></i><b>18.7</b> <code>map2</code> et <code>pmap</code> : itérer sur plusieurs vecteurs en parallèle</a></li>
+<li class="chapter" data-level="18.8" data-path="18-purrr.html"><a href="18-purrr.html#répéter-une-opération"><i class="fa fa-check"></i><b>18.8</b> Répéter une opération</a></li>
+<li class="chapter" data-level="18.9" data-path="18-purrr.html"><a href="18-purrr.html#quand-ne-pas-utiliser-map"><i class="fa fa-check"></i><b>18.9</b> Quand (ne pas) utiliser <code>map</code></a></li>
+<li class="chapter" data-level="18.10" data-path="18-purrr.html"><a href="18-purrr.html#purrr-vs-apply"><i class="fa fa-check"></i><b>18.10</b> <code>purrr</code> vs <code>*apply</code></a></li>
+<li class="chapter" data-level="18.11" data-path="18-purrr.html"><a href="18-purrr.html#ressources-9"><i class="fa fa-check"></i><b>18.11</b> Ressources</a></li>
+<li class="chapter" data-level="18.12" data-path="18-purrr.html"><a href="18-purrr.html#exercices-11"><i class="fa fa-check"></i><b>18.12</b> Exercices</a><ul>
+<li class="chapter" data-level="18.12.1" data-path="18-purrr.html"><a href="18-purrr.html#map-et-ses-variantes-1"><i class="fa fa-check"></i><b>18.12.1</b> <code>map</code> et ses variantes</a></li>
+<li class="chapter" data-level="18.12.2" data-path="18-purrr.html"><a href="18-purrr.html#modify-et-itération-sur-les-colonnes-dun-tableau"><i class="fa fa-check"></i><b>18.12.2</b> <code>modify</code> et itération sur les colonnes d’un tableau</a></li>
+<li class="chapter" data-level="18.12.3" data-path="18-purrr.html"><a href="18-purrr.html#imap-et-walk"><i class="fa fa-check"></i><b>18.12.3</b> <code>imap</code> et <code>walk</code></a></li>
+<li class="chapter" data-level="18.12.4" data-path="18-purrr.html"><a href="18-purrr.html#map2-et-pmap"><i class="fa fa-check"></i><b>18.12.4</b> <code>map2</code> et <code>pmap</code></a></li>
+<li class="chapter" data-level="18.12.5" data-path="18-purrr.html"><a href="18-purrr.html#répéter-une-opération-1"><i class="fa fa-check"></i><b>18.12.5</b> Répéter une opération</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="19" data-path="19-programmer-tidyverse.html"><a href="19-programmer-tidyverse.html"><i class="fa fa-check"></i><b>19</b> Programmer avec le <em>tidyverse</em></a><ul>
+<li class="chapter" data-level="19.1" data-path="19-programmer-tidyverse.html"><a href="19-programmer-tidyverse.html#spécificités-du-tidyverse"><i class="fa fa-check"></i><b>19.1</b> Spécificités du <em>tidyverse</em></a><ul>
+<li class="chapter" data-level="19.1.1" data-path="19-programmer-tidyverse.html"><a href="19-programmer-tidyverse.html#data-masking"><i class="fa fa-check"></i><b>19.1.1</b> <em>data masking</em></a></li>
+<li class="chapter" data-level="19.1.2" data-path="19-programmer-tidyverse.html"><a href="19-programmer-tidyverse.html#tidy-selection"><i class="fa fa-check"></i><b>19.1.2</b> <em>tidy selection</em></a></li>
+<li class="chapter" data-level="19.1.3" data-path="19-programmer-tidyverse.html"><a href="19-programmer-tidyverse.html#utilisation-dans-des-fonctions"><i class="fa fa-check"></i><b>19.1.3</b> Utilisation dans des fonctions</a></li>
+</ul></li>
+<li class="chapter" data-level="19.2" data-path="19-programmer-tidyverse.html"><a href="19-programmer-tidyverse.html#programmer-avec-dplyr-et-tidyr"><i class="fa fa-check"></i><b>19.2</b> Programmer avec <code>dplyr</code> et <code>tidyr</code></a><ul>
+<li class="chapter" data-level="19.2.1" data-path="19-programmer-tidyverse.html"><a href="19-programmer-tidyverse.html#utiliser-une-colonne-passée-en-argument"><i class="fa fa-check"></i><b>19.2.1</b> Utiliser une colonne passée en argument</a></li>
+<li class="chapter" data-level="19.2.2" data-path="19-programmer-tidyverse.html"><a href="19-programmer-tidyverse.html#utiliser-une-sélection-de-colonnes-passée-en-argument"><i class="fa fa-check"></i><b>19.2.2</b> Utiliser une sélection de colonnes passée en argument</a></li>
+<li class="chapter" data-level="19.2.3" data-path="19-programmer-tidyverse.html"><a href="19-programmer-tidyverse.html#nommer-de-nouvelles-colonnes-à-partir-dun-argument"><i class="fa fa-check"></i><b>19.2.3</b> Nommer de nouvelles colonnes à partir d’un argument</a></li>
+<li class="chapter" data-level="19.2.4" data-path="19-programmer-tidyverse.html"><a href="19-programmer-tidyverse.html#désambiguïser-data-et-env"><i class="fa fa-check"></i><b>19.2.4</b> Désambiguïser data et env</a></li>
+<li class="chapter" data-level="19.2.5" data-path="19-programmer-tidyverse.html"><a href="19-programmer-tidyverse.html#quand-les-arguments-sont-des-chaînes-de-caractères"><i class="fa fa-check"></i><b>19.2.5</b> Quand les arguments sont des chaînes de caractères</a></li>
+</ul></li>
+<li class="chapter" data-level="19.3" data-path="19-programmer-tidyverse.html"><a href="19-programmer-tidyverse.html#programmer-avec-ggplot2"><i class="fa fa-check"></i><b>19.3</b> Programmer avec <code>ggplot2</code></a><ul>
+<li class="chapter" data-level="19.3.1" data-path="19-programmer-tidyverse.html"><a href="19-programmer-tidyverse.html#sélection-de-colonnes-avec-aes"><i class="fa fa-check"></i><b>19.3.1</b> Sélection de colonnes avec <code>aes()</code></a></li>
+<li class="chapter" data-level="19.3.2" data-path="19-programmer-tidyverse.html"><a href="19-programmer-tidyverse.html#faceting-1"><i class="fa fa-check"></i><b>19.3.2</b> Faceting</a></li>
+</ul></li>
+<li class="chapter" data-level="19.4" data-path="19-programmer-tidyverse.html"><a href="19-programmer-tidyverse.html#aide-mémoire"><i class="fa fa-check"></i><b>19.4</b> Aide-mémoire</a></li>
+<li class="chapter" data-level="19.5" data-path="19-programmer-tidyverse.html"><a href="19-programmer-tidyverse.html#ressources-10"><i class="fa fa-check"></i><b>19.5</b> Ressources</a></li>
+<li class="chapter" data-level="19.6" data-path="19-programmer-tidyverse.html"><a href="19-programmer-tidyverse.html#exercices-12"><i class="fa fa-check"></i><b>19.6</b> Exercices</a><ul>
+<li class="chapter" data-level="19.6.1" data-path="19-programmer-tidyverse.html"><a href="19-programmer-tidyverse.html#dplyr-et-tidyr"><i class="fa fa-check"></i><b>19.6.1</b> <code>dplyr</code> et <code>tidyr</code></a></li>
+<li class="chapter" data-level="19.6.2" data-path="19-programmer-tidyverse.html"><a href="19-programmer-tidyverse.html#noms-de-colonnes-en-chaînes-de-caractères"><i class="fa fa-check"></i><b>19.6.2</b> Noms de colonnes en chaînes de caractères</a></li>
+<li class="chapter" data-level="19.6.3" data-path="19-programmer-tidyverse.html"><a href="19-programmer-tidyverse.html#ambiguïté-data-env"><i class="fa fa-check"></i><b>19.6.3</b> Ambiguïté <code>data</code> / <code>env</code></a></li>
+<li class="chapter" data-level="19.6.4" data-path="19-programmer-tidyverse.html"><a href="19-programmer-tidyverse.html#ggplot2-1"><i class="fa fa-check"></i><b>19.6.4</b> <code>ggplot2</code></a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="20" data-path="20-targets.html"><a href="20-targets.html"><i class="fa fa-check"></i><b>20</b> Organiser un projet avec <code>targets</code></a><ul>
+<li class="chapter" data-level="20.1" data-path="20-targets.html"><a href="20-targets.html#définition-du-pipeline"><i class="fa fa-check"></i><b>20.1</b> Définition du pipeline</a><ul>
+<li class="chapter" data-level="20.1.1" data-path="20-targets.html"><a href="20-targets.html#projet-dexemple"><i class="fa fa-check"></i><b>20.1.1</b> Projet d’exemple</a></li>
+<li class="chapter" data-level="20.1.2" data-path="20-targets.html"><a href="20-targets.html#targets.r"><i class="fa fa-check"></i><b>20.1.2</b> <code>_targets.R</code></a></li>
+</ul></li>
+<li class="chapter" data-level="20.2" data-path="20-targets.html"><a href="20-targets.html#exécution-du-pipeline"><i class="fa fa-check"></i><b>20.2</b> Exécution du pipeline</a></li>
+<li class="chapter" data-level="20.3" data-path="20-targets.html"><a href="20-targets.html#modification-du-pipeline"><i class="fa fa-check"></i><b>20.3</b> Modification du pipeline</a></li>
+<li class="chapter" data-level="20.4" data-path="20-targets.html"><a href="20-targets.html#rmarkdown"><i class="fa fa-check"></i><b>20.4</b> RMarkdown</a></li>
+<li class="chapter" data-level="20.5" data-path="20-targets.html"><a href="20-targets.html#gestion-des-données-en-cache"><i class="fa fa-check"></i><b>20.5</b> Gestion des données en cache</a></li>
+<li class="chapter" data-level="20.6" data-path="20-targets.html"><a href="20-targets.html#avantages-et-limites"><i class="fa fa-check"></i><b>20.6</b> Avantages et limites</a><ul>
+<li class="chapter" data-level="20.6.1" data-path="20-targets.html"><a href="20-targets.html#avantages"><i class="fa fa-check"></i><b>20.6.1</b> Avantages</a></li>
+<li class="chapter" data-level="20.6.2" data-path="20-targets.html"><a href="20-targets.html#interactivité-et-développement-du-pipeline"><i class="fa fa-check"></i><b>20.6.2</b> Interactivité et développement du pipeline</a></li>
+</ul></li>
+<li class="chapter" data-level="20.7" data-path="20-targets.html"><a href="20-targets.html#ressources-11"><i class="fa fa-check"></i><b>20.7</b> Ressources</a></li>
+</ul></li>
+<li class="appendix"><span><b>Annexes</b></span></li>
+<li class="chapter" data-level="A" data-path="21-ressources.html"><a href="21-ressources.html"><i class="fa fa-check"></i><b>A</b> Ressources</a><ul>
+<li class="chapter" data-level="A.1" data-path="21-ressources.html"><a href="21-ressources.html#aide"><i class="fa fa-check"></i><b>A.1</b> Aide</a><ul>
+<li class="chapter" data-level="A.1.1" data-path="21-ressources.html"><a href="21-ressources.html#aide-de-r-et-rstudio"><i class="fa fa-check"></i><b>A.1.1</b> Aide de R et RStudio</a></li>
+<li class="chapter" data-level="A.1.2" data-path="21-ressources.html"><a href="21-ressources.html#aide-en-ligne"><i class="fa fa-check"></i><b>A.1.2</b> Aide en ligne</a></li>
+<li class="chapter" data-level="A.1.3" data-path="21-ressources.html"><a href="21-ressources.html#antisèches"><i class="fa fa-check"></i><b>A.1.3</b> Antisèches</a></li>
+<li class="chapter" data-level="A.1.4" data-path="21-ressources.html"><a href="21-ressources.html#où-poser-des-questions"><i class="fa fa-check"></i><b>A.1.4</b> Où poser des questions</a></li>
+</ul></li>
+<li class="chapter" data-level="A.2" data-path="21-ressources.html"><a href="21-ressources.html#ouvrages-blogs-moocs"><i class="fa fa-check"></i><b>A.2</b> Ouvrages, blogs, MOOCs…</a><ul>
+<li class="chapter" data-level="A.2.1" data-path="21-ressources.html"><a href="21-ressources.html#francophones"><i class="fa fa-check"></i><b>A.2.1</b> Francophones</a></li>
+<li class="chapter" data-level="A.2.2" data-path="21-ressources.html"><a href="21-ressources.html#anglophones"><i class="fa fa-check"></i><b>A.2.2</b> Anglophones</a></li>
+</ul></li>
+<li class="chapter" data-level="A.3" data-path="21-ressources.html"><a href="21-ressources.html#extensions-1"><i class="fa fa-check"></i><b>A.3</b> Extensions</a><ul>
+<li class="chapter" data-level="A.3.1" data-path="21-ressources.html"><a href="21-ressources.html#où-trouver-des-extensions-intéressantes"><i class="fa fa-check"></i><b>A.3.1</b> Où trouver des extensions intéressantes ?</a></li>
+<li class="chapter" data-level="A.3.2" data-path="21-ressources.html"><a href="21-ressources.html#lextension-questionr"><i class="fa fa-check"></i><b>A.3.2</b> L’extension <code>questionr</code></a></li>
+</ul></li>
+</ul></li>
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Introduction à R et au tidyverse</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="structures-de-données" class="section level1">
+<h1><span class="header-section-number">Partie 15</span> Structures de données</h1>
+<p>R propose de nombreuses structures de données différentes, et les extensions peuvent en implémenter de nouvelles. Cette section introduit trois structures parmi les plus utilisées : les <strong>vecteurs atomiques</strong>, les <strong>listes</strong> et les <strong>tableaux de données</strong>. Certaines ont déjà été abordées et utilisées précédemment, mais connaître leurs spécificités et savoir les manipuler est utile, notamment lorsqu’on veut créer ses propres fonctions.</p>
+<div id="vecteurs-atomiques" class="section level2">
+<h2><span class="header-section-number">15.1</span> Vecteurs atomiques</h2>
+<p>Les vecteurs atomiques sont des structures qui regroupent plusieurs éléments, avec une contrainte : ces éléments doivent tous être du même type, et ils ne peuvent pas contenir d’objets complexes. Les vecteurs atomiques ont déjà été introduits section <a href="09-recodages.html#vecteurs">9.1</a>.</p>
+<div id="création-dun-vecteur" class="section level3">
+<h3><span class="header-section-number">15.1.1</span> Création d’un vecteur</h3>
+<p>On peut construire un vecteur manuellement avec la fonction <code>c()</code>.</p>
+<div class="sourceCode" id="cb680"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb680-1" title="1">x &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">3</span>, <span class="dv">8</span>)</a></code></pre></div>
+<p>Si on souhaite générer un vecteur de valeurs entières successives, on peut utiliser l’opérateur <code>:</code> ou la fonction <code>seq_len()</code>.</p>
+<div class="sourceCode" id="cb681"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb681-1" title="1"><span class="dv">2</span><span class="op">:</span><span class="dv">8</span></a>
+<a class="sourceLine" id="cb681-2" title="2"><span class="co">#&gt; [1] 2 3 4 5 6 7 8</span></a>
+<a class="sourceLine" id="cb681-3" title="3"><span class="kw">seq_len</span>(<span class="dv">5</span>)</a>
+<a class="sourceLine" id="cb681-4" title="4"><span class="co">#&gt; [1] 1 2 3 4 5</span></a></code></pre></div>
+<p>La fonction <code>seq()</code> permet de générer des séquences régulière plus complexes.</p>
+<div class="sourceCode" id="cb682"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb682-1" title="1"><span class="kw">seq</span>(<span class="fl">0.5</span>, <span class="fl">2.5</span>, <span class="dt">by =</span> <span class="fl">0.5</span>)</a>
+<a class="sourceLine" id="cb682-2" title="2"><span class="co">#&gt; [1] 0.5 1.0 1.5 2.0 2.5</span></a>
+<a class="sourceLine" id="cb682-3" title="3"><span class="kw">seq</span>(<span class="dv">0</span>, <span class="dv">4</span>, <span class="dt">length.out =</span> <span class="dv">6</span>)</a>
+<a class="sourceLine" id="cb682-4" title="4"><span class="co">#&gt; [1] 0.0 0.8 1.6 2.4 3.2 4.0</span></a></code></pre></div>
+<p>Enfin, la fonction <code>rep()</code> permet de répéter un élément ou un vecteur.</p>
+<div class="sourceCode" id="cb683"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb683-1" title="1"><span class="kw">rep</span>(<span class="st">&quot;Pomme&quot;</span>, <span class="dv">6</span>)</a>
+<a class="sourceLine" id="cb683-2" title="2"><span class="co">#&gt; [1] &quot;Pomme&quot; &quot;Pomme&quot; &quot;Pomme&quot; &quot;Pomme&quot; &quot;Pomme&quot; &quot;Pomme&quot;</span></a>
+<a class="sourceLine" id="cb683-3" title="3"><span class="kw">rep</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">4</span>, <span class="dv">2</span>)</a>
+<a class="sourceLine" id="cb683-4" title="4"><span class="co">#&gt; [1] 1 2 3 4 1 2 3 4</span></a></code></pre></div>
+<p>Si on souhaite connaître le nombre d’éléments d’un vecteur, on peut utiliser la fonction <code>length()</code>.</p>
+<div class="sourceCode" id="cb684"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb684-1" title="1">v &lt;-<span class="st"> </span><span class="kw">rep</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">4</span>, <span class="dv">2</span>)</a>
+<a class="sourceLine" id="cb684-2" title="2"><span class="kw">length</span>(v)</a>
+<a class="sourceLine" id="cb684-3" title="3"><span class="co">#&gt; [1] 8</span></a></code></pre></div>
+<p>Il peut parfois être utile de créer des vecteurs “vides”. Dans ce cas on peut les initialiser avec les fonctions <code>vector()</code>, <code>character()</code> ou <code>numeric()</code>. Par défaut ces fonctions renvoient un vecteur sans éléments, mais on peut aussi leur indiquer en argument le nombre d’éléments souhaités (qui seront alors initialisés avec une valeur par défaut).</p>
+<div class="sourceCode" id="cb685"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb685-1" title="1"><span class="kw">numeric</span>()</a>
+<a class="sourceLine" id="cb685-2" title="2"><span class="co">#&gt; numeric(0)</span></a>
+<a class="sourceLine" id="cb685-3" title="3"><span class="kw">character</span>(<span class="dv">2</span>)</a>
+<a class="sourceLine" id="cb685-4" title="4"><span class="co">#&gt; [1] &quot;&quot; &quot;&quot;</span></a></code></pre></div>
+</div>
+<div id="vecteurs-nommés" class="section level3">
+<h3><span class="header-section-number">15.1.2</span> Vecteurs nommés</h3>
+<p>Les éléments d’un vecteur peuvent être nommés. Ces noms peuvent êtré définis au moment de la création du vecteur.</p>
+<div class="sourceCode" id="cb686"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb686-1" title="1">x &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dt">e1 =</span> <span class="dv">1</span>, <span class="dt">e2 =</span> <span class="dv">3</span>, <span class="dt">e3 =</span> <span class="dv">8</span>)</a>
+<a class="sourceLine" id="cb686-2" title="2">x</a>
+<a class="sourceLine" id="cb686-3" title="3"><span class="co">#&gt; e1 e2 e3 </span></a>
+<a class="sourceLine" id="cb686-4" title="4"><span class="co">#&gt;  1  3  8</span></a></code></pre></div>
+<p>On peut utiliser <code>names()</code> pour récupérer les noms des éléments d’un vecteur.</p>
+<div class="sourceCode" id="cb687"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb687-1" title="1"><span class="kw">names</span>(x)</a>
+<a class="sourceLine" id="cb687-2" title="2"><span class="co">#&gt; [1] &quot;e1&quot; &quot;e2&quot; &quot;e3&quot;</span></a></code></pre></div>
+<p>On peut aussi utiliser <code>names()</code> pour créer ou modifier les noms d’un vecteur existant.</p>
+<div class="sourceCode" id="cb688"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb688-1" title="1"><span class="kw">names</span>(x) &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;brouette&quot;</span>, <span class="st">&quot;moto&quot;</span>, <span class="st">&quot;igloo&quot;</span>)</a>
+<a class="sourceLine" id="cb688-2" title="2">x</a>
+<a class="sourceLine" id="cb688-3" title="3"><span class="co">#&gt; brouette     moto    igloo </span></a>
+<a class="sourceLine" id="cb688-4" title="4"><span class="co">#&gt;        1        3        8</span></a></code></pre></div>
+</div>
+<div id="types-de-vecteurs" class="section level3">
+<h3><span class="header-section-number">15.1.3</span> Types de vecteurs</h3>
+<p>On peut déterminer le type d’un vecteur avec l’instruction <code>typeof</code>.</p>
+<div class="sourceCode" id="cb689"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb689-1" title="1">x &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">3</span>, <span class="dv">8</span>)</a>
+<a class="sourceLine" id="cb689-2" title="2"><span class="kw">typeof</span>(x)</a>
+<a class="sourceLine" id="cb689-3" title="3"><span class="co">#&gt; [1] &quot;double&quot;</span></a>
+<a class="sourceLine" id="cb689-4" title="4">y &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;foo&quot;</span>, <span class="st">&quot;bar&quot;</span>, <span class="st">&quot;baz&quot;</span>)</a>
+<a class="sourceLine" id="cb689-5" title="5"><span class="kw">typeof</span>(y)</a>
+<a class="sourceLine" id="cb689-6" title="6"><span class="co">#&gt; [1] &quot;character&quot;</span></a>
+<a class="sourceLine" id="cb689-7" title="7">z &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="ot">TRUE</span>, <span class="ot">FALSE</span>, <span class="ot">FALSE</span>)</a>
+<a class="sourceLine" id="cb689-8" title="8"><span class="kw">typeof</span>(z)</a>
+<a class="sourceLine" id="cb689-9" title="9"><span class="co">#&gt; [1] &quot;logical&quot;</span></a></code></pre></div>
+<p>Parmi les principaux types de données on notera<a href="#fn28" class="footnote-ref" id="fnref28"><sup>28</sup></a> :</p>
+<ul>
+<li>les chaînes de caractères (<code>character</code>)</li>
+<li>les nombres flottants (<code>double</code>)</li>
+<li>les nombres entiers (<code>integer</code>)</li>
+<li>les valeurs logiques (<code>logical</code>)</li>
+</ul>
+<p>À noter que par défaut les nombres sont considérés comme des nombres flottants (des nombres décimaux avec une virgule) : pour les définir explicitement comme nombres entiers on peut leur ajouter le suffixe <code>L</code>.</p>
+<div class="sourceCode" id="cb690"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb690-1" title="1">x &lt;-<span class="st"> </span><span class="kw">c</span>(1L, 3L, 8L)</a>
+<a class="sourceLine" id="cb690-2" title="2"><span class="kw">typeof</span>(x)</a>
+<a class="sourceLine" id="cb690-3" title="3"><span class="co">#&gt; [1] &quot;integer&quot;</span></a></code></pre></div>
+<p>On peut tester le type d’un vecteur avec les fonctions <code>is.character</code>, <code>is.double</code>, <code>is.logical</code>… Autre fonction utile, <code>is.numeric</code> teste si un vecteur est de type <code>double</code> ou <code>integer</code>.</p>
+<div class="sourceCode" id="cb691"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb691-1" title="1">x &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">3</span>, <span class="dv">8</span>)</a>
+<a class="sourceLine" id="cb691-2" title="2"><span class="kw">is.numeric</span>(x)</a>
+<a class="sourceLine" id="cb691-3" title="3"><span class="co">#&gt; [1] TRUE</span></a>
+<a class="sourceLine" id="cb691-4" title="4"><span class="kw">is.logical</span>(x <span class="op">&gt;</span><span class="st"> </span><span class="dv">2</span>)</a>
+<a class="sourceLine" id="cb691-5" title="5"><span class="co">#&gt; [1] TRUE</span></a>
+<a class="sourceLine" id="cb691-6" title="6">y &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;foo&quot;</span>, <span class="st">&quot;bar&quot;</span>, <span class="st">&quot;baz&quot;</span>)</a>
+<a class="sourceLine" id="cb691-7" title="7"><span class="kw">is.character</span>(y)</a>
+<a class="sourceLine" id="cb691-8" title="8"><span class="co">#&gt; [1] TRUE</span></a></code></pre></div>
+<p>Petite spécificité, les facteurs (voir section <a href="09-recodages.html#facteurs">9.3.1</a>) ne sont pas considérés par R comme des <code>character</code>, même s’ils comportent des chaînes de caractères. Pour tester si un vecteur est de type facteur, on utilise <code>is.factor()</code>.</p>
+<div class="sourceCode" id="cb692"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb692-1" title="1">fac &lt;-<span class="st"> </span><span class="kw">factor</span>(<span class="kw">c</span>(<span class="st">&quot;rouge&quot;</span>, <span class="st">&quot;vert&quot;</span>, <span class="st">&quot;rouge&quot;</span>))</a>
+<a class="sourceLine" id="cb692-2" title="2"><span class="kw">is.character</span>(fac)</a>
+<a class="sourceLine" id="cb692-3" title="3"><span class="co">#&gt; [1] FALSE</span></a>
+<a class="sourceLine" id="cb692-4" title="4"><span class="kw">is.factor</span>(fac)</a>
+<a class="sourceLine" id="cb692-5" title="5"><span class="co">#&gt; [1] TRUE</span></a></code></pre></div>
+<p>Tous les éléments d’un vecteur doivent être du même type. Si ça n’est pas le cas, les éléments seront convertis au type le plus “général” présent dans le vecteur, sachant que les <code>character</code> sont plus généraux que les <code>numeric</code>, qui sont eux-mêmes plus généraux que les <code>logical</code>.</p>
+<p>Dans l’exemple suivant, le nombre <code>1</code> est transformé en chaîne de caractère <code>"1"</code>.</p>
+<div class="sourceCode" id="cb693"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb693-1" title="1"><span class="kw">c</span>(<span class="dv">1</span>, <span class="st">&quot;foo&quot;</span>)</a>
+<a class="sourceLine" id="cb693-2" title="2"><span class="co">#&gt; [1] &quot;1&quot;   &quot;foo&quot;</span></a></code></pre></div>
+<p>Si on mélange nombres et valeurs logiques, les <code>TRUE</code> sont convertis en <code>1</code> et les <code>FALSE</code> en <code>0</code>.</p>
+<div class="sourceCode" id="cb694"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb694-1" title="1"><span class="kw">c</span>(<span class="ot">TRUE</span>, <span class="dv">2</span>, <span class="ot">FALSE</span>)</a>
+<a class="sourceLine" id="cb694-2" title="2"><span class="co">#&gt; [1] 1 2 0</span></a></code></pre></div>
+<div class="rmdnote">
+<p>
+Si la valeur <code>NA</code>, comme on l’a vu, permet d’indiquer une valeur manquante (<code>Not Available</code>), il existe en réalité plusieurs types de <code>NA</code>, même si cette distinction est la plupart du temps transparente pour l’utilisateur. On a ainsi notamment des valeur <code>NA_integer_</code>, <code>NA_character_</code>, <code>NA_real_</code>.
+</p>
+</div>
+<p>La conversion automatique d’un type en un autre est à l’origine d’un idiome courant en R. Quand on applique une fonction qui attend un vecteur de nombres à un vecteur de valeurs logiques, celles-ci sont automatiquement converties, les <code>TRUE</code> devenant 1 et les <code>FALSE</code> devenant 0. Du coup, si on applique <code>sum()</code> à un vecteur de valeurs logiques, le résultat est égal au nombre de valeurs <code>TRUE</code>.</p>
+<div class="sourceCode" id="cb695"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb695-1" title="1"><span class="kw">sum</span>(<span class="kw">c</span>(<span class="ot">TRUE</span>, <span class="ot">FALSE</span>, <span class="ot">TRUE</span>))</a>
+<a class="sourceLine" id="cb695-2" title="2"><span class="co">#&gt; [1] 2</span></a></code></pre></div>
+<p>On peut donc appliquer <code>sum()</code> à un test, et on obtiendra le nombre de valeurs pour lesquelles le test est vrai.</p>
+<div class="sourceCode" id="cb696"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb696-1" title="1">x &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">5</span>, <span class="dv">8</span>, <span class="dv">12</span>, <span class="dv">14</span>)</a>
+<a class="sourceLine" id="cb696-2" title="2"><span class="kw">sum</span>(x <span class="op">&gt;</span><span class="st"> </span><span class="dv">10</span>)</a>
+<a class="sourceLine" id="cb696-3" title="3"><span class="co">#&gt; [1] 2</span></a></code></pre></div>
+<p>Ceci fournit un raccourci très pratique. Dans l’exemple suivant, on tire 1000 nombres au hasard entre 0 et 1 et on calcule le nombre de valeurs obtenues qui sont inférieures à 0,5.</p>
+<div class="sourceCode" id="cb697"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb697-1" title="1">x &lt;-<span class="st"> </span><span class="kw">runif</span>(<span class="dv">1000</span>)</a>
+<a class="sourceLine" id="cb697-2" title="2"><span class="kw">sum</span>(x <span class="op">&lt;</span><span class="st"> </span><span class="fl">0.5</span>)</a>
+<a class="sourceLine" id="cb697-3" title="3"><span class="co">#&gt; [1] 482</span></a></code></pre></div>
+<p>Autre raccourci moins utilisé, appliquer <code>mean()</code> au résultat d’un test donne la proportion de valeurs pour lesquelles le test est vrai.</p>
+<div class="sourceCode" id="cb698"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb698-1" title="1">x &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">5</span>, <span class="dv">8</span>, <span class="dv">12</span>, <span class="dv">14</span>)</a>
+<a class="sourceLine" id="cb698-2" title="2"><span class="kw">mean</span>(x <span class="op">&gt;</span><span class="st"> </span><span class="dv">10</span>)</a>
+<a class="sourceLine" id="cb698-3" title="3"><span class="co">#&gt; [1] 0.4</span></a>
+<a class="sourceLine" id="cb698-4" title="4">x &lt;-<span class="st"> </span><span class="kw">runif</span>(<span class="dv">1000</span>)</a>
+<a class="sourceLine" id="cb698-5" title="5"><span class="kw">mean</span>(x <span class="op">&lt;</span><span class="st"> </span><span class="fl">0.5</span>)</a>
+<a class="sourceLine" id="cb698-6" title="6"><span class="co">#&gt; [1] 0.47</span></a></code></pre></div>
+<p>On peut convertir un vecteur d’un type à un autre avec les fonctions <code>as.character()</code>, <code>as.numeric()</code> et <code>as.logical()</code>. Si une valeur ne peut pas être convertie, elle est remplacée par un <code>NA</code>.</p>
+<div class="sourceCode" id="cb699"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb699-1" title="1"><span class="kw">as.character</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">3</span>)</a>
+<a class="sourceLine" id="cb699-2" title="2"><span class="co">#&gt; [1] &quot;1&quot; &quot;2&quot; &quot;3&quot;</span></a>
+<a class="sourceLine" id="cb699-3" title="3"><span class="kw">as.logical</span>(<span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">2</span>, <span class="dv">4</span>))</a>
+<a class="sourceLine" id="cb699-4" title="4"><span class="co">#&gt; [1] FALSE  TRUE  TRUE</span></a>
+<a class="sourceLine" id="cb699-5" title="5"><span class="kw">as.numeric</span>(<span class="kw">c</span>(<span class="st">&quot;foo&quot;</span>, <span class="st">&quot;23&quot;</span>))</a>
+<a class="sourceLine" id="cb699-6" title="6"><span class="co">#&gt; Warning: NAs introduits lors de la conversion automatique</span></a>
+<a class="sourceLine" id="cb699-7" title="7"><span class="co">#&gt; [1] NA 23</span></a></code></pre></div>
+</div>
+<div id="sélection-déléments" class="section level3">
+<h3><span class="header-section-number">15.1.4</span> Sélection d’éléments</h3>
+<p>On a vu section <a href="09-recodages.html#vecteurs">9.1</a> que l’opérateur <code>[]</code> peut être utilisé pour sélectionner des éléments d’un vecteur. Cet opérateur peut comporter :</p>
+<ul>
+<li>des nombres (qui sélectionnent par position)</li>
+<li>des chaînes de caractères (qui sélectionnent par nom)</li>
+<li>un test ou des valeurs logiques (qui sélectionnent les éléments correspondant à <code>TRUE</code>)</li>
+</ul>
+<div class="sourceCode" id="cb700"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb700-1" title="1">x &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dt">e1 =</span> <span class="dv">1</span>, <span class="dt">e2 =</span> <span class="dv">2</span>, <span class="dt">e3 =</span> <span class="dv">8</span>, <span class="dt">e4 =</span> <span class="dv">12</span>)</a>
+<a class="sourceLine" id="cb700-2" title="2">x[<span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">4</span>)]</a>
+<a class="sourceLine" id="cb700-3" title="3"><span class="co">#&gt; e1 e4 </span></a>
+<a class="sourceLine" id="cb700-4" title="4"><span class="co">#&gt;  1 12</span></a>
+<a class="sourceLine" id="cb700-5" title="5">x[<span class="kw">c</span>(<span class="st">&quot;e2&quot;</span>, <span class="st">&quot;e4&quot;</span>)]</a>
+<a class="sourceLine" id="cb700-6" title="6"><span class="co">#&gt; e2 e4 </span></a>
+<a class="sourceLine" id="cb700-7" title="7"><span class="co">#&gt;  2 12</span></a>
+<a class="sourceLine" id="cb700-8" title="8">x[x <span class="op">&lt;</span><span class="st"> </span><span class="dv">10</span>]</a>
+<a class="sourceLine" id="cb700-9" title="9"><span class="co">#&gt; e1 e2 e3 </span></a>
+<a class="sourceLine" id="cb700-10" title="10"><span class="co">#&gt;  1  2  8</span></a></code></pre></div>
+<p>Si on fournit à <code>[]</code> un ou plusieurs nombres négatifs, les valeurs correspondantes seront supprimées plutôt que sélectionnées.</p>
+<div class="sourceCode" id="cb701"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb701-1" title="1">x[<span class="op">-</span><span class="dv">1</span>]</a>
+<a class="sourceLine" id="cb701-2" title="2"><span class="co">#&gt; e2 e3 e4 </span></a>
+<a class="sourceLine" id="cb701-3" title="3"><span class="co">#&gt;  2  8 12</span></a>
+<a class="sourceLine" id="cb701-4" title="4">x[<span class="kw">c</span>(<span class="op">-</span><span class="dv">2</span>, <span class="dv">-4</span>)]</a>
+<a class="sourceLine" id="cb701-5" title="5"><span class="co">#&gt; e1 e3 </span></a>
+<a class="sourceLine" id="cb701-6" title="6"><span class="co">#&gt;  1  8</span></a></code></pre></div>
+<p>Si on souhaite afficher les premières ou dernières valeurs d’un vecteur, les fonctions <code>head()</code> et <code>tail()</code> peuvent être utiles.</p>
+<div class="sourceCode" id="cb702"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb702-1" title="1"><span class="kw">head</span>(x, <span class="dv">2</span>)</a>
+<a class="sourceLine" id="cb702-2" title="2"><span class="co">#&gt; e1 e2 </span></a>
+<a class="sourceLine" id="cb702-3" title="3"><span class="co">#&gt;  1  2</span></a>
+<a class="sourceLine" id="cb702-4" title="4"><span class="kw">tail</span>(x, <span class="dv">1</span>)</a>
+<a class="sourceLine" id="cb702-5" title="5"><span class="co">#&gt; e4 </span></a>
+<a class="sourceLine" id="cb702-6" title="6"><span class="co">#&gt; 12</span></a></code></pre></div>
+</div>
+<div id="modification" class="section level3">
+<h3><span class="header-section-number">15.1.5</span> Modification</h3>
+<p>Utilisé conjointement avec l’opérateur d’assignation <code>&lt;-</code>, l’opérateur <code>[]</code> permet de remplacer des éléments.</p>
+<div class="sourceCode" id="cb703"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb703-1" title="1">x &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dt">e1 =</span> <span class="dv">1</span>, <span class="dt">e2 =</span> <span class="dv">2</span>, <span class="dt">e3 =</span> <span class="dv">8</span>, <span class="dt">e4 =</span> <span class="dv">12</span>)</a>
+<a class="sourceLine" id="cb703-2" title="2">x[<span class="dv">1</span>] &lt;-<span class="st"> </span><span class="dv">-1000</span></a>
+<a class="sourceLine" id="cb703-3" title="3">x</a>
+<a class="sourceLine" id="cb703-4" title="4"><span class="co">#&gt;    e1    e2    e3    e4 </span></a>
+<a class="sourceLine" id="cb703-5" title="5"><span class="co">#&gt; -1000     2     8    12</span></a>
+<a class="sourceLine" id="cb703-6" title="6">x[<span class="st">&quot;e2&quot;</span>] &lt;-<span class="st"> </span><span class="dv">0</span></a>
+<a class="sourceLine" id="cb703-7" title="7">x</a>
+<a class="sourceLine" id="cb703-8" title="8"><span class="co">#&gt;    e1    e2    e3    e4 </span></a>
+<a class="sourceLine" id="cb703-9" title="9"><span class="co">#&gt; -1000     0     8    12</span></a>
+<a class="sourceLine" id="cb703-10" title="10">x[x <span class="op">&gt;</span><span class="st"> </span><span class="dv">10</span>] &lt;-<span class="st"> </span><span class="ot">NA</span></a>
+<a class="sourceLine" id="cb703-11" title="11">x</a>
+<a class="sourceLine" id="cb703-12" title="12"><span class="co">#&gt;    e1    e2    e3    e4 </span></a>
+<a class="sourceLine" id="cb703-13" title="13"><span class="co">#&gt; -1000     0     8    NA</span></a></code></pre></div>
+<p>Utilisé sans arguments, <code>[]</code> se contente de renvoyer le vecteur entier. Mais couplé à une assignation, il remplace chacun des éléments du vecteur plutôt que le vecteur lui-même.</p>
+<div class="sourceCode" id="cb704"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb704-1" title="1">x[] &lt;-<span class="st"> </span><span class="dv">3</span></a>
+<a class="sourceLine" id="cb704-2" title="2">x</a>
+<a class="sourceLine" id="cb704-3" title="3"><span class="co">#&gt; e1 e2 e3 e4 </span></a>
+<a class="sourceLine" id="cb704-4" title="4"><span class="co">#&gt;  3  3  3  3</span></a></code></pre></div>
+</div>
+</div>
+<div id="listes" class="section level2">
+<h2><span class="header-section-number">15.2</span> Listes</h2>
+<p>Les listes sont une généralisation des vecteurs : elles regroupent également plusieurs éléments, mais ceux-ci peuvent être de n’importe quel type, y compris des objets complexes. Une liste peut donc contenir elle-même des vecteurs, des listes, des tableaux de données, des fonctions, des graphiques <code>ggplot2</code> stockés dans un objet, etc.</p>
+<div id="création" class="section level3">
+<h3><span class="header-section-number">15.2.1</span> Création</h3>
+<p>On construit une liste avec la fonction <code>list</code>.</p>
+<div class="sourceCode" id="cb705"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb705-1" title="1"><span class="kw">list</span>(<span class="dv">1</span>, <span class="st">&quot;foo&quot;</span>, <span class="kw">c</span>(<span class="st">&quot;Pomme&quot;</span>, <span class="st">&quot;Citron&quot;</span>))</a>
+<a class="sourceLine" id="cb705-2" title="2"><span class="co">#&gt; [[1]]</span></a>
+<a class="sourceLine" id="cb705-3" title="3"><span class="co">#&gt; [1] 1</span></a>
+<a class="sourceLine" id="cb705-4" title="4"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb705-5" title="5"><span class="co">#&gt; [[2]]</span></a>
+<a class="sourceLine" id="cb705-6" title="6"><span class="co">#&gt; [1] &quot;foo&quot;</span></a>
+<a class="sourceLine" id="cb705-7" title="7"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb705-8" title="8"><span class="co">#&gt; [[3]]</span></a>
+<a class="sourceLine" id="cb705-9" title="9"><span class="co">#&gt; [1] &quot;Pomme&quot;  &quot;Citron&quot;</span></a></code></pre></div>
+<p>La manière dont R affiche le contenu d’une liste dans la console diffère de celle des vecteurs. Dans le cas d’une liste ses éléments sont affichés les uns en dessous des autres, et séparés par leur indice numérique entre une paire de crochets.</p>
+<p>Comme pour les vecteurs, on peut nommer les éléments à la création de la liste.</p>
+<div class="sourceCode" id="cb706"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb706-1" title="1">liste &lt;-<span class="st"> </span><span class="kw">list</span>(<span class="dt">nombre =</span> <span class="dv">1</span>, <span class="dt">char =</span> <span class="st">&quot;foo&quot;</span>, <span class="dt">vecteur =</span> <span class="kw">c</span>(<span class="st">&quot;Pomme&quot;</span>, <span class="st">&quot;Citron&quot;</span>))</a>
+<a class="sourceLine" id="cb706-2" title="2">liste</a>
+<a class="sourceLine" id="cb706-3" title="3"><span class="co">#&gt; $nombre</span></a>
+<a class="sourceLine" id="cb706-4" title="4"><span class="co">#&gt; [1] 1</span></a>
+<a class="sourceLine" id="cb706-5" title="5"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb706-6" title="6"><span class="co">#&gt; $char</span></a>
+<a class="sourceLine" id="cb706-7" title="7"><span class="co">#&gt; [1] &quot;foo&quot;</span></a>
+<a class="sourceLine" id="cb706-8" title="8"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb706-9" title="9"><span class="co">#&gt; $vecteur</span></a>
+<a class="sourceLine" id="cb706-10" title="10"><span class="co">#&gt; [1] &quot;Pomme&quot;  &quot;Citron&quot;</span></a></code></pre></div>
+<p>Dans ce cas l’affichage de la liste dans la console montre ces noms plutôt que les indices numériques.</p>
+<p>Comme pour les vecteurs atomiques, on peut utiliser <code>names()</code> pour afficher ou modifier les noms des éléments.</p>
+<div class="sourceCode" id="cb707"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb707-1" title="1"><span class="kw">names</span>(liste)</a>
+<a class="sourceLine" id="cb707-2" title="2"><span class="co">#&gt; [1] &quot;nombre&quot;  &quot;char&quot;    &quot;vecteur&quot;</span></a></code></pre></div>
+<p>L’affichage des listes peut vite devenir illisible quand la liste est plus complexe.</p>
+<div class="sourceCode" id="cb708"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb708-1" title="1">liste &lt;-<span class="st"> </span><span class="kw">list</span>(</a>
+<a class="sourceLine" id="cb708-2" title="2">    <span class="dt">l2 =</span> <span class="kw">list</span>(<span class="dt">x =</span> <span class="dv">1</span><span class="op">:</span><span class="dv">10</span>, <span class="dt">y =</span> <span class="kw">c</span>(<span class="st">&quot;Pomme&quot;</span>, <span class="st">&quot;Citron&quot;</span>)),</a>
+<a class="sourceLine" id="cb708-3" title="3">    <span class="dt">df =</span> <span class="kw">data.frame</span>(<span class="dt">v1 =</span> <span class="dv">2</span><span class="op">:</span><span class="dv">5</span>, <span class="dt">v2 =</span> LETTERS[<span class="dv">2</span><span class="op">:</span><span class="dv">5</span>]),</a>
+<a class="sourceLine" id="cb708-4" title="4">    <span class="dt">y =</span> <span class="kw">runif</span>(<span class="dv">10</span>)</a>
+<a class="sourceLine" id="cb708-5" title="5">)</a>
+<a class="sourceLine" id="cb708-6" title="6">liste</a>
+<a class="sourceLine" id="cb708-7" title="7"><span class="co">#&gt; $l2</span></a>
+<a class="sourceLine" id="cb708-8" title="8"><span class="co">#&gt; $l2$x</span></a>
+<a class="sourceLine" id="cb708-9" title="9"><span class="co">#&gt;  [1]  1  2  3  4  5  6  7  8  9 10</span></a>
+<a class="sourceLine" id="cb708-10" title="10"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb708-11" title="11"><span class="co">#&gt; $l2$y</span></a>
+<a class="sourceLine" id="cb708-12" title="12"><span class="co">#&gt; [1] &quot;Pomme&quot;  &quot;Citron&quot;</span></a>
+<a class="sourceLine" id="cb708-13" title="13"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb708-14" title="14"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb708-15" title="15"><span class="co">#&gt; $df</span></a>
+<a class="sourceLine" id="cb708-16" title="16"><span class="co">#&gt;   v1 v2</span></a>
+<a class="sourceLine" id="cb708-17" title="17"><span class="co">#&gt; 1  2  B</span></a>
+<a class="sourceLine" id="cb708-18" title="18"><span class="co">#&gt; 2  3  C</span></a>
+<a class="sourceLine" id="cb708-19" title="19"><span class="co">#&gt; 3  4  D</span></a>
+<a class="sourceLine" id="cb708-20" title="20"><span class="co">#&gt; 4  5  E</span></a>
+<a class="sourceLine" id="cb708-21" title="21"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb708-22" title="22"><span class="co">#&gt; $y</span></a>
+<a class="sourceLine" id="cb708-23" title="23"><span class="co">#&gt;  [1] 0.51882781 0.73863086 0.95549016 0.32465063 0.40237525 0.19613354</span></a>
+<a class="sourceLine" id="cb708-24" title="24"><span class="co">#&gt;  [7] 0.04378609 0.87481636 0.27902127 0.09781111</span></a></code></pre></div>
+<p>Dans ce cas la fonction <code>str</code> peut être utile pour afficher de manière plus compacte la structure de la liste.</p>
+<div class="sourceCode" id="cb709"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb709-1" title="1"><span class="kw">str</span>(liste)</a>
+<a class="sourceLine" id="cb709-2" title="2"><span class="co">#&gt; List of 3</span></a>
+<a class="sourceLine" id="cb709-3" title="3"><span class="co">#&gt;  $ l2:List of 2</span></a>
+<a class="sourceLine" id="cb709-4" title="4"><span class="co">#&gt;   ..$ x: int [1:10] 1 2 3 4 5 6 7 8 9 10</span></a>
+<a class="sourceLine" id="cb709-5" title="5"><span class="co">#&gt;   ..$ y: chr [1:2] &quot;Pomme&quot; &quot;Citron&quot;</span></a>
+<a class="sourceLine" id="cb709-6" title="6"><span class="co">#&gt;  $ df:&#39;data.frame&#39;:  4 obs. of  2 variables:</span></a>
+<a class="sourceLine" id="cb709-7" title="7"><span class="co">#&gt;   ..$ v1: int [1:4] 2 3 4 5</span></a>
+<a class="sourceLine" id="cb709-8" title="8"><span class="co">#&gt;   ..$ v2: chr [1:4] &quot;B&quot; &quot;C&quot; &quot;D&quot; &quot;E&quot;</span></a>
+<a class="sourceLine" id="cb709-9" title="9"><span class="co">#&gt;  $ y : num [1:10] 0.519 0.739 0.955 0.325 0.402 ...</span></a></code></pre></div>
+</div>
+<div id="ajout-déléments" class="section level3">
+<h3><span class="header-section-number">15.2.2</span> Ajout d’éléments</h3>
+<p>Attention, si on souhaite ajouter un nouvel élément à une liste, il ne faut pas utiliser à nouveau <code>list()</code>, car dans ce cas notre liste de départ est insérée comme une “sous-liste”.</p>
+<div class="sourceCode" id="cb710"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb710-1" title="1">liste &lt;-<span class="st"> </span><span class="kw">list</span>(<span class="dt">e1 =</span> <span class="dv">1</span><span class="op">:</span><span class="dv">3</span>, <span class="dt">e2 =</span> <span class="st">&quot;Chihuhua&quot;</span>)</a>
+<a class="sourceLine" id="cb710-2" title="2">liste2 &lt;-<span class="st"> </span><span class="kw">list</span>(liste, <span class="dt">nouveau =</span> <span class="dv">100</span>)</a>
+<a class="sourceLine" id="cb710-3" title="3"><span class="kw">str</span>(liste2)</a>
+<a class="sourceLine" id="cb710-4" title="4"><span class="co">#&gt; List of 2</span></a>
+<a class="sourceLine" id="cb710-5" title="5"><span class="co">#&gt;  $        :List of 2</span></a>
+<a class="sourceLine" id="cb710-6" title="6"><span class="co">#&gt;   ..$ e1: int [1:3] 1 2 3</span></a>
+<a class="sourceLine" id="cb710-7" title="7"><span class="co">#&gt;   ..$ e2: chr &quot;Chihuhua&quot;</span></a>
+<a class="sourceLine" id="cb710-8" title="8"><span class="co">#&gt;  $ nouveau: num 100</span></a></code></pre></div>
+<p>Il faut à la place utiliser <code>c()</code>, comme pour les vecteurs.</p>
+<div class="sourceCode" id="cb711"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb711-1" title="1">liste3 &lt;-<span class="st"> </span><span class="kw">c</span>(liste, <span class="dt">nouveau =</span> <span class="dv">100</span>)</a>
+<a class="sourceLine" id="cb711-2" title="2"><span class="kw">str</span>(liste3)</a>
+<a class="sourceLine" id="cb711-3" title="3"><span class="co">#&gt; List of 3</span></a>
+<a class="sourceLine" id="cb711-4" title="4"><span class="co">#&gt;  $ e1     : int [1:3] 1 2 3</span></a>
+<a class="sourceLine" id="cb711-5" title="5"><span class="co">#&gt;  $ e2     : chr &quot;Chihuhua&quot;</span></a>
+<a class="sourceLine" id="cb711-6" title="6"><span class="co">#&gt;  $ nouveau: num 100</span></a></code></pre></div>
+<p><code>c()</code> permet aussi de “concaténer” deux listes existantes en une seule.</p>
+<div class="sourceCode" id="cb712"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb712-1" title="1">liste1 &lt;-<span class="st"> </span><span class="kw">list</span>(<span class="dt">a =</span> <span class="dv">1</span>, <span class="dt">b =</span> <span class="dv">2</span>)</a>
+<a class="sourceLine" id="cb712-2" title="2">liste2 &lt;-<span class="st"> </span><span class="kw">list</span>(<span class="dt">x =</span> <span class="dv">3</span>, <span class="dt">y =</span> <span class="dv">4</span>)</a>
+<a class="sourceLine" id="cb712-3" title="3"><span class="kw">c</span>(liste1, liste2)</a>
+<a class="sourceLine" id="cb712-4" title="4"><span class="co">#&gt; $a</span></a>
+<a class="sourceLine" id="cb712-5" title="5"><span class="co">#&gt; [1] 1</span></a>
+<a class="sourceLine" id="cb712-6" title="6"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb712-7" title="7"><span class="co">#&gt; $b</span></a>
+<a class="sourceLine" id="cb712-8" title="8"><span class="co">#&gt; [1] 2</span></a>
+<a class="sourceLine" id="cb712-9" title="9"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb712-10" title="10"><span class="co">#&gt; $x</span></a>
+<a class="sourceLine" id="cb712-11" title="11"><span class="co">#&gt; [1] 3</span></a>
+<a class="sourceLine" id="cb712-12" title="12"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb712-13" title="13"><span class="co">#&gt; $y</span></a>
+<a class="sourceLine" id="cb712-14" title="14"><span class="co">#&gt; [1] 4</span></a></code></pre></div>
+</div>
+<div id="sélection-déléments-1" class="section level3">
+<h3><span class="header-section-number">15.2.3</span> Sélection d’éléments</h3>
+<p>Il y a deux opérateurs différents qui permettent de sélectionner les éléments d’une liste : les crochets simples <code>[]</code> et les crochets doubles <code>[[]]</code>. La différence entre ces deux opérateurs est souvent source de confusion.</p>
+<p>Partons de la liste suivante :</p>
+<div class="sourceCode" id="cb713"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb713-1" title="1">liste &lt;-<span class="st"> </span><span class="kw">list</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">5</span>, <span class="st">&quot;foo&quot;</span>, <span class="kw">c</span>(<span class="st">&quot;Pomme&quot;</span>, <span class="st">&quot;Citron&quot;</span>))</a>
+<a class="sourceLine" id="cb713-2" title="2">liste</a>
+<a class="sourceLine" id="cb713-3" title="3"><span class="co">#&gt; [[1]]</span></a>
+<a class="sourceLine" id="cb713-4" title="4"><span class="co">#&gt; [1] 1 2 3 4 5</span></a>
+<a class="sourceLine" id="cb713-5" title="5"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb713-6" title="6"><span class="co">#&gt; [[2]]</span></a>
+<a class="sourceLine" id="cb713-7" title="7"><span class="co">#&gt; [1] &quot;foo&quot;</span></a>
+<a class="sourceLine" id="cb713-8" title="8"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb713-9" title="9"><span class="co">#&gt; [[3]]</span></a>
+<a class="sourceLine" id="cb713-10" title="10"><span class="co">#&gt; [1] &quot;Pomme&quot;  &quot;Citron&quot;</span></a></code></pre></div>
+<p>Si on utilise les crochets simples pour sélectionner le premier élément de cette liste, on obtient le résultat suivant :</p>
+<div class="sourceCode" id="cb714"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb714-1" title="1">liste[<span class="dv">1</span>]</a>
+<a class="sourceLine" id="cb714-2" title="2"><span class="co">#&gt; [[1]]</span></a>
+<a class="sourceLine" id="cb714-3" title="3"><span class="co">#&gt; [1] 1 2 3 4 5</span></a></code></pre></div>
+<p>On notera que le résultat est une liste à un seul élément.</p>
+<p>Si on utilise les crochets doubles :</p>
+<div class="sourceCode" id="cb715"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb715-1" title="1">liste[[<span class="dv">1</span>]]</a>
+<a class="sourceLine" id="cb715-2" title="2"><span class="co">#&gt; [1] 1 2 3 4 5</span></a></code></pre></div>
+<p>On obtient cette fois-ci non pas une liste composée du premier élément, mais le contenu de ce premier élément.</p>
+<div class="rmdimportant">
+<p>
+La différence est importante, mais pas toujours facile à retenir. On peut utiliser deux petites astuces mnémotechniques :
+</p>
+<ul>
+<li>
+si une liste est un train composé de plusieurs wagons, <code>[1]</code> retourne le premier wagon du train, tandis que <code>[[1]]</code> renvoie le contenu du premier wagon.
+</li>
+<li>
+une alternative est de considérer que <code>[[]]</code> va chercher “plus profondément” que <code>[]</code>.
+</li>
+</ul>
+</div>
+<p>Un autre point important est que si on passe plusieurs éléments à <code>[[]]</code>, la sélection se fait d’une manière récursive peu intuitive et source d’erreurs. Il est donc conseillé de <strong>toujours utiliser</strong> <code>[[]]</code> <strong>avec un seul argument</strong>, et d’utiliser <code>[]</code> si on souhaite sélectionner plusieurs éléments d’une liste.</p>
+<div class="sourceCode" id="cb716"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb716-1" title="1">liste[<span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">2</span>)]</a>
+<a class="sourceLine" id="cb716-2" title="2"><span class="co">#&gt; [[1]]</span></a>
+<a class="sourceLine" id="cb716-3" title="3"><span class="co">#&gt; [1] 1 2 3 4 5</span></a>
+<a class="sourceLine" id="cb716-4" title="4"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb716-5" title="5"><span class="co">#&gt; [[2]]</span></a>
+<a class="sourceLine" id="cb716-6" title="6"><span class="co">#&gt; [1] &quot;foo&quot;</span></a></code></pre></div>
+<div class="rmdimportant">
+<p>
+En résumé :
+</p>
+<ul>
+<li>
+si on souhaite récupérer uniquement le contenu d’un élément d’une liste, on utilise <code>[[]]</code> avec un seul argument.
+</li>
+<li>
+si on souhaite récupérer une nouvelle liste en sélectionnant des éléments de notre liste actuelle, on utilise <code>[]</code> avec un ou plusieurs arguments.
+</li>
+</ul>
+</div>
+<div class="rmdnote">
+<p>
+Comme pour les vecteurs, on peut utiliser des nombres négatifs avec <code>[]</code> pour exclure des éléments plutôt que les sélectionner, et on peut également utiliser les fonctions <code>head()</code> et <code>tail()</code>.
+</p>
+</div>
+<p>Si la liste est nommée, on peut sélectionner des éléments par noms avec les deux opérateurs.</p>
+<div class="sourceCode" id="cb717"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb717-1" title="1">liste &lt;-<span class="st"> </span><span class="kw">list</span>(<span class="dt">nombre =</span> <span class="dv">1</span>, <span class="dt">char =</span> <span class="st">&quot;foo&quot;</span>, <span class="dt">vecteur =</span> <span class="kw">c</span>(<span class="st">&quot;Pomme&quot;</span>, <span class="st">&quot;Citron&quot;</span>))</a>
+<a class="sourceLine" id="cb717-2" title="2">liste[<span class="kw">c</span>(<span class="st">&quot;nombre&quot;</span>, <span class="st">&quot;char&quot;</span>)]</a>
+<a class="sourceLine" id="cb717-3" title="3"><span class="co">#&gt; $nombre</span></a>
+<a class="sourceLine" id="cb717-4" title="4"><span class="co">#&gt; [1] 1</span></a>
+<a class="sourceLine" id="cb717-5" title="5"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb717-6" title="6"><span class="co">#&gt; $char</span></a>
+<a class="sourceLine" id="cb717-7" title="7"><span class="co">#&gt; [1] &quot;foo&quot;</span></a>
+<a class="sourceLine" id="cb717-8" title="8">liste[[<span class="st">&quot;vecteur&quot;</span>]]</a>
+<a class="sourceLine" id="cb717-9" title="9"><span class="co">#&gt; [1] &quot;Pomme&quot;  &quot;Citron&quot;</span></a></code></pre></div>
+<p>On peut aussi utiliser l’opérateur <code>$</code>, qui équivaut à <code>[[]]</code> :</p>
+<div class="sourceCode" id="cb718"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb718-1" title="1">liste<span class="op">$</span>vecteur</a>
+<a class="sourceLine" id="cb718-2" title="2"><span class="co">#&gt; [1] &quot;Pomme&quot;  &quot;Citron&quot;</span></a></code></pre></div>
+</div>
+<div id="modification-1" class="section level3">
+<h3><span class="header-section-number">15.2.4</span> Modification</h3>
+<p>Comme pour les vecteurs, on peut utiliser l’opérateur <code>[]</code> et l’opérateur d’assignation <code>&lt;-</code> pour modifier des éléments d’une liste.</p>
+<div class="sourceCode" id="cb719"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb719-1" title="1">liste &lt;-<span class="st"> </span><span class="kw">list</span>(<span class="dt">nombre =</span> <span class="dv">1</span><span class="op">:</span><span class="dv">5</span>, <span class="dt">char =</span> <span class="st">&quot;foo&quot;</span>, <span class="dt">vecteur =</span> <span class="kw">c</span>(<span class="st">&quot;Pomme&quot;</span>, <span class="st">&quot;Citron&quot;</span>))</a>
+<a class="sourceLine" id="cb719-2" title="2">liste[<span class="dv">1</span>] &lt;-<span class="st"> &quot;first&quot;</span></a>
+<a class="sourceLine" id="cb719-3" title="3">liste</a>
+<a class="sourceLine" id="cb719-4" title="4"><span class="co">#&gt; $nombre</span></a>
+<a class="sourceLine" id="cb719-5" title="5"><span class="co">#&gt; [1] &quot;first&quot;</span></a>
+<a class="sourceLine" id="cb719-6" title="6"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb719-7" title="7"><span class="co">#&gt; $char</span></a>
+<a class="sourceLine" id="cb719-8" title="8"><span class="co">#&gt; [1] &quot;foo&quot;</span></a>
+<a class="sourceLine" id="cb719-9" title="9"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb719-10" title="10"><span class="co">#&gt; $vecteur</span></a>
+<a class="sourceLine" id="cb719-11" title="11"><span class="co">#&gt; [1] &quot;Pomme&quot;  &quot;Citron&quot;</span></a></code></pre></div>
+<div class="sourceCode" id="cb720"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb720-1" title="1">liste[<span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">3</span>)] &lt;-<span class="st"> </span><span class="dv">0</span></a>
+<a class="sourceLine" id="cb720-2" title="2">liste</a>
+<a class="sourceLine" id="cb720-3" title="3"><span class="co">#&gt; $nombre</span></a>
+<a class="sourceLine" id="cb720-4" title="4"><span class="co">#&gt; [1] 0</span></a>
+<a class="sourceLine" id="cb720-5" title="5"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb720-6" title="6"><span class="co">#&gt; $char</span></a>
+<a class="sourceLine" id="cb720-7" title="7"><span class="co">#&gt; [1] &quot;foo&quot;</span></a>
+<a class="sourceLine" id="cb720-8" title="8"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb720-9" title="9"><span class="co">#&gt; $vecteur</span></a>
+<a class="sourceLine" id="cb720-10" title="10"><span class="co">#&gt; [1] 0</span></a></code></pre></div>
+<div class="rmdimportant">
+<p>
+Attention à ne pas utiliser les crochets doubles pour modifier des éléments d’une liste car ceux-ci peuvent avoir un comportement inattendu, notamment si on veut modifier plusieurs éléments d’un coup.
+</p>
+</div>
+<p>Enfin, si on souhaite supprimer un ou plusieurs éléments d’une liste, il faut leur attribuer la valeur <code>NULL</code><a href="#fn29" class="footnote-ref" id="fnref29"><sup>29</sup></a>.</p>
+<div class="sourceCode" id="cb721"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb721-1" title="1">liste &lt;-<span class="st"> </span><span class="kw">list</span>(<span class="dt">nombre =</span> <span class="dv">1</span><span class="op">:</span><span class="dv">5</span>, <span class="dt">char =</span> <span class="st">&quot;foo&quot;</span>, <span class="dt">vecteur =</span> <span class="kw">c</span>(<span class="st">&quot;Pomme&quot;</span>, <span class="st">&quot;Citron&quot;</span>))</a>
+<a class="sourceLine" id="cb721-2" title="2">liste<span class="op">$</span>char &lt;-<span class="st"> </span><span class="ot">NULL</span></a>
+<a class="sourceLine" id="cb721-3" title="3">liste</a>
+<a class="sourceLine" id="cb721-4" title="4"><span class="co">#&gt; $nombre</span></a>
+<a class="sourceLine" id="cb721-5" title="5"><span class="co">#&gt; [1] 1 2 3 4 5</span></a>
+<a class="sourceLine" id="cb721-6" title="6"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb721-7" title="7"><span class="co">#&gt; $vecteur</span></a>
+<a class="sourceLine" id="cb721-8" title="8"><span class="co">#&gt; [1] &quot;Pomme&quot;  &quot;Citron&quot;</span></a></code></pre></div>
+</div>
+<div id="utilisation" class="section level3">
+<h3><span class="header-section-number">15.2.5</span> Utilisation</h3>
+<p>En tant que généralisation des vecteurs atomiques, les listes sont utiles dès qu’on souhaite regrouper des éléments complexes ou hétérogènes.</p>
+<p>On les utilisera par exemple pour retourner plusieurs résultats depuis une fonction.</p>
+<div class="sourceCode" id="cb722"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb722-1" title="1">indicateurs &lt;-<span class="st"> </span><span class="cf">function</span>(x) {</a>
+<a class="sourceLine" id="cb722-2" title="2">    <span class="kw">list</span>(</a>
+<a class="sourceLine" id="cb722-3" title="3">        <span class="dt">moyenne =</span> <span class="kw">mean</span>(x),</a>
+<a class="sourceLine" id="cb722-4" title="4">        <span class="dt">variance =</span> <span class="kw">var</span>(x)</a>
+<a class="sourceLine" id="cb722-5" title="5">    )</a>
+<a class="sourceLine" id="cb722-6" title="6">}</a>
+<a class="sourceLine" id="cb722-7" title="7"></a>
+<a class="sourceLine" id="cb722-8" title="8">x &lt;-<span class="st"> </span><span class="dv">1</span><span class="op">:</span><span class="dv">10</span></a>
+<a class="sourceLine" id="cb722-9" title="9">res &lt;-<span class="st"> </span><span class="kw">indicateurs</span>(x)</a>
+<a class="sourceLine" id="cb722-10" title="10">res<span class="op">$</span>moyenne</a>
+<a class="sourceLine" id="cb722-11" title="11"><span class="co">#&gt; [1] 5.5</span></a></code></pre></div>
+<p>On utilise également les listes pour stocker des objets complexes et leur appliquer des fonctions. Ce fonctionnement sera abordé en détail dans la section <a href="18-purrr.html#purrr">18</a>, mais en guise de petit aperçu, l’exemple fictif suivant récupère les noms de tous les fichiers CSV du répertoire courant et les importe tous dans une liste à l’aide de <code>purrr::map()</code> et de <code>read_csv()</code>.</p>
+<div class="sourceCode" id="cb723"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb723-1" title="1">files &lt;-<span class="st"> </span><span class="kw">list.files</span>(<span class="dt">pattern =</span> <span class="st">&quot;*.csv&quot;</span>)</a>
+<a class="sourceLine" id="cb723-2" title="2">dfs &lt;-<span class="st"> </span>purrr<span class="op">::</span><span class="kw">map</span>(files, read_csv)</a></code></pre></div>
+<p>On pourra ensuite utiliser cette liste de tableaux pour leur appliquer des transformations ou les fusionner.</p>
+</div>
+</div>
+<div id="data-frame-tibbles" class="section level2">
+<h2><span class="header-section-number">15.3</span> Tableaux de données (<em>data frame</em> et <em>tibble</em>)</h2>
+<p>On a déjà utilisé les tableaux de données à de nombreux reprises en manipulant des <em>data frames</em> ou des <em>tibbles</em>. Les seconds sont une variante des premiers, les différences entre les deux ayant été abordées section <a href="06-tidyverse.html#tibbles">6.4</a>.</p>
+<p>Un tableau de données est en réalité une liste nommée de vecteurs avec une contrainte spécifique : ces vecteurs doivent tous être de même longueur, ce qui garantit le format “tabulaire” des données.</p>
+<div id="création-1" class="section level3">
+<h3><span class="header-section-number">15.3.1</span> Création</h3>
+<p>Un tableau de données est le plus souvent créé en important des données depuis un fichier au format CSV, tableur ou autre. On peut cependant créer un <em>data frame</em> manuellement via la fonction <code>data.frame()</code> :</p>
+<div class="sourceCode" id="cb724"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb724-1" title="1">df &lt;-<span class="st"> </span><span class="kw">data.frame</span>(</a>
+<a class="sourceLine" id="cb724-2" title="2">    <span class="dt">fruit =</span> <span class="kw">c</span>(<span class="st">&quot;Pomme&quot;</span>, <span class="st">&quot;Pomme&quot;</span>, <span class="st">&quot;Citron&quot;</span>),</a>
+<a class="sourceLine" id="cb724-3" title="3">    <span class="dt">poids =</span> <span class="kw">c</span>(<span class="dv">154</span>, <span class="dv">167</span>, <span class="dv">92</span>),</a>
+<a class="sourceLine" id="cb724-4" title="4">    <span class="dt">couleur =</span> <span class="kw">c</span>(<span class="st">&quot;vert&quot;</span>, <span class="st">&quot;vert&quot;</span>, <span class="st">&quot;jaune&quot;</span>)</a>
+<a class="sourceLine" id="cb724-5" title="5">)</a></code></pre></div>
+<p>On peut aussi créer un <em>tibble</em> manuellement avec la fonction <code>tibble()</code>. La syntaxe est la même que celle de <code>data.frame()</code>, mais avec un comportement un peu différent : notamment, les noms comportant des espaces ou des caractères spéciaux sont conservés tels quels.</p>
+<p>La fonction <code>tribble()</code> permet de créer un tibble manuellement avec une syntaxe “par ligne” qui peut être un peu plus lisible.</p>
+<div class="sourceCode" id="cb725"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb725-1" title="1">df_trib &lt;-<span class="st"> </span><span class="kw">tribble</span>(</a>
+<a class="sourceLine" id="cb725-2" title="2">    <span class="op">~</span>fruit,   <span class="op">~</span>poids, <span class="op">~</span>couleur,</a>
+<a class="sourceLine" id="cb725-3" title="3">    <span class="st">&quot;Pomme&quot;</span>,  <span class="dv">154</span>,    <span class="st">&quot;vert&quot;</span>,</a>
+<a class="sourceLine" id="cb725-4" title="4">    <span class="st">&quot;Pomme&quot;</span>,  <span class="dv">167</span>,    <span class="st">&quot;vert&quot;</span>,</a>
+<a class="sourceLine" id="cb725-5" title="5">    <span class="st">&quot;Citron&quot;</span>, <span class="dv">92</span>,     <span class="st">&quot;jaune&quot;</span></a>
+<a class="sourceLine" id="cb725-6" title="6">)</a></code></pre></div>
+<p>On peut convertir un <em>data frame</em> en <em>tibble</em> avec la fonction <code>as_tibble()</code>.</p>
+<div class="sourceCode" id="cb726"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb726-1" title="1">df_tib &lt;-<span class="st"> </span><span class="kw">as_tibble</span>(df)</a>
+<a class="sourceLine" id="cb726-2" title="2">df_tib</a>
+<a class="sourceLine" id="cb726-3" title="3"><span class="co">#&gt; # A tibble: 3 × 3</span></a>
+<a class="sourceLine" id="cb726-4" title="4"><span class="co">#&gt;   fruit  poids couleur</span></a>
+<a class="sourceLine" id="cb726-5" title="5"><span class="co">#&gt;   &lt;chr&gt;  &lt;dbl&gt; &lt;chr&gt;  </span></a>
+<a class="sourceLine" id="cb726-6" title="6"><span class="co">#&gt; 1 Pomme    154 vert   </span></a>
+<a class="sourceLine" id="cb726-7" title="7"><span class="co">#&gt; 2 Pomme    167 vert   </span></a>
+<a class="sourceLine" id="cb726-8" title="8"><span class="co">#&gt; 3 Citron    92 jaune</span></a></code></pre></div>
+</div>
+<div id="noms-de-colonnes-et-de-lignes" class="section level3">
+<h3><span class="header-section-number">15.3.2</span> Noms de colonnes et de lignes</h3>
+<p>On peut lister et modifier les noms des colonnes d’un tableau avec les fonctions <code>names()</code> ou <code>colnames()</code> (qui sont équivalentes).</p>
+<div class="sourceCode" id="cb727"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb727-1" title="1"><span class="kw">names</span>(df)</a>
+<a class="sourceLine" id="cb727-2" title="2"><span class="co">#&gt; [1] &quot;fruit&quot;   &quot;poids&quot;   &quot;couleur&quot;</span></a>
+<a class="sourceLine" id="cb727-3" title="3"><span class="kw">colnames</span>(df)</a>
+<a class="sourceLine" id="cb727-4" title="4"><span class="co">#&gt; [1] &quot;fruit&quot;   &quot;poids&quot;   &quot;couleur&quot;</span></a></code></pre></div>
+<p>On peut attribuer des noms aux lignes d’un <em>data frame</em> à l’aide de la fonction <code>rownames()</code>. Attention cependant, les noms de ligne ne sont (volontairement) pas pris en charge par les <em>tibbles</em>.</p>
+<div class="sourceCode" id="cb728"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb728-1" title="1"><span class="kw">rownames</span>(df) &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;fruit1&quot;</span>, <span class="st">&quot;fruit2&quot;</span>, <span class="st">&quot;fruit3&quot;</span>)</a>
+<a class="sourceLine" id="cb728-2" title="2"><span class="kw">rownames</span>(df)</a>
+<a class="sourceLine" id="cb728-3" title="3"><span class="co">#&gt; [1] &quot;fruit1&quot; &quot;fruit2&quot; &quot;fruit3&quot;</span></a></code></pre></div>
+<div class="sourceCode" id="cb729"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb729-1" title="1"><span class="kw">rownames</span>(df_tib) &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;fruit1&quot;</span>, <span class="st">&quot;fruit2&quot;</span>, <span class="st">&quot;fruit3&quot;</span>)</a>
+<a class="sourceLine" id="cb729-2" title="2"><span class="co">#&gt; Warning: Setting row names on a tibble is deprecated.</span></a></code></pre></div>
+<p>Si on souhaite conserver des noms de ligne en passant d’un <em>data frame</em> à un <em>tibble</em>, il faut les stocker dans une nouvelle colonne, soit en la créant manuellement soit avec la fonction <code>rownames_to_column()</code> (qui a l’avantage de placer la nouvelle colonne en première position du tableau).</p>
+<div class="sourceCode" id="cb730"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb730-1" title="1"><span class="kw">rownames_to_column</span>(df, <span class="st">&quot;name&quot;</span>)</a>
+<a class="sourceLine" id="cb730-2" title="2"><span class="co">#&gt;     name  fruit poids couleur</span></a>
+<a class="sourceLine" id="cb730-3" title="3"><span class="co">#&gt; 1 fruit1  Pomme   154    vert</span></a>
+<a class="sourceLine" id="cb730-4" title="4"><span class="co">#&gt; 2 fruit2  Pomme   167    vert</span></a>
+<a class="sourceLine" id="cb730-5" title="5"><span class="co">#&gt; 3 fruit3 Citron    92   jaune</span></a></code></pre></div>
+</div>
+<div id="sélection-de-lignes-et-de-colonnes" class="section level3">
+<h3><span class="header-section-number">15.3.3</span> Sélection de lignes et de colonnes</h3>
+<p>On a déjà vu dans les parties précédentes plusieurs manières de sélectionner des éléments dans un tableau de données.</p>
+<p>Ainsi, on peut sélectionner une colonne via l’opérateur <code>$</code>.</p>
+<div class="sourceCode" id="cb731"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb731-1" title="1">df<span class="op">$</span>fruit</a>
+<a class="sourceLine" id="cb731-2" title="2"><span class="co">#&gt; [1] &quot;Pomme&quot;  &quot;Pomme&quot;  &quot;Citron&quot;</span></a></code></pre></div>
+<p>Comme un tableau de données est en réalité une liste de colonnes, on peut utiliser l’opérateur <code>[[]]</code> pour sélectionner l’une de ses colonnes, par position ou par nom<a href="#fn30" class="footnote-ref" id="fnref30"><sup>30</sup></a>.</p>
+<div class="sourceCode" id="cb732"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb732-1" title="1">df[[<span class="st">&quot;fruit&quot;</span>]]</a>
+<a class="sourceLine" id="cb732-2" title="2"><span class="co">#&gt; [1] &quot;Pomme&quot;  &quot;Pomme&quot;  &quot;Citron&quot;</span></a>
+<a class="sourceLine" id="cb732-3" title="3">df[[<span class="dv">2</span>]]</a>
+<a class="sourceLine" id="cb732-4" title="4"><span class="co">#&gt; [1] 154 167  92</span></a></code></pre></div>
+<p>On peut utiliser <code>head()</code> et <code>tail()</code> avec un tableau de données : dans ce cas ces fonctions retourneront les premières ou dernières <em>lignes</em> du tableau.</p>
+<div class="sourceCode" id="cb733"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb733-1" title="1"><span class="kw">head</span>(df, <span class="dv">2</span>)</a>
+<a class="sourceLine" id="cb733-2" title="2"><span class="co">#&gt;        fruit poids couleur</span></a>
+<a class="sourceLine" id="cb733-3" title="3"><span class="co">#&gt; fruit1 Pomme   154    vert</span></a>
+<a class="sourceLine" id="cb733-4" title="4"><span class="co">#&gt; fruit2 Pomme   167    vert</span></a></code></pre></div>
+<div class="sourceCode" id="cb734"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb734-1" title="1"><span class="kw">tail</span>(df, <span class="dv">1</span>)</a>
+<a class="sourceLine" id="cb734-2" title="2"><span class="co">#&gt;         fruit poids couleur</span></a>
+<a class="sourceLine" id="cb734-3" title="3"><span class="co">#&gt; fruit3 Citron    92   jaune</span></a></code></pre></div>
+<p>On peut également utiliser l’opérateur <code>[,]</code> pour sélectionner à la fois des lignes et des colonnes, en lui passant deux arguments séparés par une virgule : d’abord la sélection des lignes puis celle des colonnes. Dans les deux cas on peut sélectionner par position, nom ou condition. Si on laisse un argument vide, on sélectionne l’intégralité des lignes ou des colonnes.</p>
+<div class="sourceCode" id="cb735"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb735-1" title="1">df[<span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">3</span>), <span class="st">&quot;poids&quot;</span>]</a>
+<a class="sourceLine" id="cb735-2" title="2"><span class="co">#&gt; [1] 154  92</span></a></code></pre></div>
+<div class="sourceCode" id="cb736"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb736-1" title="1">df[, <span class="kw">c</span>(<span class="st">&quot;poids&quot;</span>, <span class="st">&quot;fruit&quot;</span>)]</a>
+<a class="sourceLine" id="cb736-2" title="2"><span class="co">#&gt;        poids  fruit</span></a>
+<a class="sourceLine" id="cb736-3" title="3"><span class="co">#&gt; fruit1   154  Pomme</span></a>
+<a class="sourceLine" id="cb736-4" title="4"><span class="co">#&gt; fruit2   167  Pomme</span></a>
+<a class="sourceLine" id="cb736-5" title="5"><span class="co">#&gt; fruit3    92 Citron</span></a></code></pre></div>
+<div class="sourceCode" id="cb737"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb737-1" title="1">df[df<span class="op">$</span>poids <span class="op">&gt;</span><span class="st"> </span><span class="dv">150</span>, ]</a>
+<a class="sourceLine" id="cb737-2" title="2"><span class="co">#&gt;        fruit poids couleur</span></a>
+<a class="sourceLine" id="cb737-3" title="3"><span class="co">#&gt; fruit1 Pomme   154    vert</span></a>
+<a class="sourceLine" id="cb737-4" title="4"><span class="co">#&gt; fruit2 Pomme   167    vert</span></a></code></pre></div>
+<div class="sourceCode" id="cb738"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb738-1" title="1"><span class="kw">library</span>(stringr)</a>
+<a class="sourceLine" id="cb738-2" title="2">df[, <span class="kw">str_detect</span>(<span class="kw">names</span>(df), <span class="st">&quot;o&quot;</span>)]</a>
+<a class="sourceLine" id="cb738-3" title="3"><span class="co">#&gt;        poids couleur</span></a>
+<a class="sourceLine" id="cb738-4" title="4"><span class="co">#&gt; fruit1   154    vert</span></a>
+<a class="sourceLine" id="cb738-5" title="5"><span class="co">#&gt; fruit2   167    vert</span></a>
+<a class="sourceLine" id="cb738-6" title="6"><span class="co">#&gt; fruit3    92   jaune</span></a></code></pre></div>
+<p>Attention, le comportement de <code>[,]</code> est différent entre les <em>tibbles</em> et les <em>data frame</em> lorsqu’on ne sélectionne qu’une seule colonne. Dans le cas d’un <em>data frame</em>, le résultat est un vecteur, dans le cas d’un <em>tibble</em> le résultat est un tableau à une colonne.</p>
+<div class="sourceCode" id="cb739"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb739-1" title="1">df[, <span class="st">&quot;fruit&quot;</span>]</a>
+<a class="sourceLine" id="cb739-2" title="2"><span class="co">#&gt; [1] &quot;Pomme&quot;  &quot;Pomme&quot;  &quot;Citron&quot;</span></a></code></pre></div>
+<div class="sourceCode" id="cb740"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb740-1" title="1">df_tib[, <span class="st">&quot;fruit&quot;</span>]</a>
+<a class="sourceLine" id="cb740-2" title="2"><span class="co">#&gt; # A tibble: 3 × 1</span></a>
+<a class="sourceLine" id="cb740-3" title="3"><span class="co">#&gt;   fruit </span></a>
+<a class="sourceLine" id="cb740-4" title="4"><span class="co">#&gt;   &lt;chr&gt; </span></a>
+<a class="sourceLine" id="cb740-5" title="5"><span class="co">#&gt; 1 Pomme </span></a>
+<a class="sourceLine" id="cb740-6" title="6"><span class="co">#&gt; 2 Pomme </span></a>
+<a class="sourceLine" id="cb740-7" title="7"><span class="co">#&gt; 3 Citron</span></a></code></pre></div>
+<p>Cette différence peut parfois être source d’erreurs, notamment quand on développe une fonction qui prend un tableau de données en argument.</p>
+</div>
+<div id="modification-2" class="section level3">
+<h3><span class="header-section-number">15.3.4</span> Modification</h3>
+<p>On peut utiliser <code>[[]]</code> et <code>[,]</code> avec l’opérateur d’assignation <code>&lt;-</code> pour modifier tout ou partie d’un tableau de données.</p>
+<div class="sourceCode" id="cb741"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb741-1" title="1">df[[<span class="st">&quot;poids_kg&quot;</span>]] &lt;-<span class="st"> </span>df<span class="op">$</span>poids <span class="op">/</span><span class="st"> </span><span class="dv">1000</span></a>
+<a class="sourceLine" id="cb741-2" title="2">df</a>
+<a class="sourceLine" id="cb741-3" title="3"><span class="co">#&gt;         fruit poids couleur poids_kg</span></a>
+<a class="sourceLine" id="cb741-4" title="4"><span class="co">#&gt; fruit1  Pomme   154    vert    0.154</span></a>
+<a class="sourceLine" id="cb741-5" title="5"><span class="co">#&gt; fruit2  Pomme   167    vert    0.167</span></a>
+<a class="sourceLine" id="cb741-6" title="6"><span class="co">#&gt; fruit3 Citron    92   jaune    0.092</span></a></code></pre></div>
+<div class="sourceCode" id="cb742"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb742-1" title="1">df[df<span class="op">$</span>fruit <span class="op">==</span><span class="st"> &quot;Citron&quot;</span>, <span class="st">&quot;fruit&quot;</span>] &lt;-<span class="st"> &quot;Agrume&quot;</span></a>
+<a class="sourceLine" id="cb742-2" title="2">df</a>
+<a class="sourceLine" id="cb742-3" title="3"><span class="co">#&gt;         fruit poids couleur poids_kg</span></a>
+<a class="sourceLine" id="cb742-4" title="4"><span class="co">#&gt; fruit1  Pomme   154    vert    0.154</span></a>
+<a class="sourceLine" id="cb742-5" title="5"><span class="co">#&gt; fruit2  Pomme   167    vert    0.167</span></a>
+<a class="sourceLine" id="cb742-6" title="6"><span class="co">#&gt; fruit3 Agrume    92   jaune    0.092</span></a></code></pre></div>
+<p>On pourra aussi noter que <code>[]</code> utilisé sans arguments permet de sélectionner et de modifier l’ensemble des valeurs du tableau. Ainsi les deux instructions suivantes ont des effets très différents :</p>
+<div class="sourceCode" id="cb743"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb743-1" title="1">df[] &lt;-<span class="st"> &quot;a&quot;</span></a>
+<a class="sourceLine" id="cb743-2" title="2">df</a>
+<a class="sourceLine" id="cb743-3" title="3"><span class="co">#&gt;        fruit poids couleur poids_kg</span></a>
+<a class="sourceLine" id="cb743-4" title="4"><span class="co">#&gt; fruit1     a     a       a        a</span></a>
+<a class="sourceLine" id="cb743-5" title="5"><span class="co">#&gt; fruit2     a     a       a        a</span></a>
+<a class="sourceLine" id="cb743-6" title="6"><span class="co">#&gt; fruit3     a     a       a        a</span></a>
+<a class="sourceLine" id="cb743-7" title="7"></a>
+<a class="sourceLine" id="cb743-8" title="8">df &lt;-<span class="st"> &quot;a&quot;</span></a>
+<a class="sourceLine" id="cb743-9" title="9">df</a>
+<a class="sourceLine" id="cb743-10" title="10"><span class="co">#&gt; [1] &quot;a&quot;</span></a></code></pre></div>
+<p>Pour conclure, on peut noter que l’utilisation des opérateurs <code>[[]]</code> et <code>[,]</code> sur un tableau de données peut sembler redondante et moins pratique que l’utilisation des verbes de <code>dplyr</code> comme <code>select()</code> ou <code>filter()</code>. Ils peuvent cependant être utiles lorsqu’on souhaite éviter les complications liées à l’utilisation du <em>tidyverse</em> à l’intérieur de fonctions, comme indiqué section <a href="19-programmer-tidyverse.html#programmer-tidyverse">19</a>. Ils peuvent également être plus rapides, et il est important de les connaître car on les rencontrera très fréquemment dans du code R sur le Web ou dans des packages.</p>
+</div>
+</div>
+<div id="ressources-7" class="section level2">
+<h2><span class="header-section-number">15.4</span> Ressources</h2>
+<p>L’ouvrage <em>R for Data Science</em> (en anglais), accessible en ligne, contient <a href="https://r4ds.had.co.nz/vectors.html">un chapitre sur les vecteurs atomiques et les listes</a>, et <a href="https://r4ds.had.co.nz/tibbles.html#tibbles">un chapitre dédié aux <em>tibbles</em></a>.</p>
+<p>Pour aller encore plus loin, l’ouvrage <em>Advanced R</em> (également en anglais) aborde de manière approfondie <a href="https://adv-r.hadley.nz/vectors-chap.html">les structures de données</a> et <a href="https://adv-r.hadley.nz/subsetting.html">les opérateurs de sélection <code>[]</code>, <code>[[]]</code> et <code>$</code></a>.</p>
+</div>
+<div id="exercices-8" class="section level2">
+<h2><span class="header-section-number">15.5</span> Exercices</h2>
+<div id="vecteurs-atomiques-1" class="section level3">
+<h3><span class="header-section-number">15.5.1</span> Vecteurs atomiques</h3>
+<p><strong>Exercice 1.1</strong></p>
+<p>À l’aide de <code>seq()</code>, créer un vecteur <code>v</code> contenant tous les nombres pairs entre 10 et 20.</p>
+
+<div class="solution-exo">
+<div class="sourceCode" id="cb744"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb744-1" title="1">v &lt;-<span class="st"> </span><span class="kw">seq</span>(<span class="dv">10</span>, <span class="dv">20</span>, <span class="dt">by =</span> <span class="dv">2</span>)</a></code></pre></div>
+</div>
+
+<p>Sélectionner les 3 premières valeurs de <code>v</code>.</p>
+
+<div class="solution-exo">
+<div class="sourceCode" id="cb745"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb745-1" title="1">v[<span class="dv">1</span><span class="op">:</span><span class="dv">3</span>]</a>
+<a class="sourceLine" id="cb745-2" title="2"><span class="kw">head</span>(v, <span class="dv">3</span>)</a></code></pre></div>
+</div>
+
+<p>Sélectionner toutes les valeurs de <code>v</code> strictement inférieures à 15.</p>
+
+<div class="solution-exo">
+<div class="sourceCode" id="cb746"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb746-1" title="1">v[v <span class="op">&lt;</span><span class="st"> </span><span class="dv">15</span>]</a></code></pre></div>
+</div>
+
+<p>Créer une fonction <code>derniere()</code> qui prend en paramètre un vecteur et retourne son dernier élément (la fonction doit pouvoir s’appliquer à n’importe quel vecteur, quelle que soit sa longueur).</p>
+<div class="sourceCode" id="cb747"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb747-1" title="1"><span class="kw">derniere</span>(v)</a>
+<a class="sourceLine" id="cb747-2" title="2"><span class="co">#&gt; [1] 20</span></a></code></pre></div>
+
+<div class="solution-exo">
+<div class="sourceCode" id="cb748"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb748-1" title="1">derniere &lt;-<span class="st"> </span><span class="cf">function</span>(v) {</a>
+<a class="sourceLine" id="cb748-2" title="2">    v[<span class="kw">length</span>(v)]</a>
+<a class="sourceLine" id="cb748-3" title="3">}</a>
+<a class="sourceLine" id="cb748-4" title="4"></a>
+<a class="sourceLine" id="cb748-5" title="5"><span class="co"># Ou bien</span></a>
+<a class="sourceLine" id="cb748-6" title="6"></a>
+<a class="sourceLine" id="cb748-7" title="7">derniere &lt;-<span class="st"> </span><span class="cf">function</span>(v) {</a>
+<a class="sourceLine" id="cb748-8" title="8">    <span class="kw">tail</span>(v, <span class="dv">1</span>)</a>
+<a class="sourceLine" id="cb748-9" title="9">}</a></code></pre></div>
+</div>
+
+<p>Créer une fonction <code>sauf_derniere()</code> qui prend en paramètre un vecteur et retourne ce vecteur sans son dernier élément.</p>
+<div class="sourceCode" id="cb749"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb749-1" title="1"><span class="kw">sauf_derniere</span>(v)</a>
+<a class="sourceLine" id="cb749-2" title="2"><span class="co">#&gt; [1] 10 12 14 16 18</span></a></code></pre></div>
+
+<div class="solution-exo">
+<div class="sourceCode" id="cb750"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb750-1" title="1">sauf_derniere &lt;-<span class="st"> </span><span class="cf">function</span>(v) {</a>
+<a class="sourceLine" id="cb750-2" title="2">    v[<span class="op">-</span><span class="kw">length</span>(v)]</a>
+<a class="sourceLine" id="cb750-3" title="3">}</a>
+<a class="sourceLine" id="cb750-4" title="4"></a>
+<a class="sourceLine" id="cb750-5" title="5"><span class="co"># Ou bien</span></a>
+<a class="sourceLine" id="cb750-6" title="6"></a>
+<a class="sourceLine" id="cb750-7" title="7">sauf_derniere &lt;-<span class="st"> </span><span class="cf">function</span>(v) {</a>
+<a class="sourceLine" id="cb750-8" title="8">    <span class="kw">head</span>(v, <span class="dv">-1</span>)</a>
+<a class="sourceLine" id="cb750-9" title="9">}</a></code></pre></div>
+</div>
+
+<p><strong>Exercice 1.2</strong></p>
+<p>Soit le vecteur <code>vn</code> suivant :</p>
+<div class="sourceCode" id="cb751"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb751-1" title="1">vn &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dt">val1 =</span> <span class="dv">10</span>, <span class="dt">val2 =</span> <span class="dv">0</span>, <span class="dt">val3 =</span> <span class="dv">14</span>)</a></code></pre></div>
+<p>Sélectionner les valeurs nommées “val1” et “val3”.</p>
+
+<div class="solution-exo">
+<div class="sourceCode" id="cb752"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb752-1" title="1">vn[<span class="kw">c</span>(<span class="st">&quot;val1&quot;</span>, <span class="st">&quot;val3&quot;</span>)]</a></code></pre></div>
+</div>
+
+<p>Créer une fonction <code>select_noms()</code> qui prend en argument un vecteur <code>v</code> et un ou plusieurs noms, et retourne uniquement les éléments de <code>v</code> correspondant aux noms.</p>
+<div class="sourceCode" id="cb753"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb753-1" title="1"><span class="kw">select_noms</span>(vn, <span class="kw">c</span>(<span class="st">&quot;val2&quot;</span>, <span class="st">&quot;val3&quot;</span>))</a>
+<a class="sourceLine" id="cb753-2" title="2"><span class="co">#&gt; val2 val3 </span></a>
+<a class="sourceLine" id="cb753-3" title="3"><span class="co">#&gt;    0   14</span></a></code></pre></div>
+
+<div class="solution-exo">
+<div class="sourceCode" id="cb754"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb754-1" title="1">select_noms &lt;-<span class="st"> </span><span class="cf">function</span>(v, noms) {</a>
+<a class="sourceLine" id="cb754-2" title="2">    v[noms]</a>
+<a class="sourceLine" id="cb754-3" title="3">}</a></code></pre></div>
+</div>
+
+<p><em>Facultatif :</em> créer une fonction <code>sauf_nom()</code> qui prend en argument un vecteur <code>v</code> et un nom, et retourne tous les éléments de <code>v</code> sauf celui correspondant à ce nom.</p>
+<div class="sourceCode" id="cb755"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb755-1" title="1"><span class="kw">sauf_nom</span>(vn, <span class="st">&quot;val2&quot;</span>)</a>
+<a class="sourceLine" id="cb755-2" title="2"><span class="co">#&gt; val1 val3 </span></a>
+<a class="sourceLine" id="cb755-3" title="3"><span class="co">#&gt;   10   14</span></a></code></pre></div>
+
+<div class="solution-exo">
+<div class="sourceCode" id="cb756"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb756-1" title="1">sauf_nom &lt;-<span class="st"> </span><span class="cf">function</span>(v, nom) {</a>
+<a class="sourceLine" id="cb756-2" title="2">    v[<span class="kw">names</span>(v) <span class="op">!=</span><span class="st"> </span>nom]</a>
+<a class="sourceLine" id="cb756-3" title="3">}</a></code></pre></div>
+</div>
+
+<p><em>Facultatif :</em> comparer les résultats des deux instructions suivantes.</p>
+<div class="sourceCode" id="cb757"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb757-1" title="1">vn[<span class="st">&quot;val1&quot;</span>]</a>
+<a class="sourceLine" id="cb757-2" title="2">vn[[<span class="st">&quot;val1&quot;</span>]]</a></code></pre></div>
+<p><strong>Exercice 1.3</strong></p>
+<p>Soit les vecteurs <code>x</code> et <code>y</code> suivants :</p>
+<div class="sourceCode" id="cb758"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb758-1" title="1">x &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">1</span>, <span class="ot">NA</span>, <span class="dv">3</span>, <span class="dv">4</span>, <span class="ot">NA</span>)</a>
+<a class="sourceLine" id="cb758-2" title="2">y &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">10</span>, <span class="dv">20</span>, <span class="dv">30</span>, <span class="dv">40</span>, <span class="dv">50</span>)</a></code></pre></div>
+<p>À l’aide de l’opérateur <code>[]</code>, sélectionner uniquement les valeurs <code>NA</code> de <code>x</code>.</p>
+
+<div class="solution-exo">
+<div class="sourceCode" id="cb759"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb759-1" title="1">x[<span class="kw">is.na</span>(x)]</a></code></pre></div>
+</div>
+
+<p>De la même manière, sélectionner les valeurs de <code>y</code> correspondant aux valeurs <code>NA</code> de <code>x</code> (c’est-à-dire les valeurs 20 et 50).</p>
+
+<div class="solution-exo">
+<div class="sourceCode" id="cb760"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb760-1" title="1">y[<span class="kw">is.na</span>(x)]</a></code></pre></div>
+</div>
+
+<p>En utilisant les deux instructions précédentes et l’opérateur d’assignation <code>&lt;-</code>, remplacer les valeurs manquantes de <code>x</code> par les valeurs correspondantes de <code>y</code>.</p>
+
+<div class="solution-exo">
+<div class="sourceCode" id="cb761"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb761-1" title="1">x[<span class="kw">is.na</span>(x)] &lt;-<span class="st"> </span>y[<span class="kw">is.na</span>(x)]</a></code></pre></div>
+</div>
+
+<p><strong>Exercice 1.4</strong></p>
+<p>Créer une fonction <code>problemes_conversion</code> qui :</p>
+<ul>
+<li>prend en argument un vecteur <code>v</code></li>
+<li>le convertit en vecteur numérique</li>
+<li>retourne les valeurs de <code>v</code> qui n’ont pas été converties correctement, c’est-à-dire celles qui ne valaient pas <code>NA</code> dans <code>v</code> mais valent <code>NA</code> après la conversion.</li>
+</ul>
+<p>Vérifier avec :</p>
+<div class="sourceCode" id="cb762"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb762-1" title="1">x &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;igloo&quot;</span>, <span class="st">&quot;20&quot;</span>, <span class="ot">NA</span>, <span class="st">&quot;3.5&quot;</span>, <span class="st">&quot;4,8&quot;</span>)</a>
+<a class="sourceLine" id="cb762-2" title="2"><span class="kw">problemes_conversion</span>(x)</a>
+<a class="sourceLine" id="cb762-3" title="3"><span class="co">#&gt; Warning in problemes_conversion(x): NAs introduits lors de la conversion</span></a>
+<a class="sourceLine" id="cb762-4" title="4"><span class="co">#&gt; automatique</span></a>
+<a class="sourceLine" id="cb762-5" title="5"><span class="co">#&gt; [1] &quot;igloo&quot; &quot;4,8&quot;</span></a></code></pre></div>
+
+<div class="solution-exo">
+<div class="sourceCode" id="cb763"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb763-1" title="1">problemes_conversion &lt;-<span class="st"> </span><span class="cf">function</span>(v) {</a>
+<a class="sourceLine" id="cb763-2" title="2">    conv &lt;-<span class="st"> </span><span class="kw">as.numeric</span>(v)</a>
+<a class="sourceLine" id="cb763-3" title="3">    v[<span class="op">!</span><span class="kw">is.na</span>(v) <span class="op">&amp;</span><span class="st"> </span><span class="kw">is.na</span>(conv)]</a>
+<a class="sourceLine" id="cb763-4" title="4">}</a></code></pre></div>
+</div>
+
+</div>
+<div id="listes-1" class="section level3">
+<h3><span class="header-section-number">15.5.2</span> Listes</h3>
+<p><strong>Exercice 2.1</strong></p>
+<p>Créer une liste <code>liste</code> ayant la structure suivante :</p>
+<pre><code>#&gt; List of 3
+#&gt;  $ : num 1
+#&gt;  $ : chr &quot;oui&quot;
+#&gt;  $ : int [1:3] 10 11 12</code></pre>
+
+<div class="solution-exo">
+<div class="sourceCode" id="cb765"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb765-1" title="1">liste &lt;-<span class="st"> </span><span class="kw">list</span>(<span class="dv">1</span>, <span class="st">&quot;oui&quot;</span>, <span class="dv">10</span><span class="op">:</span><span class="dv">12</span>)</a></code></pre></div>
+</div>
+
+<p>Donner les noms suivants aux éléments de la liste : <code>num</code>, <code>reponse</code> et <code>vec</code>.</p>
+
+<div class="solution-exo">
+<div class="sourceCode" id="cb766"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb766-1" title="1"><span class="kw">names</span>(liste) &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;num&quot;</span>, <span class="st">&quot;reponse&quot;</span>, <span class="st">&quot;vec&quot;</span>)</a></code></pre></div>
+</div>
+
+<p>Ajouter un élément nommé <code>chat</code> et ayant pour valeur “Ronron” à la fin de <code>liste</code>.</p>
+
+<div class="solution-exo">
+<div class="sourceCode" id="cb767"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb767-1" title="1">liste &lt;-<span class="st"> </span><span class="kw">c</span>(liste, <span class="dt">chat =</span> <span class="st">&quot;Ronron&quot;</span>)</a></code></pre></div>
+</div>
+
+<p>Modifier l’élément <code>chat</code> pour lui donner la valeur “Ronpchi”.</p>
+
+<div class="solution-exo">
+<div class="sourceCode" id="cb768"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb768-1" title="1">liste<span class="op">$</span>chat &lt;-<span class="st"> &quot;Ronpchi&quot;</span></a>
+<a class="sourceLine" id="cb768-2" title="2"><span class="co"># Ou bien</span></a>
+<a class="sourceLine" id="cb768-3" title="3">liste[<span class="st">&quot;chat&quot;</span>] &lt;-<span class="st"> &quot;Ronpchi&quot;</span></a></code></pre></div>
+</div>
+
+<p>Supprimer l’élément <code>vec</code> de <code>liste</code>.</p>
+
+<div class="solution-exo">
+<div class="sourceCode" id="cb769"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb769-1" title="1">liste<span class="op">$</span>vec &lt;-<span class="st"> </span><span class="ot">NULL</span></a>
+<a class="sourceLine" id="cb769-2" title="2"><span class="co"># Ou bien</span></a>
+<a class="sourceLine" id="cb769-3" title="3">liste[<span class="st">&quot;vec&quot;</span>] &lt;-<span class="st"> </span><span class="ot">NULL</span></a></code></pre></div>
+</div>
+
+<p><strong>Exercice 2.2</strong></p>
+<p>Créer une fonction nommée <code>extremes</code> qui prend en argument un vecteur et retourne une liste nommée comportant sa valeur minimale et sa valeur maximale.</p>
+
+<div class="solution-exo">
+<div class="sourceCode" id="cb770"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb770-1" title="1">extremes &lt;-<span class="st"> </span><span class="cf">function</span>(x) {</a>
+<a class="sourceLine" id="cb770-2" title="2">    <span class="kw">list</span>(<span class="dt">min =</span> <span class="kw">min</span>(x), <span class="dt">max =</span> <span class="kw">max</span>(x))</a>
+<a class="sourceLine" id="cb770-3" title="3">}</a></code></pre></div>
+</div>
+
+<p>Appliquer cette fonction à un vecteur de votre choix et utiliser le résultat pour calculer l’étendue (soit la différence entre la valeur maximale et la valeur minimale).</p>
+
+<div class="solution-exo">
+<div class="sourceCode" id="cb771"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb771-1" title="1">v &lt;-<span class="st"> </span><span class="kw">runif</span>(<span class="dv">10</span>)</a>
+<a class="sourceLine" id="cb771-2" title="2">res &lt;-<span class="st"> </span><span class="kw">extremes</span>(v)</a>
+<a class="sourceLine" id="cb771-3" title="3">res<span class="op">$</span>max <span class="op">-</span><span class="st"> </span>res<span class="op">$</span>min</a></code></pre></div>
+</div>
+
+<p><strong>Exercice 2.3</strong></p>
+<p>Soit la liste suivante :</p>
+<div class="sourceCode" id="cb772"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb772-1" title="1">liste &lt;-<span class="st"> </span><span class="kw">list</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">3</span>, <span class="kw">runif</span>(<span class="dv">5</span>), <span class="st">&quot;youpi&quot;</span>)</a></code></pre></div>
+<p>Sélectionner la sous liste composée des éléments 1 et 3 de <code>liste</code>.</p>
+
+<div class="solution-exo">
+<div class="sourceCode" id="cb773"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb773-1" title="1">liste[<span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">3</span>)]</a></code></pre></div>
+</div>
+
+<p>Sélectionner la sous-liste composée du premier élément de <code>liste</code>.</p>
+
+<div class="solution-exo">
+<div class="sourceCode" id="cb774"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb774-1" title="1">liste[<span class="dv">1</span>]</a></code></pre></div>
+</div>
+
+<p>Sélectionner le contenu du premier élément de <code>liste</code>.</p>
+
+<div class="solution-exo">
+<div class="sourceCode" id="cb775"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb775-1" title="1">liste[[<span class="dv">1</span>]]</a></code></pre></div>
+</div>
+
+<p>En enchaînant deux opérations de sélection, sélectionner le deuxième élément du premier élément de <code>liste</code>.</p>
+
+<div class="solution-exo">
+<div class="sourceCode" id="cb776"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb776-1" title="1">liste[[<span class="dv">1</span>]][<span class="dv">2</span>]</a></code></pre></div>
+</div>
+
+<p><strong>Exercice 2.4</strong></p>
+<p>Créer une fonction <code>description_liste</code> qui prend en argument une liste et retourne :</p>
+<ul>
+<li>son premier élément</li>
+<li>son dernier élément</li>
+<li>le nombre d’éléments qu’elle contient</li>
+</ul>
+<p>Vérifier avec :</p>
+<div class="sourceCode" id="cb777"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb777-1" title="1">liste &lt;-<span class="st"> </span><span class="kw">list</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">3</span>, <span class="kw">runif</span>(<span class="dv">5</span>), <span class="st">&quot;youpi&quot;</span>)</a>
+<a class="sourceLine" id="cb777-2" title="2"><span class="kw">description_liste</span>(liste)</a>
+<a class="sourceLine" id="cb777-3" title="3"><span class="co">#&gt; $premier_element</span></a>
+<a class="sourceLine" id="cb777-4" title="4"><span class="co">#&gt; [1] 1 2 3</span></a>
+<a class="sourceLine" id="cb777-5" title="5"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb777-6" title="6"><span class="co">#&gt; $dernier_element</span></a>
+<a class="sourceLine" id="cb777-7" title="7"><span class="co">#&gt; [1] &quot;youpi&quot;</span></a>
+<a class="sourceLine" id="cb777-8" title="8"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb777-9" title="9"><span class="co">#&gt; $nb_elements</span></a>
+<a class="sourceLine" id="cb777-10" title="10"><span class="co">#&gt; [1] 3</span></a></code></pre></div>
+
+<div class="solution-exo">
+<div class="sourceCode" id="cb778"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb778-1" title="1">description_liste &lt;-<span class="st"> </span><span class="cf">function</span>(liste) {</a>
+<a class="sourceLine" id="cb778-2" title="2">    <span class="kw">list</span>(</a>
+<a class="sourceLine" id="cb778-3" title="3">        <span class="dt">premier_element =</span> liste[[<span class="dv">1</span>]],</a>
+<a class="sourceLine" id="cb778-4" title="4">        <span class="dt">dernier_element =</span> liste[[<span class="kw">length</span>(liste)]],</a>
+<a class="sourceLine" id="cb778-5" title="5">        <span class="dt">nb_elements =</span> <span class="kw">length</span>(liste)</a>
+<a class="sourceLine" id="cb778-6" title="6">    )</a>
+<a class="sourceLine" id="cb778-7" title="7">}</a></code></pre></div>
+</div>
+
+</div>
+<div id="tableaux-de-données" class="section level3">
+<h3><span class="header-section-number">15.5.3</span> Tableaux de données</h3>
+<p><strong>Exercice 3.1</strong></p>
+<p>Créer le tableau <code>df</code> suivant :</p>
+<div class="sourceCode" id="cb779"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb779-1" title="1">df &lt;-<span class="st"> </span><span class="kw">data.frame</span>(</a>
+<a class="sourceLine" id="cb779-2" title="2">    <span class="dt">fruit =</span> <span class="kw">c</span>(<span class="st">&quot;Pomme&quot;</span>, <span class="st">&quot;Pomme&quot;</span>, <span class="st">&quot;Citron&quot;</span>),</a>
+<a class="sourceLine" id="cb779-3" title="3">    <span class="dt">poids =</span> <span class="kw">c</span>(<span class="dv">154</span>, <span class="dv">167</span>, <span class="dv">92</span>),</a>
+<a class="sourceLine" id="cb779-4" title="4">    <span class="dt">couleur =</span> <span class="kw">c</span>(<span class="st">&quot;vert&quot;</span>, <span class="st">&quot;vert&quot;</span>, <span class="st">&quot;jaune&quot;</span>)</a>
+<a class="sourceLine" id="cb779-5" title="5">)</a></code></pre></div>
+<p>À l’aide de l’opérateur <code>$</code>, sélectionner la colonne <code>fruit</code> de <code>df</code>.</p>
+
+<div class="solution-exo">
+<div class="sourceCode" id="cb780"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb780-1" title="1">df<span class="op">$</span>fruit</a></code></pre></div>
+</div>
+
+<p>Faire de même avec l’opérateur <code>[[]]</code>.</p>
+
+<div class="solution-exo">
+<div class="sourceCode" id="cb781"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb781-1" title="1">df[[<span class="st">&quot;fruit&quot;</span>]]</a></code></pre></div>
+</div>
+
+<p>À l’aide de l’opérateur <code>[[]]</code> et de la fonction <code>str_to_upper()</code> de <code>stringr</code>, transformer la colonne <code>fruit</code> en passant ses valeurs en majuscules.</p>
+
+<div class="solution-exo">
+<div class="sourceCode" id="cb782"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb782-1" title="1"><span class="kw">library</span>(stringr)</a>
+<a class="sourceLine" id="cb782-2" title="2">df[[<span class="st">&quot;fruit&quot;</span>]] &lt;-<span class="st"> </span><span class="kw">str_to_upper</span>(df[[<span class="st">&quot;fruit&quot;</span>]])</a></code></pre></div>
+</div>
+
+<p>Créer une fonction <code>colonne_maj</code> qui prend en argument un tableau de données <code>d</code> et un nom de colonne <code>colonne</code>, et retourne le tableau avec la colonne correspondante convertie en majuscules. Vérifier avec :</p>
+<div class="sourceCode" id="cb783"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb783-1" title="1"><span class="kw">colonne_maj</span>(df, <span class="st">&quot;couleur&quot;</span>)</a>
+<a class="sourceLine" id="cb783-2" title="2"><span class="co">#&gt;    fruit poids couleur</span></a>
+<a class="sourceLine" id="cb783-3" title="3"><span class="co">#&gt; 1  Pomme   154    VERT</span></a>
+<a class="sourceLine" id="cb783-4" title="4"><span class="co">#&gt; 2  Pomme   167    VERT</span></a>
+<a class="sourceLine" id="cb783-5" title="5"><span class="co">#&gt; 3 Citron    92   JAUNE</span></a></code></pre></div>
+
+<div class="solution-exo">
+<div class="sourceCode" id="cb784"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb784-1" title="1">colonne_maj &lt;-<span class="st"> </span><span class="cf">function</span>(d, colonne) {</a>
+<a class="sourceLine" id="cb784-2" title="2">    d[[colonne]] &lt;-<span class="st"> </span><span class="kw">str_to_upper</span>(d[[colonne]])</a>
+<a class="sourceLine" id="cb784-3" title="3">    d</a>
+<a class="sourceLine" id="cb784-4" title="4">}</a></code></pre></div>
+</div>
+
+<p>Utiliser la fonction pour modifier le jeu de données <code>hdv2003</code> en passant en majuscule la colonne <code>sexe</code>.</p>
+
+<div class="solution-exo">
+<div class="sourceCode" id="cb785"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb785-1" title="1"><span class="kw">library</span>(questionr)</a>
+<a class="sourceLine" id="cb785-2" title="2"><span class="kw">data</span>(hdv2003)</a>
+<a class="sourceLine" id="cb785-3" title="3">hdv2003 &lt;-<span class="st"> </span><span class="kw">colonne_maj</span>(hdv2003, <span class="st">&quot;sexe&quot;</span>)</a></code></pre></div>
+</div>
+
+<p><strong>Exercice 3.2</strong></p>
+<p>Créer le tableau <code>df</code> suivant :</p>
+<div class="sourceCode" id="cb786"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb786-1" title="1">df &lt;-<span class="st"> </span><span class="kw">data.frame</span>(</a>
+<a class="sourceLine" id="cb786-2" title="2">    <span class="dt">fruit =</span> <span class="kw">c</span>(<span class="st">&quot;Pomme&quot;</span>, <span class="st">&quot;Pomme&quot;</span>, <span class="st">&quot;Citron&quot;</span>),</a>
+<a class="sourceLine" id="cb786-3" title="3">    <span class="dt">poids =</span> <span class="kw">c</span>(<span class="dv">154</span>, <span class="dv">167</span>, <span class="dv">92</span>),</a>
+<a class="sourceLine" id="cb786-4" title="4">    <span class="dt">couleur =</span> <span class="kw">c</span>(<span class="st">&quot;vert&quot;</span>, <span class="st">&quot;vert&quot;</span>, <span class="st">&quot;jaune&quot;</span>)</a>
+<a class="sourceLine" id="cb786-5" title="5">)</a></code></pre></div>
+<p>À l’aide de l’opérateur <code>[,]</code>, sélectionner :</p>
+<ul>
+<li>les citrons</li>
+<li>les pommes et les colonnes <code>fruit</code> et <code>couleur</code></li>
+<li>la première colonne des lignes ayant un poids inférieur à 100</li>
+</ul>
+
+<div class="solution-exo">
+<div class="sourceCode" id="cb787"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb787-1" title="1">df[df<span class="op">$</span>fruit <span class="op">==</span><span class="st"> &quot;Citron&quot;</span>,]</a>
+<a class="sourceLine" id="cb787-2" title="2">df[df<span class="op">$</span>fruit <span class="op">==</span><span class="st"> &quot;Pomme&quot;</span>, <span class="kw">c</span>(<span class="st">&quot;fruit&quot;</span>, <span class="st">&quot;couleur&quot;</span>)]</a>
+<a class="sourceLine" id="cb787-3" title="3">df[df<span class="op">$</span>poids <span class="op">&lt;</span><span class="st"> </span><span class="dv">100</span>, <span class="dv">1</span>]</a></code></pre></div>
+</div>
+
+<p>Créer une fonction <code>filtre_valeur()</code> qui prend en argument une chaîne de caractères <code>valeur</code> et retourne les lignes de <code>df</code> pour lesquelles la colonne <code>fruit</code> vaut <code>valeur</code>. Vérifier avec :</p>
+<div class="sourceCode" id="cb788"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb788-1" title="1"><span class="kw">filtre_valeur</span>(<span class="st">&quot;Pomme&quot;</span>)</a>
+<a class="sourceLine" id="cb788-2" title="2"><span class="co">#&gt;   fruit poids couleur</span></a>
+<a class="sourceLine" id="cb788-3" title="3"><span class="co">#&gt; 1 Pomme   154    vert</span></a>
+<a class="sourceLine" id="cb788-4" title="4"><span class="co">#&gt; 2 Pomme   167    vert</span></a></code></pre></div>
+
+<div class="solution-exo">
+<div class="sourceCode" id="cb789"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb789-1" title="1">filtre_valeur &lt;-<span class="st"> </span><span class="cf">function</span>(valeur) {</a>
+<a class="sourceLine" id="cb789-2" title="2">    df[df<span class="op">$</span>fruit <span class="op">==</span><span class="st"> </span>valeur,]</a>
+<a class="sourceLine" id="cb789-3" title="3">}</a></code></pre></div>
+</div>
+
+<p>Modifier la fonction pour qu’elle accepte également un argument <code>d</code> contenant le tableau à filtrer. Vérifier avec :</p>
+<div class="sourceCode" id="cb790"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb790-1" title="1"><span class="kw">filtre_valeur</span>(df, <span class="st">&quot;Pomme&quot;</span>)</a>
+<a class="sourceLine" id="cb790-2" title="2"><span class="co">#&gt;   fruit poids couleur</span></a>
+<a class="sourceLine" id="cb790-3" title="3"><span class="co">#&gt; 1 Pomme   154    vert</span></a>
+<a class="sourceLine" id="cb790-4" title="4"><span class="co">#&gt; 2 Pomme   167    vert</span></a></code></pre></div>
+
+<div class="solution-exo">
+<div class="sourceCode" id="cb791"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb791-1" title="1">filtre_valeur &lt;-<span class="st"> </span><span class="cf">function</span>(d, valeur) {</a>
+<a class="sourceLine" id="cb791-2" title="2">    d[d<span class="op">$</span>fruit <span class="op">==</span><span class="st"> </span>valeur,]</a>
+<a class="sourceLine" id="cb791-3" title="3">}</a></code></pre></div>
+</div>
+
+<p>Modifier à nouveau la fonction pour qu’elle accepte un troisième argument <code>colonne</code> qui contient le nom de la colonne à utiliser pour filtrer les lignes. Vérifier avec :</p>
+<div class="sourceCode" id="cb792"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb792-1" title="1"><span class="kw">filtre_valeur</span>(df, <span class="st">&quot;couleur&quot;</span>, <span class="st">&quot;jaune&quot;</span>)</a>
+<a class="sourceLine" id="cb792-2" title="2"><span class="co">#&gt;    fruit poids couleur</span></a>
+<a class="sourceLine" id="cb792-3" title="3"><span class="co">#&gt; 3 Citron    92   jaune</span></a></code></pre></div>
+
+<div class="solution-exo">
+<div class="sourceCode" id="cb793"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb793-1" title="1">filtre_valeur &lt;-<span class="st"> </span><span class="cf">function</span>(d, colonne, valeur) {</a>
+<a class="sourceLine" id="cb793-2" title="2">    d[d[colonne] <span class="op">==</span><span class="st"> </span>valeur,]</a>
+<a class="sourceLine" id="cb793-3" title="3">}</a></code></pre></div>
+</div>
+
+<p>Vérifier que cette fonction marche aussi sur un autre jeu de données :</p>
+<div class="sourceCode" id="cb794"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb794-1" title="1"><span class="kw">library</span>(questionr)</a>
+<a class="sourceLine" id="cb794-2" title="2"><span class="kw">data</span>(hdv2003)</a>
+<a class="sourceLine" id="cb794-3" title="3"><span class="kw">filtre_valeur</span>(hdv2003, <span class="st">&quot;sexe&quot;</span>, <span class="st">&quot;Femme&quot;</span>)</a></code></pre></div>
+<p><strong>Exercice 3.3</strong></p>
+<p>Reprendre le tableau <code>df</code> des exercices précédents :</p>
+<div class="sourceCode" id="cb795"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb795-1" title="1">df &lt;-<span class="st"> </span><span class="kw">data.frame</span>(</a>
+<a class="sourceLine" id="cb795-2" title="2">    <span class="dt">fruit =</span> <span class="kw">c</span>(<span class="st">&quot;Pomme&quot;</span>, <span class="st">&quot;Pomme&quot;</span>, <span class="st">&quot;Citron&quot;</span>),</a>
+<a class="sourceLine" id="cb795-3" title="3">    <span class="dt">poids =</span> <span class="kw">c</span>(<span class="dv">154</span>, <span class="dv">167</span>, <span class="dv">92</span>),</a>
+<a class="sourceLine" id="cb795-4" title="4">    <span class="dt">couleur =</span> <span class="kw">c</span>(<span class="st">&quot;vert&quot;</span>, <span class="st">&quot;vert&quot;</span>, <span class="st">&quot;jaune&quot;</span>)</a>
+<a class="sourceLine" id="cb795-5" title="5">)</a></code></pre></div>
+<p>À l’aide de l’opérateur <code>[,]</code>, effectuer les opérations suivantes :</p>
+<ul>
+<li>Créer une nouvelle colonne <code>id</code> avec les valeurs 1, 2, 3</li>
+<li>Remplacer la valeur “jaune” de la variable <code>couleur</code> par “jaune citron”</li>
+<li>Créer une nouvelle colonne <code>poids_rec</code> qui vaut “léger” si <code>poids</code> est inférieur à 100, et “lourd” sinon</li>
+</ul>
+
+<div class="solution-exo">
+<div class="sourceCode" id="cb796"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb796-1" title="1">df[, <span class="st">&quot;id&quot;</span>] &lt;-<span class="st"> </span><span class="dv">1</span><span class="op">:</span><span class="dv">3</span></a>
+<a class="sourceLine" id="cb796-2" title="2">df[df<span class="op">$</span>couleur <span class="op">==</span><span class="st"> &quot;jaune&quot;</span>, <span class="st">&quot;couleur&quot;</span>] &lt;-<span class="st"> &quot;jaune citron&quot;</span></a>
+<a class="sourceLine" id="cb796-3" title="3">df[df<span class="op">$</span>poids <span class="op">&lt;</span><span class="st"> </span><span class="dv">100</span>, <span class="st">&quot;poids_rec&quot;</span>] &lt;-<span class="st"> &quot;léger&quot;</span></a>
+<a class="sourceLine" id="cb796-4" title="4">df[df<span class="op">$</span>poids <span class="op">&gt;=</span><span class="st"> </span><span class="dv">100</span>, <span class="st">&quot;poids_rec&quot;</span>] &lt;-<span class="st"> &quot;lourd&quot;</span></a>
+<a class="sourceLine" id="cb796-5" title="5"><span class="co"># Ou bien :</span></a>
+<a class="sourceLine" id="cb796-6" title="6">df[, <span class="st">&quot;poids_rec&quot;</span>] &lt;-<span class="st"> </span><span class="kw">if_else</span>(df<span class="op">$</span>poids <span class="op">&lt;</span><span class="st"> </span><span class="dv">100</span>, <span class="st">&quot;léger&quot;</span>, <span class="st">&quot;lourd&quot;</span>)</a></code></pre></div>
+</div>
+
+<p><em>Facultatif :</em> effectuer les mêmes opérations en utilisant les verbes de <code>dplyr</code>.</p>
+
+<div class="solution-exo">
+<div class="sourceCode" id="cb797"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb797-1" title="1">df &lt;-<span class="st"> </span>df <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">mutate</span>(<span class="dt">id =</span> <span class="dv">1</span><span class="op">:</span><span class="dv">3</span>)</a>
+<a class="sourceLine" id="cb797-2" title="2"></a>
+<a class="sourceLine" id="cb797-3" title="3">df &lt;-<span class="st"> </span>df <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb797-4" title="4"><span class="st">    </span><span class="kw">mutate</span>(</a>
+<a class="sourceLine" id="cb797-5" title="5">        <span class="dt">couleur =</span> <span class="kw">if_else</span>(couleur <span class="op">==</span><span class="st"> &quot;jaune&quot;</span>, <span class="st">&quot;jaune_citron&quot;</span>, couleur)</a>
+<a class="sourceLine" id="cb797-6" title="6">    )</a>
+<a class="sourceLine" id="cb797-7" title="7"><span class="co"># Ou bien :</span></a>
+<a class="sourceLine" id="cb797-8" title="8"><span class="kw">library</span>(forcats)</a>
+<a class="sourceLine" id="cb797-9" title="9">df &lt;-<span class="st"> </span>df <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb797-10" title="10"><span class="st">    </span><span class="kw">mutate</span>(</a>
+<a class="sourceLine" id="cb797-11" title="11">        <span class="dt">couleur =</span> <span class="kw">fct_recode</span>(couleur, <span class="st">&quot;jaune_citron&quot;</span> =<span class="st"> &quot;jaune&quot;</span>)</a>
+<a class="sourceLine" id="cb797-12" title="12">    )</a>
+<a class="sourceLine" id="cb797-13" title="13"></a>
+<a class="sourceLine" id="cb797-14" title="14">df &lt;-<span class="st"> </span>df <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb797-15" title="15"><span class="st">    </span><span class="kw">mutate</span>(</a>
+<a class="sourceLine" id="cb797-16" title="16">        <span class="dt">poids_rec =</span> <span class="kw">if_else</span>(poids <span class="op">&lt;</span><span class="st"> </span><span class="dv">100</span>, <span class="st">&quot;léger&quot;</span>, <span class="st">&quot;lourd&quot;</span>)</a>
+<a class="sourceLine" id="cb797-17" title="17">    )</a></code></pre></div>
+</div>
+
+
+</div>
+</div>
+</div>
+<div class="footnotes">
+<hr />
+<ol start="28">
+<li id="fn28"><p>Il en existe d’autres, comme <code>complex</code> ou <code>raw</code>, mais qui sont moins fréquemment utilisés.<a href="15-structures-donnees.html#fnref28" class="footnote-back">↩</a></p></li>
+<li id="fn29"><p>Si on veut ajouter un élément <code>NULL</code> à une liste, il faut utiliser les crochets simples avec la syntaxe <code>liste["foo"] &lt;- list(NULL)</code>.<a href="15-structures-donnees.html#fnref29" class="footnote-back">↩</a></p></li>
+<li id="fn30"><p>Attention, comme pour les listes, à ne pas utiliser <code>[[]]</code> avec un argument de longueur supérieur à 1, car cela mène soit à des erreurs soit à des résultats contre-intuitifs.<a href="15-structures-donnees.html#fnref30" class="footnote-back">↩</a></p></li>
+</ol>
+</div>
+<script src="js/tidyverse.js"></script>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="14-fonctions.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="16-boucles-if.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": false,
+"twitter": true,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"whatsapp": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"],
+"instapper": false
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": "https://github.com/juba/tidyverse/blob/main/15-structures-donnees.Rmd",
+"text": "Source"
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": ["introduction_au_tidyverse.epub", "introduction_au_tidyverse.pdf"],
+"search": {
+"engine": "fuse",
+"options": null
+},
+"toc": {
+"collapse": "section"
+}
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>
