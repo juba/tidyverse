@@ -1,0 +1,1042 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Partie 11 Manipuler du texte avec stringr | Introduction à R et au tidyverse</title>
+  <meta name="description" content="Une introduction à R et aux extensions du tidyverse" />
+  <meta name="generator" content="bookdown 0.24 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="Partie 11 Manipuler du texte avec stringr | Introduction à R et au tidyverse" />
+  <meta property="og:type" content="book" />
+  
+  
+  <meta property="og:description" content="Une introduction à R et aux extensions du tidyverse" />
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Partie 11 Manipuler du texte avec stringr | Introduction à R et au tidyverse" />
+  
+  <meta name="twitter:description" content="Une introduction à R et aux extensions du tidyverse" />
+  
+
+<meta name="author" content="Julien Barnier" />
+
+
+<meta name="date" content="2021-10-20" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="10-dplyr.html"/>
+<link rel="next" href="12-tidyr.html"/>
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+<link href="libs/anchor-sections-1.0.1/anchor-sections.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.0.1/anchor-sections.js"></script>
+<script src="libs/htmlwidgets-1.5.4/htmlwidgets.js"></script>
+<link href="libs/leaflet-1.3.1/leaflet.css" rel="stylesheet" />
+<script src="libs/leaflet-1.3.1/leaflet.js"></script>
+<link href="libs/leafletfix-1.0.0/leafletfix.css" rel="stylesheet" />
+<script src="libs/proj4-2.6.2/proj4.min.js"></script>
+<script src="libs/Proj4Leaflet-1.0.1/proj4leaflet.js"></script>
+<link href="libs/rstudio_leaflet-1.3.1/rstudio_leaflet.css" rel="stylesheet" />
+<script src="libs/leaflet-binding-2.0.4.1/leaflet.js"></script>
+<link href="libs/vis-9.1.0/vis-network.min.css" rel="stylesheet" />
+<script src="libs/vis-9.1.0/vis-network.min.js"></script>
+<script src="libs/visNetwork-binding-2.1.0/visNetwork.js"></script>
+
+
+<style type="text/css">
+a.sourceLine { display: inline-block; line-height: 1.25; }
+a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
+a.sourceLine:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode { white-space: pre; position: relative; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+code.sourceCode { white-space: pre-wrap; }
+a.sourceLine { text-indent: -1em; padding-left: 1em; }
+}
+pre.numberSource a.sourceLine
+  { position: relative; left: -4em; }
+pre.numberSource a.sourceLine::before
+  { content: attr(title);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; pointer-events: all; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    background-color: #ffffff;
+    color: #a0a0a0;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #a0a0a0;  padding-left: 4px; }
+div.sourceCode
+  { color: #1f1c1b; background-color: #ffffff; }
+@media screen {
+a.sourceLine::before { text-decoration: underline; }
+}
+code span. { color: #1f1c1b; } /* Normal */
+code span.al { color: #bf0303; background-color: #f7e6e6; font-weight: bold; } /* Alert */
+code span.an { color: #ca60ca; } /* Annotation */
+code span.at { color: #0057ae; } /* Attribute */
+code span.bn { color: #b08000; } /* BaseN */
+code span.bu { color: #644a9b; font-weight: bold; } /* BuiltIn */
+code span.cf { color: #1f1c1b; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #924c9d; } /* Char */
+code span.cn { color: #aa5500; } /* Constant */
+code span.co { color: #898887; } /* Comment */
+code span.cv { color: #0095ff; } /* CommentVar */
+code span.do { color: #607880; } /* Documentation */
+code span.dt { color: #0057ae; } /* DataType */
+code span.dv { color: #b08000; } /* DecVal */
+code span.er { color: #bf0303; text-decoration: underline; } /* Error */
+code span.ex { color: #0095ff; font-weight: bold; } /* Extension */
+code span.fl { color: #b08000; } /* Float */
+code span.fu { color: #644a9b; } /* Function */
+code span.im { color: #ff5500; } /* Import */
+code span.in { color: #b08000; } /* Information */
+code span.kw { color: #1f1c1b; font-weight: bold; } /* Keyword */
+code span.op { color: #1f1c1b; } /* Operator */
+code span.ot { color: #006e28; } /* Other */
+code span.pp { color: #006e28; } /* Preprocessor */
+code span.re { color: #0057ae; background-color: #e0e9f8; } /* RegionMarker */
+code span.sc { color: #3daee9; } /* SpecialChar */
+code span.ss { color: #ff5500; } /* SpecialString */
+code span.st { color: #bf0303; } /* String */
+code span.va { color: #0057ae; } /* Variable */
+code span.vs { color: #bf0303; } /* VerbatimString */
+code span.wa { color: #bf0303; } /* Warning */
+</style>
+
+
+<link rel="stylesheet" href="css/tidyverse.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./index.html">Introduction à R et au <em>tidyverse</em></a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>À propos de ce document</a><ul>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html#remerciements"><i class="fa fa-check"></i>Remerciements</a></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html#licence"><i class="fa fa-check"></i>Licence</a></li>
+</ul></li>
+<li class="chapter" data-level="1" data-path="01-presentation.html"><a href="01-presentation.html"><i class="fa fa-check"></i><b>1</b> Présentation</a><ul>
+<li class="chapter" data-level="1.1" data-path="01-presentation.html"><a href="01-presentation.html#à-propos-de-r"><i class="fa fa-check"></i><b>1.1</b> À propos de R</a></li>
+<li class="chapter" data-level="1.2" data-path="01-presentation.html"><a href="01-presentation.html#rstudio"><i class="fa fa-check"></i><b>1.2</b> À propos de RStudio</a></li>
+<li class="chapter" data-level="1.3" data-path="01-presentation.html"><a href="01-presentation.html#à-propos-du-tidyverse"><i class="fa fa-check"></i><b>1.3</b> À propos du <em>tidyverse</em></a></li>
+<li class="chapter" data-level="1.4" data-path="01-presentation.html"><a href="01-presentation.html#structure-du-document"><i class="fa fa-check"></i><b>1.4</b> Structure du document</a></li>
+<li class="chapter" data-level="1.5" data-path="01-presentation.html"><a href="01-presentation.html#prérequis"><i class="fa fa-check"></i><b>1.5</b> Prérequis</a></li>
+</ul></li>
+<li class="part"><span><b>I Introduction à R</b></span></li>
+<li class="chapter" data-level="2" data-path="02-prise_en_main.html"><a href="02-prise_en_main.html"><i class="fa fa-check"></i><b>2</b> Prise en main</a><ul>
+<li class="chapter" data-level="2.1" data-path="02-prise_en_main.html"><a href="02-prise_en_main.html#la-console"><i class="fa fa-check"></i><b>2.1</b> La console</a><ul>
+<li class="chapter" data-level="2.1.1" data-path="02-prise_en_main.html"><a href="02-prise_en_main.html#linvite-de-commandes"><i class="fa fa-check"></i><b>2.1.1</b> L’invite de commandes</a></li>
+<li class="chapter" data-level="2.1.2" data-path="02-prise_en_main.html"><a href="02-prise_en_main.html#précisions-concernant-la-saisie-des-commandes"><i class="fa fa-check"></i><b>2.1.2</b> Précisions concernant la saisie des commandes</a></li>
+</ul></li>
+<li class="chapter" data-level="2.2" data-path="02-prise_en_main.html"><a href="02-prise_en_main.html#objets"><i class="fa fa-check"></i><b>2.2</b> Objets</a><ul>
+<li class="chapter" data-level="2.2.1" data-path="02-prise_en_main.html"><a href="02-prise_en_main.html#objets-simples"><i class="fa fa-check"></i><b>2.2.1</b> Objets simples</a></li>
+<li class="chapter" data-level="2.2.2" data-path="02-prise_en_main.html"><a href="02-prise_en_main.html#introvecteurs"><i class="fa fa-check"></i><b>2.2.2</b> Vecteurs</a></li>
+</ul></li>
+<li class="chapter" data-level="2.3" data-path="02-prise_en_main.html"><a href="02-prise_en_main.html#fonctions"><i class="fa fa-check"></i><b>2.3</b> Fonctions</a><ul>
+<li class="chapter" data-level="2.3.1" data-path="02-prise_en_main.html"><a href="02-prise_en_main.html#principe"><i class="fa fa-check"></i><b>2.3.1</b> Principe</a></li>
+<li class="chapter" data-level="2.3.2" data-path="02-prise_en_main.html"><a href="02-prise_en_main.html#arguments"><i class="fa fa-check"></i><b>2.3.2</b> Arguments</a></li>
+<li class="chapter" data-level="2.3.3" data-path="02-prise_en_main.html"><a href="02-prise_en_main.html#aide-sur-une-fonction"><i class="fa fa-check"></i><b>2.3.3</b> Aide sur une fonction</a></li>
+</ul></li>
+<li class="chapter" data-level="2.4" data-path="02-prise_en_main.html"><a href="02-prise_en_main.html#regrouper-ses-commandes-dans-des-scripts"><i class="fa fa-check"></i><b>2.4</b> Regrouper ses commandes dans des scripts</a><ul>
+<li class="chapter" data-level="2.4.1" data-path="02-prise_en_main.html"><a href="02-prise_en_main.html#commentaires"><i class="fa fa-check"></i><b>2.4.1</b> Commentaires</a></li>
+</ul></li>
+<li class="chapter" data-level="2.5" data-path="02-prise_en_main.html"><a href="02-prise_en_main.html#packages"><i class="fa fa-check"></i><b>2.5</b> Installer et charger des extensions (<em>packages</em>)</a></li>
+<li class="chapter" data-level="2.6" data-path="02-prise_en_main.html"><a href="02-prise_en_main.html#exercices"><i class="fa fa-check"></i><b>2.6</b> Exercices</a></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="03-premier_travail.html"><a href="03-premier_travail.html"><i class="fa fa-check"></i><b>3</b> Premier travail avec des données</a><ul>
+<li class="chapter" data-level="3.1" data-path="03-premier_travail.html"><a href="03-premier_travail.html#jeu-de-données-dexemple"><i class="fa fa-check"></i><b>3.1</b> Jeu de données d’exemple</a></li>
+<li class="chapter" data-level="3.2" data-path="03-premier_travail.html"><a href="03-premier_travail.html#tableau-de-données-data-frame"><i class="fa fa-check"></i><b>3.2</b> Tableau de données (<em>data frame</em>)</a><ul>
+<li class="chapter" data-level="3.2.1" data-path="03-premier_travail.html"><a href="03-premier_travail.html#structure-du-tableau"><i class="fa fa-check"></i><b>3.2.1</b> Structure du tableau</a></li>
+<li class="chapter" data-level="3.2.2" data-path="03-premier_travail.html"><a href="03-premier_travail.html#accéder-aux-variables-dun-tableau"><i class="fa fa-check"></i><b>3.2.2</b> Accéder aux variables d’un tableau</a></li>
+<li class="chapter" data-level="3.2.3" data-path="03-premier_travail.html"><a href="03-premier_travail.html#créer-une-nouvelle-variable"><i class="fa fa-check"></i><b>3.2.3</b> Créer une nouvelle variable</a></li>
+</ul></li>
+<li class="chapter" data-level="3.3" data-path="03-premier_travail.html"><a href="03-premier_travail.html#analyse-univariée"><i class="fa fa-check"></i><b>3.3</b> Analyse univariée</a><ul>
+<li class="chapter" data-level="3.3.1" data-path="03-premier_travail.html"><a href="03-premier_travail.html#analyser-une-variable-quantitative"><i class="fa fa-check"></i><b>3.3.1</b> Analyser une variable quantitative</a></li>
+<li class="chapter" data-level="3.3.2" data-path="03-premier_travail.html"><a href="03-premier_travail.html#analyser-une-variable-qualitative"><i class="fa fa-check"></i><b>3.3.2</b> Analyser une variable qualitative</a></li>
+</ul></li>
+<li class="chapter" data-level="3.4" data-path="03-premier_travail.html"><a href="03-premier_travail.html#exercices-1"><i class="fa fa-check"></i><b>3.4</b> Exercices</a></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="04-bivarie.html"><a href="04-bivarie.html"><i class="fa fa-check"></i><b>4</b> Analyse bivariée</a><ul>
+<li class="chapter" data-level="4.1" data-path="04-bivarie.html"><a href="04-bivarie.html#croisement-de-deux-variables-qualitatives"><i class="fa fa-check"></i><b>4.1</b> Croisement de deux variables qualitatives</a><ul>
+<li class="chapter" data-level="4.1.1" data-path="04-bivarie.html"><a href="04-bivarie.html#tableaux-croisés"><i class="fa fa-check"></i><b>4.1.1</b> Tableaux croisés</a></li>
+<li class="chapter" data-level="4.1.2" data-path="04-bivarie.html"><a href="04-bivarie.html#test-du-χ²"><i class="fa fa-check"></i><b>4.1.2</b> Test du χ²</a></li>
+<li class="chapter" data-level="4.1.3" data-path="04-bivarie.html"><a href="04-bivarie.html#représentation-graphique-1"><i class="fa fa-check"></i><b>4.1.3</b> Représentation graphique</a></li>
+</ul></li>
+<li class="chapter" data-level="4.2" data-path="04-bivarie.html"><a href="04-bivarie.html#croisement-dune-variable-quantitative-et-dune-variable-qualitative"><i class="fa fa-check"></i><b>4.2</b> Croisement d’une variable quantitative et d’une variable qualitative</a><ul>
+<li class="chapter" data-level="4.2.1" data-path="04-bivarie.html"><a href="04-bivarie.html#représentation-graphique-2"><i class="fa fa-check"></i><b>4.2.1</b> Représentation graphique</a></li>
+<li class="chapter" data-level="4.2.2" data-path="04-bivarie.html"><a href="04-bivarie.html#tapply"><i class="fa fa-check"></i><b>4.2.2</b> Calculs d’indicateurs</a></li>
+<li class="chapter" data-level="4.2.3" data-path="04-bivarie.html"><a href="04-bivarie.html#tests-statistiques"><i class="fa fa-check"></i><b>4.2.3</b> Tests statistiques</a></li>
+</ul></li>
+<li class="chapter" data-level="4.3" data-path="04-bivarie.html"><a href="04-bivarie.html#croisement-de-deux-variables-quantitatives"><i class="fa fa-check"></i><b>4.3</b> Croisement de deux variables quantitatives</a><ul>
+<li class="chapter" data-level="4.3.1" data-path="04-bivarie.html"><a href="04-bivarie.html#représentation-graphique-3"><i class="fa fa-check"></i><b>4.3.1</b> Représentation graphique</a></li>
+<li class="chapter" data-level="4.3.2" data-path="04-bivarie.html"><a href="04-bivarie.html#calcul-dindicateurs"><i class="fa fa-check"></i><b>4.3.2</b> Calcul d’indicateurs</a></li>
+<li class="chapter" data-level="4.3.3" data-path="04-bivarie.html"><a href="04-bivarie.html#régression-linéaire"><i class="fa fa-check"></i><b>4.3.3</b> Régression linéaire</a></li>
+</ul></li>
+<li class="chapter" data-level="4.4" data-path="04-bivarie.html"><a href="04-bivarie.html#exercices-2"><i class="fa fa-check"></i><b>4.4</b> Exercices</a></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="05-organiser.html"><a href="05-organiser.html"><i class="fa fa-check"></i><b>5</b> Organiser ses scripts</a><ul>
+<li class="chapter" data-level="5.1" data-path="05-organiser.html"><a href="05-organiser.html#projets"><i class="fa fa-check"></i><b>5.1</b> Les projets dans RStudio</a></li>
+<li class="chapter" data-level="5.2" data-path="05-organiser.html"><a href="05-organiser.html#créer-des-sections-dans-un-script"><i class="fa fa-check"></i><b>5.2</b> Créer des sections dans un script</a></li>
+<li class="chapter" data-level="5.3" data-path="05-organiser.html"><a href="05-organiser.html#répartir-son-travail-entre-plusieurs-scripts"><i class="fa fa-check"></i><b>5.3</b> Répartir son travail entre plusieurs scripts</a></li>
+<li class="chapter" data-level="5.4" data-path="05-organiser.html"><a href="05-organiser.html#désactiver-la-sauvegarde-de-lespace-de-travail"><i class="fa fa-check"></i><b>5.4</b> Désactiver la sauvegarde de l’espace de travail</a></li>
+</ul></li>
+<li class="part"><span><b>II Introduction au tidyverse</b></span></li>
+<li class="chapter" data-level="6" data-path="06-tidyverse.html"><a href="06-tidyverse.html"><i class="fa fa-check"></i><b>6</b> Le tidyverse</a><ul>
+<li class="chapter" data-level="6.1" data-path="06-tidyverse.html"><a href="06-tidyverse.html#extensions"><i class="fa fa-check"></i><b>6.1</b> Extensions</a></li>
+<li class="chapter" data-level="6.2" data-path="06-tidyverse.html"><a href="06-tidyverse.html#installation"><i class="fa fa-check"></i><b>6.2</b> Installation</a></li>
+<li class="chapter" data-level="6.3" data-path="06-tidyverse.html"><a href="06-tidyverse.html#tidydata"><i class="fa fa-check"></i><b>6.3</b> tidy data</a></li>
+<li class="chapter" data-level="6.4" data-path="06-tidyverse.html"><a href="06-tidyverse.html#tibbles"><i class="fa fa-check"></i><b>6.4</b> tibbles</a></li>
+</ul></li>
+<li class="chapter" data-level="7" data-path="07-import.html"><a href="07-import.html"><i class="fa fa-check"></i><b>7</b> Importer et exporter des données</a><ul>
+<li class="chapter" data-level="7.1" data-path="07-import.html"><a href="07-import.html#import-de-fichiers-textes"><i class="fa fa-check"></i><b>7.1</b> Import de fichiers textes</a><ul>
+<li class="chapter" data-level="7.1.1" data-path="07-import.html"><a href="07-import.html#interface-interactive-dimport-de-fichiers"><i class="fa fa-check"></i><b>7.1.1</b> Interface interactive d’import de fichiers</a></li>
+</ul></li>
+<li class="chapter" data-level="7.2" data-path="07-import.html"><a href="07-import.html#import-depuis-un-fichier-excel"><i class="fa fa-check"></i><b>7.2</b> Import depuis un fichier Excel</a></li>
+<li class="chapter" data-level="7.3" data-path="07-import.html"><a href="07-import.html#import-de-fichiers-sas-spss-et-stata"><i class="fa fa-check"></i><b>7.3</b> Import de fichiers SAS, SPSS et Stata</a></li>
+<li class="chapter" data-level="7.4" data-path="07-import.html"><a href="07-import.html#import-de-fichiers-dbase"><i class="fa fa-check"></i><b>7.4</b> Import de fichiers dBase</a></li>
+<li class="chapter" data-level="7.5" data-path="07-import.html"><a href="07-import.html#connexion-à-des-bases-de-données"><i class="fa fa-check"></i><b>7.5</b> Connexion à des bases de données</a><ul>
+<li class="chapter" data-level="7.5.1" data-path="07-import.html"><a href="07-import.html#interfaçage-via-lextension-dbi"><i class="fa fa-check"></i><b>7.5.1</b> Interfaçage via l’extension <code>DBI</code></a></li>
+<li class="chapter" data-level="7.5.2" data-path="07-import.html"><a href="07-import.html#utilisation-de-dplyr-et-dbplyr"><i class="fa fa-check"></i><b>7.5.2</b> Utilisation de <code>dplyr</code> et <code>dbplyr</code></a></li>
+<li class="chapter" data-level="7.5.3" data-path="07-import.html"><a href="07-import.html#ressources"><i class="fa fa-check"></i><b>7.5.3</b> Ressources</a></li>
+</ul></li>
+<li class="chapter" data-level="7.6" data-path="07-import.html"><a href="07-import.html#export-de-données"><i class="fa fa-check"></i><b>7.6</b> Export de données</a><ul>
+<li class="chapter" data-level="7.6.1" data-path="07-import.html"><a href="07-import.html#export-de-tableaux-de-données"><i class="fa fa-check"></i><b>7.6.1</b> Export de tableaux de données</a></li>
+<li class="chapter" data-level="7.6.2" data-path="07-import.html"><a href="07-import.html#sauvegarder-des-objets"><i class="fa fa-check"></i><b>7.6.2</b> Sauvegarder des objets</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="8" data-path="08-ggplot2.html"><a href="08-ggplot2.html"><i class="fa fa-check"></i><b>8</b> Visualiser avec <code>ggplot2</code></a><ul>
+<li class="chapter" data-level="8.1" data-path="08-ggplot2.html"><a href="08-ggplot2.html#préparation"><i class="fa fa-check"></i><b>8.1</b> Préparation</a></li>
+<li class="chapter" data-level="8.2" data-path="08-ggplot2.html"><a href="08-ggplot2.html#initialisation"><i class="fa fa-check"></i><b>8.2</b> Initialisation</a></li>
+<li class="chapter" data-level="8.3" data-path="08-ggplot2.html"><a href="08-ggplot2.html#exemples-de-geom"><i class="fa fa-check"></i><b>8.3</b> Exemples de <code>geom</code></a><ul>
+<li class="chapter" data-level="8.3.1" data-path="08-ggplot2.html"><a href="08-ggplot2.html#geom_boxplot"><i class="fa fa-check"></i><b>8.3.1</b> <code>geom_boxplot</code></a></li>
+<li class="chapter" data-level="8.3.2" data-path="08-ggplot2.html"><a href="08-ggplot2.html#geom_violin"><i class="fa fa-check"></i><b>8.3.2</b> <code>geom_violin</code></a></li>
+<li class="chapter" data-level="8.3.3" data-path="08-ggplot2.html"><a href="08-ggplot2.html#geom_bar"><i class="fa fa-check"></i><b>8.3.3</b> <code>geom_bar</code></a></li>
+<li class="chapter" data-level="8.3.4" data-path="08-ggplot2.html"><a href="08-ggplot2.html#geom_text"><i class="fa fa-check"></i><b>8.3.4</b> <code>geom_text</code></a></li>
+<li class="chapter" data-level="8.3.5" data-path="08-ggplot2.html"><a href="08-ggplot2.html#geom_label"><i class="fa fa-check"></i><b>8.3.5</b> <code>geom_label</code></a></li>
+<li class="chapter" data-level="8.3.6" data-path="08-ggplot2.html"><a href="08-ggplot2.html#geom_density"><i class="fa fa-check"></i><b>8.3.6</b> <code>geom_density</code></a></li>
+<li class="chapter" data-level="8.3.7" data-path="08-ggplot2.html"><a href="08-ggplot2.html#geom_line"><i class="fa fa-check"></i><b>8.3.7</b> <code>geom_line</code></a></li>
+</ul></li>
+<li class="chapter" data-level="8.4" data-path="08-ggplot2.html"><a href="08-ggplot2.html#mappages"><i class="fa fa-check"></i><b>8.4</b> Mappages</a><ul>
+<li class="chapter" data-level="8.4.1" data-path="08-ggplot2.html"><a href="08-ggplot2.html#exemples-de-mappages"><i class="fa fa-check"></i><b>8.4.1</b> Exemples de mappages</a></li>
+<li class="chapter" data-level="8.4.2" data-path="08-ggplot2.html"><a href="08-ggplot2.html#aes-or-not-aes"><i class="fa fa-check"></i><b>8.4.2</b> <code>aes()</code> or not <code>aes()</code> ?</a></li>
+<li class="chapter" data-level="8.4.3" data-path="08-ggplot2.html"><a href="08-ggplot2.html#geom_bar-et-position"><i class="fa fa-check"></i><b>8.4.3</b> <code>geom_bar</code> et <code>position</code></a></li>
+</ul></li>
+<li class="chapter" data-level="8.5" data-path="08-ggplot2.html"><a href="08-ggplot2.html#représentation-de-plusieurs-geom"><i class="fa fa-check"></i><b>8.5</b> Représentation de plusieurs <code>geom</code></a><ul>
+<li class="chapter" data-level="8.5.1" data-path="08-ggplot2.html"><a href="08-ggplot2.html#plusieurs-sources-de-données"><i class="fa fa-check"></i><b>8.5.1</b> Plusieurs sources de données</a></li>
+</ul></li>
+<li class="chapter" data-level="8.6" data-path="08-ggplot2.html"><a href="08-ggplot2.html#faceting"><i class="fa fa-check"></i><b>8.6</b> Faceting</a></li>
+<li class="chapter" data-level="8.7" data-path="08-ggplot2.html"><a href="08-ggplot2.html#scales"><i class="fa fa-check"></i><b>8.7</b> Scales</a><ul>
+<li class="chapter" data-level="8.7.1" data-path="08-ggplot2.html"><a href="08-ggplot2.html#scale_size"><i class="fa fa-check"></i><b>8.7.1</b> <code>scale_size</code></a></li>
+<li class="chapter" data-level="8.7.2" data-path="08-ggplot2.html"><a href="08-ggplot2.html#scale_x-scale_y"><i class="fa fa-check"></i><b>8.7.2</b> <code>scale_x</code>, <code>scale_y</code></a></li>
+<li class="chapter" data-level="8.7.3" data-path="08-ggplot2.html"><a href="08-ggplot2.html#scalecolor"><i class="fa fa-check"></i><b>8.7.3</b> <code>scale_color</code>, <code>scale_fill</code></a></li>
+</ul></li>
+<li class="chapter" data-level="8.8" data-path="08-ggplot2.html"><a href="08-ggplot2.html#thèmes"><i class="fa fa-check"></i><b>8.8</b> Thèmes</a></li>
+<li class="chapter" data-level="8.9" data-path="08-ggplot2.html"><a href="08-ggplot2.html#ladd-in-esquisse"><i class="fa fa-check"></i><b>8.9</b> L’add-in <code>esquisse</code></a></li>
+<li class="chapter" data-level="8.10" data-path="08-ggplot2.html"><a href="08-ggplot2.html#ressources-1"><i class="fa fa-check"></i><b>8.10</b> Ressources</a></li>
+<li class="chapter" data-level="8.11" data-path="08-ggplot2.html"><a href="08-ggplot2.html#exercices-3"><i class="fa fa-check"></i><b>8.11</b> Exercices</a></li>
+</ul></li>
+<li class="chapter" data-level="9" data-path="09-recodages.html"><a href="09-recodages.html"><i class="fa fa-check"></i><b>9</b> Recoder des variables</a><ul>
+<li class="chapter" data-level="9.1" data-path="09-recodages.html"><a href="09-recodages.html#vecteurs"><i class="fa fa-check"></i><b>9.1</b> Rappel sur les variables et les vecteurs</a></li>
+<li class="chapter" data-level="9.2" data-path="09-recodages.html"><a href="09-recodages.html#tests"><i class="fa fa-check"></i><b>9.2</b> Tests et comparaison</a></li>
+<li class="chapter" data-level="9.3" data-path="09-recodages.html"><a href="09-recodages.html#recoder-une-variable-qualitative"><i class="fa fa-check"></i><b>9.3</b> Recoder une variable qualitative</a><ul>
+<li class="chapter" data-level="9.3.1" data-path="09-recodages.html"><a href="09-recodages.html#facteurs"><i class="fa fa-check"></i><b>9.3.1</b> Facteurs et <code>forcats</code></a></li>
+<li class="chapter" data-level="9.3.2" data-path="09-recodages.html"><a href="09-recodages.html#recode"><i class="fa fa-check"></i><b>9.3.2</b> Modifier les modalités d’une variable qualitative</a></li>
+<li class="chapter" data-level="9.3.3" data-path="09-recodages.html"><a href="09-recodages.html#ordonner-les-modalités-dune-variable-qualitative"><i class="fa fa-check"></i><b>9.3.3</b> Ordonner les modalités d’une variable qualitative</a></li>
+</ul></li>
+<li class="chapter" data-level="9.4" data-path="09-recodages.html"><a href="09-recodages.html#combiner-plusieurs-variables"><i class="fa fa-check"></i><b>9.4</b> Combiner plusieurs variables</a><ul>
+<li class="chapter" data-level="9.4.1" data-path="09-recodages.html"><a href="09-recodages.html#if-else"><i class="fa fa-check"></i><b>9.4.1</b> <code>if_else</code></a></li>
+<li class="chapter" data-level="9.4.2" data-path="09-recodages.html"><a href="09-recodages.html#case_when"><i class="fa fa-check"></i><b>9.4.2</b> <code>case_when</code></a></li>
+</ul></li>
+<li class="chapter" data-level="9.5" data-path="09-recodages.html"><a href="09-recodages.html#découper-une-variable-numérique-en-classes"><i class="fa fa-check"></i><b>9.5</b> Découper une variable numérique en classes</a><ul>
+<li class="chapter" data-level="9.5.1" data-path="09-recodages.html"><a href="09-recodages.html#interface-graphique"><i class="fa fa-check"></i><b>9.5.1</b> Interface graphique</a></li>
+</ul></li>
+<li class="chapter" data-level="9.6" data-path="09-recodages.html"><a href="09-recodages.html#exercices-4"><i class="fa fa-check"></i><b>9.6</b> Exercices</a><ul>
+<li class="chapter" data-level="9.6.1" data-path="09-recodages.html"><a href="09-recodages.html#préparation-1"><i class="fa fa-check"></i><b>9.6.1</b> Préparation</a></li>
+<li class="chapter" data-level="9.6.2" data-path="09-recodages.html"><a href="09-recodages.html#vecteurs-et-tests"><i class="fa fa-check"></i><b>9.6.2</b> Vecteurs et tests</a></li>
+<li class="chapter" data-level="9.6.3" data-path="09-recodages.html"><a href="09-recodages.html#recodages-de-variable-qualitative"><i class="fa fa-check"></i><b>9.6.3</b> Recodages de variable qualitative</a></li>
+<li class="chapter" data-level="9.6.4" data-path="09-recodages.html"><a href="09-recodages.html#combiner-plusieurs-variables-1"><i class="fa fa-check"></i><b>9.6.4</b> Combiner plusieurs variables</a></li>
+<li class="chapter" data-level="9.6.5" data-path="09-recodages.html"><a href="09-recodages.html#découper-une-variable-numérique"><i class="fa fa-check"></i><b>9.6.5</b> Découper une variable numérique</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="10" data-path="10-dplyr.html"><a href="10-dplyr.html"><i class="fa fa-check"></i><b>10</b> Manipuler les données avec <code>dplyr</code></a><ul>
+<li class="chapter" data-level="10.1" data-path="10-dplyr.html"><a href="10-dplyr.html#préparation-2"><i class="fa fa-check"></i><b>10.1</b> Préparation</a></li>
+<li class="chapter" data-level="10.2" data-path="10-dplyr.html"><a href="10-dplyr.html#les-verbes-de-dplyr"><i class="fa fa-check"></i><b>10.2</b> Les verbes de <code>dplyr</code></a><ul>
+<li class="chapter" data-level="10.2.1" data-path="10-dplyr.html"><a href="10-dplyr.html#slice"><i class="fa fa-check"></i><b>10.2.1</b> <code>slice</code></a></li>
+<li class="chapter" data-level="10.2.2" data-path="10-dplyr.html"><a href="10-dplyr.html#filter"><i class="fa fa-check"></i><b>10.2.2</b> <code>filter</code></a></li>
+<li class="chapter" data-level="10.2.3" data-path="10-dplyr.html"><a href="10-dplyr.html#select-rename"><i class="fa fa-check"></i><b>10.2.3</b> <code>select</code> et <code>rename</code></a></li>
+<li class="chapter" data-level="10.2.4" data-path="10-dplyr.html"><a href="10-dplyr.html#arrange"><i class="fa fa-check"></i><b>10.2.4</b> <code>arrange</code></a></li>
+<li class="chapter" data-level="10.2.5" data-path="10-dplyr.html"><a href="10-dplyr.html#mutate"><i class="fa fa-check"></i><b>10.2.5</b> <code>mutate</code></a></li>
+</ul></li>
+<li class="chapter" data-level="10.3" data-path="10-dplyr.html"><a href="10-dplyr.html#pipe"><i class="fa fa-check"></i><b>10.3</b> Enchaîner les opérations avec le <em>pipe</em></a></li>
+<li class="chapter" data-level="10.4" data-path="10-dplyr.html"><a href="10-dplyr.html#opérations-groupées"><i class="fa fa-check"></i><b>10.4</b> Opérations groupées</a><ul>
+<li class="chapter" data-level="10.4.1" data-path="10-dplyr.html"><a href="10-dplyr.html#group_by"><i class="fa fa-check"></i><b>10.4.1</b> <code>group_by</code></a></li>
+<li class="chapter" data-level="10.4.2" data-path="10-dplyr.html"><a href="10-dplyr.html#summarise-et-count"><i class="fa fa-check"></i><b>10.4.2</b> <code>summarise</code> et <code>count</code></a></li>
+<li class="chapter" data-level="10.4.3" data-path="10-dplyr.html"><a href="10-dplyr.html#grouper-selon-plusieurs-variables"><i class="fa fa-check"></i><b>10.4.3</b> Grouper selon plusieurs variables</a></li>
+</ul></li>
+<li class="chapter" data-level="10.5" data-path="10-dplyr.html"><a href="10-dplyr.html#autres-fonctions-utiles"><i class="fa fa-check"></i><b>10.5</b> Autres fonctions utiles</a><ul>
+<li class="chapter" data-level="10.5.1" data-path="10-dplyr.html"><a href="10-dplyr.html#slice_sample"><i class="fa fa-check"></i><b>10.5.1</b> <code>slice_sample</code></a></li>
+<li class="chapter" data-level="10.5.2" data-path="10-dplyr.html"><a href="10-dplyr.html#slice_head-slice_tail-slice_min-slice_max"><i class="fa fa-check"></i><b>10.5.2</b> <code>slice_head</code>, <code>slice_tail</code>, <code>slice_min</code>, <code>slice_max</code></a></li>
+<li class="chapter" data-level="10.5.3" data-path="10-dplyr.html"><a href="10-dplyr.html#lead-et-lag"><i class="fa fa-check"></i><b>10.5.3</b> <code>lead</code> et <code>lag</code></a></li>
+<li class="chapter" data-level="10.5.4" data-path="10-dplyr.html"><a href="10-dplyr.html#distinct-et-n_distinct"><i class="fa fa-check"></i><b>10.5.4</b> <code>distinct</code> et <code>n_distinct</code></a></li>
+<li class="chapter" data-level="10.5.5" data-path="10-dplyr.html"><a href="10-dplyr.html#relocate"><i class="fa fa-check"></i><b>10.5.5</b> <code>relocate</code></a></li>
+</ul></li>
+<li class="chapter" data-level="10.6" data-path="10-dplyr.html"><a href="10-dplyr.html#tables-multiples"><i class="fa fa-check"></i><b>10.6</b> Tables multiples</a><ul>
+<li class="chapter" data-level="10.6.1" data-path="10-dplyr.html"><a href="10-dplyr.html#concaténation-bind_rows-et-bind_cols"><i class="fa fa-check"></i><b>10.6.1</b> Concaténation : <code>bind_rows</code> et <code>bind_cols</code></a></li>
+<li class="chapter" data-level="10.6.2" data-path="10-dplyr.html"><a href="10-dplyr.html#jointures"><i class="fa fa-check"></i><b>10.6.2</b> Jointures</a></li>
+<li class="chapter" data-level="10.6.3" data-path="10-dplyr.html"><a href="10-dplyr.html#types-de-jointures"><i class="fa fa-check"></i><b>10.6.3</b> Types de jointures</a></li>
+</ul></li>
+<li class="chapter" data-level="10.7" data-path="10-dplyr.html"><a href="10-dplyr.html#ressources-2"><i class="fa fa-check"></i><b>10.7</b> Ressources</a></li>
+<li class="chapter" data-level="10.8" data-path="10-dplyr.html"><a href="10-dplyr.html#exercices-5"><i class="fa fa-check"></i><b>10.8</b> Exercices</a><ul>
+<li class="chapter" data-level="10.8.1" data-path="10-dplyr.html"><a href="10-dplyr.html#les-verbes-de-base-de-dplyr"><i class="fa fa-check"></i><b>10.8.1</b> Les verbes de base de <code>dplyr</code></a></li>
+<li class="chapter" data-level="10.8.2" data-path="10-dplyr.html"><a href="10-dplyr.html#enchaîner-des-opérations"><i class="fa fa-check"></i><b>10.8.2</b> Enchaîner des opérations</a></li>
+<li class="chapter" data-level="10.8.3" data-path="10-dplyr.html"><a href="10-dplyr.html#group_by-et-summarise"><i class="fa fa-check"></i><b>10.8.3</b> <code>group_by</code> et <code>summarise</code></a></li>
+<li class="chapter" data-level="10.8.4" data-path="10-dplyr.html"><a href="10-dplyr.html#jointures-1"><i class="fa fa-check"></i><b>10.8.4</b> Jointures</a></li>
+<li class="chapter" data-level="10.8.5" data-path="10-dplyr.html"><a href="10-dplyr.html#bonus"><i class="fa fa-check"></i><b>10.8.5</b> Bonus</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="11" data-path="11-stringr.html"><a href="11-stringr.html"><i class="fa fa-check"></i><b>11</b> Manipuler du texte avec <code>stringr</code></a><ul>
+<li class="chapter" data-level="11.1" data-path="11-stringr.html"><a href="11-stringr.html#expressions-régulières"><i class="fa fa-check"></i><b>11.1</b> Expressions régulières</a></li>
+<li class="chapter" data-level="11.2" data-path="11-stringr.html"><a href="11-stringr.html#concat"><i class="fa fa-check"></i><b>11.2</b> Concaténer des chaînes</a></li>
+<li class="chapter" data-level="11.3" data-path="11-stringr.html"><a href="11-stringr.html#convertir-en-majuscules-minuscules"><i class="fa fa-check"></i><b>11.3</b> Convertir en majuscules / minuscules</a></li>
+<li class="chapter" data-level="11.4" data-path="11-stringr.html"><a href="11-stringr.html#découper-des-chaînes"><i class="fa fa-check"></i><b>11.4</b> Découper des chaînes</a></li>
+<li class="chapter" data-level="11.5" data-path="11-stringr.html"><a href="11-stringr.html#extraire-des-sous-chaînes-par-position"><i class="fa fa-check"></i><b>11.5</b> Extraire des sous-chaînes par position</a></li>
+<li class="chapter" data-level="11.6" data-path="11-stringr.html"><a href="11-stringr.html#str-detect"><i class="fa fa-check"></i><b>11.6</b> Détecter des motifs</a></li>
+<li class="chapter" data-level="11.7" data-path="11-stringr.html"><a href="11-stringr.html#extraire-des-motifs"><i class="fa fa-check"></i><b>11.7</b> Extraire des motifs</a></li>
+<li class="chapter" data-level="11.8" data-path="11-stringr.html"><a href="11-stringr.html#remplacer-des-motifs"><i class="fa fa-check"></i><b>11.8</b> Remplacer des motifs</a></li>
+<li class="chapter" data-level="11.9" data-path="11-stringr.html"><a href="11-stringr.html#modificateurs"><i class="fa fa-check"></i><b>11.9</b> Modificateurs de motifs</a></li>
+<li class="chapter" data-level="11.10" data-path="11-stringr.html"><a href="11-stringr.html#ressources-3"><i class="fa fa-check"></i><b>11.10</b> Ressources</a></li>
+<li class="chapter" data-level="11.11" data-path="11-stringr.html"><a href="11-stringr.html#exercices-6"><i class="fa fa-check"></i><b>11.11</b> Exercices</a></li>
+</ul></li>
+<li class="chapter" data-level="12" data-path="12-tidyr.html"><a href="12-tidyr.html"><i class="fa fa-check"></i><b>12</b> Mettre en ordre avec <code>tidyr</code></a><ul>
+<li class="chapter" data-level="12.1" data-path="12-tidyr.html"><a href="12-tidyr.html#tidy-data"><i class="fa fa-check"></i><b>12.1</b> Tidy data</a></li>
+<li class="chapter" data-level="12.2" data-path="12-tidyr.html"><a href="12-tidyr.html#trois-règles-pour-des-données-bien-rangées"><i class="fa fa-check"></i><b>12.2</b> Trois règles pour des données bien rangées</a></li>
+<li class="chapter" data-level="12.3" data-path="12-tidyr.html"><a href="12-tidyr.html#les-verbes-de-tidyr"><i class="fa fa-check"></i><b>12.3</b> Les verbes de <code>tidyr</code></a><ul>
+<li class="chapter" data-level="12.3.1" data-path="12-tidyr.html"><a href="12-tidyr.html#pivot_longer-transformer-des-colonnes-en-lignes"><i class="fa fa-check"></i><b>12.3.1</b> <code>pivot_longer</code> : transformer des colonnes en lignes</a></li>
+<li class="chapter" data-level="12.3.2" data-path="12-tidyr.html"><a href="12-tidyr.html#pivot_wider-transformer-des-lignes-en-colonnes"><i class="fa fa-check"></i><b>12.3.2</b> <code>pivot_wider</code> : transformer des lignes en colonnes</a></li>
+<li class="chapter" data-level="12.3.3" data-path="12-tidyr.html"><a href="12-tidyr.html#separate"><i class="fa fa-check"></i><b>12.3.3</b> <code>separate</code> : séparer une colonne en plusieurs colonnes</a></li>
+<li class="chapter" data-level="12.3.4" data-path="12-tidyr.html"><a href="12-tidyr.html#separate-rows"><i class="fa fa-check"></i><b>12.3.4</b> <code>separate_rows</code> : séparer une colonne en plusieurs lignes</a></li>
+<li class="chapter" data-level="12.3.5" data-path="12-tidyr.html"><a href="12-tidyr.html#unite-regrouper-plusieurs-colonnes-en-une-seule"><i class="fa fa-check"></i><b>12.3.5</b> <code>unite</code> : regrouper plusieurs colonnes en une seule</a></li>
+<li class="chapter" data-level="12.3.6" data-path="12-tidyr.html"><a href="12-tidyr.html#extract"><i class="fa fa-check"></i><b>12.3.6</b> <code>extract</code> : créer de nouvelles colonnes à partir d’une colonne de texte</a></li>
+<li class="chapter" data-level="12.3.7" data-path="12-tidyr.html"><a href="12-tidyr.html#complete-compléter-des-combinaisons-de-variables-manquantes"><i class="fa fa-check"></i><b>12.3.7</b> <code>complete</code> : compléter des combinaisons de variables manquantes</a></li>
+</ul></li>
+<li class="chapter" data-level="12.4" data-path="12-tidyr.html"><a href="12-tidyr.html#ressources-4"><i class="fa fa-check"></i><b>12.4</b> Ressources</a></li>
+</ul></li>
+<li class="chapter" data-level="13" data-path="13-rmarkdown.html"><a href="13-rmarkdown.html"><i class="fa fa-check"></i><b>13</b> Diffuser et publier avec <code>rmarkdown</code></a><ul>
+<li class="chapter" data-level="13.1" data-path="13-rmarkdown.html"><a href="13-rmarkdown.html#créer-un-nouveau-document"><i class="fa fa-check"></i><b>13.1</b> Créer un nouveau document</a></li>
+<li class="chapter" data-level="13.2" data-path="13-rmarkdown.html"><a href="13-rmarkdown.html#éléments-dun-document-r-markdown"><i class="fa fa-check"></i><b>13.2</b> Éléments d’un document R Markdown</a><ul>
+<li class="chapter" data-level="13.2.1" data-path="13-rmarkdown.html"><a href="13-rmarkdown.html#en-tête-préambule"><i class="fa fa-check"></i><b>13.2.1</b> En-tête (préambule)</a></li>
+<li class="chapter" data-level="13.2.2" data-path="13-rmarkdown.html"><a href="13-rmarkdown.html#texte-du-document"><i class="fa fa-check"></i><b>13.2.2</b> Texte du document</a></li>
+<li class="chapter" data-level="13.2.3" data-path="13-rmarkdown.html"><a href="13-rmarkdown.html#blocs-de-code-r"><i class="fa fa-check"></i><b>13.2.3</b> Blocs de code R</a></li>
+<li class="chapter" data-level="13.2.4" data-path="13-rmarkdown.html"><a href="13-rmarkdown.html#compiler-un-document-knit"><i class="fa fa-check"></i><b>13.2.4</b> Compiler un document (<em>Knit</em>)</a></li>
+</ul></li>
+<li class="chapter" data-level="13.3" data-path="13-rmarkdown.html"><a href="13-rmarkdown.html#personnaliser-le-document-généré"><i class="fa fa-check"></i><b>13.3</b> Personnaliser le document généré</a></li>
+<li class="chapter" data-level="13.4" data-path="13-rmarkdown.html"><a href="13-rmarkdown.html#options-des-blocs-de-code-r"><i class="fa fa-check"></i><b>13.4</b> Options des blocs de code R</a><ul>
+<li class="chapter" data-level="13.4.1" data-path="13-rmarkdown.html"><a href="13-rmarkdown.html#nom-du-bloc"><i class="fa fa-check"></i><b>13.4.1</b> Nom du bloc</a></li>
+<li class="chapter" data-level="13.4.2" data-path="13-rmarkdown.html"><a href="13-rmarkdown.html#options"><i class="fa fa-check"></i><b>13.4.2</b> Options</a></li>
+<li class="chapter" data-level="13.4.3" data-path="13-rmarkdown.html"><a href="13-rmarkdown.html#modifier-les-options"><i class="fa fa-check"></i><b>13.4.3</b> Modifier les options</a></li>
+<li class="chapter" data-level="13.4.4" data-path="13-rmarkdown.html"><a href="13-rmarkdown.html#options-globales"><i class="fa fa-check"></i><b>13.4.4</b> Options globales</a></li>
+<li class="chapter" data-level="13.4.5" data-path="13-rmarkdown.html"><a href="13-rmarkdown.html#mise-en-cache-des-résultats"><i class="fa fa-check"></i><b>13.4.5</b> Mise en cache des résultats</a></li>
+</ul></li>
+<li class="chapter" data-level="13.5" data-path="13-rmarkdown.html"><a href="13-rmarkdown.html#rendu-des-tableaux"><i class="fa fa-check"></i><b>13.5</b> Rendu des tableaux</a><ul>
+<li class="chapter" data-level="13.5.1" data-path="13-rmarkdown.html"><a href="13-rmarkdown.html#tableaux-croisés-1"><i class="fa fa-check"></i><b>13.5.1</b> Tableaux croisés</a></li>
+<li class="chapter" data-level="13.5.2" data-path="13-rmarkdown.html"><a href="13-rmarkdown.html#tableaux-de-données-et-tris-à-plat"><i class="fa fa-check"></i><b>13.5.2</b> Tableaux de données et tris à plat</a></li>
+</ul></li>
+<li class="chapter" data-level="13.6" data-path="13-rmarkdown.html"><a href="13-rmarkdown.html#templates"><i class="fa fa-check"></i><b>13.6</b> Modèles de documents</a><ul>
+<li class="chapter" data-level="13.6.1" data-path="13-rmarkdown.html"><a href="13-rmarkdown.html#slides"><i class="fa fa-check"></i><b>13.6.1</b> Slides</a></li>
+<li class="chapter" data-level="13.6.2" data-path="13-rmarkdown.html"><a href="13-rmarkdown.html#templates-1"><i class="fa fa-check"></i><b>13.6.2</b> Templates</a></li>
+</ul></li>
+<li class="chapter" data-level="13.7" data-path="13-rmarkdown.html"><a href="13-rmarkdown.html#ressources-5"><i class="fa fa-check"></i><b>13.7</b> Ressources</a></li>
+</ul></li>
+<li class="part"><span><b>III Aller plus loin</b></span></li>
+<li class="chapter" data-level="14" data-path="14-fonctions.html"><a href="14-fonctions.html"><i class="fa fa-check"></i><b>14</b> Écrire ses propres fonctions</a><ul>
+<li class="chapter" data-level="14.1" data-path="14-fonctions.html"><a href="14-fonctions.html#introduction-et-exemples"><i class="fa fa-check"></i><b>14.1</b> Introduction et exemples</a><ul>
+<li class="chapter" data-level="14.1.1" data-path="14-fonctions.html"><a href="14-fonctions.html#structure-dune-fonction"><i class="fa fa-check"></i><b>14.1.1</b> Structure d’une fonction</a></li>
+<li class="chapter" data-level="14.1.2" data-path="14-fonctions.html"><a href="14-fonctions.html#exemple-de-fonction"><i class="fa fa-check"></i><b>14.1.2</b> Exemple de fonction</a></li>
+<li class="chapter" data-level="14.1.3" data-path="14-fonctions.html"><a href="14-fonctions.html#effets-de-bord-et-affichage-de-messages"><i class="fa fa-check"></i><b>14.1.3</b> Effets de bord et affichage de messages</a></li>
+<li class="chapter" data-level="14.1.4" data-path="14-fonctions.html"><a href="14-fonctions.html#utilité-des-fonctions"><i class="fa fa-check"></i><b>14.1.4</b> Utilité des fonctions</a></li>
+</ul></li>
+<li class="chapter" data-level="14.2" data-path="14-fonctions.html"><a href="14-fonctions.html#arguments-et-résultat-dune-fonction"><i class="fa fa-check"></i><b>14.2</b> Arguments et résultat d’une fonction</a><ul>
+<li class="chapter" data-level="14.2.1" data-path="14-fonctions.html"><a href="14-fonctions.html#définition-des-arguments"><i class="fa fa-check"></i><b>14.2.1</b> Définition des arguments</a></li>
+<li class="chapter" data-level="14.2.2" data-path="14-fonctions.html"><a href="14-fonctions.html#valeurs-par-défaut"><i class="fa fa-check"></i><b>14.2.2</b> Valeurs par défaut</a></li>
+<li class="chapter" data-level="14.2.3" data-path="14-fonctions.html"><a href="14-fonctions.html#largument-..."><i class="fa fa-check"></i><b>14.2.3</b> L’argument <code>...</code></a></li>
+<li class="chapter" data-level="14.2.4" data-path="14-fonctions.html"><a href="14-fonctions.html#resfunc"><i class="fa fa-check"></i><b>14.2.4</b> Résultat d’une fonction</a></li>
+</ul></li>
+<li class="chapter" data-level="14.3" data-path="14-fonctions.html"><a href="14-fonctions.html#portée-des-variables"><i class="fa fa-check"></i><b>14.3</b> Portée des variables</a><ul>
+<li class="chapter" data-level="14.3.1" data-path="14-fonctions.html"><a href="14-fonctions.html#une-fonction-peut-accéder-à-un-objet-extérieur"><i class="fa fa-check"></i><b>14.3.1</b> Une fonction peut accéder à un objet extérieur</a></li>
+<li class="chapter" data-level="14.3.2" data-path="14-fonctions.html"><a href="14-fonctions.html#les-arguments-et-les-objets-créés-dans-la-fonction-sont-prioritaires"><i class="fa fa-check"></i><b>14.3.2</b> Les arguments et les objets créés dans la fonction sont prioritaires</a></li>
+<li class="chapter" data-level="14.3.3" data-path="14-fonctions.html"><a href="14-fonctions.html#un-objet-créé-dans-une-fonction-nexiste-que-dans-cette-fonction"><i class="fa fa-check"></i><b>14.3.3</b> Un objet créé dans une fonction n’existe que dans cette fonction</a></li>
+<li class="chapter" data-level="14.3.4" data-path="14-fonctions.html"><a href="14-fonctions.html#on-ne-peut-pas-modifier-un-objet-global-dans-une-fonction"><i class="fa fa-check"></i><b>14.3.4</b> On ne peut pas modifier un objet global dans une fonction</a></li>
+</ul></li>
+<li class="chapter" data-level="14.4" data-path="14-fonctions.html"><a href="14-fonctions.html#les-fonctions-comme-objets"><i class="fa fa-check"></i><b>14.4</b> Les fonctions comme objets</a><ul>
+<li class="chapter" data-level="14.4.1" data-path="14-fonctions.html"><a href="14-fonctions.html#passer-des-fonctions-comme-argument"><i class="fa fa-check"></i><b>14.4.1</b> Passer des fonctions comme argument</a></li>
+<li class="chapter" data-level="14.4.2" data-path="14-fonctions.html"><a href="14-fonctions.html#fonctions-anonymes"><i class="fa fa-check"></i><b>14.4.2</b> Fonctions anonymes</a></li>
+</ul></li>
+<li class="chapter" data-level="14.5" data-path="14-fonctions.html"><a href="14-fonctions.html#ressources-6"><i class="fa fa-check"></i><b>14.5</b> Ressources</a></li>
+<li class="chapter" data-level="14.6" data-path="14-fonctions.html"><a href="14-fonctions.html#exercices-7"><i class="fa fa-check"></i><b>14.6</b> Exercices</a><ul>
+<li class="chapter" data-level="14.6.1" data-path="14-fonctions.html"><a href="14-fonctions.html#introduction-et-exemples-1"><i class="fa fa-check"></i><b>14.6.1</b> Introduction et exemples</a></li>
+<li class="chapter" data-level="14.6.2" data-path="14-fonctions.html"><a href="14-fonctions.html#arguments-et-résultats"><i class="fa fa-check"></i><b>14.6.2</b> Arguments et résultats</a></li>
+<li class="chapter" data-level="14.6.3" data-path="14-fonctions.html"><a href="14-fonctions.html#portée-des-variables-1"><i class="fa fa-check"></i><b>14.6.3</b> Portée des variables</a></li>
+<li class="chapter" data-level="14.6.4" data-path="14-fonctions.html"><a href="14-fonctions.html#les-fonctions-comme-objets-1"><i class="fa fa-check"></i><b>14.6.4</b> Les fonctions comme objets</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="15" data-path="15-structures-donnees.html"><a href="15-structures-donnees.html"><i class="fa fa-check"></i><b>15</b> Structures de données</a><ul>
+<li class="chapter" data-level="15.1" data-path="15-structures-donnees.html"><a href="15-structures-donnees.html#vecteurs-atomiques"><i class="fa fa-check"></i><b>15.1</b> Vecteurs atomiques</a><ul>
+<li class="chapter" data-level="15.1.1" data-path="15-structures-donnees.html"><a href="15-structures-donnees.html#création-dun-vecteur"><i class="fa fa-check"></i><b>15.1.1</b> Création d’un vecteur</a></li>
+<li class="chapter" data-level="15.1.2" data-path="15-structures-donnees.html"><a href="15-structures-donnees.html#vecteurs-nommés"><i class="fa fa-check"></i><b>15.1.2</b> Vecteurs nommés</a></li>
+<li class="chapter" data-level="15.1.3" data-path="15-structures-donnees.html"><a href="15-structures-donnees.html#types-de-vecteurs"><i class="fa fa-check"></i><b>15.1.3</b> Types de vecteurs</a></li>
+<li class="chapter" data-level="15.1.4" data-path="15-structures-donnees.html"><a href="15-structures-donnees.html#sélection-déléments"><i class="fa fa-check"></i><b>15.1.4</b> Sélection d’éléments</a></li>
+<li class="chapter" data-level="15.1.5" data-path="15-structures-donnees.html"><a href="15-structures-donnees.html#modification"><i class="fa fa-check"></i><b>15.1.5</b> Modification</a></li>
+</ul></li>
+<li class="chapter" data-level="15.2" data-path="15-structures-donnees.html"><a href="15-structures-donnees.html#listes"><i class="fa fa-check"></i><b>15.2</b> Listes</a><ul>
+<li class="chapter" data-level="15.2.1" data-path="15-structures-donnees.html"><a href="15-structures-donnees.html#création"><i class="fa fa-check"></i><b>15.2.1</b> Création</a></li>
+<li class="chapter" data-level="15.2.2" data-path="15-structures-donnees.html"><a href="15-structures-donnees.html#ajout-déléments"><i class="fa fa-check"></i><b>15.2.2</b> Ajout d’éléments</a></li>
+<li class="chapter" data-level="15.2.3" data-path="15-structures-donnees.html"><a href="15-structures-donnees.html#sélection-déléments-1"><i class="fa fa-check"></i><b>15.2.3</b> Sélection d’éléments</a></li>
+<li class="chapter" data-level="15.2.4" data-path="15-structures-donnees.html"><a href="15-structures-donnees.html#modification-1"><i class="fa fa-check"></i><b>15.2.4</b> Modification</a></li>
+<li class="chapter" data-level="15.2.5" data-path="15-structures-donnees.html"><a href="15-structures-donnees.html#utilisation"><i class="fa fa-check"></i><b>15.2.5</b> Utilisation</a></li>
+</ul></li>
+<li class="chapter" data-level="15.3" data-path="15-structures-donnees.html"><a href="15-structures-donnees.html#data-frame-tibbles"><i class="fa fa-check"></i><b>15.3</b> Tableaux de données (<em>data frame</em> et <em>tibble</em>)</a><ul>
+<li class="chapter" data-level="15.3.1" data-path="15-structures-donnees.html"><a href="15-structures-donnees.html#création-1"><i class="fa fa-check"></i><b>15.3.1</b> Création</a></li>
+<li class="chapter" data-level="15.3.2" data-path="15-structures-donnees.html"><a href="15-structures-donnees.html#noms-de-colonnes-et-de-lignes"><i class="fa fa-check"></i><b>15.3.2</b> Noms de colonnes et de lignes</a></li>
+<li class="chapter" data-level="15.3.3" data-path="15-structures-donnees.html"><a href="15-structures-donnees.html#sélection-de-lignes-et-de-colonnes"><i class="fa fa-check"></i><b>15.3.3</b> Sélection de lignes et de colonnes</a></li>
+<li class="chapter" data-level="15.3.4" data-path="15-structures-donnees.html"><a href="15-structures-donnees.html#modification-2"><i class="fa fa-check"></i><b>15.3.4</b> Modification</a></li>
+</ul></li>
+<li class="chapter" data-level="15.4" data-path="15-structures-donnees.html"><a href="15-structures-donnees.html#ressources-7"><i class="fa fa-check"></i><b>15.4</b> Ressources</a></li>
+<li class="chapter" data-level="15.5" data-path="15-structures-donnees.html"><a href="15-structures-donnees.html#exercices-8"><i class="fa fa-check"></i><b>15.5</b> Exercices</a><ul>
+<li class="chapter" data-level="15.5.1" data-path="15-structures-donnees.html"><a href="15-structures-donnees.html#vecteurs-atomiques-1"><i class="fa fa-check"></i><b>15.5.1</b> Vecteurs atomiques</a></li>
+<li class="chapter" data-level="15.5.2" data-path="15-structures-donnees.html"><a href="15-structures-donnees.html#listes-1"><i class="fa fa-check"></i><b>15.5.2</b> Listes</a></li>
+<li class="chapter" data-level="15.5.3" data-path="15-structures-donnees.html"><a href="15-structures-donnees.html#tableaux-de-données"><i class="fa fa-check"></i><b>15.5.3</b> Tableaux de données</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="16" data-path="16-boucles-if.html"><a href="16-boucles-if.html"><i class="fa fa-check"></i><b>16</b> Boucles et exécution conditionnelle</a><ul>
+<li class="chapter" data-level="16.1" data-path="16-boucles-if.html"><a href="16-boucles-if.html#if-else-exécuter-du-code-sous-certaines-conditions"><i class="fa fa-check"></i><b>16.1</b> <code>if</code>, <code>else</code> : exécuter du code sous certaines conditions</a><ul>
+<li class="chapter" data-level="16.1.1" data-path="16-boucles-if.html"><a href="16-boucles-if.html#if"><i class="fa fa-check"></i><b>16.1.1</b> <code>if</code></a></li>
+<li class="chapter" data-level="16.1.2" data-path="16-boucles-if.html"><a href="16-boucles-if.html#if-else-1"><i class="fa fa-check"></i><b>16.1.2</b> <code>if</code> / <code>else</code></a></li>
+<li class="chapter" data-level="16.1.3" data-path="16-boucles-if.html"><a href="16-boucles-if.html#if-else-if-else"><i class="fa fa-check"></i><b>16.1.3</b> “<code>if</code>” / “<code>else if</code>” / “<code>else</code>”</a></li>
+<li class="chapter" data-level="16.1.4" data-path="16-boucles-if.html"><a href="16-boucles-if.html#construction-de-conditions-complexes"><i class="fa fa-check"></i><b>16.1.4</b> Construction de conditions complexes</a></li>
+<li class="chapter" data-level="16.1.5" data-path="16-boucles-if.html"><a href="16-boucles-if.html#différence-entre-if-else-et-ifelse"><i class="fa fa-check"></i><b>16.1.5</b> Différence entre <code>if</code> / <code>else</code> et <code>ifelse</code></a></li>
+</ul></li>
+<li class="chapter" data-level="16.2" data-path="16-boucles-if.html"><a href="16-boucles-if.html#contrôle-de-lexécution-et-gestion-des-erreurs"><i class="fa fa-check"></i><b>16.2</b> Contrôle de l’exécution et gestion des erreurs</a><ul>
+<li class="chapter" data-level="16.2.1" data-path="16-boucles-if.html"><a href="16-boucles-if.html#utilisation-de-return-pour-sortir-de-la-fonction"><i class="fa fa-check"></i><b>16.2.1</b> Utilisation de <code>return</code> pour sortir de la fonction</a></li>
+<li class="chapter" data-level="16.2.2" data-path="16-boucles-if.html"><a href="16-boucles-if.html#warning"><i class="fa fa-check"></i><b>16.2.2</b> <code>warning</code></a></li>
+<li class="chapter" data-level="16.2.3" data-path="16-boucles-if.html"><a href="16-boucles-if.html#stop-et-stopifnot"><i class="fa fa-check"></i><b>16.2.3</b> <code>stop</code> et <code>stopifnot</code></a></li>
+<li class="chapter" data-level="16.2.4" data-path="16-boucles-if.html"><a href="16-boucles-if.html#tester-la-présence-dun-argument"><i class="fa fa-check"></i><b>16.2.4</b> Tester la présence d’un argument</a></li>
+</ul></li>
+<li class="chapter" data-level="16.3" data-path="16-boucles-if.html"><a href="16-boucles-if.html#for-et-while-répéter-des-instructions-dans-une-boucle"><i class="fa fa-check"></i><b>16.3</b> <code>for</code> et <code>while</code> : répéter des instructions dans une boucle</a><ul>
+<li class="chapter" data-level="16.3.1" data-path="16-boucles-if.html"><a href="16-boucles-if.html#for"><i class="fa fa-check"></i><b>16.3.1</b> <code>for</code></a></li>
+<li class="chapter" data-level="16.3.2" data-path="16-boucles-if.html"><a href="16-boucles-if.html#while"><i class="fa fa-check"></i><b>16.3.2</b> <code>while</code></a></li>
+<li class="chapter" data-level="16.3.3" data-path="16-boucles-if.html"><a href="16-boucles-if.html#next-et-break"><i class="fa fa-check"></i><b>16.3.3</b> <code>next</code> et <code>break</code></a></li>
+<li class="chapter" data-level="16.3.4" data-path="16-boucles-if.html"><a href="16-boucles-if.html#no-boucles"><i class="fa fa-check"></i><b>16.3.4</b> Quand (ne pas) utiliser des boucles</a></li>
+</ul></li>
+<li class="chapter" data-level="16.4" data-path="16-boucles-if.html"><a href="16-boucles-if.html#débugguer-une-fonction"><i class="fa fa-check"></i><b>16.4</b> Débugguer une fonction</a><ul>
+<li class="chapter" data-level="16.4.1" data-path="16-boucles-if.html"><a href="16-boucles-if.html#print"><i class="fa fa-check"></i><b>16.4.1</b> print()</a></li>
+<li class="chapter" data-level="16.4.2" data-path="16-boucles-if.html"><a href="16-boucles-if.html#localiser-une-erreur"><i class="fa fa-check"></i><b>16.4.2</b> Localiser une erreur</a></li>
+<li class="chapter" data-level="16.4.3" data-path="16-boucles-if.html"><a href="16-boucles-if.html#browser"><i class="fa fa-check"></i><b>16.4.3</b> browser()</a></li>
+</ul></li>
+<li class="chapter" data-level="16.5" data-path="16-boucles-if.html"><a href="16-boucles-if.html#ressources-boucles"><i class="fa fa-check"></i><b>16.5</b> Ressources</a></li>
+<li class="chapter" data-level="16.6" data-path="16-boucles-if.html"><a href="16-boucles-if.html#exercices-9"><i class="fa fa-check"></i><b>16.6</b> Exercices</a><ul>
+<li class="chapter" data-level="16.6.1" data-path="16-boucles-if.html"><a href="16-boucles-if.html#if-et-else"><i class="fa fa-check"></i><b>16.6.1</b> <code>if</code> et <code>else</code></a></li>
+<li class="chapter" data-level="16.6.2" data-path="16-boucles-if.html"><a href="16-boucles-if.html#contrôle-de-lexécution"><i class="fa fa-check"></i><b>16.6.2</b> Contrôle de l’exécution</a></li>
+<li class="chapter" data-level="16.6.3" data-path="16-boucles-if.html"><a href="16-boucles-if.html#boucles"><i class="fa fa-check"></i><b>16.6.3</b> Boucles</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="17" data-path="17-dplyr-avance.html"><a href="17-dplyr-avance.html"><i class="fa fa-check"></i><b>17</b> <code>dplyr</code> avancé</a><ul>
+<li class="chapter" data-level="17.1" data-path="17-dplyr-avance.html"><a href="17-dplyr-avance.html#appliquer-ses-propres-fonctions"><i class="fa fa-check"></i><b>17.1</b> Appliquer ses propres fonctions</a><ul>
+<li class="chapter" data-level="17.1.1" data-path="17-dplyr-avance.html"><a href="17-dplyr-avance.html#exemple-avec-mutate"><i class="fa fa-check"></i><b>17.1.1</b> Exemple avec <code>mutate</code></a></li>
+<li class="chapter" data-level="17.1.2" data-path="17-dplyr-avance.html"><a href="17-dplyr-avance.html#exemple-avec-summarise"><i class="fa fa-check"></i><b>17.1.2</b> Exemple avec <code>summarise</code></a></li>
+<li class="chapter" data-level="17.1.3" data-path="17-dplyr-avance.html"><a href="17-dplyr-avance.html#exemple-avec-rename_with"><i class="fa fa-check"></i><b>17.1.3</b> Exemple avec <code>rename_with</code></a></li>
+</ul></li>
+<li class="chapter" data-level="17.2" data-path="17-dplyr-avance.html"><a href="17-dplyr-avance.html#across"><i class="fa fa-check"></i><b>17.2</b> <code>across()</code> : appliquer des fonctions à plusieurs colonnes</a><ul>
+<li class="chapter" data-level="17.2.1" data-path="17-dplyr-avance.html"><a href="17-dplyr-avance.html#appliquer-une-fonction-à-plusieurs-colonnes"><i class="fa fa-check"></i><b>17.2.1</b> Appliquer une fonction à plusieurs colonnes</a></li>
+<li class="chapter" data-level="17.2.2" data-path="17-dplyr-avance.html"><a href="17-dplyr-avance.html#passer-des-arguments-supplémentaires-à-la-fonction-appliquée"><i class="fa fa-check"></i><b>17.2.2</b> Passer des arguments supplémentaires à la fonction appliquée</a></li>
+<li class="chapter" data-level="17.2.3" data-path="17-dplyr-avance.html"><a href="17-dplyr-avance.html#noms-des-nouvelles-colonnes"><i class="fa fa-check"></i><b>17.2.3</b> Noms des nouvelles colonnes</a></li>
+<li class="chapter" data-level="17.2.4" data-path="17-dplyr-avance.html"><a href="17-dplyr-avance.html#appliquer-plusieurs-fonctions-à-plusieurs-colonnes"><i class="fa fa-check"></i><b>17.2.4</b> Appliquer plusieurs fonctions à plusieurs colonnes</a></li>
+<li class="chapter" data-level="17.2.5" data-path="17-dplyr-avance.html"><a href="17-dplyr-avance.html#renommer-plusieurs-colonnes-avec-une-fonction"><i class="fa fa-check"></i><b>17.2.5</b> Renommer plusieurs colonnes avec une fonction</a></li>
+</ul></li>
+<li class="chapter" data-level="17.3" data-path="17-dplyr-avance.html"><a href="17-dplyr-avance.html#rowwise-et-c_across-appliquer-une-transformation-ligne-par-ligne"><i class="fa fa-check"></i><b>17.3</b> <code>rowwise()</code> et <code>c_across()</code> : appliquer une transformation ligne par ligne</a></li>
+<li class="chapter" data-level="17.4" data-path="17-dplyr-avance.html"><a href="17-dplyr-avance.html#syntaxes-abregees"><i class="fa fa-check"></i><b>17.4</b> Fonctions anonymes et syntaxes abrégées</a></li>
+<li class="chapter" data-level="17.5" data-path="17-dplyr-avance.html"><a href="17-dplyr-avance.html#ressources-8"><i class="fa fa-check"></i><b>17.5</b> Ressources</a></li>
+<li class="chapter" data-level="17.6" data-path="17-dplyr-avance.html"><a href="17-dplyr-avance.html#exercices-10"><i class="fa fa-check"></i><b>17.6</b> Exercices</a><ul>
+<li class="chapter" data-level="17.6.1" data-path="17-dplyr-avance.html"><a href="17-dplyr-avance.html#appliquer-ses-propres-fonctions-1"><i class="fa fa-check"></i><b>17.6.1</b> Appliquer ses propres fonctions</a></li>
+<li class="chapter" data-level="17.6.2" data-path="17-dplyr-avance.html"><a href="17-dplyr-avance.html#across-1"><i class="fa fa-check"></i><b>17.6.2</b> <code>across()</code></a></li>
+<li class="chapter" data-level="17.6.3" data-path="17-dplyr-avance.html"><a href="17-dplyr-avance.html#rowwise-et-c_across"><i class="fa fa-check"></i><b>17.6.3</b> <code>rowwise()</code> et <code>c_across()</code></a></li>
+<li class="chapter" data-level="17.6.4" data-path="17-dplyr-avance.html"><a href="17-dplyr-avance.html#fonctions-anonymes-et-notations-abrégées"><i class="fa fa-check"></i><b>17.6.4</b> Fonctions anonymes et notations abrégées</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="18" data-path="18-purrr.html"><a href="18-purrr.html"><i class="fa fa-check"></i><b>18</b> Itérer avec <code>purrr</code></a><ul>
+<li class="chapter" data-level="18.1" data-path="18-purrr.html"><a href="18-purrr.html#exemple-dapplication"><i class="fa fa-check"></i><b>18.1</b> Exemple d’application</a></li>
+<li class="chapter" data-level="18.2" data-path="18-purrr.html"><a href="18-purrr.html#map-et-ses-variantes"><i class="fa fa-check"></i><b>18.2</b> <code>map</code> et ses variantes</a><ul>
+<li class="chapter" data-level="18.2.1" data-path="18-purrr.html"><a href="18-purrr.html#modes-dappel-de-map"><i class="fa fa-check"></i><b>18.2.1</b> Modes d’appel de <code>map</code></a></li>
+<li class="chapter" data-level="18.2.2" data-path="18-purrr.html"><a href="18-purrr.html#variantes-de-map"><i class="fa fa-check"></i><b>18.2.2</b> Variantes de <code>map</code></a></li>
+<li class="chapter" data-level="18.2.3" data-path="18-purrr.html"><a href="18-purrr.html#map_dfr-et-map_dfc"><i class="fa fa-check"></i><b>18.2.3</b> <code>map_dfr()</code> et <code>map_dfc()</code></a></li>
+</ul></li>
+<li class="chapter" data-level="18.3" data-path="18-purrr.html"><a href="18-purrr.html#itérer-sur-les-colonnes-dun-tableau-de-données"><i class="fa fa-check"></i><b>18.3</b> Itérer sur les colonnes d’un tableau de données</a></li>
+<li class="chapter" data-level="18.4" data-path="18-purrr.html"><a href="18-purrr.html#modify"><i class="fa fa-check"></i><b>18.4</b> <code>modify</code></a></li>
+<li class="chapter" data-level="18.5" data-path="18-purrr.html"><a href="18-purrr.html#imap"><i class="fa fa-check"></i><b>18.5</b> <code>imap</code></a></li>
+<li class="chapter" data-level="18.6" data-path="18-purrr.html"><a href="18-purrr.html#walk"><i class="fa fa-check"></i><b>18.6</b> <code>walk</code></a></li>
+<li class="chapter" data-level="18.7" data-path="18-purrr.html"><a href="18-purrr.html#map2-et-pmap-itérer-sur-plusieurs-vecteurs-en-parallèle"><i class="fa fa-check"></i><b>18.7</b> <code>map2</code> et <code>pmap</code> : itérer sur plusieurs vecteurs en parallèle</a></li>
+<li class="chapter" data-level="18.8" data-path="18-purrr.html"><a href="18-purrr.html#répéter-une-opération"><i class="fa fa-check"></i><b>18.8</b> Répéter une opération</a></li>
+<li class="chapter" data-level="18.9" data-path="18-purrr.html"><a href="18-purrr.html#quand-ne-pas-utiliser-map"><i class="fa fa-check"></i><b>18.9</b> Quand (ne pas) utiliser <code>map</code></a></li>
+<li class="chapter" data-level="18.10" data-path="18-purrr.html"><a href="18-purrr.html#purrr-vs-apply"><i class="fa fa-check"></i><b>18.10</b> <code>purrr</code> vs <code>*apply</code></a></li>
+<li class="chapter" data-level="18.11" data-path="18-purrr.html"><a href="18-purrr.html#ressources-9"><i class="fa fa-check"></i><b>18.11</b> Ressources</a></li>
+<li class="chapter" data-level="18.12" data-path="18-purrr.html"><a href="18-purrr.html#exercices-11"><i class="fa fa-check"></i><b>18.12</b> Exercices</a><ul>
+<li class="chapter" data-level="18.12.1" data-path="18-purrr.html"><a href="18-purrr.html#map-et-ses-variantes-1"><i class="fa fa-check"></i><b>18.12.1</b> <code>map</code> et ses variantes</a></li>
+<li class="chapter" data-level="18.12.2" data-path="18-purrr.html"><a href="18-purrr.html#modify-et-itération-sur-les-colonnes-dun-tableau"><i class="fa fa-check"></i><b>18.12.2</b> <code>modify</code> et itération sur les colonnes d’un tableau</a></li>
+<li class="chapter" data-level="18.12.3" data-path="18-purrr.html"><a href="18-purrr.html#imap-et-walk"><i class="fa fa-check"></i><b>18.12.3</b> <code>imap</code> et <code>walk</code></a></li>
+<li class="chapter" data-level="18.12.4" data-path="18-purrr.html"><a href="18-purrr.html#map2-et-pmap"><i class="fa fa-check"></i><b>18.12.4</b> <code>map2</code> et <code>pmap</code></a></li>
+<li class="chapter" data-level="18.12.5" data-path="18-purrr.html"><a href="18-purrr.html#répéter-une-opération-1"><i class="fa fa-check"></i><b>18.12.5</b> Répéter une opération</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="19" data-path="19-programmer-tidyverse.html"><a href="19-programmer-tidyverse.html"><i class="fa fa-check"></i><b>19</b> Programmer avec le <em>tidyverse</em></a><ul>
+<li class="chapter" data-level="19.1" data-path="19-programmer-tidyverse.html"><a href="19-programmer-tidyverse.html#spécificités-du-tidyverse"><i class="fa fa-check"></i><b>19.1</b> Spécificités du <em>tidyverse</em></a><ul>
+<li class="chapter" data-level="19.1.1" data-path="19-programmer-tidyverse.html"><a href="19-programmer-tidyverse.html#data-masking"><i class="fa fa-check"></i><b>19.1.1</b> <em>data masking</em></a></li>
+<li class="chapter" data-level="19.1.2" data-path="19-programmer-tidyverse.html"><a href="19-programmer-tidyverse.html#tidy-selection"><i class="fa fa-check"></i><b>19.1.2</b> <em>tidy selection</em></a></li>
+<li class="chapter" data-level="19.1.3" data-path="19-programmer-tidyverse.html"><a href="19-programmer-tidyverse.html#utilisation-dans-des-fonctions"><i class="fa fa-check"></i><b>19.1.3</b> Utilisation dans des fonctions</a></li>
+</ul></li>
+<li class="chapter" data-level="19.2" data-path="19-programmer-tidyverse.html"><a href="19-programmer-tidyverse.html#programmer-avec-dplyr-et-tidyr"><i class="fa fa-check"></i><b>19.2</b> Programmer avec <code>dplyr</code> et <code>tidyr</code></a><ul>
+<li class="chapter" data-level="19.2.1" data-path="19-programmer-tidyverse.html"><a href="19-programmer-tidyverse.html#utiliser-une-colonne-passée-en-argument"><i class="fa fa-check"></i><b>19.2.1</b> Utiliser une colonne passée en argument</a></li>
+<li class="chapter" data-level="19.2.2" data-path="19-programmer-tidyverse.html"><a href="19-programmer-tidyverse.html#utiliser-une-sélection-de-colonnes-passée-en-argument"><i class="fa fa-check"></i><b>19.2.2</b> Utiliser une sélection de colonnes passée en argument</a></li>
+<li class="chapter" data-level="19.2.3" data-path="19-programmer-tidyverse.html"><a href="19-programmer-tidyverse.html#nommer-de-nouvelles-colonnes-à-partir-dun-argument"><i class="fa fa-check"></i><b>19.2.3</b> Nommer de nouvelles colonnes à partir d’un argument</a></li>
+<li class="chapter" data-level="19.2.4" data-path="19-programmer-tidyverse.html"><a href="19-programmer-tidyverse.html#désambiguïser-data-et-env"><i class="fa fa-check"></i><b>19.2.4</b> Désambiguïser data et env</a></li>
+<li class="chapter" data-level="19.2.5" data-path="19-programmer-tidyverse.html"><a href="19-programmer-tidyverse.html#quand-les-arguments-sont-des-chaînes-de-caractères"><i class="fa fa-check"></i><b>19.2.5</b> Quand les arguments sont des chaînes de caractères</a></li>
+</ul></li>
+<li class="chapter" data-level="19.3" data-path="19-programmer-tidyverse.html"><a href="19-programmer-tidyverse.html#programmer-avec-ggplot2"><i class="fa fa-check"></i><b>19.3</b> Programmer avec <code>ggplot2</code></a><ul>
+<li class="chapter" data-level="19.3.1" data-path="19-programmer-tidyverse.html"><a href="19-programmer-tidyverse.html#sélection-de-colonnes-avec-aes"><i class="fa fa-check"></i><b>19.3.1</b> Sélection de colonnes avec <code>aes()</code></a></li>
+<li class="chapter" data-level="19.3.2" data-path="19-programmer-tidyverse.html"><a href="19-programmer-tidyverse.html#faceting-1"><i class="fa fa-check"></i><b>19.3.2</b> Faceting</a></li>
+</ul></li>
+<li class="chapter" data-level="19.4" data-path="19-programmer-tidyverse.html"><a href="19-programmer-tidyverse.html#aide-mémoire"><i class="fa fa-check"></i><b>19.4</b> Aide-mémoire</a></li>
+<li class="chapter" data-level="19.5" data-path="19-programmer-tidyverse.html"><a href="19-programmer-tidyverse.html#ressources-10"><i class="fa fa-check"></i><b>19.5</b> Ressources</a></li>
+<li class="chapter" data-level="19.6" data-path="19-programmer-tidyverse.html"><a href="19-programmer-tidyverse.html#exercices-12"><i class="fa fa-check"></i><b>19.6</b> Exercices</a><ul>
+<li class="chapter" data-level="19.6.1" data-path="19-programmer-tidyverse.html"><a href="19-programmer-tidyverse.html#dplyr-et-tidyr"><i class="fa fa-check"></i><b>19.6.1</b> <code>dplyr</code> et <code>tidyr</code></a></li>
+<li class="chapter" data-level="19.6.2" data-path="19-programmer-tidyverse.html"><a href="19-programmer-tidyverse.html#noms-de-colonnes-en-chaînes-de-caractères"><i class="fa fa-check"></i><b>19.6.2</b> Noms de colonnes en chaînes de caractères</a></li>
+<li class="chapter" data-level="19.6.3" data-path="19-programmer-tidyverse.html"><a href="19-programmer-tidyverse.html#ambiguïté-data-env"><i class="fa fa-check"></i><b>19.6.3</b> Ambiguïté <code>data</code> / <code>env</code></a></li>
+<li class="chapter" data-level="19.6.4" data-path="19-programmer-tidyverse.html"><a href="19-programmer-tidyverse.html#ggplot2-1"><i class="fa fa-check"></i><b>19.6.4</b> <code>ggplot2</code></a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="20" data-path="20-targets.html"><a href="20-targets.html"><i class="fa fa-check"></i><b>20</b> Organiser un projet avec <code>targets</code></a><ul>
+<li class="chapter" data-level="20.1" data-path="20-targets.html"><a href="20-targets.html#définition-du-pipeline"><i class="fa fa-check"></i><b>20.1</b> Définition du pipeline</a><ul>
+<li class="chapter" data-level="20.1.1" data-path="20-targets.html"><a href="20-targets.html#projet-dexemple"><i class="fa fa-check"></i><b>20.1.1</b> Projet d’exemple</a></li>
+<li class="chapter" data-level="20.1.2" data-path="20-targets.html"><a href="20-targets.html#targets.r"><i class="fa fa-check"></i><b>20.1.2</b> <code>_targets.R</code></a></li>
+</ul></li>
+<li class="chapter" data-level="20.2" data-path="20-targets.html"><a href="20-targets.html#exécution-du-pipeline"><i class="fa fa-check"></i><b>20.2</b> Exécution du pipeline</a></li>
+<li class="chapter" data-level="20.3" data-path="20-targets.html"><a href="20-targets.html#modification-du-pipeline"><i class="fa fa-check"></i><b>20.3</b> Modification du pipeline</a></li>
+<li class="chapter" data-level="20.4" data-path="20-targets.html"><a href="20-targets.html#rmarkdown"><i class="fa fa-check"></i><b>20.4</b> RMarkdown</a></li>
+<li class="chapter" data-level="20.5" data-path="20-targets.html"><a href="20-targets.html#gestion-des-données-en-cache"><i class="fa fa-check"></i><b>20.5</b> Gestion des données en cache</a></li>
+<li class="chapter" data-level="20.6" data-path="20-targets.html"><a href="20-targets.html#avantages-et-limites"><i class="fa fa-check"></i><b>20.6</b> Avantages et limites</a><ul>
+<li class="chapter" data-level="20.6.1" data-path="20-targets.html"><a href="20-targets.html#avantages"><i class="fa fa-check"></i><b>20.6.1</b> Avantages</a></li>
+<li class="chapter" data-level="20.6.2" data-path="20-targets.html"><a href="20-targets.html#interactivité-et-développement-du-pipeline"><i class="fa fa-check"></i><b>20.6.2</b> Interactivité et développement du pipeline</a></li>
+</ul></li>
+<li class="chapter" data-level="20.7" data-path="20-targets.html"><a href="20-targets.html#ressources-11"><i class="fa fa-check"></i><b>20.7</b> Ressources</a></li>
+</ul></li>
+<li class="appendix"><span><b>Annexes</b></span></li>
+<li class="chapter" data-level="A" data-path="21-ressources.html"><a href="21-ressources.html"><i class="fa fa-check"></i><b>A</b> Ressources</a><ul>
+<li class="chapter" data-level="A.1" data-path="21-ressources.html"><a href="21-ressources.html#aide"><i class="fa fa-check"></i><b>A.1</b> Aide</a><ul>
+<li class="chapter" data-level="A.1.1" data-path="21-ressources.html"><a href="21-ressources.html#aide-de-r-et-rstudio"><i class="fa fa-check"></i><b>A.1.1</b> Aide de R et RStudio</a></li>
+<li class="chapter" data-level="A.1.2" data-path="21-ressources.html"><a href="21-ressources.html#aide-en-ligne"><i class="fa fa-check"></i><b>A.1.2</b> Aide en ligne</a></li>
+<li class="chapter" data-level="A.1.3" data-path="21-ressources.html"><a href="21-ressources.html#antisèches"><i class="fa fa-check"></i><b>A.1.3</b> Antisèches</a></li>
+<li class="chapter" data-level="A.1.4" data-path="21-ressources.html"><a href="21-ressources.html#où-poser-des-questions"><i class="fa fa-check"></i><b>A.1.4</b> Où poser des questions</a></li>
+</ul></li>
+<li class="chapter" data-level="A.2" data-path="21-ressources.html"><a href="21-ressources.html#ouvrages-blogs-moocs"><i class="fa fa-check"></i><b>A.2</b> Ouvrages, blogs, MOOCs…</a><ul>
+<li class="chapter" data-level="A.2.1" data-path="21-ressources.html"><a href="21-ressources.html#francophones"><i class="fa fa-check"></i><b>A.2.1</b> Francophones</a></li>
+<li class="chapter" data-level="A.2.2" data-path="21-ressources.html"><a href="21-ressources.html#anglophones"><i class="fa fa-check"></i><b>A.2.2</b> Anglophones</a></li>
+</ul></li>
+<li class="chapter" data-level="A.3" data-path="21-ressources.html"><a href="21-ressources.html#extensions-1"><i class="fa fa-check"></i><b>A.3</b> Extensions</a><ul>
+<li class="chapter" data-level="A.3.1" data-path="21-ressources.html"><a href="21-ressources.html#où-trouver-des-extensions-intéressantes"><i class="fa fa-check"></i><b>A.3.1</b> Où trouver des extensions intéressantes ?</a></li>
+<li class="chapter" data-level="A.3.2" data-path="21-ressources.html"><a href="21-ressources.html#lextension-questionr"><i class="fa fa-check"></i><b>A.3.2</b> L’extension <code>questionr</code></a></li>
+</ul></li>
+</ul></li>
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Introduction à R et au tidyverse</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="manipuler-du-texte-avec-stringr" class="section level1">
+<h1><span class="header-section-number">Partie 11</span> Manipuler du texte avec <code>stringr</code></h1>
+<p>Les fonctions de <code>forcats</code> vues précédemment permettent de modifier des modalités d’une variables qualitative globalement. Mais parfois on a besoin de manipuler le contenu même du texte d’une variable de type chaîne de caractères : combiner, rechercher, remplacer…</p>
+<p>On va utiliser ici les fonctions de l’extension <code>stringr</code>. Celle-ci fait partie du coeur du <em>tidyverse</em>, elle est donc automatiquement chargée avec :</p>
+<div class="sourceCode" id="cb492"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb492-1" title="1"><span class="kw">library</span>(tidyverse)</a></code></pre></div>
+<div class="rmdnote">
+<p>
+<code>stringr</code> est en fait une interface simplifiée aux fonctions d’une autre extension, <code>stringi</code>. Si les fonctions de <code>stringr</code> ne sont pas suffisantes ou si on manipule beaucoup de chaînes de caractères, ne pas hésiter à se reporter à la documentation de <code>stringi</code>.
+</p>
+</div>
+<p>Dans ce qui suit on va utiliser le court tableau d’exemple <code>d</code> suivant :</p>
+<div class="sourceCode" id="cb493"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb493-1" title="1">d &lt;-<span class="st"> </span><span class="kw">tibble</span>(</a>
+<a class="sourceLine" id="cb493-2" title="2">  <span class="dt">nom =</span> <span class="kw">c</span>(<span class="st">&quot;Mr Félicien Machin&quot;</span>, <span class="st">&quot;Mme Raymonde Bidule&quot;</span>, <span class="st">&quot;M. Martial Truc&quot;</span>, <span class="st">&quot;Mme Huguette Chose&quot;</span>),</a>
+<a class="sourceLine" id="cb493-3" title="3">  <span class="dt">adresse =</span> <span class="kw">c</span>(<span class="st">&quot;3 rue des Fleurs&quot;</span>, <span class="st">&quot;47 ave de la Libération&quot;</span>, <span class="st">&quot;12 rue du 17 octobre 1961&quot;</span>, <span class="st">&quot;221 avenue de la Libération&quot;</span>),</a>
+<a class="sourceLine" id="cb493-4" title="4">  <span class="dt">ville =</span> <span class="kw">c</span>(<span class="st">&quot;Nouméa&quot;</span>, <span class="st">&quot;Marseille&quot;</span>, <span class="st">&quot;Vénissieux&quot;</span>, <span class="st">&quot;Marseille&quot;</span>) </a>
+<a class="sourceLine" id="cb493-5" title="5">)</a></code></pre></div>
+<table>
+<thead>
+<tr class="header">
+<th align="left">nom</th>
+<th align="left">adresse</th>
+<th align="left">ville</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">Mr Félicien Machin</td>
+<td align="left">3 rue des Fleurs</td>
+<td align="left">Nouméa</td>
+</tr>
+<tr class="even">
+<td align="left">Mme Raymonde Bidule</td>
+<td align="left">47 ave de la Libération</td>
+<td align="left">Marseille</td>
+</tr>
+<tr class="odd">
+<td align="left">M. Martial Truc</td>
+<td align="left">12 rue du 17 octobre 1961</td>
+<td align="left">Vénissieux</td>
+</tr>
+<tr class="even">
+<td align="left">Mme Huguette Chose</td>
+<td align="left">221 avenue de la Libération</td>
+<td align="left">Marseille</td>
+</tr>
+</tbody>
+</table>
+<div id="expressions-régulières" class="section level2">
+<h2><span class="header-section-number">11.1</span> Expressions régulières</h2>
+<p>Les fonctions présentées ci-dessous sont pour la plupart prévues pour fonctionner avec des <em>expressions régulières</em>. Celles-ci constituent un mini-langage, qui peut paraître assez cryptique, mais qui est très puissant pour spécifier des motifs de chaînes de caractères.</p>
+<p>Elles permettent par exemple de sélectionner le dernier mot avant la fin d’une chaîne, l’ensemble des suites alphanumériques commençant par une majuscule, des nombres de 3 ou 4 chiffres situés en début de chaîne, et beaucoup beaucoup d’autres choses encore bien plus complexes.</p>
+<p>Pour donner un exemple concret, l’expression régulière suivante permet de détecter une adresse de courrier électronique<a href="#fn19" class="footnote-ref" id="fnref19"><sup>19</sup></a> :</p>
+<p><code>[\w\d+.-_]+@[\w\d.-]+\.[a-zA-Z]{2,}</code></p>
+<p>Par souci de simplicité, dans ce qui suit les exemples seront donnés autant que possible avec de simples chaînes de caractères, sans expression régulière. Mais si vous pensez manipuler des données textuelles, il peut être très utile de s’intéresser à cette syntaxe.</p>
+</div>
+<div id="concat" class="section level2">
+<h2><span class="header-section-number">11.2</span> Concaténer des chaînes</h2>
+<p>La première opération de base consiste à concaténer des chaînes de caractères entre elles. On peut le faire avec la fonction <code>paste</code>.</p>
+<p>Par exemple, si on veut concaténer l’adresse et la ville :</p>
+<div class="sourceCode" id="cb494"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb494-1" title="1"><span class="kw">paste</span>(d<span class="op">$</span>adresse, d<span class="op">$</span>ville)</a>
+<a class="sourceLine" id="cb494-2" title="2"><span class="co">#&gt; [1] &quot;3 rue des Fleurs Nouméa&quot;              </span></a>
+<a class="sourceLine" id="cb494-3" title="3"><span class="co">#&gt; [2] &quot;47 ave de la Libération Marseille&quot;    </span></a>
+<a class="sourceLine" id="cb494-4" title="4"><span class="co">#&gt; [3] &quot;12 rue du 17 octobre 1961 Vénissieux&quot; </span></a>
+<a class="sourceLine" id="cb494-5" title="5"><span class="co">#&gt; [4] &quot;221 avenue de la Libération Marseille&quot;</span></a></code></pre></div>
+<p>Par défaut, <code>paste</code> concatène en ajoutant un espace entre les différentes chaînes. On peut spécifier un autre séparateur avec son argument <code>sep</code> :</p>
+<div class="sourceCode" id="cb495"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb495-1" title="1"><span class="kw">paste</span>(d<span class="op">$</span>adresse, d<span class="op">$</span>ville, <span class="dt">sep =</span> <span class="st">&quot; - &quot;</span>)</a>
+<a class="sourceLine" id="cb495-2" title="2"><span class="co">#&gt; [1] &quot;3 rue des Fleurs - Nouméa&quot;              </span></a>
+<a class="sourceLine" id="cb495-3" title="3"><span class="co">#&gt; [2] &quot;47 ave de la Libération - Marseille&quot;    </span></a>
+<a class="sourceLine" id="cb495-4" title="4"><span class="co">#&gt; [3] &quot;12 rue du 17 octobre 1961 - Vénissieux&quot; </span></a>
+<a class="sourceLine" id="cb495-5" title="5"><span class="co">#&gt; [4] &quot;221 avenue de la Libération - Marseille&quot;</span></a></code></pre></div>
+<p>Il existe une variante, <code>paste0</code>, qui concatène sans mettre de séparateur, et qui est légèrement plus rapide :</p>
+<div class="sourceCode" id="cb496"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb496-1" title="1"><span class="kw">paste0</span>(d<span class="op">$</span>adresse, d<span class="op">$</span>ville)</a>
+<a class="sourceLine" id="cb496-2" title="2"><span class="co">#&gt; [1] &quot;3 rue des FleursNouméa&quot;              </span></a>
+<a class="sourceLine" id="cb496-3" title="3"><span class="co">#&gt; [2] &quot;47 ave de la LibérationMarseille&quot;    </span></a>
+<a class="sourceLine" id="cb496-4" title="4"><span class="co">#&gt; [3] &quot;12 rue du 17 octobre 1961Vénissieux&quot; </span></a>
+<a class="sourceLine" id="cb496-5" title="5"><span class="co">#&gt; [4] &quot;221 avenue de la LibérationMarseille&quot;</span></a></code></pre></div>
+<div class="rmdnote">
+<p>
+À noter que <code>paste</code> et <code>paste0</code> sont des fonctions R de base. L’équivalent pour <code>stringr</code> se nomme <code>str_c</code>.
+</p>
+</div>
+<p>Parfois on cherche à concaténer les différents éléments d’un vecteur non pas avec ceux d’un autre vecteur, comme on l’a fait précédemment, mais <em>entre eux</em>. Dans ce cas <code>paste</code> seule ne fera rien :</p>
+<div class="sourceCode" id="cb497"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb497-1" title="1"><span class="kw">paste</span>(d<span class="op">$</span>ville)</a>
+<a class="sourceLine" id="cb497-2" title="2"><span class="co">#&gt; [1] &quot;Nouméa&quot;     &quot;Marseille&quot;  &quot;Vénissieux&quot; &quot;Marseille&quot;</span></a></code></pre></div>
+<p>Il faut lui ajouter un argument <code>collapse</code>, avec comme valeur la chaîne à utiliser pour concaténer les éléments :</p>
+<div class="sourceCode" id="cb498"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb498-1" title="1"><span class="kw">paste</span>(d<span class="op">$</span>ville, <span class="dt">collapse =</span> <span class="st">&quot;, &quot;</span>)</a>
+<a class="sourceLine" id="cb498-2" title="2"><span class="co">#&gt; [1] &quot;Nouméa, Marseille, Vénissieux, Marseille&quot;</span></a></code></pre></div>
+</div>
+<div id="convertir-en-majuscules-minuscules" class="section level2">
+<h2><span class="header-section-number">11.3</span> Convertir en majuscules / minuscules</h2>
+<p>Les fonctions <code>str_to_lower</code>, <code>str_to_upper</code> et <code>str_to_title</code> permettent respectivement de mettre en minuscules, mettre en majuscules, ou de capitaliser les éléments d’un vecteur de chaînes de caractères :</p>
+<div class="sourceCode" id="cb499"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb499-1" title="1"><span class="kw">str_to_lower</span>(d<span class="op">$</span>nom)</a>
+<a class="sourceLine" id="cb499-2" title="2"><span class="co">#&gt; [1] &quot;mr félicien machin&quot;  &quot;mme raymonde bidule&quot; &quot;m. martial truc&quot;    </span></a>
+<a class="sourceLine" id="cb499-3" title="3"><span class="co">#&gt; [4] &quot;mme huguette chose&quot;</span></a></code></pre></div>
+<div class="sourceCode" id="cb500"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb500-1" title="1"><span class="kw">str_to_upper</span>(d<span class="op">$</span>nom)</a>
+<a class="sourceLine" id="cb500-2" title="2"><span class="co">#&gt; [1] &quot;MR FÉLICIEN MACHIN&quot;  &quot;MME RAYMONDE BIDULE&quot; &quot;M. MARTIAL TRUC&quot;    </span></a>
+<a class="sourceLine" id="cb500-3" title="3"><span class="co">#&gt; [4] &quot;MME HUGUETTE CHOSE&quot;</span></a></code></pre></div>
+<div class="sourceCode" id="cb501"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb501-1" title="1"><span class="kw">str_to_title</span>(d<span class="op">$</span>nom)</a>
+<a class="sourceLine" id="cb501-2" title="2"><span class="co">#&gt; [1] &quot;Mr Félicien Machin&quot;  &quot;Mme Raymonde Bidule&quot; &quot;M. Martial Truc&quot;    </span></a>
+<a class="sourceLine" id="cb501-3" title="3"><span class="co">#&gt; [4] &quot;Mme Huguette Chose&quot;</span></a></code></pre></div>
+</div>
+<div id="découper-des-chaînes" class="section level2">
+<h2><span class="header-section-number">11.4</span> Découper des chaînes</h2>
+<p>La fonction <code>str_split</code> permet de “découper” une chaîne de caractère en fonction d’un délimiteur. On passe la chaîne en premier argument, et le délimiteur en second :</p>
+<div class="sourceCode" id="cb502"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb502-1" title="1"><span class="kw">str_split</span>(<span class="st">&quot;un-deux-trois&quot;</span>, <span class="st">&quot;-&quot;</span>)</a>
+<a class="sourceLine" id="cb502-2" title="2"><span class="co">#&gt; [[1]]</span></a>
+<a class="sourceLine" id="cb502-3" title="3"><span class="co">#&gt; [1] &quot;un&quot;    &quot;deux&quot;  &quot;trois&quot;</span></a></code></pre></div>
+<p>On peut appliquer la fonction à un vecteur, dans ce cas le résultat sera une liste :</p>
+<div class="sourceCode" id="cb503"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb503-1" title="1"><span class="kw">str_split</span>(d<span class="op">$</span>nom, <span class="st">&quot; &quot;</span>)</a>
+<a class="sourceLine" id="cb503-2" title="2"><span class="co">#&gt; [[1]]</span></a>
+<a class="sourceLine" id="cb503-3" title="3"><span class="co">#&gt; [1] &quot;Mr&quot;       &quot;Félicien&quot; &quot;Machin&quot;  </span></a>
+<a class="sourceLine" id="cb503-4" title="4"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb503-5" title="5"><span class="co">#&gt; [[2]]</span></a>
+<a class="sourceLine" id="cb503-6" title="6"><span class="co">#&gt; [1] &quot;Mme&quot;      &quot;Raymonde&quot; &quot;Bidule&quot;  </span></a>
+<a class="sourceLine" id="cb503-7" title="7"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb503-8" title="8"><span class="co">#&gt; [[3]]</span></a>
+<a class="sourceLine" id="cb503-9" title="9"><span class="co">#&gt; [1] &quot;M.&quot;      &quot;Martial&quot; &quot;Truc&quot;   </span></a>
+<a class="sourceLine" id="cb503-10" title="10"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb503-11" title="11"><span class="co">#&gt; [[4]]</span></a>
+<a class="sourceLine" id="cb503-12" title="12"><span class="co">#&gt; [1] &quot;Mme&quot;      &quot;Huguette&quot; &quot;Chose&quot;</span></a></code></pre></div>
+<p>Ou un tableau (plus précisément une matrice) si on ajoute <code>simplify = TRUE</code>.</p>
+<div class="sourceCode" id="cb504"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb504-1" title="1"><span class="kw">str_split</span>(d<span class="op">$</span>nom, <span class="st">&quot; &quot;</span>, <span class="dt">simplify =</span> <span class="ot">TRUE</span>)</a>
+<a class="sourceLine" id="cb504-2" title="2"><span class="co">#&gt;      [,1]  [,2]       [,3]    </span></a>
+<a class="sourceLine" id="cb504-3" title="3"><span class="co">#&gt; [1,] &quot;Mr&quot;  &quot;Félicien&quot; &quot;Machin&quot;</span></a>
+<a class="sourceLine" id="cb504-4" title="4"><span class="co">#&gt; [2,] &quot;Mme&quot; &quot;Raymonde&quot; &quot;Bidule&quot;</span></a>
+<a class="sourceLine" id="cb504-5" title="5"><span class="co">#&gt; [3,] &quot;M.&quot;  &quot;Martial&quot;  &quot;Truc&quot;  </span></a>
+<a class="sourceLine" id="cb504-6" title="6"><span class="co">#&gt; [4,] &quot;Mme&quot; &quot;Huguette&quot; &quot;Chose&quot;</span></a></code></pre></div>
+<p>Si on souhaite créer de nouvelles colonnes dans un tableau de données en découpant une colonne de type texte, on pourra utiliser la fonction <code>separate</code> de l’extension <code>tidyr</code>. Celle-ci est expliquée section <a href="12-tidyr.html#separate">12.3.3</a>.</p>
+<p>Voici juste un exemple de son utilisation :</p>
+<div class="sourceCode" id="cb505"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb505-1" title="1"><span class="kw">library</span>(tidyr)</a>
+<a class="sourceLine" id="cb505-2" title="2">d <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">separate</span>(nom, <span class="kw">c</span>(<span class="st">&quot;genre&quot;</span>, <span class="st">&quot;prenom&quot;</span>, <span class="st">&quot;nom&quot;</span>), <span class="dt">sep =</span> <span class="st">&quot; &quot;</span>)</a>
+<a class="sourceLine" id="cb505-3" title="3"><span class="co">#&gt; # A tibble: 4 × 5</span></a>
+<a class="sourceLine" id="cb505-4" title="4"><span class="co">#&gt;   genre prenom   nom    adresse                     ville     </span></a>
+<a class="sourceLine" id="cb505-5" title="5"><span class="co">#&gt;   &lt;chr&gt; &lt;chr&gt;    &lt;chr&gt;  &lt;chr&gt;                       &lt;chr&gt;     </span></a>
+<a class="sourceLine" id="cb505-6" title="6"><span class="co">#&gt; 1 Mr    Félicien Machin 3 rue des Fleurs            Nouméa    </span></a>
+<a class="sourceLine" id="cb505-7" title="7"><span class="co">#&gt; 2 Mme   Raymonde Bidule 47 ave de la Libération     Marseille </span></a>
+<a class="sourceLine" id="cb505-8" title="8"><span class="co">#&gt; 3 M.    Martial  Truc   12 rue du 17 octobre 1961   Vénissieux</span></a>
+<a class="sourceLine" id="cb505-9" title="9"><span class="co">#&gt; 4 Mme   Huguette Chose  221 avenue de la Libération Marseille</span></a></code></pre></div>
+</div>
+<div id="extraire-des-sous-chaînes-par-position" class="section level2">
+<h2><span class="header-section-number">11.5</span> Extraire des sous-chaînes par position</h2>
+<p>La fonction <code>str_sub</code> permet d’extraire des sous-chaînes par position, en indiquant simplement les positions des premier et dernier caractères :</p>
+<div class="sourceCode" id="cb506"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb506-1" title="1"><span class="kw">str_sub</span>(d<span class="op">$</span>ville, <span class="dv">1</span>, <span class="dv">3</span>)</a>
+<a class="sourceLine" id="cb506-2" title="2"><span class="co">#&gt; [1] &quot;Nou&quot; &quot;Mar&quot; &quot;Vén&quot; &quot;Mar&quot;</span></a></code></pre></div>
+</div>
+<div id="str-detect" class="section level2">
+<h2><span class="header-section-number">11.6</span> Détecter des motifs</h2>
+<p><code>str_detect</code> permet de détecter la présence d’un motif parmi les élements d’un vecteur. Par exemple, si on souhaite identifier toutes les adresses contenant “Libération” :</p>
+<div class="sourceCode" id="cb507"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb507-1" title="1"><span class="kw">str_detect</span>(d<span class="op">$</span>adresse, <span class="st">&quot;Libération&quot;</span>)</a>
+<a class="sourceLine" id="cb507-2" title="2"><span class="co">#&gt; [1] FALSE  TRUE FALSE  TRUE</span></a></code></pre></div>
+<p><code>str_detect</code> renvoie un vecteur de valeurs logiques et peut donc être utilisée, par exemple, avec le verbe <code>filter</code> de <code>dplyr</code> pour extraire des sous-populations.</p>
+<p>Une variante, <code>str_count</code>, compte le nombre d’occurrences d’une chaîne pour chaque élément d’un vecteur :</p>
+<div class="sourceCode" id="cb508"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb508-1" title="1"><span class="kw">str_count</span>(d<span class="op">$</span>ville, <span class="st">&quot;s&quot;</span>)</a>
+<a class="sourceLine" id="cb508-2" title="2"><span class="co">#&gt; [1] 0 1 2 1</span></a></code></pre></div>
+<div class="rmdimportant">
+<p>
+Attention, les fonctions de <code>stringr</code> étant prévues pour fonctionner avec des expressions régulières, certains caractères n’auront pas le sens habituel dans la chaîne indiquant le motif à rechercher. Par exemple, le <code>.</code> ne sera pas un point mais le symbole représentant “n’importe quel caractère”.
+</p>
+<p>
+La section sur les modificateurs de motifs explique comment utiliser des chaîne “classiques” au lieu d’expressions régulières.
+</p>
+</div>
+<p>On peut aussi utiliser <code>str_subset</code> pour ne garder d’un vecteur que les éléments correspondant au motif :</p>
+<div class="sourceCode" id="cb509"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb509-1" title="1"><span class="kw">str_subset</span>(d<span class="op">$</span>adresse, <span class="st">&quot;Libération&quot;</span>)</a>
+<a class="sourceLine" id="cb509-2" title="2"><span class="co">#&gt; [1] &quot;47 ave de la Libération&quot;     &quot;221 avenue de la Libération&quot;</span></a></code></pre></div>
+</div>
+<div id="extraire-des-motifs" class="section level2">
+<h2><span class="header-section-number">11.7</span> Extraire des motifs</h2>
+<p><code>str_extract</code> permet d’extraire les valeurs correspondant à un motif. Si on lui passe comme motif une chaîne de caractère, cela aura peu d’intérêt :</p>
+<div class="sourceCode" id="cb510"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb510-1" title="1"><span class="kw">str_extract</span>(d<span class="op">$</span>adresse, <span class="st">&quot;Libération&quot;</span>)</a>
+<a class="sourceLine" id="cb510-2" title="2"><span class="co">#&gt; [1] NA           &quot;Libération&quot; NA           &quot;Libération&quot;</span></a></code></pre></div>
+<p>C’est tout de suite plus intéressant si on utilise des expressions régulières. Par exemple la commande suivante permet d’isoler les numéros de rue.</p>
+<div class="sourceCode" id="cb511"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb511-1" title="1"><span class="kw">str_extract</span>(d<span class="op">$</span>adresse, <span class="st">&quot;^</span><span class="ch">\\</span><span class="st">d+&quot;</span>)</a>
+<a class="sourceLine" id="cb511-2" title="2"><span class="co">#&gt; [1] &quot;3&quot;   &quot;47&quot;  &quot;12&quot;  &quot;221&quot;</span></a></code></pre></div>
+<p><code>str_extract</code> ne récupère que la première occurrence du motif. Si on veut toutes les extraire on peut utiliser <code>str_extract_all</code>. Ainsi, si on veut extraire l’ensemble des nombres présents dans les adresses :</p>
+<div class="sourceCode" id="cb512"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb512-1" title="1"><span class="kw">str_extract_all</span>(d<span class="op">$</span>adresse, <span class="st">&quot;</span><span class="ch">\\</span><span class="st">d+&quot;</span>)</a>
+<a class="sourceLine" id="cb512-2" title="2"><span class="co">#&gt; [[1]]</span></a>
+<a class="sourceLine" id="cb512-3" title="3"><span class="co">#&gt; [1] &quot;3&quot;</span></a>
+<a class="sourceLine" id="cb512-4" title="4"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb512-5" title="5"><span class="co">#&gt; [[2]]</span></a>
+<a class="sourceLine" id="cb512-6" title="6"><span class="co">#&gt; [1] &quot;47&quot;</span></a>
+<a class="sourceLine" id="cb512-7" title="7"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb512-8" title="8"><span class="co">#&gt; [[3]]</span></a>
+<a class="sourceLine" id="cb512-9" title="9"><span class="co">#&gt; [1] &quot;12&quot;   &quot;17&quot;   &quot;1961&quot;</span></a>
+<a class="sourceLine" id="cb512-10" title="10"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb512-11" title="11"><span class="co">#&gt; [[4]]</span></a>
+<a class="sourceLine" id="cb512-12" title="12"><span class="co">#&gt; [1] &quot;221&quot;</span></a></code></pre></div>
+<div class="rmdnote">
+<p>
+Si on veut faire de l’extraction de groupes dans des expressions régulières (identifiés avec des parenthèses), on pourra utiliser <code>str_match</code>.
+</p>
+</div>
+<p>À noter que si on souhaite extraire des valeurs d’une colonne texte d’un tableau de données pour créer de nouvelles variables, on pourra utiliser la fonction <code>extract</code> de l’extension <code>tidyr</code>, décrite section <a href="12-tidyr.html#extract">12.3.6</a>.</p>
+<p>Par exemple :</p>
+<div class="sourceCode" id="cb513"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb513-1" title="1"><span class="kw">library</span>(tidyr)</a>
+<a class="sourceLine" id="cb513-2" title="2">d <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">extract</span>(adresse, <span class="st">&quot;type_rue&quot;</span>, <span class="st">&quot;^</span><span class="ch">\\</span><span class="st">d+ (.*?) &quot;</span>, <span class="dt">remove =</span> <span class="ot">FALSE</span>)</a>
+<a class="sourceLine" id="cb513-3" title="3"><span class="co">#&gt; # A tibble: 4 × 4</span></a>
+<a class="sourceLine" id="cb513-4" title="4"><span class="co">#&gt;   nom                 adresse                     type_rue ville     </span></a>
+<a class="sourceLine" id="cb513-5" title="5"><span class="co">#&gt;   &lt;chr&gt;               &lt;chr&gt;                       &lt;chr&gt;    &lt;chr&gt;     </span></a>
+<a class="sourceLine" id="cb513-6" title="6"><span class="co">#&gt; 1 Mr Félicien Machin  3 rue des Fleurs            rue      Nouméa    </span></a>
+<a class="sourceLine" id="cb513-7" title="7"><span class="co">#&gt; 2 Mme Raymonde Bidule 47 ave de la Libération     ave      Marseille </span></a>
+<a class="sourceLine" id="cb513-8" title="8"><span class="co">#&gt; 3 M. Martial Truc     12 rue du 17 octobre 1961   rue      Vénissieux</span></a>
+<a class="sourceLine" id="cb513-9" title="9"><span class="co">#&gt; 4 Mme Huguette Chose  221 avenue de la Libération avenue   Marseille</span></a></code></pre></div>
+</div>
+<div id="remplacer-des-motifs" class="section level2">
+<h2><span class="header-section-number">11.8</span> Remplacer des motifs</h2>
+<p>La fonction <code>str_replace</code> permet de remplacer une chaîne ou un motif par une autre.</p>
+<p>Par exemple, on peut remplace les occurrence de “Mr” par “M.” dans les noms de notre tableau :</p>
+<div class="sourceCode" id="cb514"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb514-1" title="1"><span class="kw">str_replace</span>(d<span class="op">$</span>nom, <span class="st">&quot;Mr&quot;</span>, <span class="st">&quot;M.&quot;</span>)</a>
+<a class="sourceLine" id="cb514-2" title="2"><span class="co">#&gt; [1] &quot;M. Félicien Machin&quot;  &quot;Mme Raymonde Bidule&quot; &quot;M. Martial Truc&quot;    </span></a>
+<a class="sourceLine" id="cb514-3" title="3"><span class="co">#&gt; [4] &quot;Mme Huguette Chose&quot;</span></a></code></pre></div>
+<p>La variante <code>str_replace_all</code> permet de spécifier plusieurs remplacements d’un coup :</p>
+<div class="sourceCode" id="cb515"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb515-1" title="1"><span class="kw">str_replace_all</span>(</a>
+<a class="sourceLine" id="cb515-2" title="2">    d<span class="op">$</span>adresse, </a>
+<a class="sourceLine" id="cb515-3" title="3">    <span class="kw">c</span>(<span class="st">&quot;avenue&quot;</span> =<span class="st"> &quot;Avenue&quot;</span>, <span class="st">&quot;ave&quot;</span> =<span class="st"> &quot;Avenue&quot;</span>, <span class="st">&quot;rue&quot;</span> =<span class="st"> &quot;Rue&quot;</span>)</a>
+<a class="sourceLine" id="cb515-4" title="4">)</a>
+<a class="sourceLine" id="cb515-5" title="5"><span class="co">#&gt; [1] &quot;3 Rue des Fleurs&quot;            &quot;47 Avenue de la Libération&quot; </span></a>
+<a class="sourceLine" id="cb515-6" title="6"><span class="co">#&gt; [3] &quot;12 Rue du 17 octobre 1961&quot;   &quot;221 Avenue de la Libération&quot;</span></a></code></pre></div>
+</div>
+<div id="modificateurs" class="section level2">
+<h2><span class="header-section-number">11.9</span> Modificateurs de motifs</h2>
+<p>Par défaut, les motifs passés aux fonctions comme <code>str_detect</code>, <code>str_extract</code> ou <code>str_replace</code> sont des expressions régulières classiques.</p>
+<p>On peut spécifier qu’un motif n’est pas une expression régulière mais une chaîne de caractères normale en lui appliquant la fonction <code>fixed</code>. Par exemple, si on veut compter le nombre de points dans les noms de notre tableau, le paramétrage par défaut ne fonctionnera pas car dans une expression régulière le <code>.</code> est un symbole signifiant “n’importe quel caractère” :</p>
+<div class="sourceCode" id="cb516"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb516-1" title="1"><span class="kw">str_count</span>(d<span class="op">$</span>nom, <span class="st">&quot;.&quot;</span>)</a>
+<a class="sourceLine" id="cb516-2" title="2"><span class="co">#&gt; [1] 18 19 15 18</span></a></code></pre></div>
+<p>Il faut donc spécifier que notre point est bien un point avec <code>fixed</code> :</p>
+<div class="sourceCode" id="cb517"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb517-1" title="1"><span class="kw">str_count</span>(d<span class="op">$</span>nom, <span class="kw">fixed</span>(<span class="st">&quot;.&quot;</span>))</a>
+<a class="sourceLine" id="cb517-2" title="2"><span class="co">#&gt; [1] 0 0 1 0</span></a></code></pre></div>
+<p>On peut aussi modifier le comportement des expressions régulières à l’aide de la fonction <code>regex</code>. On peut ainsi rendre les motifs insensibles à la casse avec <code>ignore_case</code> :</p>
+<div class="sourceCode" id="cb518"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb518-1" title="1"><span class="kw">str_detect</span>(d<span class="op">$</span>nom, <span class="st">&quot;mme&quot;</span>)</a>
+<a class="sourceLine" id="cb518-2" title="2"><span class="co">#&gt; [1] FALSE FALSE FALSE FALSE</span></a></code></pre></div>
+<div class="sourceCode" id="cb519"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb519-1" title="1"><span class="kw">str_detect</span>(d<span class="op">$</span>nom, <span class="kw">regex</span>(<span class="st">&quot;mme&quot;</span>, <span class="dt">ignore_case =</span> <span class="ot">TRUE</span>))</a>
+<a class="sourceLine" id="cb519-2" title="2"><span class="co">#&gt; [1] FALSE  TRUE FALSE  TRUE</span></a></code></pre></div>
+<p>On peut également permettre aux regex d’être multilignes avec l’option <code>multiline = TRUE</code>, etc.</p>
+</div>
+<div id="ressources-3" class="section level2">
+<h2><span class="header-section-number">11.10</span> Ressources</h2>
+<p>L’ouvrage <em>R for Data Science</em>, accessible en ligne, contient <a href="http://r4ds.had.co.nz/strings.html">un chapitre entier</a> sur les chaînes de caractères et les expressions régulières (en anglais).</p>
+<p>Le <a href="http://stringr.tidyverse.org/">site officiel de stringr</a> contient une <a href="http://stringr.tidyverse.org/reference/index.html">liste des fonctions</a> et les pages d’aide associées, ainsi qu’un <a href="http://stringr.tidyverse.org/articles/regular-expressions.html">article dédié aux expressions régulières</a>.</p>
+<p>Pour des besoins plus pointus, on pourra aussi utiliser <a href="http://www.gagolewski.com/software/stringi/">l’extension stringi</a> sur laquelle est elle-même basée <code>stringr</code>.</p>
+</div>
+<div id="exercices-6" class="section level2">
+<h2><span class="header-section-number">11.11</span> Exercices</h2>
+<p>Dans ces exercices on utilise un tableau <code>d</code>, généré par le code suivant :</p>
+<div class="sourceCode" id="cb520"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb520-1" title="1">d &lt;-<span class="st"> </span><span class="kw">tibble</span>(</a>
+<a class="sourceLine" id="cb520-2" title="2">  <span class="dt">nom =</span> <span class="kw">c</span>(<span class="st">&quot;M. rené Bézigue&quot;</span>, <span class="st">&quot;Mme Paulette fouchin&quot;</span>, <span class="st">&quot;Mme yvonne duluc&quot;</span>, <span class="st">&quot;M. Jean-Yves Pernoud&quot;</span>),</a>
+<a class="sourceLine" id="cb520-3" title="3">  <span class="dt">naissance =</span> <span class="kw">c</span>(<span class="st">&quot;18/04/1937 Vesoul&quot;</span>, <span class="st">&quot;En 1947 à Grenoble (38)&quot;</span>, <span class="st">&quot;Le 5 mars 1931 à Bar-le-Duc&quot;</span>, <span class="st">&quot;Marseille, juin 1938&quot;</span>),</a>
+<a class="sourceLine" id="cb520-4" title="4">  <span class="dt">profession =</span> <span class="kw">c</span>(<span class="st">&quot;Ouvrier agric&quot;</span>, <span class="st">&quot;ouvrière qualifiée&quot;</span>, <span class="st">&quot;Institutrice&quot;</span>, <span class="st">&quot;Exploitant agric&quot;</span>) </a>
+<a class="sourceLine" id="cb520-5" title="5">)</a></code></pre></div>
+<table>
+<thead>
+<tr class="header">
+<th align="left">nom</th>
+<th align="left">naissance</th>
+<th align="left">profession</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">M. rené Bézigue</td>
+<td align="left">18/04/1937 Vesoul</td>
+<td align="left">Ouvrier agric</td>
+</tr>
+<tr class="even">
+<td align="left">Mme Paulette fouchin</td>
+<td align="left">En 1947 à Grenoble (38)</td>
+<td align="left">ouvrière qualifiée</td>
+</tr>
+<tr class="odd">
+<td align="left">Mme yvonne duluc</td>
+<td align="left">Le 5 mars 1931 à Bar-le-Duc</td>
+<td align="left">Institutrice</td>
+</tr>
+<tr class="even">
+<td align="left">M. Jean-Yves Pernoud</td>
+<td align="left">Marseille, juin 1938</td>
+<td align="left">Exploitant agric</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Exercice 1</strong></p>
+<p>Capitalisez les noms des personnes avec <code>str_to_title</code> :</p>
+<pre><code>#&gt; [1] &quot;M. René Bézigue&quot;      &quot;Mme Paulette Fouchin&quot; &quot;Mme Yvonne Duluc&quot;    
+#&gt; [4] &quot;M. Jean-Yves Pernoud&quot;</code></pre>
+
+<div class="solution-exo">
+<div class="sourceCode" id="cb522"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb522-1" title="1"><span class="kw">str_to_title</span>(d<span class="op">$</span>nom)</a></code></pre></div>
+</div>
+
+<p><strong>Exercice 2</strong></p>
+<p>Dans la variable <code>profession</code>, remplacer toutes les occurrences de l’abbréviation “agric” par “agricole” :</p>
+<pre><code>#&gt; [1] &quot;Ouvrier agricole&quot;    &quot;ouvrière qualifiée&quot;  &quot;Institutrice&quot;       
+#&gt; [4] &quot;Exploitant agricole&quot;</code></pre>
+
+<div class="solution-exo">
+<div class="sourceCode" id="cb524"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb524-1" title="1"><span class="kw">str_replace</span>(d<span class="op">$</span>profession, <span class="st">&quot;agric&quot;</span>, <span class="st">&quot;agricole&quot;</span>)</a></code></pre></div>
+</div>
+
+<p><strong>Exercice 3</strong></p>
+<p>À l’aide de <code>str_detect</code>, identifier les personnes de catégorie professionnelle “Ouvrier”. Indication : pensez au modificateur <code>ignore_case</code>.</p>
+<pre><code>#&gt; [1]  TRUE  TRUE FALSE FALSE</code></pre>
+
+<div class="solution-exo">
+<div class="sourceCode" id="cb526"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb526-1" title="1"><span class="kw">str_detect</span>(d<span class="op">$</span>profession, <span class="kw">regex</span>(<span class="st">&quot;Ouvr&quot;</span>, <span class="dt">ignore_case =</span> <span class="ot">TRUE</span>))</a></code></pre></div>
+</div>
+
+<p><strong>Exercice 4</strong></p>
+<p>À l’aide de <code>case_when</code> et de <code>str_detect</code>, créer une nouvelle variable <code>sexe</code> identifiant le sexe de chaque personne en fonction de la présence de <code>M.</code> ou de <code>Mme</code> dans son nom.</p>
+<pre><code>#&gt; # A tibble: 4 × 4
+#&gt;   nom                  naissance                   profession         sexe 
+#&gt;   &lt;chr&gt;                &lt;chr&gt;                       &lt;chr&gt;              &lt;chr&gt;
+#&gt; 1 M. rené Bézigue      18/04/1937 Vesoul           Ouvrier agric      Homme
+#&gt; 2 Mme Paulette fouchin En 1947 à Grenoble (38)     ouvrière qualifiée Femme
+#&gt; 3 Mme yvonne duluc     Le 5 mars 1931 à Bar-le-Duc Institutrice       Femme
+#&gt; 4 M. Jean-Yves Pernoud Marseille, juin 1938        Exploitant agric   Homme</code></pre>
+
+<div class="solution-exo">
+<div class="sourceCode" id="cb528"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb528-1" title="1">d <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb528-2" title="2"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">sexe =</span> <span class="kw">case_when</span>(</a>
+<a class="sourceLine" id="cb528-3" title="3">          <span class="kw">str_detect</span>(nom, <span class="kw">fixed</span>(<span class="st">&quot;Mme&quot;</span>)) <span class="op">~</span><span class="st"> &quot;Femme&quot;</span>,</a>
+<a class="sourceLine" id="cb528-4" title="4">          <span class="kw">str_detect</span>(nom, <span class="kw">fixed</span>(<span class="st">&quot;M.&quot;</span>)) <span class="op">~</span><span class="st"> &quot;Homme&quot;</span></a>
+<a class="sourceLine" id="cb528-5" title="5">      )</a>
+<a class="sourceLine" id="cb528-6" title="6">  )</a></code></pre></div>
+</div>
+
+<p><strong>Exercice 5</strong></p>
+<p>Extraire l’année de naissance de chaque individu avec <code>str_extract</code>. Vous pouvez utiliser le regex <code>"\\d\\d\\d\\d"</code> qui permet d’identifier les nombres de quatre chiffres.</p>
+<p>Vous devez obtenir le vecteur suivant :</p>
+<pre><code>#&gt; [1] &quot;1937&quot; &quot;1947&quot; &quot;1931&quot; &quot;1938&quot;</code></pre>
+
+<div class="solution-exo">
+<div class="sourceCode" id="cb530"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb530-1" title="1"><span class="kw">str_extract</span>(d<span class="op">$</span>naissance, <span class="st">&quot;</span><span class="ch">\\</span><span class="st">d</span><span class="ch">\\</span><span class="st">d</span><span class="ch">\\</span><span class="st">d</span><span class="ch">\\</span><span class="st">d&quot;</span>)</a></code></pre></div>
+</div>
+
+<p>À l’aide de la fonction <code>extract</code> de l’extension <code>tidyr</code> et du regex précédent, créez une nouvelle variable <code>annee</code> dans le tableau, qui contient l’année de naissance (pour plus d’informations sur <code>extract</code>, voir la section <a href="12-tidyr.html#extract">12.3.6</a>).</p>
+<pre><code>#&gt; # A tibble: 4 × 4
+#&gt;   nom                  naissance                   annee profession        
+#&gt;   &lt;chr&gt;                &lt;chr&gt;                       &lt;chr&gt; &lt;chr&gt;             
+#&gt; 1 M. rené Bézigue      18/04/1937 Vesoul           1937  Ouvrier agric     
+#&gt; 2 Mme Paulette fouchin En 1947 à Grenoble (38)     1947  ouvrière qualifiée
+#&gt; 3 Mme yvonne duluc     Le 5 mars 1931 à Bar-le-Duc 1931  Institutrice      
+#&gt; 4 M. Jean-Yves Pernoud Marseille, juin 1938        1938  Exploitant agric</code></pre>
+
+<div class="solution-exo">
+<div class="sourceCode" id="cb532"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb532-1" title="1"><span class="kw">library</span>(tidyr)</a>
+<a class="sourceLine" id="cb532-2" title="2">d <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb532-3" title="3"><span class="st">    </span><span class="kw">extract</span>(</a>
+<a class="sourceLine" id="cb532-4" title="4">        naissance,</a>
+<a class="sourceLine" id="cb532-5" title="5">        <span class="st">&quot;annee&quot;</span>,</a>
+<a class="sourceLine" id="cb532-6" title="6">        <span class="st">&quot;(</span><span class="ch">\\</span><span class="st">d</span><span class="ch">\\</span><span class="st">d</span><span class="ch">\\</span><span class="st">d</span><span class="ch">\\</span><span class="st">d)&quot;</span>, </a>
+<a class="sourceLine" id="cb532-7" title="7">        <span class="dt">remove =</span> <span class="ot">FALSE</span></a>
+<a class="sourceLine" id="cb532-8" title="8">    )</a></code></pre></div>
+</div>
+
+
+</div>
+</div>
+<div class="footnotes">
+<hr />
+<ol start="19">
+<li id="fn19"><p>Il s’agit en fait d’une version très simplifiée, la “véritable” expression permettant de tester si une adresse mail est valide fait plus de 80 lignes…<a href="11-stringr.html#fnref19" class="footnote-back">↩</a></p></li>
+</ol>
+</div>
+<script src="js/tidyverse.js"></script>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="10-dplyr.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="12-tidyr.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": false,
+"twitter": true,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"whatsapp": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"],
+"instapper": false
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": "https://github.com/juba/tidyverse/blob/main/11-stringr.Rmd",
+"text": "Source"
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": ["introduction_au_tidyverse.epub", "introduction_au_tidyverse.pdf"],
+"search": {
+"engine": "fuse",
+"options": null
+},
+"toc": {
+"collapse": "section"
+}
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>
