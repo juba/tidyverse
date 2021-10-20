@@ -99,7 +99,7 @@ str_to_title(d$nom)
 La fonction `str_split` permet de "découper" une chaîne de caractère en fonction d'un délimiteur. On passe la chaîne en premier argument, et le délimiteur en second :
 
 ```{r}
-str_split("un-deux-trois", "-") 
+str_split("un-deux-trois", "-")
 ```
 
 On peut appliquer la fonction à un vecteur, dans ce cas le résultat sera une liste :
@@ -120,7 +120,7 @@ Voici juste un exemple de son utilisation :
 
 ```{r}
 library(tidyr)
-d %>% separate(nom, c("genre", "prenom", "nom"))
+d %>% separate(nom, c("genre", "prenom", "nom"), sep = " ")
 ```
 
 
@@ -211,7 +211,10 @@ str_replace(d$nom, "Mr", "M.")
 La variante `str_replace_all` permet de spécifier plusieurs remplacements d'un coup :
 
 ```{r}
-str_replace_all(d$adresse, c("avenue"="Avenue", "ave"="Avenue", "rue"="Rue"))
+str_replace_all(
+    d$adresse, 
+    c("avenue" = "Avenue", "ave" = "Avenue", "rue" = "Rue")
+)
 ```
 
 ## Modificateurs de motifs {#modificateurs}
@@ -332,8 +335,10 @@ str_detect(d$profession, regex("Ouvr", ignore_case = TRUE))
 ```{r str4, eval=FALSE}
 d %>% 
   mutate(sexe = case_when(
-            str_detect(nom, fixed("Mme")) ~ "Femme",
-            str_detect(nom, fixed("M.")) ~ "Homme"))
+          str_detect(nom, fixed("Mme")) ~ "Femme",
+          str_detect(nom, fixed("M.")) ~ "Homme"
+      )
+  )
 ```
 </div>
 \fi
@@ -369,7 +374,12 @@ str_extract(d$naissance, "\\d\\d\\d\\d")
 ```{r str5b, eval=FALSE}
 library(tidyr)
 d %>% 
-  extract(naissance, "annee", "(\\d\\d\\d\\d)", remove = FALSE)
+    extract(
+        naissance,
+        "annee",
+        "(\\d\\d\\d\\d)", 
+        remove = FALSE
+    )
 ```
 </div>
 \fi
