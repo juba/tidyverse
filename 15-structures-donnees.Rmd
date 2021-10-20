@@ -1,14 +1,6 @@
 # Structures de données
 
-R propose de nombreuses structures de données différentes, et les extensions peuvent en implémenter de nouvelles. Cette section introduit trois structures parmi les plus utilisées : les **vecteurs atomiques**, les **listes** et les **tableaux de données**. Certaines ont déjà été abordées et utilisées précédemment, mais connaître leurs spécificités et savoir les manipuler et très utile, notamment lorsqu'on commence à vouloir créer ses propres fonctions.
-
-On commence par charger les jeux de données d'exemple utilisés par la suite :
-
-```{r}
-library(questionr)
-data(hdv2003)
-data(rp2012)
-```
+R propose de nombreuses structures de données différentes, et les extensions peuvent en implémenter de nouvelles. Cette section introduit trois structures parmi les plus utilisées : les **vecteurs atomiques**, les **listes** et les **tableaux de données**. Certaines ont déjà été abordées et utilisées précédemment, mais connaître leurs spécificités et savoir les manipuler est utile, notamment lorsqu'on veut créer ses propres fonctions.
 
 
 ## Vecteurs atomiques
@@ -44,7 +36,14 @@ rep("Pomme", 6)
 rep(1:4, 2)
 ```
 
-Il peut parfois être utile de créer des vecteurs "vides". Dans ce cas on peut les initialiser avec les fonctions `vector()`, `character()` ou `numeric()`. Par défaut ces fonctions renvoient un vecteur vide, sans éléments, mais on peut aussi leur indiquer en argument le nombre d'éléments souhaités.
+Si on souhaite connaître le nombre d'éléments d'un vecteur, on peut utiliser la fonction `length()`.
+
+```{r}
+v <- rep(1:4, 2)
+length(v)
+```
+
+Il peut parfois être utile de créer des vecteurs "vides". Dans ce cas on peut les initialiser avec les fonctions `vector()`, `character()` ou `numeric()`. Par défaut ces fonctions renvoient un vecteur sans éléments, mais on peut aussi leur indiquer en argument le nombre d'éléments souhaités (qui seront alors initialisés avec une valeur par défaut).
 
 ```{r}
 numeric()
@@ -54,7 +53,7 @@ character(2)
 
 ### Vecteurs nommés
 
-Les éléments d'un vecteur peuvent être nommés. Ceci peut se faire au moment de la création du vecteur.
+Les éléments d'un vecteur peuvent être nommés. Ces noms peuvent êtré définis au moment de la création du vecteur.
 
 ```{r}
 x <- c(e1 = 1, e2 = 3, e3 = 8)
@@ -105,9 +104,11 @@ typeof(x)
 On peut tester le type d'un vecteur avec les fonctions `is.character`, `is.double`, `is.logical`... Autre fonction utile, `is.numeric` teste si un vecteur est de type `double` ou `integer`.
 
 ```{r}
-is.character("Chihuahua")
-is.logical(3 == 2)
-is.numeric(1:5)
+x <- c(1, 3, 8)
+is.numeric(x)
+is.logical(x > 2)
+y <- c("foo", "bar", "baz")
+is.character(y)
 ```
 
 Petite spécificité, les facteurs (voir section \@ref(facteurs)) ne sont pas considérés par R comme des `character`, même s'ils comportent des chaînes de caractères. Pour tester si un vecteur est de type facteur, on utilise `is.factor()`. 
@@ -118,7 +119,7 @@ is.character(fac)
 is.factor(fac)
 ```
 
-Tous les éléments d'un vecteur doivent être du même type. Si ça n'est pas le cas, les éléments seront convertis au type le plus "général", sachant que les `character` sont plus généraux que les `numeric`, qui sont eux-mêmes plus généraux que les `logical`.
+Tous les éléments d'un vecteur doivent être du même type. Si ça n'est pas le cas, les éléments seront convertis au type le plus "général" présent dans le vecteur, sachant que les `character` sont plus généraux que les `numeric`, qui sont eux-mêmes plus généraux que les `logical`.
 
 Dans l'exemple suivant, le nombre `1` est transformé en chaîne de caractère `"1"`.
 
@@ -140,17 +141,17 @@ Si la valeur `NA`, comme on l'a vu, permet d'indiquer une valeur manquante (`Not
 La conversion automatique d'un type en un autre est à l'origine d'un idiome courant en R. Quand on applique une fonction qui attend un vecteur de nombres à un vecteur de valeurs logiques, celles-ci sont automatiquement converties, les `TRUE` devenant 1 et les `FALSE` devenant 0. Du coup, si on applique `sum()` à un vecteur de valeurs logiques, le résultat est égal au nombre de valeurs `TRUE`.
 
 ```{r}
-sum(c(TRUE, FALSE, TRUE, TRUE, FALSE))
+sum(c(TRUE, FALSE, TRUE))
 ```
 
-On peut donc aussi appliquer `sum()` à un test, et on obtiendra le nombre de valeurs pour lesquelles le test est vrai.
+On peut donc appliquer `sum()` à un test, et on obtiendra le nombre de valeurs pour lesquelles le test est vrai.
 
 ```{r}
 x <- c(1, 5, 8, 12, 14)
 sum(x > 10)
 ```
 
-Ceci fournit un raccourci très pratique. Dans l'exemple suivant, on tire 1000 nombres au hasard entre 0 et 1 et on regarde le nombre de valeurs obtenues inférieures à 0,5.
+Ceci fournit un raccourci très pratique. Dans l'exemple suivant, on tire 1000 nombres au hasard entre 0 et 1 et on calcule le nombre de valeurs obtenues qui sont inférieures à 0,5.
 
 ```{r}
 x <- runif(1000)
@@ -166,10 +167,18 @@ x <- runif(1000)
 mean(x < 0.5)
 ```
 
+On peut convertir un vecteur d'un type à un autre avec les fonctions `as.character()`, `as.numeric()` et `as.logical()`. Si une valeur ne peut pas être convertie, elle est remplacée par un `NA`.
+
+```{r warning=TRUE}
+as.character(1:3)
+as.logical(c(0, 2, 4))
+as.numeric(c("foo", "23"))
+```
+
 
 ### Sélection d'éléments
 
-On a vu section \@ref(vecteurs) que l'opérateur `[]` peut être utilisé pour sélectionner ou modifier des éléments d'un vecteur. Cet opérateur peut comporter :
+On a vu section \@ref(vecteurs) que l'opérateur `[]` peut être utilisé pour sélectionner des éléments d'un vecteur. Cet opérateur peut comporter :
 
 - des nombres (qui sélectionnent par position)
 - des chaînes de caractères (qui sélectionnent par nom)
@@ -196,19 +205,21 @@ head(x, 2)
 tail(x, 1)
 ```
 
-#### Modification
+### Modification
 
 Utilisé conjointement avec l'opérateur d'assignation `<-`, l'opérateur `[]` permet de remplacer des éléments.
 
 ```{r}
 x <- c(e1 = 1, e2 = 2, e3 = 8, e4 = 12)
 x[1] <- -1000
+x
 x["e2"] <- 0
+x
 x[x > 10] <- NA
 x
 ```
 
-Utilisé sans arguments, `[]` se contente de renvoyer le vecteur. Mais couplé à une assignation, il remplace chacun des éléments du vecteur plutôt que le vecteur lui-même.
+Utilisé sans arguments, `[]` se contente de renvoyer le vecteur entier. Mais couplé à une assignation, il remplace chacun des éléments du vecteur plutôt que le vecteur lui-même.
 
 ```{r}
 x[] <- 3
@@ -229,84 +240,77 @@ list(1, "foo", c("Pomme", "Citron"))
 
 La manière dont R affiche le contenu d'une liste dans la console diffère de celle des vecteurs. Dans le cas d'une liste ses éléments sont affichés les uns en dessous des autres, et séparés par leur indice numérique entre une paire de crochets.
 
-Comme pour les vecteurs, on peut nommer les éléments à la création de la liste ou avec la fonction `names()`.
+Comme pour les vecteurs, on peut nommer les éléments à la création de la liste.
 
 ```{r}
-list(nombre = 1, char = "foo", vecteur = c("Pomme", "Citron"))
+liste <- list(nombre = 1, char = "foo", vecteur = c("Pomme", "Citron"))
+liste
 ```
 
 Dans ce cas l'affichage de la liste dans la console montre ces noms plutôt que les indices numériques.
 
-Si les noms comportent des caractères spéciaux comme des espaces, il faut les entourer de guillemets ou de quotes inverses.
-
+Comme pour les vecteurs atomiques, on peut utiliser `names()` pour afficher ou modifier les noms des éléments.
 ```{r}
-list("Élément 1" = 1, `Élément 2` = "foo")
+names(liste)
 ```
 
-L'affichage des listes peut vite devenir illisible quand la liste est plus complexe^[Pour rappel, la fonction `runif()` renvoie des nombres aléatoires suivant une loi uniforme, par défaut compris entre 0 et 1.].
+L'affichage des listes peut vite devenir illisible quand la liste est plus complexe.
 
 ```{r}
-l <- list(
+liste <- list(
     l2 = list(x = 1:10, y = c("Pomme", "Citron")),
     df = data.frame(v1 = 2:5, v2 = LETTERS[2:5]),
     y = runif(10)
 )
-l
+liste
 ```
 
 Dans ce cas la fonction `str` peut être utile pour afficher de manière plus compacte la structure de la liste.
 
 ```{r}
-str(l)
+str(liste)
 ```
 
 ### Ajout d'éléments
 
-Attention, si on souhaite ajouter un nouvel élément à une liste, il ne faut pas utiliser à nouveau `list()`, car dans ce cas notre liste de départ est vue comme une "sous-liste".
+Attention, si on souhaite ajouter un nouvel élément à une liste, il ne faut pas utiliser à nouveau `list()`, car dans ce cas notre liste de départ est insérée comme une "sous-liste".
 
 ```{r}
-l <- list(e1 = 1:3, e2 = "Chihuhua")
-l2 <- list(l, nouveau = 100)
-str(l2)
+liste <- list(e1 = 1:3, e2 = "Chihuhua")
+liste2 <- list(liste, nouveau = 100)
+str(liste2)
 ```
 
 Il faut à la place utiliser `c()`, comme pour les vecteurs.
 
 ```{r}
-l3 <- c(l, nouveau = 100)
-str(l3)
+liste3 <- c(liste, nouveau = 100)
+str(liste3)
 ```
 
 `c()` permet aussi de "concaténer" deux listes existantes en une seule.
 
 ```{r}
-l1 <- list(a = 1, b = 2)
-l2 <- list(x = 3, y = 4)
-c(l1, l2)
+liste1 <- list(a = 1, b = 2)
+liste2 <- list(x = 3, y = 4)
+c(liste1, liste2)
 ```
-
-On peut aussi utiliser la fonction `append()` qui permet d'ajouter de nouveaux éléments à la fin de la liste ou de les insérer à une position spécifique indiquée par l'argument `after`.
-
-```{r}
-append(l, list(nouveau1 = 100, nouveau2 = 102), after = 1)
-```
-
 
 ### Sélection d'éléments
 
-Il y a deux opérateurs différents qui permettent de sélectionner ou modifier les éléments d'une liste : les crochets simples `[]` et les crochets doubles `[[]]`. La différence entre ces deux opérateurs est souvent source de confusion.
+Il y a deux opérateurs différents qui permettent de sélectionner les éléments d'une liste : les crochets simples `[]` et les crochets doubles `[[]]`. La différence entre ces deux opérateurs est souvent source de confusion.
 
 Partons de la liste suivante :
 
 ```{r}
-l <- list(1:5, "foo", c("Pomme", "Citron"))
-l
+liste <- list(1:5, "foo", c("Pomme", "Citron"))
+liste
 ```
 
 Si on utilise les crochets simples pour sélectionner le premier élément de cette liste, on obtient le résultat suivant :
 
 ```{r}
-l[1]
+liste[1]
 ```
 
 On notera que le résultat est une liste à un seul élément.
@@ -314,7 +318,7 @@ On notera que le résultat est une liste à un seul élément.
 Si on utilise les crochets doubles :
 
 ```{r}
-l[[1]]
+liste[[1]]
 ```
 
 On obtient cette fois-ci non pas une liste composée du premier élément, mais le contenu de ce premier élément.
@@ -326,10 +330,10 @@ La différence est importante, mais pas toujours facile à retenir. On peut util
 - une alternative est de considérer que `[[]]` va chercher "plus profondément" que `[]`.
 ```
 
-Un autre point important est que si on passe plusieurs éléments à `[[]]`, la sélection se fait d'une manière récursive peu intuitive et source d'erreurs. Il est donc conseillé de **toujours utiliser `[[]]` avec un seul argument**, et d'utiliser `[]` si on souhaite sélectionner plusieurs éléments d'une liste.
+Un autre point important est que si on passe plusieurs éléments à `[[]]`, la sélection se fait d'une manière récursive peu intuitive et source d'erreurs. Il est donc conseillé de **toujours utiliser** `[[]]` **avec un seul argument**, et d'utiliser `[]` si on souhaite sélectionner plusieurs éléments d'une liste.
 
 ```{r}
-l[c(1, 2)]
+liste[c(1, 2)]
 ```
 
 ```{block, type='rmdimportant'}
@@ -340,66 +344,49 @@ En résumé :
 ```
 
 ```{block, type='rmdnote'}
-Comme pour les vecteurs, on peut aussi utiliser des nombres négatifs avec `[]` pour exclure des éléments plutôt que les sélectionner, ainsi que les fonctions `head()` et `tail()`.
+Comme pour les vecteurs, on peut utiliser des nombres négatifs avec `[]` pour exclure des éléments plutôt que les sélectionner, et on peut également utiliser les fonctions `head()` et `tail()`.
 ```
 
 Si la liste est nommée, on peut sélectionner des éléments par noms avec les deux opérateurs.
 
 ```{r}
-l <- list(nombre = 1, char = "foo", vecteur = c("Pomme", "Citron"))
-l[c("nombre", "char")]
-l[["vecteur"]]
+liste <- list(nombre = 1, char = "foo", vecteur = c("Pomme", "Citron"))
+liste[c("nombre", "char")]
+liste[["vecteur"]]
 ```
 
 On peut aussi utiliser l'opérateur `$`, qui équivaut à `[[]]` :
 
 ```{r}
-l$vecteur
+liste$vecteur
 ```
 
-Là aussi, si le nom comporte des espaces, on doit l'entourer avec des quotes inverses.
-
-```{r}
-l <- list(`Élément 1` = 1, `Élément 2` = "foo")
-l$`Élément 1`
-```
-
-Attention, `$` effectue ce qu'on appelle du *"partial matching"*, c'est-à-dire qu'il peut récupérer un élément même si on lui a passé seulement le début du nom.
-
-```{r}
-l <- list(nombre = 1, char = "foo")
-l$no
-```
 
 ### Modification
 
-Comme pour les vecteurs, on peut utiliser les opérateurs de sélection pour modifier des éléments. Si on n'en modifie qu'un seul, `[]` et `[[]]` sont équivalents.
+Comme pour les vecteurs, on peut utiliser l'opérateur `[]` et l'opérateur d'assignation `<-` pour modifier des éléments d'une liste.
 
 ```{r}
-l <- list(nombre = 1:5, char = "foo", vecteur = c("Pomme", "Citron"))
-l[1] <- "first"
-l[[2]] <- "second"
-l
+liste <- list(nombre = 1:5, char = "foo", vecteur = c("Pomme", "Citron"))
+liste[1] <- "first"
+liste
 ```
 
-Si on souhaite modifier plusieurs éléments, on doit utiliser les crochets simples.
-
 ```{r}
-l <- list(nombre = 1:5, char = "foo", vecteur = c("Pomme", "Citron"))
-l[c(1, 3)] <- 0
-l
+liste[c(1, 3)] <- 0
+liste
 ```
 
 ```{block type='rmdimportant'}
-Comme pour la sélection, attention à ne pas utiliser les crochets doubles pour modifier plusieurs éléments d'une liste. Ceux-ci ne génèreront pas forcément d'erreur mais n'auront pas le comportement attendu.
+Attention à ne pas utiliser les crochets doubles pour modifier des éléments d'une liste car ceux-ci peuvent avoir un comportement inattendu, notamment si on veut modifier plusieurs éléments d'un coup.
 ```
 
-Enfin, si on souhaite supprimer un ou plusieurs éléments d'une liste, il faut leur attribuer la valeur `NULL`^[Si on veut ajouter un élément `NULL` à une liste, il faut utiliser les crochets simples avec la syntaxe `l["foo"] <- list(NULL)`.].
+Enfin, si on souhaite supprimer un ou plusieurs éléments d'une liste, il faut leur attribuer la valeur `NULL`^[Si on veut ajouter un élément `NULL` à une liste, il faut utiliser les crochets simples avec la syntaxe `liste["foo"] <- list(NULL)`.].
 
 ```{r}
-l <- list(nombre = 1:5, char = "foo", vecteur = c("Pomme", "Citron"))
-l$char <- NULL
-l
+liste <- list(nombre = 1:5, char = "foo", vecteur = c("Pomme", "Citron"))
+liste$char <- NULL
+liste
 ```
 
 
@@ -407,11 +394,14 @@ l
 
 En tant que généralisation des vecteurs atomiques, les listes sont utiles dès qu'on souhaite regrouper des éléments complexes ou hétérogènes.
 
-On les utilisera par exemple pour retourner plusieurs résultats différents depuis une fonction.
+On les utilisera par exemple pour retourner plusieurs résultats depuis une fonction.
 
 ```{r}
 indicateurs <- function(x) {
-    list(moyenne = mean(x), variance = var(x))
+    list(
+        moyenne = mean(x),
+        variance = var(x)
+    )
 }
 
 x <- 1:10
@@ -419,7 +409,7 @@ res <- indicateurs(x)
 res$moyenne
 ```
 
-On utilise également les listes pour stocker une série d'objets complexes et leur appliquer des fonctions. Ce fonctionnement sera abordé en détail dans la section \@ref(purrr), mais en guise de petit aperçu, l'exemple fictif suivant récupère les noms de tous les fichiers CSV du répertoire courant et les importe tous dans une liste à l'aide de `purrr::map()` et de `read_csv()`. 
+On utilise également les listes pour stocker des objets complexes et leur appliquer des fonctions. Ce fonctionnement sera abordé en détail dans la section \@ref(purrr), mais en guise de petit aperçu, l'exemple fictif suivant récupère les noms de tous les fichiers CSV du répertoire courant et les importe tous dans une liste à l'aide de `purrr::map()` et de `read_csv()`. 
 
 ```{r eval=FALSE}
 files <- list.files(pattern = "*.csv")
@@ -449,10 +439,10 @@ df <- data.frame(
 
 On peut aussi créer un *tibble* manuellement avec la fonction `tibble()`. La syntaxe est la même que celle de `data.frame()`, mais avec un comportement un peu différent : notamment, les noms comportant des espaces ou des caractères spéciaux sont conservés tels quels.
 
-La fonction `tribble()` permet de créer un tableau manuellement avec une syntaxe "par ligne" qui peut être un peu plus naturelle.
+La fonction `tribble()` permet de créer un tibble manuellement avec une syntaxe "par ligne" qui peut être un peu plus lisible.
 
 ```{r}
-df_tib <- tribble(
+df_trib <- tribble(
     ~fruit,   ~poids, ~couleur,
     "Pomme",  154,    "vert",
     "Pomme",  167,    "vert",
@@ -460,11 +450,16 @@ df_tib <- tribble(
 )
 ```
 
-Enfin, on peut convertir un *data frame* en *tibble* avec la fonction `as_tibble()`.
+On peut convertir un *data frame* en *tibble* avec la fonction `as_tibble()`.
+
+```{r}
+df_tib <- as_tibble(df)
+df_tib
+```
 
 ### Noms de colonnes et de lignes
 
-On peut accéder et modifier les noms des colonnes d'un tableau avec les fonctions `names()` ou `colnames()` (qui sont équivalentes).
+On peut lister et modifier les noms des colonnes d'un tableau avec les fonctions `names()` ou `colnames()` (qui sont équivalentes).
 
 ```{r}
 names(df)
@@ -476,7 +471,10 @@ On peut attribuer des noms aux lignes d'un *data frame* à l'aide de la fonction
 ```{r}
 rownames(df) <- c("fruit1", "fruit2", "fruit3")
 rownames(df)
-rownames(as_tibble(df))
+```
+
+```{r warning=TRUE}
+rownames(df_tib) <- c("fruit1", "fruit2", "fruit3")
 ```
 
 Si on souhaite conserver des noms de ligne en passant d'un *data frame* à un *tibble*, il faut les stocker dans une nouvelle colonne, soit en la créant manuellement soit avec la fonction `rownames_to_column()` (qui a l'avantage de placer la nouvelle colonne en première position du tableau).
@@ -495,102 +493,70 @@ Ainsi, on peut sélectionner une colonne via l'opérateur `$`.
 df$fruit
 ```
 
-Attention, si votre tableau de données est un *data frame*, R fera du *partial matching* sur le nom donné à `$`, ce qui n'est pas toujours souhaitable (les *tibbles* n'ont pas ce comportement).
-
-```{r}
-df$poi
-```
-```{r results="hide"}
-tib <- as_tibble(df)
-tib$poi
-```
-
 Comme un tableau de données est en réalité une liste de colonnes, on peut utiliser l'opérateur `[[]]` pour sélectionner l'une de ses colonnes, par position ou par nom^[Attention, comme pour les listes, à ne pas utiliser `[[]]` avec un argument de longueur supérieur à 1, car cela mène soit à des erreurs soit à des résultats contre-intuitifs.].
 
 ```{r}
+df[["fruit"]]
 df[[2]]
-df[["couleur"]]
 ```
 
-Comme pour les listes, on peut aussi utiliser `[]` pour sélectionner des colonnes. La différence avec `[[]]` est que lorsqu'on sélectionne une unique colonne le résultat est un tableau à une colonne, et non un vecteur.
+
+On peut utiliser `head()` et `tail()` avec un tableau de données : dans ce cas ces fonctions retourneront les premières ou dernières *lignes* du tableau.
+
+```{r df_print = "default"}
+head(df, 2)
+```
 
 ```{r}
-df[["couleur"]]
-df["couleur"]
+tail(df, 1)
 ```
 
-On peut également utiliser l'opérateur `[]` pour sélectionner à la fois des lignes et des colonnes, en lui passant deux arguments séparés par une virgule : d'abord la sélection des lignes puis celle des colonnes. Dans les deux cas on peut sélectionner par position, nom ou condition. Si on laisse un argument vide, on sélectionne l'intégralité des lignes ou des colonnes.
+On peut également utiliser l'opérateur `[,]` pour sélectionner à la fois des lignes et des colonnes, en lui passant deux arguments séparés par une virgule : d'abord la sélection des lignes puis celle des colonnes. Dans les deux cas on peut sélectionner par position, nom ou condition. Si on laisse un argument vide, on sélectionne l'intégralité des lignes ou des colonnes.
 
 ```{r}
 df[c(1, 3), "poids"]
+```
+```{r}
+df[, c("poids", "fruit")]
+```
+```{r}
 df[df$poids > 150, ]
+```
+```{r}
 library(stringr)
 df[, str_detect(names(df), "o")]
 ```
 
+
 Attention, le comportement de `[,]` est différent entre les *tibbles* et les *data frame* lorsqu'on ne sélectionne qu'une seule colonne. Dans le cas d'un *data frame*, le résultat est un vecteur, dans le cas d'un *tibble* le résultat est un tableau à une colonne.
 
-Cette différence peut être source d'erreurs, il est donc important, notamment quand on développe une fonction qui prend un tableau de données en argument, de savoir si ce tableau est un *data frame* ou un *tibble*.
-
-Par exemple, la fonction suivante prend comme arguments un tableau `d` et des noms de variable `vars`, puis retourne la matrice de variance-covariance du sous-tableau correspondant.
+```{r}
+df[, "fruit"]
+```
 
 ```{r}
-tab_cov <- function(d, vars) {
-    cov(d[, vars])
-}
+df_tib[, "fruit"]
 ```
 
-On peut l'appliquer sans souci à deux colonnes d'un *data frame*.
-
-```{r}
-tab <- data.frame(x = runif(5), y = runif(5))
-tab_cov(tab, c("x", "y"))
-```
-
-Mais si on essaie de l'appliquer à une seule colonne, on obtient une erreur car `d[, vars]` renvoie un vecteur, tandis que `cov()` ne s'applique qu'à un tableau de données.
-
-```{r error = TRUE}
-tab_cov(tab, "x")
-```
-
-Si on transforme notre *data frame* en *tibble*, alors on peut appeler `tab_cov()` avec un seul nom de variables, car dans ce cas `d[, vars]` retourne bien un tableau à une colonne, et pas un vecteur.
-
-```{r}
-tib <- as_tibble(tab)
-tab_cov(tib, "x")
-```
-
-Pour corriger le problème dans notre fonction, on peut soit convertir l'objet `d` en *tibble* avant d'utiliser `[,]`.
-
-```{r}
-
-tab_cov <- function(d, vars) {
-    d <- as_tibble(d)
-    cov(d[, vars])
-}
-```
-
-Soit ajouter un troisième argument `drop = FALSE` dans notre appel à `[,]`, qui fait que le résultat sera bien un tableau à une colonne même si `d` est un *data frame*.
-
-```{r}
-tab_cov <- function(d, vars) {
-    tab <- d[, vars, drop = FALSE]
-    cov(tab)
-}
-```
+Cette différence peut parfois être source d'erreurs, notamment quand on développe une fonction qui prend un tableau de données en argument.
 
 
 ### Modification
 
-On peut utiliser `[[]]` et `[]` avec l'opérateur d'assignation `<-` pour modifier tout ou partie d'un tableau de données.
+On peut utiliser `[[]]` et `[,]` avec l'opérateur d'assignation `<-` pour modifier tout ou partie d'un tableau de données.
 
 ```{r}
 df[["poids_kg"]] <- df$poids / 1000
+df
+```
+
+```{r}
 df[df$fruit == "Citron", "fruit"] <- "Agrume"
 df
 ```
 
-Enfin, `[]` utilisé sans arguments permet de sélectionner et de modifier l'ensemble des valeurs du tableau. Ainsi les deux instructions suivantes ont des effets très différents :
+
+On pourra aussi noter que `[]` utilisé sans arguments permet de sélectionner et de modifier l'ensemble des valeurs du tableau. Ainsi les deux instructions suivantes ont des effets très différents :
 
 ```{r}
 df[] <- "a"
@@ -600,7 +566,7 @@ df <- "a"
 df
 ```
 
-Pour conclure, on peut noter que l'utilisation des opérateurs `[[]]` et `[]` sur un tableau de données peut sembler redondante et moins pratique que l'utilisation des verbes de `dplyr` comme `select()` ou `filter()`. Ils peuvent cependant être utiles lorsqu'on souhaite éviter les complications liées à l'utilisation du *tidyverse* à l'intérieur de fonctions, comme indiqué section \@ref(programmer-tidyverse).
+Pour conclure, on peut noter que l'utilisation des opérateurs `[[]]` et `[,]` sur un tableau de données peut sembler redondante et moins pratique que l'utilisation des verbes de `dplyr` comme `select()` ou `filter()`. Ils peuvent cependant être utiles lorsqu'on souhaite éviter les complications liées à l'utilisation du *tidyverse* à l'intérieur de fonctions, comme indiqué section \@ref(programmer-tidyverse). Ils peuvent également être plus rapides, et il est important de les connaître car on les rencontrera très fréquemment dans du code R sur le Web ou dans des packages.
 
 
 ## Ressources
@@ -643,31 +609,76 @@ head(v, 3)
 \fi
 
 
-Sélectionner toutes les valeurs de `v` strictement inférieures à 5.
+Sélectionner toutes les valeurs de `v` strictement inférieures à 15.
 
 \iffalse
 <div class="solution-exo">
 ```{r eval=FALSE}
-v[v < 5]
+v[v < 15]
 ```
 </div>
 \fi
 
-Sélectionner toutes les valeurs de `v` sauf la dernière.
+Créer une fonction `derniere()` qui prend en paramètre un vecteur et retourne son dernier élément (la fonction doit pouvoir s'appliquer à n'importe quel vecteur, quelle que soit sa longueur).
+
+```{r echo=FALSE,ref.label='don11b'}
+```
+
+```{r}
+derniere(v)
+```
 
 \iffalse
 <div class="solution-exo">
-```{r eval=FALSE}
-v[-length(v)]
-head(v, -1)
+
+```{r don11b, eval=FALSE}
+derniere <- function(v) {
+    v[length(v)]
+}
+
+# Ou bien
+
+derniere <- function(v) {
+    tail(v, 1)
+}
 ```
 </div>
 \fi
+
+
+Créer une fonction `sauf_derniere()` qui prend en paramètre un vecteur et retourne ce vecteur sans son dernier élément.
+
+```{r echo=FALSE,ref.label='don11c'}
+```
+
+```{r}
+sauf_derniere(v)
+```
+
+
+\iffalse
+<div class="solution-exo">
+
+```{r don11c, eval=FALSE}
+sauf_derniere <- function(v) {
+    v[-length(v)]
+}
+
+# Ou bien
+
+sauf_derniere <- function(v) {
+    head(v, -1)
+}
+```
+</div>
+\fi
+
+
 
 
 **Exercice 1.2**
 
-Soit le vecteur nommé `vn` suivant :
+Soit le vecteur `vn` suivant :
 ```{r}
 vn <- c(val1 = 10, val2 = 0, val3 = 14)
 ```
@@ -682,12 +693,41 @@ vn[c("val1", "val3")]
 </div>
 \fi
 
-Sélectionner toutes les valeurs sauf celle nommée "val3".
+Créer une fonction `select_noms()` qui prend en argument un vecteur `v` et un ou plusieurs noms, et retourne uniquement les éléments de `v` correspondant aux noms.
+
+```{r echo=FALSE,ref.label='don12a'}
+```
+
+```{r}
+select_noms(vn, c("val2", "val3"))
+```
 
 \iffalse
 <div class="solution-exo">
-```{r eval=FALSE}
-vn[names(vn) != "val3"]
+```{r don12a,eval=FALSE}
+select_noms <- function(v, noms) {
+    v[noms]
+}
+```
+</div>
+\fi
+
+
+*Facultatif :* créer une fonction `sauf_nom()` qui prend en argument un vecteur `v` et un nom, et retourne tous les éléments de `v` sauf celui correspondant à ce nom.
+
+```{r echo=FALSE,ref.label='don12b'}
+```
+
+```{r}
+sauf_nom(vn, "val2")
+```
+
+\iffalse
+<div class="solution-exo">
+```{r don12b,eval=FALSE}
+sauf_nom <- function(v, nom) {
+    v[names(v) != nom]
+}
 ```
 </div>
 \fi
@@ -719,7 +759,7 @@ x[is.na(x)]
 </div>
 \fi
 
-De la même manière, sélectionner les valeurs de `y` correspondant aux valeurs `NA` de `x`.
+De la même manière, sélectionner les valeurs de `y` correspondant aux valeurs `NA` de `x` (c'est-à-dire les valeurs 20 et 50).
 
 \iffalse
 <div class="solution-exo">
@@ -740,21 +780,51 @@ x[is.na(x)] <- y[is.na(x)]
 \fi
 
 
+**Exercice 1.4**
+
+Créer une fonction `problemes_conversion` qui :
+
+- prend en argument un vecteur `v`
+- le convertit en vecteur numérique
+- retourne les valeurs de `v` qui n'ont pas été converties correctement, c'est-à-dire celles qui ne valaient pas `NA` dans `v` mais valent `NA` après la conversion.
+
+Vérifier avec :
+
+```{r echo = FALSE, ref.label='don14'}
+```
+
+```{r warning=TRUE}
+x <- c("igloo", "20", NA, "3.5", "4,8")
+problemes_conversion(x)
+```
+
+\iffalse
+<div class="solution-exo">
+```{r don14, eval=FALSE}
+problemes_conversion <- function(v) {
+    conv <- as.numeric(v)
+    v[!is.na(v) & is.na(conv)]
+}
+```
+</div>
+\fi
+
+
 ### Listes
 
 **Exercice 2.1**
 
-Créer la liste `l` ayant la structure suivante :
+Créer une liste `liste` ayant la structure suivante :
 
 ```{r echo = FALSE}
-l <- list(1, "oui", 10:12)
-str(l)
+liste <- list(1, "oui", 10:12)
+str(liste)
 ```
 
 \iffalse
 <div class="solution-exo">
 ```{r eval=FALSE}
-l <- list(1, "oui", 10:12)
+liste <- list(1, "oui", 10:12)
 ```
 </div>
 \fi
@@ -764,17 +834,17 @@ Donner les noms suivants aux éléments de la liste : `num`, `reponse` et `vec`.
 \iffalse
 <div class="solution-exo">
 ```{r eval=FALSE}
-names(l) <- c("num", "reponse", "vec")
+names(liste) <- c("num", "reponse", "vec")
 ```
 </div>
 \fi
 
-Ajouter un élément nommé `chat` et ayant pour valeur "Ronron" à la fin de `l`.
+Ajouter un élément nommé `chat` et ayant pour valeur "Ronron" à la fin de `liste`.
 
 \iffalse
 <div class="solution-exo">
 ```{r eval=FALSE}
-l <- c(l, chat = "Ronron")
+liste <- c(liste, chat = "Ronron")
 ```
 </div>
 \fi
@@ -784,37 +854,21 @@ Modifier l'élément `chat` pour lui donner la valeur "Ronpchi".
 \iffalse
 <div class="solution-exo">
 ```{r eval=FALSE}
-l$chat <- "Ronpchi"
+liste$chat <- "Ronpchi"
+# Ou bien
+liste["chat"] <- "Ronpchi"
 ```
 </div>
 \fi
 
-Supprimer l'élément `vec` de `l`.
+Supprimer l'élément `vec` de `liste`.
 
 \iffalse
 <div class="solution-exo">
 ```{r eval=FALSE}
-l$vec <- NULL
-```
-</div>
-\fi
-
-Créer une liste `l2` avec un seul élément nommé `Incroyable élément` et comme valeur 42.
-
-\iffalse
-<div class="solution-exo">
-```{r eval=FALSE}
-l2 <- list(`Incroyable élément` = 42)
-```
-</div>
-\fi
-
-Créer une liste `l3` en concaténant `l` et `l2`.
-
-\iffalse
-<div class="solution-exo">
-```{r eval=FALSE}
-l3 <- c(l, l2)
+liste$vec <- NULL
+# Ou bien
+liste["vec"] <- NULL
 ```
 </div>
 \fi
@@ -852,112 +906,162 @@ res$max - res$min
 Soit la liste suivante :
 
 ```{r}
-l <- list(1:3, runif(5), "youpi")
+liste <- list(1:3, runif(5), "youpi")
 ```
 
-Sélectionner la sous liste composée des éléments 1 et 3 de `l`.
+Sélectionner la sous liste composée des éléments 1 et 3 de `liste`.
 
 \iffalse
 <div class="solution-exo">
 ```{r eval=FALSE}
-l[c(1, 3)]
+liste[c(1, 3)]
 ```
 </div>
 \fi
 
-Sélectionner la sous-liste composée du premier élément de `l`.
+Sélectionner la sous-liste composée du premier élément de `liste`.
 
 \iffalse
 <div class="solution-exo">
 ```{r eval=FALSE}
-l[1]
+liste[1]
 ```
 </div>
 \fi
 
-Sélectionner le contenu du premier élément de `l`.
+Sélectionner le contenu du premier élément de `liste`.
 
 \iffalse
 <div class="solution-exo">
 ```{r eval=FALSE}
-l[[1]]
+liste[[1]]
 ```
 </div>
 \fi
 
-En enchaînant deux opérations de sélection, sélectionner le deuxième élément du premier élément de `l`.
+En enchaînant deux opérations de sélection, sélectionner le deuxième élément du premier élément de `liste`.
 
 \iffalse
 <div class="solution-exo">
 ```{r eval=FALSE}
-l[[1]][2]
+liste[[1]][2]
 ```
 </div>
 \fi
+
+
+**Exercice 2.4**
+
+Créer une fonction `description_liste` qui prend en argument une liste et retourne :
+
+- son premier élément
+- son dernier élément
+- le nombre d'éléments qu'elle contient
+
+Vérifier avec :
+
+```{r echo=FALSE,ref.label='don24'}
+```
+
+```{r}
+liste <- list(1:3, runif(5), "youpi")
+description_liste(liste)
+```
+
+\iffalse
+<div class="solution-exo">
+```{r don24,eval=FALSE}
+description_liste <- function(liste) {
+    list(
+        premier_element = liste[[1]],
+        dernier_element = liste[[length(liste)]],
+        nb_elements = length(liste)
+    )
+}
+```
+</div>
+\fi
+
 
 
 
 ### Tableaux de données
 
+
 **Exercice 3.1**
 
-Construire le tableau `d_tib` suivant à l'aide de la fonction *tibble*.
+Créer le tableau `df` suivant :
 
-```
-# A tibble: 3 × 2
-  `var 1` `var 2`
-    <int> <chr>  
-1       1 rouge  
-2       2 vert   
-3       3 rouge  
-```
-
-```{r echo = FALSE, ref.label='don31'}
-```
-
-\iffalse
-<div class="solution-exo">
-```{r don31, eval=FALSE}
-d_tib <- tibble(
-    `var 1` = 1:3,
-    `var 2` = c("rouge", "vert", "rouge")
+```{r}
+df <- data.frame(
+    fruit = c("Pomme", "Pomme", "Citron"),
+    poids = c(154, 167, 92),
+    couleur = c("vert", "vert", "jaune")
 )
 ```
-</div>
-\fi
 
-Le convertir en *data frame* en lui appliquant la fonction `data.frame()` et stocker le résultat dans un objet `d_df`. 
+À l'aide de l'opérateur `$`, sélectionner la colonne `fruit` de `df`.
 
 \iffalse
 <div class="solution-exo">
 ```{r eval=FALSE}
-d_df <- data.frame(d_tib)
+df$fruit
 ```
 </div>
 \fi
 
-Que constatez-vous si vous comparez `d_tib` et `d_df` ?
-
-\iffalse
-<div class="solution-exo">
-Lors de la conversion en *data frame*, les noms de variables ont été modifiés en remplaçant les espaces par des points.
-</div>
-\fi
-
-Sélectionner la colonne `var 1` de `d_tib` à l'aide des opérateurs `[[]]`, `$`, `[,]` et `[]`. Quelles différences constatez-vous ?
+Faire de même avec l'opérateur `[[]]`.
 
 \iffalse
 <div class="solution-exo">
 ```{r eval=FALSE}
-d_tib[["var 1"]]
-d_tib$`var 1`
-d_tib["var 1"]
-d_tib[, "var 1"]
+df[["fruit"]]
 ```
 </div>
 \fi
 
-Comparer les résultats de `d_tib[, "var 1"]` et `d_df[, "var.1"]`.
+À l'aide de l'opérateur `[[]]` et de la fonction `str_to_upper()` de `stringr`, transformer la colonne `fruit` en passant ses valeurs en majuscules.
+
+\iffalse
+<div class="solution-exo">
+```{r eval=FALSE}
+library(stringr)
+df[["fruit"]] <- str_to_upper(df[["fruit"]])
+```
+</div>
+\fi
+
+Créer une fonction `colonne_maj` qui prend en argument un tableau de données `d` et un nom de colonne `colonne`, et retourne le tableau avec la colonne correspondante convertie en majuscules. Vérifier avec :
+
+```{r echo=FALSE,ref.label='don33'}
+```
+
+```{r}
+colonne_maj(df, "couleur")
+```
+
+\iffalse
+<div class="solution-exo">
+```{r don33, eval=FALSE}
+colonne_maj <- function(d, colonne) {
+    d[[colonne]] <- str_to_upper(d[[colonne]])
+    d
+}
+```
+</div>
+\fi
+
+Utiliser la fonction pour modifier le jeu de données `hdv2003` en passant en majuscule la colonne `sexe`.
+
+\iffalse
+<div class="solution-exo">
+```{r eval=FALSE}
+library(questionr)
+data(hdv2003)
+hdv2003 <- colonne_maj(hdv2003, "sexe")
+```
+</div>
+\fi
 
 
 **Exercice 3.2**
@@ -974,41 +1078,93 @@ df <- data.frame(
 
 À l'aide de l'opérateur `[,]`, sélectionner :
 
+- les citrons
 - les pommes et les colonnes `fruit` et `couleur`
-- les deux dernières lignes
 - la première colonne des lignes ayant un poids inférieur à 100
 
 \iffalse
 <div class="solution-exo">
 ```{r eval=FALSE}
+df[df$fruit == "Citron",]
 df[df$fruit == "Pomme", c("fruit", "couleur")]
-df[2:3, ]
 df[df$poids < 100, 1]
 ```
 </div>
 \fi
 
-Faire de même en utilisant les verbes de `dplyr`.
+Créer une fonction `filtre_valeur()` qui prend en argument une chaîne de caractères `valeur` et retourne les lignes de `df` pour lesquelles la colonne `fruit` vaut `valeur`. Vérifier avec :
+
+```{r echo=FALSE,ref.label='don32a'}
+```
+
+```{r}
+filtre_valeur("Pomme")
+```
 
 \iffalse
 <div class="solution-exo">
-```{r eval=FALSE}
-df %>% 
-    filter(fruit == "Pomme") %>%
-    select(fruit, couleur)
-df %>% 
-    slice(2:3)
-df %>% 
-    filter(poids < 100) %>% 
-    select(1)
+```{r don32a, eval=FALSE}
+filtre_valeur <- function(valeur) {
+    df[df$fruit == valeur,]
+}
 ```
 </div>
 \fi
 
+Modifier la fonction pour qu'elle accepte également un argument `d` contenant le tableau à filtrer. Vérifier avec :
+
+```{r echo=FALSE,ref.label='don32b'}
+```
+
+```{r}
+filtre_valeur(df, "Pomme")
+```
+
+
+\iffalse
+<div class="solution-exo">
+```{r don32b, eval=FALSE}
+filtre_valeur <- function(d, valeur) {
+    d[d$fruit == valeur,]
+}
+```
+</div>
+\fi
+
+Modifier à nouveau la fonction pour qu'elle accepte un troisième argument `colonne` qui contient le nom de la colonne à utiliser pour filtrer les lignes. Vérifier avec :
+
+```{r echo=FALSE,ref.label='don32c'}
+```
+
+```{r}
+filtre_valeur(df, "couleur", "jaune")
+```
+
+
+\iffalse
+<div class="solution-exo">
+```{r don32c, eval=FALSE}
+filtre_valeur <- function(d, colonne, valeur) {
+    d[d[colonne] == valeur,]
+}
+```
+</div>
+\fi
+
+Vérifier que cette fonction marche aussi sur un autre jeu de données :
+
+```{r eval=FALSE}
+library(questionr)
+data(hdv2003)
+filtre_valeur(hdv2003, "sexe", "Femme")
+```
+
+
+
 
 **Exercice 3.3**
 
-Reprendre le tableau `df` de l'exercice précédent.
+Reprendre le tableau `df` des exercices précédents :
 
 ```{r}
 df <- data.frame(
@@ -1037,12 +1193,14 @@ df[, "poids_rec"] <- if_else(df$poids < 100, "léger", "lourd")
 </div>
 \fi
 
-Effectuer les mêmes opérations en utilisant les verbes de `dplyr`.
+*Facultatif :* effectuer les mêmes opérations en utilisant les verbes de `dplyr`.
 
 \iffalse
 <div class="solution-exo">
+
 ```{r eval=FALSE}
 df <- df %>% mutate(id = 1:3)
+
 df <- df %>%
     mutate(
         couleur = if_else(couleur == "jaune", "jaune_citron", couleur)
@@ -1053,6 +1211,7 @@ df <- df %>%
     mutate(
         couleur = fct_recode(couleur, "jaune_citron" = "jaune")
     )
+
 df <- df %>%
     mutate(
         poids_rec = if_else(poids < 100, "léger", "lourd")
