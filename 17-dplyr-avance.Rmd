@@ -11,6 +11,11 @@ data(hdv2003)
 data(rp2012)
 ```
 
+```{r include=FALSE}
+hdv2003 <- as_tibble(hdv2003)
+rp2012 <- as_tibble(rp2012)
+```
+
 ## Appliquer ses propres fonctions 
 
 ### Exemple avec `mutate`
@@ -203,7 +208,6 @@ recode_oui_non <- function(v) {
         fct_explicit_na("Manquant")
 }
 
-data(hdv2003)
 hdv2003 %>%
     mutate(
         cuisine = recode_oui_non(cuisine),
@@ -397,7 +401,7 @@ Si on préfère créer de nouvelles colonnes, on doit indiquer la manière de le
 
 Ainsi, si on souhaite plutôt que les variables recodées soient stockées dans de nouvelles colonnes nommées avec le suffixe `_rec`, on peut utiliser :
 
-```{r}
+```{r cache=FALSE}
 hdv2003 %>%
     mutate(
         across(
@@ -515,7 +519,7 @@ mean(c(restos$decor, restos$accueil))
 
 Ce que nous souhaitons ici, c'est calculer la moyenne non pas pour l'ensemble du tableau mais *pour chaque ligne*. Pour cela, on va utiliser la fonction `rowwise()`. Celle-ci est équivalente à un `group_by()` qui créerait autant de groupes qu'il y a de lignes dans notre tableau.
 
-```{r cache=FALSE}
+```{r}
 restos %>% rowwise() 
 ```
 
