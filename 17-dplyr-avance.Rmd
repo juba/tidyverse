@@ -116,14 +116,14 @@ Si on souhaite convertir ce résultat en pourcentage, il faut qu'on divise par l
 sum(str_detect(rp2012$commune, "ac$")) / length(rp2012$commune) * 100
 ```
 
-On crée une fonction nommée `prop_suffixe` qui a pour objectif d'effectuer ce calcul. Elle prend en entrée deux arguments : un vecteur de chaînes de caractères et un "motif" à détecter. On rajoute nous-mêmes le "$" à la fin du motif en question pour faciliter l'usage de la fonction. Le résultat final est le suivant :
+On crée une fonction nommée `prop_suffixe` qui a pour objectif d'effectuer ce calcul. Elle prend en entrée deux arguments : un vecteur de chaînes de caractères et un suffixe à détecter. On rajoute nous-mêmes le "$" à la fin du suffixe en question pour faciliter l'usage de la fonction. Le résultat final est le suivant :
 
 ```{r}
-prop_suffixe <- function(v, motif) {
-    # On ajoute $ à la fin du motif pour capturer uniquement les suffixes
-    motif <- paste0(motif, "$")
-    # Détection du motif
-    nb_detect <- sum(str_detect(v, motif))
+prop_suffixe <- function(v, suffixe) {
+    # On ajoute $ à la fin du suffixe pour capturer uniquement en fin de chaîne
+    suffixe <- paste0(suffixe, "$")
+    # Détection du suffixe
+    nb_detect <- sum(str_detect(v, suffixe))
     # On retourne le pourcentage
     nb_detect / length(v) * 100
 }
@@ -232,7 +232,7 @@ Il existe de nombreuses manières de définir les colonnes qu'on souhaite transf
 
 Une première possibilité est d'utiliser `c()` en lui passant les noms des variables (on notera qu'on n'est pas obligés de mettre ces noms entre guillemets).
 
-```{r results="hide"}
+```{r}
 df %>%
     mutate(
         across(
@@ -244,7 +244,7 @@ df %>%
 
 Une autre possibilité est d'utiliser `:`, qui permet de définir une plage de colonnes en lui indiquant la colonne de début et la colonne de fin. Ainsi dans l'exemple suivant notre recodage est appliqué à toutes les colonnes situées entre `pcs` et `pcs_mere` (incluses).
 
-```{r results="hide"}
+```{r}
 df %>%
     mutate(
         across(
@@ -286,6 +286,7 @@ De manière similaire, la fonction `num_range()` permet de sélectionner des col
 across(num_range("Q", 1:12, width = 2))
 ```
 
+
 On peut également sélectionner des colonnes via une condition avec la fonction `where()`. Celle-ci prend elle-même en argument une fonction qui doit renvoyer `TRUE` ou `FALSE`, et ne conserve que les colonnes qui correspondent à des `TRUE`.
 
 Dans l'exemple suivant, on applique la fonction `max` seulement aux colonnes de `df` pour lesquelles la fonction `is.numeric` renvoie `TRUE`.
@@ -302,7 +303,7 @@ df %>%
 
 Pour des conditions plus complexes, on doit parfois définir soi-même la fonction passée à `where()`. Dans l'exemple suivant on calcule la moyenne uniquement pour les variables de `df` dont la valeur minimale est supérieure à 20.
 
-```{r results="hide"}
+```{r}
 age_adulte <- function(v) {
     min(v, na.rm = TRUE) > 20
 }
@@ -399,7 +400,7 @@ df %>%
     )
 ```
 
-### Noms des colonnes créées dans un `mutate`
+### Noms des colonnes créées par un `mutate`
 
 Par défaut, lorsqu'on utilise `across()` dans un `mutate`, les nouvelles colonnes portent le même nom que les colonnes d'origine, ce qui signifie que ces dernières sont "écrasées" par les nouvelles valeurs.
 
@@ -486,6 +487,134 @@ Et le code suivant remplace les espaces par des `_` uniquement pour les colonnes
 ```{r}
 df %>%
     rename_with(remplace_espaces, .cols = contains("enf"))
+```
+
+
+## Fonctions anonymes et syntaxes abrégées {#syntaxes-abregees}
+
+Dans les sections précédentes, nous avons rencontré plusieurs fonctions, comme `rename_with()` ou `across()`, qui prennent  une fonction en argument.
+
+Par exemple, dans l'utilisation suivante de `rename_with()`, on avait créé une fonction `remplace_points()`.
+
+```{r results="hide"}
+remplace_espaces <- function(v) {
+    str_replace_all(v, " ", "_")
+}
+
+df %>% rename_with(remplace_espaces)
+```
+
+Le fait de créer une fonction à part pour une opération d'une seule ligne ne se justifie pas forcément, surtout si on n'utilise pas cette fonction ailleurs dans notre code. Dans, ce cas, on peut définir notre fonction directement dans l'appel à `rename_with()` en utilisant une *fonction anonyme*, déjà introduites section \@ref(fonctions-anonymes).
+
+```{r results="hide"}
+df %>%
+    rename_with(function(v) {
+        str_replace_all(v, " ", "_")
+    })
+```
+
+Cette notation est assez pratique et souvent utilisée pour les fonctions à usage unique, ne serait-ce que pour s'économiser le fait de devoir lui trouver un nom pertinent.
+
+La syntaxe étant un peu lourde, il existe deux alternatives permettant une définition plus "compacte". 
+
+- La première alternative est propre aux packages du *tidyverse* (notamment `dplyr` et `purrr`), et ne fonctionnera pas pour les fonctions n'appartenant pas à ces packages. Il s'agit d'utiliser une syntaxe de type "formule" : le corps de la formule contient les instructions de la fonction, et les arguments sont nommés `.x` (ou `.`) s'il n'y en a qu'un, `.x` et `.y` s'il y en a deux, et `..1`, `..2`, etc. s'ils sont plus nombreux.
+
+- La deuxième alternative est une syntaxe apparue avec la version 4.1 de R, qui permet de remplacer `function(...)` par le raccourci `\(...)`.
+
+Ainsi les définitions suivantes sont équivalents :
+
+```{r eval=FALSE}
+# Fonctionne partout et tout le temps
+function(x) { x + 2 }
+# Fonctionne uniquement dans les fonctions du tidyverse
+~ { .x + 2 }
+# Fonctionne uniquement à partir de R 4.1
+\(x) { x + 2 }
+```
+
+De même que les définitions suivantes :
+
+```{r eval=FALSE}
+function(v1, v2) {
+    res <- v1 / v2
+    round(res, 1)
+}
+
+~ {
+    res <- .x / .y
+    round(res, 1)
+}
+
+\(v1, v2) {
+    res <- v1 / v2
+    round(res, 1)
+}
+```
+
+Quand la fonction anonyme est constituée d'une seule instruction, on peut supprimer les accolades dans sa définition.
+
+```{r eval=FALSE}
+function(x) x + 2
+~ .x + 2
+\(x) x + 2
+```
+
+On pourra du coup, si on le souhaite, utiliser ces syntaxes compactes dans notre `rename_with()` pour définir notre fonction anonyme.
+
+```{r results="hide"}
+df %>%
+    rename_with(~ str_replace_all(.x, " ", "_") )
+
+df %>%
+    rename_with( \(x) str_replace_all(x, " ", "_") )
+```
+
+Cette syntaxe peut être utilisée partout où on peut passer une fonction comme argument et donc définir des fonctions anonymes. Dans cet exemple déjà vu précédemment, on passe la fonction `numerique_sans_na` comme argument de `where()`.
+
+```{r results="hide"}
+age_adulte <- function(v) {
+    min(v, na.rm = TRUE) > 20
+}
+
+df %>%
+    summarise(
+        across(
+            where(age_adulte),
+            mean
+        )
+    )
+```
+
+On peut donc remplacer la fonction `numerique_sans_na` par une fonction anonyme définie directement dans le `where()`.
+
+```{r results="hide"}
+df %>%
+    summarise(
+        across(
+            where(function(v) { min(v, na.rm = TRUE) > 20 }),
+            mean
+        )
+    )
+```
+
+Et du coup utiliser une des deux syntaxes "compactes".
+
+```{r eval=FALSE}
+df %>%
+    summarise(
+        across(
+            where(~ min(.x, na.rm = TRUE) > 20),
+            mean
+        )
+    )
+
+df %>%
+    summarise(
+        across(
+            where(\(v) min(v, na.rm = TRUE) > 20),
+            mean
+        )
+    )
 ```
 
 
@@ -618,132 +747,6 @@ restos %>%
     )
 ```
 
-## Fonctions anonymes et syntaxes abrégées {#syntaxes-abregees}
-
-Dans les sections précédentes, nous avons rencontré plusieurs fonctions, comme `rename_with()` ou `across()`, qui prennent  une fonction en argument.
-
-Par exemple, dans l'utilisation suivante de `rename_with()`, on avait créé une fonction `remplace_points()`.
-
-```{r results="hide"}
-remplace_espaces <- function(v) {
-    str_replace_all(v, " ", "_")
-}
-
-df %>% rename_with(remplace_espaces)
-```
-
-Le fait de créer une fonction à part pour une opération d'une seule ligne ne se justifie pas forcément, surtout si on n'utilise pas cette fonction ailleurs dans notre code. Dans, ce cas, on peut définir notre fonction directement dans l'appel à `rename_with()` en utilisant une *fonction anonyme*, déjà introduites section \@ref(fonctions-anonymes).
-
-```{r results="hide"}
-df %>%
-    rename_with(function(v) {
-        str_replace_all(v, " ", "_")
-    })
-```
-
-Cette notation est assez pratique et souvent utilisée pour les fonctions à usage unique, ne serait-ce que pour s'économiser le fait de devoir lui trouver un nom pertinent.
-
-La syntaxe étant un peu lourde, il existe deux alternatives permettant une définition plus "compacte". 
-
-- La première alternative est propre aux packages du *tidyverse* (notamment `dplyr` et `purrr`), et ne fonctionnera pas pour les fonctions n'appartenant pas à ces packages. Il s'agit d'utiliser une syntaxe de type "formule" : le corps de la formule contient les instructions de la fonction, et les arguments sont nommés `.x` (ou `.`) s'il n'y en a qu'un, `.x` et `.y` s'il y en a deux, et `..1`, `..2`, etc. s'ils sont plus nombreux.
-
-- La deuxième alternative est une syntaxe apparue avec la version 4.1 de R, qui permet de remplacer `function(...)` par le raccourci `\(...)`.
-
-Ainsi les définitions suivantes sont équivalents :
-
-```{r eval=FALSE}
-# Fonctionne partout et tout le temps
-function(x) { x + 2 }
-# Fonctionne uniquement dans les fonctions du tidyverse
-~ { .x + 2 }
-# Fonctionne uniquement à partir de R 4.1
-\(x) { x + 2 }
-```
-
-De même que les définitions suivantes :
-
-```{r eval=FALSE}
-function(v1, v2) {
-    res <- v1 / v2
-    round(res, 1)
-}
-
-~ {
-    res <- .x / .y
-    round(res, 1)
-}
-
-\(v1, v2) {
-    res <- v1 / v2
-    round(res, 1)
-}
-```
-
-Quand la fonction anonyme est constituée d'une seule instruction, on peut supprimer les accolades dans sa définition.
-
-```{r eval=FALSE}
-function(x) x + 2
-~ .x + 2
-\(x) x + 2
-```
-
-On pourra du coup, si on le souhaite, utiliser ces syntaxes compactes dans notre `rename_with()` pour définir notre fonction anonyme.
-
-```{r results="hide"}
-df %>%
-    rename_with(~ str_replace_all(.x, " ", "_") )
-
-df %>%
-    rename_with( \(x) str_replace_all(x, " ", "_") )
-```
-
-Cette syntaxe peut être utilisée partout où on peut passer une fonction comme argument et donc définir des fonctions anonymes. Dans cet exemple déjà vu précédemment, on passe la fonction `numerique_sans_na` comme argument de `where()`.
-
-```{r results="hide"}
-age_adulte <- function(v) {
-    min(v, na.rm = TRUE) > 20
-}
-
-df %>%
-    summarise(
-        across(
-            where(age_adulte),
-            mean
-        )
-    )
-```
-
-On peut donc remplacer la fonction `numerique_sans_na` par une fonction anonyme définie directement dans le `where()`.
-
-```{r results="hide"}
-df %>%
-    summarise(
-        across(
-            where(function(v) { min(v, na.rm = TRUE) > 20 }),
-            mean
-        )
-    )
-```
-
-Et du coup utiliser une des deux syntaxes "compactes".
-
-```{r eval=FALSE}
-df %>%
-    summarise(
-        across(
-            where(~ min(.x, na.rm = TRUE) > 20),
-            mean
-        )
-    )
-
-df %>%
-    summarise(
-        across(
-            where(\(v) min(v, na.rm = TRUE) > 20),
-            mean
-        )
-    )
-```
 
 
 ## Ressources
@@ -844,6 +847,72 @@ starwars %>%
 
 
 **Exercice 1.3**
+
+On a vu que la fonction suivante permet de calculer le pourcentage des éléments d'un vecteur de chaînes de caractères se terminant par un motif passé en argument.
+
+```{r}
+prop_suffixe <- function(v, suffixe) {
+    # On ajoute $ à la fin du suffixe pour capturer uniquement en fin de chaîne
+    suffixe <- paste0(suffixe, "$")
+    # Détection du suffixe
+    nb_detect <- sum(str_detect(v, suffixe))
+    # On retourne le pourcentage
+    nb_detect / length(v) * 100
+}
+```
+
+Modifier cette fonction en une fonction `prop_prefixe` qui retourne le pourcentage d'éléments commençant par un préfixe passé en arguments. Indication : pour détecter si une chaîne commence par "debut", on peut utiliser l'expression régulière "^debut".
+
+\iffalse
+<div class="solution-exo">
+```{r eval=FALSE}
+prop_prefixe <- function(v, prefixe) {
+    # On ajoute $ à la fin du prefixe pour capturer uniquement en début de chaîne
+    prefixe <- paste0("^", prefixe)
+    # Détection du motif
+    nb_detect <- sum(str_detect(v, prefixe))
+    # On retourne le pourcentage
+    nb_detect / length(v) * 100
+}
+```
+</div>
+\fi
+é
+Utiliser `prop_prefixe` dans un `summarise` appliqué à `rp2012` pour calculer le pourcentage de communes commençant par "saint" selon le département. Ordonner les résultats par pourcentage décroissant.
+
+\iffalse
+<div class="solution-exo">
+```{r eval=FALSE}
+rp2012 %>%
+    group_by(departement) %>%
+    summarise(
+        prop_saint = prop_prefixe(commune, "Saint")
+    ) %>%
+    arrange(desc(prop_saint))
+```
+</div>
+\fi
+
+Créer une fonction `tab_prefixe` qui prend un seul argument `prefixe` et renvoie le tableau obtenu à la question précédente pour le préfixe passé en argument. Tester avec `tab_prefixe("Plou")` et `tab_prefixe("Sch")`
+
+\iffalse
+<div class="solution-exo">
+```{r eval=FALSE}
+tab_prefixe <- function(prefixe) {
+    rp2012 %>%
+        group_by(departement) %>%
+        summarise(
+            prop = prop_prefixe(commune, prefixe)
+        ) %>%
+        arrange(desc(prop))
+}
+```
+</div>
+\fi
+
+
+
+**Exercice 1.4**
 
 La liste suivante donne, pour chacun des neuf principaux films de la saga *Star Wars*, la date à laquelle ils se déroulent dans l'univers de la saga.
 
@@ -1058,113 +1127,9 @@ hdv2003 %>%
 \fi
 
 
-### `rowwise()` et `c_across()`
-
-**Exercice 3.1**
-
-On repart du code final de l'exercice 2.3, qui recodait une série de variables de `hdv2003` en valeurs `TRUE`/`FALSE` dans de nouvelles variables avec le suffixe "_true".
-
-```{r}
-detecte_oui <- function(v) {
-    v == "Oui"
-}
-hdv2003 <- hdv2003 %>%
-    mutate(
-        across(
-            hard.rock:sport,
-            detecte_oui,
-            .names = "{.col}_true"
-        )
-    )
-```
-
-Calculer le plus simplement possible une nouvelle variable `total` qui contient, pour chaque ligne, le nombre de valeurs `TRUE` des deux variables `cinema_true` et `sport_true` (si une ligne contient `TRUE` pour ces deux variables, `total` doit valoir 2, etc.)
-
-\iffalse
-<div class="solution-exo">
-```{r eval=FALSE}
-hdv2003 %>%
-    mutate(total = cuisine_true + sport_true)
-```
-</div>
-\fi
-
-Recalculer la variable `total` pour qu'elle contienne le nombre de `TRUE` par ligne pour les variables `bricol_true`, `cinema_true` et `sport_true`.
-
-\iffalse
-<div class="solution-exo">
-```{r eval=FALSE}
-hdv2003 %>%
-    rowwise() %>%
-    mutate(total = sum(cuisine_true, sport_true, bricol_true))
-```
-</div>
-\fi
-
-Recalculer la variable `total` pour qu'elle contienne le nombre de `TRUE` par ligne pour toutes les variables se terminant par "_true".
-
-\iffalse
-<div class="solution-exo">
-```{r eval=FALSE}
-hdv2003 %>%
-    rowwise() %>%
-    mutate(total = sum(c_across(ends_with("_true"))))
-```
-</div>
-\fi
-
-
-Reprendre le code précédent pour qu'il puisse s'appliquer directement sur les variables `hard.rock`...`sport`, sans passer par le recodage en `TRUE`/`FALSE`. 
-
-\iffalse
-<div class="solution-exo">
-
-```{r eval=FALSE}
-count_oui <- function(v) {
-    sum(v == "Oui")
-}
-
-hdv2003 %>%
-    rowwise() %>%
-    mutate(
-        total = count_oui(c_across(hard.rock:sport))
-    )
-```
-</div>
-\fi
-
-
-**Exercice 3.2**
-
-Dans le jeu de données `starwars`, la colonne `films` contient la liste des films dans lesquels apparaissent les différents personnages. Cette colonne a une forme un peu particulière puisqu'il s'agit d'une "colonne-liste" : les éléments de cette colonne sont eux-mêmes des listes.
-
-```{r}
-head(starwars$films, 3)
-```
-
-On essaye de calculer le nombre de films pour chaque personnage avec le code suivant. Est-ce que ça fonctionne ? Pourquoi ?
-
-```{r eval=FALSE}
-starwars %>%
-    mutate(n_films = length(films))
-```
-
-Trouver une manière d'obtenir le résultat attendu.
-
-\iffalse
-<div class="solution-exo">
-```{r eval=FALSE}
-starwars %>%
-    rowwise() %>%
-    mutate(n_films = length(films))
-```
-</div>
-\fi
-
-
 ### Fonctions anonymes et notations abrégées
 
-**Exercice 4.1**
+**Exercice 3.1**
 
 Soit le code suivant, qui renomme les colonnes du tableau `starwars` de type liste en leur ajoutant le préfixe "liste_".
 
@@ -1208,7 +1173,7 @@ starwars %>%
 </div>
 \fi
 
-**Exercice 4.2**
+**Exercice 3.2**
 
 Le code suivant indique, pour chaque région du jeu de données `rp2012`, le nom de la commune ayant la valeur maximale pour les variables `dipl_aucun` et `dipl_sup`.
 
@@ -1302,3 +1267,106 @@ rp2012 %>%
 </div>
 \fi
 
+
+### `rowwise()` et `c_across()`
+
+**Exercice 4.1**
+
+On repart du code final de l'exercice 2.3, qui recodait une série de variables de `hdv2003` en valeurs `TRUE`/`FALSE` dans de nouvelles variables avec le suffixe "_true".
+
+```{r}
+detecte_oui <- function(v) {
+    v == "Oui"
+}
+hdv2003 <- hdv2003 %>%
+    mutate(
+        across(
+            hard.rock:sport,
+            detecte_oui,
+            .names = "{.col}_true"
+        )
+    )
+```
+
+Calculer le plus simplement possible une nouvelle variable `total` qui contient, pour chaque ligne, le nombre de valeurs `TRUE` des deux variables `cinema_true` et `sport_true` (si une ligne contient `TRUE` pour ces deux variables, `total` doit valoir 2, etc.)
+
+\iffalse
+<div class="solution-exo">
+```{r eval=FALSE}
+hdv2003 %>%
+    mutate(total = cuisine_true + sport_true)
+```
+</div>
+\fi
+
+Recalculer la variable `total` pour qu'elle contienne le nombre de `TRUE` par ligne pour les variables `bricol_true`, `cinema_true` et `sport_true`.
+
+\iffalse
+<div class="solution-exo">
+```{r eval=FALSE}
+hdv2003 %>%
+    rowwise() %>%
+    mutate(total = sum(cuisine_true, sport_true, bricol_true))
+```
+</div>
+\fi
+
+Recalculer la variable `total` pour qu'elle contienne le nombre de `TRUE` par ligne pour toutes les variables se terminant par "_true".
+
+\iffalse
+<div class="solution-exo">
+```{r eval=FALSE}
+hdv2003 %>%
+    rowwise() %>%
+    mutate(total = sum(c_across(ends_with("_true"))))
+```
+</div>
+\fi
+
+
+Reprendre le code précédent pour qu'il puisse s'appliquer directement sur les variables `hard.rock`...`sport`, sans passer par le recodage en `TRUE`/`FALSE`. 
+
+\iffalse
+<div class="solution-exo">
+
+```{r eval=FALSE}
+count_oui <- function(v) {
+    sum(v == "Oui")
+}
+
+hdv2003 %>%
+    rowwise() %>%
+    mutate(
+        total = count_oui(c_across(hard.rock:sport))
+    )
+```
+</div>
+\fi
+
+
+**Exercice 4.2**
+
+Dans le jeu de données `starwars`, la colonne `films` contient la liste des films dans lesquels apparaissent les différents personnages. Cette colonne a une forme un peu particulière puisqu'il s'agit d'une "colonne-liste" : les éléments de cette colonne sont eux-mêmes des listes.
+
+```{r}
+head(starwars$films, 3)
+```
+
+On essaye de calculer le nombre de films pour chaque personnage avec le code suivant. Est-ce que ça fonctionne ? Pourquoi ?
+
+```{r eval=FALSE}
+starwars %>%
+    mutate(n_films = length(films))
+```
+
+Trouver une manière d'obtenir le résultat attendu.
+
+\iffalse
+<div class="solution-exo">
+```{r eval=FALSE}
+starwars %>%
+    rowwise() %>%
+    mutate(n_films = length(films))
+```
+</div>
+\fi
