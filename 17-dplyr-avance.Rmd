@@ -20,64 +20,72 @@ rp2012 <- as_tibble(rp2012)
 
 ### Exemple avec `mutate`
 
-Dans le jeu de données `hdv2003` plusieurs variables comprennent les mêmes modalités `Oui` / `Non`. C'est le cas notamment de `cuisine` et `cinema`.
+Soit le jeu de données fictif suivant, dont chaque ligne représente un individu pour lequel on dispose de sa PCS, celle de son conjoint, son âge et celui de ses enfants.
 
-Supposons qu'on souhaite recoder les valeurs de `cuisine` en transformant `Oui` en `O`, et `Non` en `N`. On a vu section \@ref(recode) qu'on peut utiliser pour cela la fonction `fct_recode()` de `forcats`.
+```{r}
+df <- tribble(
+    ~id, ~pcs, ~pcs_conjoint, ~pcs_pere, ~pcs_mere, ~age, ~`age enf1`, ~`age enf2`, ~`age enf3`,
+      1,  "5",           "6",       "5",       "6",   25,           2,          NA,          NA,
+      2,  "3",           "2",       "3",       "2",   45,          12,           8,           2,
+      3,  "4",           "1",       "2",       "5",   29,           7,          NA,          NA,
+      4,  "2",           "3",       "1",       "4",   32,           6,           3,          NA,
+      5,  "1",           "4",       "4",       "3",   65,          39,          36,          28,
+      6,  "6",           "5",       "6",       "6",   51,          18,          12,          NA,
+      7,  "5",           "6",       "4",       "6",   37,           8,           4,           1,
+      8,  "3",           "2",       "3",       "1",   42,          16,          10,           5
+)
+
+df
+```
+
+Dans ce tableau les PCS sont indiquées sous forme de code numérique. Il serait donc plus lisible de les avoir sous forme d'intitulé de catégorie socio-professionnelle. On a vu section \@ref(recode) qu'on peut utiliser pour cela la fonction `fct_recode()` de `forcats`.
 
 ```{r results="hide"}
-hdv2003 %>%
+df %>%
     mutate(
-        cuisine = fct_recode(cuisine,
-            "O" = "Oui",
-            "N" = "Non"
+        pcs = fct_recode(pcs,
+            "Agriculteur" = "1",
+            "Indépendant" = "2",
+            "Cadre" = "3",
+            "Intermédiaire" = "4",
+            "Employé" = "5",
+            "Ouvrier" = "6"
         )
     )
 ```
 
-Supposons qu'on souhaite également convertir les `NA` éventuelles de `cuisine` en valeurs explicites `Non réponse`. On peut le faire avec la fonction `fct_explicit_na()` de `forcats`. Notre recodage doit donc se faire en deux étapes, par exemple de la manière suivante :
-
-```{r results="hide"}
-hdv2003 %>%
-    mutate(
-        cuisine = fct_recode(cuisine,
-            "O" = "Oui",
-            "N" = "Non"
-        ),
-        cuisine = fct_explicit_na(cuisine, "Non réponse")
-    )
-```
-
-Comme notre recodage commence à être un peu complexe, on décide de l'extraire de notre `mutate` en créant une fonction dédiée. On la nomme `recode_oui_non`. Celle-ci prend en entrée un vecteur `v` et retourne le vecteur recodé.
+Plutôt que d'intégrer le code du recodage directement dans le `mutate()`, on peut l'extraire en créant une fonction.
 
 ```{r}
-recode_oui_non <- function(v) {
-    v %>%
-        fct_recode(
-            "O" = "Oui",
-            "N" = "Non"
-        ) %>%
-        fct_explicit_na("Manquant")
+recode_pcs <- function(v) {
+    fct_recode(v,
+        "Agriculteur" = "1",
+        "Indépendant" = "2",
+        "Cadre" = "3",
+        "Intermédiaire" = "4",
+        "Employé" = "5",
+        "Ouvrier" = "6"
+    )
 }
 ```
 
 On peut dès lors simplifier notre `mutate` en appelant notre nouvelle fonction.
 
 ```{r results="hide"}
-hdv2003 %>%
-    mutate(cuisine = recode_oui_non(cuisine))
+df %>%
+    mutate(pcs = recode_pcs(pcs))
 ```
 
-Premier avantage : on gagne en lisibilité. On a séparé le code d'une opération spécifique dans une fonction avec un nom "parlant", ce qui permet de savoir facilement à quoi elle sert. Et on a simplifié notre `mutate` qui est désormais plus lisible parce qu'il fait apparaître la logique des nos opérations (on veut recoder les valeurs "oui" / "non") sans en inclure les détails.
+Premier avantage : on gagne en lisibilité. On a séparé le code d'une opération spécifique dans une fonction avec un nom "parlant", ce qui permet de savoir facilement à quoi elle sert. Et on a simplifié notre `mutate` qui est désormais plus lisible parce qu'il fait apparaître la logique des nos opérations (on veut recoder les PCS) sans en inclure les détails.
 
-Le deuxième avantage évident, comme pour toute fonction, est qu'on peut la réutiliser pour appliquer ce recodage à plusieurs variables. Ainsi, si on veut recoder de la même manière `cuisine` et `cinema`, il suffit de faire :
+Le deuxième avantage évident, comme pour toute fonction, est qu'on peut la réutiliser pour appliquer ce recodage à plusieurs variables. Ainsi, si on veut recoder de la même manière `pcs` et `pcs_conjoint`, il suffit de faire :
 
 ```{r results="hide"}
-hdv2003 %>%
+df %>%
     mutate(
-        cuisine = recode_oui_non(cuisine),
-        cinema = recode_oui_non(cinema)
+        pcs = recode_pcs(pcs),
+        pcs_conjoint = recode_pcs(pcs_conjoint)
     )
-
 ```
 
 Le code est plus court, plus lisible, on évite les erreurs de copier/coller, et si on souhaite modifier le recodage on n'a à intervenir qu'à un seul endroit.
@@ -151,116 +159,126 @@ En créant une fonction plutôt qu'en mettant notre code directement dans le `su
 
 ### Exemple avec `rename_with`
 
-On a vu section \@ref(select-rename) que `dplyr` propose la fonction `rename()` pour renommer des colonnes d'un tableau de données. On peut l'utiliser par exemple pour remplacer un `.` par un `_` dans le nom d'une variable d'`hdv2003`.
+On a vu section \@ref(select-rename) que `dplyr` propose la fonction `rename()` pour renommer des colonnes d'un tableau de données. On peut l'utiliser par exemple pour remplacer un espace par un `_` dans le nom d'une variable de `df.
 
 ```{r results="hide"}
-hdv2003 %>% rename("lecture_bd" = "lecture.bd")
+df %>% rename("age_enf1" = "age enf1")
 ```
 
-Supposons maintenant qu'on souhaite appliquer la même transformation à l'ensemble des variables de `hdv2003`. Une solution pour cela est d'utiliser la fonction `rename_with()`, toujours fournie par `dplyr`, qui prend en argument non pas une correspondance `"nouveau nom" = "ancien nom"` mais une fonction qui sera appliquée à l'ensemble des noms de colonnes.
+Supposons maintenant qu'on souhaite appliquer la même transformation à l'ensemble des variables de `df`. Une solution pour cela est d'utiliser la fonction `rename_with()`, toujours fournie par `dplyr`, qui prend en argument non pas une correspondance `"nouveau nom" = "ancien nom"` mais une fonction qui sera appliquée à l'ensemble des noms de colonnes.
 
 Par exemple, si on souhaite convertir tous les noms de colonnes en majuscules, on peut passer comme argument la fonction `str_to_upper()` de `stringr`.
 
 ```{r}
-hdv2003 %>% rename_with(str_to_upper)
+df %>% rename_with(str_to_upper)
 ```
 
-Pour remplacer les `.` par des `_`, on va d'abord créer une fonction *ad hoc* qui utilise `str_replace_all`.
+Pour remplacer les espaces par des `_`, on va d'abord créer une fonction *ad hoc* qui utilise `str_replace_all`.
 
 ```{r}
-remplace_points <- function(v) {
-    str_replace_all(v, fixed("."), "_")
+remplace_espaces <- function(v) {
+    str_replace_all(v, " ", "_")
 }
-```
-
-```{block type='rmdnote'}
-On notera qu'on est obligé d'utiliser ici la fonction `fixed()` pour indiquer que le motif `"."` est bien le caractère `.` et pas une expression régulière.
 ```
 
 Dès lors, on peut appliquer cette fonction à l'ensemble de nos noms de variables :
 
 ```{r}
-hdv2003 %>% rename_with(remplace_points)
+df %>% rename_with(remplace_espaces)
 ```
 
-Certain.es lectrices et lecteurs attentives auront peut-être noté que le même résultat peut être obtenu en utilisant `remplace_points()` avec la fonction `names()`. 
+Certain.es lectrices et lecteurs attentives auront peut-être noté que le même résultat peut être obtenu en utilisant `remplace_espaces()` avec la fonction `names()`. 
 
 ```{r eval=FALSE}
-names(hdv2003) <- remplace_points(names(hdv2003))
+names(df) <- remplace_espaces(names(df))
 ```
 
-L'avantage de `rename_with()`, comme nous allons le voir ci-dessous, c'est qu'elle permet si nécessaire de n'appliquer cette transformation qu'à certaines colonnes seulement.
+L'avantage de `rename_with()` c'est qu'elle peut s'intégrer dans un pipiline de dplyr, et, comme nous allons le voir un peu plus loin, permet si nécessaire de n'appliquer cette transformation qu'à certaines colonnes seulement.
 
 
 ## `across()` : appliquer des fonctions à plusieurs colonnes {#across}
 
 ### Appliquer une fonction à plusieurs colonnes
 
-On a défini précédemment une fonction qui recode les modalités d'une variable "Oui" / "Non" et on a vu comment appliquer ce recodage à deux variables de `hdv2003`.
+On a défini précédemment une fonction qui recode les modalités d'une variable PCS et on a vu comment appliquer ce recodage à deux variables de `df`.
 
 ```{r results="hide"}
-recode_oui_non <- function(v) {
-    v %>%
-        fct_recode(
-            "O" = "Oui",
-            "N" = "Non"
-        ) %>%
-        fct_explicit_na("Manquant")
+recode_pcs <- function(v) {
+    fct_recode(v,
+        "Agriculteur" = "1",
+        "Indépendant" = "2",
+        "Cadre" = "3",
+        "Intermédiaire" = "4",
+        "Employé" = "5",
+        "Ouvrier" = "6"
+    )
 }
 
-hdv2003 %>%
+df %>%
     mutate(
-        cuisine = recode_oui_non(cuisine),
-        cinema = recode_oui_non(cinema)
+        pcs = recode_pcs(pcs),
+        pcs_conjoint = recode_pcs(pcs_conjoint)
     )
 ```
 
-Supposons qu'on souhaite appliquer ce recodage à toutes les variables "Oui" / "Non" de notre tableau. On pourrait évidemment créer autant de lignes que nécessaires dans notre `mutate`, mais on peut aussi utiliser la fonction `across()` de `dplyr`, qui permet justement ce type d'opérations.
+Supposons qu'on souhaite appliquer ce recodage à toutes les variables PCS de notre tableau. On pourrait évidemment créer autant de lignes que nécessaires dans notre `mutate`, mais on peut aussi utiliser la fonction `across()` de `dplyr`, qui facilite justement ce type d'opérations.
 
 `across()` prend deux arguments principaux :
 
 - la définition d'un ensemble de colonnes de notre tableau de données
 - une ou plusieurs fonctions à appliquer aux colonnes sélectionnées
 
-Il existe de nombreuses manières de définir les colonnes qu'on souhaite transformer : celles-ci sont en fait les mêmes que celles offertes par le verbe `select()`. 
+Il existe de nombreuses manières de définir les colonnes qu'on souhaite transformer : celles-ci sont en fait les mêmes que celles offertes par des verbes de `dplyr` comme `select()`.
 
 Une première possibilité est d'utiliser `c()` en lui passant les noms des variables (on notera qu'on n'est pas obligés de mettre ces noms entre guillemets).
 
 ```{r results="hide"}
-hdv2003 %>%
+df %>%
     mutate(
         across(
-            c(cinema, cuisine, lecture.bd, bricol),
-            recode_oui_non
+            c(pcs, pcs_conjoint),
+            recode_pcs
         )
     )
 ```
 
-Une autre possibilité est d'utiliser `:`, qui permet de définir une plage de colonnes en lui indiquant la colonne de début et la colonne de fin. Ainsi dans l'exemple suivant notre recodage est appliqué à toutes les colonnes situées entre `hard.rock` et `sport` (incluses).
+Une autre possibilité est d'utiliser `:`, qui permet de définir une plage de colonnes en lui indiquant la colonne de début et la colonne de fin. Ainsi dans l'exemple suivant notre recodage est appliqué à toutes les colonnes situées entre `pcs` et `pcs_mere` (incluses).
 
 ```{r results="hide"}
-hdv2003 %>%
+df %>%
     mutate(
         across(
-            hard.rock:sport,
-            recode_oui_non
+            pcs:pcs_mere,
+            recode_pcs
         )
     )
 ```
 
 On peut aussi sélectionner les variables via leurs noms. On peut ainsi choisir les variables qui commencent par une certaine chaîne de caractères via la fonction `starts_with()`, celles qui se terminent ou qui contiennent certains caractères avec `ends_with()` et `contains()`.
 
-Dans l'exemple suivant, on effectue un `summarise` qui applique la fonction `max()` à toutes les variables de `rp2012` qui commencent par `dipl`.
-
 ```{r}
-rp2012 %>%
-    summarise(
+df %>%
+    mutate(
         across(
-            starts_with("dipl"),
-            max
+            starts_with("pcs_"),
+            recode_pcs
         )
     )
 ```
+
+
+`across()` fonctionne dans un `mutate`, mais aussi dans un `summarise`. Dans l'exemple suivant, on calcule la moyenne de toutes les variables qui commencent par "age".
+
+```{r}
+df %>%
+    summarise(
+        across(
+            contains("enf"),
+            mean
+        )
+    )
+```
+
 
 De manière similaire, la fonction `num_range()` permet de sélectionner des colonnes ayant un préfixe commun suivi d'un indicateur numérique, comme `x1`, `x2`... Par exemple la syntaxe suivante sélectionnerait toutes les colonnes de `Q01` à `Q12` :
 
@@ -270,50 +288,50 @@ across(num_range("Q", 1:12, width = 2))
 
 On peut également sélectionner des colonnes via une condition avec la fonction `where()`. Celle-ci prend elle-même en argument une fonction qui doit renvoyer `TRUE` ou `FALSE`, et ne conserve que les colonnes qui correspondent à des `TRUE`.
 
-Dans l'exemple suivant, on applique la fonction `max` seulement aux colonnes de `hdv2003` pour lesquelles la fonction `is.numeric` renvoie `TRUE`.
+Dans l'exemple suivant, on applique la fonction `max` seulement aux colonnes de `df` pour lesquelles la fonction `is.numeric` renvoie `TRUE`.
 
 ```{r}
-hdv2003 %>%
+df %>%
     summarise(
         across(
             where(is.numeric),
-            max
+            mean
         )
     )
 ```
 
-Pour des conditions plus complexes, on doit parfois définir soi-même la fonction passée à `where()`. Ainsi, si on souhaite appliquer `recode_oui_non()` à toutes les colonnes de `hdv2003` contenant la modalité "Oui", on peut faire :
+Pour des conditions plus complexes, on doit parfois définir soi-même la fonction passée à `where()`. Dans l'exemple suivant on calcule la moyenne uniquement pour les variables de `df` dont la valeur minimale est supérieure à 20.
 
 ```{r results="hide"}
-detecte_oui <- function(v) {
-    "Oui" %in% v
+age_adulte <- function(v) {
+    min(v, na.rm = TRUE) > 20
 }
 
-hdv2003 %>%
-    mutate(
-        across(
-            where(detecte_oui),
-            recode_oui_non
-        )
-    )
-```
-
-Il est même possible, pour les cas les plus complexes, de combiner plusieurs sélections avec les opérateurs `&`, `|` et `!`. L'exemple suivant applique la fonction `max()` à toutes les colonnes numériques de `hdv2003`, sauf aux colonnes `id` et `poids`.
-
-```{r}
-hdv2003 %>%
+df %>%
     summarise(
         across(
-            where(is.numeric) & !c(id, poids),
-            max
+            where(age_adulte),
+            mean
         )
     )
 ```
 
-Enfin, la fonction spéciale `everything()` permet de sélectionner la totalité des colonnes d'un tableau. Dans l'exemple suivant, on applique `n_distinct()` pour afficher le nombre de valeurs distinctes de toutes les variables de `hdv2003`.
+Il est même possible, pour les cas les plus complexes, de combiner plusieurs sélections avec les opérateurs `&`, `|` et `!`. L'exemple suivant applique la fonction `max()` à toutes les colonnes numériques de `df`, sauf à la colonne `id`.
 
 ```{r}
-hdv2003 %>%
+df %>%
+    summarise(
+        across(
+            where(is.numeric) & !id,
+            mean
+        )
+    )
+```
+
+Enfin, la fonction spéciale `everything()` permet de sélectionner la totalité des colonnes d'un tableau. Dans l'exemple suivant, on applique `n_distinct()` pour afficher le nombre de valeurs distinctes de toutes les variables de `df`.
+
+```{r}
+df %>%
     summarise(
         across(
             everything(),
@@ -322,7 +340,7 @@ hdv2003 %>%
     )
 ```
 
-Cette manière de sélectionner un ensemble de colonnes est appelée *tidy selection*. Elle offre encore d'autres possibilités de sélection, pour avoir un aperçu complet on pourra se référer à [la page de documentation de la fonction select()](https://dplyr.tidyverse.org/reference/select.html).
+Ces différentes manières de sélectionner un ensemble de colonnes est appelée *tidy selection*. Il y a encore d'autres possibilités de sélection, pour avoir un aperçu complet on pourra se référer à [la page de documentation de la fonction select()](https://dplyr.tidyverse.org/reference/select.html).
 
 ```{block type='rmdnote'}
 Une erreur de syntaxe fréquente est de mettre la sélection des colonnes dans l'appel à `across()`, mais pas la fonction qu'on souhaite appliquer.
@@ -340,30 +358,30 @@ Il faut bien penser à passer la fonction comme argument du `across()`, donc à 
 
 Par défaut, si on passe des arguments supplémentaires à `across()`, ils seront automatiquement transmis comme arguments à la fonction appliquée.
 
-Dans l'exemple vu précédemment, on appliquait `max()` à toutes les variables numériques de `hdv2003`.
+Dans l'exemple vu précédemment, on appliquait `mean()` à toutes les variables d'âge de `df`. Or comme certaines colonnes ont des valeurs manquantes, leur résultat vaut `NA`.
 
 ```{r eval=FALSE}
-hdv2003 %>%
+df %>%
     summarise(
         across(
-            where(is.numeric),
-            max
+            starts_with("age"),
+            mean
         )
     )
 ```
 
-Si on souhaite que `max()` soit appelé avec l'argument `na.rm = TRUE`, on pourrait définir explicitement une fonction à part qui utilise cet argument :
+Si on préfère que `mean()` soit appelé avec l'argument `na.rm = TRUE`, on pourrait définir explicitement une fonction à part qui utilise cet argument :
 
 ```{r eval=FALSE}
-max_sans_na <- function(x) {
+mean_sans_na <- function(x) {
     max(x, na.rm = TRUE)
 }
 
-hdv2003 %>%
+df %>%
     summarise(
         across(
-            where(is.numeric),
-            max_sans_na
+            starts_with("age"),
+            mean_sans_na
         )
     )
 ```
@@ -371,28 +389,28 @@ hdv2003 %>%
 Mais on peut faire plus simple, car tout argument supplémentaire passé à `across()` est transmis directement à la fonction appelée. Il est donc possible de faire :
 
 ```{r}
-hdv2003 %>%
+df %>%
     summarise(
         across(
-            where(is.numeric),
+            starts_with("age"),
             max,
             na.rm = TRUE
         )
     )
 ```
 
-### Noms des nouvelles colonnes
+### Noms des colonnes créées dans un `mutate`
 
 Par défaut, lorsqu'on utilise `across()` dans un `mutate`, les nouvelles colonnes portent le même nom que les colonnes d'origine, ce qui signifie que ces dernières sont "écrasées" par les nouvelles valeurs.
 
-Ainsi dans l'exemple suivant, les valeurs d'origine des colonnes entre `hard.rock` et `sport` ont été écrasées par le résultat du recodage.
+Ainsi dans l'exemple suivant, les valeurs d'origine des colonnes PCS ont été écrasées par le résultat du recodage.
 
 ```{r eval=FALSE}
-hdv2003 %>%
+df %>%
     mutate(
         across(
-            hard.rock:sport,
-            recode_oui_non
+            starts_with("pcs"),
+            recode_pcs
         )
     )
 ```
@@ -402,11 +420,11 @@ Si on préfère créer de nouvelles colonnes, on doit indiquer la manière de le
 Ainsi, si on souhaite plutôt que les variables recodées soient stockées dans de nouvelles colonnes nommées avec le suffixe `_rec`, on peut utiliser :
 
 ```{r cache=FALSE}
-hdv2003 %>%
+df %>%
     mutate(
         across(
-            hard.rock:sport,
-            recode_oui_non,
+            starts_with("pcs"),
+            recode_pcs,
             .names = "{.col}_rec"
         )
     )
@@ -417,13 +435,13 @@ hdv2003 %>%
 
 `across()` offre également la possibilité d'appliquer plusieurs fonctions à un ensemble de colonnes. Dans ce cas, plutôt que de lui passer une seule fonction comme deuxième argument, on lui passe une liste nommée de fonctions.
 
-Le code suivant calcule le minimum et le maximum pour trois variables de `rp2012`
+Le code suivant calcule le minimum et le maximum pour les variables d'âge de `df`.
 
 ```{r}
-rp2012 %>%
+df %>%
     summarise(
         across(
-            cadres:empl,
+            starts_with("age"),
             list(min = min, max = max)
         )
     )
@@ -432,15 +450,14 @@ rp2012 %>%
 Par défaut les nouvelles variables sont nommées sous la forme `{nom_variable}_{nom_fonction}`, mais on peut personnaliser cette règle en ajoutant un argument `.names` à `across()`. Cet argument est une chaîne de caractères dans laquelle `{.col}` sera remplacé par le nom de la colonne courante, et `{.fn}` par le nom de la fonction.
 
 ```{r}
-rp2012 %>%
+df %>%
     summarise(
         across(
-            cadres:ouvr,
+            starts_with("age"),
             list(min = min, max = max),
-            .names = "{.fn}-{.col}"
+            .names = "{.fn}_{.col}"
         )
     )
-
 ```
 
 ### Renommer plusieurs colonnes avec une fonction
@@ -448,11 +465,11 @@ rp2012 %>%
 On a vu précédemment qu'on peut utiliser `rename_with()` pour renommer les colonnes d'un tableau de données à l'aide d'une fonction.
 
 ```{r results="hide"}
-remplace_points <- function(v) {
-    str_replace_all(v, fixed("."), "_")
+remplace_espaces <- function(v) {
+    str_replace_all(v, " ", "_")
 }
 
-hdv2003 %>% rename_with(remplace_points)
+df %>% rename_with(remplace_espaces)
 ```
 
 Par défaut, `rename_with()` applique la fonction de renommage à l'ensemble des colonnes du tableau. Il est cependant possible de lui indiquer de ne renommer que certaines de ces colonnes. Pour cela, on peut lui ajouter un argument supplémentaire nommé `.cols`, dont la syntaxe est exactement la même que pour `across()` ou `select()`.
@@ -460,15 +477,15 @@ Par défaut, `rename_with()` applique la fonction de renommage à l'ensemble des
 Par exemple, le code suivant convertit en majuscule uniquement les noms des colonnes `id` et `poids`.
 
 ```{r}
-hdv2003 %>%
-    rename_with(str_to_upper, .cols = c(id, poids))
+df %>%
+    rename_with(str_to_upper, .cols = starts_with("pcs"))
 ```
 
-Et le code suivant remplace les `.` par des `_` uniquement pour les colonnes qui ne sont pas numériques.
+Et le code suivant remplace les espaces par des `_` uniquement pour les colonnes dont le nom contient "enf".
 
 ```{r}
-hdv2003 %>%
-    rename_with(remplace_points, .cols = !where(is.numeric))
+df %>%
+    rename_with(remplace_espaces, .cols = contains("enf"))
 ```
 
 
@@ -607,20 +624,20 @@ Dans les sections précédentes, nous avons rencontré plusieurs fonctions, comm
 
 Par exemple, dans l'utilisation suivante de `rename_with()`, on avait créé une fonction `remplace_points()`.
 
-```{r eval=FALSE}
-remplace_points <- function(v) {
-    str_replace_all(v, fixed("."), "_")
+```{r results="hide"}
+remplace_espaces <- function(v) {
+    str_replace_all(v, " ", "_")
 }
 
-hdv2003 %>% rename_with(remplace_points)
+df %>% rename_with(remplace_espaces)
 ```
 
 Le fait de créer une fonction à part pour une opération d'une seule ligne ne se justifie pas forcément, surtout si on n'utilise pas cette fonction ailleurs dans notre code. Dans, ce cas, on peut définir notre fonction directement dans l'appel à `rename_with()` en utilisant une *fonction anonyme*, déjà introduites section \@ref(fonctions-anonymes).
 
-```{r eval=FALSE}
-hdv2003 %>%
+```{r results="hide"}
+df %>%
     rename_with(function(v) {
-        str_replace_all(v, fixed("."), "_")
+        str_replace_all(v, " ", "_")
     })
 ```
 
@@ -672,38 +689,38 @@ function(x) x + 2
 
 On pourra du coup, si on le souhaite, utiliser ces syntaxes compactes dans notre `rename_with()` pour définir notre fonction anonyme.
 
-```{r eval = FALSE}
-hdv2003 %>%
-    rename_with(~ str_replace_all(.x, fixed("."), "_") )
+```{r results="hide"}
+df %>%
+    rename_with(~ str_replace_all(.x, " ", "_") )
 
-hdv2003 %>%
-    rename_with( \(x) str_replace_all(x, fixed("."), "_") )
+df %>%
+    rename_with( \(x) str_replace_all(x, " ", "_") )
 ```
 
-Cette syntaxe peut être utilisée partout où on peut passer une fonction comme argument et donc définir des fonctions anonymes. Dans cet exemple déjà vu précédemment, on passe la fonction `detecte_oui` comme argument de `where()`.
+Cette syntaxe peut être utilisée partout où on peut passer une fonction comme argument et donc définir des fonctions anonymes. Dans cet exemple déjà vu précédemment, on passe la fonction `numerique_sans_na` comme argument de `where()`.
 
-```{r eval=FALSE}
-detecte_oui <- function(v) {
-    "Oui" %in% v
+```{r results="hide"}
+age_adulte <- function(v) {
+    min(v, na.rm = TRUE) > 20
 }
 
-hdv2003 %>%
-    mutate(
+df %>%
+    summarise(
         across(
-            where(detecte_oui),
-            recode_oui_non
+            where(age_adulte),
+            mean
         )
     )
 ```
 
-On peut donc remplacer la fonction `detecte_oui` par une fonction anonyme définie directement dans le `where()`.
+On peut donc remplacer la fonction `numerique_sans_na` par une fonction anonyme définie directement dans le `where()`.
 
-```{r eval=FALSE}
-hdv2003 %>%
-    mutate(
+```{r results="hide"}
+df %>%
+    summarise(
         across(
-            where(function(v) { "Oui" %in% v }),
-            recode_oui_non
+            where(function(v) { min(v, na.rm = TRUE) > 20 }),
+            mean
         )
     )
 ```
@@ -711,19 +728,19 @@ hdv2003 %>%
 Et du coup utiliser une des deux syntaxes "compactes".
 
 ```{r eval=FALSE}
-hdv2003 %>%
-    mutate(
+df %>%
+    summarise(
         across(
-            where(~ "Oui" %in% .x),
-            recode_oui_non
+            where(~ min(.x, na.rm = TRUE) > 20),
+            mean
         )
     )
 
-hdv2003 %>%
-    mutate(
+df %>%
+    summarise(
         across(
-            where(\(v) "Oui" %in% v),
-            recode_oui_non
+            where(\(v) min(v, na.rm = TRUE) > 20),
+            mean
         )
     )
 ```
@@ -871,34 +888,6 @@ age_film <- function(annees, film) {
 </div>
 \fi
 
-Modifier la fonction pour qu'elle retourne un message d'erreur si l'identifiant du film n'a pas été reconnu.
-
-\iffalse
-<div class="solution-exo">
-```{r eval=FALSE}
-age_film <- function(annees, film) {
-    annees_films <- list(
-        "I"    = -32,
-        "II"   = -22,
-        "III"  = -19,
-        "IV"   =   0,
-        "V"    =   3,
-        "VI"   =   4,
-        "VII"  =  34,
-        "VIII" =  34,
-        "IX"   =  35
-    )
-    if (!(film %in% names(annees_films))) {
-        stop("L'identifiant du film n'a pas été reconnu")
-    }
-    annees_naissance <- -annees
-    annee_ref <- annees_films[[film]]
-    annee_ref - annees_naissance
-}
-```
-</div>
-\fi
-
 Utiliser la fonction pour ajouter deux nouvelles variables au tableau `starwars` : `age_iv` qui correspond à l'âge (potentiel) au moment du film IV, et `age_ix` qui correspond à l'âge au moment du film IX.
 
 \iffalse
@@ -943,7 +932,7 @@ starwars %>%
 </div>
 \fi
 
-Toujours à l'aide d'`across()`, appliquer `etendue` de la même manière à toutes les variables numériques.
+Toujours à l'aide d'`across()`, appliquer `etendue` à toutes les variables numériques, toujours pour chaque valeur de `sex`.
 
 \iffalse
 <div class="solution-exo">
