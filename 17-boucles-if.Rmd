@@ -53,7 +53,7 @@ Une autre utilisation possible (et un peu plus utile) dans le cadre d'une foncti
 ```{r}
 moyenne <- function(x, arrondir = TRUE) {
     res <- mean(x)
-    if (arrondir) {
+    if (arrondir == TRUE) {
         res <- round(res)
     }
     res
@@ -64,7 +64,36 @@ moyenne(v)
 moyenne(v, arrondir = FALSE)
 ```
 
-À noter que quand le bloc de code qui suit une instruction `if` ne comporte qu'une seule instruction, on peut omettre les accolades qui l'entourent. Les syntaxe suivantes sont donc équivalentes :
+```{block type='rmdimportant'}
+On notera que le test `x == TRUE` est en fait redondant, car son résultat est le même que la valeur de `x` :
+
+- si `x` vaut `TRUE`, `x == TRUE` vaut `TRUE`
+- si `x` vaut `FALSE`, `x == TRUE` vaut `FALSE`
+
+On remplacera donc en général `if (x == TRUE)` par `if (x)`.
+
+De la même manière, on pourra remplacer `if (x == FALSE)` par `if (!x)`.
+```
+
+Dans notre fonction `moyenne` ci-dessus, on peut donc remplacer :
+
+```{r eval=FALSE}
+if (arrondir == TRUE) {
+    res <- round(res)
+}
+```
+
+Par :
+
+```{r eval=FALSE}
+if (arrondir) {
+    res <- round(res)
+}
+```
+
+
+
+À noter également que quand le bloc de code qui suit une instruction `if` ne comporte qu'une seule instruction, on peut omettre les accolades qui l'entourent. Les syntaxe suivantes sont donc équivalentes :
 
 ```{r eval=FALSE}
 if (arrondir) {
@@ -170,7 +199,7 @@ On peut combiner plusieurs tests avec les opérateurs logiques classiques :
 
 - `&&` est l'opérateur "et", qui est vrai si les deux conditions qu'il réunit sont vraies
 - `||` est l'opérateur "ou", qui est vrai si au moins l'une des deux conditions qu'il réunit sont vraies
-- `!` est l'opérateur "non", qui teste si la condition qu'il précède est fausse
+- `!` est l'opérateur "not", qui teste si la condition qu'il précède est fausse
 
 Ainsi, si on veut qu'une variable `temperature` soit comprise entre 15 et 25, on écrira :
 
@@ -194,7 +223,18 @@ verifie_temperature <- function(temperature) {
 verifie_temperature(10)
 ```
 
-Enfin, si on souhaite tester que `temperature` n'est pas égale à `NULL` :
+Si on veut tester si `temperature` vaut `NULL`, on peut utiliser `is.null()`.
+
+```{r eval = FALSE}
+verifie_temperature <- function(temperature = NULL) {
+    if (is.null(temperature)) {
+        message("Merci d'indiquer une température")
+    }
+}
+verifie_temperature()
+```
+
+Mais si à l'inverse on veut tester si `temperature` *n'est pas* `NULL`, on inverse le test précédent en utilisant `!`.
 
 ```{r eval = FALSE}
 verifie_temperature <- function(temperature = NULL) {
@@ -634,247 +674,6 @@ phrases %>% map_int(n_voyelles)
 Au final, entre les fonctions vectorisées existantes et les possibilités fournies par `purrr`, il est assez rare de devoir utiliser une boucle directement dans R. Pour autant, il ne faut pas non plus tomber dans l'excès inverse et considérer que tout usage de `for` ou `while` doit être évité : ces fonctions sont parfaitement justifiées dans de nombreux cas de figure, et si vous trouvez une solution qui fonctionne de manière efficace avec une boucle `for`, il n'est pas forcément utile de chercher à la remplacer à tout prix.
 
 
-## Débugguer une fonction
-
-Lorsqu'on commence à écrire des fonctions un peu complexes, avec des `if`, des `for`, etc., arrive forcément un moment où ça ne fonctionne pas comme on souhaiterait et où on ne comprend pas pourquoi. Bref, il y a un bug.
-
-Trouver la cause d'un bug n'est pas toujours évident, mais heureusement il existe plusieurs outils permettant de faciliter les choses.
-
-### print()
-
-L'outil le plus simple, parfois décrié mais souvent efficace, est de rajouter un simple `print()` dans le code de notre fonction pour examiner le contenu d'un objet à un moment donné.
-
-Dans l'exemple suivant, on a écrit une fonction `phrase_max()` qui prend en entrée une chaîne de caractères et une lettre. La fonction découpe la chaîne en phrases, et retourne la phrase qui comporte le plus de fois la lettre.
-
-```{r}
-phrase_max <- function(str, lettre) {
-    phrases <- str_split(str, ".", simplify = TRUE)
-    n_lettre <- str_detect(phrases, lettre)
-    phrases[n_lettre == max(n_lettre)]
-}
-```
-
-Du moins en théorie, car en pratique ça n'est pas tout à fait ça...
-
-```{r}
-texte <- "Le chat dort. Le félin roupille. Le chat dort tout le temps."
-phrase_max(texte, "t")
-```
-
-Pour essayer de comprendre ce qui se passe, on va rajouter un `print()` qui va nous permettre d'afficher le contenu de `phrases` juste après le `str_split()`.
-
-```{r}
-phrase_max <- function(str, lettre) {
-    phrases <- str_split(str, ".", simplify = TRUE)
-    print(phrases)
-    n_lettre <- str_detect(phrases, lettre)
-    phrases[n_lettre == max(n_lettre)]
-}
-
-phrase_max(texte, "t")
-```
-
-Il y a donc un problème : plutôt que d'obtenir des phrases on n'obtient que des chaînes vides. Pourquoi ? Car on a oublié que l'argument `pattern` de `str_split()`, celui à qui on a donné la valeur `"."`, admet par défaut une expression régulière. Or dans une expression régulière, le `.` est un symbole spécial qui correspond à n'importe quel caractère.
-
-On corrige donc le problème en entourant notre `pattern` de la fonction `fixed()` de `stringr`, qui permet de spécifier qu'on souhaite bien découper notre texte selon le caractère `"."`.
-
-```{r}
-phrase_max <- function(str, lettre) {
-    phrases <- str_split(str, fixed("."), simplify = TRUE)
-    n_lettre <- str_detect(phrases, lettre)
-    phrases[n_lettre == max(n_lettre)]
-}
-```
-
-On teste cette version corrigée.
-```{r}
-phrase_max(texte, "t")
-```
-
-C'est un peu mieux, mais pas encore tout à fait ça puisque la fonction nous retourne plusieurs phrases et pas seulement celle qui comporte le plus de "t"...
-
-On rajoute donc un `print()` pour voir ce que vaut le résultat du `str_detect()`.
-
-```{r}
-phrase_max <- function(str, lettre) {
-    phrases <- str_split(str, fixed("."), simplify = TRUE)
-    n_lettre <- str_detect(phrases, lettre)
-    print(n_lettre)
-    phrases[n_lettre == max(n_lettre)]
-}
-
-phrase_max(texte, "t")
-```
-
-Ce qui nous permet de constater que `n_lettre` ne contient pas le nombre d'occurrences de "t", mais juste une valeur logique indiquant si la phrase contient ou non un "t". Pourquoi ? Tout simplement parce qu'on n'a pas utilisé la bonne fonction ! Il faut en effet remplacer `str_detect()` par `str_count()`.
-
-```{r}
-phrase_max <- function(str, lettre) {
-    phrases <- str_split(str, fixed("."), simplify = TRUE)
-    n_lettre <- str_count(phrases, lettre)
-    phrases[n_lettre == max(n_lettre)]
-}
-```
-
-On teste cette nouvelle version :
-
-```{r}
-phrase_max(texte, "t")
-```
-
-Cette fois ça semble fonctionner !
-
-### Localiser une erreur
-
-`print()` peut aussi être utile pour savoir à quel moment une erreur se produit.
-
-Dans l'exemple suivant, on crée une fonction `prop_values()` qui prend en argument un tableau de données `df` et une proportion `prop` et retourne une liste comportant les modalités de variables qui apparaissent au moins dans la proportion correspondante.
-
-```{r}
-prop_values <- function(df, prop = 0.5) {
-    min_freq <- prop * nrow(df)
-    res <- list()
-    for (var in names(df)) {
-        freq <- table(df[[var]])
-        freq <- freq[freq >= min_freq]
-        if (length(freq) > 0) {
-            res[[var]] <- freq
-        }
-    }
-    res
-}
-```
-
-Si on applique `prop_values()` à `hdv2003` avec une valeur de `prop` à 0.75, on obtient toutes les modalités correspondant à au moins trois quart des observations.
-
-```{r}
-data(hdv2003)
-prop_values(hdv2003, 0.75)
-```
-
-Essayons maintenant d'appliquer `prop_values()` au jeu de données `starwars` de `dplyr`.
-
-```{r error=TRUE}
-library(dplyr)
-data(starwars)
-prop_values(starwars, 0.75)
-```
-
-On obtient une erreur plus ou moins sybilline : apparemment une erreur se produit au moment de faire le tri à plat des valeurs avec `table(df[[var]])`. Mais comme ce tri à plat s'effectue dans une boucle, on ne sait pas quelle variable de `starwars` cause le problème.
-
-On va donc rajouter comme première instruction de la boucle un `print(var)`.
-
-```{r error=TRUE}
-prop_values <- function(df, prop = 0.5) {
-    min_freq <- prop * nrow(df)
-    res <- list()
-    for (var in names(df)) {
-        print(var) # debug
-        freq <- table(df[[var]])
-        freq <- freq[freq >= min_freq]
-        if (length(freq) > 0) {
-            res[[var]] <- freq
-        }
-    }
-    res
-}
-
-prop_values(starwars, 0.75)
-```
-
-On voit que tout semble bien se passer pour les premières variables de notre tableau, et que l'erreur survient au moment de traiter la variable `films`. On regarde donc à quoi ressemble cette variable.
-
-```{r}
-head(starwars$films, 3)
-```
-
-Damn, cette variable n'est pas un vecteur atomique mais une liste ! Un tableau de données peut en effet contenir ce que l'on appelle des colonnes-listes. Comme ça n'est pas fréquent, on ne l'avait clairement pas prévu au moment de la création de la fonction.
-
-On a désormais identifié le problème, on peut donc le corriger par exemple en ignorant les colonnes de type liste en utilisant `is.list()` et l'instruction `next`.
-
-```{r}
-prop_values <- function(df, prop = 0.5) {
-    min_freq <- prop * nrow(df)
-    res <- list()
-    for (var in names(df)) {
-        if (is.list(df[[var]])) next
-        freq <- table(df[[var]])
-        freq <- freq[freq >= min_freq]
-        if (length(freq) > 0) {
-            res[[var]] <- freq
-        }
-    }
-    res
-}
-
-prop_values(starwars, 0.75)
-```
-
-### browser()
-
-Il y a des alternatives plus efficaces à l'utilisation de `print()` pour identifier et comprendre les bugs. La plus utilisée est la fonction `browser()`. Celle-ci peut s'insérer à n'importe quel endroit du code, et lorsqu'elle est rencontrée par R celui-ci s'interrompt et affiche une invite de commande permettant notamment d'inspecter des objets.
-
-On reprend l'exemple précédent en remplaçant le `print(var)` que nous avions inséré pour débugguer la fonction `prop_values` par un appel à `browser()`.
-
-```{r eval=FALSE}
-prop_values <- function(df, prop = 0.5) {
-    min_freq <- prop * nrow(df)
-    res <- list()
-    for (var in names(df)) {
-        browser()
-        freq <- table(df[[var]])
-        freq <- freq[freq >= min_freq]
-        if (length(freq) > 0) {
-            res[[var]] <- freq
-        }
-    }
-    res
-}
-
-prop_values(starwars, 0.75)
-```
-
-Lorsqu'on lance ce code, R s'interrompt et affiche l'invite de commande suivant :
-
-```
-Called from: prop_values(starwars, 0.75)
-
-Browse[1]>
-```
-
-Cette invite de commande offre plusieurs possibilités. On peut lui indiquer du code R qui sera exécuté dans le contexte du moment de l'interruption. Notamment, si on indique un nom d'objet, on pourra voir sa valeur. Ainsi, si on tape `var`, R nous affiche la valeur actuelle de `var`, donc au moment de la première itération de la boucle.
-
-```
-Browse[1]> var                                         
-[1] "name"
-```
-
-On peut également fournir des commandes spécifiques : si on tape `n`, R va passer à l'instruction suivante puis s'interrompre à nouveau^[Si on a un objet `n` dont on souhaite afficher le contenu, on doit faire `print(n)`.].
-
-```
-Browse[1]> n                                           
-debug à #6 : freq <- table(df[[var]])
-```
-
-Si on tape `c`, R va relancer l'exécution jusqu'à la fin, ou jusqu'à la prochaine rencontre d'un `browser()`. Dans notre cas, cela signifie qu'on va continuer jusqu'au `browser()` de la deuxième itération de la boucle.
-
-```
-Browse[2]> c                                           
-Called from: prop_values(starwars, 0.75)
-
-Browse[1]> var                                         
-[1] "height"
-```
-
-Si on souhaite sortir de cette invite de commande et tout interrompre, il suffit de taper `Q`.
-
-`browser()` est donc un peu plus complexe à utiliser que des `print()` ajoutés manuellement, mais c'est aussi un outil plus souple et plus puissant.
-
-```{block type='rmdnote'}
-Cette section n'offre qu'un petit aperçu des possibilités de debugging. R propose d'autres fonctionnalités, et les environnements de développement comme RStudio ou Visual Studio Code proposent également leurs propres outils. 
-
-Pour plus d'informations on pourra se reporter aux ressources indiquées dans la section ci-dessous.
-```
 
 
 
@@ -882,13 +681,12 @@ Pour plus d'informations on pourra se reporter aux ressources indiquées dans la
 
 L'ouvrage *R for Data Science* (en anglais), accessible en ligne, contient [un chapitre sur les boucles for](https://r4ds.had.co.nz/iteration.html#for-loops), et [un chapitre sur les blocs if / else](https://r4ds.had.co.nz/functions.html#conditional-execution).
 
-L'ouvrage *Advanced R* (également en anglais) aborde de manière approfondie [les tests et les boucles](https://adv-r.hadley.nz/control-flow.html) et consacre un chapitre entier [au debugging](https://adv-r.hadley.nz/debugging.html).
+L'ouvrage *Advanced R* (également en anglais) aborde de manière approfondie [les tests et les boucles](https://adv-r.hadley.nz/control-flow.html).
 
 Sur le blog de [ThinkR](https://thinkr.fr/), [un article détaillé sur l'utilisation des boucles](https://thinkr.fr/comment-faire-des-boucles-en-r-ou-pas/) et les alternatives possibles.
 
 Sur le [blog de Florian Privé](https://privefl.github.io/blog/), un [billet approfondi sur les raisons pour lesquelles les boucles peuvent être lentes](https://privefl.github.io/blog/why-loops-are-slow-in-r/) et sur les cas où il est préférable de ne pas les utiliser.
 
-Le site de RStudio propose une page entière détaillant ses [fonctionnalités de debugging](https://support.rstudio.com/hc/en-us/articles/205612627-Debugging-with-RStudio) (en anglais). Pour les utilisateurs de Visual Studio Code, on pourra se référer à l'extension [VSCode-R-Debugger](https://github.com/ManuelHentschel/VSCode-R-Debugger).
 
 ## Exercices
 
