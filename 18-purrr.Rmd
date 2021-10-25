@@ -13,7 +13,7 @@ data(rp2012)
 
 ## Exemple d'application
 
-Pour mieux appréhender de quoi il s'agit, on part vecteur suivant, qui contient des extraits (fictifs ?) de discours politiques.
+Pour mieux appréhender de quoi il s'agit, on part du vecteur suivant, qui contient des extraits (fictifs ?) de discours politiques.
 
 ```{r}
 discours <- c(
@@ -33,9 +33,9 @@ mots <- str_split(discours, " ")
 str(mots)
 ```
 
-L'objet `mots` est une liste de vecteurs de chaînes de caractères qui contiennent les mots des différents discours.
+L'objet `mots` est une liste de vecteurs de chaînes de caractères qui contiennent les mots des différents extraits.
 
-Calculer le nombre de mots de chaque discours revient à calculer la longueur de chaque élément de `mots`. Pour cela on pourrait vouloir utiliser la fonction `length()` directement :
+Calculer le nombre de mots de chaque extrait revient à calculer la longueur de chaque élément de `mots`. Pour cela on pourrait vouloir utiliser la fonction `length()` directement :
 
 ```{r}
 length(mots)
@@ -48,7 +48,7 @@ On a vu section \@ref(no-boucles) qu'on peut pour cela utiliser une boucle `for`
 ```{r}
 resultat <- list()
 for (item in mots) {
-    resultat <- append(resultat, length(item))
+    resultat <- c(resultat, length(item))
 }
 resultat
 ```
@@ -68,7 +68,7 @@ En utilisant `map()` on peut remplacer notre boucle `for` par un simple :
 map(mots, length)
 ```
 
-`map` va itérer sur les éléments de `mots`, leur appliquer tour à tout la fonction `length` passée en argument, et regrouper les résultats dans une liste.
+`map` va itérer sur les éléments de `mots`, leur appliquer tour à tour la fonction `length` passée en argument, et regrouper les résultats dans une liste.
 
 À noter qu'on peut évidemment utiliser le *pipe*.
 
@@ -183,10 +183,17 @@ Dans ce cas on ne peut utiliser `map_chr()`. Si on essaie on obtient un message 
 mots %>% map_chr(~ str_subset(.x, "f") )
 ```
 
-Dans ce cas, on doit utiliser `map()` et conserver le résultat sous forme de liste. Et, pourquoi pas, enchaîner les `map()` si on veut effectuer des opérations supplémentaires.
+Dans ce cas, on doit utiliser `map()` et conserver le résultat sous forme de liste. 
 
 ```{r}
-mots %>% 
+mots %>%
+    map(~ str_subset(.x, "f") )
+```
+
+On peut évidemment enchaîner les `map()` si on veut effectuer des opérations supplémentaires.
+
+```{r}
+mots %>%
     map(~ str_subset(.x, "f") ) %>%
     map_int(length)
 ```
@@ -227,31 +234,31 @@ Comment faire si l'on souhaite charger les fichiers de plusieurs départements ?
 
 ```{r message=FALSE}
 departements <- c("38", "42", "69")
+urls <- genere_url(departements)
 
-l <- genere_url(departements) %>%
-    map(read_csv)
+dfs <- urls %>% map(read_csv)
 ```
 
-Le résultat `l` est une liste de trois tableaux de données. Chacun de ces éléments est un *tibble* : d'abord celui du fichier CSV des données de l'Ain, puis celui de la Loire, et enfin celui du Rhône.
+Le résultat `dfs` est une liste de trois tableaux de données. Chacun de ces éléments est un *tibble* : d'abord celui du fichier CSV des données de l'Isère, puis celui de la Loire, et enfin celui du Rhône.
 
-On peut itérer sur cette liste `l` pour appliquer une fonction à chacun de ces tableaux.
+On peut itérer sur cette liste `dfs` pour appliquer une fonction à chacun de ces tableaux.
 
 ```{r}
 # Affichage des dimensions de chaque tableau
-l %>% map(dim)
+dfs %>% map(dim)
 ```
 
 ```{r}
 # Calcul de la moyenne de la variable dipl_aucun
-l %>% map_dbl(~ mean(.x$dipl_aucun))
+dfs %>% map_dbl(~ mean(.x$dipl_aucun))
 ```
 
 ```{r}
 # Calcul du coefficient associé à la variable dipl_sup dans
 # la régression linéaire de cadres en fonction de dipl_sup
-l %>% map_dbl(~ {
+dfs %>% map_dbl(~ {
     reg <- lm(cadres ~ dipl_sup, data = .x)
-    reg$coefficients[["dipl_sup"]]
+    reg$coefficients["dipl_sup"]
 })
 ```
 
@@ -259,8 +266,9 @@ Si on souhaite réunir ces trois *tibbles* en un seul, on peut utiliser la fonct
 
 ```{r message=FALSE, eval=FALSE}
 departements <- c("38", "42", "69")
+urls <- genere_url(departements)
 
-df <- genere_url(departements) %>%
+df <- urls %>%
     map(read_csv) %>%
     bind_rows()
 ```
@@ -268,8 +276,7 @@ df <- genere_url(departements) %>%
 Mais on peut aussi utiliser une autre variante de `map()`, nommée `map_dfr()`, qui considère les résultats obtenus par l'application de la fonction comme les lignes d'un tableau de données qu'elle va automatiquement rassembler en un seul tableau, de la même manière qu'avec un `bind_rows()`.
 
 ```{r message=FALSE}
-df <- genere_url(departements) %>%
-    map_dfr(read_csv)
+df <- urls %>% map_dfr(read_csv)
 
 df
 ```
@@ -321,7 +328,7 @@ Ou bien utiliser `keep()` pour n'appliquer `mean` qu'aux variables numériques.
 ```{r}
 starwars %>%
     keep(is.numeric) %>%
-    map(mean, na.rm = TRUE)
+    map_dbl(mean, na.rm = TRUE)
 ```
 
 
@@ -432,18 +439,14 @@ Par exemple, le code suivant génère quatre diagrammes en barre indiquant la r�
 
 ```{r}
 par(mfrow = c(2, 2))
-walk(restos, ~{
-    barplot(table(.x))
-})
+walk(restos, ~ barplot(table(.x)) )
 ```
 
 Comme pour `map()`, la variante `iwalk()` permet d'itérer à la fois sur les valeurs et sur les noms des éléments du vecteur ou de la liste. Ceci permet par exemple d'afficher le nom du restaurant comme titre de chaque graphique.
 
 ```{r}
 par(mfrow = c(2, 2))
-iwalk(restos, ~{
-    barplot(table(.x), main = .y)
-})
+iwalk(restos, ~ barplot(table(.x), main = .y) )
 ```
 
 Au final, on notera que l'utilisation de `walk()`, comme elle ne retourne pas de résultats, est très proche de celle d'une boucle `for`.
@@ -454,19 +457,24 @@ Comme `walk()` ne retourne pas de résultats, il n'existe pas de variantes du ty
 
 ## `map2` et `pmap` : itérer sur plusieurs vecteurs en parallèle
 
-Supposons qu'un.e collègue, qui travaille avec nous sur le jeu de données `rp2012`, nous a envoyé une liste de variables dont elle voudrait connaître la corrélation. Cette liste a été saisie dans un tableur sur deux colonnes, chaque ligne indiquant deux variables pour lesquelles elle souhaite qu'on effectue ce calcul.
+Supposons qu'un.e collègue, qui travaille avec nous sur le jeu de données `rp2012`, nous a envoyé une liste de variables dont elle voudrait connaître les corrélations. Cette liste a été saisie dans un tableur sur deux colonnes, chaque ligne indiquant deux variables pour lesquelles elle souhaite qu'on effectue ce calcul.
 
 Après importation dans R on obtient le tableau de données suivant.
 
 ```{r}
-correlations <- tibble(
-    var1 = c("dipl_sup",   "dipl_sup", "hlm",    "hlm",  "proprio"),
-    var2 = c("dipl_aucun", "cadres",   "cadres", "ouvr", "hlm"),
+correlations <- tribble(
+    ~var1,       ~var2,
+    "dipl_sup", "dipl_aucun",
+    "dipl_sup", "cadres",
+    "hlm",      "cadres",
+    "hlm",      "ouvr",
+    "proprio",  "hlm"
 )
+
 correlations
 ```
 
-Pour pouvoir calculer les corrélations souhaitées, on doit itérer sur les deux vecteurs `var1` et `var2` *en parallèle*, et calculer la corrélation entre le vecteur correspondant à la valeur courante de `var1` et celui correspondant à la valeur courante de `var2`.
+Pour pouvoir calculer les corrélations souhaitées, on doit itérer sur les deux vecteurs `var1` et `var2` *en parallèle*, et calculer la corrélation entre la colonne correspondant à la valeur courante de `var1` et celle correspondant à la valeur courante de `var2`.
 
 C'est précisément ce que fait la fonction `map2()`. Celle-ci prend trois arguments en entrée
 
@@ -488,15 +496,12 @@ Si on souhaite uniquement capturer les effets de bord sans récupérer les résu
 Supposons maintenant que notre collègue nous a envoyé, toujours sous la même forme, une liste de variables dont elle souhaite obtenir un nuage de points, mais en fournissant également un titre à ajouter au graphique. On obtient le tableau suivant.
 
 ```{r}
-nuages <- tibble(
-    var1 = c("dipl_sup",   "dipl_sup", "hlm",    "proprio"),
-    var2 = c("dipl_aucun", "cadres",   "cadres", "cadres"),
-    titre = c(
-        "Diplômés du supérieur x sans diplôme",
-        "Pourcentage de cadres x diplômés du supérieur",
-        "Pas facile de trouver un titre",
-        "Oui non vraiment c'est pas simple"
-    )
+nuages <- tribble(
+    ~var1,       ~var2,       ~titre,
+    "dipl_sup", "dipl_aucun", "Diplômés du supérieur x sans diplôme",
+    "dipl_sup", "cadres",     "Pourcentage de cadres x diplômés du supérieur",
+    "hlm",      "cadres",     "Pas facile de trouver un titre",
+    "proprio",  "cadres",     "Oui non vraiment c'est pas simple"
 )
 
 nuages
@@ -530,7 +535,7 @@ pwalk(
 )
 ```
 
-Petite précision, si la liste est nommée, il faut que les noms des arguments de la fonction correspondent aux noms de la list.
+Petite précision, si la liste est nommée, il faut que les noms des arguments de la fonction correspondent aux noms de la liste.
 
 ```{r eval=FALSE}
 pwalk(
@@ -743,10 +748,19 @@ notes %>%
         )
     )
 ```
-</div>
+</div>pwalk(
+    list(nuages$var1, nuages$var2, nuages$titre),
+    function(var1, var2, titre) {
+        plot(
+            rp2012[[var1]], rp2012[[var2]],
+            xlab = var1, ylab = var2, main = titre
+        )
+    }
+)
+
 \fi
 
-Calculer et retourner les mêmes résultats, mais cette fois sous la forme d'un tableau de données.
+Calculer et retourner les mêmes résultats, mais cette fois sous la forme d'un unique tableau de données, avec une ligne par matière.
 
 \iffalse
 <div class="solution-exo">
@@ -810,9 +824,13 @@ L'équipe chargée de l'enquête vient de repérer une erreur de saisie : "Flixe
 
 \iffalse
 <div class="solution-exo">
+
 ```{r eval=FALSE}
-parcours <- parcours %>% 
+parcours <- parcours %>%
     map(~ ifelse(.x == "Flixevile", "Flixeville", .x))
+# Ou bien
+parcours <- parcours %>%
+    map(~ str_replace(.x, "Flixevile", "Flixeville"))
 ```
 </div>
 \fi
@@ -829,12 +847,12 @@ urls <- c(
 )
 ```
 
-Utiliser `map()` pour charger ces deux tableaux de données dans une liste `l`.
+Utiliser `map()` pour charger ces deux tableaux de données dans une liste nommée `dfs`.
 
 \iffalse
 <div class="solution-exo">
 ```{r eval=FALSE}
-l <- map(urls, read_csv)
+dfs <- map(urls, read_csv)
 ```
 </div>
 \fi
@@ -851,7 +869,7 @@ d <- map_dfr(urls, read_csv)
 </div>
 \fi
 
-Comparer la variable `code_insee` contenue dans les deux tableaux de `l`. D'où vient le problème ?
+À l'aide de `map()`, afficher la variable code_insee des deux tableaux de `dfs`. D'où vient le problème ?
 
 \iffalse
 <div class="solution-exo">
@@ -888,15 +906,15 @@ d <- map_dfr(urls, read_csv, col_types = c("code_insee" = "c"))
 Soit le tableau de données `d` suivant :
 
 ```{r}
-d <- tibble(
-    prenom = c("pierre-edmond", "YVONNE", "charlotte-adélaïde"),
-    nom = c("rateau", "de la grappinière", "QUIGNON"),
-    age = c(19, 73, 27),
-    taille = c(151, 182, NA)
+d <- tribble(
+    ~prenom,              ~nom,                ~age, ~taille,
+    "pierre-edmond",      "rateau",            19,   151,
+    "YVONNE",             "de la grappinière", 73,   182,
+    "charlotte-adélaïde", "QUIGNON",           27,   NA
 )
 ```
 
-Utliser la fonction `typeof()` pour afficher le type de toutes les colonnes de `d`.
+Utliser `typeof()` et `map()` pour afficher le type de toutes les colonnes de `d`.
 
 \iffalse
 <div class="solution-exo">
@@ -1001,9 +1019,10 @@ notes %>% imap_dfr(function(notes, matiere) {
 </div>
 \fi
 
+
 **Exercice 3.2**
 
-Lors de la présentation des boucles `for`, on a vu la fonction suivante qui affiche les dimensions de chaque tableau de données contenus dans une liste.
+Lors de la présentation des boucles `for`, on a vu la fonction suivante qui affiche les dimensions de chaque tableau de données contenu dans une liste.
 
 ```{r}
 affiche_dimensions <- function(dfs) {
@@ -1022,7 +1041,7 @@ l <- list(
 affiche_dimensions(l)
 ```
 
-Réécrire et simplifier `affiche_dimensions()` en utilisant `iwalk()`.
+Réécrire `affiche_dimensions()` en utilisant `iwalk()`.
 
 \iffalse
 <div class="solution-exo">
@@ -1044,15 +1063,12 @@ Lors de la présentation des boucles, on a vu la fonction `summaries` suivante, 
 ```{r eval=FALSE}
 summaries <- function(d, vars) {
     for (var in vars) {
-        if (!(var %in% names(d))) {
-            next
-        }
         message("--- ", var, " ---")
         print(summary(d[, var]))
     }
 }
 
-summaries(hdv2003, c("sexe", "diplodocus", "age"))
+summaries(hdv2003, c("sexe", "age"))
 ```
 
 Réécrire la fonction sans utiliser de boucle `for`.
@@ -1061,28 +1077,36 @@ Réécrire la fonction sans utiliser de boucle `for`.
 <div class="solution-exo">
 ```{r eval=FALSE}
 summaries <- function(d, vars) {
-    walk(vars, ~{
-        if (.x %in% names(d)) {
+    vars %>%
+        walk(~{
             message("--- ", .x, " ---")
             print(summary(d[, .x]))
-        }
-    })
+        })
 }
 ```
 </div>
 \fi
 
-Modifier cette nouvelle fonction en utilisant `keep()` ou `discard()` plutôt qu'un `if`.
+
+Modifier cette nouvelle fonction en utilisant `keep()` ou `discard()`, pour qu'elle fonctionne sans erreur même si l'une des variables passées en arguments n'existe pas.
+
+```{r echo = FALSE, ref.label='purrr33'}
+```
+
+```{r}
+summaries(hdv2003, c("sexe", "igloo", "age"))
+```
 
 \iffalse
 <div class="solution-exo">
-```{r eval=FALSE}
+```{r purrr33, eval=FALSE}
 summaries <- function(d, vars) {
-    vars <- vars %>% keep(~ .x %in% names(d) )
-    walk(vars, ~{
-        message("--- ", .x, " ---")
-        print(summary(d[, .x]))
-    })
+    vars %>% 
+        keep(~ .x %in% names(d) ) %>%
+        walk(~{
+            message("--- ", .x, " ---")
+            print(summary(d[, .x]))
+        })
 }
 ```
 </div>
@@ -1096,27 +1120,33 @@ summaries <- function(d, vars) {
 Soit le tableau de données suivant, qui indique des couples de variables du jeu de données `hdv2003`.
 
 ```{r}
-croisements <- tibble(
-    v1 = c("qualif", "qualif", "sexe", "sexe"),
-    v2 = c("clso",   "cinema", "clso", "cinema")
+croisements <- tribble(
+    ~v1,      ~v2,
+    "qualif", "clso",
+    "qualif", "cinema",
+    "sexe",   "clso",
+    "sexe",   "cinema"
 )
 
 croisements
 ```
 
-Calculer une liste qui contient les tableaux croisés des quatre couples de variables de `croisements`.
+À l'aide de `map2()`, calculer une liste qui contient les tableaux croisés des quatre couples de variables de `croisements`.
 
 \iffalse
 <div class="solution-exo">
 ```{r eval=FALSE}
 map2(croisements$v1, croisements$v2,
-    ~table(hdv2003[[.x]], hdv2003[[.y]]) 
+    ~table(hdv2003[[.x]], hdv2003[[.y]])
 )
 ```
 </div>
 \fi
 
-Modifier le code précédent pour obtenir une liste avec les noms des deux variables croisées et le résultat du test du Khi2 sur le tableau croisé.
+Modifier le code précédent pour obtenir une liste comportant, pour chaque couple de variables : 
+
+1. les noms des deux variables croisées 
+2. le résultat du test du Khi2 appliqué aux deux variables
 
 \iffalse
 <div class="solution-exo">
@@ -1131,15 +1161,22 @@ khi2 <- map2(croisements$v1, croisements$v2,
 </div>
 \fi
 
-Filtrer la liste obtenue à l'étape précédente pour ne conserver que les éléments dont la p-value du test du Khi2 est inférieure à 0.001.
+*Facultatif :* filtrer la liste obtenue à l'étape précédente pour ne conserver que les éléments dont la p-value du test du Khi2 est inférieure à 0.001.
 
 \iffalse
 <div class="solution-exo">
 ```{r eval=FALSE}
-khi2 %>% keep(~ .x$chisq$p.value < 0.001)
+khi2 <- map2(croisements$v1, croisements$v2,
+    ~list(
+        variables = paste(.x, .y),
+        chisq = chisq.test(hdv2003[[.x]], hdv2003[[.y]])
+    )
+) %>%
+keep(~ .x$chisq$p.value < 0.001)
 ```
 </div>
 \fi
+
 
 **Exercice 4.2**
 
@@ -1157,22 +1194,15 @@ sample(
 Le tableau de données suivant définit trois types de tirages aléatoires différents. `elements` contient les éléments parmi lesquels on tire, `probas` les probabilités de chaque élément d'être tiré, et `n` le nombre de tirages.
 
 ```{r}
-tirages <- list(
-    elements = list(
-        c("pile", "face"),
-        c("boule rouge", "boule noire"),
-        1:6
-    ),
-    probas = list(
-        c(0.5, 0.5),
-        c(0.1, 0.9),
-        rep(1/6, 6)
-    ),
-    n = c(1000, 500, 800)
+tirages <- tribble(
+    ~elements,           ~probas,     ~n,
+    c("pile", "face"),   c(0.5, 0.5), 1000,
+    c("rouge", "noire"), c(0.1, 0.9), 500,
+    1:6,                 rep(1/6, 6), 800
 )
 ```
 
-Créer une liste contenant les résultats de ces trois séries de tirages.
+À l'aide de `pmap()` et de `sample()`, créer une liste contenant les résultats des simumations de ces trois séries de tirages.
 
 \iffalse
 <div class="solution-exo">
@@ -1245,40 +1275,41 @@ Comme vu précédemment, la fonction suivante permet de simuler 20 lancers de pi
 sample(c("pile", "face"), size = 20, replace = TRUE)
 ```
 
-À l'aide de `map` et de cette fonction, créer une liste contenant le résultat de 100 simulations de 20 lancers.
+À l'aide de `map()` et de ce code, créer une liste nommée `sims` contenant le résultat de 100 simulations de 20 lancers.
 
 \iffalse
 <div class="solution-exo">
 ```{r eval=FALSE}
 sims <- map(
     1:100,
-    ~sample(c("pile", "face"), size = 20, replace = TRUE)
+    ~ sample(c("pile", "face"), size = 20, replace = TRUE)
 )
 ```
 </div>
 \fi
 
-Toujours à l'aide de `map`, calculer le nombre de "pile" obtenus pour chaque simulation.
+Toujours à l'aide de `map()`, calculer le nombre de "pile" obtenus pour chaque simulation de `sims`.
 
 \iffalse
 <div class="solution-exo">
 ```{r eval=FALSE}
-piles <- sims %>% map_int(~ sum(.x == "pile"))
+n_piles <- sims %>% map_int(~ sum(.x == "pile"))
 ```
 </div>
 \fi
 
-Déterminer le nombre minimal et le nombre maximal de "pile" obtenus parmi toutes les simulations.
+Déterminer le nombre minimal et le nombre maximal de "pile" obtenus parmi toutes les simulations de `sims`.
 
 \iffalse
 <div class="solution-exo">
 ```{r eval=FALSE}
-range(piles)
+range(n_piles)
 ```
 </div>
 \fi
 
-À l'aide de la fonction [head_while()](https://purrr.tidyverse.org/reference/head_while.html), déterminer pour chaque simulation le nombre de "pile" consécutifs obtenus avant le premier "face".
+
+*Facultatif :* à l'aide de la fonction [head_while()](https://purrr.tidyverse.org/reference/head_while.html), déterminer pour chaque simulation de `sims` le nombre de "pile" consécutifs obtenus avant le premier "face".
 
 \iffalse
 <div class="solution-exo">
@@ -1287,7 +1318,7 @@ egal_pile <- function(v) { v == "pile"}
 sims %>% map_int(
     ~ length(head_while(.x, egal_pile))
 )
-# En abrégé, moins lisible
+# Ou bien, en abrégé
 sims %>% map_int(
     ~ length(head_while(.x, ~ .x == "pile"))
 )
@@ -1299,15 +1330,15 @@ sims %>% map_int(
 *Facultatif :* la fonction `rle()` permet de calculer les *run length encoding* d'un vecteur.
 
 ```{r}
-rle(c("pile", "face", "face", "face","pile", "pile"))
+rle(c("pile", "face", "face", "face", "pile", "pile"))
 ```
 
-À l'aide de cette fonction, calculer pour chaque simulation la longueur de la plus grande série consécutive de "pile".
+À l'aide de cette fonction et de `map_int()`, calculer pour chaque simulation la longueur de la plus grande série consécutive de "pile".
 
 \iffalse
 <div class="solution-exo">
 ```{r eval=FALSE}
-sims %>% map_dbl(~{
+sims %>% map_int(~{
     r <- rle(.x)
     longueurs_pile <- r$lengths[r$values == "pile"]
     max(longueurs_pile)
