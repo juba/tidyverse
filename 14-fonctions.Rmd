@@ -449,6 +449,40 @@ Si on appelle `prop_tab` en lui passant uniquement le vecteur `v`, on voit que `
 prop_tab(hdv2003$qualif)
 ```
 
+### Arguments obligatoires et arguments facultatifs {#arg-oblig}
+
+Si un argument n'a pas de valeur par défaut, il est *obligatoire* : si l'utilisateur essaye d'appeler la fonction sans définir cet argument, cela génère une erreur.
+
+```{r}
+prop_tab <- function(v, decimales, useNA) {
+  tri <- table(v, useNA = useNA)
+  tri <- tri / length(v) * 100
+  tri <- round(tri, decimales)
+  return(tri)
+}
+
+prop_tab(hdv2003$sexe)
+```
+
+```{block type='rmdnote'}
+Pour être tout à fait précis, l'erreur est générée uniquement lorsque l'argument sans valeur par défaut est utilisé dans la fonction.
+```
+
+Si à l'inverse un argument a une valeur par défaut, il devient *facultatif* : on peut appeler la fonction sans le définir.
+
+```{r}
+prop_tab <- function(v, decimales = 1, useNA = "ifany") {
+  tri <- table(v, useNA = useNA)
+  tri <- tri / length(v) * 100
+  tri <- round(tri, decimales)
+  return(tri)
+}
+
+prop_tab(hdv2003$sexe)
+```
+
+Parfois un argument est facultatif mais on n'a pas forcément de valeur par défaut à lui attribuer. Dans ce cas on lui attribue en général par défaut la valeur `NULL`, et on utilise l'instruction `if()` dans la fonction pour tester s'il a été défini ou pas. Ce cas de figure est détaillé section \@ref(test-arg).
+
 
 ### L'argument `...`
 

@@ -392,11 +392,21 @@ longueur_max(1:5)
 ```
 
 
-### Tester la présence d'un argument
+### Tester la présence d'un argument facultatif {#test-arg}
 
-La méthode la plus courante pour tester si l'argument d'une fonction a été défini lors de l'appel de cette fonction est de donner à cet argument la valeur `NULL` par défaut, et de tester cette valeur.
+On a vu section \@ref(arg-oblig) que pour rendre un argument de fonction "facultatif", on doit lui attribuer une valeur par défaut. Parfois cependant, on n'a pas de valeur par défaut évidente à lui attribuer directement : dans ce cas on lui attribue la valeur `NULL` et on utilise un `if()` dans la fonction pour déterminer s'il a été défini ou non par l'utilisateur.
 
-Par exemple, soit une fonction qui génère un graphique avec un argument `titre` qui permet de définir son titre. On peut mettre par défaut cet argument à `NULL` et ajouter un titre par défaut si l'utilisateur n'en a pas fourni.
+Par exemple, soit une fonction qui génère un graphique avec un argument `titre` qui permet de définir son titre.
+
+```{r}
+histo <- function(x, titre) {
+    hist(x, main = titre)
+}
+```
+
+Si l'utilisateur ne donne pas de titre, on souhaite ajouter un titre qui indique la valeur de la moyenne de la variable représentée.
+
+Dans ce genre de cas de figure, on attribue à `titre` la valeur par défaut `NULL`, et on vérifie dans le corps de la fonction que l'utilisateur n'a pas fourni de valeur avec `if (is.null(titre))`. On peut alors calculer la valeur "par défaut" souhaitée :
 
 ```{r}
 histo <- function(x, titre = NULL) {
@@ -410,6 +420,8 @@ x <- c(1, 15, 8, 10, 12, 18, 8, 4)
 histo(x)
 histo(x, titre = "Quel bel histogramme")
 ```
+
+
 
 
 ## `for` et `while` : répéter des instructions dans une boucle
