@@ -898,22 +898,22 @@ Le symbole $ dans l’expression régulière <code>“ac$”</code> représente 
 <span id="cb706-9"><a href="15-dplyr-avance.html#cb706-9"></a><span class="co">#&gt;      id   age `age enf1` `age enf2` `age enf3`</span></span>
 <span id="cb706-10"><a href="15-dplyr-avance.html#cb706-10"></a><span class="co">#&gt;   &lt;dbl&gt; &lt;dbl&gt;      &lt;dbl&gt;      &lt;dbl&gt;      &lt;dbl&gt;</span></span>
 <span id="cb706-11"><a href="15-dplyr-avance.html#cb706-11"></a><span class="co">#&gt; 1   4.5  40.8       13.5         NA         NA</span></span></code></pre></div>
-<p>Pour des conditions plus complexes, on doit parfois définir soi-même la fonction passée à <code>where()</code>. Dans l’exemple suivant on calcule la moyenne uniquement pour les variables de <code>df</code> dont la valeur minimale est supérieure à 20.</p>
-<div class="sourceCode" id="cb707"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb707-1"><a href="15-dplyr-avance.html#cb707-1"></a>age_adulte &lt;-<span class="st"> </span><span class="cf">function</span>(v) {</span>
-<span id="cb707-2"><a href="15-dplyr-avance.html#cb707-2"></a>    <span class="kw">min</span>(v, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>) <span class="op">&gt;</span><span class="st"> </span><span class="dv">20</span></span>
+<p>Pour des conditions plus complexes, on doit parfois définir soi-même la fonction passée à <code>where()</code>. Dans l’exemple suivant on calcule la moyenne uniquement pour les variables de <code>df</code> qui sont numériques et n’ont pas de valeurs manquantes</p>
+<div class="sourceCode" id="cb707"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb707-1"><a href="15-dplyr-avance.html#cb707-1"></a>no_na &lt;-<span class="st"> </span><span class="cf">function</span>(v) {</span>
+<span id="cb707-2"><a href="15-dplyr-avance.html#cb707-2"></a>    <span class="kw">is.numeric</span>(v) <span class="op">&amp;&amp;</span><span class="st"> </span><span class="kw">sum</span>(<span class="kw">is.na</span>(v)) <span class="op">==</span><span class="st"> </span><span class="dv">0</span></span>
 <span id="cb707-3"><a href="15-dplyr-avance.html#cb707-3"></a>}</span>
 <span id="cb707-4"><a href="15-dplyr-avance.html#cb707-4"></a></span>
 <span id="cb707-5"><a href="15-dplyr-avance.html#cb707-5"></a>df <span class="op">%&gt;%</span></span>
 <span id="cb707-6"><a href="15-dplyr-avance.html#cb707-6"></a><span class="st">    </span><span class="kw">summarise</span>(</span>
 <span id="cb707-7"><a href="15-dplyr-avance.html#cb707-7"></a>        <span class="kw">across</span>(</span>
-<span id="cb707-8"><a href="15-dplyr-avance.html#cb707-8"></a>            <span class="kw">where</span>(age_adulte),</span>
+<span id="cb707-8"><a href="15-dplyr-avance.html#cb707-8"></a>            <span class="kw">where</span>(no_na),</span>
 <span id="cb707-9"><a href="15-dplyr-avance.html#cb707-9"></a>            mean</span>
 <span id="cb707-10"><a href="15-dplyr-avance.html#cb707-10"></a>        )</span>
 <span id="cb707-11"><a href="15-dplyr-avance.html#cb707-11"></a>    )</span>
-<span id="cb707-12"><a href="15-dplyr-avance.html#cb707-12"></a><span class="co">#&gt; # A tibble: 1 × 1</span></span>
-<span id="cb707-13"><a href="15-dplyr-avance.html#cb707-13"></a><span class="co">#&gt;     age</span></span>
-<span id="cb707-14"><a href="15-dplyr-avance.html#cb707-14"></a><span class="co">#&gt;   &lt;dbl&gt;</span></span>
-<span id="cb707-15"><a href="15-dplyr-avance.html#cb707-15"></a><span class="co">#&gt; 1  40.8</span></span></code></pre></div>
+<span id="cb707-12"><a href="15-dplyr-avance.html#cb707-12"></a><span class="co">#&gt; # A tibble: 1 × 3</span></span>
+<span id="cb707-13"><a href="15-dplyr-avance.html#cb707-13"></a><span class="co">#&gt;      id   age `age enf1`</span></span>
+<span id="cb707-14"><a href="15-dplyr-avance.html#cb707-14"></a><span class="co">#&gt;   &lt;dbl&gt; &lt;dbl&gt;      &lt;dbl&gt;</span></span>
+<span id="cb707-15"><a href="15-dplyr-avance.html#cb707-15"></a><span class="co">#&gt; 1   4.5  40.8       13.5</span></span></code></pre></div>
 <p>Il est même possible, pour les cas les plus complexes, de combiner plusieurs sélections avec les opérateurs <code>&amp;</code>, <code>|</code> et <code>!</code>. L’exemple suivant applique la fonction <code>max()</code> à toutes les colonnes numériques de <code>df</code>, sauf à la colonne <code>id</code>.</p>
 <div class="sourceCode" id="cb708"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb708-1"><a href="15-dplyr-avance.html#cb708-1"></a>df <span class="op">%&gt;%</span></span>
 <span id="cb708-2"><a href="15-dplyr-avance.html#cb708-2"></a><span class="st">    </span><span class="kw">summarise</span>(</span>
@@ -938,7 +938,7 @@ Le symbole $ dans l’expression régulière <code>“ac$”</code> représente 
 <span id="cb709-9"><a href="15-dplyr-avance.html#cb709-9"></a><span class="co">#&gt;      id   pcs pcs_pere pcs_mere   age `age enf1` `age enf2` `age enf3`</span></span>
 <span id="cb709-10"><a href="15-dplyr-avance.html#cb709-10"></a><span class="co">#&gt;   &lt;int&gt; &lt;int&gt;    &lt;int&gt;    &lt;int&gt; &lt;int&gt;      &lt;int&gt;      &lt;int&gt;      &lt;int&gt;</span></span>
 <span id="cb709-11"><a href="15-dplyr-avance.html#cb709-11"></a><span class="co">#&gt; 1     8     6        6        6     8          8          7          5</span></span></code></pre></div>
-<p>Ces différentes manières de sélectionner un ensemble de colonnes est appelée <em>tidy selection</em>. Il y a encore d’autres possibilités de sélection, pour avoir un aperçu complet on pourra se référer à <a href="https://dplyr.tidyverse.org/reference/select.html">la page de documentation de la fonction select()</a>.</p>
+<p>Ces différentes manières de sélectionner un ensemble de colonnes sont appelées <em>tidy selection</em>. Il y a encore d’autres possibilités de sélection, pour avoir un aperçu complet on pourra se référer à <a href="https://dplyr.tidyverse.org/reference/select.html">la page de documentation de la fonction select()</a>.</p>
 <div class="rmdnote">
 <p>
 Une erreur de syntaxe fréquente est de mettre la sélection des colonnes dans l’appel à <code>across()</code>, mais pas la fonction qu’on souhaite appliquer.
@@ -1150,23 +1150,23 @@ Il faut bien penser à passer la fonction comme argument du <code>across()</code
 <span id="cb725-3"><a href="15-dplyr-avance.html#cb725-3"></a></span>
 <span id="cb725-4"><a href="15-dplyr-avance.html#cb725-4"></a>df <span class="op">%&gt;%</span></span>
 <span id="cb725-5"><a href="15-dplyr-avance.html#cb725-5"></a><span class="st">    </span><span class="kw">rename_with</span>( \(x) <span class="kw">str_replace_all</span>(x, <span class="st">&quot; &quot;</span>, <span class="st">&quot;_&quot;</span>) )</span></code></pre></div>
-<p>Cette syntaxe peut être utilisée partout où on peut passer une fonction comme argument et donc définir des fonctions anonymes. Dans cet exemple déjà vu précédemment, on passe la fonction <code>numerique_sans_na</code> comme argument de <code>where()</code>.</p>
-<div class="sourceCode" id="cb726"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb726-1"><a href="15-dplyr-avance.html#cb726-1"></a>age_adulte &lt;-<span class="st"> </span><span class="cf">function</span>(v) {</span>
-<span id="cb726-2"><a href="15-dplyr-avance.html#cb726-2"></a>    <span class="kw">min</span>(v, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>) <span class="op">&gt;</span><span class="st"> </span><span class="dv">20</span></span>
+<p>Cette syntaxe peut être utilisée partout où on peut passer une fonction comme argument et donc définir des fonctions anonymes. Dans cet exemple déjà vu précédemment, on passe la fonction <code>no_na</code> comme argument de <code>where()</code>.</p>
+<div class="sourceCode" id="cb726"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb726-1"><a href="15-dplyr-avance.html#cb726-1"></a>no_na &lt;-<span class="st"> </span><span class="cf">function</span>(v) {</span>
+<span id="cb726-2"><a href="15-dplyr-avance.html#cb726-2"></a>    <span class="kw">is.numeric</span>(v) <span class="op">&amp;&amp;</span><span class="st"> </span><span class="kw">sum</span>(<span class="kw">is.na</span>(v)) <span class="op">==</span><span class="st"> </span><span class="dv">0</span></span>
 <span id="cb726-3"><a href="15-dplyr-avance.html#cb726-3"></a>}</span>
 <span id="cb726-4"><a href="15-dplyr-avance.html#cb726-4"></a></span>
 <span id="cb726-5"><a href="15-dplyr-avance.html#cb726-5"></a>df <span class="op">%&gt;%</span></span>
 <span id="cb726-6"><a href="15-dplyr-avance.html#cb726-6"></a><span class="st">    </span><span class="kw">summarise</span>(</span>
 <span id="cb726-7"><a href="15-dplyr-avance.html#cb726-7"></a>        <span class="kw">across</span>(</span>
-<span id="cb726-8"><a href="15-dplyr-avance.html#cb726-8"></a>            <span class="kw">where</span>(age_adulte),</span>
+<span id="cb726-8"><a href="15-dplyr-avance.html#cb726-8"></a>            <span class="kw">where</span>(no_na),</span>
 <span id="cb726-9"><a href="15-dplyr-avance.html#cb726-9"></a>            mean</span>
 <span id="cb726-10"><a href="15-dplyr-avance.html#cb726-10"></a>        )</span>
 <span id="cb726-11"><a href="15-dplyr-avance.html#cb726-11"></a>    )</span></code></pre></div>
-<p>On peut donc remplacer la fonction <code>numerique_sans_na</code> par une fonction anonyme définie directement dans le <code>where()</code>.</p>
+<p>On peut donc remplacer la fonction <code>no_na</code> par une fonction anonyme définie directement dans le <code>where()</code>.</p>
 <div class="sourceCode" id="cb727"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb727-1"><a href="15-dplyr-avance.html#cb727-1"></a>df <span class="op">%&gt;%</span></span>
 <span id="cb727-2"><a href="15-dplyr-avance.html#cb727-2"></a><span class="st">    </span><span class="kw">summarise</span>(</span>
 <span id="cb727-3"><a href="15-dplyr-avance.html#cb727-3"></a>        <span class="kw">across</span>(</span>
-<span id="cb727-4"><a href="15-dplyr-avance.html#cb727-4"></a>            <span class="kw">where</span>(<span class="cf">function</span>(v) { <span class="kw">min</span>(v, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>) <span class="op">&gt;</span><span class="st"> </span><span class="dv">20</span> }),</span>
+<span id="cb727-4"><a href="15-dplyr-avance.html#cb727-4"></a>            <span class="kw">where</span>(<span class="cf">function</span>(v) { <span class="kw">is.numeric</span>(v) <span class="op">&amp;&amp;</span><span class="st"> </span><span class="kw">sum</span>(<span class="kw">is.na</span>(v)) <span class="op">==</span><span class="st"> </span><span class="dv">0</span> }),</span>
 <span id="cb727-5"><a href="15-dplyr-avance.html#cb727-5"></a>            mean</span>
 <span id="cb727-6"><a href="15-dplyr-avance.html#cb727-6"></a>        )</span>
 <span id="cb727-7"><a href="15-dplyr-avance.html#cb727-7"></a>    )</span></code></pre></div>
@@ -1174,7 +1174,7 @@ Il faut bien penser à passer la fonction comme argument du <code>across()</code
 <div class="sourceCode" id="cb728"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb728-1"><a href="15-dplyr-avance.html#cb728-1"></a>df <span class="op">%&gt;%</span></span>
 <span id="cb728-2"><a href="15-dplyr-avance.html#cb728-2"></a><span class="st">    </span><span class="kw">summarise</span>(</span>
 <span id="cb728-3"><a href="15-dplyr-avance.html#cb728-3"></a>        <span class="kw">across</span>(</span>
-<span id="cb728-4"><a href="15-dplyr-avance.html#cb728-4"></a>            <span class="kw">where</span>(<span class="op">~</span><span class="st"> </span><span class="kw">min</span>(.x, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>) <span class="op">&gt;</span><span class="st"> </span><span class="dv">20</span>),</span>
+<span id="cb728-4"><a href="15-dplyr-avance.html#cb728-4"></a>            <span class="kw">where</span>(<span class="op">~</span><span class="st"> </span><span class="kw">is.numeric</span>(.x) <span class="op">&amp;&amp;</span><span class="st"> </span><span class="kw">sum</span>(<span class="kw">is.na</span>(.x)) <span class="op">==</span><span class="st"> </span><span class="dv">0</span>),</span>
 <span id="cb728-5"><a href="15-dplyr-avance.html#cb728-5"></a>            mean</span>
 <span id="cb728-6"><a href="15-dplyr-avance.html#cb728-6"></a>        )</span>
 <span id="cb728-7"><a href="15-dplyr-avance.html#cb728-7"></a>    )</span>
@@ -1182,7 +1182,7 @@ Il faut bien penser à passer la fonction comme argument du <code>across()</code
 <span id="cb728-9"><a href="15-dplyr-avance.html#cb728-9"></a>df <span class="op">%&gt;%</span></span>
 <span id="cb728-10"><a href="15-dplyr-avance.html#cb728-10"></a><span class="st">    </span><span class="kw">summarise</span>(</span>
 <span id="cb728-11"><a href="15-dplyr-avance.html#cb728-11"></a>        <span class="kw">across</span>(</span>
-<span id="cb728-12"><a href="15-dplyr-avance.html#cb728-12"></a>            <span class="kw">where</span>(\(v) <span class="kw">min</span>(v, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>) <span class="op">&gt;</span><span class="st"> </span><span class="dv">20</span>),</span>
+<span id="cb728-12"><a href="15-dplyr-avance.html#cb728-12"></a>            <span class="kw">where</span>(\(v) <span class="kw">is.numeric</span>(v) <span class="op">&amp;&amp;</span><span class="st"> </span><span class="kw">sum</span>(<span class="kw">is.na</span>(v)) <span class="op">==</span><span class="st"> </span><span class="dv">0</span>),</span>
 <span id="cb728-13"><a href="15-dplyr-avance.html#cb728-13"></a>            mean</span>
 <span id="cb728-14"><a href="15-dplyr-avance.html#cb728-14"></a>        )</span>
 <span id="cb728-15"><a href="15-dplyr-avance.html#cb728-15"></a>    )</span></code></pre></div>
@@ -1233,7 +1233,7 @@ Il faut bien penser à passer la fonction comme argument du <code>across()</code
 <div class="sourceCode" id="cb731"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb731-1"><a href="15-dplyr-avance.html#cb731-1"></a><span class="kw">mean</span>(<span class="kw">c</span>(restos<span class="op">$</span>decor, restos<span class="op">$</span>accueil))</span>
 <span id="cb731-2"><a href="15-dplyr-avance.html#cb731-2"></a><span class="co">#&gt; [1] 1.5</span></span></code></pre></div>
 <p>Ce que nous souhaitons ici, c’est calculer la moyenne non pas pour l’ensemble du tableau mais <em>pour chaque ligne</em>. Pour cela, on va utiliser la fonction <code>rowwise()</code>. Celle-ci est équivalente à un <code>group_by()</code> qui créerait autant de groupes qu’il y a de lignes dans notre tableau.</p>
-<div class="sourceCode" id="cb732"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb732-1"><a href="15-dplyr-avance.html#cb732-1"></a>restos <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">rowwise</span>() </span>
+<div class="sourceCode" id="cb732"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb732-1"><a href="15-dplyr-avance.html#cb732-1"></a>restos <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">rowwise</span>()</span>
 <span id="cb732-2"><a href="15-dplyr-avance.html#cb732-2"></a><span class="co">#&gt; # A tibble: 4 × 5</span></span>
 <span id="cb732-3"><a href="15-dplyr-avance.html#cb732-3"></a><span class="co">#&gt; # Rowwise: </span></span>
 <span id="cb732-4"><a href="15-dplyr-avance.html#cb732-4"></a><span class="co">#&gt;   nom                     cuisine decor accueil  prix</span></span>
