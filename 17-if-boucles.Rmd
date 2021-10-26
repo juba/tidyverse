@@ -21,11 +21,9 @@ L'instruction `if` permet de n'exécuter du code que si une condition est rempli
 
 ![](resources/figures/structure_if)
 
-`if` prend une condition (entre parenthèses) puis un bloc de code (entre accolades) qui n'est exécuté que si la condition est vraie.
+`if` est suivie d'une condition (entre parenthèses) puis d'un bloc de code (entre accolades). Ce bloc de code n'est exécuté que si la condition est vraie.
 
 Par exemple, dans le code suivant, le message `Bonjour !` ne sera affiché que si la valeur de l'objet `prenom` vaut `"Pierre-Edmond"` :
-
-Prenons tout de suite un exemple :
 
 ```{r}
 prenom <- "Pierre-Edmond"
@@ -102,7 +100,7 @@ if (arrondir) {
 
 if (arrondir) res <- round(res)
 
-if (arrondir) 
+if (arrondir)
     res <- round(res)
 ```
 
@@ -143,23 +141,11 @@ graph_var(c("Pomme", "Pomme", "Citron"))
 graph_var(c(1, 5, 10, 3, 1, 4))
 ```
 
-On peut évidemment passer des conditions plus complexes. Dans notre fonction, le test `is.character(x)` échoue si `x` est un facteur, alors qu'on souhaiterait quand même réaliser un `barplot`. On peut donc compléter la condition du `if` :
 
-```{r}
-graph_var <- function(x) {
-    if (is.character(x) || is.factor(x)) {
-        barplot(table(x))
-    } else {
-        hist(x)
-    }
-}
-
-graph_var(factor(c("Pomme", "Pomme", "Citron")))
-```
 
 ### "`if`" / "`else if`" / "`else`"
 
-On peut aussi utiliser des blocs supplémentaires `else if` qui permettent d'ajouter de nouvelles conditions. Dès qu'une condition est vraie, le bloc de code correspondant est exécuté. Le dernier bloc `else` est exécuté si aucune des conditions n'est vraie.
+Une possibilité complémentaire est d'ajouter des blocs `else if` qui permettent d'ajouter des conditions supplémentaires. Dès qu'une condition est vraie, le bloc de code correspondant est exécuté. Le dernier bloc `else` est exécuté si aucune des conditions n'est vraie.
 
 On peut donc améliorer encore notre fonction `graph_var()` pour tester les différents types explicitement et afficher un message si aucun type géré n'a été reconnu.
 
@@ -299,7 +285,7 @@ if (x >= 5) {
 ```
 
 ```{block type='rmdimportant'}
-À retenir donc : quand on utilise l'instruction `if`, la condition qui lui est passée entre parenthèses ne doit renvoyer qu'une seule valeur `TRUE` ou `FALSE`. 
+À retenir donc : quand on utilise l'instruction `if`, la condition qui lui est passée entre parenthèses ne doit renvoyer qu'une seule valeur `TRUE` ou `FALSE`.
 ```
 
 
@@ -311,7 +297,17 @@ L'instruction `if` est souvent utilisée dans des fonctions pour valider les val
 
 Une première utilisation peut être d'utiliser un `return` pour interrompre l'exécution de la fonction et retourner un résultat. On a en effet vu section \@ref(resfunc) que dès que R rencontre un `return` dans une fonction, il interrompt immédiatement l'exécution de celle-ci.
 
-La fonction suivante retourne la longueur du mot le plus long dans un vecteur de chaînes de caractères. On ajoute donc un test qui retourne `NA` dans le cas où le vecteur passé en argument serait d'un type différent.
+La fonction suivante retourne la longueur du mot le plus long dans un vecteur de chaînes de caractères.
+
+```{r}
+longueur_max <- function(x) {
+    max(nchar(x))
+}
+
+longueur_max(c("Pomme", "Pamplemousse"))
+```
+
+Cette fonction n'a pas trop de sens si on lui passe en entrée un vecteur qui n'est pas un vecteur de chaînes de caractères. On peut donc rajouter un test qui, si `x` n'est pas de type `character`, retourne directement la valeur `NA`.
 
 ```{r}
 longueur_max <- function(x) {
@@ -321,7 +317,6 @@ longueur_max <- function(x) {
     max(nchar(x))
 }
 
-longueur_max(c("Pomme", "Citron"))
 longueur_max(1:5)
 ```
 
@@ -540,7 +535,7 @@ Le déroulement de la boucle est le suivant :
 
 Les instructions `next` et `break` permettent de modifier les itérations d'une boucle `for` ou `while`.
 
-`next` permet de sortir de l'itération courante et de passer directement à l'itération suivante sans exécuter le reste du code. 
+`next` permet de sortir de l'itération courante et de passer directement à l'itération suivante sans exécuter le reste du code.
 
 Reprenons la fonction `summaries`, vue plus haut, qui affiche le résumé de plusieurs variables d'un tableau de données.
 
@@ -711,23 +706,20 @@ Sur le [blog de Florian Privé](https://privefl.github.io/blog/), un [billet app
 
 **Exercice 1.1**
 
-Écrire une fonction `pile_ou_face` qui ne prend aucun argument en entrée et qui effectue les actions suivantes :
+Écrire une fonction `gel` qui prend un argument nommé `temperature` et effectue les actions suivantes :
 
-- tire un nombre au hasard entre 0 et 1 avec `runif(1)`
-- si ce nombre est inférieur à 0.5, retourne "pile"
-- sinon, retourne "face"
+- si `temperature` est négative, affiche le message "ça gèle" avec la fonction `message()`
+- sinon, affiche le message "ça gèle pas" avec la fonction `message()`
 
 \iffalse
 <div class="solution-exo">
 ```{r eval=FALSE}
-pile_ou_face <- function() {
-    alea <- runif(1)
-    if (alea < 0.5) {
-        result <- "pile"
+gel <- function(temperature) {
+    if (temperature <= 0) {
+        message("ça gèle")
     } else {
-        result <- "face"
+        message("ça gèle pas")
     }
-    result
 }
 ```
 </div>
@@ -736,64 +728,16 @@ pile_ou_face <- function() {
 
 **Exercice 1.2**
 
-Créer une fonction `moyenne_arrondie`, qui prend en argument un vecteur `x`, un argument `na.rm` avec une valeur par défaut à `TRUE`, et un argument facultatif `decimales`. La fonction doit effectuer les opérations suivantes :
-
-- calculer la moyenne du vecteur en tenant compte de l'argument `na.rm` passé à la fonction
-- si `decimales` est défini, arrondir la moyenne au nombre de décimales correspondant avec la fonction `round()`
-- retourner le résultat
-
-\iffalse
-<div class="solution-exo">
-```{r eval=FALSE}
-moyenne_arrondie <- function(x, na.rm = TRUE, decimales = NULL) {
-    moyenne <- mean(x, na.rm = na.rm)
-    if (!is.null(decimales)) {
-        moyenne <- round(moyenne, decimales)
-    }
-    moyenne
-}
-```
-</div>
-\fi
-
-**Exercice 1.3**
-
-Écrire une fonction `avertissement` qui prend deux arguments `pluie` et `parapluie`, avec comme valeurs `FALSE` par défaut, et qui effectue les opérations suivantes :
-
-
-- si `pluie` vaut `TRUE` et `parapluie` vaut `FALSE`, affiche "mouillé"
-- si `pluie` vaut `TRUE` et `parapluie` vaut `TRUE`, affiche "bien vu"
-- si `pluie` vaut `FALSE`, affiche "RAS"
-
-\iffalse
-<div class="solution-exo">
-```{r eval=FALSE}
-avertissement <- function(pluie = FALSE, parapluie = FALSE) {
-    if (pluie && !parapluie) {
-        message("mouillé")
-    }
-    if (pluie && parapluie) {
-        message("bien vu")
-    }
-    if (!pluie) {
-        message("RAS")
-    }
-}
-```
-</div>
-\fi
-
-**Exercice 1.4**
-
 Écrire une fonction `meteo` qui prend un argument nommé `temperature` et effectue les actions suivantes :
 
-- si `temperature` est inférieure à 0, affiche le message "ça caille"
+- si `temperature` est inférieure à 0, affiche le message "ça caille" avec la fonction `message()`
 - si `temperature` est comprise entre 0 et 15, affiche le message "fais pas chaud"
 - si `temperature` est comprise entre 15 et 30, affiche le message "on est pas mal"
 - si `temperature` est supérieure à 30, affiche le message "tous à Miribel"
 
 \iffalse
 <div class="solution-exo">
+
 ```{r eval=FALSE}
 meteo <- function(temperature) {
     if (temperature < 0) {
@@ -810,13 +754,13 @@ meteo <- function(temperature) {
 meteo <- function(temperature) {
     if (temperature < 0) {
         message("ça caille")
-    } 
+    }
     if (temperature >= 0 && temperature < 15) {
         message("fais pas chaud")
-    } 
+    }
     if (temperature >= 15 && temperature < 30) {
         message("on est pas mal")
-    } 
+    }
     if (temperature >= 30) {
         message("tous à Mriribel")
     }
@@ -826,11 +770,62 @@ meteo <- function(temperature) {
 \fi
 
 
+**Exercice 1.3**
+
+Écrire une fonction `avertissement` qui prend deux arguments `pluie` et `parapluie` et qui effectue les opérations suivantes :
+
+- si `pluie` vaut `TRUE` et `parapluie` vaut `FALSE`, affiche "mouillé" avec la fonction `message()`
+- si `pluie` vaut `TRUE` et `parapluie` vaut `TRUE`, affiche "bien vu"
+- si `pluie` vaut `FALSE`, affiche "RAS"
+
+\iffalse
+<div class="solution-exo">
+```{r eval=FALSE}
+avertissement <- function(pluie, parapluie) {
+    if (pluie && !parapluie) {
+        message("mouillé")
+    }
+    if (pluie && parapluie) {
+        message("bien vu")
+    }
+    if (!pluie) {
+        message("RAS")
+    }
+}
+```
+</div>
+\fi
+
+
+
 ### Contrôle de l'exécution
 
 **Exercice 2.1**
 
-Créer une fonction `etendue` qui renvoie la différence entre la plus grande et la plus petite valeur d'un vecteur.
+Créer une fonction `moyenne_arrondie`, qui prend en argument un vecteur `x` et un argument facultatif `decimales`. La fonction doit effectuer les opérations suivantes :
+
+- calculer la moyenne du vecteur
+- si `decimales` est défini, arrondir la moyenne au nombre de décimales correspondant avec la fonction `round()`
+- retourner le résultat
+
+\iffalse
+<div class="solution-exo">
+```{r eval=FALSE}
+moyenne_arrondie <- function(x, decimales = NULL) {
+    moyenne <- mean(x)
+    if (!is.null(decimales)) {
+        moyenne <- round(moyenne, decimales)
+    }
+    moyenne
+}
+```
+</div>
+\fi
+
+
+**Exercice 2.2**
+
+Créer une fonction `etendue` qui retourne la différence entre la plus grande et la plus petite valeur d'un vecteur.
 
 \iffalse
 <div class="solution-exo">
@@ -841,6 +836,7 @@ etendue <- function(x) {
 ```
 </div>
 \fi
+
 
 Modifier la fonction pour qu'elle retourne `NA` si le vecteur passé en argument n'est pas numérique.
 
@@ -875,7 +871,7 @@ etendue <- function(x) {
 \fi
 
 
-**Exercice 2.2**
+**Exercice 2.3**
 
 Créer une fonction `proportion` qui prend en argument un vecteur et retourne les valeurs de ce vecteur divisée par leur somme.
 
@@ -966,10 +962,26 @@ reponse <- readline("Quelle est votre réponse ?")
 
 - Afficher le message "Quel est le plus grand sociologue de tous les temps ?" et demander la réponse à l'utilisateur
 - Si la réponse saisie est "Tonton Michel", afficher "Bingo !"
-- Sinon, afficher "Nope" et poser à nouveau la question
+- Sinon, afficher "Nope"
 
 \iffalse
 <div class="solution-exo">
+```{r eval=FALSE}
+reponse <- readline("Quel est le plus grand sociologue de tous les temps ?")
+if (reponse == "Tonton Michel") {
+    message("Bingo !")
+} else {
+    message("Nope !")
+}
+```
+</div>
+\fi
+
+À l'aide d'une boucle `while()`, modifier le code précédent pour que la question soit répétée jusqu'à ce que l'utilisateur saisisse "Tonton Michel".
+
+\iffalse
+<div class="solution-exo">
+
 ```{r eval=FALSE}
 reponse <- ""
 while (reponse != "Tonton Michel") {
