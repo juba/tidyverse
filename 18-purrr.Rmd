@@ -90,7 +90,7 @@ for (i in seq_along(mots)) {
 resultat
 ```
 
-`purrr` propose des variantes de la fonction `map` qui permettent justement de s'assurer du type de résultat obtenu. Ainsi, `map_dbl()` renverra toujours un vecteur de nombres flottants, et `map_int()` un vecteur de nombres entiers. En remplacement de la boucle `for` ci-dessus, on peut donc utiliser :
+Mais `purrr` propose des variantes de la fonction `map` qui permettent justement de s'assurer du type de résultat obtenu. Ainsi, `map_dbl()` renverra toujours un vecteur de nombres flottants, et `map_int()` un vecteur de nombres entiers. En remplacement de la boucle `for` ci-dessus, on peut donc utiliser :
 
 ```{r}
 mots %>% map_int(length)
@@ -198,6 +198,7 @@ mots %>%
     map_int(length)
 ```
 
+
 ### `map_dfr()` et `map_dfc()`
 
 La page suivante contient les données du jeu de données `rp2012` sous la forme de fichiers CSV, avec un fichier par département :
@@ -283,9 +284,23 @@ df
 
 Les deux lignes de code ci-dessus partent donc d'une liste d'identifiants de départements, génèrent les URL des fichiers CSV correspondant, les importent dans R et assemblent le résultat en un seul tableau. Plutôt efficace !
 
+Une fonction utile en complément de `map_dfr()` est la fonction `list.files()`, qui peut lister les fichiers ayant une certaine extension dans un dossier spécifique. Par exemple, l'instruction suivante liste tous les fichiers se terminant par `.csv` du sous-dossier `data`.
+
+```{r eval=FALSE}
+fichiers <- list.files("data", "*.csv", full.names = TRUE)
+```
+
+On peut dès lors utiliser `map_dfr()` et `read_csv()` pour lire tous ces fichiers en une seule fois et les concaténer avec `bind_rows()`.
+
+```{r eval=FALSE}
+d <- fichiers %>% map_dfr(read_csv)
+```
+
 ```{block type='rmdnote'}
 Il existe également une variante `map_dfc()` qui considère les résultats comme des colonnes d'un tableau de données et les rassemble en un seul tableau comme le ferait la fonction `bind_cols()` de `dplyr`.
 ```
+
+
 
 
 ## Itérer sur les colonnes d'un tableau de données
@@ -323,7 +338,7 @@ starwars %>%
     discard(~ .x == 0 )
 ```
 
-Ou bien utiliser `keep()` pour n'appliquer `mean` qu'aux variables numériques.
+Ou bien utiliser `keep()` pour n'appliquer `mean()` qu'aux variables numériques.
 
 ```{r}
 starwars %>%
@@ -352,7 +367,7 @@ v %>% modify(length)
 
 L'objectif de `modify()` est de permettre de "modifier" une liste ou un vecteur en lui appliquant une fonction tout en étant sûr qu'on ne va pas modifier son type.
 
-L'intérêt de `modify()` est qu'elle propose deux variantes, `modify_if()` et `modify_at()`, qui sélectionnent les éléments soit via une fonction soit par leur nom ou leur position, et qui n'appliquent la fonction de transformation qu'aux éléments sélectionnés.
+L'intérêt principal de `modify()` est qu'elle propose deux variantes, `modify_if()` et `modify_at()`, qui sélectionnent les éléments soit via une fonction soit par leur nom ou leur position, et qui n'appliquent la fonction de transformation qu'aux éléments sélectionnés.
 
 Cela peut être particulièrement utile quand on l'applique à un tableau de données. Par exemple le code suivant transforme uniquement les colonnes de type `factor` de `hdv2003` en `character`, et laisse les autres inchangées.
 
@@ -421,9 +436,19 @@ Tout comme `map()` proposait les variantes `map_int()`, `map_chr()` ou `map_dfr(
 
 Pour reprendre notre exemple de départ, on peut donc, en utilisant `imap` récupérer le nom de l'élément de la liste courant et l'utiliser pour rajouter le nom du restaurant dans notre *tibble* de résultats.
 
+On peut le faire avec une fonction anonyme "classique" :
+
+```{r}
+restos %>% imap_dfr(function(notes, nom) {
+    tibble(resto = nom, moyenne = mean(notes), ecart_type = sd(notes))
+})
+```
+
+On peut aussi utiliser la notation compacte de type formule, mais dans ce cas il faut bien se souvenir que `.x` correspond à la valeur de l'élément courant, et `.y` à son nom.
+
 ```{r}
 restos %>% imap_dfr(~ {
-    tibble(nom = .y, moyenne = mean(.x), ecart_type = sd(.x))
+    tibble(resto = .y, moyenne = mean(.x), ecart_type = sd(.x))
 })
 ```
 
@@ -455,6 +480,7 @@ Au final, on notera que l'utilisation de `walk()`, comme elle ne retourne pas de
 Comme `walk()` ne retourne pas de résultats, il n'existe pas de variantes du type `map_chr()` ou `imap_int()`.
 ```
 
+
 ## `map2` et `pmap` : itérer sur plusieurs vecteurs en parallèle
 
 Supposons qu'un.e collègue, qui travaille avec nous sur le jeu de données `rp2012`, nous a envoyé une liste de variables dont elle voudrait connaître les corrélations. Cette liste a été saisie dans un tableur sur deux colonnes, chaque ligne indiquant deux variables pour lesquelles elle souhaite qu'on effectue ce calcul.
@@ -482,13 +508,23 @@ C'est précisément ce que fait la fonction `map2()`. Celle-ci prend trois argum
 2. une fonction qui accepte deux arguments : ceux-ci prendront tour à tour les deux valeurs courantes des deux listes ou vecteurs itérés
 
 ```{r}
-map2(correlations$var1, correlations$var2, ~ cor(rp2012[[.x]], rp2012[[.y]]))
+map2(
+    correlations$var1,
+    correlations$var2, 
+    ~ cor(rp2012[[.x]], rp2012[[.y]])
+)
 ```
 
-`map2()` propose les mêmes variantes `map2_int()`, `mapr2_chr()`, etc. que `map()`. On peut donc utiliser `map2_dbl()` pour récupérer un vecteur numérique plutôt qu'une liste. 
+`map2()` propose les mêmes variantes `map2_int()`, `mapr2_chr()`, etc. que `map()`. On peut donc utiliser `map2_dbl()` pour récupérer un vecteur numérique plutôt qu'une liste, et l'utiliser par exemple pour rajouter une colonne à notre tableau de départ.
 
 ```{r}
-map2_dbl(correlations$var1, correlations$var2, ~ cor(rp2012[[.x]], rp2012[[.y]]))
+correlations$corr <- map2_dbl(
+    correlations$var1,
+    correlations$var2,
+    ~ cor(rp2012[[.x]], rp2012[[.y]])
+)
+
+correlations
 ```
 
 Si on souhaite uniquement capturer les effets de bord sans récupérer les résultats de la fonctions appliquée, on peut aussi utiliser la variante `walk2()`.
@@ -598,7 +634,7 @@ Par exemple si on souhaite générer 10 vecteurs de 100 nombre aléatoires, on p
 ```{r}
 res <- list()
 for (i in 1:10) {
-    res[[i]] <- rnorm(100)
+    res <- c(res, rnorm(100))
 }
 ```
 
@@ -646,7 +682,7 @@ Quand on peut faire simplement :
 str_count(textes, "f")
 ```
 
-Par contre `map()` est utile quand on souhaite appliquer une fonction qui n'est pas vectorisée, comme c'est le cas par exemple avec `read_csv()`, qui ne permet pas de charger plusieurs fichiers d'un coup :
+Par contre `map()` est utile quand on souhaite appliquer une fonction qui n'est pas vectorisée à plusieurs valeurs, comme c'est le cas par exemple avec `read_csv()`, qui ne permet pas de charger plusieurs fichiers d'un coup :
 
 ```{r eval=FALSE}
 fichiers <- c("fichier1.csv", "fichier2.csv")
@@ -657,8 +693,8 @@ Ou quand on veut itérer sur un argument, par exemple ici sur l'argument `patter
 
 ```{r}
 voyelle <- c(a = "a", e = "e", i = "i")
-v <- c("brouette", "moto", "igloo")
-voyelle %>% map(~ str_count(v, pattern = .x))
+textes <- c("brouette", "moto", "igloo")
+voyelle %>% map(~ str_count(textes, pattern = .x))
 ```
 
 On l'utilise également quand on veut appliquer une fonction non pas à une liste, mais aux éléments qu'elle contient :
@@ -783,21 +819,6 @@ notes %>%
 
 \fi
 
-Calculer et retourner les mêmes résultats, mais cette fois sous la forme d'un unique tableau de données, avec une ligne par matière.
-
-\iffalse
-<div class="solution-exo">
-```{r eval=FALSE}
-notes %>%
-    map_dfr(~ c(
-            nb_notes = length(.x),
-            moyenne = mean(.x, na.rm = TRUE),
-            ecart_type = sd(.x, na.rm = TRUE)
-        )
-    )
-```
-</div>
-\fi
 
 **Exercice 1.2**
 
