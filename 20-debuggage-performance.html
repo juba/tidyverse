@@ -24,7 +24,7 @@
 <meta name="author" content="Julien Barnier" />
 
 
-<meta name="date" content="2021-10-25" />
+<meta name="date" content="2021-10-26" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -620,194 +620,194 @@ Cette partie est encore en cours de rédaction.
 <h3><span class="header-section-number">20.1.1</span> print()</h3>
 <p>L’outil le plus simple, parfois décrié mais souvent efficace, est de rajouter un simple <code>print()</code> dans le code de notre fonction pour examiner le contenu d’un objet à un moment donné.</p>
 <p>Dans l’exemple suivant, on a écrit une fonction <code>phrase_max()</code> qui prend en entrée une chaîne de caractères et une lettre. La fonction découpe la chaîne en phrases, et retourne la phrase qui comporte le plus de fois la lettre.</p>
-<div class="sourceCode" id="cb1157"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1157-1"><a href="20-debuggage-performance.html#cb1157-1"></a>phrase_max &lt;-<span class="st"> </span><span class="cf">function</span>(str, lettre) {</span>
-<span id="cb1157-2"><a href="20-debuggage-performance.html#cb1157-2"></a>    phrases &lt;-<span class="st"> </span><span class="kw">str_split</span>(str, <span class="st">&quot;.&quot;</span>, <span class="dt">simplify =</span> <span class="ot">TRUE</span>)</span>
-<span id="cb1157-3"><a href="20-debuggage-performance.html#cb1157-3"></a>    n_lettre &lt;-<span class="st"> </span><span class="kw">str_detect</span>(phrases, lettre)</span>
-<span id="cb1157-4"><a href="20-debuggage-performance.html#cb1157-4"></a>    phrases[n_lettre <span class="op">==</span><span class="st"> </span><span class="kw">max</span>(n_lettre)]</span>
-<span id="cb1157-5"><a href="20-debuggage-performance.html#cb1157-5"></a>}</span></code></pre></div>
+<div class="sourceCode" id="cb1161"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1161-1"><a href="20-debuggage-performance.html#cb1161-1"></a>phrase_max &lt;-<span class="st"> </span><span class="cf">function</span>(str, lettre) {</span>
+<span id="cb1161-2"><a href="20-debuggage-performance.html#cb1161-2"></a>    phrases &lt;-<span class="st"> </span><span class="kw">str_split</span>(str, <span class="st">&quot;.&quot;</span>, <span class="dt">simplify =</span> <span class="ot">TRUE</span>)</span>
+<span id="cb1161-3"><a href="20-debuggage-performance.html#cb1161-3"></a>    n_lettre &lt;-<span class="st"> </span><span class="kw">str_detect</span>(phrases, lettre)</span>
+<span id="cb1161-4"><a href="20-debuggage-performance.html#cb1161-4"></a>    phrases[n_lettre <span class="op">==</span><span class="st"> </span><span class="kw">max</span>(n_lettre)]</span>
+<span id="cb1161-5"><a href="20-debuggage-performance.html#cb1161-5"></a>}</span></code></pre></div>
 <p>Du moins en théorie, car en pratique ça n’est pas tout à fait ça…</p>
-<div class="sourceCode" id="cb1158"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1158-1"><a href="20-debuggage-performance.html#cb1158-1"></a>texte &lt;-<span class="st"> &quot;Le chat dort. Le félin roupille. Le chat dort tout le temps.&quot;</span></span>
-<span id="cb1158-2"><a href="20-debuggage-performance.html#cb1158-2"></a><span class="kw">phrase_max</span>(texte, <span class="st">&quot;t&quot;</span>)</span>
-<span id="cb1158-3"><a href="20-debuggage-performance.html#cb1158-3"></a><span class="co">#&gt;  [1] &quot;&quot; &quot;&quot; &quot;&quot; &quot;&quot; &quot;&quot; &quot;&quot; &quot;&quot; &quot;&quot; &quot;&quot; &quot;&quot; &quot;&quot; &quot;&quot; &quot;&quot; &quot;&quot; &quot;&quot; &quot;&quot; &quot;&quot; &quot;&quot; &quot;&quot; &quot;&quot; &quot;&quot; &quot;&quot; &quot;&quot; &quot;&quot; &quot;&quot;</span></span>
-<span id="cb1158-4"><a href="20-debuggage-performance.html#cb1158-4"></a><span class="co">#&gt; [26] &quot;&quot; &quot;&quot; &quot;&quot; &quot;&quot; &quot;&quot; &quot;&quot; &quot;&quot; &quot;&quot; &quot;&quot; &quot;&quot; &quot;&quot; &quot;&quot; &quot;&quot; &quot;&quot; &quot;&quot; &quot;&quot; &quot;&quot; &quot;&quot; &quot;&quot; &quot;&quot; &quot;&quot; &quot;&quot; &quot;&quot; &quot;&quot; &quot;&quot;</span></span>
-<span id="cb1158-5"><a href="20-debuggage-performance.html#cb1158-5"></a><span class="co">#&gt; [51] &quot;&quot; &quot;&quot; &quot;&quot; &quot;&quot; &quot;&quot; &quot;&quot; &quot;&quot; &quot;&quot; &quot;&quot; &quot;&quot; &quot;&quot;</span></span></code></pre></div>
+<div class="sourceCode" id="cb1162"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1162-1"><a href="20-debuggage-performance.html#cb1162-1"></a>texte &lt;-<span class="st"> &quot;Le chat dort. Le félin roupille. Le chat dort tout le temps.&quot;</span></span>
+<span id="cb1162-2"><a href="20-debuggage-performance.html#cb1162-2"></a><span class="kw">phrase_max</span>(texte, <span class="st">&quot;t&quot;</span>)</span>
+<span id="cb1162-3"><a href="20-debuggage-performance.html#cb1162-3"></a><span class="co">#&gt;  [1] &quot;&quot; &quot;&quot; &quot;&quot; &quot;&quot; &quot;&quot; &quot;&quot; &quot;&quot; &quot;&quot; &quot;&quot; &quot;&quot; &quot;&quot; &quot;&quot; &quot;&quot; &quot;&quot; &quot;&quot; &quot;&quot; &quot;&quot; &quot;&quot; &quot;&quot; &quot;&quot; &quot;&quot; &quot;&quot; &quot;&quot; &quot;&quot; &quot;&quot;</span></span>
+<span id="cb1162-4"><a href="20-debuggage-performance.html#cb1162-4"></a><span class="co">#&gt; [26] &quot;&quot; &quot;&quot; &quot;&quot; &quot;&quot; &quot;&quot; &quot;&quot; &quot;&quot; &quot;&quot; &quot;&quot; &quot;&quot; &quot;&quot; &quot;&quot; &quot;&quot; &quot;&quot; &quot;&quot; &quot;&quot; &quot;&quot; &quot;&quot; &quot;&quot; &quot;&quot; &quot;&quot; &quot;&quot; &quot;&quot; &quot;&quot; &quot;&quot;</span></span>
+<span id="cb1162-5"><a href="20-debuggage-performance.html#cb1162-5"></a><span class="co">#&gt; [51] &quot;&quot; &quot;&quot; &quot;&quot; &quot;&quot; &quot;&quot; &quot;&quot; &quot;&quot; &quot;&quot; &quot;&quot; &quot;&quot; &quot;&quot;</span></span></code></pre></div>
 <p>Pour essayer de comprendre ce qui se passe, on va rajouter un <code>print()</code> qui va nous permettre d’afficher le contenu de <code>phrases</code> juste après le <code>str_split()</code>.</p>
-<div class="sourceCode" id="cb1159"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1159-1"><a href="20-debuggage-performance.html#cb1159-1"></a>phrase_max &lt;-<span class="st"> </span><span class="cf">function</span>(str, lettre) {</span>
-<span id="cb1159-2"><a href="20-debuggage-performance.html#cb1159-2"></a>    phrases &lt;-<span class="st"> </span><span class="kw">str_split</span>(str, <span class="st">&quot;.&quot;</span>, <span class="dt">simplify =</span> <span class="ot">TRUE</span>)</span>
-<span id="cb1159-3"><a href="20-debuggage-performance.html#cb1159-3"></a>    <span class="kw">print</span>(phrases)</span>
-<span id="cb1159-4"><a href="20-debuggage-performance.html#cb1159-4"></a>    n_lettre &lt;-<span class="st"> </span><span class="kw">str_detect</span>(phrases, lettre)</span>
-<span id="cb1159-5"><a href="20-debuggage-performance.html#cb1159-5"></a>    phrases[n_lettre <span class="op">==</span><span class="st"> </span><span class="kw">max</span>(n_lettre)]</span>
-<span id="cb1159-6"><a href="20-debuggage-performance.html#cb1159-6"></a>}</span>
-<span id="cb1159-7"><a href="20-debuggage-performance.html#cb1159-7"></a></span>
-<span id="cb1159-8"><a href="20-debuggage-performance.html#cb1159-8"></a><span class="kw">phrase_max</span>(texte, <span class="st">&quot;t&quot;</span>)</span>
-<span id="cb1159-9"><a href="20-debuggage-performance.html#cb1159-9"></a><span class="co">#&gt;      [,1] [,2] [,3] [,4] [,5] [,6] [,7] [,8] [,9] [,10] [,11] [,12] [,13] [,14]</span></span>
-<span id="cb1159-10"><a href="20-debuggage-performance.html#cb1159-10"></a><span class="co">#&gt; [1,] &quot;&quot;   &quot;&quot;   &quot;&quot;   &quot;&quot;   &quot;&quot;   &quot;&quot;   &quot;&quot;   &quot;&quot;   &quot;&quot;   &quot;&quot;    &quot;&quot;    &quot;&quot;    &quot;&quot;    &quot;&quot;   </span></span>
-<span id="cb1159-11"><a href="20-debuggage-performance.html#cb1159-11"></a><span class="co">#&gt;      [,15] [,16] [,17] [,18] [,19] [,20] [,21] [,22] [,23] [,24] [,25] [,26]</span></span>
-<span id="cb1159-12"><a href="20-debuggage-performance.html#cb1159-12"></a><span class="co">#&gt; [1,] &quot;&quot;    &quot;&quot;    &quot;&quot;    &quot;&quot;    &quot;&quot;    &quot;&quot;    &quot;&quot;    &quot;&quot;    &quot;&quot;    &quot;&quot;    &quot;&quot;    &quot;&quot;   </span></span>
-<span id="cb1159-13"><a href="20-debuggage-performance.html#cb1159-13"></a><span class="co">#&gt;      [,27] [,28] [,29] [,30] [,31] [,32] [,33] [,34] [,35] [,36] [,37] [,38]</span></span>
-<span id="cb1159-14"><a href="20-debuggage-performance.html#cb1159-14"></a><span class="co">#&gt; [1,] &quot;&quot;    &quot;&quot;    &quot;&quot;    &quot;&quot;    &quot;&quot;    &quot;&quot;    &quot;&quot;    &quot;&quot;    &quot;&quot;    &quot;&quot;    &quot;&quot;    &quot;&quot;   </span></span>
-<span id="cb1159-15"><a href="20-debuggage-performance.html#cb1159-15"></a><span class="co">#&gt;      [,39] [,40] [,41] [,42] [,43] [,44] [,45] [,46] [,47] [,48] [,49] [,50]</span></span>
-<span id="cb1159-16"><a href="20-debuggage-performance.html#cb1159-16"></a><span class="co">#&gt; [1,] &quot;&quot;    &quot;&quot;    &quot;&quot;    &quot;&quot;    &quot;&quot;    &quot;&quot;    &quot;&quot;    &quot;&quot;    &quot;&quot;    &quot;&quot;    &quot;&quot;    &quot;&quot;   </span></span>
-<span id="cb1159-17"><a href="20-debuggage-performance.html#cb1159-17"></a><span class="co">#&gt;      [,51] [,52] [,53] [,54] [,55] [,56] [,57] [,58] [,59] [,60] [,61]</span></span>
-<span id="cb1159-18"><a href="20-debuggage-performance.html#cb1159-18"></a><span class="co">#&gt; [1,] &quot;&quot;    &quot;&quot;    &quot;&quot;    &quot;&quot;    &quot;&quot;    &quot;&quot;    &quot;&quot;    &quot;&quot;    &quot;&quot;    &quot;&quot;    &quot;&quot;</span></span>
-<span id="cb1159-19"><a href="20-debuggage-performance.html#cb1159-19"></a><span class="co">#&gt;  [1] &quot;&quot; &quot;&quot; &quot;&quot; &quot;&quot; &quot;&quot; &quot;&quot; &quot;&quot; &quot;&quot; &quot;&quot; &quot;&quot; &quot;&quot; &quot;&quot; &quot;&quot; &quot;&quot; &quot;&quot; &quot;&quot; &quot;&quot; &quot;&quot; &quot;&quot; &quot;&quot; &quot;&quot; &quot;&quot; &quot;&quot; &quot;&quot; &quot;&quot;</span></span>
-<span id="cb1159-20"><a href="20-debuggage-performance.html#cb1159-20"></a><span class="co">#&gt; [26] &quot;&quot; &quot;&quot; &quot;&quot; &quot;&quot; &quot;&quot; &quot;&quot; &quot;&quot; &quot;&quot; &quot;&quot; &quot;&quot; &quot;&quot; &quot;&quot; &quot;&quot; &quot;&quot; &quot;&quot; &quot;&quot; &quot;&quot; &quot;&quot; &quot;&quot; &quot;&quot; &quot;&quot; &quot;&quot; &quot;&quot; &quot;&quot; &quot;&quot;</span></span>
-<span id="cb1159-21"><a href="20-debuggage-performance.html#cb1159-21"></a><span class="co">#&gt; [51] &quot;&quot; &quot;&quot; &quot;&quot; &quot;&quot; &quot;&quot; &quot;&quot; &quot;&quot; &quot;&quot; &quot;&quot; &quot;&quot; &quot;&quot;</span></span></code></pre></div>
+<div class="sourceCode" id="cb1163"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1163-1"><a href="20-debuggage-performance.html#cb1163-1"></a>phrase_max &lt;-<span class="st"> </span><span class="cf">function</span>(str, lettre) {</span>
+<span id="cb1163-2"><a href="20-debuggage-performance.html#cb1163-2"></a>    phrases &lt;-<span class="st"> </span><span class="kw">str_split</span>(str, <span class="st">&quot;.&quot;</span>, <span class="dt">simplify =</span> <span class="ot">TRUE</span>)</span>
+<span id="cb1163-3"><a href="20-debuggage-performance.html#cb1163-3"></a>    <span class="kw">print</span>(phrases)</span>
+<span id="cb1163-4"><a href="20-debuggage-performance.html#cb1163-4"></a>    n_lettre &lt;-<span class="st"> </span><span class="kw">str_detect</span>(phrases, lettre)</span>
+<span id="cb1163-5"><a href="20-debuggage-performance.html#cb1163-5"></a>    phrases[n_lettre <span class="op">==</span><span class="st"> </span><span class="kw">max</span>(n_lettre)]</span>
+<span id="cb1163-6"><a href="20-debuggage-performance.html#cb1163-6"></a>}</span>
+<span id="cb1163-7"><a href="20-debuggage-performance.html#cb1163-7"></a></span>
+<span id="cb1163-8"><a href="20-debuggage-performance.html#cb1163-8"></a><span class="kw">phrase_max</span>(texte, <span class="st">&quot;t&quot;</span>)</span>
+<span id="cb1163-9"><a href="20-debuggage-performance.html#cb1163-9"></a><span class="co">#&gt;      [,1] [,2] [,3] [,4] [,5] [,6] [,7] [,8] [,9] [,10] [,11] [,12] [,13] [,14]</span></span>
+<span id="cb1163-10"><a href="20-debuggage-performance.html#cb1163-10"></a><span class="co">#&gt; [1,] &quot;&quot;   &quot;&quot;   &quot;&quot;   &quot;&quot;   &quot;&quot;   &quot;&quot;   &quot;&quot;   &quot;&quot;   &quot;&quot;   &quot;&quot;    &quot;&quot;    &quot;&quot;    &quot;&quot;    &quot;&quot;   </span></span>
+<span id="cb1163-11"><a href="20-debuggage-performance.html#cb1163-11"></a><span class="co">#&gt;      [,15] [,16] [,17] [,18] [,19] [,20] [,21] [,22] [,23] [,24] [,25] [,26]</span></span>
+<span id="cb1163-12"><a href="20-debuggage-performance.html#cb1163-12"></a><span class="co">#&gt; [1,] &quot;&quot;    &quot;&quot;    &quot;&quot;    &quot;&quot;    &quot;&quot;    &quot;&quot;    &quot;&quot;    &quot;&quot;    &quot;&quot;    &quot;&quot;    &quot;&quot;    &quot;&quot;   </span></span>
+<span id="cb1163-13"><a href="20-debuggage-performance.html#cb1163-13"></a><span class="co">#&gt;      [,27] [,28] [,29] [,30] [,31] [,32] [,33] [,34] [,35] [,36] [,37] [,38]</span></span>
+<span id="cb1163-14"><a href="20-debuggage-performance.html#cb1163-14"></a><span class="co">#&gt; [1,] &quot;&quot;    &quot;&quot;    &quot;&quot;    &quot;&quot;    &quot;&quot;    &quot;&quot;    &quot;&quot;    &quot;&quot;    &quot;&quot;    &quot;&quot;    &quot;&quot;    &quot;&quot;   </span></span>
+<span id="cb1163-15"><a href="20-debuggage-performance.html#cb1163-15"></a><span class="co">#&gt;      [,39] [,40] [,41] [,42] [,43] [,44] [,45] [,46] [,47] [,48] [,49] [,50]</span></span>
+<span id="cb1163-16"><a href="20-debuggage-performance.html#cb1163-16"></a><span class="co">#&gt; [1,] &quot;&quot;    &quot;&quot;    &quot;&quot;    &quot;&quot;    &quot;&quot;    &quot;&quot;    &quot;&quot;    &quot;&quot;    &quot;&quot;    &quot;&quot;    &quot;&quot;    &quot;&quot;   </span></span>
+<span id="cb1163-17"><a href="20-debuggage-performance.html#cb1163-17"></a><span class="co">#&gt;      [,51] [,52] [,53] [,54] [,55] [,56] [,57] [,58] [,59] [,60] [,61]</span></span>
+<span id="cb1163-18"><a href="20-debuggage-performance.html#cb1163-18"></a><span class="co">#&gt; [1,] &quot;&quot;    &quot;&quot;    &quot;&quot;    &quot;&quot;    &quot;&quot;    &quot;&quot;    &quot;&quot;    &quot;&quot;    &quot;&quot;    &quot;&quot;    &quot;&quot;</span></span>
+<span id="cb1163-19"><a href="20-debuggage-performance.html#cb1163-19"></a><span class="co">#&gt;  [1] &quot;&quot; &quot;&quot; &quot;&quot; &quot;&quot; &quot;&quot; &quot;&quot; &quot;&quot; &quot;&quot; &quot;&quot; &quot;&quot; &quot;&quot; &quot;&quot; &quot;&quot; &quot;&quot; &quot;&quot; &quot;&quot; &quot;&quot; &quot;&quot; &quot;&quot; &quot;&quot; &quot;&quot; &quot;&quot; &quot;&quot; &quot;&quot; &quot;&quot;</span></span>
+<span id="cb1163-20"><a href="20-debuggage-performance.html#cb1163-20"></a><span class="co">#&gt; [26] &quot;&quot; &quot;&quot; &quot;&quot; &quot;&quot; &quot;&quot; &quot;&quot; &quot;&quot; &quot;&quot; &quot;&quot; &quot;&quot; &quot;&quot; &quot;&quot; &quot;&quot; &quot;&quot; &quot;&quot; &quot;&quot; &quot;&quot; &quot;&quot; &quot;&quot; &quot;&quot; &quot;&quot; &quot;&quot; &quot;&quot; &quot;&quot; &quot;&quot;</span></span>
+<span id="cb1163-21"><a href="20-debuggage-performance.html#cb1163-21"></a><span class="co">#&gt; [51] &quot;&quot; &quot;&quot; &quot;&quot; &quot;&quot; &quot;&quot; &quot;&quot; &quot;&quot; &quot;&quot; &quot;&quot; &quot;&quot; &quot;&quot;</span></span></code></pre></div>
 <p>Il y a donc un problème : plutôt que d’obtenir des phrases on n’obtient que des chaînes vides. Pourquoi ? Car on a oublié que l’argument <code>pattern</code> de <code>str_split()</code>, celui à qui on a donné la valeur <code>"."</code>, admet par défaut une expression régulière. Or dans une expression régulière, le <code>.</code> est un symbole spécial qui correspond à n’importe quel caractère.</p>
 <p>On corrige donc le problème en entourant notre <code>pattern</code> de la fonction <code>fixed()</code> de <code>stringr</code>, qui permet de spécifier qu’on souhaite bien découper notre texte selon le caractère <code>"."</code>.</p>
-<div class="sourceCode" id="cb1160"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1160-1"><a href="20-debuggage-performance.html#cb1160-1"></a>phrase_max &lt;-<span class="st"> </span><span class="cf">function</span>(str, lettre) {</span>
-<span id="cb1160-2"><a href="20-debuggage-performance.html#cb1160-2"></a>    phrases &lt;-<span class="st"> </span><span class="kw">str_split</span>(str, <span class="kw">fixed</span>(<span class="st">&quot;.&quot;</span>), <span class="dt">simplify =</span> <span class="ot">TRUE</span>)</span>
-<span id="cb1160-3"><a href="20-debuggage-performance.html#cb1160-3"></a>    n_lettre &lt;-<span class="st"> </span><span class="kw">str_detect</span>(phrases, lettre)</span>
-<span id="cb1160-4"><a href="20-debuggage-performance.html#cb1160-4"></a>    phrases[n_lettre <span class="op">==</span><span class="st"> </span><span class="kw">max</span>(n_lettre)]</span>
-<span id="cb1160-5"><a href="20-debuggage-performance.html#cb1160-5"></a>}</span></code></pre></div>
+<div class="sourceCode" id="cb1164"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1164-1"><a href="20-debuggage-performance.html#cb1164-1"></a>phrase_max &lt;-<span class="st"> </span><span class="cf">function</span>(str, lettre) {</span>
+<span id="cb1164-2"><a href="20-debuggage-performance.html#cb1164-2"></a>    phrases &lt;-<span class="st"> </span><span class="kw">str_split</span>(str, <span class="kw">fixed</span>(<span class="st">&quot;.&quot;</span>), <span class="dt">simplify =</span> <span class="ot">TRUE</span>)</span>
+<span id="cb1164-3"><a href="20-debuggage-performance.html#cb1164-3"></a>    n_lettre &lt;-<span class="st"> </span><span class="kw">str_detect</span>(phrases, lettre)</span>
+<span id="cb1164-4"><a href="20-debuggage-performance.html#cb1164-4"></a>    phrases[n_lettre <span class="op">==</span><span class="st"> </span><span class="kw">max</span>(n_lettre)]</span>
+<span id="cb1164-5"><a href="20-debuggage-performance.html#cb1164-5"></a>}</span></code></pre></div>
 <p>On teste cette version corrigée.</p>
-<div class="sourceCode" id="cb1161"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1161-1"><a href="20-debuggage-performance.html#cb1161-1"></a><span class="kw">phrase_max</span>(texte, <span class="st">&quot;t&quot;</span>)</span>
-<span id="cb1161-2"><a href="20-debuggage-performance.html#cb1161-2"></a><span class="co">#&gt; [1] &quot;Le chat dort&quot;                &quot; Le chat dort tout le temps&quot;</span></span></code></pre></div>
+<div class="sourceCode" id="cb1165"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1165-1"><a href="20-debuggage-performance.html#cb1165-1"></a><span class="kw">phrase_max</span>(texte, <span class="st">&quot;t&quot;</span>)</span>
+<span id="cb1165-2"><a href="20-debuggage-performance.html#cb1165-2"></a><span class="co">#&gt; [1] &quot;Le chat dort&quot;                &quot; Le chat dort tout le temps&quot;</span></span></code></pre></div>
 <p>C’est un peu mieux, mais pas encore tout à fait ça puisque la fonction nous retourne plusieurs phrases et pas seulement celle qui comporte le plus de “t”…</p>
 <p>On rajoute donc un <code>print()</code> pour voir ce que vaut le résultat du <code>str_detect()</code>.</p>
-<div class="sourceCode" id="cb1162"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1162-1"><a href="20-debuggage-performance.html#cb1162-1"></a>phrase_max &lt;-<span class="st"> </span><span class="cf">function</span>(str, lettre) {</span>
-<span id="cb1162-2"><a href="20-debuggage-performance.html#cb1162-2"></a>    phrases &lt;-<span class="st"> </span><span class="kw">str_split</span>(str, <span class="kw">fixed</span>(<span class="st">&quot;.&quot;</span>), <span class="dt">simplify =</span> <span class="ot">TRUE</span>)</span>
-<span id="cb1162-3"><a href="20-debuggage-performance.html#cb1162-3"></a>    n_lettre &lt;-<span class="st"> </span><span class="kw">str_detect</span>(phrases, lettre)</span>
-<span id="cb1162-4"><a href="20-debuggage-performance.html#cb1162-4"></a>    <span class="kw">print</span>(n_lettre)</span>
-<span id="cb1162-5"><a href="20-debuggage-performance.html#cb1162-5"></a>    phrases[n_lettre <span class="op">==</span><span class="st"> </span><span class="kw">max</span>(n_lettre)]</span>
-<span id="cb1162-6"><a href="20-debuggage-performance.html#cb1162-6"></a>}</span>
-<span id="cb1162-7"><a href="20-debuggage-performance.html#cb1162-7"></a></span>
-<span id="cb1162-8"><a href="20-debuggage-performance.html#cb1162-8"></a><span class="kw">phrase_max</span>(texte, <span class="st">&quot;t&quot;</span>)</span>
-<span id="cb1162-9"><a href="20-debuggage-performance.html#cb1162-9"></a><span class="co">#&gt; [1]  TRUE FALSE  TRUE FALSE</span></span>
-<span id="cb1162-10"><a href="20-debuggage-performance.html#cb1162-10"></a><span class="co">#&gt; [1] &quot;Le chat dort&quot;                &quot; Le chat dort tout le temps&quot;</span></span></code></pre></div>
+<div class="sourceCode" id="cb1166"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1166-1"><a href="20-debuggage-performance.html#cb1166-1"></a>phrase_max &lt;-<span class="st"> </span><span class="cf">function</span>(str, lettre) {</span>
+<span id="cb1166-2"><a href="20-debuggage-performance.html#cb1166-2"></a>    phrases &lt;-<span class="st"> </span><span class="kw">str_split</span>(str, <span class="kw">fixed</span>(<span class="st">&quot;.&quot;</span>), <span class="dt">simplify =</span> <span class="ot">TRUE</span>)</span>
+<span id="cb1166-3"><a href="20-debuggage-performance.html#cb1166-3"></a>    n_lettre &lt;-<span class="st"> </span><span class="kw">str_detect</span>(phrases, lettre)</span>
+<span id="cb1166-4"><a href="20-debuggage-performance.html#cb1166-4"></a>    <span class="kw">print</span>(n_lettre)</span>
+<span id="cb1166-5"><a href="20-debuggage-performance.html#cb1166-5"></a>    phrases[n_lettre <span class="op">==</span><span class="st"> </span><span class="kw">max</span>(n_lettre)]</span>
+<span id="cb1166-6"><a href="20-debuggage-performance.html#cb1166-6"></a>}</span>
+<span id="cb1166-7"><a href="20-debuggage-performance.html#cb1166-7"></a></span>
+<span id="cb1166-8"><a href="20-debuggage-performance.html#cb1166-8"></a><span class="kw">phrase_max</span>(texte, <span class="st">&quot;t&quot;</span>)</span>
+<span id="cb1166-9"><a href="20-debuggage-performance.html#cb1166-9"></a><span class="co">#&gt; [1]  TRUE FALSE  TRUE FALSE</span></span>
+<span id="cb1166-10"><a href="20-debuggage-performance.html#cb1166-10"></a><span class="co">#&gt; [1] &quot;Le chat dort&quot;                &quot; Le chat dort tout le temps&quot;</span></span></code></pre></div>
 <p>Ce qui nous permet de constater que <code>n_lettre</code> ne contient pas le nombre d’occurrences de “t”, mais juste une valeur logique indiquant si la phrase contient ou non un “t”. Pourquoi ? Tout simplement parce qu’on n’a pas utilisé la bonne fonction ! Il faut en effet remplacer <code>str_detect()</code> par <code>str_count()</code>.</p>
-<div class="sourceCode" id="cb1163"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1163-1"><a href="20-debuggage-performance.html#cb1163-1"></a>phrase_max &lt;-<span class="st"> </span><span class="cf">function</span>(str, lettre) {</span>
-<span id="cb1163-2"><a href="20-debuggage-performance.html#cb1163-2"></a>    phrases &lt;-<span class="st"> </span><span class="kw">str_split</span>(str, <span class="kw">fixed</span>(<span class="st">&quot;.&quot;</span>), <span class="dt">simplify =</span> <span class="ot">TRUE</span>)</span>
-<span id="cb1163-3"><a href="20-debuggage-performance.html#cb1163-3"></a>    n_lettre &lt;-<span class="st"> </span><span class="kw">str_count</span>(phrases, lettre)</span>
-<span id="cb1163-4"><a href="20-debuggage-performance.html#cb1163-4"></a>    phrases[n_lettre <span class="op">==</span><span class="st"> </span><span class="kw">max</span>(n_lettre)]</span>
-<span id="cb1163-5"><a href="20-debuggage-performance.html#cb1163-5"></a>}</span></code></pre></div>
+<div class="sourceCode" id="cb1167"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1167-1"><a href="20-debuggage-performance.html#cb1167-1"></a>phrase_max &lt;-<span class="st"> </span><span class="cf">function</span>(str, lettre) {</span>
+<span id="cb1167-2"><a href="20-debuggage-performance.html#cb1167-2"></a>    phrases &lt;-<span class="st"> </span><span class="kw">str_split</span>(str, <span class="kw">fixed</span>(<span class="st">&quot;.&quot;</span>), <span class="dt">simplify =</span> <span class="ot">TRUE</span>)</span>
+<span id="cb1167-3"><a href="20-debuggage-performance.html#cb1167-3"></a>    n_lettre &lt;-<span class="st"> </span><span class="kw">str_count</span>(phrases, lettre)</span>
+<span id="cb1167-4"><a href="20-debuggage-performance.html#cb1167-4"></a>    phrases[n_lettre <span class="op">==</span><span class="st"> </span><span class="kw">max</span>(n_lettre)]</span>
+<span id="cb1167-5"><a href="20-debuggage-performance.html#cb1167-5"></a>}</span></code></pre></div>
 <p>On teste cette nouvelle version :</p>
-<div class="sourceCode" id="cb1164"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1164-1"><a href="20-debuggage-performance.html#cb1164-1"></a><span class="kw">phrase_max</span>(texte, <span class="st">&quot;t&quot;</span>)</span>
-<span id="cb1164-2"><a href="20-debuggage-performance.html#cb1164-2"></a><span class="co">#&gt; [1] &quot; Le chat dort tout le temps&quot;</span></span></code></pre></div>
+<div class="sourceCode" id="cb1168"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1168-1"><a href="20-debuggage-performance.html#cb1168-1"></a><span class="kw">phrase_max</span>(texte, <span class="st">&quot;t&quot;</span>)</span>
+<span id="cb1168-2"><a href="20-debuggage-performance.html#cb1168-2"></a><span class="co">#&gt; [1] &quot; Le chat dort tout le temps&quot;</span></span></code></pre></div>
 <p>Cette fois ça semble fonctionner !</p>
 </div>
 <div id="localiser-une-erreur" class="section level3">
 <h3><span class="header-section-number">20.1.2</span> Localiser une erreur</h3>
 <p><code>print()</code> peut aussi être utile pour savoir à quel moment une erreur se produit.</p>
 <p>Dans l’exemple suivant, on crée une fonction <code>prop_values()</code> qui prend en argument un tableau de données <code>df</code> et une proportion <code>prop</code> et retourne une liste comportant les modalités de variables qui apparaissent au moins dans la proportion correspondante.</p>
-<div class="sourceCode" id="cb1165"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1165-1"><a href="20-debuggage-performance.html#cb1165-1"></a>prop_values &lt;-<span class="st"> </span><span class="cf">function</span>(df, <span class="dt">prop =</span> <span class="fl">0.5</span>) {</span>
-<span id="cb1165-2"><a href="20-debuggage-performance.html#cb1165-2"></a>    min_freq &lt;-<span class="st"> </span>prop <span class="op">*</span><span class="st"> </span><span class="kw">nrow</span>(df)</span>
-<span id="cb1165-3"><a href="20-debuggage-performance.html#cb1165-3"></a>    res &lt;-<span class="st"> </span><span class="kw">list</span>()</span>
-<span id="cb1165-4"><a href="20-debuggage-performance.html#cb1165-4"></a>    <span class="cf">for</span> (var <span class="cf">in</span> <span class="kw">names</span>(df)) {</span>
-<span id="cb1165-5"><a href="20-debuggage-performance.html#cb1165-5"></a>        freq &lt;-<span class="st"> </span><span class="kw">table</span>(df[[var]])</span>
-<span id="cb1165-6"><a href="20-debuggage-performance.html#cb1165-6"></a>        freq &lt;-<span class="st"> </span>freq[freq <span class="op">&gt;=</span><span class="st"> </span>min_freq]</span>
-<span id="cb1165-7"><a href="20-debuggage-performance.html#cb1165-7"></a>        <span class="cf">if</span> (<span class="kw">length</span>(freq) <span class="op">&gt;</span><span class="st"> </span><span class="dv">0</span>) {</span>
-<span id="cb1165-8"><a href="20-debuggage-performance.html#cb1165-8"></a>            res[[var]] &lt;-<span class="st"> </span>freq</span>
-<span id="cb1165-9"><a href="20-debuggage-performance.html#cb1165-9"></a>        }</span>
-<span id="cb1165-10"><a href="20-debuggage-performance.html#cb1165-10"></a>    }</span>
-<span id="cb1165-11"><a href="20-debuggage-performance.html#cb1165-11"></a>    res</span>
-<span id="cb1165-12"><a href="20-debuggage-performance.html#cb1165-12"></a>}</span></code></pre></div>
+<div class="sourceCode" id="cb1169"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1169-1"><a href="20-debuggage-performance.html#cb1169-1"></a>prop_values &lt;-<span class="st"> </span><span class="cf">function</span>(df, <span class="dt">prop =</span> <span class="fl">0.5</span>) {</span>
+<span id="cb1169-2"><a href="20-debuggage-performance.html#cb1169-2"></a>    min_freq &lt;-<span class="st"> </span>prop <span class="op">*</span><span class="st"> </span><span class="kw">nrow</span>(df)</span>
+<span id="cb1169-3"><a href="20-debuggage-performance.html#cb1169-3"></a>    res &lt;-<span class="st"> </span><span class="kw">list</span>()</span>
+<span id="cb1169-4"><a href="20-debuggage-performance.html#cb1169-4"></a>    <span class="cf">for</span> (var <span class="cf">in</span> <span class="kw">names</span>(df)) {</span>
+<span id="cb1169-5"><a href="20-debuggage-performance.html#cb1169-5"></a>        freq &lt;-<span class="st"> </span><span class="kw">table</span>(df[[var]])</span>
+<span id="cb1169-6"><a href="20-debuggage-performance.html#cb1169-6"></a>        freq &lt;-<span class="st"> </span>freq[freq <span class="op">&gt;=</span><span class="st"> </span>min_freq]</span>
+<span id="cb1169-7"><a href="20-debuggage-performance.html#cb1169-7"></a>        <span class="cf">if</span> (<span class="kw">length</span>(freq) <span class="op">&gt;</span><span class="st"> </span><span class="dv">0</span>) {</span>
+<span id="cb1169-8"><a href="20-debuggage-performance.html#cb1169-8"></a>            res[[var]] &lt;-<span class="st"> </span>freq</span>
+<span id="cb1169-9"><a href="20-debuggage-performance.html#cb1169-9"></a>        }</span>
+<span id="cb1169-10"><a href="20-debuggage-performance.html#cb1169-10"></a>    }</span>
+<span id="cb1169-11"><a href="20-debuggage-performance.html#cb1169-11"></a>    res</span>
+<span id="cb1169-12"><a href="20-debuggage-performance.html#cb1169-12"></a>}</span></code></pre></div>
 <p>Si on applique <code>prop_values()</code> à <code>hdv2003</code> avec une valeur de <code>prop</code> à 0.75, on obtient toutes les modalités correspondant à au moins trois quart des observations.</p>
-<div class="sourceCode" id="cb1166"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1166-1"><a href="20-debuggage-performance.html#cb1166-1"></a><span class="kw">data</span>(hdv2003)</span>
-<span id="cb1166-2"><a href="20-debuggage-performance.html#cb1166-2"></a><span class="kw">prop_values</span>(hdv2003, <span class="fl">0.75</span>)</span>
-<span id="cb1166-3"><a href="20-debuggage-performance.html#cb1166-3"></a><span class="co">#&gt; $hard.rock</span></span>
-<span id="cb1166-4"><a href="20-debuggage-performance.html#cb1166-4"></a><span class="co">#&gt;  Non </span></span>
-<span id="cb1166-5"><a href="20-debuggage-performance.html#cb1166-5"></a><span class="co">#&gt; 1986 </span></span>
-<span id="cb1166-6"><a href="20-debuggage-performance.html#cb1166-6"></a><span class="co">#&gt; </span></span>
-<span id="cb1166-7"><a href="20-debuggage-performance.html#cb1166-7"></a><span class="co">#&gt; $lecture.bd</span></span>
-<span id="cb1166-8"><a href="20-debuggage-performance.html#cb1166-8"></a><span class="co">#&gt;  Non </span></span>
-<span id="cb1166-9"><a href="20-debuggage-performance.html#cb1166-9"></a><span class="co">#&gt; 1953 </span></span>
-<span id="cb1166-10"><a href="20-debuggage-performance.html#cb1166-10"></a><span class="co">#&gt; </span></span>
-<span id="cb1166-11"><a href="20-debuggage-performance.html#cb1166-11"></a><span class="co">#&gt; $peche.chasse</span></span>
-<span id="cb1166-12"><a href="20-debuggage-performance.html#cb1166-12"></a><span class="co">#&gt;  Non </span></span>
-<span id="cb1166-13"><a href="20-debuggage-performance.html#cb1166-13"></a><span class="co">#&gt; 1776</span></span></code></pre></div>
+<div class="sourceCode" id="cb1170"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1170-1"><a href="20-debuggage-performance.html#cb1170-1"></a><span class="kw">data</span>(hdv2003)</span>
+<span id="cb1170-2"><a href="20-debuggage-performance.html#cb1170-2"></a><span class="kw">prop_values</span>(hdv2003, <span class="fl">0.75</span>)</span>
+<span id="cb1170-3"><a href="20-debuggage-performance.html#cb1170-3"></a><span class="co">#&gt; $hard.rock</span></span>
+<span id="cb1170-4"><a href="20-debuggage-performance.html#cb1170-4"></a><span class="co">#&gt;  Non </span></span>
+<span id="cb1170-5"><a href="20-debuggage-performance.html#cb1170-5"></a><span class="co">#&gt; 1986 </span></span>
+<span id="cb1170-6"><a href="20-debuggage-performance.html#cb1170-6"></a><span class="co">#&gt; </span></span>
+<span id="cb1170-7"><a href="20-debuggage-performance.html#cb1170-7"></a><span class="co">#&gt; $lecture.bd</span></span>
+<span id="cb1170-8"><a href="20-debuggage-performance.html#cb1170-8"></a><span class="co">#&gt;  Non </span></span>
+<span id="cb1170-9"><a href="20-debuggage-performance.html#cb1170-9"></a><span class="co">#&gt; 1953 </span></span>
+<span id="cb1170-10"><a href="20-debuggage-performance.html#cb1170-10"></a><span class="co">#&gt; </span></span>
+<span id="cb1170-11"><a href="20-debuggage-performance.html#cb1170-11"></a><span class="co">#&gt; $peche.chasse</span></span>
+<span id="cb1170-12"><a href="20-debuggage-performance.html#cb1170-12"></a><span class="co">#&gt;  Non </span></span>
+<span id="cb1170-13"><a href="20-debuggage-performance.html#cb1170-13"></a><span class="co">#&gt; 1776</span></span></code></pre></div>
 <p>Essayons maintenant d’appliquer <code>prop_values()</code> au jeu de données <code>starwars</code> de <code>dplyr</code>.</p>
-<div class="sourceCode" id="cb1167"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1167-1"><a href="20-debuggage-performance.html#cb1167-1"></a><span class="kw">library</span>(dplyr)</span>
-<span id="cb1167-2"><a href="20-debuggage-performance.html#cb1167-2"></a><span class="kw">data</span>(starwars)</span>
-<span id="cb1167-3"><a href="20-debuggage-performance.html#cb1167-3"></a><span class="kw">prop_values</span>(starwars, <span class="fl">0.75</span>)</span>
-<span id="cb1167-4"><a href="20-debuggage-performance.html#cb1167-4"></a><span class="co">#&gt; Error in table(df[[var]]): all arguments must have the same length</span></span></code></pre></div>
+<div class="sourceCode" id="cb1171"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1171-1"><a href="20-debuggage-performance.html#cb1171-1"></a><span class="kw">library</span>(dplyr)</span>
+<span id="cb1171-2"><a href="20-debuggage-performance.html#cb1171-2"></a><span class="kw">data</span>(starwars)</span>
+<span id="cb1171-3"><a href="20-debuggage-performance.html#cb1171-3"></a><span class="kw">prop_values</span>(starwars, <span class="fl">0.75</span>)</span>
+<span id="cb1171-4"><a href="20-debuggage-performance.html#cb1171-4"></a><span class="co">#&gt; Error in table(df[[var]]): all arguments must have the same length</span></span></code></pre></div>
 <p>On obtient une erreur plus ou moins sybilline : apparemment une erreur se produit au moment de faire le tri à plat des valeurs avec <code>table(df[[var]])</code>. Mais comme ce tri à plat s’effectue dans une boucle, on ne sait pas quelle variable de <code>starwars</code> cause le problème.</p>
 <p>On va donc rajouter comme première instruction de la boucle un <code>print(var)</code>.</p>
-<div class="sourceCode" id="cb1168"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1168-1"><a href="20-debuggage-performance.html#cb1168-1"></a>prop_values &lt;-<span class="st"> </span><span class="cf">function</span>(df, <span class="dt">prop =</span> <span class="fl">0.5</span>) {</span>
-<span id="cb1168-2"><a href="20-debuggage-performance.html#cb1168-2"></a>    min_freq &lt;-<span class="st"> </span>prop <span class="op">*</span><span class="st"> </span><span class="kw">nrow</span>(df)</span>
-<span id="cb1168-3"><a href="20-debuggage-performance.html#cb1168-3"></a>    res &lt;-<span class="st"> </span><span class="kw">list</span>()</span>
-<span id="cb1168-4"><a href="20-debuggage-performance.html#cb1168-4"></a>    <span class="cf">for</span> (var <span class="cf">in</span> <span class="kw">names</span>(df)) {</span>
-<span id="cb1168-5"><a href="20-debuggage-performance.html#cb1168-5"></a>        <span class="kw">print</span>(var) <span class="co"># debug</span></span>
-<span id="cb1168-6"><a href="20-debuggage-performance.html#cb1168-6"></a>        freq &lt;-<span class="st"> </span><span class="kw">table</span>(df[[var]])</span>
-<span id="cb1168-7"><a href="20-debuggage-performance.html#cb1168-7"></a>        freq &lt;-<span class="st"> </span>freq[freq <span class="op">&gt;=</span><span class="st"> </span>min_freq]</span>
-<span id="cb1168-8"><a href="20-debuggage-performance.html#cb1168-8"></a>        <span class="cf">if</span> (<span class="kw">length</span>(freq) <span class="op">&gt;</span><span class="st"> </span><span class="dv">0</span>) {</span>
-<span id="cb1168-9"><a href="20-debuggage-performance.html#cb1168-9"></a>            res[[var]] &lt;-<span class="st"> </span>freq</span>
-<span id="cb1168-10"><a href="20-debuggage-performance.html#cb1168-10"></a>        }</span>
-<span id="cb1168-11"><a href="20-debuggage-performance.html#cb1168-11"></a>    }</span>
-<span id="cb1168-12"><a href="20-debuggage-performance.html#cb1168-12"></a>    res</span>
-<span id="cb1168-13"><a href="20-debuggage-performance.html#cb1168-13"></a>}</span>
-<span id="cb1168-14"><a href="20-debuggage-performance.html#cb1168-14"></a></span>
-<span id="cb1168-15"><a href="20-debuggage-performance.html#cb1168-15"></a><span class="kw">prop_values</span>(starwars, <span class="fl">0.75</span>)</span>
-<span id="cb1168-16"><a href="20-debuggage-performance.html#cb1168-16"></a><span class="co">#&gt; [1] &quot;name&quot;</span></span>
-<span id="cb1168-17"><a href="20-debuggage-performance.html#cb1168-17"></a><span class="co">#&gt; [1] &quot;height&quot;</span></span>
-<span id="cb1168-18"><a href="20-debuggage-performance.html#cb1168-18"></a><span class="co">#&gt; [1] &quot;mass&quot;</span></span>
-<span id="cb1168-19"><a href="20-debuggage-performance.html#cb1168-19"></a><span class="co">#&gt; [1] &quot;hair_color&quot;</span></span>
-<span id="cb1168-20"><a href="20-debuggage-performance.html#cb1168-20"></a><span class="co">#&gt; [1] &quot;skin_color&quot;</span></span>
-<span id="cb1168-21"><a href="20-debuggage-performance.html#cb1168-21"></a><span class="co">#&gt; [1] &quot;eye_color&quot;</span></span>
-<span id="cb1168-22"><a href="20-debuggage-performance.html#cb1168-22"></a><span class="co">#&gt; [1] &quot;birth_year&quot;</span></span>
-<span id="cb1168-23"><a href="20-debuggage-performance.html#cb1168-23"></a><span class="co">#&gt; [1] &quot;sex&quot;</span></span>
-<span id="cb1168-24"><a href="20-debuggage-performance.html#cb1168-24"></a><span class="co">#&gt; [1] &quot;gender&quot;</span></span>
-<span id="cb1168-25"><a href="20-debuggage-performance.html#cb1168-25"></a><span class="co">#&gt; [1] &quot;homeworld&quot;</span></span>
-<span id="cb1168-26"><a href="20-debuggage-performance.html#cb1168-26"></a><span class="co">#&gt; [1] &quot;species&quot;</span></span>
-<span id="cb1168-27"><a href="20-debuggage-performance.html#cb1168-27"></a><span class="co">#&gt; [1] &quot;films&quot;</span></span>
-<span id="cb1168-28"><a href="20-debuggage-performance.html#cb1168-28"></a><span class="co">#&gt; Error in table(df[[var]]): all arguments must have the same length</span></span></code></pre></div>
+<div class="sourceCode" id="cb1172"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1172-1"><a href="20-debuggage-performance.html#cb1172-1"></a>prop_values &lt;-<span class="st"> </span><span class="cf">function</span>(df, <span class="dt">prop =</span> <span class="fl">0.5</span>) {</span>
+<span id="cb1172-2"><a href="20-debuggage-performance.html#cb1172-2"></a>    min_freq &lt;-<span class="st"> </span>prop <span class="op">*</span><span class="st"> </span><span class="kw">nrow</span>(df)</span>
+<span id="cb1172-3"><a href="20-debuggage-performance.html#cb1172-3"></a>    res &lt;-<span class="st"> </span><span class="kw">list</span>()</span>
+<span id="cb1172-4"><a href="20-debuggage-performance.html#cb1172-4"></a>    <span class="cf">for</span> (var <span class="cf">in</span> <span class="kw">names</span>(df)) {</span>
+<span id="cb1172-5"><a href="20-debuggage-performance.html#cb1172-5"></a>        <span class="kw">print</span>(var) <span class="co"># debug</span></span>
+<span id="cb1172-6"><a href="20-debuggage-performance.html#cb1172-6"></a>        freq &lt;-<span class="st"> </span><span class="kw">table</span>(df[[var]])</span>
+<span id="cb1172-7"><a href="20-debuggage-performance.html#cb1172-7"></a>        freq &lt;-<span class="st"> </span>freq[freq <span class="op">&gt;=</span><span class="st"> </span>min_freq]</span>
+<span id="cb1172-8"><a href="20-debuggage-performance.html#cb1172-8"></a>        <span class="cf">if</span> (<span class="kw">length</span>(freq) <span class="op">&gt;</span><span class="st"> </span><span class="dv">0</span>) {</span>
+<span id="cb1172-9"><a href="20-debuggage-performance.html#cb1172-9"></a>            res[[var]] &lt;-<span class="st"> </span>freq</span>
+<span id="cb1172-10"><a href="20-debuggage-performance.html#cb1172-10"></a>        }</span>
+<span id="cb1172-11"><a href="20-debuggage-performance.html#cb1172-11"></a>    }</span>
+<span id="cb1172-12"><a href="20-debuggage-performance.html#cb1172-12"></a>    res</span>
+<span id="cb1172-13"><a href="20-debuggage-performance.html#cb1172-13"></a>}</span>
+<span id="cb1172-14"><a href="20-debuggage-performance.html#cb1172-14"></a></span>
+<span id="cb1172-15"><a href="20-debuggage-performance.html#cb1172-15"></a><span class="kw">prop_values</span>(starwars, <span class="fl">0.75</span>)</span>
+<span id="cb1172-16"><a href="20-debuggage-performance.html#cb1172-16"></a><span class="co">#&gt; [1] &quot;name&quot;</span></span>
+<span id="cb1172-17"><a href="20-debuggage-performance.html#cb1172-17"></a><span class="co">#&gt; [1] &quot;height&quot;</span></span>
+<span id="cb1172-18"><a href="20-debuggage-performance.html#cb1172-18"></a><span class="co">#&gt; [1] &quot;mass&quot;</span></span>
+<span id="cb1172-19"><a href="20-debuggage-performance.html#cb1172-19"></a><span class="co">#&gt; [1] &quot;hair_color&quot;</span></span>
+<span id="cb1172-20"><a href="20-debuggage-performance.html#cb1172-20"></a><span class="co">#&gt; [1] &quot;skin_color&quot;</span></span>
+<span id="cb1172-21"><a href="20-debuggage-performance.html#cb1172-21"></a><span class="co">#&gt; [1] &quot;eye_color&quot;</span></span>
+<span id="cb1172-22"><a href="20-debuggage-performance.html#cb1172-22"></a><span class="co">#&gt; [1] &quot;birth_year&quot;</span></span>
+<span id="cb1172-23"><a href="20-debuggage-performance.html#cb1172-23"></a><span class="co">#&gt; [1] &quot;sex&quot;</span></span>
+<span id="cb1172-24"><a href="20-debuggage-performance.html#cb1172-24"></a><span class="co">#&gt; [1] &quot;gender&quot;</span></span>
+<span id="cb1172-25"><a href="20-debuggage-performance.html#cb1172-25"></a><span class="co">#&gt; [1] &quot;homeworld&quot;</span></span>
+<span id="cb1172-26"><a href="20-debuggage-performance.html#cb1172-26"></a><span class="co">#&gt; [1] &quot;species&quot;</span></span>
+<span id="cb1172-27"><a href="20-debuggage-performance.html#cb1172-27"></a><span class="co">#&gt; [1] &quot;films&quot;</span></span>
+<span id="cb1172-28"><a href="20-debuggage-performance.html#cb1172-28"></a><span class="co">#&gt; Error in table(df[[var]]): all arguments must have the same length</span></span></code></pre></div>
 <p>On voit que tout semble bien se passer pour les premières variables de notre tableau, et que l’erreur survient au moment de traiter la variable <code>films</code>. On regarde donc à quoi ressemble cette variable.</p>
-<div class="sourceCode" id="cb1169"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1169-1"><a href="20-debuggage-performance.html#cb1169-1"></a><span class="kw">head</span>(starwars<span class="op">$</span>films, <span class="dv">3</span>)</span>
-<span id="cb1169-2"><a href="20-debuggage-performance.html#cb1169-2"></a><span class="co">#&gt; [[1]]</span></span>
-<span id="cb1169-3"><a href="20-debuggage-performance.html#cb1169-3"></a><span class="co">#&gt; [1] &quot;The Empire Strikes Back&quot; &quot;Revenge of the Sith&quot;    </span></span>
-<span id="cb1169-4"><a href="20-debuggage-performance.html#cb1169-4"></a><span class="co">#&gt; [3] &quot;Return of the Jedi&quot;      &quot;A New Hope&quot;             </span></span>
-<span id="cb1169-5"><a href="20-debuggage-performance.html#cb1169-5"></a><span class="co">#&gt; [5] &quot;The Force Awakens&quot;      </span></span>
-<span id="cb1169-6"><a href="20-debuggage-performance.html#cb1169-6"></a><span class="co">#&gt; </span></span>
-<span id="cb1169-7"><a href="20-debuggage-performance.html#cb1169-7"></a><span class="co">#&gt; [[2]]</span></span>
-<span id="cb1169-8"><a href="20-debuggage-performance.html#cb1169-8"></a><span class="co">#&gt; [1] &quot;The Empire Strikes Back&quot; &quot;Attack of the Clones&quot;   </span></span>
-<span id="cb1169-9"><a href="20-debuggage-performance.html#cb1169-9"></a><span class="co">#&gt; [3] &quot;The Phantom Menace&quot;      &quot;Revenge of the Sith&quot;    </span></span>
-<span id="cb1169-10"><a href="20-debuggage-performance.html#cb1169-10"></a><span class="co">#&gt; [5] &quot;Return of the Jedi&quot;      &quot;A New Hope&quot;             </span></span>
-<span id="cb1169-11"><a href="20-debuggage-performance.html#cb1169-11"></a><span class="co">#&gt; </span></span>
-<span id="cb1169-12"><a href="20-debuggage-performance.html#cb1169-12"></a><span class="co">#&gt; [[3]]</span></span>
-<span id="cb1169-13"><a href="20-debuggage-performance.html#cb1169-13"></a><span class="co">#&gt; [1] &quot;The Empire Strikes Back&quot; &quot;Attack of the Clones&quot;   </span></span>
-<span id="cb1169-14"><a href="20-debuggage-performance.html#cb1169-14"></a><span class="co">#&gt; [3] &quot;The Phantom Menace&quot;      &quot;Revenge of the Sith&quot;    </span></span>
-<span id="cb1169-15"><a href="20-debuggage-performance.html#cb1169-15"></a><span class="co">#&gt; [5] &quot;Return of the Jedi&quot;      &quot;A New Hope&quot;             </span></span>
-<span id="cb1169-16"><a href="20-debuggage-performance.html#cb1169-16"></a><span class="co">#&gt; [7] &quot;The Force Awakens&quot;</span></span></code></pre></div>
+<div class="sourceCode" id="cb1173"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1173-1"><a href="20-debuggage-performance.html#cb1173-1"></a><span class="kw">head</span>(starwars<span class="op">$</span>films, <span class="dv">3</span>)</span>
+<span id="cb1173-2"><a href="20-debuggage-performance.html#cb1173-2"></a><span class="co">#&gt; [[1]]</span></span>
+<span id="cb1173-3"><a href="20-debuggage-performance.html#cb1173-3"></a><span class="co">#&gt; [1] &quot;The Empire Strikes Back&quot; &quot;Revenge of the Sith&quot;    </span></span>
+<span id="cb1173-4"><a href="20-debuggage-performance.html#cb1173-4"></a><span class="co">#&gt; [3] &quot;Return of the Jedi&quot;      &quot;A New Hope&quot;             </span></span>
+<span id="cb1173-5"><a href="20-debuggage-performance.html#cb1173-5"></a><span class="co">#&gt; [5] &quot;The Force Awakens&quot;      </span></span>
+<span id="cb1173-6"><a href="20-debuggage-performance.html#cb1173-6"></a><span class="co">#&gt; </span></span>
+<span id="cb1173-7"><a href="20-debuggage-performance.html#cb1173-7"></a><span class="co">#&gt; [[2]]</span></span>
+<span id="cb1173-8"><a href="20-debuggage-performance.html#cb1173-8"></a><span class="co">#&gt; [1] &quot;The Empire Strikes Back&quot; &quot;Attack of the Clones&quot;   </span></span>
+<span id="cb1173-9"><a href="20-debuggage-performance.html#cb1173-9"></a><span class="co">#&gt; [3] &quot;The Phantom Menace&quot;      &quot;Revenge of the Sith&quot;    </span></span>
+<span id="cb1173-10"><a href="20-debuggage-performance.html#cb1173-10"></a><span class="co">#&gt; [5] &quot;Return of the Jedi&quot;      &quot;A New Hope&quot;             </span></span>
+<span id="cb1173-11"><a href="20-debuggage-performance.html#cb1173-11"></a><span class="co">#&gt; </span></span>
+<span id="cb1173-12"><a href="20-debuggage-performance.html#cb1173-12"></a><span class="co">#&gt; [[3]]</span></span>
+<span id="cb1173-13"><a href="20-debuggage-performance.html#cb1173-13"></a><span class="co">#&gt; [1] &quot;The Empire Strikes Back&quot; &quot;Attack of the Clones&quot;   </span></span>
+<span id="cb1173-14"><a href="20-debuggage-performance.html#cb1173-14"></a><span class="co">#&gt; [3] &quot;The Phantom Menace&quot;      &quot;Revenge of the Sith&quot;    </span></span>
+<span id="cb1173-15"><a href="20-debuggage-performance.html#cb1173-15"></a><span class="co">#&gt; [5] &quot;Return of the Jedi&quot;      &quot;A New Hope&quot;             </span></span>
+<span id="cb1173-16"><a href="20-debuggage-performance.html#cb1173-16"></a><span class="co">#&gt; [7] &quot;The Force Awakens&quot;</span></span></code></pre></div>
 <p>Damn, cette variable n’est pas un vecteur atomique mais une liste ! Un tableau de données peut en effet contenir ce que l’on appelle des colonnes-listes. Comme ça n’est pas fréquent, on ne l’avait clairement pas prévu au moment de la création de la fonction.</p>
 <p>On a désormais identifié le problème, on peut donc le corriger par exemple en ignorant les colonnes de type liste en utilisant <code>is.list()</code> et l’instruction <code>next</code>.</p>
-<div class="sourceCode" id="cb1170"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1170-1"><a href="20-debuggage-performance.html#cb1170-1"></a>prop_values &lt;-<span class="st"> </span><span class="cf">function</span>(df, <span class="dt">prop =</span> <span class="fl">0.5</span>) {</span>
-<span id="cb1170-2"><a href="20-debuggage-performance.html#cb1170-2"></a>    min_freq &lt;-<span class="st"> </span>prop <span class="op">*</span><span class="st"> </span><span class="kw">nrow</span>(df)</span>
-<span id="cb1170-3"><a href="20-debuggage-performance.html#cb1170-3"></a>    res &lt;-<span class="st"> </span><span class="kw">list</span>()</span>
-<span id="cb1170-4"><a href="20-debuggage-performance.html#cb1170-4"></a>    <span class="cf">for</span> (var <span class="cf">in</span> <span class="kw">names</span>(df)) {</span>
-<span id="cb1170-5"><a href="20-debuggage-performance.html#cb1170-5"></a>        <span class="cf">if</span> (<span class="kw">is.list</span>(df[[var]])) <span class="cf">next</span></span>
-<span id="cb1170-6"><a href="20-debuggage-performance.html#cb1170-6"></a>        freq &lt;-<span class="st"> </span><span class="kw">table</span>(df[[var]])</span>
-<span id="cb1170-7"><a href="20-debuggage-performance.html#cb1170-7"></a>        freq &lt;-<span class="st"> </span>freq[freq <span class="op">&gt;=</span><span class="st"> </span>min_freq]</span>
-<span id="cb1170-8"><a href="20-debuggage-performance.html#cb1170-8"></a>        <span class="cf">if</span> (<span class="kw">length</span>(freq) <span class="op">&gt;</span><span class="st"> </span><span class="dv">0</span>) {</span>
-<span id="cb1170-9"><a href="20-debuggage-performance.html#cb1170-9"></a>            res[[var]] &lt;-<span class="st"> </span>freq</span>
-<span id="cb1170-10"><a href="20-debuggage-performance.html#cb1170-10"></a>        }</span>
-<span id="cb1170-11"><a href="20-debuggage-performance.html#cb1170-11"></a>    }</span>
-<span id="cb1170-12"><a href="20-debuggage-performance.html#cb1170-12"></a>    res</span>
-<span id="cb1170-13"><a href="20-debuggage-performance.html#cb1170-13"></a>}</span>
-<span id="cb1170-14"><a href="20-debuggage-performance.html#cb1170-14"></a></span>
-<span id="cb1170-15"><a href="20-debuggage-performance.html#cb1170-15"></a><span class="kw">prop_values</span>(starwars, <span class="fl">0.75</span>)</span>
-<span id="cb1170-16"><a href="20-debuggage-performance.html#cb1170-16"></a><span class="co">#&gt; $gender</span></span>
-<span id="cb1170-17"><a href="20-debuggage-performance.html#cb1170-17"></a><span class="co">#&gt; masculine </span></span>
-<span id="cb1170-18"><a href="20-debuggage-performance.html#cb1170-18"></a><span class="co">#&gt;        66</span></span></code></pre></div>
+<div class="sourceCode" id="cb1174"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1174-1"><a href="20-debuggage-performance.html#cb1174-1"></a>prop_values &lt;-<span class="st"> </span><span class="cf">function</span>(df, <span class="dt">prop =</span> <span class="fl">0.5</span>) {</span>
+<span id="cb1174-2"><a href="20-debuggage-performance.html#cb1174-2"></a>    min_freq &lt;-<span class="st"> </span>prop <span class="op">*</span><span class="st"> </span><span class="kw">nrow</span>(df)</span>
+<span id="cb1174-3"><a href="20-debuggage-performance.html#cb1174-3"></a>    res &lt;-<span class="st"> </span><span class="kw">list</span>()</span>
+<span id="cb1174-4"><a href="20-debuggage-performance.html#cb1174-4"></a>    <span class="cf">for</span> (var <span class="cf">in</span> <span class="kw">names</span>(df)) {</span>
+<span id="cb1174-5"><a href="20-debuggage-performance.html#cb1174-5"></a>        <span class="cf">if</span> (<span class="kw">is.list</span>(df[[var]])) <span class="cf">next</span></span>
+<span id="cb1174-6"><a href="20-debuggage-performance.html#cb1174-6"></a>        freq &lt;-<span class="st"> </span><span class="kw">table</span>(df[[var]])</span>
+<span id="cb1174-7"><a href="20-debuggage-performance.html#cb1174-7"></a>        freq &lt;-<span class="st"> </span>freq[freq <span class="op">&gt;=</span><span class="st"> </span>min_freq]</span>
+<span id="cb1174-8"><a href="20-debuggage-performance.html#cb1174-8"></a>        <span class="cf">if</span> (<span class="kw">length</span>(freq) <span class="op">&gt;</span><span class="st"> </span><span class="dv">0</span>) {</span>
+<span id="cb1174-9"><a href="20-debuggage-performance.html#cb1174-9"></a>            res[[var]] &lt;-<span class="st"> </span>freq</span>
+<span id="cb1174-10"><a href="20-debuggage-performance.html#cb1174-10"></a>        }</span>
+<span id="cb1174-11"><a href="20-debuggage-performance.html#cb1174-11"></a>    }</span>
+<span id="cb1174-12"><a href="20-debuggage-performance.html#cb1174-12"></a>    res</span>
+<span id="cb1174-13"><a href="20-debuggage-performance.html#cb1174-13"></a>}</span>
+<span id="cb1174-14"><a href="20-debuggage-performance.html#cb1174-14"></a></span>
+<span id="cb1174-15"><a href="20-debuggage-performance.html#cb1174-15"></a><span class="kw">prop_values</span>(starwars, <span class="fl">0.75</span>)</span>
+<span id="cb1174-16"><a href="20-debuggage-performance.html#cb1174-16"></a><span class="co">#&gt; $gender</span></span>
+<span id="cb1174-17"><a href="20-debuggage-performance.html#cb1174-17"></a><span class="co">#&gt; masculine </span></span>
+<span id="cb1174-18"><a href="20-debuggage-performance.html#cb1174-18"></a><span class="co">#&gt;        66</span></span></code></pre></div>
 </div>
 <div id="browser" class="section level3">
 <h3><span class="header-section-number">20.1.3</span> browser()</h3>
 <p>Il y a des alternatives plus efficaces à l’utilisation de <code>print()</code> pour identifier et comprendre les bugs. La plus utilisée est la fonction <code>browser()</code>. Celle-ci peut s’insérer à n’importe quel endroit du code, et lorsqu’elle est rencontrée par R celui-ci s’interrompt et affiche une invite de commande permettant notamment d’inspecter des objets.</p>
 <p>On reprend l’exemple précédent en remplaçant le <code>print(var)</code> que nous avions inséré pour débugguer la fonction <code>prop_values</code> par un appel à <code>browser()</code>.</p>
-<div class="sourceCode" id="cb1171"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1171-1"><a href="20-debuggage-performance.html#cb1171-1"></a>prop_values &lt;-<span class="st"> </span><span class="cf">function</span>(df, <span class="dt">prop =</span> <span class="fl">0.5</span>) {</span>
-<span id="cb1171-2"><a href="20-debuggage-performance.html#cb1171-2"></a>    min_freq &lt;-<span class="st"> </span>prop <span class="op">*</span><span class="st"> </span><span class="kw">nrow</span>(df)</span>
-<span id="cb1171-3"><a href="20-debuggage-performance.html#cb1171-3"></a>    res &lt;-<span class="st"> </span><span class="kw">list</span>()</span>
-<span id="cb1171-4"><a href="20-debuggage-performance.html#cb1171-4"></a>    <span class="cf">for</span> (var <span class="cf">in</span> <span class="kw">names</span>(df)) {</span>
-<span id="cb1171-5"><a href="20-debuggage-performance.html#cb1171-5"></a>        <span class="kw">browser</span>()</span>
-<span id="cb1171-6"><a href="20-debuggage-performance.html#cb1171-6"></a>        freq &lt;-<span class="st"> </span><span class="kw">table</span>(df[[var]])</span>
-<span id="cb1171-7"><a href="20-debuggage-performance.html#cb1171-7"></a>        freq &lt;-<span class="st"> </span>freq[freq <span class="op">&gt;=</span><span class="st"> </span>min_freq]</span>
-<span id="cb1171-8"><a href="20-debuggage-performance.html#cb1171-8"></a>        <span class="cf">if</span> (<span class="kw">length</span>(freq) <span class="op">&gt;</span><span class="st"> </span><span class="dv">0</span>) {</span>
-<span id="cb1171-9"><a href="20-debuggage-performance.html#cb1171-9"></a>            res[[var]] &lt;-<span class="st"> </span>freq</span>
-<span id="cb1171-10"><a href="20-debuggage-performance.html#cb1171-10"></a>        }</span>
-<span id="cb1171-11"><a href="20-debuggage-performance.html#cb1171-11"></a>    }</span>
-<span id="cb1171-12"><a href="20-debuggage-performance.html#cb1171-12"></a>    res</span>
-<span id="cb1171-13"><a href="20-debuggage-performance.html#cb1171-13"></a>}</span>
-<span id="cb1171-14"><a href="20-debuggage-performance.html#cb1171-14"></a></span>
-<span id="cb1171-15"><a href="20-debuggage-performance.html#cb1171-15"></a><span class="kw">prop_values</span>(starwars, <span class="fl">0.75</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb1175"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1175-1"><a href="20-debuggage-performance.html#cb1175-1"></a>prop_values &lt;-<span class="st"> </span><span class="cf">function</span>(df, <span class="dt">prop =</span> <span class="fl">0.5</span>) {</span>
+<span id="cb1175-2"><a href="20-debuggage-performance.html#cb1175-2"></a>    min_freq &lt;-<span class="st"> </span>prop <span class="op">*</span><span class="st"> </span><span class="kw">nrow</span>(df)</span>
+<span id="cb1175-3"><a href="20-debuggage-performance.html#cb1175-3"></a>    res &lt;-<span class="st"> </span><span class="kw">list</span>()</span>
+<span id="cb1175-4"><a href="20-debuggage-performance.html#cb1175-4"></a>    <span class="cf">for</span> (var <span class="cf">in</span> <span class="kw">names</span>(df)) {</span>
+<span id="cb1175-5"><a href="20-debuggage-performance.html#cb1175-5"></a>        <span class="kw">browser</span>()</span>
+<span id="cb1175-6"><a href="20-debuggage-performance.html#cb1175-6"></a>        freq &lt;-<span class="st"> </span><span class="kw">table</span>(df[[var]])</span>
+<span id="cb1175-7"><a href="20-debuggage-performance.html#cb1175-7"></a>        freq &lt;-<span class="st"> </span>freq[freq <span class="op">&gt;=</span><span class="st"> </span>min_freq]</span>
+<span id="cb1175-8"><a href="20-debuggage-performance.html#cb1175-8"></a>        <span class="cf">if</span> (<span class="kw">length</span>(freq) <span class="op">&gt;</span><span class="st"> </span><span class="dv">0</span>) {</span>
+<span id="cb1175-9"><a href="20-debuggage-performance.html#cb1175-9"></a>            res[[var]] &lt;-<span class="st"> </span>freq</span>
+<span id="cb1175-10"><a href="20-debuggage-performance.html#cb1175-10"></a>        }</span>
+<span id="cb1175-11"><a href="20-debuggage-performance.html#cb1175-11"></a>    }</span>
+<span id="cb1175-12"><a href="20-debuggage-performance.html#cb1175-12"></a>    res</span>
+<span id="cb1175-13"><a href="20-debuggage-performance.html#cb1175-13"></a>}</span>
+<span id="cb1175-14"><a href="20-debuggage-performance.html#cb1175-14"></a></span>
+<span id="cb1175-15"><a href="20-debuggage-performance.html#cb1175-15"></a><span class="kw">prop_values</span>(starwars, <span class="fl">0.75</span>)</span></code></pre></div>
 <p>Lorsqu’on lance ce code, R s’interrompt et affiche l’invite de commande suivant :</p>
 <pre><code>Called from: prop_values(starwars, 0.75)
 
