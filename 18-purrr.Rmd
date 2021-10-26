@@ -619,11 +619,34 @@ De la même manière, si on s'intéresse juste aux effets de bord, on pourra rem
 
 Une fois qu'on a compris la logique de `map()` et de ses variantes, on peut être tenté.es de l'appliquer un peu systématiquement. Il faut cependant garder en tête que son usage n'est pas toujours conseillé notamment dans les cas où il existe déjà une fonction vectorisée qui permet d'obtenir le même résultat.
 
-Ainsi cela n'aurait pas de sens de faire `map(v, length)` quand on peut simplement faire `length(v)`.
+Ainsi cela n'aurait pas de sens de faire :
 
-Pour prendre un exemple un peu moins caricatural, de nombreuses fonctions de `stringr` s'appliquent à des vecteurs, il n'est donc pas utile de faire `map(txt, str_count("f"))` quand on peut faire simplement `str_count(txt, "f")`.
+```{r}
+v <- 1:5
+map_dbl(v, ~ .x + 10)
+```
 
-Par contre `map()` est utile quand on souhaite appliquer une fonction qui n'est pas vectorisée, comme c'est le cas par exemple avec `read_csv()` :
+Quand on peut simplement faire :
+
+```{r}
+v + 10
+```
+
+
+Pour prendre un exemple un peu moins caricatural, de nombreuses fonctions de `stringr` sont vectorisées, il n'est donc pas utile de faire :
+
+```{r}
+textes <- c("fantastique", "effectivement", "igloo")
+map_int(textes, ~ str_count(.x, "f"))
+```
+
+Quand on peut faire simplement :
+
+```{r}
+str_count(textes, "f")
+```
+
+Par contre `map()` est utile quand on souhaite appliquer une fonction qui n'est pas vectorisée, comme c'est le cas par exemple avec `read_csv()`, qui ne permet pas de charger plusieurs fichiers d'un coup :
 
 ```{r eval=FALSE}
 fichiers <- c("fichier1.csv", "fichier2.csv")
@@ -635,7 +658,7 @@ Ou quand on veut itérer sur un argument, par exemple ici sur l'argument `patter
 ```{r}
 voyelle <- c(a = "a", e = "e", i = "i")
 v <- c("brouette", "moto", "igloo")
-voyelle %>% map(~ str_count(v, pattern = .x) )
+voyelle %>% map(~ str_count(v, pattern = .x))
 ```
 
 On l'utilise également quand on veut appliquer une fonction non pas à une liste, mais aux éléments qu'elle contient :
@@ -645,7 +668,7 @@ l <- list(1:3, c(2, 5))
 l %>% map_int(length)
 ```
 
-En termes de performance, `map()` n'est pas forcément plus rapide qu'une boucle `for`, puisque dans les deux cas on itère sur un ensemble de valeurs. Par contre une fonction vectorisée existante sera toujours (beaucoup) plus rapide.
+À noter qu'en termes de performance, `map()` n'est pas forcément plus rapide qu'une boucle `for`, puisque dans les deux cas on itère sur un ensemble de valeurs. Par contre une fonction vectorisée existante sera toujours (beaucoup) plus rapide.
 
 
 ## `purrr` vs `*apply`
@@ -852,7 +875,7 @@ Utiliser `map()` pour charger ces deux tableaux de données dans une liste nomm�
 \iffalse
 <div class="solution-exo">
 ```{r eval=FALSE}
-dfs <- map(urls, read_csv)
+dfs <- urls %>% map(read_csv)
 ```
 </div>
 \fi
@@ -864,7 +887,7 @@ Utiliser `map_dfr()` pour charger ces deux tableaux de données et les regrouper
 <div class="solution-exo">
 ```{r eval=FALSE}
 # Génère une erreur !
-d <- map_dfr(urls, read_csv)
+d <- urls %>% map_dfr(read_csv)
 ```
 </div>
 \fi
@@ -875,7 +898,7 @@ d <- map_dfr(urls, read_csv)
 <div class="solution-exo">
 ```{r eval=FALSE}
 # Une variable a été importée en character, l'autre en numérique
-l %>% map( ~.x$code_insee)
+dfs %>% map(~ .x$code_insee)
 ```
 </div>
 \fi
@@ -886,13 +909,15 @@ Trouver une solution pour corriger le problème.
 <div class="solution-exo">
 ```{r eval=FALSE}
 # En convertissant manuellement code_insee en character
-d <- map_dfr(urls, ~{
-    tab <- read_csv(.x)
-    tab$code_insee <- as.character(tab$code_insee)
-    tab
-})
+d <- urls %>% 
+    map_dfr(~{
+        tab <- read_csv(.x)
+        tab$code_insee <- as.character(tab$code_insee)
+        tab
+    })
 # Ou bien en utilisant l'option col_types de read_csv
-d <- map_dfr(urls, read_csv, col_types = c("code_insee" = "c"))
+d <- urls %>%
+    map_dfr(read_csv, col_types = c("code_insee" = "character"))
 ```
 </div>
 \fi
@@ -1012,9 +1037,13 @@ Construire un tableau de données avec une matière par ligne et deux colonnes c
 \iffalse
 <div class="solution-exo">
 ```{r pur31c, eval=FALSE}
-notes %>% imap_dfr(function(notes, matiere) {
-    tibble(matiere = matiere, moyenne = mean(notes, na.rm = TRUE))
-})
+notes %>% 
+    imap_dfr(function(notes, matiere) {
+        tibble(
+            matiere = matiere,
+            moyenne = mean(notes, na.rm = TRUE)
+        )
+    })
 ```
 </div>
 \fi
@@ -1101,7 +1130,7 @@ summaries(hdv2003, c("sexe", "igloo", "age"))
 <div class="solution-exo">
 ```{r purrr33, eval=FALSE}
 summaries <- function(d, vars) {
-    vars %>% 
+    vars %>%
         keep(~ .x %in% names(d) ) %>%
         walk(~{
             message("--- ", .x, " ---")
