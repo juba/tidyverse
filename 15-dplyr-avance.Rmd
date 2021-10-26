@@ -301,17 +301,17 @@ df %>%
     )
 ```
 
-Pour des conditions plus complexes, on doit parfois définir soi-même la fonction passée à `where()`. Dans l'exemple suivant on calcule la moyenne uniquement pour les variables de `df` dont la valeur minimale est supérieure à 20.
+Pour des conditions plus complexes, on doit parfois définir soi-même la fonction passée à `where()`. Dans l'exemple suivant on calcule la moyenne uniquement pour les variables de `df` qui sont numériques et n'ont pas de valeurs manquantes
 
 ```{r}
-age_adulte <- function(v) {
-    min(v, na.rm = TRUE) > 20
+no_na <- function(v) {
+    is.numeric(v) && sum(is.na(v)) == 0
 }
 
 df %>%
     summarise(
         across(
-            where(age_adulte),
+            where(no_na),
             mean
         )
     )
@@ -341,7 +341,7 @@ df %>%
     )
 ```
 
-Ces différentes manières de sélectionner un ensemble de colonnes est appelée *tidy selection*. Il y a encore d'autres possibilités de sélection, pour avoir un aperçu complet on pourra se référer à [la page de documentation de la fonction select()](https://dplyr.tidyverse.org/reference/select.html).
+Ces différentes manières de sélectionner un ensemble de colonnes sont appelées *tidy selection*. Il y a encore d'autres possibilités de sélection, pour avoir un aperçu complet on pourra se référer à [la page de documentation de la fonction select()](https://dplyr.tidyverse.org/reference/select.html).
 
 ```{block type='rmdnote'}
 Une erreur de syntaxe fréquente est de mettre la sélection des colonnes dans l'appel à `across()`, mais pas la fonction qu'on souhaite appliquer.
@@ -569,29 +569,29 @@ df %>%
     rename_with( \(x) str_replace_all(x, " ", "_") )
 ```
 
-Cette syntaxe peut être utilisée partout où on peut passer une fonction comme argument et donc définir des fonctions anonymes. Dans cet exemple déjà vu précédemment, on passe la fonction `numerique_sans_na` comme argument de `where()`.
+Cette syntaxe peut être utilisée partout où on peut passer une fonction comme argument et donc définir des fonctions anonymes. Dans cet exemple déjà vu précédemment, on passe la fonction `no_na` comme argument de `where()`.
 
 ```{r results="hide"}
-age_adulte <- function(v) {
-    min(v, na.rm = TRUE) > 20
+no_na <- function(v) {
+    is.numeric(v) && sum(is.na(v)) == 0
 }
 
 df %>%
     summarise(
         across(
-            where(age_adulte),
+            where(no_na),
             mean
         )
     )
 ```
 
-On peut donc remplacer la fonction `numerique_sans_na` par une fonction anonyme définie directement dans le `where()`.
+On peut donc remplacer la fonction `no_na` par une fonction anonyme définie directement dans le `where()`.
 
 ```{r results="hide"}
 df %>%
     summarise(
         across(
-            where(function(v) { min(v, na.rm = TRUE) > 20 }),
+            where(function(v) { is.numeric(v) && sum(is.na(v)) == 0 }),
             mean
         )
     )
@@ -603,7 +603,7 @@ Et du coup utiliser une des deux syntaxes "compactes".
 df %>%
     summarise(
         across(
-            where(~ min(.x, na.rm = TRUE) > 20),
+            where(~ is.numeric(.x) && sum(is.na(.x)) == 0),
             mean
         )
     )
@@ -611,7 +611,7 @@ df %>%
 df %>%
     summarise(
         across(
-            where(\(v) min(v, na.rm = TRUE) > 20),
+            where(\(v) is.numeric(v) && sum(is.na(v)) == 0),
             mean
         )
     )
@@ -666,7 +666,7 @@ mean(c(restos$decor, restos$accueil))
 Ce que nous souhaitons ici, c'est calculer la moyenne non pas pour l'ensemble du tableau mais *pour chaque ligne*. Pour cela, on va utiliser la fonction `rowwise()`. Celle-ci est équivalente à un `group_by()` qui créerait autant de groupes qu'il y a de lignes dans notre tableau.
 
 ```{r}
-restos %>% rowwise() 
+restos %>% rowwise()
 ```
 
 Quant notre tableau est groupé via un `rowwise()`, les opérations s'effectuent sur un tableau constitué uniquement de la ligne courante. Si on calcule la moyenne précédente, on obtient désormais le bon résultat.
