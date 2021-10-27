@@ -607,10 +607,10 @@ code span.wa { color: #bf0303; } /* Warning */
             <section class="normal" id="section-">
 <div id="structures-de-données" class="section level1">
 <h1><span class="header-section-number">Partie 16</span> Structures de données</h1>
-<p>R propose de nombreuses structures de données différentes, et les extensions peuvent en implémenter de nouvelles. Cette section introduit trois structures parmi les plus utilisées : les <strong>vecteurs atomiques</strong>, les <strong>listes</strong> et les <strong>tableaux de données</strong>. Certaines ont déjà été abordées et utilisées précédemment, mais connaître leurs spécificités et savoir les manipuler est utile, notamment lorsqu’on veut créer ses propres fonctions.</p>
+<p>R propose de nombreuses structures de données différentes, et les extensions peuvent en implémenter de nouvelles. Cette section introduit trois structures parmi les plus utilisées : les <strong>vecteurs atomiques</strong>, les <strong>listes</strong> et les <strong>tableaux de données</strong>. Certaines ont déjà été abordées et utilisées précédemment, mais connaître leurs spécificités et savoir les manipuler est utile voire indispensable, notamment lorsqu’on veut créer ses propres fonctions.</p>
 <div id="vecteurs-atomiques" class="section level2">
 <h2><span class="header-section-number">16.1</span> Vecteurs atomiques</h2>
-<p>Les vecteurs atomiques sont des structures qui regroupent plusieurs éléments, avec une contrainte : ces éléments doivent tous être du même type, et ils ne peuvent pas contenir d’objets complexes. Les vecteurs atomiques ont déjà été introduits section <a href="09-recodages.html#vecteurs">9.1</a>.</p>
+<p>Les vecteurs atomiques sont des structures qui regroupent ensemble plusieurs éléments constitués d’une seule valeur, avec deux contraintes : ces valeurs doivent toutes être du même type. Les vecteurs atomiques ont déjà été introduits section <a href="09-recodages.html#vecteurs">9.1</a>.</p>
 <div id="création-dun-vecteur" class="section level3">
 <h3><span class="header-section-number">16.1.1</span> Création d’un vecteur</h3>
 <p>On peut construire un vecteur manuellement avec la fonction <code>c()</code>.</p>
@@ -634,7 +634,7 @@ code span.wa { color: #bf0303; } /* Warning */
 <div class="sourceCode" id="cb781"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb781-1"><a href="16-structures-donnees.html#cb781-1"></a>v &lt;-<span class="st"> </span><span class="kw">rep</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">4</span>, <span class="dv">2</span>)</span>
 <span id="cb781-2"><a href="16-structures-donnees.html#cb781-2"></a><span class="kw">length</span>(v)</span>
 <span id="cb781-3"><a href="16-structures-donnees.html#cb781-3"></a><span class="co">#&gt; [1] 8</span></span></code></pre></div>
-<p>Il peut parfois être utile de créer des vecteurs “vides”. Dans ce cas on peut les initialiser avec les fonctions <code>vector()</code>, <code>character()</code> ou <code>numeric()</code>. Par défaut ces fonctions renvoient un vecteur sans éléments, mais on peut aussi leur indiquer en argument le nombre d’éléments souhaités (qui seront alors initialisés avec une valeur par défaut).</p>
+<p>Il peut parfois être utile de créer des vecteurs “vides”. Dans ce cas on peut les initialiser avec les fonctions <code>vector()</code>, <code>character()</code> ou <code>numeric()</code>. Par défaut ces fonctions renvoient un vecteur sans élément, mais on peut aussi leur indiquer en argument le nombre d’éléments souhaités (qui seront alors initialisés avec une valeur par défaut).</p>
 <div class="sourceCode" id="cb782"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb782-1"><a href="16-structures-donnees.html#cb782-1"></a><span class="kw">numeric</span>()</span>
 <span id="cb782-2"><a href="16-structures-donnees.html#cb782-2"></a><span class="co">#&gt; numeric(0)</span></span>
 <span id="cb782-3"><a href="16-structures-donnees.html#cb782-3"></a><span class="kw">character</span>(<span class="dv">2</span>)</span>
@@ -683,11 +683,13 @@ code span.wa { color: #bf0303; } /* Warning */
 <div class="sourceCode" id="cb788"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb788-1"><a href="16-structures-donnees.html#cb788-1"></a>x &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">3</span>, <span class="dv">8</span>)</span>
 <span id="cb788-2"><a href="16-structures-donnees.html#cb788-2"></a><span class="kw">is.numeric</span>(x)</span>
 <span id="cb788-3"><a href="16-structures-donnees.html#cb788-3"></a><span class="co">#&gt; [1] TRUE</span></span>
-<span id="cb788-4"><a href="16-structures-donnees.html#cb788-4"></a><span class="kw">is.logical</span>(x <span class="op">&gt;</span><span class="st"> </span><span class="dv">2</span>)</span>
-<span id="cb788-5"><a href="16-structures-donnees.html#cb788-5"></a><span class="co">#&gt; [1] TRUE</span></span>
-<span id="cb788-6"><a href="16-structures-donnees.html#cb788-6"></a>y &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;foo&quot;</span>, <span class="st">&quot;bar&quot;</span>, <span class="st">&quot;baz&quot;</span>)</span>
-<span id="cb788-7"><a href="16-structures-donnees.html#cb788-7"></a><span class="kw">is.character</span>(y)</span>
-<span id="cb788-8"><a href="16-structures-donnees.html#cb788-8"></a><span class="co">#&gt; [1] TRUE</span></span></code></pre></div>
+<span id="cb788-4"><a href="16-structures-donnees.html#cb788-4"></a>x <span class="op">&gt;</span><span class="st"> </span><span class="dv">2</span></span>
+<span id="cb788-5"><a href="16-structures-donnees.html#cb788-5"></a><span class="co">#&gt; [1] FALSE  TRUE  TRUE</span></span>
+<span id="cb788-6"><a href="16-structures-donnees.html#cb788-6"></a><span class="kw">is.logical</span>(x <span class="op">&gt;</span><span class="st"> </span><span class="dv">2</span>)</span>
+<span id="cb788-7"><a href="16-structures-donnees.html#cb788-7"></a><span class="co">#&gt; [1] TRUE</span></span>
+<span id="cb788-8"><a href="16-structures-donnees.html#cb788-8"></a>y &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;foo&quot;</span>, <span class="st">&quot;bar&quot;</span>, <span class="st">&quot;baz&quot;</span>)</span>
+<span id="cb788-9"><a href="16-structures-donnees.html#cb788-9"></a><span class="kw">is.character</span>(y)</span>
+<span id="cb788-10"><a href="16-structures-donnees.html#cb788-10"></a><span class="co">#&gt; [1] TRUE</span></span></code></pre></div>
 <p>Petite spécificité, les facteurs (voir section <a href="09-recodages.html#facteurs">9.3.1</a>) ne sont pas considérés par R comme des <code>character</code>, même s’ils comportent des chaînes de caractères. Pour tester si un vecteur est de type facteur, on utilise <code>is.factor()</code>.</p>
 <div class="sourceCode" id="cb789"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb789-1"><a href="16-structures-donnees.html#cb789-1"></a>fac &lt;-<span class="st"> </span><span class="kw">factor</span>(<span class="kw">c</span>(<span class="st">&quot;rouge&quot;</span>, <span class="st">&quot;vert&quot;</span>, <span class="st">&quot;rouge&quot;</span>))</span>
 <span id="cb789-2"><a href="16-structures-donnees.html#cb789-2"></a><span class="kw">is.character</span>(fac)</span>
@@ -703,7 +705,7 @@ code span.wa { color: #bf0303; } /* Warning */
 <span id="cb791-2"><a href="16-structures-donnees.html#cb791-2"></a><span class="co">#&gt; [1] 1 2 0</span></span></code></pre></div>
 <div class="rmdnote">
 <p>
-Si la valeur <code>NA</code>, comme on l’a vu, permet d’indiquer une valeur manquante (<code>Not Available</code>), il existe en réalité plusieurs types de <code>NA</code>, même si cette distinction est la plupart du temps transparente pour l’utilisateur. On a ainsi notamment des valeur <code>NA_integer_</code>, <code>NA_character_</code>, <code>NA_real_</code>.
+Si la valeur <code>NA</code>, comme on l’a vu, permet d’indiquer une valeur manquante (<code>Not Available</code>), il existe en réalité plusieurs types de <code>NA</code>, même si cette distinction est la plupart du temps transparente pour l’utilisateur. On a ainsi notamment des valeurs <code>NA_integer_</code>, <code>NA_character_</code>, <code>NA_real_</code>.
 </p>
 </div>
 <p>La conversion automatique d’un type en un autre est à l’origine d’un idiome courant en R. Quand on applique une fonction qui attend un vecteur de nombres à un vecteur de valeurs logiques, celles-ci sont automatiquement converties, les <code>TRUE</code> devenant 1 et les <code>FALSE</code> devenant 0. Du coup, si on applique <code>sum()</code> à un vecteur de valeurs logiques, le résultat est égal au nombre de valeurs <code>TRUE</code>.</p>
@@ -713,7 +715,7 @@ Si la valeur <code>NA</code>, comme on l’a vu, permet d’indiquer une valeur 
 <div class="sourceCode" id="cb793"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb793-1"><a href="16-structures-donnees.html#cb793-1"></a>x &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">5</span>, <span class="dv">8</span>, <span class="dv">12</span>, <span class="dv">14</span>)</span>
 <span id="cb793-2"><a href="16-structures-donnees.html#cb793-2"></a><span class="kw">sum</span>(x <span class="op">&gt;</span><span class="st"> </span><span class="dv">10</span>)</span>
 <span id="cb793-3"><a href="16-structures-donnees.html#cb793-3"></a><span class="co">#&gt; [1] 2</span></span></code></pre></div>
-<p>Ceci fournit un raccourci très pratique. Dans l’exemple suivant, on tire 1000 nombres au hasard entre 0 et 1 et on calcule le nombre de valeurs obtenues qui sont inférieures à 0,5.</p>
+<p>Ceci fournit un raccourci très pratique. Dans l’exemple suivant, on tire 1000 nombres au hasard entre 0 et 1 et on calcule le nombre de valeurs obtenues qui sont inférieures à 0.5.</p>
 <div class="sourceCode" id="cb794"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb794-1"><a href="16-structures-donnees.html#cb794-1"></a>x &lt;-<span class="st"> </span><span class="kw">runif</span>(<span class="dv">1000</span>)</span>
 <span id="cb794-2"><a href="16-structures-donnees.html#cb794-2"></a><span class="kw">sum</span>(x <span class="op">&lt;</span><span class="st"> </span><span class="fl">0.5</span>)</span>
 <span id="cb794-3"><a href="16-structures-donnees.html#cb794-3"></a><span class="co">#&gt; [1] 491</span></span></code></pre></div>
@@ -724,7 +726,7 @@ Si la valeur <code>NA</code>, comme on l’a vu, permet d’indiquer une valeur 
 <span id="cb795-4"><a href="16-structures-donnees.html#cb795-4"></a>x &lt;-<span class="st"> </span><span class="kw">runif</span>(<span class="dv">1000</span>)</span>
 <span id="cb795-5"><a href="16-structures-donnees.html#cb795-5"></a><span class="kw">mean</span>(x <span class="op">&lt;</span><span class="st"> </span><span class="fl">0.5</span>)</span>
 <span id="cb795-6"><a href="16-structures-donnees.html#cb795-6"></a><span class="co">#&gt; [1] 0.49</span></span></code></pre></div>
-<p>On peut convertir un vecteur d’un type à un autre avec les fonctions <code>as.character()</code>, <code>as.numeric()</code> et <code>as.logical()</code>. Si une valeur ne peut pas être convertie, elle est remplacée par un <code>NA</code>.</p>
+<p>On peut convertir un vecteur d’un type à un autre avec les fonctions <code>as.character()</code>, <code>as.numeric()</code> et <code>as.logical()</code>. Si une valeur ne peut pas être convertie, elle est remplacée par un <code>NA</code>, et R affiche un avertissement.</p>
 <div class="sourceCode" id="cb796"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb796-1"><a href="16-structures-donnees.html#cb796-1"></a><span class="kw">as.character</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">3</span>)</span>
 <span id="cb796-2"><a href="16-structures-donnees.html#cb796-2"></a><span class="co">#&gt; [1] &quot;1&quot; &quot;2&quot; &quot;3&quot;</span></span>
 <span id="cb796-3"><a href="16-structures-donnees.html#cb796-3"></a><span class="kw">as.logical</span>(<span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">2</span>, <span class="dv">4</span>))</span>
@@ -791,7 +793,7 @@ Si la valeur <code>NA</code>, comme on l’a vu, permet d’indiquer une valeur 
 </div>
 <div id="listes" class="section level2">
 <h2><span class="header-section-number">16.2</span> Listes</h2>
-<p>Les listes sont une généralisation des vecteurs : elles regroupent également plusieurs éléments, mais ceux-ci peuvent être de n’importe quel type, y compris des objets complexes. Une liste peut donc contenir elle-même des vecteurs, des listes, des tableaux de données, des fonctions, des graphiques <code>ggplot2</code> stockés dans un objet, etc.</p>
+<p>Les listes sont une généralisation des vecteurs : elles regroupent également plusieurs éléments ensemble, mais ceux-ci peuvent être de n’importe quel type, y compris des objets complexes. Une liste peut donc contenir des vecteurs, des listes, des tableaux de données, des fonctions, des graphiques <code>ggplot2</code> stockés dans un objet, etc.</p>
 <div id="création" class="section level3">
 <h3><span class="header-section-number">16.2.1</span> Création</h3>
 <p>On construit une liste avec la fonction <code>list</code>.</p>
@@ -804,7 +806,7 @@ Si la valeur <code>NA</code>, comme on l’a vu, permet d’indiquer une valeur 
 <span id="cb802-7"><a href="16-structures-donnees.html#cb802-7"></a><span class="co">#&gt; </span></span>
 <span id="cb802-8"><a href="16-structures-donnees.html#cb802-8"></a><span class="co">#&gt; [[3]]</span></span>
 <span id="cb802-9"><a href="16-structures-donnees.html#cb802-9"></a><span class="co">#&gt; [1] &quot;Pomme&quot;  &quot;Citron&quot;</span></span></code></pre></div>
-<p>La manière dont R affiche le contenu d’une liste dans la console diffère de celle des vecteurs. Dans le cas d’une liste ses éléments sont affichés les uns en dessous des autres, et séparés par leur indice numérique entre une paire de crochets.</p>
+<p>La manière dont R affiche le contenu d’une liste dans la console diffère de celle des vecteurs. Dans le cas d’une liste ses éléments sont affichés les uns en dessous des autres, et séparés par leur indice numérique entre une paire de crochets. Dans l’affichage ci-dessus, il faut bien distinguer les <code>[[1]]</code>, <code>[[2]]</code> et <code>[[3]]</code>, qui correspondent au numéro de l’élément de la liste, et les <code>[1]</code> qui font partie de l’affichage du contenu de ces éléments.</p>
 <p>Comme pour les vecteurs, on peut nommer les éléments à la création de la liste.</p>
 <div class="sourceCode" id="cb803"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb803-1"><a href="16-structures-donnees.html#cb803-1"></a>liste &lt;-<span class="st"> </span><span class="kw">list</span>(<span class="dt">nombre =</span> <span class="dv">1</span>, <span class="dt">char =</span> <span class="st">&quot;foo&quot;</span>, <span class="dt">vecteur =</span> <span class="kw">c</span>(<span class="st">&quot;Pomme&quot;</span>, <span class="st">&quot;Citron&quot;</span>))</span>
 <span id="cb803-2"><a href="16-structures-donnees.html#cb803-2"></a>liste</span>
@@ -816,11 +818,11 @@ Si la valeur <code>NA</code>, comme on l’a vu, permet d’indiquer une valeur 
 <span id="cb803-8"><a href="16-structures-donnees.html#cb803-8"></a><span class="co">#&gt; </span></span>
 <span id="cb803-9"><a href="16-structures-donnees.html#cb803-9"></a><span class="co">#&gt; $vecteur</span></span>
 <span id="cb803-10"><a href="16-structures-donnees.html#cb803-10"></a><span class="co">#&gt; [1] &quot;Pomme&quot;  &quot;Citron&quot;</span></span></code></pre></div>
-<p>Dans ce cas l’affichage de la liste dans la console montre ces noms plutôt que les indices numériques.</p>
+<p>Dans ce cas l’affichage de la liste dans la console montre ces noms plutôt que les indices numériques des éléments.</p>
 <p>Comme pour les vecteurs atomiques, on peut utiliser <code>names()</code> pour afficher ou modifier les noms des éléments.</p>
 <div class="sourceCode" id="cb804"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb804-1"><a href="16-structures-donnees.html#cb804-1"></a><span class="kw">names</span>(liste)</span>
 <span id="cb804-2"><a href="16-structures-donnees.html#cb804-2"></a><span class="co">#&gt; [1] &quot;nombre&quot;  &quot;char&quot;    &quot;vecteur&quot;</span></span></code></pre></div>
-<p>L’affichage des listes peut vite devenir illisible quand la liste est plus complexe.</p>
+<p>L’affichage peut vite devenir illisible quand la liste est plus complexe.</p>
 <div class="sourceCode" id="cb805"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb805-1"><a href="16-structures-donnees.html#cb805-1"></a>liste &lt;-<span class="st"> </span><span class="kw">list</span>(</span>
 <span id="cb805-2"><a href="16-structures-donnees.html#cb805-2"></a>    <span class="dt">l2 =</span> <span class="kw">list</span>(<span class="dt">x =</span> <span class="dv">1</span><span class="op">:</span><span class="dv">10</span>, <span class="dt">y =</span> <span class="kw">c</span>(<span class="st">&quot;Pomme&quot;</span>, <span class="st">&quot;Citron&quot;</span>)),</span>
 <span id="cb805-3"><a href="16-structures-donnees.html#cb805-3"></a>    <span class="dt">df =</span> <span class="kw">data.frame</span>(<span class="dt">v1 =</span> <span class="dv">2</span><span class="op">:</span><span class="dv">5</span>, <span class="dt">v2 =</span> LETTERS[<span class="dv">2</span><span class="op">:</span><span class="dv">5</span>]),</span>
@@ -845,7 +847,7 @@ Si la valeur <code>NA</code>, comme on l’a vu, permet d’indiquer une valeur 
 <span id="cb805-22"><a href="16-structures-donnees.html#cb805-22"></a><span class="co">#&gt; $y</span></span>
 <span id="cb805-23"><a href="16-structures-donnees.html#cb805-23"></a><span class="co">#&gt;  [1] 0.70796899 0.55870227 0.02648297 0.89798007 0.91583097 0.62418931</span></span>
 <span id="cb805-24"><a href="16-structures-donnees.html#cb805-24"></a><span class="co">#&gt;  [7] 0.72412828 0.73592213 0.44967755 0.45434820</span></span></code></pre></div>
-<p>Dans ce cas la fonction <code>str</code> peut être utile pour afficher de manière plus compacte la structure de la liste.</p>
+<p>Dans ce cas la fonction <code>str</code> peut être utile pour afficher de manière plus compacte la structure de la liste. Dans cet exemple elle permet de voir un peu plus clairement que <code>x</code> et <code>y</code> sont des éléments d’une sous-liste <code>l2</code>.</p>
 <div class="sourceCode" id="cb806"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb806-1"><a href="16-structures-donnees.html#cb806-1"></a><span class="kw">str</span>(liste)</span>
 <span id="cb806-2"><a href="16-structures-donnees.html#cb806-2"></a><span class="co">#&gt; List of 3</span></span>
 <span id="cb806-3"><a href="16-structures-donnees.html#cb806-3"></a><span class="co">#&gt;  $ l2:List of 2</span></span>
@@ -991,7 +993,7 @@ Comme pour les vecteurs, on peut utiliser des nombres négatifs avec <code>[]</c
 <span id="cb817-10"><a href="16-structures-donnees.html#cb817-10"></a><span class="co">#&gt; [1] 0</span></span></code></pre></div>
 <div class="rmdimportant">
 <p>
-Attention à ne pas utiliser les crochets doubles pour modifier des éléments d’une liste car ceux-ci peuvent avoir un comportement inattendu, notamment si on veut modifier plusieurs éléments d’un coup.
+Attention à ne pas utiliser les crochets doubles pour modifier des éléments d’une liste car ceux-ci peuvent avoir un comportement inattendu si on veut modifier plusieurs éléments d’un coup.
 </p>
 </div>
 <p>Enfin, si on souhaite supprimer un ou plusieurs éléments d’une liste, il faut leur attribuer la valeur <code>NULL</code><a href="#fn32" class="footnote-ref" id="fnref32"><sup>32</sup></a>.</p>
@@ -1018,7 +1020,9 @@ Attention à ne pas utiliser les crochets doubles pour modifier des éléments d
 <span id="cb819-8"><a href="16-structures-donnees.html#cb819-8"></a>x &lt;-<span class="st"> </span><span class="dv">1</span><span class="op">:</span><span class="dv">10</span></span>
 <span id="cb819-9"><a href="16-structures-donnees.html#cb819-9"></a>res &lt;-<span class="st"> </span><span class="kw">indicateurs</span>(x)</span>
 <span id="cb819-10"><a href="16-structures-donnees.html#cb819-10"></a>res<span class="op">$</span>moyenne</span>
-<span id="cb819-11"><a href="16-structures-donnees.html#cb819-11"></a><span class="co">#&gt; [1] 5.5</span></span></code></pre></div>
+<span id="cb819-11"><a href="16-structures-donnees.html#cb819-11"></a><span class="co">#&gt; [1] 5.5</span></span>
+<span id="cb819-12"><a href="16-structures-donnees.html#cb819-12"></a>res<span class="op">$</span>variance</span>
+<span id="cb819-13"><a href="16-structures-donnees.html#cb819-13"></a><span class="co">#&gt; [1] 9.166667</span></span></code></pre></div>
 <p>On utilise également les listes pour stocker des objets complexes et leur appliquer des fonctions. Ce fonctionnement sera abordé en détail dans la section <a href="18-purrr.html#purrr">18</a>, mais en guise de petit aperçu, l’exemple fictif suivant récupère les noms de tous les fichiers CSV du répertoire courant et les importe tous dans une liste à l’aide de <code>purrr::map()</code> et de <code>read_csv()</code>.</p>
 <div class="sourceCode" id="cb820"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb820-1"><a href="16-structures-donnees.html#cb820-1"></a>files &lt;-<span class="st"> </span><span class="kw">list.files</span>(<span class="dt">pattern =</span> <span class="st">&quot;*.csv&quot;</span>)</span>
 <span id="cb820-2"><a href="16-structures-donnees.html#cb820-2"></a>dfs &lt;-<span class="st"> </span>purrr<span class="op">::</span><span class="kw">map</span>(files, read_csv)</span></code></pre></div>
@@ -1028,7 +1032,7 @@ Attention à ne pas utiliser les crochets doubles pour modifier des éléments d
 <div id="data-frame-tibbles" class="section level2">
 <h2><span class="header-section-number">16.3</span> Tableaux de données (<em>data frame</em> et <em>tibble</em>)</h2>
 <p>On a déjà utilisé les tableaux de données à de nombreux reprises en manipulant des <em>data frames</em> ou des <em>tibbles</em>. Les seconds sont une variante des premiers, les différences entre les deux ayant été abordées section <a href="06-tidyverse.html#tibbles">6.4</a>.</p>
-<p>Un tableau de données est en réalité une liste nommée de vecteurs avec une contrainte spécifique : ces vecteurs doivent tous être de même longueur, ce qui garantit le format “tabulaire” des données.</p>
+<p>Un tableau de données est en réalité une liste nommée de vecteurs atomiques avec une contrainte spécifique : ces vecteurs doivent tous être de même longueur, ce qui garantit le format “tabulaire” des données.</p>
 <div id="création-1" class="section level3">
 <h3><span class="header-section-number">16.3.1</span> Création</h3>
 <p>Un tableau de données est le plus souvent créé en important des données depuis un fichier au format CSV, tableur ou autre. On peut cependant créer un <em>data frame</em> manuellement via la fonction <code>data.frame()</code> :</p>
@@ -1081,7 +1085,7 @@ Attention à ne pas utiliser les crochets doubles pour modifier des éléments d
 <p>Ainsi, on peut sélectionner une colonne via l’opérateur <code>$</code>.</p>
 <div class="sourceCode" id="cb828"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb828-1"><a href="16-structures-donnees.html#cb828-1"></a>df<span class="op">$</span>fruit</span>
 <span id="cb828-2"><a href="16-structures-donnees.html#cb828-2"></a><span class="co">#&gt; [1] &quot;Pomme&quot;  &quot;Pomme&quot;  &quot;Citron&quot;</span></span></code></pre></div>
-<p>Comme un tableau de données est en réalité une liste de colonnes, on peut utiliser l’opérateur <code>[[]]</code> pour sélectionner l’une de ses colonnes, par position ou par nom<a href="#fn33" class="footnote-ref" id="fnref33"><sup>33</sup></a>.</p>
+<p>Comme un tableau de données est en réalité une liste de colonnes, on peut aussi utiliser l’opérateur <code>[[]]</code> pour sélectionner l’une de ses colonnes, par position ou par nom<a href="#fn33" class="footnote-ref" id="fnref33"><sup>33</sup></a>.</p>
 <div class="sourceCode" id="cb829"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb829-1"><a href="16-structures-donnees.html#cb829-1"></a>df[[<span class="st">&quot;fruit&quot;</span>]]</span>
 <span id="cb829-2"><a href="16-structures-donnees.html#cb829-2"></a><span class="co">#&gt; [1] &quot;Pomme&quot;  &quot;Pomme&quot;  &quot;Citron&quot;</span></span>
 <span id="cb829-3"><a href="16-structures-donnees.html#cb829-3"></a>df[[<span class="dv">2</span>]]</span>
@@ -1095,23 +1099,27 @@ Attention à ne pas utiliser les crochets doubles pour modifier des éléments d
 <span id="cb831-2"><a href="16-structures-donnees.html#cb831-2"></a><span class="co">#&gt;         fruit poids couleur</span></span>
 <span id="cb831-3"><a href="16-structures-donnees.html#cb831-3"></a><span class="co">#&gt; fruit3 Citron    92   jaune</span></span></code></pre></div>
 <p>On peut également utiliser l’opérateur <code>[,]</code> pour sélectionner à la fois des lignes et des colonnes, en lui passant deux arguments séparés par une virgule : d’abord la sélection des lignes puis celle des colonnes. Dans les deux cas on peut sélectionner par position, nom ou condition. Si on laisse un argument vide, on sélectionne l’intégralité des lignes ou des colonnes.</p>
-<div class="sourceCode" id="cb832"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb832-1"><a href="16-structures-donnees.html#cb832-1"></a>df[<span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">3</span>), <span class="st">&quot;poids&quot;</span>]</span>
-<span id="cb832-2"><a href="16-structures-donnees.html#cb832-2"></a><span class="co">#&gt; [1] 154  92</span></span></code></pre></div>
-<div class="sourceCode" id="cb833"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb833-1"><a href="16-structures-donnees.html#cb833-1"></a>df[, <span class="kw">c</span>(<span class="st">&quot;poids&quot;</span>, <span class="st">&quot;fruit&quot;</span>)]</span>
-<span id="cb833-2"><a href="16-structures-donnees.html#cb833-2"></a><span class="co">#&gt;        poids  fruit</span></span>
-<span id="cb833-3"><a href="16-structures-donnees.html#cb833-3"></a><span class="co">#&gt; fruit1   154  Pomme</span></span>
-<span id="cb833-4"><a href="16-structures-donnees.html#cb833-4"></a><span class="co">#&gt; fruit2   167  Pomme</span></span>
-<span id="cb833-5"><a href="16-structures-donnees.html#cb833-5"></a><span class="co">#&gt; fruit3    92 Citron</span></span></code></pre></div>
-<div class="sourceCode" id="cb834"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb834-1"><a href="16-structures-donnees.html#cb834-1"></a>df[df<span class="op">$</span>poids <span class="op">&gt;</span><span class="st"> </span><span class="dv">150</span>, ]</span>
-<span id="cb834-2"><a href="16-structures-donnees.html#cb834-2"></a><span class="co">#&gt;        fruit poids couleur</span></span>
-<span id="cb834-3"><a href="16-structures-donnees.html#cb834-3"></a><span class="co">#&gt; fruit1 Pomme   154    vert</span></span>
-<span id="cb834-4"><a href="16-structures-donnees.html#cb834-4"></a><span class="co">#&gt; fruit2 Pomme   167    vert</span></span></code></pre></div>
+<div class="sourceCode" id="cb832"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb832-1"><a href="16-structures-donnees.html#cb832-1"></a><span class="co"># Lignes 1 et 3 et colonne &quot;poids&quot;</span></span>
+<span id="cb832-2"><a href="16-structures-donnees.html#cb832-2"></a>df[<span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">3</span>), <span class="st">&quot;poids&quot;</span>]</span>
+<span id="cb832-3"><a href="16-structures-donnees.html#cb832-3"></a><span class="co">#&gt; [1] 154  92</span></span></code></pre></div>
+<div class="sourceCode" id="cb833"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb833-1"><a href="16-structures-donnees.html#cb833-1"></a><span class="co"># Toutes les lignes et colonnes &quot;poids&quot; et &quot;fruit&quot;</span></span>
+<span id="cb833-2"><a href="16-structures-donnees.html#cb833-2"></a>df[, <span class="kw">c</span>(<span class="st">&quot;poids&quot;</span>, <span class="st">&quot;fruit&quot;</span>)]</span>
+<span id="cb833-3"><a href="16-structures-donnees.html#cb833-3"></a><span class="co">#&gt;        poids  fruit</span></span>
+<span id="cb833-4"><a href="16-structures-donnees.html#cb833-4"></a><span class="co">#&gt; fruit1   154  Pomme</span></span>
+<span id="cb833-5"><a href="16-structures-donnees.html#cb833-5"></a><span class="co">#&gt; fruit2   167  Pomme</span></span>
+<span id="cb833-6"><a href="16-structures-donnees.html#cb833-6"></a><span class="co">#&gt; fruit3    92 Citron</span></span></code></pre></div>
+<div class="sourceCode" id="cb834"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb834-1"><a href="16-structures-donnees.html#cb834-1"></a><span class="co"># Lignes pour lesquelles poids &gt; 150, et toutes les colonnes</span></span>
+<span id="cb834-2"><a href="16-structures-donnees.html#cb834-2"></a>df[df<span class="op">$</span>poids <span class="op">&gt;</span><span class="st"> </span><span class="dv">150</span>, ]</span>
+<span id="cb834-3"><a href="16-structures-donnees.html#cb834-3"></a><span class="co">#&gt;        fruit poids couleur</span></span>
+<span id="cb834-4"><a href="16-structures-donnees.html#cb834-4"></a><span class="co">#&gt; fruit1 Pomme   154    vert</span></span>
+<span id="cb834-5"><a href="16-structures-donnees.html#cb834-5"></a><span class="co">#&gt; fruit2 Pomme   167    vert</span></span></code></pre></div>
 <div class="sourceCode" id="cb835"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb835-1"><a href="16-structures-donnees.html#cb835-1"></a><span class="kw">library</span>(stringr)</span>
-<span id="cb835-2"><a href="16-structures-donnees.html#cb835-2"></a>df[, <span class="kw">str_detect</span>(<span class="kw">names</span>(df), <span class="st">&quot;o&quot;</span>)]</span>
-<span id="cb835-3"><a href="16-structures-donnees.html#cb835-3"></a><span class="co">#&gt;        poids couleur</span></span>
-<span id="cb835-4"><a href="16-structures-donnees.html#cb835-4"></a><span class="co">#&gt; fruit1   154    vert</span></span>
-<span id="cb835-5"><a href="16-structures-donnees.html#cb835-5"></a><span class="co">#&gt; fruit2   167    vert</span></span>
-<span id="cb835-6"><a href="16-structures-donnees.html#cb835-6"></a><span class="co">#&gt; fruit3    92   jaune</span></span></code></pre></div>
+<span id="cb835-2"><a href="16-structures-donnees.html#cb835-2"></a><span class="co"># Colonnes dont le nom contient un &quot;o&quot;, et toutes les lignes</span></span>
+<span id="cb835-3"><a href="16-structures-donnees.html#cb835-3"></a>df[, <span class="kw">str_detect</span>(<span class="kw">names</span>(df), <span class="st">&quot;o&quot;</span>)]</span>
+<span id="cb835-4"><a href="16-structures-donnees.html#cb835-4"></a><span class="co">#&gt;        poids couleur</span></span>
+<span id="cb835-5"><a href="16-structures-donnees.html#cb835-5"></a><span class="co">#&gt; fruit1   154    vert</span></span>
+<span id="cb835-6"><a href="16-structures-donnees.html#cb835-6"></a><span class="co">#&gt; fruit2   167    vert</span></span>
+<span id="cb835-7"><a href="16-structures-donnees.html#cb835-7"></a><span class="co">#&gt; fruit3    92   jaune</span></span></code></pre></div>
 <p>Attention, le comportement de <code>[,]</code> est différent entre les <em>tibbles</em> et les <em>data frame</em> lorsqu’on ne sélectionne qu’une seule colonne. Dans le cas d’un <em>data frame</em>, le résultat est un vecteur, dans le cas d’un <em>tibble</em> le résultat est un tableau à une colonne.</p>
 <div class="sourceCode" id="cb836"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb836-1"><a href="16-structures-donnees.html#cb836-1"></a>df[, <span class="st">&quot;fruit&quot;</span>]</span>
 <span id="cb836-2"><a href="16-structures-donnees.html#cb836-2"></a><span class="co">#&gt; [1] &quot;Pomme&quot;  &quot;Pomme&quot;  &quot;Citron&quot;</span></span></code></pre></div>
@@ -1127,29 +1135,21 @@ Attention à ne pas utiliser les crochets doubles pour modifier des éléments d
 <div id="modification-2" class="section level3">
 <h3><span class="header-section-number">16.3.4</span> Modification</h3>
 <p>On peut utiliser <code>[[]]</code> et <code>[,]</code> avec l’opérateur d’assignation <code>&lt;-</code> pour modifier tout ou partie d’un tableau de données.</p>
-<div class="sourceCode" id="cb838"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb838-1"><a href="16-structures-donnees.html#cb838-1"></a>df[[<span class="st">&quot;poids_kg&quot;</span>]] &lt;-<span class="st"> </span>df<span class="op">$</span>poids <span class="op">/</span><span class="st"> </span><span class="dv">1000</span></span>
-<span id="cb838-2"><a href="16-structures-donnees.html#cb838-2"></a>df</span>
-<span id="cb838-3"><a href="16-structures-donnees.html#cb838-3"></a><span class="co">#&gt;         fruit poids couleur poids_kg</span></span>
-<span id="cb838-4"><a href="16-structures-donnees.html#cb838-4"></a><span class="co">#&gt; fruit1  Pomme   154    vert    0.154</span></span>
-<span id="cb838-5"><a href="16-structures-donnees.html#cb838-5"></a><span class="co">#&gt; fruit2  Pomme   167    vert    0.167</span></span>
-<span id="cb838-6"><a href="16-structures-donnees.html#cb838-6"></a><span class="co">#&gt; fruit3 Citron    92   jaune    0.092</span></span></code></pre></div>
-<div class="sourceCode" id="cb839"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb839-1"><a href="16-structures-donnees.html#cb839-1"></a>df[df<span class="op">$</span>fruit <span class="op">==</span><span class="st"> &quot;Citron&quot;</span>, <span class="st">&quot;fruit&quot;</span>] &lt;-<span class="st"> &quot;Agrume&quot;</span></span>
-<span id="cb839-2"><a href="16-structures-donnees.html#cb839-2"></a>df</span>
-<span id="cb839-3"><a href="16-structures-donnees.html#cb839-3"></a><span class="co">#&gt;         fruit poids couleur poids_kg</span></span>
-<span id="cb839-4"><a href="16-structures-donnees.html#cb839-4"></a><span class="co">#&gt; fruit1  Pomme   154    vert    0.154</span></span>
-<span id="cb839-5"><a href="16-structures-donnees.html#cb839-5"></a><span class="co">#&gt; fruit2  Pomme   167    vert    0.167</span></span>
-<span id="cb839-6"><a href="16-structures-donnees.html#cb839-6"></a><span class="co">#&gt; fruit3 Agrume    92   jaune    0.092</span></span></code></pre></div>
-<p>On pourra aussi noter que <code>[]</code> utilisé sans arguments permet de sélectionner et de modifier l’ensemble des valeurs du tableau. Ainsi les deux instructions suivantes ont des effets très différents :</p>
-<div class="sourceCode" id="cb840"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb840-1"><a href="16-structures-donnees.html#cb840-1"></a>df[] &lt;-<span class="st"> &quot;a&quot;</span></span>
-<span id="cb840-2"><a href="16-structures-donnees.html#cb840-2"></a>df</span>
-<span id="cb840-3"><a href="16-structures-donnees.html#cb840-3"></a><span class="co">#&gt;        fruit poids couleur poids_kg</span></span>
-<span id="cb840-4"><a href="16-structures-donnees.html#cb840-4"></a><span class="co">#&gt; fruit1     a     a       a        a</span></span>
-<span id="cb840-5"><a href="16-structures-donnees.html#cb840-5"></a><span class="co">#&gt; fruit2     a     a       a        a</span></span>
-<span id="cb840-6"><a href="16-structures-donnees.html#cb840-6"></a><span class="co">#&gt; fruit3     a     a       a        a</span></span>
-<span id="cb840-7"><a href="16-structures-donnees.html#cb840-7"></a></span>
-<span id="cb840-8"><a href="16-structures-donnees.html#cb840-8"></a>df &lt;-<span class="st"> &quot;a&quot;</span></span>
-<span id="cb840-9"><a href="16-structures-donnees.html#cb840-9"></a>df</span>
-<span id="cb840-10"><a href="16-structures-donnees.html#cb840-10"></a><span class="co">#&gt; [1] &quot;a&quot;</span></span></code></pre></div>
+<div class="sourceCode" id="cb838"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb838-1"><a href="16-structures-donnees.html#cb838-1"></a><span class="co"># Création d&#39;une nouvelle colonne poids_kg</span></span>
+<span id="cb838-2"><a href="16-structures-donnees.html#cb838-2"></a>df[[<span class="st">&quot;poids_kg&quot;</span>]] &lt;-<span class="st"> </span>df<span class="op">$</span>poids <span class="op">/</span><span class="st"> </span><span class="dv">1000</span></span>
+<span id="cb838-3"><a href="16-structures-donnees.html#cb838-3"></a>df</span>
+<span id="cb838-4"><a href="16-structures-donnees.html#cb838-4"></a><span class="co">#&gt;         fruit poids couleur poids_kg</span></span>
+<span id="cb838-5"><a href="16-structures-donnees.html#cb838-5"></a><span class="co">#&gt; fruit1  Pomme   154    vert    0.154</span></span>
+<span id="cb838-6"><a href="16-structures-donnees.html#cb838-6"></a><span class="co">#&gt; fruit2  Pomme   167    vert    0.167</span></span>
+<span id="cb838-7"><a href="16-structures-donnees.html#cb838-7"></a><span class="co">#&gt; fruit3 Citron    92   jaune    0.092</span></span></code></pre></div>
+<div class="sourceCode" id="cb839"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb839-1"><a href="16-structures-donnees.html#cb839-1"></a><span class="co"># Remplacement de la valeur de la colonne &quot;fruit&quot; pour les lignes </span></span>
+<span id="cb839-2"><a href="16-structures-donnees.html#cb839-2"></a><span class="co"># pour lesquelles &quot;fruit&quot; vaut &quot;Citron&quot;</span></span>
+<span id="cb839-3"><a href="16-structures-donnees.html#cb839-3"></a>df[df<span class="op">$</span>fruit <span class="op">==</span><span class="st"> &quot;Citron&quot;</span>, <span class="st">&quot;fruit&quot;</span>] &lt;-<span class="st"> &quot;Agrume&quot;</span></span>
+<span id="cb839-4"><a href="16-structures-donnees.html#cb839-4"></a>df</span>
+<span id="cb839-5"><a href="16-structures-donnees.html#cb839-5"></a><span class="co">#&gt;         fruit poids couleur poids_kg</span></span>
+<span id="cb839-6"><a href="16-structures-donnees.html#cb839-6"></a><span class="co">#&gt; fruit1  Pomme   154    vert    0.154</span></span>
+<span id="cb839-7"><a href="16-structures-donnees.html#cb839-7"></a><span class="co">#&gt; fruit2  Pomme   167    vert    0.167</span></span>
+<span id="cb839-8"><a href="16-structures-donnees.html#cb839-8"></a><span class="co">#&gt; fruit3 Agrume    92   jaune    0.092</span></span></code></pre></div>
 <p>Pour conclure, on peut noter que l’utilisation des opérateurs <code>[[]]</code> et <code>[,]</code> sur un tableau de données peut sembler redondante et moins pratique que l’utilisation des verbes de <code>dplyr</code> comme <code>select()</code> ou <code>filter()</code>. Ils peuvent cependant être utiles lorsqu’on souhaite éviter les complications liées à l’utilisation du <em>tidyverse</em> à l’intérieur de fonctions, comme indiqué section <a href="19-programmer-tidyverse.html#programmer-tidyverse">19</a>. Ils peuvent également être plus rapides, et il est important de les connaître car on les rencontrera très fréquemment dans du code R sur le Web ou dans des packages.</p>
 </div>
 </div>
@@ -1166,108 +1166,108 @@ Attention à ne pas utiliser les crochets doubles pour modifier des éléments d
 <p>À l’aide de <code>seq()</code>, créer un vecteur <code>v</code> contenant tous les nombres pairs entre 10 et 20.</p>
 
 <div class="solution-exo">
-<div class="sourceCode" id="cb841"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb841-1"><a href="16-structures-donnees.html#cb841-1"></a>v &lt;-<span class="st"> </span><span class="kw">seq</span>(<span class="dv">10</span>, <span class="dv">20</span>, <span class="dt">by =</span> <span class="dv">2</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb840"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb840-1"><a href="16-structures-donnees.html#cb840-1"></a>v &lt;-<span class="st"> </span><span class="kw">seq</span>(<span class="dv">10</span>, <span class="dv">20</span>, <span class="dt">by =</span> <span class="dv">2</span>)</span></code></pre></div>
 </div>
 
 <p>Sélectionner les 3 premières valeurs de <code>v</code>.</p>
 
 <div class="solution-exo">
-<div class="sourceCode" id="cb842"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb842-1"><a href="16-structures-donnees.html#cb842-1"></a>v[<span class="dv">1</span><span class="op">:</span><span class="dv">3</span>]</span>
-<span id="cb842-2"><a href="16-structures-donnees.html#cb842-2"></a><span class="kw">head</span>(v, <span class="dv">3</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb841"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb841-1"><a href="16-structures-donnees.html#cb841-1"></a>v[<span class="dv">1</span><span class="op">:</span><span class="dv">3</span>]</span>
+<span id="cb841-2"><a href="16-structures-donnees.html#cb841-2"></a><span class="kw">head</span>(v, <span class="dv">3</span>)</span></code></pre></div>
 </div>
 
 <p>Sélectionner toutes les valeurs de <code>v</code> strictement inférieures à 15.</p>
 
 <div class="solution-exo">
-<div class="sourceCode" id="cb843"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb843-1"><a href="16-structures-donnees.html#cb843-1"></a>v[v <span class="op">&lt;</span><span class="st"> </span><span class="dv">15</span>]</span></code></pre></div>
+<div class="sourceCode" id="cb842"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb842-1"><a href="16-structures-donnees.html#cb842-1"></a>v[v <span class="op">&lt;</span><span class="st"> </span><span class="dv">15</span>]</span></code></pre></div>
 </div>
 
 <p>Créer une fonction <code>derniere()</code> qui prend en paramètre un vecteur et retourne son dernier élément (la fonction doit pouvoir s’appliquer à n’importe quel vecteur, quelle que soit sa longueur).</p>
-<div class="sourceCode" id="cb844"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb844-1"><a href="16-structures-donnees.html#cb844-1"></a><span class="kw">derniere</span>(v)</span>
-<span id="cb844-2"><a href="16-structures-donnees.html#cb844-2"></a><span class="co">#&gt; [1] 20</span></span></code></pre></div>
+<div class="sourceCode" id="cb843"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb843-1"><a href="16-structures-donnees.html#cb843-1"></a><span class="kw">derniere</span>(v)</span>
+<span id="cb843-2"><a href="16-structures-donnees.html#cb843-2"></a><span class="co">#&gt; [1] 20</span></span></code></pre></div>
 
 <div class="solution-exo">
-<div class="sourceCode" id="cb845"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb845-1"><a href="16-structures-donnees.html#cb845-1"></a>derniere &lt;-<span class="st"> </span><span class="cf">function</span>(v) {</span>
-<span id="cb845-2"><a href="16-structures-donnees.html#cb845-2"></a>    v[<span class="kw">length</span>(v)]</span>
-<span id="cb845-3"><a href="16-structures-donnees.html#cb845-3"></a>}</span>
-<span id="cb845-4"><a href="16-structures-donnees.html#cb845-4"></a></span>
-<span id="cb845-5"><a href="16-structures-donnees.html#cb845-5"></a><span class="co"># Ou bien</span></span>
-<span id="cb845-6"><a href="16-structures-donnees.html#cb845-6"></a></span>
-<span id="cb845-7"><a href="16-structures-donnees.html#cb845-7"></a>derniere &lt;-<span class="st"> </span><span class="cf">function</span>(v) {</span>
-<span id="cb845-8"><a href="16-structures-donnees.html#cb845-8"></a>    <span class="kw">tail</span>(v, <span class="dv">1</span>)</span>
-<span id="cb845-9"><a href="16-structures-donnees.html#cb845-9"></a>}</span></code></pre></div>
+<div class="sourceCode" id="cb844"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb844-1"><a href="16-structures-donnees.html#cb844-1"></a>derniere &lt;-<span class="st"> </span><span class="cf">function</span>(v) {</span>
+<span id="cb844-2"><a href="16-structures-donnees.html#cb844-2"></a>    v[<span class="kw">length</span>(v)]</span>
+<span id="cb844-3"><a href="16-structures-donnees.html#cb844-3"></a>}</span>
+<span id="cb844-4"><a href="16-structures-donnees.html#cb844-4"></a></span>
+<span id="cb844-5"><a href="16-structures-donnees.html#cb844-5"></a><span class="co"># Ou bien</span></span>
+<span id="cb844-6"><a href="16-structures-donnees.html#cb844-6"></a></span>
+<span id="cb844-7"><a href="16-structures-donnees.html#cb844-7"></a>derniere &lt;-<span class="st"> </span><span class="cf">function</span>(v) {</span>
+<span id="cb844-8"><a href="16-structures-donnees.html#cb844-8"></a>    <span class="kw">tail</span>(v, <span class="dv">1</span>)</span>
+<span id="cb844-9"><a href="16-structures-donnees.html#cb844-9"></a>}</span></code></pre></div>
 </div>
 
 <p>Créer une fonction <code>sauf_derniere()</code> qui prend en paramètre un vecteur et retourne ce vecteur sans son dernier élément.</p>
-<div class="sourceCode" id="cb846"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb846-1"><a href="16-structures-donnees.html#cb846-1"></a><span class="kw">sauf_derniere</span>(v)</span>
-<span id="cb846-2"><a href="16-structures-donnees.html#cb846-2"></a><span class="co">#&gt; [1] 10 12 14 16 18</span></span></code></pre></div>
+<div class="sourceCode" id="cb845"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb845-1"><a href="16-structures-donnees.html#cb845-1"></a><span class="kw">sauf_derniere</span>(v)</span>
+<span id="cb845-2"><a href="16-structures-donnees.html#cb845-2"></a><span class="co">#&gt; [1] 10 12 14 16 18</span></span></code></pre></div>
 
 <div class="solution-exo">
-<div class="sourceCode" id="cb847"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb847-1"><a href="16-structures-donnees.html#cb847-1"></a>sauf_derniere &lt;-<span class="st"> </span><span class="cf">function</span>(v) {</span>
-<span id="cb847-2"><a href="16-structures-donnees.html#cb847-2"></a>    v[<span class="op">-</span><span class="kw">length</span>(v)]</span>
-<span id="cb847-3"><a href="16-structures-donnees.html#cb847-3"></a>}</span>
-<span id="cb847-4"><a href="16-structures-donnees.html#cb847-4"></a></span>
-<span id="cb847-5"><a href="16-structures-donnees.html#cb847-5"></a><span class="co"># Ou bien</span></span>
-<span id="cb847-6"><a href="16-structures-donnees.html#cb847-6"></a></span>
-<span id="cb847-7"><a href="16-structures-donnees.html#cb847-7"></a>sauf_derniere &lt;-<span class="st"> </span><span class="cf">function</span>(v) {</span>
-<span id="cb847-8"><a href="16-structures-donnees.html#cb847-8"></a>    <span class="kw">head</span>(v, <span class="dv">-1</span>)</span>
-<span id="cb847-9"><a href="16-structures-donnees.html#cb847-9"></a>}</span></code></pre></div>
+<div class="sourceCode" id="cb846"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb846-1"><a href="16-structures-donnees.html#cb846-1"></a>sauf_derniere &lt;-<span class="st"> </span><span class="cf">function</span>(v) {</span>
+<span id="cb846-2"><a href="16-structures-donnees.html#cb846-2"></a>    v[<span class="op">-</span><span class="kw">length</span>(v)]</span>
+<span id="cb846-3"><a href="16-structures-donnees.html#cb846-3"></a>}</span>
+<span id="cb846-4"><a href="16-structures-donnees.html#cb846-4"></a></span>
+<span id="cb846-5"><a href="16-structures-donnees.html#cb846-5"></a><span class="co"># Ou bien</span></span>
+<span id="cb846-6"><a href="16-structures-donnees.html#cb846-6"></a></span>
+<span id="cb846-7"><a href="16-structures-donnees.html#cb846-7"></a>sauf_derniere &lt;-<span class="st"> </span><span class="cf">function</span>(v) {</span>
+<span id="cb846-8"><a href="16-structures-donnees.html#cb846-8"></a>    <span class="kw">head</span>(v, <span class="dv">-1</span>)</span>
+<span id="cb846-9"><a href="16-structures-donnees.html#cb846-9"></a>}</span></code></pre></div>
 </div>
 
 <p><strong>Exercice 1.2</strong></p>
 <p>Soit le vecteur <code>vn</code> suivant :</p>
-<div class="sourceCode" id="cb848"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb848-1"><a href="16-structures-donnees.html#cb848-1"></a>vn &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dt">val1 =</span> <span class="dv">10</span>, <span class="dt">val2 =</span> <span class="dv">0</span>, <span class="dt">val3 =</span> <span class="dv">14</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb847"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb847-1"><a href="16-structures-donnees.html#cb847-1"></a>vn &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dt">val1 =</span> <span class="dv">10</span>, <span class="dt">val2 =</span> <span class="dv">0</span>, <span class="dt">val3 =</span> <span class="dv">14</span>)</span></code></pre></div>
 <p>Sélectionner les valeurs nommées “val1” et “val3”.</p>
 
 <div class="solution-exo">
-<div class="sourceCode" id="cb849"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb849-1"><a href="16-structures-donnees.html#cb849-1"></a>vn[<span class="kw">c</span>(<span class="st">&quot;val1&quot;</span>, <span class="st">&quot;val3&quot;</span>)]</span></code></pre></div>
+<div class="sourceCode" id="cb848"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb848-1"><a href="16-structures-donnees.html#cb848-1"></a>vn[<span class="kw">c</span>(<span class="st">&quot;val1&quot;</span>, <span class="st">&quot;val3&quot;</span>)]</span></code></pre></div>
 </div>
 
-<p>Créer une fonction <code>select_noms()</code> qui prend en argument un vecteur <code>v</code> et un ou plusieurs noms, et retourne uniquement les éléments de <code>v</code> correspondant aux noms.</p>
-<div class="sourceCode" id="cb850"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb850-1"><a href="16-structures-donnees.html#cb850-1"></a><span class="kw">select_noms</span>(vn, <span class="kw">c</span>(<span class="st">&quot;val2&quot;</span>, <span class="st">&quot;val3&quot;</span>))</span>
-<span id="cb850-2"><a href="16-structures-donnees.html#cb850-2"></a><span class="co">#&gt; val2 val3 </span></span>
-<span id="cb850-3"><a href="16-structures-donnees.html#cb850-3"></a><span class="co">#&gt;    0   14</span></span></code></pre></div>
+<p>Créer une fonction <code>select_noms()</code> qui prend en argument un vecteur <code>v</code> et un ou plusieurs noms, et retourne uniquement les éléments de <code>v</code> correspondant à ces noms.</p>
+<div class="sourceCode" id="cb849"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb849-1"><a href="16-structures-donnees.html#cb849-1"></a><span class="kw">select_noms</span>(vn, <span class="kw">c</span>(<span class="st">&quot;val2&quot;</span>, <span class="st">&quot;val3&quot;</span>))</span>
+<span id="cb849-2"><a href="16-structures-donnees.html#cb849-2"></a><span class="co">#&gt; val2 val3 </span></span>
+<span id="cb849-3"><a href="16-structures-donnees.html#cb849-3"></a><span class="co">#&gt;    0   14</span></span></code></pre></div>
 
 <div class="solution-exo">
-<div class="sourceCode" id="cb851"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb851-1"><a href="16-structures-donnees.html#cb851-1"></a>select_noms &lt;-<span class="st"> </span><span class="cf">function</span>(v, noms) {</span>
-<span id="cb851-2"><a href="16-structures-donnees.html#cb851-2"></a>    v[noms]</span>
-<span id="cb851-3"><a href="16-structures-donnees.html#cb851-3"></a>}</span></code></pre></div>
+<div class="sourceCode" id="cb850"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb850-1"><a href="16-structures-donnees.html#cb850-1"></a>select_noms &lt;-<span class="st"> </span><span class="cf">function</span>(v, noms) {</span>
+<span id="cb850-2"><a href="16-structures-donnees.html#cb850-2"></a>    v[noms]</span>
+<span id="cb850-3"><a href="16-structures-donnees.html#cb850-3"></a>}</span></code></pre></div>
 </div>
 
 <p><em>Facultatif :</em> créer une fonction <code>sauf_nom()</code> qui prend en argument un vecteur <code>v</code> et un nom, et retourne tous les éléments de <code>v</code> sauf celui correspondant à ce nom.</p>
-<div class="sourceCode" id="cb852"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb852-1"><a href="16-structures-donnees.html#cb852-1"></a><span class="kw">sauf_nom</span>(vn, <span class="st">&quot;val2&quot;</span>)</span>
-<span id="cb852-2"><a href="16-structures-donnees.html#cb852-2"></a><span class="co">#&gt; val1 val3 </span></span>
-<span id="cb852-3"><a href="16-structures-donnees.html#cb852-3"></a><span class="co">#&gt;   10   14</span></span></code></pre></div>
+<div class="sourceCode" id="cb851"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb851-1"><a href="16-structures-donnees.html#cb851-1"></a><span class="kw">sauf_nom</span>(vn, <span class="st">&quot;val2&quot;</span>)</span>
+<span id="cb851-2"><a href="16-structures-donnees.html#cb851-2"></a><span class="co">#&gt; val1 val3 </span></span>
+<span id="cb851-3"><a href="16-structures-donnees.html#cb851-3"></a><span class="co">#&gt;   10   14</span></span></code></pre></div>
 
 <div class="solution-exo">
-<div class="sourceCode" id="cb853"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb853-1"><a href="16-structures-donnees.html#cb853-1"></a>sauf_nom &lt;-<span class="st"> </span><span class="cf">function</span>(v, nom) {</span>
-<span id="cb853-2"><a href="16-structures-donnees.html#cb853-2"></a>    v[<span class="kw">names</span>(v) <span class="op">!=</span><span class="st"> </span>nom]</span>
-<span id="cb853-3"><a href="16-structures-donnees.html#cb853-3"></a>}</span></code></pre></div>
+<div class="sourceCode" id="cb852"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb852-1"><a href="16-structures-donnees.html#cb852-1"></a>sauf_nom &lt;-<span class="st"> </span><span class="cf">function</span>(v, nom) {</span>
+<span id="cb852-2"><a href="16-structures-donnees.html#cb852-2"></a>    v[<span class="kw">names</span>(v) <span class="op">!=</span><span class="st"> </span>nom]</span>
+<span id="cb852-3"><a href="16-structures-donnees.html#cb852-3"></a>}</span></code></pre></div>
 </div>
 
 <p><em>Facultatif :</em> comparer les résultats des deux instructions suivantes.</p>
-<div class="sourceCode" id="cb854"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb854-1"><a href="16-structures-donnees.html#cb854-1"></a>vn[<span class="st">&quot;val1&quot;</span>]</span>
-<span id="cb854-2"><a href="16-structures-donnees.html#cb854-2"></a>vn[[<span class="st">&quot;val1&quot;</span>]]</span></code></pre></div>
+<div class="sourceCode" id="cb853"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb853-1"><a href="16-structures-donnees.html#cb853-1"></a>vn[<span class="st">&quot;val1&quot;</span>]</span>
+<span id="cb853-2"><a href="16-structures-donnees.html#cb853-2"></a>vn[[<span class="st">&quot;val1&quot;</span>]]</span></code></pre></div>
 <p><strong>Exercice 1.3</strong></p>
 <p>Soit les vecteurs <code>x</code> et <code>y</code> suivants :</p>
-<div class="sourceCode" id="cb855"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb855-1"><a href="16-structures-donnees.html#cb855-1"></a>x &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">1</span>, <span class="ot">NA</span>, <span class="dv">3</span>, <span class="dv">4</span>, <span class="ot">NA</span>)</span>
-<span id="cb855-2"><a href="16-structures-donnees.html#cb855-2"></a>y &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">10</span>, <span class="dv">20</span>, <span class="dv">30</span>, <span class="dv">40</span>, <span class="dv">50</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb854"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb854-1"><a href="16-structures-donnees.html#cb854-1"></a>x &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">1</span>, <span class="ot">NA</span>, <span class="dv">3</span>, <span class="dv">4</span>, <span class="ot">NA</span>)</span>
+<span id="cb854-2"><a href="16-structures-donnees.html#cb854-2"></a>y &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">10</span>, <span class="dv">20</span>, <span class="dv">30</span>, <span class="dv">40</span>, <span class="dv">50</span>)</span></code></pre></div>
 <p>À l’aide de l’opérateur <code>[]</code>, sélectionner uniquement les valeurs <code>NA</code> de <code>x</code>.</p>
 
 <div class="solution-exo">
-<div class="sourceCode" id="cb856"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb856-1"><a href="16-structures-donnees.html#cb856-1"></a>x[<span class="kw">is.na</span>(x)]</span></code></pre></div>
+<div class="sourceCode" id="cb855"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb855-1"><a href="16-structures-donnees.html#cb855-1"></a>x[<span class="kw">is.na</span>(x)]</span></code></pre></div>
 </div>
 
 <p>De la même manière, sélectionner les valeurs de <code>y</code> correspondant aux valeurs <code>NA</code> de <code>x</code> (c’est-à-dire les valeurs 20 et 50).</p>
 
 <div class="solution-exo">
-<div class="sourceCode" id="cb857"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb857-1"><a href="16-structures-donnees.html#cb857-1"></a>y[<span class="kw">is.na</span>(x)]</span></code></pre></div>
+<div class="sourceCode" id="cb856"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb856-1"><a href="16-structures-donnees.html#cb856-1"></a>y[<span class="kw">is.na</span>(x)]</span></code></pre></div>
 </div>
 
 <p>En utilisant les deux instructions précédentes et l’opérateur d’assignation <code>&lt;-</code>, remplacer les valeurs manquantes de <code>x</code> par les valeurs correspondantes de <code>y</code>.</p>
 
 <div class="solution-exo">
-<div class="sourceCode" id="cb858"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb858-1"><a href="16-structures-donnees.html#cb858-1"></a>x[<span class="kw">is.na</span>(x)] &lt;-<span class="st"> </span>y[<span class="kw">is.na</span>(x)]</span></code></pre></div>
+<div class="sourceCode" id="cb857"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb857-1"><a href="16-structures-donnees.html#cb857-1"></a>x[<span class="kw">is.na</span>(x)] &lt;-<span class="st"> </span>y[<span class="kw">is.na</span>(x)]</span></code></pre></div>
 </div>
 
 <p><strong>Exercice 1.4</strong></p>
@@ -1278,16 +1278,16 @@ Attention à ne pas utiliser les crochets doubles pour modifier des éléments d
 <li>retourne les valeurs de <code>v</code> qui n’ont pas été converties correctement, c’est-à-dire celles qui ne valaient pas <code>NA</code> dans <code>v</code> mais valent <code>NA</code> après la conversion.</li>
 </ul>
 <p>Vérifier avec :</p>
-<div class="sourceCode" id="cb859"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb859-1"><a href="16-structures-donnees.html#cb859-1"></a>x &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;igloo&quot;</span>, <span class="st">&quot;20&quot;</span>, <span class="ot">NA</span>, <span class="st">&quot;3.5&quot;</span>, <span class="st">&quot;4,8&quot;</span>)</span>
-<span id="cb859-2"><a href="16-structures-donnees.html#cb859-2"></a><span class="kw">problemes_conversion</span>(x)</span>
-<span id="cb859-3"><a href="16-structures-donnees.html#cb859-3"></a><span class="co">#&gt; Warning in problemes_conversion(x): NAs introduced by coercion</span></span>
-<span id="cb859-4"><a href="16-structures-donnees.html#cb859-4"></a><span class="co">#&gt; [1] &quot;igloo&quot; &quot;4,8&quot;</span></span></code></pre></div>
+<div class="sourceCode" id="cb858"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb858-1"><a href="16-structures-donnees.html#cb858-1"></a>x &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;igloo&quot;</span>, <span class="st">&quot;20&quot;</span>, <span class="ot">NA</span>, <span class="st">&quot;3.5&quot;</span>, <span class="st">&quot;4,8&quot;</span>)</span>
+<span id="cb858-2"><a href="16-structures-donnees.html#cb858-2"></a><span class="kw">problemes_conversion</span>(x)</span>
+<span id="cb858-3"><a href="16-structures-donnees.html#cb858-3"></a><span class="co">#&gt; Warning in problemes_conversion(x): NAs introduced by coercion</span></span>
+<span id="cb858-4"><a href="16-structures-donnees.html#cb858-4"></a><span class="co">#&gt; [1] &quot;igloo&quot; &quot;4,8&quot;</span></span></code></pre></div>
 
 <div class="solution-exo">
-<div class="sourceCode" id="cb860"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb860-1"><a href="16-structures-donnees.html#cb860-1"></a>problemes_conversion &lt;-<span class="st"> </span><span class="cf">function</span>(v) {</span>
-<span id="cb860-2"><a href="16-structures-donnees.html#cb860-2"></a>    conv &lt;-<span class="st"> </span><span class="kw">as.numeric</span>(v)</span>
-<span id="cb860-3"><a href="16-structures-donnees.html#cb860-3"></a>    v[<span class="op">!</span><span class="kw">is.na</span>(v) <span class="op">&amp;</span><span class="st"> </span><span class="kw">is.na</span>(conv)]</span>
-<span id="cb860-4"><a href="16-structures-donnees.html#cb860-4"></a>}</span></code></pre></div>
+<div class="sourceCode" id="cb859"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb859-1"><a href="16-structures-donnees.html#cb859-1"></a>problemes_conversion &lt;-<span class="st"> </span><span class="cf">function</span>(v) {</span>
+<span id="cb859-2"><a href="16-structures-donnees.html#cb859-2"></a>    conv &lt;-<span class="st"> </span><span class="kw">as.numeric</span>(v)</span>
+<span id="cb859-3"><a href="16-structures-donnees.html#cb859-3"></a>    v[<span class="op">!</span><span class="kw">is.na</span>(v) <span class="op">&amp;</span><span class="st"> </span><span class="kw">is.na</span>(conv)]</span>
+<span id="cb859-4"><a href="16-structures-donnees.html#cb859-4"></a>}</span></code></pre></div>
 </div>
 
 </div>
@@ -1301,79 +1301,79 @@ Attention à ne pas utiliser les crochets doubles pour modifier des éléments d
 #&gt;  $ : int [1:3] 10 11 12</code></pre>
 
 <div class="solution-exo">
-<div class="sourceCode" id="cb862"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb862-1"><a href="16-structures-donnees.html#cb862-1"></a>liste &lt;-<span class="st"> </span><span class="kw">list</span>(<span class="dv">1</span>, <span class="st">&quot;oui&quot;</span>, <span class="dv">10</span><span class="op">:</span><span class="dv">12</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb861"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb861-1"><a href="16-structures-donnees.html#cb861-1"></a>liste &lt;-<span class="st"> </span><span class="kw">list</span>(<span class="dv">1</span>, <span class="st">&quot;oui&quot;</span>, <span class="dv">10</span><span class="op">:</span><span class="dv">12</span>)</span></code></pre></div>
 </div>
 
 <p>Donner les noms suivants aux éléments de la liste : <code>num</code>, <code>reponse</code> et <code>vec</code>.</p>
 
 <div class="solution-exo">
-<div class="sourceCode" id="cb863"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb863-1"><a href="16-structures-donnees.html#cb863-1"></a><span class="kw">names</span>(liste) &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;num&quot;</span>, <span class="st">&quot;reponse&quot;</span>, <span class="st">&quot;vec&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb862"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb862-1"><a href="16-structures-donnees.html#cb862-1"></a><span class="kw">names</span>(liste) &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;num&quot;</span>, <span class="st">&quot;reponse&quot;</span>, <span class="st">&quot;vec&quot;</span>)</span></code></pre></div>
 </div>
 
 <p>Ajouter un élément nommé <code>chat</code> et ayant pour valeur “Ronron” à la fin de <code>liste</code>.</p>
 
 <div class="solution-exo">
-<div class="sourceCode" id="cb864"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb864-1"><a href="16-structures-donnees.html#cb864-1"></a>liste &lt;-<span class="st"> </span><span class="kw">c</span>(liste, <span class="dt">chat =</span> <span class="st">&quot;Ronron&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb863"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb863-1"><a href="16-structures-donnees.html#cb863-1"></a>liste &lt;-<span class="st"> </span><span class="kw">c</span>(liste, <span class="dt">chat =</span> <span class="st">&quot;Ronron&quot;</span>)</span></code></pre></div>
 </div>
 
 <p>Modifier l’élément <code>chat</code> pour lui donner la valeur “Ronpchi”.</p>
 
 <div class="solution-exo">
-<div class="sourceCode" id="cb865"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb865-1"><a href="16-structures-donnees.html#cb865-1"></a>liste<span class="op">$</span>chat &lt;-<span class="st"> &quot;Ronpchi&quot;</span></span>
-<span id="cb865-2"><a href="16-structures-donnees.html#cb865-2"></a><span class="co"># Ou bien</span></span>
-<span id="cb865-3"><a href="16-structures-donnees.html#cb865-3"></a>liste[<span class="st">&quot;chat&quot;</span>] &lt;-<span class="st"> &quot;Ronpchi&quot;</span></span></code></pre></div>
+<div class="sourceCode" id="cb864"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb864-1"><a href="16-structures-donnees.html#cb864-1"></a>liste<span class="op">$</span>chat &lt;-<span class="st"> &quot;Ronpchi&quot;</span></span>
+<span id="cb864-2"><a href="16-structures-donnees.html#cb864-2"></a><span class="co"># Ou bien</span></span>
+<span id="cb864-3"><a href="16-structures-donnees.html#cb864-3"></a>liste[<span class="st">&quot;chat&quot;</span>] &lt;-<span class="st"> &quot;Ronpchi&quot;</span></span></code></pre></div>
 </div>
 
 <p>Supprimer l’élément <code>vec</code> de <code>liste</code>.</p>
 
 <div class="solution-exo">
-<div class="sourceCode" id="cb866"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb866-1"><a href="16-structures-donnees.html#cb866-1"></a>liste<span class="op">$</span>vec &lt;-<span class="st"> </span><span class="ot">NULL</span></span>
-<span id="cb866-2"><a href="16-structures-donnees.html#cb866-2"></a><span class="co"># Ou bien</span></span>
-<span id="cb866-3"><a href="16-structures-donnees.html#cb866-3"></a>liste[<span class="st">&quot;vec&quot;</span>] &lt;-<span class="st"> </span><span class="ot">NULL</span></span></code></pre></div>
+<div class="sourceCode" id="cb865"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb865-1"><a href="16-structures-donnees.html#cb865-1"></a>liste<span class="op">$</span>vec &lt;-<span class="st"> </span><span class="ot">NULL</span></span>
+<span id="cb865-2"><a href="16-structures-donnees.html#cb865-2"></a><span class="co"># Ou bien</span></span>
+<span id="cb865-3"><a href="16-structures-donnees.html#cb865-3"></a>liste[<span class="st">&quot;vec&quot;</span>] &lt;-<span class="st"> </span><span class="ot">NULL</span></span></code></pre></div>
 </div>
 
 <p><strong>Exercice 2.2</strong></p>
 <p>Créer une fonction nommée <code>extremes</code> qui prend en argument un vecteur et retourne une liste nommée comportant sa valeur minimale et sa valeur maximale.</p>
 
 <div class="solution-exo">
-<div class="sourceCode" id="cb867"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb867-1"><a href="16-structures-donnees.html#cb867-1"></a>extremes &lt;-<span class="st"> </span><span class="cf">function</span>(x) {</span>
-<span id="cb867-2"><a href="16-structures-donnees.html#cb867-2"></a>    <span class="kw">list</span>(<span class="dt">min =</span> <span class="kw">min</span>(x), <span class="dt">max =</span> <span class="kw">max</span>(x))</span>
-<span id="cb867-3"><a href="16-structures-donnees.html#cb867-3"></a>}</span></code></pre></div>
+<div class="sourceCode" id="cb866"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb866-1"><a href="16-structures-donnees.html#cb866-1"></a>extremes &lt;-<span class="st"> </span><span class="cf">function</span>(x) {</span>
+<span id="cb866-2"><a href="16-structures-donnees.html#cb866-2"></a>    <span class="kw">list</span>(<span class="dt">min =</span> <span class="kw">min</span>(x), <span class="dt">max =</span> <span class="kw">max</span>(x))</span>
+<span id="cb866-3"><a href="16-structures-donnees.html#cb866-3"></a>}</span></code></pre></div>
 </div>
 
 <p>Appliquer cette fonction à un vecteur de votre choix et utiliser le résultat pour calculer l’étendue (soit la différence entre la valeur maximale et la valeur minimale).</p>
 
 <div class="solution-exo">
-<div class="sourceCode" id="cb868"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb868-1"><a href="16-structures-donnees.html#cb868-1"></a>v &lt;-<span class="st"> </span><span class="kw">runif</span>(<span class="dv">10</span>)</span>
-<span id="cb868-2"><a href="16-structures-donnees.html#cb868-2"></a>res &lt;-<span class="st"> </span><span class="kw">extremes</span>(v)</span>
-<span id="cb868-3"><a href="16-structures-donnees.html#cb868-3"></a>res<span class="op">$</span>max <span class="op">-</span><span class="st"> </span>res<span class="op">$</span>min</span></code></pre></div>
+<div class="sourceCode" id="cb867"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb867-1"><a href="16-structures-donnees.html#cb867-1"></a>v &lt;-<span class="st"> </span><span class="kw">runif</span>(<span class="dv">10</span>)</span>
+<span id="cb867-2"><a href="16-structures-donnees.html#cb867-2"></a>res &lt;-<span class="st"> </span><span class="kw">extremes</span>(v)</span>
+<span id="cb867-3"><a href="16-structures-donnees.html#cb867-3"></a>res<span class="op">$</span>max <span class="op">-</span><span class="st"> </span>res<span class="op">$</span>min</span></code></pre></div>
 </div>
 
 <p><strong>Exercice 2.3</strong></p>
 <p>Soit la liste suivante :</p>
-<div class="sourceCode" id="cb869"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb869-1"><a href="16-structures-donnees.html#cb869-1"></a>liste &lt;-<span class="st"> </span><span class="kw">list</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">3</span>, <span class="kw">runif</span>(<span class="dv">5</span>), <span class="st">&quot;youpi&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb868"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb868-1"><a href="16-structures-donnees.html#cb868-1"></a>liste &lt;-<span class="st"> </span><span class="kw">list</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">3</span>, <span class="kw">runif</span>(<span class="dv">5</span>), <span class="st">&quot;youpi&quot;</span>)</span></code></pre></div>
 <p>Sélectionner la sous liste composée des éléments 1 et 3 de <code>liste</code>.</p>
 
 <div class="solution-exo">
-<div class="sourceCode" id="cb870"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb870-1"><a href="16-structures-donnees.html#cb870-1"></a>liste[<span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">3</span>)]</span></code></pre></div>
+<div class="sourceCode" id="cb869"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb869-1"><a href="16-structures-donnees.html#cb869-1"></a>liste[<span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">3</span>)]</span></code></pre></div>
 </div>
 
 <p>Sélectionner la sous-liste composée du premier élément de <code>liste</code>.</p>
 
 <div class="solution-exo">
-<div class="sourceCode" id="cb871"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb871-1"><a href="16-structures-donnees.html#cb871-1"></a>liste[<span class="dv">1</span>]</span></code></pre></div>
+<div class="sourceCode" id="cb870"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb870-1"><a href="16-structures-donnees.html#cb870-1"></a>liste[<span class="dv">1</span>]</span></code></pre></div>
 </div>
 
 <p>Sélectionner le contenu du premier élément de <code>liste</code>.</p>
 
 <div class="solution-exo">
-<div class="sourceCode" id="cb872"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb872-1"><a href="16-structures-donnees.html#cb872-1"></a>liste[[<span class="dv">1</span>]]</span></code></pre></div>
+<div class="sourceCode" id="cb871"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb871-1"><a href="16-structures-donnees.html#cb871-1"></a>liste[[<span class="dv">1</span>]]</span></code></pre></div>
 </div>
 
 <p>En enchaînant deux opérations de sélection, sélectionner le deuxième élément du premier élément de <code>liste</code>.</p>
 
 <div class="solution-exo">
-<div class="sourceCode" id="cb873"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb873-1"><a href="16-structures-donnees.html#cb873-1"></a>liste[[<span class="dv">1</span>]][<span class="dv">2</span>]</span></code></pre></div>
+<div class="sourceCode" id="cb872"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb872-1"><a href="16-structures-donnees.html#cb872-1"></a>liste[[<span class="dv">1</span>]][<span class="dv">2</span>]</span></code></pre></div>
 </div>
 
 <p><strong>Exercice 2.4</strong></p>
@@ -1384,25 +1384,25 @@ Attention à ne pas utiliser les crochets doubles pour modifier des éléments d
 <li>le nombre d’éléments qu’elle contient</li>
 </ul>
 <p>Vérifier avec :</p>
-<div class="sourceCode" id="cb874"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb874-1"><a href="16-structures-donnees.html#cb874-1"></a>liste &lt;-<span class="st"> </span><span class="kw">list</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">3</span>, <span class="kw">runif</span>(<span class="dv">5</span>), <span class="st">&quot;youpi&quot;</span>)</span>
-<span id="cb874-2"><a href="16-structures-donnees.html#cb874-2"></a><span class="kw">description_liste</span>(liste)</span>
-<span id="cb874-3"><a href="16-structures-donnees.html#cb874-3"></a><span class="co">#&gt; $premier_element</span></span>
-<span id="cb874-4"><a href="16-structures-donnees.html#cb874-4"></a><span class="co">#&gt; [1] 1 2 3</span></span>
-<span id="cb874-5"><a href="16-structures-donnees.html#cb874-5"></a><span class="co">#&gt; </span></span>
-<span id="cb874-6"><a href="16-structures-donnees.html#cb874-6"></a><span class="co">#&gt; $dernier_element</span></span>
-<span id="cb874-7"><a href="16-structures-donnees.html#cb874-7"></a><span class="co">#&gt; [1] &quot;youpi&quot;</span></span>
-<span id="cb874-8"><a href="16-structures-donnees.html#cb874-8"></a><span class="co">#&gt; </span></span>
-<span id="cb874-9"><a href="16-structures-donnees.html#cb874-9"></a><span class="co">#&gt; $nb_elements</span></span>
-<span id="cb874-10"><a href="16-structures-donnees.html#cb874-10"></a><span class="co">#&gt; [1] 3</span></span></code></pre></div>
+<div class="sourceCode" id="cb873"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb873-1"><a href="16-structures-donnees.html#cb873-1"></a>liste &lt;-<span class="st"> </span><span class="kw">list</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">3</span>, <span class="kw">runif</span>(<span class="dv">5</span>), <span class="st">&quot;youpi&quot;</span>)</span>
+<span id="cb873-2"><a href="16-structures-donnees.html#cb873-2"></a><span class="kw">description_liste</span>(liste)</span>
+<span id="cb873-3"><a href="16-structures-donnees.html#cb873-3"></a><span class="co">#&gt; $premier_element</span></span>
+<span id="cb873-4"><a href="16-structures-donnees.html#cb873-4"></a><span class="co">#&gt; [1] 1 2 3</span></span>
+<span id="cb873-5"><a href="16-structures-donnees.html#cb873-5"></a><span class="co">#&gt; </span></span>
+<span id="cb873-6"><a href="16-structures-donnees.html#cb873-6"></a><span class="co">#&gt; $dernier_element</span></span>
+<span id="cb873-7"><a href="16-structures-donnees.html#cb873-7"></a><span class="co">#&gt; [1] &quot;youpi&quot;</span></span>
+<span id="cb873-8"><a href="16-structures-donnees.html#cb873-8"></a><span class="co">#&gt; </span></span>
+<span id="cb873-9"><a href="16-structures-donnees.html#cb873-9"></a><span class="co">#&gt; $nb_elements</span></span>
+<span id="cb873-10"><a href="16-structures-donnees.html#cb873-10"></a><span class="co">#&gt; [1] 3</span></span></code></pre></div>
 
 <div class="solution-exo">
-<div class="sourceCode" id="cb875"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb875-1"><a href="16-structures-donnees.html#cb875-1"></a>description_liste &lt;-<span class="st"> </span><span class="cf">function</span>(liste) {</span>
-<span id="cb875-2"><a href="16-structures-donnees.html#cb875-2"></a>    <span class="kw">list</span>(</span>
-<span id="cb875-3"><a href="16-structures-donnees.html#cb875-3"></a>        <span class="dt">premier_element =</span> liste[[<span class="dv">1</span>]],</span>
-<span id="cb875-4"><a href="16-structures-donnees.html#cb875-4"></a>        <span class="dt">dernier_element =</span> liste[[<span class="kw">length</span>(liste)]],</span>
-<span id="cb875-5"><a href="16-structures-donnees.html#cb875-5"></a>        <span class="dt">nb_elements =</span> <span class="kw">length</span>(liste)</span>
-<span id="cb875-6"><a href="16-structures-donnees.html#cb875-6"></a>    )</span>
-<span id="cb875-7"><a href="16-structures-donnees.html#cb875-7"></a>}</span></code></pre></div>
+<div class="sourceCode" id="cb874"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb874-1"><a href="16-structures-donnees.html#cb874-1"></a>description_liste &lt;-<span class="st"> </span><span class="cf">function</span>(liste) {</span>
+<span id="cb874-2"><a href="16-structures-donnees.html#cb874-2"></a>    <span class="kw">list</span>(</span>
+<span id="cb874-3"><a href="16-structures-donnees.html#cb874-3"></a>        <span class="dt">premier_element =</span> liste[[<span class="dv">1</span>]],</span>
+<span id="cb874-4"><a href="16-structures-donnees.html#cb874-4"></a>        <span class="dt">dernier_element =</span> liste[[<span class="kw">length</span>(liste)]],</span>
+<span id="cb874-5"><a href="16-structures-donnees.html#cb874-5"></a>        <span class="dt">nb_elements =</span> <span class="kw">length</span>(liste)</span>
+<span id="cb874-6"><a href="16-structures-donnees.html#cb874-6"></a>    )</span>
+<span id="cb874-7"><a href="16-structures-donnees.html#cb874-7"></a>}</span></code></pre></div>
 </div>
 
 </div>
@@ -1410,59 +1410,55 @@ Attention à ne pas utiliser les crochets doubles pour modifier des éléments d
 <h3><span class="header-section-number">16.5.3</span> Tableaux de données</h3>
 <p><strong>Exercice 3.1</strong></p>
 <p>Créer le tableau <code>df</code> suivant :</p>
-<div class="sourceCode" id="cb876"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb876-1"><a href="16-structures-donnees.html#cb876-1"></a>df &lt;-<span class="st"> </span><span class="kw">data.frame</span>(</span>
-<span id="cb876-2"><a href="16-structures-donnees.html#cb876-2"></a>    <span class="dt">fruit =</span> <span class="kw">c</span>(<span class="st">&quot;Pomme&quot;</span>, <span class="st">&quot;Pomme&quot;</span>, <span class="st">&quot;Citron&quot;</span>),</span>
-<span id="cb876-3"><a href="16-structures-donnees.html#cb876-3"></a>    <span class="dt">poids =</span> <span class="kw">c</span>(<span class="dv">154</span>, <span class="dv">167</span>, <span class="dv">92</span>),</span>
-<span id="cb876-4"><a href="16-structures-donnees.html#cb876-4"></a>    <span class="dt">couleur =</span> <span class="kw">c</span>(<span class="st">&quot;vert&quot;</span>, <span class="st">&quot;vert&quot;</span>, <span class="st">&quot;jaune&quot;</span>)</span>
-<span id="cb876-5"><a href="16-structures-donnees.html#cb876-5"></a>)</span></code></pre></div>
+<div class="sourceCode" id="cb875"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb875-1"><a href="16-structures-donnees.html#cb875-1"></a>df &lt;-<span class="st"> </span><span class="kw">tribble</span>(</span>
+<span id="cb875-2"><a href="16-structures-donnees.html#cb875-2"></a>    <span class="op">~</span>fruit,   <span class="op">~</span>poids, <span class="op">~</span>couleur,</span>
+<span id="cb875-3"><a href="16-structures-donnees.html#cb875-3"></a>    <span class="st">&quot;Pomme&quot;</span>,  <span class="dv">154</span>,    <span class="st">&quot;vert&quot;</span>,</span>
+<span id="cb875-4"><a href="16-structures-donnees.html#cb875-4"></a>    <span class="st">&quot;Pomme&quot;</span>,  <span class="dv">167</span>,    <span class="st">&quot;vert&quot;</span>,</span>
+<span id="cb875-5"><a href="16-structures-donnees.html#cb875-5"></a>    <span class="st">&quot;Citron&quot;</span>, <span class="dv">92</span>,     <span class="st">&quot;jaune&quot;</span></span>
+<span id="cb875-6"><a href="16-structures-donnees.html#cb875-6"></a>)</span></code></pre></div>
 <p>À l’aide de l’opérateur <code>$</code>, sélectionner la colonne <code>fruit</code> de <code>df</code>.</p>
 
 <div class="solution-exo">
-<div class="sourceCode" id="cb877"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb877-1"><a href="16-structures-donnees.html#cb877-1"></a>df<span class="op">$</span>fruit</span></code></pre></div>
+<div class="sourceCode" id="cb876"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb876-1"><a href="16-structures-donnees.html#cb876-1"></a>df<span class="op">$</span>fruit</span></code></pre></div>
 </div>
 
 <p>Faire de même avec l’opérateur <code>[[]]</code>.</p>
 
 <div class="solution-exo">
-<div class="sourceCode" id="cb878"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb878-1"><a href="16-structures-donnees.html#cb878-1"></a>df[[<span class="st">&quot;fruit&quot;</span>]]</span></code></pre></div>
+<div class="sourceCode" id="cb877"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb877-1"><a href="16-structures-donnees.html#cb877-1"></a>df[[<span class="st">&quot;fruit&quot;</span>]]</span></code></pre></div>
 </div>
 
 <p>À l’aide de l’opérateur <code>[[]]</code> et de la fonction <code>str_to_upper()</code> de <code>stringr</code>, transformer la colonne <code>fruit</code> en passant ses valeurs en majuscules.</p>
 
 <div class="solution-exo">
-<div class="sourceCode" id="cb879"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb879-1"><a href="16-structures-donnees.html#cb879-1"></a><span class="kw">library</span>(stringr)</span>
-<span id="cb879-2"><a href="16-structures-donnees.html#cb879-2"></a>df[[<span class="st">&quot;fruit&quot;</span>]] &lt;-<span class="st"> </span><span class="kw">str_to_upper</span>(df[[<span class="st">&quot;fruit&quot;</span>]])</span></code></pre></div>
+<div class="sourceCode" id="cb878"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb878-1"><a href="16-structures-donnees.html#cb878-1"></a><span class="kw">library</span>(stringr)</span>
+<span id="cb878-2"><a href="16-structures-donnees.html#cb878-2"></a>df[[<span class="st">&quot;fruit&quot;</span>]] &lt;-<span class="st"> </span><span class="kw">str_to_upper</span>(df[[<span class="st">&quot;fruit&quot;</span>]])</span></code></pre></div>
 </div>
 
 <p>Créer une fonction <code>colonne_maj</code> qui prend en argument un tableau de données <code>d</code> et un nom de colonne <code>colonne</code>, et retourne le tableau avec la colonne correspondante convertie en majuscules. Vérifier avec :</p>
-<div class="sourceCode" id="cb880"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb880-1"><a href="16-structures-donnees.html#cb880-1"></a><span class="kw">colonne_maj</span>(df, <span class="st">&quot;couleur&quot;</span>)</span>
-<span id="cb880-2"><a href="16-structures-donnees.html#cb880-2"></a><span class="co">#&gt;    fruit poids couleur</span></span>
-<span id="cb880-3"><a href="16-structures-donnees.html#cb880-3"></a><span class="co">#&gt; 1  Pomme   154    VERT</span></span>
-<span id="cb880-4"><a href="16-structures-donnees.html#cb880-4"></a><span class="co">#&gt; 2  Pomme   167    VERT</span></span>
-<span id="cb880-5"><a href="16-structures-donnees.html#cb880-5"></a><span class="co">#&gt; 3 Citron    92   JAUNE</span></span></code></pre></div>
+<div class="sourceCode" id="cb879"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb879-1"><a href="16-structures-donnees.html#cb879-1"></a><span class="kw">colonne_maj</span>(df, <span class="st">&quot;couleur&quot;</span>)</span>
+<span id="cb879-2"><a href="16-structures-donnees.html#cb879-2"></a><span class="co">#&gt; # A tibble: 3 × 3</span></span>
+<span id="cb879-3"><a href="16-structures-donnees.html#cb879-3"></a><span class="co">#&gt;   fruit  poids couleur</span></span>
+<span id="cb879-4"><a href="16-structures-donnees.html#cb879-4"></a><span class="co">#&gt;   &lt;chr&gt;  &lt;dbl&gt; &lt;chr&gt;  </span></span>
+<span id="cb879-5"><a href="16-structures-donnees.html#cb879-5"></a><span class="co">#&gt; 1 Pomme    154 VERT   </span></span>
+<span id="cb879-6"><a href="16-structures-donnees.html#cb879-6"></a><span class="co">#&gt; 2 Pomme    167 VERT   </span></span>
+<span id="cb879-7"><a href="16-structures-donnees.html#cb879-7"></a><span class="co">#&gt; 3 Citron    92 JAUNE</span></span></code></pre></div>
 
 <div class="solution-exo">
-<div class="sourceCode" id="cb881"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb881-1"><a href="16-structures-donnees.html#cb881-1"></a>colonne_maj &lt;-<span class="st"> </span><span class="cf">function</span>(d, colonne) {</span>
-<span id="cb881-2"><a href="16-structures-donnees.html#cb881-2"></a>    d[[colonne]] &lt;-<span class="st"> </span><span class="kw">str_to_upper</span>(d[[colonne]])</span>
-<span id="cb881-3"><a href="16-structures-donnees.html#cb881-3"></a>    d</span>
-<span id="cb881-4"><a href="16-structures-donnees.html#cb881-4"></a>}</span></code></pre></div>
-</div>
-
-<p>Utiliser la fonction pour modifier le jeu de données <code>hdv2003</code> en passant en majuscule la colonne <code>sexe</code>.</p>
-
-<div class="solution-exo">
-<div class="sourceCode" id="cb882"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb882-1"><a href="16-structures-donnees.html#cb882-1"></a><span class="kw">library</span>(questionr)</span>
-<span id="cb882-2"><a href="16-structures-donnees.html#cb882-2"></a><span class="kw">data</span>(hdv2003)</span>
-<span id="cb882-3"><a href="16-structures-donnees.html#cb882-3"></a>hdv2003 &lt;-<span class="st"> </span><span class="kw">colonne_maj</span>(hdv2003, <span class="st">&quot;sexe&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb880"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb880-1"><a href="16-structures-donnees.html#cb880-1"></a>colonne_maj &lt;-<span class="st"> </span><span class="cf">function</span>(d, colonne) {</span>
+<span id="cb880-2"><a href="16-structures-donnees.html#cb880-2"></a>    d[[colonne]] &lt;-<span class="st"> </span><span class="kw">str_to_upper</span>(d[[colonne]])</span>
+<span id="cb880-3"><a href="16-structures-donnees.html#cb880-3"></a>    d</span>
+<span id="cb880-4"><a href="16-structures-donnees.html#cb880-4"></a>}</span></code></pre></div>
 </div>
 
 <p><strong>Exercice 3.2</strong></p>
 <p>Créer le tableau <code>df</code> suivant :</p>
-<div class="sourceCode" id="cb883"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb883-1"><a href="16-structures-donnees.html#cb883-1"></a>df &lt;-<span class="st"> </span><span class="kw">data.frame</span>(</span>
-<span id="cb883-2"><a href="16-structures-donnees.html#cb883-2"></a>    <span class="dt">fruit =</span> <span class="kw">c</span>(<span class="st">&quot;Pomme&quot;</span>, <span class="st">&quot;Pomme&quot;</span>, <span class="st">&quot;Citron&quot;</span>),</span>
-<span id="cb883-3"><a href="16-structures-donnees.html#cb883-3"></a>    <span class="dt">poids =</span> <span class="kw">c</span>(<span class="dv">154</span>, <span class="dv">167</span>, <span class="dv">92</span>),</span>
-<span id="cb883-4"><a href="16-structures-donnees.html#cb883-4"></a>    <span class="dt">couleur =</span> <span class="kw">c</span>(<span class="st">&quot;vert&quot;</span>, <span class="st">&quot;vert&quot;</span>, <span class="st">&quot;jaune&quot;</span>)</span>
-<span id="cb883-5"><a href="16-structures-donnees.html#cb883-5"></a>)</span></code></pre></div>
+<div class="sourceCode" id="cb881"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb881-1"><a href="16-structures-donnees.html#cb881-1"></a>df &lt;-<span class="st"> </span><span class="kw">tribble</span>(</span>
+<span id="cb881-2"><a href="16-structures-donnees.html#cb881-2"></a>    <span class="op">~</span>fruit,   <span class="op">~</span>poids, <span class="op">~</span>couleur,</span>
+<span id="cb881-3"><a href="16-structures-donnees.html#cb881-3"></a>    <span class="st">&quot;Pomme&quot;</span>,  <span class="dv">154</span>,    <span class="st">&quot;vert&quot;</span>,</span>
+<span id="cb881-4"><a href="16-structures-donnees.html#cb881-4"></a>    <span class="st">&quot;Pomme&quot;</span>,  <span class="dv">167</span>,    <span class="st">&quot;vert&quot;</span>,</span>
+<span id="cb881-5"><a href="16-structures-donnees.html#cb881-5"></a>    <span class="st">&quot;Citron&quot;</span>, <span class="dv">92</span>,     <span class="st">&quot;jaune&quot;</span></span>
+<span id="cb881-6"><a href="16-structures-donnees.html#cb881-6"></a>)</span></code></pre></div>
 <p>À l’aide de l’opérateur <code>[,]</code>, sélectionner :</p>
 <ul>
 <li>les citrons</li>
@@ -1471,57 +1467,64 @@ Attention à ne pas utiliser les crochets doubles pour modifier des éléments d
 </ul>
 
 <div class="solution-exo">
-<div class="sourceCode" id="cb884"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb884-1"><a href="16-structures-donnees.html#cb884-1"></a>df[df<span class="op">$</span>fruit <span class="op">==</span><span class="st"> &quot;Citron&quot;</span>,]</span>
-<span id="cb884-2"><a href="16-structures-donnees.html#cb884-2"></a>df[df<span class="op">$</span>fruit <span class="op">==</span><span class="st"> &quot;Pomme&quot;</span>, <span class="kw">c</span>(<span class="st">&quot;fruit&quot;</span>, <span class="st">&quot;couleur&quot;</span>)]</span>
-<span id="cb884-3"><a href="16-structures-donnees.html#cb884-3"></a>df[df<span class="op">$</span>poids <span class="op">&lt;</span><span class="st"> </span><span class="dv">100</span>, <span class="dv">1</span>]</span></code></pre></div>
+<div class="sourceCode" id="cb882"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb882-1"><a href="16-structures-donnees.html#cb882-1"></a>df[df<span class="op">$</span>fruit <span class="op">==</span><span class="st"> &quot;Citron&quot;</span>,]</span>
+<span id="cb882-2"><a href="16-structures-donnees.html#cb882-2"></a>df[df<span class="op">$</span>fruit <span class="op">==</span><span class="st"> &quot;Pomme&quot;</span>, <span class="kw">c</span>(<span class="st">&quot;fruit&quot;</span>, <span class="st">&quot;couleur&quot;</span>)]</span>
+<span id="cb882-3"><a href="16-structures-donnees.html#cb882-3"></a>df[df<span class="op">$</span>poids <span class="op">&lt;</span><span class="st"> </span><span class="dv">100</span>, <span class="dv">1</span>]</span></code></pre></div>
 </div>
 
-<p>Créer une fonction <code>filtre_valeur()</code> qui prend en argument une chaîne de caractères <code>valeur</code> et retourne les lignes de <code>df</code> pour lesquelles la colonne <code>fruit</code> vaut <code>valeur</code>. Vérifier avec :</p>
-<div class="sourceCode" id="cb885"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb885-1"><a href="16-structures-donnees.html#cb885-1"></a><span class="kw">filtre_valeur</span>(<span class="st">&quot;Pomme&quot;</span>)</span>
-<span id="cb885-2"><a href="16-structures-donnees.html#cb885-2"></a><span class="co">#&gt;   fruit poids couleur</span></span>
-<span id="cb885-3"><a href="16-structures-donnees.html#cb885-3"></a><span class="co">#&gt; 1 Pomme   154    vert</span></span>
-<span id="cb885-4"><a href="16-structures-donnees.html#cb885-4"></a><span class="co">#&gt; 2 Pomme   167    vert</span></span></code></pre></div>
+<p>Créer une fonction <code>filtre_valeur()</code> qui prend un seul argument nommé <code>valeur</code> et retourne les lignes de <code>df</code> pour lesquelles la colonne <code>fruit</code> vaut <code>valeur</code>. Vérifier avec :</p>
+<div class="sourceCode" id="cb883"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb883-1"><a href="16-structures-donnees.html#cb883-1"></a><span class="kw">filtre_valeur</span>(<span class="st">&quot;Pomme&quot;</span>)</span>
+<span id="cb883-2"><a href="16-structures-donnees.html#cb883-2"></a><span class="co">#&gt; # A tibble: 2 × 3</span></span>
+<span id="cb883-3"><a href="16-structures-donnees.html#cb883-3"></a><span class="co">#&gt;   fruit poids couleur</span></span>
+<span id="cb883-4"><a href="16-structures-donnees.html#cb883-4"></a><span class="co">#&gt;   &lt;chr&gt; &lt;dbl&gt; &lt;chr&gt;  </span></span>
+<span id="cb883-5"><a href="16-structures-donnees.html#cb883-5"></a><span class="co">#&gt; 1 Pomme   154 vert   </span></span>
+<span id="cb883-6"><a href="16-structures-donnees.html#cb883-6"></a><span class="co">#&gt; 2 Pomme   167 vert</span></span></code></pre></div>
 
 <div class="solution-exo">
-<div class="sourceCode" id="cb886"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb886-1"><a href="16-structures-donnees.html#cb886-1"></a>filtre_valeur &lt;-<span class="st"> </span><span class="cf">function</span>(valeur) {</span>
-<span id="cb886-2"><a href="16-structures-donnees.html#cb886-2"></a>    df[df<span class="op">$</span>fruit <span class="op">==</span><span class="st"> </span>valeur,]</span>
-<span id="cb886-3"><a href="16-structures-donnees.html#cb886-3"></a>}</span></code></pre></div>
+<div class="sourceCode" id="cb884"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb884-1"><a href="16-structures-donnees.html#cb884-1"></a>filtre_valeur &lt;-<span class="st"> </span><span class="cf">function</span>(valeur) {</span>
+<span id="cb884-2"><a href="16-structures-donnees.html#cb884-2"></a>    df[df<span class="op">$</span>fruit <span class="op">==</span><span class="st"> </span>valeur,]</span>
+<span id="cb884-3"><a href="16-structures-donnees.html#cb884-3"></a>}</span></code></pre></div>
 </div>
 
 <p>Modifier la fonction pour qu’elle accepte également un argument <code>d</code> contenant le tableau à filtrer. Vérifier avec :</p>
-<div class="sourceCode" id="cb887"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb887-1"><a href="16-structures-donnees.html#cb887-1"></a><span class="kw">filtre_valeur</span>(df, <span class="st">&quot;Pomme&quot;</span>)</span>
-<span id="cb887-2"><a href="16-structures-donnees.html#cb887-2"></a><span class="co">#&gt;   fruit poids couleur</span></span>
-<span id="cb887-3"><a href="16-structures-donnees.html#cb887-3"></a><span class="co">#&gt; 1 Pomme   154    vert</span></span>
-<span id="cb887-4"><a href="16-structures-donnees.html#cb887-4"></a><span class="co">#&gt; 2 Pomme   167    vert</span></span></code></pre></div>
+<div class="sourceCode" id="cb885"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb885-1"><a href="16-structures-donnees.html#cb885-1"></a><span class="kw">filtre_valeur</span>(df, <span class="st">&quot;Pomme&quot;</span>)</span>
+<span id="cb885-2"><a href="16-structures-donnees.html#cb885-2"></a><span class="co">#&gt; # A tibble: 2 × 3</span></span>
+<span id="cb885-3"><a href="16-structures-donnees.html#cb885-3"></a><span class="co">#&gt;   fruit poids couleur</span></span>
+<span id="cb885-4"><a href="16-structures-donnees.html#cb885-4"></a><span class="co">#&gt;   &lt;chr&gt; &lt;dbl&gt; &lt;chr&gt;  </span></span>
+<span id="cb885-5"><a href="16-structures-donnees.html#cb885-5"></a><span class="co">#&gt; 1 Pomme   154 vert   </span></span>
+<span id="cb885-6"><a href="16-structures-donnees.html#cb885-6"></a><span class="co">#&gt; 2 Pomme   167 vert</span></span></code></pre></div>
 
 <div class="solution-exo">
-<div class="sourceCode" id="cb888"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb888-1"><a href="16-structures-donnees.html#cb888-1"></a>filtre_valeur &lt;-<span class="st"> </span><span class="cf">function</span>(d, valeur) {</span>
-<span id="cb888-2"><a href="16-structures-donnees.html#cb888-2"></a>    d[d<span class="op">$</span>fruit <span class="op">==</span><span class="st"> </span>valeur,]</span>
+<div class="sourceCode" id="cb886"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb886-1"><a href="16-structures-donnees.html#cb886-1"></a>filtre_valeur &lt;-<span class="st"> </span><span class="cf">function</span>(d, valeur) {</span>
+<span id="cb886-2"><a href="16-structures-donnees.html#cb886-2"></a>    d[d<span class="op">$</span>fruit <span class="op">==</span><span class="st"> </span>valeur,]</span>
+<span id="cb886-3"><a href="16-structures-donnees.html#cb886-3"></a>}</span></code></pre></div>
+</div>
+
+<p>Modifier à nouveau la fonction pour qu’elle accepte aussi un argument <code>colonne</code> qui contient le nom de la colonne à utiliser pour filtrer les lignes. Vérifier avec :</p>
+<div class="sourceCode" id="cb887"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb887-1"><a href="16-structures-donnees.html#cb887-1"></a><span class="kw">filtre_valeur</span>(df, <span class="dt">colonne =</span> <span class="st">&quot;couleur&quot;</span>, <span class="dt">valeur =</span> <span class="st">&quot;jaune&quot;</span>)</span>
+<span id="cb887-2"><a href="16-structures-donnees.html#cb887-2"></a><span class="co">#&gt; # A tibble: 1 × 3</span></span>
+<span id="cb887-3"><a href="16-structures-donnees.html#cb887-3"></a><span class="co">#&gt;   fruit  poids couleur</span></span>
+<span id="cb887-4"><a href="16-structures-donnees.html#cb887-4"></a><span class="co">#&gt;   &lt;chr&gt;  &lt;dbl&gt; &lt;chr&gt;  </span></span>
+<span id="cb887-5"><a href="16-structures-donnees.html#cb887-5"></a><span class="co">#&gt; 1 Citron    92 jaune</span></span></code></pre></div>
+
+<div class="solution-exo">
+<div class="sourceCode" id="cb888"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb888-1"><a href="16-structures-donnees.html#cb888-1"></a>filtre_valeur &lt;-<span class="st"> </span><span class="cf">function</span>(d, colonne, valeur) {</span>
+<span id="cb888-2"><a href="16-structures-donnees.html#cb888-2"></a>    d[d[colonne] <span class="op">==</span><span class="st"> </span>valeur,]</span>
 <span id="cb888-3"><a href="16-structures-donnees.html#cb888-3"></a>}</span></code></pre></div>
 </div>
 
-<p>Modifier à nouveau la fonction pour qu’elle accepte un troisième argument <code>colonne</code> qui contient le nom de la colonne à utiliser pour filtrer les lignes. Vérifier avec :</p>
-<div class="sourceCode" id="cb889"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb889-1"><a href="16-structures-donnees.html#cb889-1"></a><span class="kw">filtre_valeur</span>(df, <span class="st">&quot;couleur&quot;</span>, <span class="st">&quot;jaune&quot;</span>)</span>
-<span id="cb889-2"><a href="16-structures-donnees.html#cb889-2"></a><span class="co">#&gt;    fruit poids couleur</span></span>
-<span id="cb889-3"><a href="16-structures-donnees.html#cb889-3"></a><span class="co">#&gt; 3 Citron    92   jaune</span></span></code></pre></div>
-
-<div class="solution-exo">
-<div class="sourceCode" id="cb890"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb890-1"><a href="16-structures-donnees.html#cb890-1"></a>filtre_valeur &lt;-<span class="st"> </span><span class="cf">function</span>(d, colonne, valeur) {</span>
-<span id="cb890-2"><a href="16-structures-donnees.html#cb890-2"></a>    d[d[colonne] <span class="op">==</span><span class="st"> </span>valeur,]</span>
-<span id="cb890-3"><a href="16-structures-donnees.html#cb890-3"></a>}</span></code></pre></div>
-</div>
-
 <p>Vérifier que cette fonction marche aussi sur un autre jeu de données :</p>
-<div class="sourceCode" id="cb891"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb891-1"><a href="16-structures-donnees.html#cb891-1"></a><span class="kw">library</span>(questionr)</span>
-<span id="cb891-2"><a href="16-structures-donnees.html#cb891-2"></a><span class="kw">data</span>(hdv2003)</span>
-<span id="cb891-3"><a href="16-structures-donnees.html#cb891-3"></a><span class="kw">filtre_valeur</span>(hdv2003, <span class="st">&quot;sexe&quot;</span>, <span class="st">&quot;Femme&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb889"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb889-1"><a href="16-structures-donnees.html#cb889-1"></a><span class="kw">library</span>(questionr)</span>
+<span id="cb889-2"><a href="16-structures-donnees.html#cb889-2"></a><span class="kw">data</span>(hdv2003)</span>
+<span id="cb889-3"><a href="16-structures-donnees.html#cb889-3"></a><span class="kw">filtre_valeur</span>(hdv2003, <span class="st">&quot;sexe&quot;</span>, <span class="st">&quot;Femme&quot;</span>)</span></code></pre></div>
 <p><strong>Exercice 3.3</strong></p>
 <p>Reprendre le tableau <code>df</code> des exercices précédents :</p>
-<div class="sourceCode" id="cb892"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb892-1"><a href="16-structures-donnees.html#cb892-1"></a>df &lt;-<span class="st"> </span><span class="kw">data.frame</span>(</span>
-<span id="cb892-2"><a href="16-structures-donnees.html#cb892-2"></a>    <span class="dt">fruit =</span> <span class="kw">c</span>(<span class="st">&quot;Pomme&quot;</span>, <span class="st">&quot;Pomme&quot;</span>, <span class="st">&quot;Citron&quot;</span>),</span>
-<span id="cb892-3"><a href="16-structures-donnees.html#cb892-3"></a>    <span class="dt">poids =</span> <span class="kw">c</span>(<span class="dv">154</span>, <span class="dv">167</span>, <span class="dv">92</span>),</span>
-<span id="cb892-4"><a href="16-structures-donnees.html#cb892-4"></a>    <span class="dt">couleur =</span> <span class="kw">c</span>(<span class="st">&quot;vert&quot;</span>, <span class="st">&quot;vert&quot;</span>, <span class="st">&quot;jaune&quot;</span>)</span>
-<span id="cb892-5"><a href="16-structures-donnees.html#cb892-5"></a>)</span></code></pre></div>
+<div class="sourceCode" id="cb890"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb890-1"><a href="16-structures-donnees.html#cb890-1"></a>df &lt;-<span class="st"> </span><span class="kw">tribble</span>(</span>
+<span id="cb890-2"><a href="16-structures-donnees.html#cb890-2"></a>    <span class="op">~</span>fruit,   <span class="op">~</span>poids, <span class="op">~</span>couleur,</span>
+<span id="cb890-3"><a href="16-structures-donnees.html#cb890-3"></a>    <span class="st">&quot;Pomme&quot;</span>,  <span class="dv">154</span>,    <span class="st">&quot;vert&quot;</span>,</span>
+<span id="cb890-4"><a href="16-structures-donnees.html#cb890-4"></a>    <span class="st">&quot;Pomme&quot;</span>,  <span class="dv">167</span>,    <span class="st">&quot;vert&quot;</span>,</span>
+<span id="cb890-5"><a href="16-structures-donnees.html#cb890-5"></a>    <span class="st">&quot;Citron&quot;</span>, <span class="dv">92</span>,     <span class="st">&quot;jaune&quot;</span></span>
+<span id="cb890-6"><a href="16-structures-donnees.html#cb890-6"></a>)</span></code></pre></div>
 <p>À l’aide de l’opérateur <code>[,]</code>, effectuer les opérations suivantes :</p>
 <ul>
 <li>Créer une nouvelle colonne <code>id</code> avec les valeurs 1, 2, 3</li>
@@ -1530,34 +1533,35 @@ Attention à ne pas utiliser les crochets doubles pour modifier des éléments d
 </ul>
 
 <div class="solution-exo">
-<div class="sourceCode" id="cb893"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb893-1"><a href="16-structures-donnees.html#cb893-1"></a>df[, <span class="st">&quot;id&quot;</span>] &lt;-<span class="st"> </span><span class="dv">1</span><span class="op">:</span><span class="dv">3</span></span>
-<span id="cb893-2"><a href="16-structures-donnees.html#cb893-2"></a>df[df<span class="op">$</span>couleur <span class="op">==</span><span class="st"> &quot;jaune&quot;</span>, <span class="st">&quot;couleur&quot;</span>] &lt;-<span class="st"> &quot;jaune citron&quot;</span></span>
-<span id="cb893-3"><a href="16-structures-donnees.html#cb893-3"></a>df[df<span class="op">$</span>poids <span class="op">&lt;</span><span class="st"> </span><span class="dv">100</span>, <span class="st">&quot;poids_rec&quot;</span>] &lt;-<span class="st"> &quot;léger&quot;</span></span>
-<span id="cb893-4"><a href="16-structures-donnees.html#cb893-4"></a>df[df<span class="op">$</span>poids <span class="op">&gt;=</span><span class="st"> </span><span class="dv">100</span>, <span class="st">&quot;poids_rec&quot;</span>] &lt;-<span class="st"> &quot;lourd&quot;</span></span>
-<span id="cb893-5"><a href="16-structures-donnees.html#cb893-5"></a><span class="co"># Ou bien :</span></span>
-<span id="cb893-6"><a href="16-structures-donnees.html#cb893-6"></a>df[, <span class="st">&quot;poids_rec&quot;</span>] &lt;-<span class="st"> </span><span class="kw">if_else</span>(df<span class="op">$</span>poids <span class="op">&lt;</span><span class="st"> </span><span class="dv">100</span>, <span class="st">&quot;léger&quot;</span>, <span class="st">&quot;lourd&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb891"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb891-1"><a href="16-structures-donnees.html#cb891-1"></a>df[, <span class="st">&quot;id&quot;</span>] &lt;-<span class="st"> </span><span class="dv">1</span><span class="op">:</span><span class="dv">3</span></span>
+<span id="cb891-2"><a href="16-structures-donnees.html#cb891-2"></a>df[df<span class="op">$</span>couleur <span class="op">==</span><span class="st"> &quot;jaune&quot;</span>, <span class="st">&quot;couleur&quot;</span>] &lt;-<span class="st"> &quot;jaune citron&quot;</span></span>
+<span id="cb891-3"><a href="16-structures-donnees.html#cb891-3"></a></span>
+<span id="cb891-4"><a href="16-structures-donnees.html#cb891-4"></a>df[df<span class="op">$</span>poids <span class="op">&lt;</span><span class="st"> </span><span class="dv">100</span>, <span class="st">&quot;poids_rec&quot;</span>] &lt;-<span class="st"> &quot;léger&quot;</span></span>
+<span id="cb891-5"><a href="16-structures-donnees.html#cb891-5"></a>df[df<span class="op">$</span>poids <span class="op">&gt;=</span><span class="st"> </span><span class="dv">100</span>, <span class="st">&quot;poids_rec&quot;</span>] &lt;-<span class="st"> &quot;lourd&quot;</span></span>
+<span id="cb891-6"><a href="16-structures-donnees.html#cb891-6"></a><span class="co"># Ou bien :</span></span>
+<span id="cb891-7"><a href="16-structures-donnees.html#cb891-7"></a>df[, <span class="st">&quot;poids_rec&quot;</span>] &lt;-<span class="st"> </span><span class="kw">if_else</span>(df<span class="op">$</span>poids <span class="op">&lt;</span><span class="st"> </span><span class="dv">100</span>, <span class="st">&quot;léger&quot;</span>, <span class="st">&quot;lourd&quot;</span>)</span></code></pre></div>
 </div>
 
 <p><em>Facultatif :</em> effectuer les mêmes opérations en utilisant les verbes de <code>dplyr</code>.</p>
 
 <div class="solution-exo">
-<div class="sourceCode" id="cb894"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb894-1"><a href="16-structures-donnees.html#cb894-1"></a>df &lt;-<span class="st"> </span>df <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">mutate</span>(<span class="dt">id =</span> <span class="dv">1</span><span class="op">:</span><span class="dv">3</span>)</span>
-<span id="cb894-2"><a href="16-structures-donnees.html#cb894-2"></a></span>
-<span id="cb894-3"><a href="16-structures-donnees.html#cb894-3"></a>df &lt;-<span class="st"> </span>df <span class="op">%&gt;%</span></span>
-<span id="cb894-4"><a href="16-structures-donnees.html#cb894-4"></a><span class="st">    </span><span class="kw">mutate</span>(</span>
-<span id="cb894-5"><a href="16-structures-donnees.html#cb894-5"></a>        <span class="dt">couleur =</span> <span class="kw">if_else</span>(couleur <span class="op">==</span><span class="st"> &quot;jaune&quot;</span>, <span class="st">&quot;jaune_citron&quot;</span>, couleur)</span>
-<span id="cb894-6"><a href="16-structures-donnees.html#cb894-6"></a>    )</span>
-<span id="cb894-7"><a href="16-structures-donnees.html#cb894-7"></a><span class="co"># Ou bien :</span></span>
-<span id="cb894-8"><a href="16-structures-donnees.html#cb894-8"></a><span class="kw">library</span>(forcats)</span>
-<span id="cb894-9"><a href="16-structures-donnees.html#cb894-9"></a>df &lt;-<span class="st"> </span>df <span class="op">%&gt;%</span></span>
-<span id="cb894-10"><a href="16-structures-donnees.html#cb894-10"></a><span class="st">    </span><span class="kw">mutate</span>(</span>
-<span id="cb894-11"><a href="16-structures-donnees.html#cb894-11"></a>        <span class="dt">couleur =</span> <span class="kw">fct_recode</span>(couleur, <span class="st">&quot;jaune_citron&quot;</span> =<span class="st"> &quot;jaune&quot;</span>)</span>
-<span id="cb894-12"><a href="16-structures-donnees.html#cb894-12"></a>    )</span>
-<span id="cb894-13"><a href="16-structures-donnees.html#cb894-13"></a></span>
-<span id="cb894-14"><a href="16-structures-donnees.html#cb894-14"></a>df &lt;-<span class="st"> </span>df <span class="op">%&gt;%</span></span>
-<span id="cb894-15"><a href="16-structures-donnees.html#cb894-15"></a><span class="st">    </span><span class="kw">mutate</span>(</span>
-<span id="cb894-16"><a href="16-structures-donnees.html#cb894-16"></a>        <span class="dt">poids_rec =</span> <span class="kw">if_else</span>(poids <span class="op">&lt;</span><span class="st"> </span><span class="dv">100</span>, <span class="st">&quot;léger&quot;</span>, <span class="st">&quot;lourd&quot;</span>)</span>
-<span id="cb894-17"><a href="16-structures-donnees.html#cb894-17"></a>    )</span></code></pre></div>
+<div class="sourceCode" id="cb892"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb892-1"><a href="16-structures-donnees.html#cb892-1"></a>df &lt;-<span class="st"> </span>df <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">mutate</span>(<span class="dt">id =</span> <span class="dv">1</span><span class="op">:</span><span class="dv">3</span>)</span>
+<span id="cb892-2"><a href="16-structures-donnees.html#cb892-2"></a></span>
+<span id="cb892-3"><a href="16-structures-donnees.html#cb892-3"></a>df &lt;-<span class="st"> </span>df <span class="op">%&gt;%</span></span>
+<span id="cb892-4"><a href="16-structures-donnees.html#cb892-4"></a><span class="st">    </span><span class="kw">mutate</span>(</span>
+<span id="cb892-5"><a href="16-structures-donnees.html#cb892-5"></a>        <span class="dt">couleur =</span> <span class="kw">if_else</span>(couleur <span class="op">==</span><span class="st"> &quot;jaune&quot;</span>, <span class="st">&quot;jaune_citron&quot;</span>, couleur)</span>
+<span id="cb892-6"><a href="16-structures-donnees.html#cb892-6"></a>    )</span>
+<span id="cb892-7"><a href="16-structures-donnees.html#cb892-7"></a><span class="co"># Ou bien :</span></span>
+<span id="cb892-8"><a href="16-structures-donnees.html#cb892-8"></a><span class="kw">library</span>(forcats)</span>
+<span id="cb892-9"><a href="16-structures-donnees.html#cb892-9"></a>df &lt;-<span class="st"> </span>df <span class="op">%&gt;%</span></span>
+<span id="cb892-10"><a href="16-structures-donnees.html#cb892-10"></a><span class="st">    </span><span class="kw">mutate</span>(</span>
+<span id="cb892-11"><a href="16-structures-donnees.html#cb892-11"></a>        <span class="dt">couleur =</span> <span class="kw">fct_recode</span>(couleur, <span class="st">&quot;jaune_citron&quot;</span> =<span class="st"> &quot;jaune&quot;</span>)</span>
+<span id="cb892-12"><a href="16-structures-donnees.html#cb892-12"></a>    )</span>
+<span id="cb892-13"><a href="16-structures-donnees.html#cb892-13"></a></span>
+<span id="cb892-14"><a href="16-structures-donnees.html#cb892-14"></a>df &lt;-<span class="st"> </span>df <span class="op">%&gt;%</span></span>
+<span id="cb892-15"><a href="16-structures-donnees.html#cb892-15"></a><span class="st">    </span><span class="kw">mutate</span>(</span>
+<span id="cb892-16"><a href="16-structures-donnees.html#cb892-16"></a>        <span class="dt">poids_rec =</span> <span class="kw">if_else</span>(poids <span class="op">&lt;</span><span class="st"> </span><span class="dv">100</span>, <span class="st">&quot;léger&quot;</span>, <span class="st">&quot;lourd&quot;</span>)</span>
+<span id="cb892-17"><a href="16-structures-donnees.html#cb892-17"></a>    )</span></code></pre></div>
 </div>
 
 
