@@ -1,6 +1,6 @@
 # `dplyr` avancé
 
-La partie \@ref(dplyr) a permis de présenter l'extension `dplyr`. On va voir ici comment aller un peu plus loin dans l'utilisation du *package*, notamment en utilisant nos propres fonctions et en appliquant des transformations à des ensembles de colonnes.
+L'extension `dplyr` a déjà été présentée dans la partie \@ref(dplyr). On va voir ici comment aller un peu plus loin dans l'utilisation du *package*, notamment en utilisant nos propres fonctions et en appliquant des transformations à des ensembles de colonnes.
 
 On commence par charger les extensions du *tidyverse* ainsi que les jeux de données `hdv2003` et `rp2012` de l'extension `questionr`.
 
@@ -20,7 +20,7 @@ rp2012 <- as_tibble(rp2012)
 
 ### Exemple avec `mutate`
 
-Soit le jeu de données fictif suivant, dont chaque ligne représente un individu pour lequel on dispose de sa PCS, celle de son conjoint, son âge et celui de ses enfants.
+Soit le jeu de données fictif suivant, dont chaque ligne représente un individu pour lequel on dispose de sa PCS, celle de ses parents, son âge et celui de ses enfants.
 
 ```{r}
 df <- tribble(
@@ -38,7 +38,7 @@ df <- tribble(
 df
 ```
 
-Dans ce tableau les PCS sont indiquées sous forme de code numérique. Il serait donc plus lisible de les avoir sous forme d'intitulé de catégorie socio-professionnelle. On a vu section \@ref(recode) qu'on peut utiliser pour cela la fonction `fct_recode()` de `forcats`.
+Dans ce tableau les PCS sont indiquées sous forme de codes : il serait plus lisible de les avoir sous forme d'intitulés de catégorie socio-professionnelle. On a vu section \@ref(recode) qu'on peut effectuer ce recodage avec la fonction `fct_recode()` de l'extension `forcats`.
 
 ```{r results="hide"}
 df %>%
@@ -76,9 +76,9 @@ df %>%
     mutate(pcs = recode_pcs(pcs))
 ```
 
-Premier avantage : on gagne en lisibilité. On a séparé le code d'une opération spécifique dans une fonction avec un nom "parlant", ce qui permet de savoir facilement à quoi elle sert. Et on a simplifié notre `mutate` qui est désormais plus lisible parce qu'il fait apparaître la logique de nos opérations (on veut recoder les PCS) sans en inclure les détails.
+Premier avantage : on gagne en lisibilité. On a déplacé le code d'une opération spécifique dans une fonction avec un nom "parlant", ce qui permet de savoir facilement à quoi elle sert. Et on a simplifié notre `mutate` qui est désormais plus lisible parce qu'il fait apparaître la logique de nos opérations (on veut recoder les PCS) sans en inclure les détails.
 
-Le deuxième avantage évident, comme pour toute fonction, est qu'on peut la réutiliser pour appliquer ce recodage à plusieurs variables. Ainsi, si on veut recoder de la même manière `pcs` et `pcs_conjoint`, il suffit de faire :
+Le deuxième avantage évident, comme pour toute fonction, est qu'on peut la réutiliser pour appliquer ce recodage à plusieurs variables. Ainsi, si on veut recoder de la même manière `pcs` et `pcs_mere`, il suffit de faire :
 
 ```{r results="hide"}
 df %>%
@@ -88,11 +88,11 @@ df %>%
     )
 ```
 
-Le code est plus court, plus lisible, on évite les erreurs de copier/coller, et si on souhaite modifier le recodage on n'a à intervenir qu'à un seul endroit.
+Le code est plus court, plus lisible, on évite les erreurs de copier/coller, et si on souhaite modifier le recodage on n'a à intervenir qu'à un seul endroit en modifiant notre fonction.
 
 ### Exemple avec `summarise`
 
-Autre exemple, cette fois sur le jeu de données `rp2012`. Imaginons qu'on souhaite calculer, pour chaque région, le pourcentage de communes dont le nom se termine par une série de caractères donnée.
+Autre exemple, cette fois sur le jeu de données `rp2012`. Imaginons qu'on souhaite calculer, pour chaque région, le pourcentage de communes dont le nom se termine par une série de caractères donnée : par exemple, le pourcentage de communes dont le nom se termine par "ac".
 
 Comme il ne s'agit pas forcément d'une question triviale, on va décomposer le problème et rappeler (comme vu section \@ref(str-detect)) que la fonction `str_detect()` de l'extension `stringr` permet de détecter quels éléments d'un vecteur de chaînes de caractères correspondent à une expression régulière. Ainsi, si on veut détecter si un nom de commune (variable `rp2012$commune`) se termine par `"ac"`, on utilisera :
 
@@ -104,7 +104,7 @@ str_detect(rp2012$commune, "ac$")
 Le symbole \\$ dans l'expression régulière `"ac$"` représente la fin de la chaîne de caractères. Il permet de s'assurer qu'on ne détecte que les noms de communes se terminant par "ac" (comme "Fige**ac**"), et pas ceux contenant "ac" à un autre endroit (comme "Arc**ac**hon").
 ```
 
-Si on veut compter le nombre de communes pour lesquelles on a détecté une terminaison en "ac", on peut tout simplement appliquer la fonction `sum()` au résultat précédent : les `TRUE` du résultat du `str_detect` sont alors convertis en 1, les `FALSE` en 0, et le `sum()` renverra donc le nombre de `TRUE`.
+Si on veut compter le nombre de communes pour lesquelles on a détecté une terminaison en "ac", on peut utiliser un idiome courant en R et appliquer la fonction `sum()` au résultat précédent : les `TRUE` du résultat du `str_detect` sont alors convertis en 1, les `FALSE` en 0, et le `sum()` renverra donc le nombre de `TRUE`.
 
 ```{r}
 sum(str_detect(rp2012$commune, "ac$"))
@@ -116,7 +116,9 @@ Si on souhaite convertir ce résultat en pourcentage, il faut qu'on divise par l
 sum(str_detect(rp2012$commune, "ac$")) / length(rp2012$commune) * 100
 ```
 
-On crée une fonction nommée `prop_suffixe` qui a pour objectif d'effectuer ce calcul. Elle prend en entrée deux arguments : un vecteur de chaînes de caractères et un suffixe à détecter. On rajoute nous-mêmes le "$" à la fin du suffixe en question pour faciliter l'usage de la fonction. Le résultat final est le suivant :
+On crée une fonction nommée `prop_suffixe` qui a pour objectif d'effectuer ce calcul. Elle prend en entrée deux arguments : un vecteur de chaînes de caractères et un suffixe à détecter, et retourne le pourcentage d'éléments du vecteur se terminant par le suffixe. On rajoute nous-même le "$" à la fin du suffixe en question pour faciliter l'usage de la fonction. 
+
+Le résultat final est le suivant :
 
 ```{r}
 prop_suffixe <- function(v, suffixe) {
@@ -159,7 +161,7 @@ En créant une fonction plutôt qu'en mettant notre code directement dans le `su
 
 ### Exemple avec `rename_with`
 
-On a vu section \@ref(select-rename) que `dplyr` propose la fonction `rename()` pour renommer des colonnes d'un tableau de données. On peut l'utiliser par exemple pour remplacer un espace par un `_` dans le nom d'une variable de `df.
+On a vu section \@ref(select-rename) que `dplyr` propose la fonction `rename()` pour renommer des colonnes d'un tableau de données. On peut l'utiliser par exemple pour remplacer un espace par un `_` dans le nom d'une variable de `df`.
 
 ```{r results="hide"}
 df %>% rename("age_enf1" = "age enf1")
@@ -193,7 +195,7 @@ Certain.es lectrices et lecteurs attentives auront peut-être noté que le même
 names(df) <- remplace_espaces(names(df))
 ```
 
-L'avantage de `rename_with()` c'est qu'elle peut s'intégrer dans un pipiline de dplyr, et, comme nous allons le voir un peu plus loin, permet si nécessaire de n'appliquer cette transformation qu'à certaines colonnes seulement.
+L'avantage de `rename_with()` c'est qu'elle peut s'intégrer dans un pipeline de dplyr, et, comme nous allons le voir un peu plus loin, permet si nécessaire de n'appliquer cette transformation qu'à certaines colonnes seulement.
 
 
 ## `across()` : appliquer des fonctions à plusieurs colonnes {#across}
@@ -260,14 +262,14 @@ On peut aussi sélectionner les variables via leurs noms. On peut ainsi choisir 
 df %>%
     mutate(
         across(
-            starts_with("pcs_"),
+            starts_with("pcs"),
             recode_pcs
         )
     )
 ```
 
 
-`across()` fonctionne dans un `mutate`, mais aussi dans un `summarise`. Dans l'exemple suivant, on calcule la moyenne de toutes les variables qui commencent par "age".
+`across()` fonctionne dans un `mutate`, mais aussi dans un `summarise`. Dans l'exemple suivant, on calcule la moyenne de toutes les variables qui contiennent "enf".
 
 ```{r}
 df %>%
@@ -289,7 +291,7 @@ across(num_range("Q", 1:12, width = 2))
 
 On peut également sélectionner des colonnes via une condition avec la fonction `where()`. Celle-ci prend elle-même en argument une fonction qui doit renvoyer `TRUE` ou `FALSE`, et ne conserve que les colonnes qui correspondent à des `TRUE`.
 
-Dans l'exemple suivant, on applique la fonction `max` seulement aux colonnes de `df` pour lesquelles la fonction `is.numeric` renvoie `TRUE`.
+Dans l'exemple suivant, on applique la fonction `mean` seulement aux colonnes de `df` pour lesquelles la fonction `is.numeric` renvoie `TRUE`.
 
 ```{r}
 df %>%
@@ -301,7 +303,7 @@ df %>%
     )
 ```
 
-Pour des conditions plus complexes, on doit parfois définir soi-même la fonction passée à `where()`. Dans l'exemple suivant on calcule la moyenne uniquement pour les variables de `df` qui sont numériques et n'ont pas de valeurs manquantes
+Pour des conditions plus complexes, on doit parfois définir soi-même la fonction passée à `where()`. Dans l'exemple suivant on calcule la moyenne uniquement pour les variables de `df` qui sont numériques et n'ont pas de valeurs manquantes.
 
 ```{r}
 no_na <- function(v) {
@@ -317,7 +319,7 @@ df %>%
     )
 ```
 
-Il est même possible, pour les cas les plus complexes, de combiner plusieurs sélections avec les opérateurs `&`, `|` et `!`. L'exemple suivant applique la fonction `max()` à toutes les colonnes numériques de `df`, sauf à la colonne `id`.
+Il est même possible, pour les cas les plus complexes, de combiner plusieurs sélections avec les opérateurs `&`, `|` et `!`. L'exemple suivant applique la fonction `mean()` à toutes les colonnes numériques de `df`, sauf à la colonne `id`.
 
 ```{r}
 df %>%
@@ -348,11 +350,11 @@ Une erreur de syntaxe fréquente est de mettre la sélection des colonnes dans l
 
 Ainsi le code suivant génèrera une erreur :
 
-`mutate(across(hard.rock:sport), recode_oui_non)`
+`mutate(across(pcs:pcs_mere), recode_pcs)`
 
 Il faut bien penser à passer la fonction comme argument du `across()`, donc à l'intérieur de ses parenthèses.
 
-`mutate(across(hard.rock:sport, recode_oui_non))`
+`mutate(across(pcs:pcs_mere, recode_pcs))`
 ```
 
 ### Passer des arguments supplémentaires à la fonction appliquée
@@ -371,7 +373,7 @@ df %>%
     )
 ```
 
-Si on préfère que `mean()` soit appelé avec l'argument `na.rm = TRUE`, on pourrait définir explicitement une fonction à part qui utilise cet argument :
+Si on préfère que `mean()` soit appelée avec l'argument `na.rm = TRUE`, on pourrait définir explicitement une fonction à part qui utilise cet argument :
 
 ```{r eval=FALSE}
 mean_sans_na <- function(x) {
@@ -443,7 +445,7 @@ df %>%
     summarise(
         across(
             starts_with("age"),
-            list(min = min, max = max)
+            list(minimum = min, maximum = max)
         )
     )
 ```
@@ -455,7 +457,7 @@ df %>%
     summarise(
         across(
             starts_with("age"),
-            list(min = min, max = max),
+            list(minimum = min, maximum = max),
             .names = "{.fn}_{.col}"
         )
     )
@@ -525,11 +527,11 @@ Ainsi les définitions suivantes sont équivalents :
 
 ```{r eval=FALSE}
 # Fonctionne partout et tout le temps
-function(x) { x + 2 }
+function(v) { v + 2 }
 # Fonctionne uniquement dans les fonctions du tidyverse
 ~ { .x + 2 }
 # Fonctionne uniquement à partir de R 4.1
-\(x) { x + 2 }
+\(v) { v + 2 }
 ```
 
 De même que les définitions suivantes :
@@ -621,24 +623,15 @@ df %>%
 
 ## `rowwise()` et `c_across()` : appliquer une transformation ligne par ligne
 
-Soit le tableau de données suivant, qui contient des évaluations de restaurants sur quatre critères différents (on a initialisé les valeurs de chaque critère en tirant au sort des notes entre 0 et 5)^[Un nom de salon de coiffure s'est glissé dans cette liste de restaurants. Saurez-vous le retrouver ?].
+Soit le tableau de données suivant, qui contient des évaluations de restaurants sur quatre critères différents^[Un nom de salon de coiffure s'est glissé dans cette liste de restaurants. Saurez-vous le retrouver ?] :
 
 ```{r}
-alea <- function(n) {
-    sample(0:5, size = n, replace = TRUE)
-}
-
-restos <- tibble(
-    nom = c(
-        "La bonne fourchette",
-        "La choucroute de l'amer",
-        "L'Hair de rien",
-        "La blanquette de Vaulx"
-    ),
-    cuisine = alea(4),
-    decor   = alea(4),
-    accueil = alea(4),
-    prix    = alea(4)
+restos <- tribble(
+    ~nom,                       ~cuisine, ~decor, ~accueil, ~prix,
+    "La bonne fourchette",             4,      2,        5,     4,
+    "La choucroute de l'amer",         3,      3,        2,     3,
+    "L'Hair de rien",                  1,      4,        4,     3,
+    "La blanquette de Vaulx",          5,      4,        4,     5,
 )
 
 restos
@@ -663,7 +656,7 @@ La valeur obtenue correspond aux résultat de :
 mean(c(restos$decor, restos$accueil))
 ```
 
-Ce que nous souhaitons ici, c'est calculer la moyenne non pas pour l'ensemble du tableau mais *pour chaque ligne*. Pour cela, on va utiliser la fonction `rowwise()`. Celle-ci est équivalente à un `group_by()` qui créerait autant de groupes qu'il y a de lignes dans notre tableau.
+Ce que nous souhaitons ici, c'est calculer la moyenne non pas pour l'ensemble du tableau mais *pour chaque ligne*. Pour cela, on va utiliser la fonction `rowwise()` : celle-ci est équivalente à un `group_by()` qui créerait autant de groupes qu'il y a de lignes dans notre tableau.
 
 ```{r}
 restos %>% rowwise()
@@ -683,7 +676,7 @@ Supposons qu'on souhaite désormais calculer la moyenne de l'ensemble des critè
 ```{r}
 restos %>%
     rowwise() %>%
-    mutate(decor_accueil = mean(c(decor, accueil, cuisine, prix)))
+    mutate(moyenne = mean(c(decor, accueil, cuisine, prix)))
 ```
 
 Lister les variables de cette manière peut vite devenir pénible si le nombre de variables est important. C'est pourquoi `dplyr` propose la fonction `c_across()` : celle-ci permet de sélectionner des colonnes de la même manière que `select()` ou `across()`, et retourne un vecteur constitué des valeurs concaténées de ces colonnes.
@@ -694,7 +687,7 @@ L'exemple suivant calcule la moyenne de toutes les colonnes comprises entre `dec
 restos %>%
     rowwise() %>%
     mutate(
-        total = mean(c_across(decor:prix))
+        moyenne = mean(c_across(decor:prix))
     )
 ```
 
@@ -704,7 +697,7 @@ Comme pour `across()` ou `select()`, on peut utiliser la fonction `where()` pour
 restos %>%
     rowwise() %>%
     mutate(
-        total = mean(
+        moyenne = mean(
             c_across(where(is.numeric))
         )
     )
@@ -735,7 +728,7 @@ restos %>%
     summarise(note_max = pmax(cuisine, decor, accueil, prix))
 ```
 
-Dans certains cas, notamment lorsque les colonnes sont nombreuses ou qu'on ne les a pas identifiées à l'avance, on pourra  utiliser `rowwise()` et `c_across()` même quand des alternatives vectorisées existent.
+Dans certains cas, notamment lorsque les colonnes sont nombreuses ou qu'on ne les a pas identifiées à l'avance, on pourra  donc utiliser `rowwise()` et `c_across()` même quand des alternatives vectorisées existent.
 
 ```{r}
 restos %>%
@@ -861,7 +854,7 @@ prop_suffixe <- function(v, suffixe) {
 }
 ```
 
-Modifier cette fonction en une fonction `prop_prefixe` qui retourne le pourcentage d'éléments commençant par un préfixe passé en argument. *Indication :* pour détecter si une chaîne commence par `"debut"`, on peut utiliser l'expression régulière `"^debut"`.
+Modifier cette fonction en une fonction `prop_prefixe` qui retourne le pourcentage d'éléments commençant par un préfixe passé en argument. *Indication :* pour détecter si une chaîne commence par `"ker"`, on utilise l'expression régulière `"^ker"`.
 
 \iffalse
 <div class="solution-exo">
