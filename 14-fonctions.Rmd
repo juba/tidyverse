@@ -12,7 +12,7 @@ Le principe d'une fonction est de prendre en entrée un ou plusieurs arguments (
 
 ![](resources/figures/schema_fonction)
 
-Nous avons déjà rencontré et utilisé un grand nombre de fonctions, certaines assez simples (`mean`, `max`...) et d'autres beaucoup plus complexes (`ggplot`, `group_by`...). R, comme tout langage de programmation, offre la possibilité de créer et d'utiliser ses propres fonctions.
+Nous avons déjà rencontré et utilisé un grand nombre de fonctions, certaines assez simples (`mean`, `max`...) et d'autres beaucoup plus complexes (`summary`, `mutate`...). R, comme tout langage de programmation, offre la possibilité de créer et d'utiliser ses propres fonctions.
 
 
 Voici un exemple de fonction très simple, quoi que d'une utilité douteuse, puisqu'elle se contente d'ajouter 2 à un nombre :
@@ -36,19 +36,19 @@ D'abord, une fonction est créée en utilisant l'instruction `function`. Celle-c
 
 ```{r eval=FALSE}
 function() {
-  
+
 }
 ```
 
-Dans les parenthèses, on indique les *arguments* de la fonction, ceux qui devront être indiqués quand nous l'appellerons. Ici notre fonction ne prend qu'un seul argument, que nous avons décidé de nommer `x` :
+Dans les parenthèses, on indique les *arguments* de la fonction, ceux qui devront lui être passés quand nous l'appellerons. Ici notre fonction ne prend qu'un seul argument, que nous avons décidé arbitrairement de nommer `x`.
 
 ```{r eval=FALSE}
 function(x) {
-  
+
 }
 ```
 
-Les accolades comprennent une série d'instructions R qui constituent le *corps* de notre fonction. C'est ce code qui sera exécuté quand notre fonction est appelée. On peut utiliser dans le corps de la fonction les arguments qui lui sont passés. Ici, la première ligne utilise la valeur de l'argument `x`, lui ajoute 2 et stocke le résultat dans un nouvel objet `res` :
+Les accolades comprennent une série d'instructions R qui constituent le *corps* de notre fonction. C'est ce code qui sera exécuté quand notre fonction est appelée. On peut utiliser dans le corps de la fonction les arguments qui lui sont passés. Ici, la première ligne utilise la valeur de l'argument `x`, lui ajoute 2 et stocke le résultat dans un nouvel objet `res`.
 
 ```{r eval=FALSE}
 function(x) {
@@ -56,7 +56,7 @@ function(x) {
 }
 ```
 
-Pour qu'elle soit utile, notre fonction doit renvoyer le résultat qu'elle a calculé précédemment. Ceci se fait via l'instruction `return` à qui on passe la valeur à retourner :
+Pour qu'elle soit utile, notre fonction doit renvoyer le résultat qu'elle a calculé précédemment. Ceci se fait via l'instruction `return` à qui on passe la valeur à retourner.
 
 ```{r eval=FALSE}
 function(x) {
@@ -65,7 +65,7 @@ function(x) {
 }
 ```
 
-Enfin, pour que notre fonction puisse être appelée et utilisée, nous devons lui donner un nom, ou plus précisément la stocker dans un objet :
+Enfin, pour que notre fonction puisse être appelée et utilisée, nous devons lui donner un nom, ou plus précisément la stocker dans un objet. Ici on la stocke dans un objet nommé `ajoute2`.
 
 ```{r eval=FALSE}
 ajoute2 <- function(x) {
@@ -77,10 +77,10 @@ ajoute2 <- function(x) {
 ```{block, type='rmdnote'}
 Les fonctions étant des objets comme les autres, elles suivent les mêmes contraintes pour leur nom : on a donc droit aux lettres, chiffres, point et tiret bas.
 
-Attention à ne pas donner à votre fonction le nom d'une fonction déjà existante : par exemple, si vous créez une fonction nommée `table`, la fonction du même nom de R base ne sera plus disponible (sauf à la préfixer avec `base::table()`). Si vous "écrasez" par erreur une fonction existante, il vous suffit de relancer votre session R et de trouver un nouveau nom.
+Attention à ne pas donner à votre fonction le nom d'une fonction déjà existante : par exemple, si vous créez une fonction nommée `table`, la fonction du même nom de R base ne sera plus disponible (sauf à la préfixer avec `base::table`). Si vous "écrasez" par erreur une fonction existante, il vous suffit de relancer votre session R et de trouver un nouveau nom.
 ```
 
-Avec le code précédent, on a donc créé un nouvel objet `ajoute2` de type `function`. Cette nouvelle fonction prend un seul argument `x`, calcule la valeur `x + 2` et retourne ce résultat. On l'utilise en tapant son nom suivi de la valeur de ses arguments entre parenthèses, par exemple :
+Avec le code précédent, on a donc créé un nouvel objet `ajoute2` de type `function`. Cette nouvelle fonction prend un seul argument `x`, calcule la valeur `x + 2` et retourne ce résultat. On l'utilise en tapant son nom suivi de la valeur de son argument entre parenthèses, par exemple :
 
 ```{r}
 ajoute2(41)
@@ -95,7 +95,7 @@ z
 ```
 
 
-À noter qu'ici notre fonction marche aussi si on lui passe un vecteur en argument :
+À noter que comme `x + 2` fonctionne si `x` est un vecteur, on peut aussi appeler notre fonction en lui passant un vecteur en argument.
 
 ```{r}
 vec <- 1:5
@@ -142,20 +142,27 @@ miaule("ouaf")
 
 ### Exemple de fonction
 
-Prenons un exemple un peu plus élaboré : on sait que la fonction `table()` retourne le tri à plat en effectifs d'une variable qualitative. On pourrait créer notre propre fonction qui renvoie plutôt le tri à plat en pourcentages. Voici une manière de le faire :
+Prenons un exemple un peu plus élaboré : la fonction `table()` retourne le tri à plat en effectifs d'une variable qualitative. On souhaite créer une fonction qui calcule plutôt le tri à plat en pourcentages. Voici une manière de le faire :
 
 ```{r}
 prop_tab <- function(v) {
   tri <- table(v)
   effectif_total <- length(v)
-  pourcentages <- tri / effectif_total * 100
-  return(pourcentages)
+  tri <- tri / effectif_total * 100
+  return(tri)
 }
 ```
 
 Notre fonction prend en entrée un argument nommé `v`, en l'occurrence un vecteur représentant une variable qualitative. On commence par faire le tri à plat de ce vecteur avec `table`, puis on calcule la répartition en pourcentages en divisant ce tri à plat par l'effectif total et en multipliant par 100.
 
-Testons sur une variable de `hdv2003` :
+Testons avec un vecteur d'exemple :
+
+```{r}
+vec <- c("rouge", "vert", "vert", "bleu", "rouge")
+prop_tab(vec)
+```
+
+Testons sur une variable du jeu de données `hdv2003`^[Le jeu de données `hdv2003` fait partie de l'extension `questionr`, il est décrit section \@ref(hdv2003).] :
 
 ```{r}
 library(questionr)
@@ -163,7 +170,7 @@ data(hdv2003)
 prop_tab(hdv2003$qualif)
 ```
 
-Ça fonctionne, avec une petite limite : par défaut `table()` ignire les `NA`. On peut modifier ce comportement en lui ajoutant un argument `useNA = "ifany"`.
+Ça fonctionne, mais avec une petite limite : par défaut `table()` ignore les `NA`. On peut modifier ce comportement en lui ajoutant un argument `useNA = "ifany"`.
 
 ```{r}
 prop_tab <- function(v) {
@@ -196,7 +203,7 @@ prop_tab <- function(v) {
 prop_tab(hdv2003$qualif)
 ```
 
-Tout cela fonctionne ! Cela dit, limiter à un chiffre après la virgule ne convient pas forcément dans tous les cas. L'idéal serait d'offrir la possibilité à la personne qui appelle la fonction de choisir elle-même la précision de l'affichage. Comment ? Tout simplement en ajoutant un deuxième argument à la fonction, que nous nommerons `decimales`, et en utilisant cet argument à la place du 1 dans l'appel à `round()` :
+Ça fonctionne ! Cela dit, limiter à un chiffre après la virgule ne convient pas forcément dans tous les cas. L'idéal serait d'offrir la possibilité à la personne qui appelle la fonction de choisir elle-même la précision de l'affichage. Comment ? Tout simplement en ajoutant un deuxième argument à notre fonction, que nous nommerons `decimales`, et en utilisant cet argument à la place du 1 dans l'appel à `round()`.
 
 ```{r}
 prop_tab <- function(v, decimales) {
@@ -286,7 +293,7 @@ min_alea(50000)
 
 ### Utilité des fonctions
 
-Une question légitime est de se demander dans quels cas il est utile de créer une fonction.
+On peut se demander dans quels cas il est utile de créer une fonction.
 
 Une règle courante considère que dès qu'on a répété le même code plus de deux fois, il est préférable d'en faire une fonction. Celles-ci ont en effet comme avantage d'éviter la duplication du code.
 
@@ -303,7 +310,7 @@ df <- data.frame(
 df
 ```
 
-On sait qu'on peut facilement [recoder l'une de ces variables](09-recodages.html#recoder-une-variable-qualitative) à l'aide de la fonction `fct_recode()` de l'extension `forcats` :
+On a vu section \@ref(recoder-une-variable-qualitative) qu'on peut recoder l'une de ces variables à l'aide de la fonction `fct_recode()` de l'extension `forcats` :
 
 ```{r, eval = FALSE}
 df$q1 <- fct_recode(df$q1,
@@ -354,7 +361,7 @@ df$q3 <- recode_oui_non(df$q3)
 df$q4 <- recode_oui_non(df$q4)
 ```
 
-Autre avantage, si on réalise qu'on a commis une erreur et qu'en fait le code `"1"` correspondait à `"Non"` et le code `"2"` à `"Oui"`, on n'a pas besoin de modifier tous les endroits où on a copié/collé notre recodage, mais seulement la définition de la fonction.
+Autre avantage, si on réalise qu'on a commis une erreur et qu'en fait le code `"1"` correspondait à `"Non"` et le code `"2"` à `"Oui"`, on n'a pas besoin de modifier tous les endroits où on a copié/collé notre recodage : on a juste à corriger la définition de la fonction.
 
 Les avantages de procéder ainsi sont donc multiples :
 
@@ -617,7 +624,7 @@ indicateurs <- function(v) {
 indicateurs(hdv2003$age)
 ```
 
-Mais dans ce cas de figure il est recommandé de retourner plutôt une liste nommée^[Les listes seront abordées un peu plus en détail dans la partie \@ref(listes)], de cette manière :
+Mais dans ce cas de figure il est recommandé de retourner plutôt une liste nommée^[Les listes seront abordées un peu plus en détail dans la partie \@ref(listes).], de cette manière :
 
 ```{r}
 indicateurs <- function(v) {
@@ -726,7 +733,7 @@ nouvel_objet
 Ici, `nouvel_objet` existe tant qu'on est dans la fonction, mais il est détruit dès qu'on en sort et donc inaccessible dans notre environnement global.
 
 ```{block type='rmdimportant'}
-Les objets créés dans notre session et qui existent dans notre environnement (tel que visible dans l'onglet *Environment* de RStudio) sont appelés des **variables globales** : elles existent et sont accessibles pour les fonctions appelées depuis cet environnement. Les objets créés lors de l'exécution d'une fonction sont à l'inverse des **variables locales** : elles n'existent qu'à l'intérieur de la fonction et pour la durée de son exécution. Si deux objets du même nom coexistent, les objets locaux sont prioritaires par rapport aux objets globaux.
+Les objets créés dans notre session et qui existent dans notre environnement (tel que visible dans l'onglet *Environment* de RStudio) sont appelés des **objets globaux** : ils existent et sont accessibles pour les fonctions appelées depuis cet environnement. Les objets créés lors de l'exécution d'une fonction sont à l'inverse des **objets locaux** : ils n'existent qu'à l'intérieur de la fonction et pour la durée de son exécution. Si deux objets du même nom coexistent, l'objet local est prioritaire par rapport à l'objet global.
 ```
 
 
@@ -825,13 +832,13 @@ df <- data.frame(
 df
 ```
 
-On peut utiliser `tapply` pour calculer le poids moyen par type de fruit :
+On peut utiliser `tapply` pour calculer le poids moyen par type de fruit.
 
 ```{r}
 tapply(df$poids, df$fruit, mean)
 ```
 
-Si on souhaite plutôt calculer le poids maximal, il suffit de passer à `tapply` la fonction `max` plutôt que la fonction `mean` :
+Si on souhaite plutôt calculer le poids maximal, il suffit de passer à `tapply` la fonction `max` plutôt que la fonction `mean`.
 
 ```{r}
 tapply(df$poids, df$fruit, max)
@@ -1051,7 +1058,7 @@ hdv2003$cuisine <- recode_oui_non(hdv2003$cuisine)
 \fi
 
 
-### Arguments et résultats
+### Arguments et résultat
 
 **Exercice 2.1**
 
@@ -1236,7 +1243,7 @@ x
 
 **Exercice 3.2**
 
-Dans le code suivant, on a essayé de créer une fonction qui modifie un tableau de données passé en argument pour ne conserver que les pommes. Pourquoi cela ne fonctionne-t-il pas ?
+Dans le code suivant, on a essayé de créer une fonction qui modifie un tableau de données passé en argument pour ne conserver que les lignes correspondant aux pommes. Est-ce que ça fonctionne ?
 
 ```{r eval=FALSE}
 df <- data.frame(
@@ -1306,7 +1313,7 @@ salut()
 
 **Exercice 4.2**
 
-Construire une fonction `etendue()` qui prend en entrée un vecteur numérique et retourne la différence entre la valeur maximale et la valeur minimale de ce vecteur (vous pouvez récupérer le code de l'exercice 1.2 en le simplifiant).
+Construire une fonction `etendue()` qui prend en entrée un vecteur numérique et retourne la différence entre la valeur maximale et la valeur minimale de ce vecteur (vous pouvez récupérer le code de l'exercice 1.2).
 
 \iffalse
 <div class="solution-exo">
@@ -1365,4 +1372,4 @@ body(f)
 f(5)
 ```
 
-Intuitivement, à quoi sert la fonction `quote` ?
+Intuitivement, comprenez-vous à quoi sert la fonction `quote` ?
