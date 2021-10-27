@@ -1,6 +1,6 @@
 # Programmer avec le *tidyverse* {#programmer-tidyverse}
 
-Dans les parties précédentes, nous avons vu comment créer et utiliser nos propres fonctions. Cependant, un lectorat attentif aura remarqué que nous avons rigoureusement évité d'utiliser des fonctions du *tidyverse*, notamment de `dplyr`, de `tidyr` et de `ggplot2`, dans les fonctions que nous avons créées jusqu'ici.
+Dans les parties précédentes, nous avons vu comment créer et utiliser nos propres fonctions. Cependant, un lecteur.trice attentif.ve aura remarqué que nous avons rigoureusement évité d'utiliser des fonctions du *tidyverse*, notamment de `dplyr`, de `tidyr` et de `ggplot2`, dans les fonctions que nous avons créées jusqu'ici.
 
 Nous allons voir dans cette section les spécificités liées à certaines fonctions du *tidyverse* et les manières de les utiliser pour programmer et les inclure dans nos propres fonctions.
 
@@ -12,7 +12,7 @@ data(starwars)
 ```
 
 ```{block type='rmdnote'}
-Les notions et fonctions abordées dans cette partie sont propres aux extensions du *tidyverse*. Elles ne seront en général pas utilisables ailleurs dans R.
+Les notions et fonctions abordées dans cette partie sont propres aux extensions du *tidyverse*. Elles ne sont en général pas utilisables ailleurs dans R.
 ```
 
 ## Spécificités du *tidyverse*
@@ -92,7 +92,7 @@ restos %>% mutate(note_michelin = note)
 
 ```{r}
 filtre_nom <- function(df, valeurs) {
-    df %>% filter(nom == valeurs)
+    df %>% filter(nom %in% valeurs)
 }
 ```
 
@@ -771,7 +771,7 @@ affiche_planete <- function() {
 \fi
 
 
-Créer une fonction `affiche_barplot` qui affiche le message "Nom de la variable", lit la réponse de l'utilisateur, et affiche le diagramme en barres de la variable correspondante du tableau `starwars`.
+Créer une fonction `affiche_barplot` qui affiche le message "Nom de la variable", lit la réponse de l'utilisateur, et affiche avec `ggplot2` le diagramme en barres de la variable correspondante du tableau `starwars`.
 
 \iffalse
 <div class="solution-exo">
@@ -878,7 +878,7 @@ La fonction utilisant `[,]` évite l'ambiguïté liée à la présence simultan�
 
 **Exercice 4.1**
 
-Créer une fonction `graph_bar` qui prend en argument un tableau de données `df` et une variable `var` et qui retourne le diagramme en barre de la variable correspondante.
+Créer une fonction `graph_bar` qui prend en argument un tableau de données `df` et une variable `var` et qui retourne le diagramme en barre de la variable correspondante généré avec `ggplot2`.
 
 ```{r ref.label="progtidy-2-1", echo=FALSE}
 ```
@@ -923,7 +923,7 @@ graph_bar <- function(df, var, facet_var) {
 
 **Exercice 4.2**
 
-Créer une fonction `graph_points` qui prend en arguments un tableau de données et deux variables, et affiche le nuage de points de ces deux variables.
+Créer une fonction `graph_points` qui prend en arguments un tableau de données et deux variables, et affiche le nuage de points de ces deux variables généré avec `ggplot2`.
 
 ```{r echo=FALSE, ref.label='progtidy-2-2a', warning=FALSE}
 ```
