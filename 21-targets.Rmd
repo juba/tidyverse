@@ -1,6 +1,6 @@
 # Organiser un projet avec `targets`
 
-[targets](https://docs.ropensci.org/targets/) est une extension R développée par [Will Landau](https://twitter.com/wmlandau) qui permet d'organiser un projet sous la forme d'un *pipeline* de traitements, composé de différentes étapes, et gérant automatiquement les dépendances entre celles-ci^[Pour les personnes habituées au développement, il s'agit d'un équivalent à [GNU Make](https://www.gnu.org/software/make/) pour R.]. Cette organisation a plusieurs avantages :
+[targets](https://docs.ropensci.org/targets/) est une extension développée par [Will Landau](https://twitter.com/wmlandau) qui permet d'organiser un projet sous la forme d'un *pipeline* de traitements, composé de différentes étapes, et gérant automatiquement les dépendances entre celles-ci^[Pour les personnes habituées au développement, il s'agit d'un équivalent à [GNU Make](https://www.gnu.org/software/make/) pour R.]. Cette organisation a plusieurs avantages :
 
 - elle permet une description de toutes les étapes du pipeline dans un fichier dédié, et force à séparer ces différentes étapes dans des fonctions à part, ce qui facilite la lisibilité et la maintenance du projet
 - elle facilite la reproductibilité des traitements, car elle garantit que toutes les étapes ont bien été effectuées dans le bon ordre et dans un nouvel environnement
@@ -46,7 +46,7 @@ calculs_content <- calculs_content %>%
 writeLines(calculs_content, "R/fonctions_calculs.R")
 ```
 
-Pour illustrer la suite nous allons partir d'un projet très simple : à partir du [fichier national des prénoms donnés à la naissance](https://www.insee.fr/fr/statistiques/2540004), diffusé par l'INSEE, on souhaite produire un document indiquant les prénoms ayant les évolutions les plus fortes (à la hausse ou à la baisse) entre 2019 et 2020.
+On part d'un projet très simple : à partir du [fichier national des prénoms donnés à la naissance](https://www.insee.fr/fr/statistiques/2540004), diffusé par l'INSEE, on souhaite produire un document indiquant les prénoms ayant les évolutions les plus fortes (à la hausse ou à la baisse) entre 2019 et 2020.
 
 Le dossier de notre projet s'organise de la manière suivante :
 
@@ -92,7 +92,7 @@ library(targets)
 library(tarchetypes)
 ```
 
-On va ensuite utiliser `source()` pour charger le contenu des deux fichiers `R/fonctions_recode.R` et `R/fonctions_calculs.R`, pour pouvoir utiliser par la suite les fonctions qu'ils définissent.
+On va ensuite utiliser `source()` pour charger le contenu des deux fichiers `R/fonctions_recode.R` et `R/fonctions_calculs.R`, et pouvoir utiliser par la suite les fonctions qu'ils définissent.
 
 ```{r eval=FALSE}
 # Chargement des fonctions
@@ -100,7 +100,7 @@ source("R/fonctions_recode.R")
 source("R/fonctions_calculs.R")
 ```
 
-On définit ensuite des options globales pour le pipeline. L'option `packages` de `tar_option_set()`, permet de spécifier une liste d'extensions à charger systématiquement avant le lancement de chaque étape. Ici on s'assure que l'extension `tidyverse` est bien chargée et disponible.
+On définit ensuite des options globales pour le pipeline. L'option `packages` de `tar_option_set()`, permet de spécifier une liste d'extensions à charger systématiquement avant le lancement de chaque étape. Ici on s'assure que l'extension `tidyverse` est bien chargée et disponible, et on positionne l'option `tidyverse.quiet` à `TRUE` pour supprimer le message qu'elle affiche systématiquement au chargement.
 
 ```{r eval=FALSE}
 # Options pour les différentes étapes
@@ -109,6 +109,12 @@ tar_option_set(packages = "tidyverse")
 ```
 
 Vient enfin la définition du pipeline proprement dit. Celle-ci se fait via la fonction `tar_plan()` de `tarchetypes`.
+
+```{r eval=FALSE}
+tar_plan(
+
+)
+```
 
 La première opération que l'on souhaite effectuer est de charger les données contenues dans `data/nat2020.csv`. Pour cela on va d'abord créer une première étape qui consiste à *référencer* notre fichier CSV à l'aide de la fonction `tar_file()`.
 
@@ -133,7 +139,7 @@ tar_plan(
 
 Cette nouvelle étape définit une deuxième cible nommée `donnees_brutes`. Cette cible correspond au nom d'une étape, mais aussi à un objet : dans ce qui suit, `donnees_brutes` correspond au tableau de données résultat du `read_csv2()`.
 
-On va utiliser cet objet dans une troisième étape qui lui applique nos deux fonctions de filtrage et transformation définies dans `R/fonctions_recode.R`.
+On va utiliser cet objet `donnees_brutes` dans une troisième étape nommée `donnees` qui lui applique les deux fonctions de filtrage et transformation définies dans `R/fonctions_recode.R`.
 
 ```{r eval=FALSE}
 tar_plan(
@@ -168,7 +174,7 @@ tar_plan(
 ```
 
 ```{block type='rmdimportant'}
-On notera que les cibles doivent toutes avoir des noms différents. Si on exécute plusieurs étapes de transformations ou de calculs sur un tableau de données, on devra donner un nom distinct à ces cibles et aux objets qui correspondent.
+On notera que les cibles doivent toutes avoir des noms différents. Si on exécute plusieurs étapes de transformation ou de calcul sur un tableau de données, on devra donner un nom distinct à ces cibles et aux objets qui correspondent.
 ```
 
 Au final, notre fichier `_targets.R` est donc le suivant :
@@ -189,7 +195,7 @@ Une fois notre pipeline défini, `targets` fournit des outils permettant de visu
 tar_visnetwork()
 ```
 
-Les différentes cibles apparaissent sous forme de cercles, et les fonctions qui leur sont appliquées sous forme de triangles. Les flèches indiquent que `targets` a automatiquement créé un réseau de *dépendances* entre cibles et fonctions : ainsi la cible `donnees` dépend des fonctions `filter_data`, `pivot_2019_2020` et de la cible `donnees_brutes`, qui elle-même dépend de la cible `csv_file`.
+Les différentes cibles apparaissent sous forme de cercles, et les fonctions qui leur sont appliquées sous forme de triangles. Les flèches indiquent que `targets` a automatiquement créé un *réseau de dépendances* entre cibles et fonctions : ainsi la cible `donnees` dépend des fonctions `filter_data`, `pivot_2019_2020` et de la cible `donnees_brutes`, qui elle-même dépend de la cible `csv_file`.
 
 La couleur des différents éléments montrent que ceux-ci sont à l'état *outdated* : ils ne sont pas à jour.
 
@@ -199,7 +205,7 @@ On va donc exécuter notre pipeline, en utilisant la fonction `tar_make()`.
 tar_make()
 ```
 
-Lorsqu'on utilise `tar_make()`, `targets` lance une nouvelle session R (pour éviter tout problème ou conflit lié à l'état de notre session actuelle), charge les extensions définie via `tar_option_set()`, et exécute les cibles définies avec `tar_plan()`.
+Lorsqu'on utilise `tar_make()`, `targets` lance une nouvelle session R (pour éviter tout problème ou conflit lié à l'état de notre session actuelle), charge les extensions définies via `tar_option_set()`, et exécute les cibles définies avec `tar_plan()`.
 
 On visualise le nouvel état de notre pipeline, et on voit que toutes les cibles sont passées à l'état *up to date*.
 
@@ -293,7 +299,7 @@ reports/
 _targets.R
 ```
 
-Quand on utilise un document RMarkdown dans un pipeline, il faut accéder aux données utilisées via les fonctions `tar_read()` ou `tar_load()` : ceci permet de s'assurer qu'on récupère les données "à jour", et cela permet aussi à `targets` de déterminer un lien de dépendance entre le document et les données.
+Quand on utilise un document RMarkdown dans un pipeline, on doit accéder aux données en utilisant les fonctions `tar_read()` ou `tar_load()` : ceci permet de s'assurer qu'on récupère les données "à jour", et cela permet aussi à `targets` de déterminer un lien de dépendance entre le document et les données.
 
 Comme on souhaite utiliser les données de `donnees_evo`, on devra donc utiliser quelque chose comme :
 
@@ -307,7 +313,7 @@ Au final, le contenu de notre fichier RMarkdown est le suivant :
 cat(htmltools::includeText("reports/evolution.Rmd"))
 ```
 
-Pour ajouter ce rapport à notre pipeline, on crée une nouvelle cible dans le `tar_plan()` de  `_targets.R`. Comme il s'agit d'un document RMarkodnw, on utilise la fonction `tar_render()`.
+Pour ajouter ce rapport à notre pipeline, on crée une nouvelle cible dans le `tar_plan()` de  `_targets.R`. Comme il s'agit d'un document RMarkdown, on utilise la fonction `tar_render()`.
 
 ```{r cache=FALSE, eval=FALSE, code=readLines("resources/targets_sample_project/_targets.R")}
 ```
@@ -335,7 +341,7 @@ La cible `report_evo` a bien été calculée, et on devrait retrouver notre rapp
 
 On a vu qu'on peut récupérer ces objets dans notre session via les fonctions `tar_read()` et `tar_load()`. `targets` propose également plusieurs fonctions pour gérer les données et métadonnées en cache :
 
-- `tar_destroy()` supprimme la totalite du répertoire `_targets`. Elle permet donc de "repartir de zéro", sans aucun cache et avec toutes les cibles à recalculer.
+- `tar_destroy()` supprime la totalite du répertoire `_targets`. Elle permet donc de "repartir de zéro", sans aucun cache et avec toutes les cibles à recalculer.
 - `tar_delete(donnees)` supprime l'objet `donnees` du cache et place l'état de la cible correspondante à *outdated*. Elle permet de forcer le recalcul d'une cible et de celles qui en dépendent. À noter qu'on peut sélectionner plusieurs cibles en utilisant la syntaxe de la *tidy selection*.
 - `tar_prune()` permet de supprimer les cibles qui ne sont plus présentes dans le pipeline. Elle permet donc de "faire le ménage" quand on a supprimé des étapes dans `_targets.R`.
 
@@ -353,7 +359,7 @@ On peut voir dans cette introduction rapide que l'utilisation de `targets` prés
 5. comme `targets` conserve une copie des résultats des cibles en cache, pas besoin de tout recalculer quand on relance le projet, on peut récupérer directement les résultats et savoir si ils sont à jour.
 6. `tar_make()` ne recalcule que les cibles qui le nécessitent, les temps de calcul et d'exécution sont optimisés.
 
-Parmi les inconvénients liés à l'utilisation de `targets`, on notera que le débogage est un peu plus complexe, même si l'extension [fournit plusieurs outils](https://books.ropensci.org/targets/debugging.html) pour faciliter le travail.
+Parmi les inconvénients liés à l'utilisation de `targets`, on notera que le débuggage est un peu plus complexe, même si l'extension [fournit plusieurs outils](https://books.ropensci.org/targets/debugging.html) pour faciliter le travail.
 
 ### Interactivité et développement du pipeline
 
@@ -368,7 +374,7 @@ Ceci fonctionne, mais ne provoque pas l'affichage du graphique. Il faut faire un
 De la même manière, on ne peut pas utiliser d'interfaces interactives comme celles vues pour faciliter les recodages de variables (par exemple section \@ref(irec)). Il est donc souvent pratique de commencer à développer des transformations, calculs ou analyses de façon "interactive", via un script classique dans lequel on importe les données nécessaires via `tar_read()`. Une fois qu'on obtient le résultat souhaité, on transforme ce code en une ou plusieurs fonctions et on les intègre au pipeline de `targets`.
 
 ```{block type='rmdnote'}
-On notera que les documents RMarkdown s'utilisent très bien avec `targets` : du moment qu'on charge les données avec `tar_read()` ou `tar_load()`, ils permettent à la fois une utilisation "interactive" pendant leur écriture, et une intégration directe sans modification dans un pipeline avec `tar_render()`. 
+On notera que les documents RMarkdown s'utilisent très bien avec `targets` : du moment qu'on charge les données avec `tar_read()` ou `tar_load()`, ils permettent à la fois une utilisation "interactive" pendant leur écriture, et une intégration directe dans un pipeline avec `tar_render()` sans avoir besoin de les modifier. 
 ```
 
 

@@ -6,8 +6,8 @@ filter_data <- function(df) {
         filter(preusuel != "_PRENOMS_RARES")
 }
 
-# Passage d'un format avec les années en ligne à un 
-# format en colonne avec les années en colonnes
+# Passage d'un format avec les années en ligne à un
+# format avec les années en colonnes
 pivot_2019_2020 <- function(df) {
     df %>%
         tidyr::pivot_wider(names_from = annais, values_from = nombre) %>%
