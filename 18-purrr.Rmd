@@ -74,13 +74,11 @@ map(mots, length)
 
 ```{r}
 mots %>% map(length)
-# Ou, pour R >= 4.1
-mots |> map(length)
 ```
 
 Ici notre résultat est une liste. Or il pourrait être simplifié sous forme de vecteur atomique, puisque tous ses éléments sont des nombres. 
 
-Si on souhaite obtenir un vecteur numérique avec une boucle `for`, il faut soit convertir le résultat de la boucle précédente en vecteur atomique (avec `unlist()` ou `purrr::flatten_int()`), soit modifier cette boucle pour qu'elle génère plutôt un vecteur numérique :
+Si on souhaitait obtenir un vecteur numérique avec une boucle `for`, il faut soit convertir le résultat de la boucle précédente en vecteur atomique (avec `unlist()` ou `purrr::flatten_int()`), soit modifier cette boucle pour qu'elle génère plutôt un vecteur numérique :
 
 ```{r}
 resultat <- numeric(length(discours))
@@ -131,7 +129,7 @@ Comme notre fonction est très courte, on peut aussi préférer utiliser une *fo
 mots %>% map_chr(function(v) { tail(v, 1) })
 ```
 
-On peut aussi utiliser la notation abrégée sous forme de formule, propre aux fonctions du *tidyverse*, présentée section \@ref(syntaxes-abregees) .
+On peut aussi utiliser la notation abrégée sous forme de formule, propre aux fonctions du *tidyverse*, présentée section \@ref(syntaxes-abregees).
 
 ```{r}
 mots %>% map_chr(~ tail(.x, 1) )
@@ -177,20 +175,20 @@ Pour pouvoir utiliser ces variantes et obtenir un vecteur atomique, chaque résu
 mots %>% map(~ str_subset(.x, "f") )
 ```
 
-Dans ce cas on ne peut utiliser `map_chr()`. Si on essaie on obtient un message d'erreur nous indiquant que certains résultats de `str_subset()` ne sont pas au bon format.
+Dans ce cas on ne peut pas utiliser `map_chr()` : si on essaie on obtient un message d'erreur nous indiquant que certains résultats de `str_subset()` ne sont pas au bon format.
 
 ```{r error=TRUE}
 mots %>% map_chr(~ str_subset(.x, "f") )
 ```
 
-Dans ce cas, on doit utiliser `map()` et conserver le résultat sous forme de liste. 
+Dans ce cas, on doit donc utiliser `map()` et conserver le résultat sous forme de liste, qui elle peut contenir des éléments de longueurs différentes.
 
 ```{r}
 mots %>%
     map(~ str_subset(.x, "f") )
 ```
 
-On peut évidemment enchaîner les `map()` si on veut effectuer des opérations supplémentaires.
+On notera qu'on peut tout à fait enchaîner les `map()` si on veut effectuer des opérations supplémentaires.
 
 ```{r}
 mots %>%
@@ -231,7 +229,9 @@ Grâce à la fonction `read_csv()`, on peut charger directement dans notre sessi
 data69 <- read_csv(genere_url("69"))
 ```
 
-Comment faire si l'on souhaite charger les fichiers de plusieurs départements ? La fonction `read_csv()` n'accepte qu'une seule URL à la fois, elle n'est pas vectorisée. Dans ce cas on peut utiliser `map()` pour l'appliquer tour à tour à plusieurs URL.
+Comment faire si l'on souhaite charger les fichiers de plusieurs départements ? La fonction `read_csv()` n'accepte qu'une seule URL à la fois, elle n'est pas vectorisée.
+
+Dans ce cas on peut utiliser `map()` pour l'appliquer tour à tour à plusieurs URL.
 
 ```{r message=FALSE}
 departements <- c("38", "42", "69")
@@ -290,7 +290,7 @@ Une fonction utile en complément de `map_dfr()` est la fonction `list.files()`,
 fichiers <- list.files("data", "*.csv", full.names = TRUE)
 ```
 
-On peut dès lors utiliser `map_dfr()` et `read_csv()` pour lire tous ces fichiers en une seule fois et les concaténer avec `bind_rows()`.
+On peut dès lors utiliser `map_dfr()` et `read_csv()` pour lire tous ces fichiers en une seule fois et les concaténer en un seul tableau de données.
 
 ```{r eval=FALSE}
 d <- fichiers %>% map_dfr(read_csv)
@@ -305,7 +305,7 @@ Il existe également une variante `map_dfc()` qui considère les résultats comm
 
 ## Itérer sur les colonnes d'un tableau de données
 
-On a vu section \@ref(data-frame-tibbles) que les tableaux de données (*data frame* ou *tibble*) sont en fait des listes dont les éléments sont les colonnes du tableau. Si on applique `map()` et ses variantes à un tableau, celle-ci itèrera donc sur ses colonnes.
+On a vu section \@ref(data-frame-tibbles) que les tableaux de données (*data frame* ou *tibble*) sont en fait des listes dont les éléments sont les colonnes du tableau. Si on applique `map()` à un tableau, celle-ci itérera donc sur ses colonnes.
 
 Par exemple, on peut appliquer `n_distinct` au jeu de données `starwars` et obtenir le nombre de valeurs distinctes de chacune de ses colonnes.
 
@@ -367,7 +367,7 @@ v %>% modify(length)
 
 L'objectif de `modify()` est de permettre de "modifier" une liste ou un vecteur en lui appliquant une fonction tout en étant sûr qu'on ne va pas modifier son type.
 
-L'intérêt principal de `modify()` est qu'elle propose deux variantes, `modify_if()` et `modify_at()`, qui sélectionnent les éléments soit via une fonction soit par leur nom ou leur position, et qui n'appliquent la fonction de transformation qu'aux éléments sélectionnés.
+L'intérêt principal de `modify()` est qu'elle propose deux variantes, `modify_if()` et `modify_at()`, qui sélectionnent les éléments respectivement via une fonction et via leur nom ou leur position, et qui n'appliquent la fonction de transformation qu'aux éléments sélectionnés.
 
 Cela peut être particulièrement utile quand on l'applique à un tableau de données. Par exemple le code suivant transforme uniquement les colonnes de type `factor` de `hdv2003` en `character`, et laisse les autres inchangées.
 
@@ -404,7 +404,7 @@ restos <- list(
 )
 ```
 
-À partir de cette liste, on souhaite créer un tableau de données comportant la moyenne et l'écart-type de chaque restaurant. Comme on l'a vu précédemment, cela peut se faire avec l'aide de `map_dfr()`.
+À partir de cette liste, on souhaite créer un tableau de données comportant la moyenne et l'écart-type des notes de chaque restaurant. Comme on l'a vu précédemment, cela peut se faire avec l'aide de `map_dfr()`.
 
 ```{r}
 restos %>% map_dfr(~ tibble(moyenne = mean(.x), ecart_type = sd(.x)) )
@@ -434,7 +434,7 @@ l2 <- l %>% imap(~ {
 
 Tout comme `map()` proposait les variantes `map_int()`, `map_chr()` ou `map_dfr()`, on peut également utiliser `imap_dbl()`, `imap_chr()` et autres `imap_dfc()` pour forcer le type de résultat retourné.
 
-Pour reprendre notre exemple de départ, on peut donc, en utilisant `imap` récupérer le nom de l'élément de la liste courant et l'utiliser pour rajouter le nom du restaurant dans notre *tibble* de résultats.
+Pour reprendre notre exemple de départ, on peut donc, en utilisant `imap`, récupérer le nom de l'élément courant de la liste `restos` et l'utiliser pour rajouter le nom du restaurant dans notre *tibble* de résultats.
 
 On peut le faire avec une fonction anonyme "classique" :
 
@@ -444,7 +444,7 @@ restos %>% imap_dfr(function(notes, nom) {
 })
 ```
 
-On peut aussi utiliser la notation compacte de type formule, mais dans ce cas il faut bien se souvenir que `.x` correspond à la valeur de l'élément courant, et `.y` à son nom.
+On peut aussi utiliser la notation compacte de type formule, en se souvenant à nouveau que `.x` correspond à la valeur de l'élément courant, et `.y` à son nom.
 
 ```{r}
 restos %>% imap_dfr(~ {
@@ -460,25 +460,30 @@ Si on utilise `imap()` sur une liste ou un vecteur qui n'a pas de noms, le deuxi
 
 `walk()` est une variante de `map()` qui a pour particularité de ne pas retourner de résultat. On l'utilise lorsqu'on souhaite parcourir un vecteur ou une liste et appliquer à ses éléments une fonction dont on ne souhaite conserver que les "effets de bord" : afficher un message, générer un graphique, enregistrer un fichier...
 
-Par exemple, le code suivant génère quatre diagrammes en barre indiquant la répartition des notes des différents restaurants vus dans la section précédente^[L'utilisation de `par()` permet ici de placer les graphiques sur une grille de deux lignes et deux colonnes.].
+Par exemple, le code suivant génère quatre diagrammes en barre indiquant la répartition des notes des différents restaurants vus dans la section précédente.
 
-```{r}
+```{r eval=FALSE}
+walk(restos, ~ barplot(table(.x)) )
+```
+
+```{r echo=FALSE}
 par(mfrow = c(2, 2))
 walk(restos, ~ barplot(table(.x)) )
 ```
 
+
 Comme pour `map()`, la variante `iwalk()` permet d'itérer à la fois sur les valeurs et sur les noms des éléments du vecteur ou de la liste. Ceci permet par exemple d'afficher le nom du restaurant comme titre de chaque graphique.
 
-```{r}
+```{r eval=FALSE}
+iwalk(restos, ~ barplot(table(.x), main = .y) )
+```
+
+```{r echo=FALSE}
 par(mfrow = c(2, 2))
 iwalk(restos, ~ barplot(table(.x), main = .y) )
 ```
 
 Au final, on notera que l'utilisation de `walk()`, comme elle ne retourne pas de résultats, est très proche de celle d'une boucle `for`.
-
-```{block type='rmdnote'}
-Comme `walk()` ne retourne pas de résultats, il n'existe pas de variantes du type `map_chr()` ou `imap_int()`.
-```
 
 
 ## `map2` et `pmap` : itérer sur plusieurs vecteurs en parallèle
@@ -500,12 +505,14 @@ correlations <- tribble(
 correlations
 ```
 
-Pour pouvoir calculer les corrélations souhaitées, on doit itérer sur les deux vecteurs `var1` et `var2` *en parallèle*, et calculer la corrélation entre la colonne correspondant à la valeur courante de `var1` et celle correspondant à la valeur courante de `var2`.
+Pour pouvoir calculer les corrélations souhaitées, on doit itérer sur les deux vecteurs `var1` et `var2` *en parallèle*, et calculer la corrélation entre la colonne de `rp2012` correspondant à la valeur courante de `var1` et celle correspondant à la valeur courante de `var2`.
 
-C'est précisément ce que fait la fonction `map2()`. Celle-ci prend trois arguments en entrée
+C'est précisément ce que fait la fonction `map2()`. Celle-ci prend trois arguments en entrée :
 
 1. deux listes ou vecteurs qui seront itérés en parallèle
 2. une fonction qui accepte deux arguments : ceux-ci prendront tour à tour les deux valeurs courantes des deux listes ou vecteurs itérés
+
+On peut donc utiliser `map2` pour itérer parallèlement sur les deux colonnes `var1` et `var2` de notre tableau `correlations`, et calculer la corrélation des deux colonnes correspondantes de `rp2012`.
 
 ```{r}
 map2(
@@ -529,7 +536,7 @@ correlations
 
 Si on souhaite uniquement capturer les effets de bord sans récupérer les résultats de la fonctions appliquée, on peut aussi utiliser la variante `walk2()`.
 
-Supposons maintenant que notre collègue nous a envoyé, toujours sous la même forme, une liste de variables dont elle souhaite obtenir un nuage de points, mais en fournissant également un titre à ajouter au graphique. On obtient le tableau suivant.
+Supposons maintenant que notre collègue nous a envoyé, toujours sous la même forme, une liste de variables dont elle souhaite obtenir un nuage de points, mais en fournissant également un titre à ajouter au graphique. On obtient le tableau suivant :
 
 ```{r}
 nuages <- tribble(
@@ -558,7 +565,19 @@ rp2012_orig <- rp2012
 rp2012 <- sample_n(rp2012, size = 500)
 ```
 
-```{r}
+```{r eval=FALSE}
+pwalk(
+    list(nuages$var1, nuages$var2, nuages$titre),
+    function(var1, var2, titre) {
+        plot(
+            rp2012[[var1]], rp2012[[var2]],
+            xlab = var1, ylab = var2, main = titre
+        )
+    }
+)
+```
+
+```{r echo=FALSE}
 par(mfrow = c(2, 2))
 pwalk(
     list(nuages$var1, nuages$var2, nuages$titre),
@@ -570,6 +589,7 @@ pwalk(
     }
 )
 ```
+
 
 Petite précision, si la liste est nommée, il faut que les noms des arguments de la fonction correspondent aux noms de la liste.
 
@@ -600,7 +620,7 @@ pwalk(
 )
 ```
 
-On peut utiliser la syntaxe "formule" pour la fonction anonyme, dans ce cas les arguments sont accessibles avec la notation `..1`, `..2`, etc. 
+On peut utiliser la syntaxe "formule" pour la fonction anonyme, dans ce cas les arguments sont accessibles avec la notation `..1`, `..2`, etc. On notera que dans ce cas la syntaxe "formule" est sans doute moins lisible que la syntaxe classique avec `function()` qui permet de nommer les paramètres.
 
 ```{r eval=FALSE}
 pwalk(
@@ -612,10 +632,6 @@ pwalk(
         )
     }
 )
-```
-
-```{block, type='rmdnote'}
-On notera que dans ce cas la syntaxe "formule" est sans doute moins lisible que la syntaxe classique avec `function()` qui permet de nommer les paramètres.
 ```
 
 Comme pour `map()` et `map2()`, `pmap()` propose aussi les variantes `pmap_int()`, `pmap_chr()`, etc.
@@ -647,7 +663,7 @@ res <- map(1:10, ~ rnorm(100))
 Ce qui donne un code un peu plus compact et plus lisible.
 
 ```{block type='rmdnote'}
-De la même manière, si on s'intéresse juste aux effets de bord, on pourra remplacer une boucle `for` par un appel à `walk()`, mais dans ce cas de figure le code résultant n'est pas forcément plus lisible.
+De la même manière, si on s'intéresse juste aux effets de bord, on pourra éventuellement remplacer une boucle `for` par un appel à `walk()`.
 ```
 
 
@@ -689,7 +705,7 @@ fichiers <- c("fichier1.csv", "fichier2.csv")
 l <- fichiers %>% map(read_csv)
 ```
 
-Ou quand on veut itérer sur un argument, par exemple ici sur l'argument `pattern` de `str_count()` :
+Ou quand on veut itérer sur un argument non vectorisé, par exemple ici sur l'argument `pattern` de `str_count()` :
 
 ```{r}
 voyelle <- c(a = "a", e = "e", i = "i")
@@ -715,9 +731,9 @@ L'avantage de `map()` et des autres fonctions fournies par `purrr` et qu'elles s
 
 Mais un des avantages principaux des fonctions de la famille `map()` est qu'elles sont consistantes et cohérentes dans le type de résultat qu'elles retournent : on est certain que `map()` ou `imap()` retourneront une liste, que `map_chr()` ou `map2_chr()` retourneront un vecteur de chaînes de caractères, etc.
 
-Là encore, il n'est pas question de dire qu'il ne faut pas utiliser les fonctions `*apply`. Si vous en avez l'habitude et qu'elles fonctionnent pour vous, il n'y a pas forcément de raison de changer. Mais si vous n'avez pas l'habitude de ce type d'opérations ou si vous préférez une syntaxe plus cohérente et plus facile à retenir, les fonctions de `purrr` peuvent être intéressantes.
+Là encore, il n'est pas question de dire qu'il ne faut pas utiliser les fonctions `*apply`. Si vous en avez l'habitude et qu'elles fonctionnent pour vous, il n'y a pas spécialement de raison de changer. Mais si vous n'avez pas l'habitude de ce type d'opérations ou si vous préférez une syntaxe plus cohérente et plus facile à retenir, les fonctions de `purrr` peuvent être intéressantes.
 
-Si vous souhaitez en savoir plus, l'ouvrage en ligne *R for data science* contient [une comparaison plus détaillée](https://r4ds.had.co.nz/iteration.html#base-r) des deux familles de fonction. 
+Si vous souhaitez en savoir plus, l'ouvrage en ligne *R for data science* contient [une comparaison plus détaillée](https://r4ds.had.co.nz/iteration.html#base-r) des deux familles de fonctions. 
 
 
 ## Ressources
@@ -807,22 +823,13 @@ notes %>%
         )
     )
 ```
-</div>pwalk(
-    list(nuages$var1, nuages$var2, nuages$titre),
-    function(var1, var2, titre) {
-        plot(
-            rp2012[[var1]], rp2012[[var2]],
-            xlab = var1, ylab = var2, main = titre
-        )
-    }
-)
-
+</div>
 \fi
 
 
 **Exercice 1.2**
 
-La liste suivante comporte les parcours biographiques de 5 personnes sous la forme de vecteurs indiquant leurs communes de résidence successive.
+La liste suivante comporte les parcours biographiques de 5 personnes sous la forme de vecteurs indiquant leurs communes de résidence successives.
 
 ```{r}
 parcours <- list(
@@ -928,6 +935,7 @@ Trouver une solution pour corriger le problème.
 
 \iffalse
 <div class="solution-exo">
+
 ```{r eval=FALSE}
 # En convertissant manuellement code_insee en character
 d <- urls %>% 
@@ -936,6 +944,7 @@ d <- urls %>%
         tab$code_insee <- as.character(tab$code_insee)
         tab
     })
+
 # Ou bien en utilisant l'option col_types de read_csv
 d <- urls %>%
     map_dfr(read_csv, col_types = c("code_insee" = "character"))
@@ -998,7 +1007,7 @@ d <- d %>% modify_if(is.character, str_to_title)
 <div class="solution-exo">
 ```{r eval=FALSE}
 d %>% discard(~ sum(is.na(.x)) > 0)
-# Autre possibilité
+# Ou bien
 d %>% discard(~ any(is.na(.x)))
 ```
 </div>
@@ -1364,11 +1373,6 @@ range(n_piles)
 \iffalse
 <div class="solution-exo">
 ```{r eval=FALSE}
-egal_pile <- function(v) { v == "pile"}
-sims %>% map_int(
-    ~ length(head_while(.x, egal_pile))
-)
-# Ou bien, en abrégé
 sims %>% map_int(
     ~ length(head_while(.x, ~ .x == "pile"))
 )
