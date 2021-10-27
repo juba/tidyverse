@@ -1,11 +1,11 @@
 # Structures de données
 
-R propose de nombreuses structures de données différentes, et les extensions peuvent en implémenter de nouvelles. Cette section introduit trois structures parmi les plus utilisées : les **vecteurs atomiques**, les **listes** et les **tableaux de données**. Certaines ont déjà été abordées et utilisées précédemment, mais connaître leurs spécificités et savoir les manipuler est utile, notamment lorsqu'on veut créer ses propres fonctions.
+R propose de nombreuses structures de données différentes, et les extensions peuvent en implémenter de nouvelles. Cette section introduit trois structures parmi les plus utilisées : les **vecteurs atomiques**, les **listes** et les **tableaux de données**. Certaines ont déjà été abordées et utilisées précédemment, mais connaître leurs spécificités et savoir les manipuler est utile voire indispensable, notamment lorsqu'on veut créer ses propres fonctions.
 
 
 ## Vecteurs atomiques
 
-Les vecteurs atomiques sont des structures qui regroupent plusieurs éléments, avec une contrainte : ces éléments doivent tous être du même type, et ils ne peuvent pas contenir d'objets complexes. Les vecteurs atomiques ont déjà été introduits section \@ref(vecteurs).
+Les vecteurs atomiques sont des structures qui regroupent ensemble plusieurs éléments constitués d'une seule valeur, avec deux contraintes : ces valeurs doivent toutes être du même type. Les vecteurs atomiques ont déjà été introduits section \@ref(vecteurs).
 
 ### Création d'un vecteur
 
@@ -43,7 +43,7 @@ v <- rep(1:4, 2)
 length(v)
 ```
 
-Il peut parfois être utile de créer des vecteurs "vides". Dans ce cas on peut les initialiser avec les fonctions `vector()`, `character()` ou `numeric()`. Par défaut ces fonctions renvoient un vecteur sans éléments, mais on peut aussi leur indiquer en argument le nombre d'éléments souhaités (qui seront alors initialisés avec une valeur par défaut).
+Il peut parfois être utile de créer des vecteurs "vides". Dans ce cas on peut les initialiser avec les fonctions `vector()`, `character()` ou `numeric()`. Par défaut ces fonctions renvoient un vecteur sans élément, mais on peut aussi leur indiquer en argument le nombre d'éléments souhaités (qui seront alors initialisés avec une valeur par défaut).
 
 ```{r}
 numeric()
@@ -106,6 +106,7 @@ On peut tester le type d'un vecteur avec les fonctions `is.character`, `is.doubl
 ```{r}
 x <- c(1, 3, 8)
 is.numeric(x)
+x > 2
 is.logical(x > 2)
 y <- c("foo", "bar", "baz")
 is.character(y)
@@ -134,7 +135,7 @@ c(TRUE, 2, FALSE)
 ```
 
 ```{block, type='rmdnote'}
-Si la valeur `NA`, comme on l'a vu, permet d'indiquer une valeur manquante (`Not Available`), il existe en réalité plusieurs types de `NA`, même si cette distinction est la plupart du temps transparente pour l'utilisateur. On a ainsi notamment des valeur `NA_integer_`, `NA_character_`, `NA_real_`.
+Si la valeur `NA`, comme on l'a vu, permet d'indiquer une valeur manquante (`Not Available`), il existe en réalité plusieurs types de `NA`, même si cette distinction est la plupart du temps transparente pour l'utilisateur. On a ainsi notamment des valeurs `NA_integer_`, `NA_character_`, `NA_real_`.
 ```
 
 
@@ -151,7 +152,7 @@ x <- c(1, 5, 8, 12, 14)
 sum(x > 10)
 ```
 
-Ceci fournit un raccourci très pratique. Dans l'exemple suivant, on tire 1000 nombres au hasard entre 0 et 1 et on calcule le nombre de valeurs obtenues qui sont inférieures à 0,5.
+Ceci fournit un raccourci très pratique. Dans l'exemple suivant, on tire 1000 nombres au hasard entre 0 et 1 et on calcule le nombre de valeurs obtenues qui sont inférieures à 0.5.
 
 ```{r}
 x <- runif(1000)
@@ -167,7 +168,7 @@ x <- runif(1000)
 mean(x < 0.5)
 ```
 
-On peut convertir un vecteur d'un type à un autre avec les fonctions `as.character()`, `as.numeric()` et `as.logical()`. Si une valeur ne peut pas être convertie, elle est remplacée par un `NA`.
+On peut convertir un vecteur d'un type à un autre avec les fonctions `as.character()`, `as.numeric()` et `as.logical()`. Si une valeur ne peut pas être convertie, elle est remplacée par un `NA`, et R affiche un avertissement.
 
 ```{r warning=TRUE}
 as.character(1:3)
@@ -228,7 +229,7 @@ x
 
 ## Listes
 
-Les listes sont une généralisation des vecteurs : elles regroupent également plusieurs éléments, mais ceux-ci peuvent être de n'importe quel type, y compris des objets complexes. Une liste peut donc contenir elle-même des vecteurs, des listes, des tableaux de données, des fonctions, des graphiques `ggplot2` stockés dans un objet, etc.
+Les listes sont une généralisation des vecteurs : elles regroupent également plusieurs éléments ensemble, mais ceux-ci peuvent être de n'importe quel type, y compris des objets complexes. Une liste peut donc contenir des vecteurs, des listes, des tableaux de données, des fonctions, des graphiques `ggplot2` stockés dans un objet, etc.
 
 ### Création
 
@@ -238,7 +239,7 @@ On construit une liste avec la fonction `list`.
 list(1, "foo", c("Pomme", "Citron"))
 ```
 
-La manière dont R affiche le contenu d'une liste dans la console diffère de celle des vecteurs. Dans le cas d'une liste ses éléments sont affichés les uns en dessous des autres, et séparés par leur indice numérique entre une paire de crochets.
+La manière dont R affiche le contenu d'une liste dans la console diffère de celle des vecteurs. Dans le cas d'une liste ses éléments sont affichés les uns en dessous des autres, et séparés par leur indice numérique entre une paire de crochets. Dans l'affichage ci-dessus, il faut bien distinguer les `[[1]]`, `[[2]]` et `[[3]]`, qui correspondent au numéro de l'élément de la liste, et les `[1]` qui font partie de l'affichage du contenu de ces éléments.
 
 Comme pour les vecteurs, on peut nommer les éléments à la création de la liste.
 
@@ -247,14 +248,14 @@ liste <- list(nombre = 1, char = "foo", vecteur = c("Pomme", "Citron"))
 liste
 ```
 
-Dans ce cas l'affichage de la liste dans la console montre ces noms plutôt que les indices numériques.
+Dans ce cas l'affichage de la liste dans la console montre ces noms plutôt que les indices numériques des éléments.
 
 Comme pour les vecteurs atomiques, on peut utiliser `names()` pour afficher ou modifier les noms des éléments.
 ```{r}
 names(liste)
 ```
 
-L'affichage des listes peut vite devenir illisible quand la liste est plus complexe.
+L'affichage peut vite devenir illisible quand la liste est plus complexe.
 
 ```{r}
 liste <- list(
@@ -265,7 +266,7 @@ liste <- list(
 liste
 ```
 
-Dans ce cas la fonction `str` peut être utile pour afficher de manière plus compacte la structure de la liste.
+Dans ce cas la fonction `str` peut être utile pour afficher de manière plus compacte la structure de la liste. Dans cet exemple elle permet de voir un peu plus clairement que `x` et `y` sont des éléments d'une sous-liste `l2`.
 
 ```{r}
 str(liste)
@@ -378,7 +379,7 @@ liste
 ```
 
 ```{block type='rmdimportant'}
-Attention à ne pas utiliser les crochets doubles pour modifier des éléments d'une liste car ceux-ci peuvent avoir un comportement inattendu, notamment si on veut modifier plusieurs éléments d'un coup.
+Attention à ne pas utiliser les crochets doubles pour modifier des éléments d'une liste car ceux-ci peuvent avoir un comportement inattendu si on veut modifier plusieurs éléments d'un coup.
 ```
 
 Enfin, si on souhaite supprimer un ou plusieurs éléments d'une liste, il faut leur attribuer la valeur `NULL`^[Si on veut ajouter un élément `NULL` à une liste, il faut utiliser les crochets simples avec la syntaxe `liste["foo"] <- list(NULL)`.].
@@ -407,6 +408,7 @@ indicateurs <- function(x) {
 x <- 1:10
 res <- indicateurs(x)
 res$moyenne
+res$variance
 ```
 
 On utilise également les listes pour stocker des objets complexes et leur appliquer des fonctions. Ce fonctionnement sera abordé en détail dans la section \@ref(purrr), mais en guise de petit aperçu, l'exemple fictif suivant récupère les noms de tous les fichiers CSV du répertoire courant et les importe tous dans une liste à l'aide de `purrr::map()` et de `read_csv()`. 
@@ -423,7 +425,7 @@ On pourra ensuite utiliser cette liste de tableaux pour leur appliquer des trans
 
 On a déjà utilisé les tableaux de données à de nombreux reprises en manipulant des *data frames* ou des *tibbles*. Les seconds sont une variante des premiers, les différences entre les deux ayant été abordées section \@ref(tibbles). 
 
-Un tableau de données est en réalité une liste nommée de vecteurs avec une contrainte spécifique : ces vecteurs doivent tous être de même longueur, ce qui garantit le format "tabulaire" des données.
+Un tableau de données est en réalité une liste nommée de vecteurs atomiques avec une contrainte spécifique : ces vecteurs doivent tous être de même longueur, ce qui garantit le format "tabulaire" des données.
 
 ### Création
 
@@ -493,7 +495,7 @@ Ainsi, on peut sélectionner une colonne via l'opérateur `$`.
 df$fruit
 ```
 
-Comme un tableau de données est en réalité une liste de colonnes, on peut utiliser l'opérateur `[[]]` pour sélectionner l'une de ses colonnes, par position ou par nom^[Attention, comme pour les listes, à ne pas utiliser `[[]]` avec un argument de longueur supérieur à 1, car cela mène soit à des erreurs soit à des résultats contre-intuitifs.].
+Comme un tableau de données est en réalité une liste de colonnes, on peut aussi utiliser l'opérateur `[[]]` pour sélectionner l'une de ses colonnes, par position ou par nom^[Attention, comme pour les listes, à ne pas utiliser `[[]]` avec un argument de longueur supérieur à 1, car cela mène soit à des erreurs soit à des résultats contre-intuitifs.].
 
 ```{r}
 df[["fruit"]]
@@ -514,16 +516,20 @@ tail(df, 1)
 On peut également utiliser l'opérateur `[,]` pour sélectionner à la fois des lignes et des colonnes, en lui passant deux arguments séparés par une virgule : d'abord la sélection des lignes puis celle des colonnes. Dans les deux cas on peut sélectionner par position, nom ou condition. Si on laisse un argument vide, on sélectionne l'intégralité des lignes ou des colonnes.
 
 ```{r}
+# Lignes 1 et 3 et colonne "poids"
 df[c(1, 3), "poids"]
 ```
 ```{r}
+# Toutes les lignes et colonnes "poids" et "fruit"
 df[, c("poids", "fruit")]
 ```
 ```{r}
+# Lignes pour lesquelles poids > 150, et toutes les colonnes
 df[df$poids > 150, ]
 ```
 ```{r}
 library(stringr)
+# Colonnes dont le nom contient un "o", et toutes les lignes
 df[, str_detect(names(df), "o")]
 ```
 
@@ -546,25 +552,18 @@ Cette différence peut parfois être source d'erreurs, notamment quand on dével
 On peut utiliser `[[]]` et `[,]` avec l'opérateur d'assignation `<-` pour modifier tout ou partie d'un tableau de données.
 
 ```{r}
+# Création d'une nouvelle colonne poids_kg
 df[["poids_kg"]] <- df$poids / 1000
 df
 ```
 
 ```{r}
+# Remplacement de la valeur de la colonne "fruit" pour les lignes 
+# pour lesquelles "fruit" vaut "Citron"
 df[df$fruit == "Citron", "fruit"] <- "Agrume"
 df
 ```
 
-
-On pourra aussi noter que `[]` utilisé sans arguments permet de sélectionner et de modifier l'ensemble des valeurs du tableau. Ainsi les deux instructions suivantes ont des effets très différents :
-
-```{r}
-df[] <- "a"
-df
-
-df <- "a"
-df
-```
 
 Pour conclure, on peut noter que l'utilisation des opérateurs `[[]]` et `[,]` sur un tableau de données peut sembler redondante et moins pratique que l'utilisation des verbes de `dplyr` comme `select()` ou `filter()`. Ils peuvent cependant être utiles lorsqu'on souhaite éviter les complications liées à l'utilisation du *tidyverse* à l'intérieur de fonctions, comme indiqué section \@ref(programmer-tidyverse). Ils peuvent également être plus rapides, et il est important de les connaître car on les rencontrera très fréquemment dans du code R sur le Web ou dans des packages.
 
@@ -693,7 +692,7 @@ vn[c("val1", "val3")]
 </div>
 \fi
 
-Créer une fonction `select_noms()` qui prend en argument un vecteur `v` et un ou plusieurs noms, et retourne uniquement les éléments de `v` correspondant aux noms.
+Créer une fonction `select_noms()` qui prend en argument un vecteur `v` et un ou plusieurs noms, et retourne uniquement les éléments de `v` correspondant à ces noms.
 
 ```{r echo=FALSE,ref.label='don12a'}
 ```
@@ -993,10 +992,11 @@ description_liste <- function(liste) {
 Créer le tableau `df` suivant :
 
 ```{r}
-df <- data.frame(
-    fruit = c("Pomme", "Pomme", "Citron"),
-    poids = c(154, 167, 92),
-    couleur = c("vert", "vert", "jaune")
+df <- tribble(
+    ~fruit,   ~poids, ~couleur,
+    "Pomme",  154,    "vert",
+    "Pomme",  167,    "vert",
+    "Citron", 92,     "jaune"
 )
 ```
 
@@ -1051,17 +1051,6 @@ colonne_maj <- function(d, colonne) {
 </div>
 \fi
 
-Utiliser la fonction pour modifier le jeu de données `hdv2003` en passant en majuscule la colonne `sexe`.
-
-\iffalse
-<div class="solution-exo">
-```{r eval=FALSE}
-library(questionr)
-data(hdv2003)
-hdv2003 <- colonne_maj(hdv2003, "sexe")
-```
-</div>
-\fi
 
 
 **Exercice 3.2**
@@ -1069,10 +1058,11 @@ hdv2003 <- colonne_maj(hdv2003, "sexe")
 Créer le tableau `df` suivant :
 
 ```{r}
-df <- data.frame(
-    fruit = c("Pomme", "Pomme", "Citron"),
-    poids = c(154, 167, 92),
-    couleur = c("vert", "vert", "jaune")
+df <- tribble(
+    ~fruit,   ~poids, ~couleur,
+    "Pomme",  154,    "vert",
+    "Pomme",  167,    "vert",
+    "Citron", 92,     "jaune"
 )
 ```
 
@@ -1092,7 +1082,7 @@ df[df$poids < 100, 1]
 </div>
 \fi
 
-Créer une fonction `filtre_valeur()` qui prend en argument une chaîne de caractères `valeur` et retourne les lignes de `df` pour lesquelles la colonne `fruit` vaut `valeur`. Vérifier avec :
+Créer une fonction `filtre_valeur()` qui prend un seul argument nommé `valeur` et retourne les lignes de `df` pour lesquelles la colonne `fruit` vaut `valeur`. Vérifier avec :
 
 ```{r echo=FALSE,ref.label='don32a'}
 ```
@@ -1131,13 +1121,13 @@ filtre_valeur <- function(d, valeur) {
 </div>
 \fi
 
-Modifier à nouveau la fonction pour qu'elle accepte un troisième argument `colonne` qui contient le nom de la colonne à utiliser pour filtrer les lignes. Vérifier avec :
+Modifier à nouveau la fonction pour qu'elle accepte aussi un argument `colonne` qui contient le nom de la colonne à utiliser pour filtrer les lignes. Vérifier avec :
 
 ```{r echo=FALSE,ref.label='don32c'}
 ```
 
 ```{r}
-filtre_valeur(df, "couleur", "jaune")
+filtre_valeur(df, colonne = "couleur", valeur = "jaune")
 ```
 
 
@@ -1167,10 +1157,11 @@ filtre_valeur(hdv2003, "sexe", "Femme")
 Reprendre le tableau `df` des exercices précédents :
 
 ```{r}
-df <- data.frame(
-    fruit = c("Pomme", "Pomme", "Citron"),
-    poids = c(154, 167, 92),
-    couleur = c("vert", "vert", "jaune")
+df <- tribble(
+    ~fruit,   ~poids, ~couleur,
+    "Pomme",  154,    "vert",
+    "Pomme",  167,    "vert",
+    "Citron", 92,     "jaune"
 )
 ```
 
@@ -1182,9 +1173,11 @@ df <- data.frame(
 
 \iffalse
 <div class="solution-exo">
+
 ```{r eval=FALSE}
 df[, "id"] <- 1:3
 df[df$couleur == "jaune", "couleur"] <- "jaune citron"
+
 df[df$poids < 100, "poids_rec"] <- "léger"
 df[df$poids >= 100, "poids_rec"] <- "lourd"
 # Ou bien :
