@@ -1,6 +1,6 @@
 # Exécution conditionnelle et boucles
 
-Nous avons vu précédemment comment écrire nos propres fonctions. Cette section présente des éléments du langage qui permettent de programmer des actions un peu plus complexes : exécuter du code de manière conditionnelle, selon le résultat d'un test, et répéter des opérations avec des boucles.
+Nous avons vu précédemment comment écrire nos propres fonctions. Cette section présente des éléments du langage qui permettent de programmer des actions un peu plus complexes : exécuter du code de manière conditionnelle selon le résultat d'un test, et répéter des opérations avec des boucles.
 
 Les notions décrites dans cette partie s'appliquent pour le développement de fonctions, mais peuvent aussi être mises en œuvre à tout moment dans un script.
 
@@ -13,15 +13,15 @@ data(rp2012)
 ```
 
 
-## `if`, `else` : exécuter du code sous certaines conditions
+## `if` et `else` : exécuter du code sous certaines conditions
 
 ### `if`
 
 L'instruction `if` permet de n'exécuter du code que si une condition est remplie.
 
-![](resources/figures/structure_if)
-
 `if` est suivie d'une condition (entre parenthèses) puis d'un bloc de code (entre accolades). Ce bloc de code n'est exécuté que si la condition est vraie.
+
+![](resources/figures/structure_if)
 
 Par exemple, dans le code suivant, le message `Bonjour !` ne sera affiché que si la valeur de l'objet `prenom` vaut `"Pierre-Edmond"` :
 
@@ -46,7 +46,7 @@ bonjour_pierre_edmond("Pierre-Edmond")
 bonjour_pierre_edmond("Valérie-Charlotte")
 ```
 
-Une autre utilisation possible (et un peu plus utile) dans le cadre d'une fonction est de n'exécuter certaines instructions que si la valeur d'un argument remplit une certaine condition. Dans l'exemple suivant, on n'applique la fonction `round()` que si l'argument `arrondir` vaut `TRUE`.
+Une autre utilisation possible (et un peu plus utile) dans le cadre d'une fonction est de n'exécuter certaines instructions que si la valeur d'un argument vaut une valeur donnée. Dans l'exemple suivant, on n'applique la fonction `round()` que si l'argument `arrondir` vaut `TRUE`.
 
 ```{r}
 moyenne <- function(x, arrondir = TRUE) {
@@ -99,20 +99,17 @@ if (arrondir) {
 }
 
 if (arrondir) res <- round(res)
-
-if (arrondir)
-    res <- round(res)
 ```
 
-Pour des raisons de lisibilité, dans ce qui suit on conservera les accolades dans tous les cas.
+
 
 ### `if` / `else`
 
-On utilise souvent `if` en conjonction avec l'instruction `else`. `else` précède un autre bloc de code R qui ne s'exécute que si la condition donnée à `if` est fausse :
+On utilise souvent `if` en le faisant suivre par une instruction `else`. `else` précède un autre bloc de code R qui ne s'exécute que si la condition donnée au `if` est fausse :
 
 ![](resources/figures/structure_if_else)
 
-On peut ainsi utiliser `if` / `else` pour une nouvelle fonction fort utile qui nous évitera bien des désagréments météorologiques :
+On peut ainsi utiliser `if` / `else` pour une nouvelle fonction fort utile qui nous évitera bien des désagréments météorologiques.
 
 ```{r}
 conseil_vestimentaire <- function(temperature) {
@@ -147,11 +144,11 @@ graph_var(c(1, 5, 10, 3, 1, 4))
 
 Une possibilité complémentaire est d'ajouter des blocs `else if` qui permettent d'ajouter des conditions supplémentaires. Dès qu'une condition est vraie, le bloc de code correspondant est exécuté. Le dernier bloc `else` est exécuté si aucune des conditions n'est vraie.
 
-On peut donc améliorer encore notre fonction `graph_var()` pour tester les différents types explicitement et afficher un message si aucun type géré n'a été reconnu.
+On peut donc améliorer encore notre fonction `graph_var()` pour tester plusieurs types explicitement et afficher un message si aucun type géré n'a été reconnu.
 
 ```{r}
 graph_var <- function(x) {
-    if (is.character(x) || is.factor(x)) {
+    if (is.character(x)) {
         barplot(table(x))
     } else if (is.numeric(x)) {
         hist(x)
@@ -233,26 +230,38 @@ verifie_temperature(15)
 
 On pourra noter qu'il existe deux types d'opérateurs "et" et "ou" dans R :
 
-- `&` et `|` sont des opérateurs *vectorisés*. Ils peuvent s'appliquer à des vecteurs et retourneront un vecteur de `TRUE` et `FALSE`
-- `&&` et `||` ne peuvent retourner qu'une seule valeur, et si on leur fournit des vecteurs ils n'utiliseront que leurs premières valeurs
+- Les opérateurs simples `&` et `|` sont des opérateurs *vectorisés*. Ils peuvent s'appliquer à des vecteurs et retourneront un vecteur de `TRUE` et `FALSE`.
+- Les opérateurs doubles `&&` et `||` ne peuvent retourner qu'une seule valeur, et si on leur fournit des vecteurs ils n'utiliseront que la première valeur de chacun d'entre eux.
 
 ```{r}
 x <- 1:5
-x > 0 & x <=2
-x > 0 && x <=2
+x > 0 & x <= 2
+x > 0 && x <= 2
+```
+
+Quand on passe un test à un `if`, celui-ci est censé retourner une unique valeur `TRUE` ou `FALSE`. Une erreur fréquente, notamment quand on est dans une fonction, est de passer à `if` une condition appliquée à un vecteur. Dans ce cas R a la bonne idée d'afficher un avertissement, et il n'utilise alors que la première valeur du vecteur pour déterminer si le bloc de code doit être exécuté ou non.
+
+```{r}
+superieur_a_5 <- function(x) {
+    if (x >= 5) {
+        message(">=5")
+    }
+}
+
+superieur_a_5(1:10)
 ```
 
 ```{block type='rmdimportant'}
-Comme la condition passée à un `if` ne doit retourner qu'une seule valeur (et non un vecteur), on utilisera de préférence `&&` et `||`.
+À retenir : quand on utilise l'instruction `if`, la condition qui lui est passée entre parenthèses ne doit renvoyer qu'une seule valeur `TRUE` ou `FALSE`. Si on utilise une condition complexe, on utilisera donc plutôt les opérateurs doubles `&&` et `||`.
 ```
 
 
 ### Différence entre `if` / `else` et `ifelse`
 
-Une source fréquente de confusion concerne la différence entre les instructions `if` / `else` et la fonction `ifelse()` de R base (ou son équivalent `if_else` de `dplyr`, voir section \@ref(if-else)). Les deux sont pourtant très différentes :
+Une source fréquente de confusion concerne la différence entre les instructions `if` / `else` et la fonction `ifelse()` de R base (ou son équivalent `if_else()` de `dplyr`, voir section \@ref(if-else)). Les deux sont pourtant très différentes :
 
 - `if` / `else` s'utilisent quand on teste une seule condition et qu'on veut exécuter des blocs de code différents selon son résultat
-- `ifelse` et `if_else` appliquent un test à tous les éléments d'un vecteur et retournent un vecteur de valeurs logiques
+- `ifelse` et `if_else` appliquent un test à tous les éléments d'un vecteur et retournent un vecteur dont les éléments dépendent du résultat de chaque test
 
 Premier cas de figure : un objet `x` contient une seule valeur et on veut afficher un message différent selon si celle-ci est inférieure ou supérieure à 10. Dans ce cas on utilise `if` / `else`.
 
@@ -270,23 +279,10 @@ Deuxième cas de figure : `x` est un vecteur et on souhaite recoder chacune de s
 
 ```{r}
 x <- 5:15
-
-ifelse(x >= 10, ">=10", "<10")
+x_rec <- ifelse(x >= 10, ">=10", "<10")
+x_rec
 ```
 
-Une erreur fréquente, notamment quand on est dans une fonction, est de passer à `if` une condition appliquée à un vecteur. Dans ce cas R a la bonne idée d'afficher un message d'avertissement.
-
-```{r}
-x <- 1:10
-
-if (x >= 5) {
-    message(">=5")
-}
-```
-
-```{block type='rmdimportant'}
-À retenir donc : quand on utilise l'instruction `if`, la condition qui lui est passée entre parenthèses ne doit renvoyer qu'une seule valeur `TRUE` ou `FALSE`.
-```
 
 
 ## Contrôle de l'exécution et gestion des erreurs
@@ -295,7 +291,7 @@ L'instruction `if` est souvent utilisée dans des fonctions pour valider les val
 
 ### Utilisation de `return` pour sortir de la fonction
 
-Une première utilisation peut être d'utiliser un `return` pour interrompre l'exécution de la fonction et retourner un résultat. On a en effet vu section \@ref(resfunc) que dès que R rencontre un `return` dans une fonction, il interrompt immédiatement l'exécution de celle-ci.
+On peut utiliser un `return` pour interrompre l'exécution de la fonction et retourner un résultat. On a en effet vu section \@ref(resfunc) que dès que R rencontre un `return` dans une fonction, il interrompt immédiatement l'exécution de celle-ci.
 
 La fonction suivante retourne la longueur du mot le plus long dans un vecteur de chaînes de caractères.
 
@@ -323,7 +319,7 @@ longueur_max(1:5)
 
 ### `warning`
 
-La fonction `warning` fonctionne comme `message` mais permet d'afficher un avertissement. Celui-ci est présenté différemment dans la console de manière à attirer l'attention sur un point particulier. Il indique également la fonction qui a déclenché l'avertissement, ce qui peut être utile pour retrouver l'origine du problème.
+La fonction `warning` fonctionne comme `message` mais permet d'afficher un avertissement. Celui-ci est présenté un peu différemment dans la console de manière à attirer l'attention, et il indique quelle fonction a déclenché l'avertissement, ce qui peut être utile pour retrouver l'origine du problème.
 
 Dans la fonction précédente, on peut ajouter un avertissement dans le cas où le vecteur passé en argument n'est pas de type `character`.
 
@@ -399,9 +395,7 @@ histo <- function(x, titre) {
 }
 ```
 
-Si l'utilisateur ne donne pas de titre, on souhaite ajouter un titre qui indique la valeur de la moyenne de la variable représentée.
-
-Dans ce genre de cas de figure, on attribue à `titre` la valeur par défaut `NULL`, et on vérifie dans le corps de la fonction que l'utilisateur n'a pas fourni de valeur avec `if (is.null(titre))`. On peut alors calculer la valeur "par défaut" souhaitée :
+Si l'utilisateur ne donne pas de titre, on souhaite ajouter un titre qui indique la valeur de la moyenne de la variable représentée. Dans ce cas on attribue à `titre` la valeur par défaut `NULL`, et on vérifie dans le corps de la fonction que l'utilisateur n'a pas fourni de valeur avec `if (is.null(titre))`. On peut alors calculer la valeur "par défaut" souhaitée :
 
 ```{r}
 histo <- function(x, titre = NULL) {
@@ -426,7 +420,7 @@ histo(x, titre = "Quel bel histogramme")
 
 ## `for` et `while` : répéter des instructions dans une boucle
 
-Les boucles sont un type d'instructions qui permet de répéter du code plusieurs fois, soit en fonction d'une condition soit selon les éléments d'un vecteur^[En complément, on verra également dans la section \@ref(purrr) d'autres fonctions tirées de l'extension `purrr` qui permettent d'appliquer une fonction en itérant sur les éléments de plusieurs objets.].
+Les boucles permettent de répéter du code plusieurs fois, soit en fonction d'une condition soit selon les éléments d'un vecteur^[En complément, on verra également dans la section \@ref(purrr) d'autres fonctions tirées de l'extension `purrr` qui permettent d'appliquer une fonction en itérant sur les éléments de plusieurs objets.].
 
 ### `for`
 
@@ -446,7 +440,7 @@ for (item in 1:5) {
 
 Ici notre vecteur "source" est constitué des entiers de 1 à 5. `for` va donc exécuter l'instruction `print(item)` 5 fois, en remplaçant la première fois `item` par 1, la seconde fois par 2, etc.
 
-On peut itérer sur tout type d'objet, et le nom `item` peut être remplacé par ce que l'on souhaite :
+On peut itérer sur différents types d'objets, et le nom `item` peut être remplacé par ce que l'on souhaite :
 
 ```{r}
 for (prenom in c("Pierre-Edmond", "Valérie-Charlotte")) {
@@ -467,7 +461,7 @@ summaries <- function(d, vars) {
 summaries(hdv2003, c("sexe", "age", "heures.tv"))
 ```
 
-Un "pattern" relativement fréquent est de vouloir itérer sur les éléments d'un vecteur par leur position. Il est du coup assez naturel d'utiliser quelque chose comme `for (i in 1:length(x))`. Il est cependant préférable dans ces cas-là d'utiliser la fonction dédiée `seq_along(x)`^[L'intérêt de `seq_along(x)` est notamment qu'elle n'essaie pas d'exécuter le bloc de code si jamais `x` est de longueur nulle. *Cf.* des explications supplémentaires dans [Advanced R](https://adv-r.hadley.nz/control-flow.html#common-pitfalls)].
+Un "pattern" relativement fréquent est de vouloir itérer sur les éléments d'un vecteur par leur position. Il est du coup assez naturel d'utiliser quelque chose comme `for (i in 1:length(x))`. Il est cependant préférable dans ces cas-là d'utiliser la fonction dédiée `seq_along(x)`^[L'intérêt de `seq_along(x)` est notamment qu'elle n'essaie pas d'exécuter le bloc de code si jamais `x` est de longueur nulle. *Cf.* des explications supplémentaires dans [Advanced R](https://adv-r.hadley.nz/control-flow.html#common-pitfalls).].
 
 ```{r}
 x <- c("rouge", "vert", "bleu")
@@ -528,7 +522,7 @@ Le déroulement de la boucle est le suivant :
 
 1. la première instruction initialise la valeur de la variable `resultat` avec une chaîne vide
 2. à la première entrée dans le `while`, `resultat` vaut `""`, elle est donc différente de `"Face"` et le bloc de code est donc exécuté
-3. à la fin de cette exécution, `resultat` voit soit `"Pile"` soit `"Face"`. On entre alors une deuxième fois dans le `while`. Si `resultat` vaut `"Pile"`, la condition du `while` n'est pas vraie, on n'exécute donc pas le bloc de code et on sort de la boucle. Si `resultat` vaut `"Face"`, la condition est vraie, on n'exécute le bloc de code et on rentre ensuite une troisième fois dans le `while`, etc.
+3. à la fin de cette exécution, `resultat` vaut soit `"Pile"` soit `"Face"`. On entre alors une deuxième fois dans le `while`. Si `resultat` vaut `"Pile"`, la condition du `while` n'est pas vraie, on n'exécute donc pas le bloc de code et on sort de la boucle. Si `resultat` vaut `"Face"`, la condition est vraie, on exécute le bloc de code et on rentre ensuite une troisième fois dans le `while`, etc.
 
 
 ### `next` et `break`
@@ -556,7 +550,7 @@ Si on passe à la fonction un nom de colonne qui n'existe pas, on obtient une er
 summaries(hdv2003, c("sexe", "igloo", "age"))
 ```
 
-Or on pourrait, dans ce cas vouloir afficher les résultats pour les "bonnes" colonnes, et ignorer les autres. C'est possible si rajoute une instruction `next` quand la valeur courante de `var` ne fait pas partie des noms de colonnes (on pourrait aussi ajouter un `warning()` juste avant le `next` pour informer l'utilisateur).
+On pourrait dans ce cas vouloir afficher les résultats pour les "bonnes" colonnes, et ignorer les autres. C'est possible si on ajoute une instruction `next` quand la valeur courante de `var` ne fait pas partie des noms de colonnes (on pourrait aussi ajouter un `warning()` juste avant le `next` pour informer l'utilisateur).
 
 ```{r}
 summaries <- function(d, vars) {
@@ -596,7 +590,7 @@ summaries(hdv2003, c("sexe", "igloo", "age"))
 
 Le mécanisme des boucles, assez intuitif, peut être utilisé pour beaucoup d'opérations. Il y a cependant sous R des alternatives souvent plus rapides, qu'il est préférable de privilégier.
 
-Avant tout, de nombreuses fonctions R sont "vectorisées" et s'appliquent directement à tous les éléments d'un vecteur. Dans le cas où une fonction vectorisée existe déjà, elle propose en général une syntaxe plus compacte et une exécution plus rapide.
+Avant tout, de nombreuses fonctions R sont "vectorisées" et s'appliquent directement à tous les éléments d'un vecteur. Dans le cas où une fonction vectorisée existe déjà, elle propose en général une syntaxe plus compacte et une exécution (beaucoup) plus rapide.
 
 Pour prendre un exemple caricatural, si on souhaite ajouter 10 à chaque élément d'un vecteur on évitera absolument de faire :
 
@@ -620,7 +614,6 @@ for (i in seq_along(mots)) {
 Or c'est tout à fait inutile car `str_replace_all()` étant vectorisée, on peut l'appliquer directement à un vecteur sans utiliser de boucle.
 
 ```{r}
-mots <- c("brXuette", "mXtX", "iglXX")
 mots <- str_replace_all(mots, "X", "o")
 ```
 
@@ -631,19 +624,16 @@ x <- c(1, NA, 4, 110, NA)
 y <- c(20, 30, 40, 50, 60)
 
 for (i in seq_along(x)) {
-    if (is.na(x[i])) x[i] <- y[i]
+    if (is.na(x[i])) {
+        x[i] <- y[i]
+    }
 }
-
-x
 ```
 
 Cette boucle sera avantageusement remplacée par une utilisation plus compacte et plus rapide de l'opérateur `[]`.
 
 ```{r}
-x <- c(1, NA, 4, 110, NA)
-y <- c(20, 30, 40, 50, 60)
 x[is.na(x)] <- y[is.na(x)]
-x
 ```
 
 En dehors des questions de performance, une boucle peut aussi être moins lisible que certaines alternatives. Soit la fonction suivante, qui prend en entrée un vecteur de mots et retourne le nombre total de voyelles qu'il contient.
@@ -683,9 +673,7 @@ library(purrr)
 phrases %>% map_int(n_voyelles)
 ```
 
-Au final, entre les fonctions vectorisées existantes et les possibilités fournies par `purrr`, il est assez rare de devoir utiliser une boucle directement dans R. Pour autant, il ne faut pas non plus tomber dans l'excès inverse et considérer que tout usage de `for` ou `while` doit être évité : ces fonctions sont parfaitement justifiées dans de nombreux cas de figure, et si vous trouvez une solution qui fonctionne de manière efficace avec une boucle `for`, il n'est pas forcément utile de chercher à la remplacer à tout prix.
-
-
+Au final, entre les fonctions vectorisées existantes et les possibilités fournies par `purrr`, il est assez rare de devoir utiliser une boucle directement dans R. Pour autant, il ne faut pas non plus tomber dans l'excès inverse et considérer que tout usage de `for` ou `while` doit être évité : ces fonctions sont parfaitement justifiées dans certains cas de figure, et si vous trouvez une solution qui fonctionne de manière efficace avec une boucle `for`, il n'est pas forcément utile de chercher à la remplacer.
 
 
 
