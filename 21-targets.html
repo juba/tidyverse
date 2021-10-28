@@ -555,7 +555,14 @@ code span.wa { color: #bf0303; } /* Warning */
 <li class="chapter" data-level="20.1.3" data-path="20-debuggage-performance.html"><a href="20-debuggage-performance.html#browser"><i class="fa fa-check"></i><b>20.1.3</b> browser()</a></li>
 </ul></li>
 <li class="chapter" data-level="20.2" data-path="20-debuggage-performance.html"><a href="20-debuggage-performance.html#benchmarking-mesurer-et-comparer-les-temps-dexécution"><i class="fa fa-check"></i><b>20.2</b> benchmarking : mesurer et comparer les temps d’exécution</a></li>
-<li class="chapter" data-level="20.3" data-path="20-debuggage-performance.html"><a href="20-debuggage-performance.html#profiling-identifier-les-problèmes-de-performance"><i class="fa fa-check"></i><b>20.3</b> profiling : identifier les problèmes de performance</a></li>
+<li class="chapter" data-level="20.3" data-path="20-debuggage-performance.html"><a href="20-debuggage-performance.html#quelques-conseils-doptimisation"><i class="fa fa-check"></i><b>20.3</b> Quelques conseils d’optimisation</a><ul>
+<li class="chapter" data-level="20.3.1" data-path="20-debuggage-performance.html"><a href="20-debuggage-performance.html#privilégier-les-fonctions-vectorisées"><i class="fa fa-check"></i><b>20.3.1</b> Privilégier les fonctions vectorisées</a></li>
+<li class="chapter" data-level="20.3.2" data-path="20-debuggage-performance.html"><a href="20-debuggage-performance.html#mettre-le-minimum-dopérations-dans-les-boucles"><i class="fa fa-check"></i><b>20.3.2</b> Mettre le minimum d’opérations dans les boucles</a></li>
+<li class="chapter" data-level="20.3.3" data-path="20-debuggage-performance.html"><a href="20-debuggage-performance.html#choisir-un-format-de-fichier-adapté"><i class="fa fa-check"></i><b>20.3.3</b> Choisir un format de fichier adapté</a></li>
+<li class="chapter" data-level="20.3.4" data-path="20-debuggage-performance.html"><a href="20-debuggage-performance.html#repérer-les-opérations-coûteuses-avec-du-profiling"><i class="fa fa-check"></i><b>20.3.4</b> Repérer les opérations coûteuses avec du <em>profiling</em></a></li>
+<li class="chapter" data-level="20.3.5" data-path="20-debuggage-performance.html"><a href="20-debuggage-performance.html#mettre-en-cache-les-résultats-intermédiaires"><i class="fa fa-check"></i><b>20.3.5</b> Mettre en cache les résultats intermédiaires</a></li>
+<li class="chapter" data-level="20.3.6" data-path="20-debuggage-performance.html"><a href="20-debuggage-performance.html#utiliser-dautres-extensions"><i class="fa fa-check"></i><b>20.3.6</b> Utiliser d’autres extensions</a></li>
+</ul></li>
 <li class="chapter" data-level="20.4" data-path="20-debuggage-performance.html"><a href="20-debuggage-performance.html#ressources-11"><i class="fa fa-check"></i><b>20.4</b> Ressources</a></li>
 </ul></li>
 <li class="chapter" data-level="21" data-path="21-targets.html"><a href="21-targets.html"><i class="fa fa-check"></i><b>21</b> Organiser un projet avec <code>targets</code></a><ul>
@@ -607,7 +614,7 @@ code span.wa { color: #bf0303; } /* Warning */
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="organiser-un-projet-avec-targets" class="section level1">
+<div id="targets" class="section level1">
 <h1><span class="header-section-number">Partie 21</span> Organiser un projet avec <code>targets</code></h1>
 <p><a href="https://docs.ropensci.org/targets/">targets</a> est une extension développée par <a href="https://twitter.com/wmlandau">Will Landau</a> qui permet d’organiser un projet sous la forme d’un <em>pipeline</em> de traitements, composé de différentes étapes, et gérant automatiquement les dépendances entre celles-ci<a href="#fn40" class="footnote-ref" id="fnref40"><sup>40</sup></a>. Cette organisation a plusieurs avantages :</p>
 <ul>
@@ -636,33 +643,33 @@ _targets.R</code></pre>
 </div>
 <p>Le fichier <code>data/nat2020.csv</code> contient les données brutes <a href="https://www.insee.fr/fr/statistiques/2540004">téléchargées depuis le site de l’INSEE</a>.</p>
 <p>Le fichier <code>R/fonctions_recode.R</code> contient deux fonctions de traitement et de remise en forme des données.</p>
-<div class="sourceCode" id="cb1194"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1194-1"><a href="21-targets.html#cb1194-1"></a><span class="co"># On conserve uniquement 2019 et 2020 et on</span></span>
-<span id="cb1194-2"><a href="21-targets.html#cb1194-2"></a><span class="co"># filtre les lignes des prénoms rares regroupés</span></span>
-<span id="cb1194-3"><a href="21-targets.html#cb1194-3"></a>filter_data &lt;-<span class="st"> </span><span class="cf">function</span>(df) {</span>
-<span id="cb1194-4"><a href="21-targets.html#cb1194-4"></a>    df <span class="op">%&gt;%</span></span>
-<span id="cb1194-5"><a href="21-targets.html#cb1194-5"></a><span class="st">        </span><span class="kw">filter</span>(annais <span class="op">%in%</span><span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;2019&quot;</span>, <span class="st">&quot;2020&quot;</span>)) <span class="op">%&gt;%</span></span>
-<span id="cb1194-6"><a href="21-targets.html#cb1194-6"></a><span class="st">        </span><span class="kw">filter</span>(preusuel <span class="op">!=</span><span class="st"> &quot;_PRENOMS_RARES&quot;</span>)</span>
-<span id="cb1194-7"><a href="21-targets.html#cb1194-7"></a>}</span>
-<span id="cb1194-8"><a href="21-targets.html#cb1194-8"></a></span>
-<span id="cb1194-9"><a href="21-targets.html#cb1194-9"></a><span class="co"># Passage d&#39;un format avec les années en ligne à un</span></span>
-<span id="cb1194-10"><a href="21-targets.html#cb1194-10"></a><span class="co"># format avec les années en colonnes</span></span>
-<span id="cb1194-11"><a href="21-targets.html#cb1194-11"></a>pivot_<span class="dv">2019</span>_<span class="dv">2020</span> &lt;-<span class="st"> </span><span class="cf">function</span>(df) {</span>
-<span id="cb1194-12"><a href="21-targets.html#cb1194-12"></a>    df <span class="op">%&gt;%</span></span>
-<span id="cb1194-13"><a href="21-targets.html#cb1194-13"></a><span class="st">        </span>tidyr<span class="op">::</span><span class="kw">pivot_wider</span>(<span class="dt">names_from =</span> annais, <span class="dt">values_from =</span> nombre) <span class="op">%&gt;%</span></span>
-<span id="cb1194-14"><a href="21-targets.html#cb1194-14"></a><span class="st">        </span><span class="kw">relocate</span>(<span class="st">`</span><span class="dt">2020</span><span class="st">`</span>, <span class="dt">.after =</span> <span class="st">`</span><span class="dt">2019</span><span class="st">`</span>)</span>
-<span id="cb1194-15"><a href="21-targets.html#cb1194-15"></a>}</span></code></pre></div>
+<div class="sourceCode" id="cb1198"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1198-1"><a href="21-targets.html#cb1198-1"></a><span class="co"># On conserve uniquement 2019 et 2020 et on</span></span>
+<span id="cb1198-2"><a href="21-targets.html#cb1198-2"></a><span class="co"># filtre les lignes des prénoms rares regroupés</span></span>
+<span id="cb1198-3"><a href="21-targets.html#cb1198-3"></a>filter_data &lt;-<span class="st"> </span><span class="cf">function</span>(df) {</span>
+<span id="cb1198-4"><a href="21-targets.html#cb1198-4"></a>    df <span class="op">%&gt;%</span></span>
+<span id="cb1198-5"><a href="21-targets.html#cb1198-5"></a><span class="st">        </span><span class="kw">filter</span>(annais <span class="op">%in%</span><span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;2019&quot;</span>, <span class="st">&quot;2020&quot;</span>)) <span class="op">%&gt;%</span></span>
+<span id="cb1198-6"><a href="21-targets.html#cb1198-6"></a><span class="st">        </span><span class="kw">filter</span>(preusuel <span class="op">!=</span><span class="st"> &quot;_PRENOMS_RARES&quot;</span>)</span>
+<span id="cb1198-7"><a href="21-targets.html#cb1198-7"></a>}</span>
+<span id="cb1198-8"><a href="21-targets.html#cb1198-8"></a></span>
+<span id="cb1198-9"><a href="21-targets.html#cb1198-9"></a><span class="co"># Passage d&#39;un format avec les années en ligne à un</span></span>
+<span id="cb1198-10"><a href="21-targets.html#cb1198-10"></a><span class="co"># format avec les années en colonnes</span></span>
+<span id="cb1198-11"><a href="21-targets.html#cb1198-11"></a>pivot_<span class="dv">2019</span>_<span class="dv">2020</span> &lt;-<span class="st"> </span><span class="cf">function</span>(df) {</span>
+<span id="cb1198-12"><a href="21-targets.html#cb1198-12"></a>    df <span class="op">%&gt;%</span></span>
+<span id="cb1198-13"><a href="21-targets.html#cb1198-13"></a><span class="st">        </span>tidyr<span class="op">::</span><span class="kw">pivot_wider</span>(<span class="dt">names_from =</span> annais, <span class="dt">values_from =</span> nombre) <span class="op">%&gt;%</span></span>
+<span id="cb1198-14"><a href="21-targets.html#cb1198-14"></a><span class="st">        </span><span class="kw">relocate</span>(<span class="st">`</span><span class="dt">2020</span><span class="st">`</span>, <span class="dt">.after =</span> <span class="st">`</span><span class="dt">2019</span><span class="st">`</span>)</span>
+<span id="cb1198-15"><a href="21-targets.html#cb1198-15"></a>}</span></code></pre></div>
 <p>Le fichier <code>R/fonctions_calculs.R</code> contient une seule fonction qui calcule les variables d’évolution 2019-2020.</p>
-<div class="sourceCode" id="cb1195"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1195-1"><a href="21-targets.html#cb1195-1"></a><span class="co"># Calcul des indicateurs d&#39;évolution en effectifs et pourcentages</span></span>
-<span id="cb1195-2"><a href="21-targets.html#cb1195-2"></a><span class="co"># pour les prénoms dont la fréquence est &gt; à min_n</span></span>
-<span id="cb1195-3"><a href="21-targets.html#cb1195-3"></a>calcule_evo &lt;-<span class="st"> </span><span class="cf">function</span>(df, <span class="dt">min_n =</span> <span class="dv">200</span>) {</span>
-<span id="cb1195-4"><a href="21-targets.html#cb1195-4"></a>    df <span class="op">%&gt;%</span></span>
-<span id="cb1195-5"><a href="21-targets.html#cb1195-5"></a><span class="st">        </span><span class="kw">filter</span>(<span class="st">`</span><span class="dt">2020</span><span class="st">`</span> <span class="op">&gt;</span><span class="st"> </span>min_n <span class="op">|</span><span class="st"> `</span><span class="dt">2019</span><span class="st">`</span> <span class="op">&gt;</span><span class="st"> </span>min_n) <span class="op">%&gt;%</span></span>
-<span id="cb1195-6"><a href="21-targets.html#cb1195-6"></a><span class="st">        </span><span class="kw">mutate</span>(</span>
-<span id="cb1195-7"><a href="21-targets.html#cb1195-7"></a>            <span class="dt">evo =</span> (<span class="st">`</span><span class="dt">2020</span><span class="st">`</span> <span class="op">-</span><span class="st"> `</span><span class="dt">2019</span><span class="st">`</span>),</span>
-<span id="cb1195-8"><a href="21-targets.html#cb1195-8"></a>            <span class="st">`</span><span class="dt">evo%</span><span class="st">`</span> =<span class="st"> </span><span class="kw">round</span>(evo <span class="op">/</span><span class="st"> `</span><span class="dt">2019</span><span class="st">`</span> <span class="op">*</span><span class="st"> </span><span class="dv">100</span>, <span class="dv">2</span>)</span>
-<span id="cb1195-9"><a href="21-targets.html#cb1195-9"></a>        ) <span class="op">%&gt;%</span></span>
-<span id="cb1195-10"><a href="21-targets.html#cb1195-10"></a><span class="st">        </span><span class="kw">drop_na</span>(evo)</span>
-<span id="cb1195-11"><a href="21-targets.html#cb1195-11"></a>}</span></code></pre></div>
+<div class="sourceCode" id="cb1199"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1199-1"><a href="21-targets.html#cb1199-1"></a><span class="co"># Calcul des indicateurs d&#39;évolution en effectifs et pourcentages</span></span>
+<span id="cb1199-2"><a href="21-targets.html#cb1199-2"></a><span class="co"># pour les prénoms dont la fréquence est &gt; à min_n</span></span>
+<span id="cb1199-3"><a href="21-targets.html#cb1199-3"></a>calcule_evo &lt;-<span class="st"> </span><span class="cf">function</span>(df, <span class="dt">min_n =</span> <span class="dv">200</span>) {</span>
+<span id="cb1199-4"><a href="21-targets.html#cb1199-4"></a>    df <span class="op">%&gt;%</span></span>
+<span id="cb1199-5"><a href="21-targets.html#cb1199-5"></a><span class="st">        </span><span class="kw">filter</span>(<span class="st">`</span><span class="dt">2020</span><span class="st">`</span> <span class="op">&gt;</span><span class="st"> </span>min_n <span class="op">|</span><span class="st"> `</span><span class="dt">2019</span><span class="st">`</span> <span class="op">&gt;</span><span class="st"> </span>min_n) <span class="op">%&gt;%</span></span>
+<span id="cb1199-6"><a href="21-targets.html#cb1199-6"></a><span class="st">        </span><span class="kw">mutate</span>(</span>
+<span id="cb1199-7"><a href="21-targets.html#cb1199-7"></a>            <span class="dt">evo =</span> (<span class="st">`</span><span class="dt">2020</span><span class="st">`</span> <span class="op">-</span><span class="st"> `</span><span class="dt">2019</span><span class="st">`</span>),</span>
+<span id="cb1199-8"><a href="21-targets.html#cb1199-8"></a>            <span class="st">`</span><span class="dt">evo%</span><span class="st">`</span> =<span class="st"> </span><span class="kw">round</span>(evo <span class="op">/</span><span class="st"> `</span><span class="dt">2019</span><span class="st">`</span> <span class="op">*</span><span class="st"> </span><span class="dv">100</span>, <span class="dv">2</span>)</span>
+<span id="cb1199-9"><a href="21-targets.html#cb1199-9"></a>        ) <span class="op">%&gt;%</span></span>
+<span id="cb1199-10"><a href="21-targets.html#cb1199-10"></a><span class="st">        </span><span class="kw">drop_na</span>(evo)</span>
+<span id="cb1199-11"><a href="21-targets.html#cb1199-11"></a>}</span></code></pre></div>
 </div>
 <div id="targets.r" class="section level3">
 <h3><span class="header-section-number">21.1.2</span> <code>_targets.R</code></h3>
@@ -673,94 +680,94 @@ La syntaxe présentée ici est celle proposée par l’extension <code>tarchetyp
 </p>
 </div>
 <p>Le fichier <code>_targets.R</code> commence par charger à la fois <code>targets</code> et <code>tarchetypes</code>.</p>
-<div class="sourceCode" id="cb1196"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1196-1"><a href="21-targets.html#cb1196-1"></a><span class="co"># Packages nécessaires pour ce script</span></span>
-<span id="cb1196-2"><a href="21-targets.html#cb1196-2"></a><span class="kw">library</span>(targets)</span>
-<span id="cb1196-3"><a href="21-targets.html#cb1196-3"></a><span class="kw">library</span>(tarchetypes)</span></code></pre></div>
+<div class="sourceCode" id="cb1200"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1200-1"><a href="21-targets.html#cb1200-1"></a><span class="co"># Packages nécessaires pour ce script</span></span>
+<span id="cb1200-2"><a href="21-targets.html#cb1200-2"></a><span class="kw">library</span>(targets)</span>
+<span id="cb1200-3"><a href="21-targets.html#cb1200-3"></a><span class="kw">library</span>(tarchetypes)</span></code></pre></div>
 <p>On va ensuite utiliser <code>source()</code> pour charger le contenu des deux fichiers <code>R/fonctions_recode.R</code> et <code>R/fonctions_calculs.R</code>, et pouvoir utiliser par la suite les fonctions qu’ils définissent.</p>
-<div class="sourceCode" id="cb1197"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1197-1"><a href="21-targets.html#cb1197-1"></a><span class="co"># Chargement des fonctions</span></span>
-<span id="cb1197-2"><a href="21-targets.html#cb1197-2"></a><span class="kw">source</span>(<span class="st">&quot;R/fonctions_recode.R&quot;</span>)</span>
-<span id="cb1197-3"><a href="21-targets.html#cb1197-3"></a><span class="kw">source</span>(<span class="st">&quot;R/fonctions_calculs.R&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb1201"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1201-1"><a href="21-targets.html#cb1201-1"></a><span class="co"># Chargement des fonctions</span></span>
+<span id="cb1201-2"><a href="21-targets.html#cb1201-2"></a><span class="kw">source</span>(<span class="st">&quot;R/fonctions_recode.R&quot;</span>)</span>
+<span id="cb1201-3"><a href="21-targets.html#cb1201-3"></a><span class="kw">source</span>(<span class="st">&quot;R/fonctions_calculs.R&quot;</span>)</span></code></pre></div>
 <p>On définit ensuite des options globales pour le pipeline. L’option <code>packages</code> de <code>tar_option_set()</code>, permet de spécifier une liste d’extensions à charger systématiquement avant le lancement de chaque étape. Ici on s’assure que l’extension <code>tidyverse</code> est bien chargée et disponible, et on positionne l’option <code>tidyverse.quiet</code> à <code>TRUE</code> pour supprimer le message qu’elle affiche systématiquement au chargement.</p>
-<div class="sourceCode" id="cb1198"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1198-1"><a href="21-targets.html#cb1198-1"></a><span class="co"># Options pour les différentes étapes</span></span>
-<span id="cb1198-2"><a href="21-targets.html#cb1198-2"></a><span class="kw">options</span>(<span class="dt">tidyverse.quiet =</span> <span class="ot">TRUE</span>)</span>
-<span id="cb1198-3"><a href="21-targets.html#cb1198-3"></a><span class="kw">tar_option_set</span>(<span class="dt">packages =</span> <span class="st">&quot;tidyverse&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb1202"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1202-1"><a href="21-targets.html#cb1202-1"></a><span class="co"># Options pour les différentes étapes</span></span>
+<span id="cb1202-2"><a href="21-targets.html#cb1202-2"></a><span class="kw">options</span>(<span class="dt">tidyverse.quiet =</span> <span class="ot">TRUE</span>)</span>
+<span id="cb1202-3"><a href="21-targets.html#cb1202-3"></a><span class="kw">tar_option_set</span>(<span class="dt">packages =</span> <span class="st">&quot;tidyverse&quot;</span>)</span></code></pre></div>
 <p>Vient enfin la définition du pipeline proprement dit. Celle-ci se fait via la fonction <code>tar_plan()</code> de <code>tarchetypes</code>.</p>
-<div class="sourceCode" id="cb1199"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1199-1"><a href="21-targets.html#cb1199-1"></a><span class="kw">tar_plan</span>(</span>
-<span id="cb1199-2"><a href="21-targets.html#cb1199-2"></a></span>
-<span id="cb1199-3"><a href="21-targets.html#cb1199-3"></a>)</span></code></pre></div>
+<div class="sourceCode" id="cb1203"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1203-1"><a href="21-targets.html#cb1203-1"></a><span class="kw">tar_plan</span>(</span>
+<span id="cb1203-2"><a href="21-targets.html#cb1203-2"></a></span>
+<span id="cb1203-3"><a href="21-targets.html#cb1203-3"></a>)</span></code></pre></div>
 <p>La première opération que l’on souhaite effectuer est de charger les données contenues dans <code>data/nat2020.csv</code>. Pour cela on va d’abord créer une première étape qui consiste à <em>référencer</em> notre fichier CSV à l’aide de la fonction <code>tar_file()</code>.</p>
-<div class="sourceCode" id="cb1200"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1200-1"><a href="21-targets.html#cb1200-1"></a><span class="kw">tar_plan</span>(</span>
-<span id="cb1200-2"><a href="21-targets.html#cb1200-2"></a>    <span class="co"># Chargement du fichier CSV</span></span>
-<span id="cb1200-3"><a href="21-targets.html#cb1200-3"></a>    <span class="kw">tar_file</span>(csv_file, <span class="st">&quot;data/nat2020.csv&quot;</span>)</span>
-<span id="cb1200-4"><a href="21-targets.html#cb1200-4"></a>)</span></code></pre></div>
+<div class="sourceCode" id="cb1204"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1204-1"><a href="21-targets.html#cb1204-1"></a><span class="kw">tar_plan</span>(</span>
+<span id="cb1204-2"><a href="21-targets.html#cb1204-2"></a>    <span class="co"># Chargement du fichier CSV</span></span>
+<span id="cb1204-3"><a href="21-targets.html#cb1204-3"></a>    <span class="kw">tar_file</span>(csv_file, <span class="st">&quot;data/nat2020.csv&quot;</span>)</span>
+<span id="cb1204-4"><a href="21-targets.html#cb1204-4"></a>)</span></code></pre></div>
 <p>Cette première étape définit une <em>cible</em> (<em>target</em>), nommée <code>csv_file</code>, qui pointe vers notre fichier CSV.</p>
 <p>On ajoute une seconde étape qui charge les données à l’aide de <code>read_csv2()</code>.</p>
-<div class="sourceCode" id="cb1201"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1201-1"><a href="21-targets.html#cb1201-1"></a><span class="kw">tar_plan</span>(</span>
-<span id="cb1201-2"><a href="21-targets.html#cb1201-2"></a>    <span class="co"># Chargement du fichier CSV</span></span>
-<span id="cb1201-3"><a href="21-targets.html#cb1201-3"></a>    <span class="kw">tar_file</span>(csv_file, <span class="st">&quot;data/nat2020.csv&quot;</span>),</span>
-<span id="cb1201-4"><a href="21-targets.html#cb1201-4"></a>    <span class="dt">donnees_brutes =</span> <span class="kw">read_csv2</span>(csv_file),</span>
-<span id="cb1201-5"><a href="21-targets.html#cb1201-5"></a>)</span></code></pre></div>
+<div class="sourceCode" id="cb1205"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1205-1"><a href="21-targets.html#cb1205-1"></a><span class="kw">tar_plan</span>(</span>
+<span id="cb1205-2"><a href="21-targets.html#cb1205-2"></a>    <span class="co"># Chargement du fichier CSV</span></span>
+<span id="cb1205-3"><a href="21-targets.html#cb1205-3"></a>    <span class="kw">tar_file</span>(csv_file, <span class="st">&quot;data/nat2020.csv&quot;</span>),</span>
+<span id="cb1205-4"><a href="21-targets.html#cb1205-4"></a>    <span class="dt">donnees_brutes =</span> <span class="kw">read_csv2</span>(csv_file),</span>
+<span id="cb1205-5"><a href="21-targets.html#cb1205-5"></a>)</span></code></pre></div>
 <p>Cette nouvelle étape définit une deuxième cible nommée <code>donnees_brutes</code>. Cette cible correspond au nom d’une étape, mais aussi à un objet : dans ce qui suit, <code>donnees_brutes</code> correspond au tableau de données résultat du <code>read_csv2()</code>.</p>
 <p>On va utiliser cet objet <code>donnees_brutes</code> dans une troisième étape nommée <code>donnees</code> qui lui applique les deux fonctions de filtrage et transformation définies dans <code>R/fonctions_recode.R</code>.</p>
-<div class="sourceCode" id="cb1202"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1202-1"><a href="21-targets.html#cb1202-1"></a><span class="kw">tar_plan</span>(</span>
-<span id="cb1202-2"><a href="21-targets.html#cb1202-2"></a>    <span class="co"># Chargement du fichier CSV</span></span>
-<span id="cb1202-3"><a href="21-targets.html#cb1202-3"></a>    <span class="kw">tar_file</span>(csv_file, <span class="st">&quot;data/nat2020.csv&quot;</span>),</span>
-<span id="cb1202-4"><a href="21-targets.html#cb1202-4"></a>    <span class="dt">donnees_brutes =</span> <span class="kw">read_csv2</span>(csv_file),</span>
-<span id="cb1202-5"><a href="21-targets.html#cb1202-5"></a></span>
-<span id="cb1202-6"><a href="21-targets.html#cb1202-6"></a>    <span class="co"># Mise en forme des données</span></span>
-<span id="cb1202-7"><a href="21-targets.html#cb1202-7"></a>    <span class="dt">donnees =</span> donnees_brutes <span class="op">%&gt;%</span></span>
-<span id="cb1202-8"><a href="21-targets.html#cb1202-8"></a><span class="st">        </span><span class="kw">filter_data</span>() <span class="op">%&gt;%</span></span>
-<span id="cb1202-9"><a href="21-targets.html#cb1202-9"></a><span class="st">        </span><span class="kw">pivot_2019_2020</span>()</span>
-<span id="cb1202-10"><a href="21-targets.html#cb1202-10"></a>)</span></code></pre></div>
+<div class="sourceCode" id="cb1206"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1206-1"><a href="21-targets.html#cb1206-1"></a><span class="kw">tar_plan</span>(</span>
+<span id="cb1206-2"><a href="21-targets.html#cb1206-2"></a>    <span class="co"># Chargement du fichier CSV</span></span>
+<span id="cb1206-3"><a href="21-targets.html#cb1206-3"></a>    <span class="kw">tar_file</span>(csv_file, <span class="st">&quot;data/nat2020.csv&quot;</span>),</span>
+<span id="cb1206-4"><a href="21-targets.html#cb1206-4"></a>    <span class="dt">donnees_brutes =</span> <span class="kw">read_csv2</span>(csv_file),</span>
+<span id="cb1206-5"><a href="21-targets.html#cb1206-5"></a></span>
+<span id="cb1206-6"><a href="21-targets.html#cb1206-6"></a>    <span class="co"># Mise en forme des données</span></span>
+<span id="cb1206-7"><a href="21-targets.html#cb1206-7"></a>    <span class="dt">donnees =</span> donnees_brutes <span class="op">%&gt;%</span></span>
+<span id="cb1206-8"><a href="21-targets.html#cb1206-8"></a><span class="st">        </span><span class="kw">filter_data</span>() <span class="op">%&gt;%</span></span>
+<span id="cb1206-9"><a href="21-targets.html#cb1206-9"></a><span class="st">        </span><span class="kw">pivot_2019_2020</span>()</span>
+<span id="cb1206-10"><a href="21-targets.html#cb1206-10"></a>)</span></code></pre></div>
 <p>Ici aussi, <code>donnees</code> est à la fois le nom d’une cible et un objet contenant nos données retravaillées. On utilise cet objet dans une étape supplémentaire qui utilise la fonction de <code>R/fonctions_calculs.R</code> pour calculer les variables d’évolution.</p>
-<div class="sourceCode" id="cb1203"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1203-1"><a href="21-targets.html#cb1203-1"></a><span class="kw">tar_plan</span>(</span>
-<span id="cb1203-2"><a href="21-targets.html#cb1203-2"></a>    <span class="co"># Chargement du fichier CSV</span></span>
-<span id="cb1203-3"><a href="21-targets.html#cb1203-3"></a>    <span class="kw">tar_file</span>(csv_file, <span class="st">&quot;data/nat2020.csv&quot;</span>),</span>
-<span id="cb1203-4"><a href="21-targets.html#cb1203-4"></a>    <span class="dt">donnees_brutes =</span> <span class="kw">read_csv2</span>(csv_file),</span>
-<span id="cb1203-5"><a href="21-targets.html#cb1203-5"></a></span>
-<span id="cb1203-6"><a href="21-targets.html#cb1203-6"></a>    <span class="co"># Mise en forme des données</span></span>
-<span id="cb1203-7"><a href="21-targets.html#cb1203-7"></a>    <span class="dt">donnees =</span> donnees_brutes <span class="op">%&gt;%</span></span>
-<span id="cb1203-8"><a href="21-targets.html#cb1203-8"></a><span class="st">        </span><span class="kw">filter_data</span>() <span class="op">%&gt;%</span></span>
-<span id="cb1203-9"><a href="21-targets.html#cb1203-9"></a><span class="st">        </span><span class="kw">pivot_2019_2020</span>(),</span>
-<span id="cb1203-10"><a href="21-targets.html#cb1203-10"></a></span>
-<span id="cb1203-11"><a href="21-targets.html#cb1203-11"></a>    <span class="co"># Calcul indicateurs</span></span>
-<span id="cb1203-12"><a href="21-targets.html#cb1203-12"></a>    <span class="dt">donnees_evo =</span> donnees <span class="op">%&gt;%</span></span>
-<span id="cb1203-13"><a href="21-targets.html#cb1203-13"></a><span class="st">        </span><span class="kw">calcule_evo</span>(<span class="dt">min_n =</span> <span class="dv">1000</span>)</span>
-<span id="cb1203-14"><a href="21-targets.html#cb1203-14"></a>)</span></code></pre></div>
+<div class="sourceCode" id="cb1207"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1207-1"><a href="21-targets.html#cb1207-1"></a><span class="kw">tar_plan</span>(</span>
+<span id="cb1207-2"><a href="21-targets.html#cb1207-2"></a>    <span class="co"># Chargement du fichier CSV</span></span>
+<span id="cb1207-3"><a href="21-targets.html#cb1207-3"></a>    <span class="kw">tar_file</span>(csv_file, <span class="st">&quot;data/nat2020.csv&quot;</span>),</span>
+<span id="cb1207-4"><a href="21-targets.html#cb1207-4"></a>    <span class="dt">donnees_brutes =</span> <span class="kw">read_csv2</span>(csv_file),</span>
+<span id="cb1207-5"><a href="21-targets.html#cb1207-5"></a></span>
+<span id="cb1207-6"><a href="21-targets.html#cb1207-6"></a>    <span class="co"># Mise en forme des données</span></span>
+<span id="cb1207-7"><a href="21-targets.html#cb1207-7"></a>    <span class="dt">donnees =</span> donnees_brutes <span class="op">%&gt;%</span></span>
+<span id="cb1207-8"><a href="21-targets.html#cb1207-8"></a><span class="st">        </span><span class="kw">filter_data</span>() <span class="op">%&gt;%</span></span>
+<span id="cb1207-9"><a href="21-targets.html#cb1207-9"></a><span class="st">        </span><span class="kw">pivot_2019_2020</span>(),</span>
+<span id="cb1207-10"><a href="21-targets.html#cb1207-10"></a></span>
+<span id="cb1207-11"><a href="21-targets.html#cb1207-11"></a>    <span class="co"># Calcul indicateurs</span></span>
+<span id="cb1207-12"><a href="21-targets.html#cb1207-12"></a>    <span class="dt">donnees_evo =</span> donnees <span class="op">%&gt;%</span></span>
+<span id="cb1207-13"><a href="21-targets.html#cb1207-13"></a><span class="st">        </span><span class="kw">calcule_evo</span>(<span class="dt">min_n =</span> <span class="dv">1000</span>)</span>
+<span id="cb1207-14"><a href="21-targets.html#cb1207-14"></a>)</span></code></pre></div>
 <div class="rmdimportant">
 <p>
 On notera que les cibles doivent toutes avoir des noms différents. Si on exécute plusieurs étapes de transformation ou de calcul sur un tableau de données, on devra donner un nom distinct à ces cibles et aux objets qui correspondent.
 </p>
 </div>
 <p>Au final, notre fichier <code>_targets.R</code> est donc le suivant :</p>
-<div class="sourceCode" id="cb1204"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1204-1"><a href="21-targets.html#cb1204-1"></a><span class="co"># Packages nécessaires pour ce script</span></span>
-<span id="cb1204-2"><a href="21-targets.html#cb1204-2"></a><span class="kw">library</span>(targets)</span>
-<span id="cb1204-3"><a href="21-targets.html#cb1204-3"></a><span class="kw">library</span>(tarchetypes)</span>
-<span id="cb1204-4"><a href="21-targets.html#cb1204-4"></a></span>
-<span id="cb1204-5"><a href="21-targets.html#cb1204-5"></a><span class="co"># Chargement des fonctions</span></span>
-<span id="cb1204-6"><a href="21-targets.html#cb1204-6"></a><span class="kw">source</span>(<span class="st">&quot;R/fonctions_recode.R&quot;</span>)</span>
-<span id="cb1204-7"><a href="21-targets.html#cb1204-7"></a><span class="kw">source</span>(<span class="st">&quot;R/fonctions_calculs.R&quot;</span>)</span>
-<span id="cb1204-8"><a href="21-targets.html#cb1204-8"></a></span>
-<span id="cb1204-9"><a href="21-targets.html#cb1204-9"></a><span class="co"># Options pour les différentes étapes</span></span>
-<span id="cb1204-10"><a href="21-targets.html#cb1204-10"></a><span class="kw">options</span>(<span class="dt">tidyverse.quiet =</span> <span class="ot">TRUE</span>)</span>
-<span id="cb1204-11"><a href="21-targets.html#cb1204-11"></a><span class="kw">tar_option_set</span>(<span class="dt">packages =</span> <span class="st">&quot;tidyverse&quot;</span>)</span>
-<span id="cb1204-12"><a href="21-targets.html#cb1204-12"></a></span>
-<span id="cb1204-13"><a href="21-targets.html#cb1204-13"></a><span class="co"># Définition du pipeline</span></span>
-<span id="cb1204-14"><a href="21-targets.html#cb1204-14"></a><span class="kw">tar_plan</span>(</span>
-<span id="cb1204-15"><a href="21-targets.html#cb1204-15"></a>    <span class="co"># Chargement du fichier CSV</span></span>
-<span id="cb1204-16"><a href="21-targets.html#cb1204-16"></a>    <span class="kw">tar_file</span>(csv_file, <span class="st">&quot;data/nat2020.csv&quot;</span>),</span>
-<span id="cb1204-17"><a href="21-targets.html#cb1204-17"></a>    <span class="dt">donnees_brutes =</span> <span class="kw">read_csv2</span>(csv_file),</span>
-<span id="cb1204-18"><a href="21-targets.html#cb1204-18"></a></span>
-<span id="cb1204-19"><a href="21-targets.html#cb1204-19"></a>    <span class="co"># Mise en forme des données</span></span>
-<span id="cb1204-20"><a href="21-targets.html#cb1204-20"></a>    <span class="dt">donnees =</span> donnees_brutes <span class="op">%&gt;%</span></span>
-<span id="cb1204-21"><a href="21-targets.html#cb1204-21"></a><span class="st">        </span><span class="kw">filter_data</span>() <span class="op">%&gt;%</span></span>
-<span id="cb1204-22"><a href="21-targets.html#cb1204-22"></a><span class="st">        </span><span class="kw">pivot_2019_2020</span>(),</span>
-<span id="cb1204-23"><a href="21-targets.html#cb1204-23"></a></span>
-<span id="cb1204-24"><a href="21-targets.html#cb1204-24"></a>    <span class="co"># Calcul indicateurs</span></span>
-<span id="cb1204-25"><a href="21-targets.html#cb1204-25"></a>    <span class="dt">donnees_evo =</span> donnees <span class="op">%&gt;%</span></span>
-<span id="cb1204-26"><a href="21-targets.html#cb1204-26"></a><span class="st">        </span><span class="kw">calcule_evo</span>(<span class="dt">min_n =</span> <span class="dv">1000</span>)</span>
-<span id="cb1204-27"><a href="21-targets.html#cb1204-27"></a></span>
-<span id="cb1204-28"><a href="21-targets.html#cb1204-28"></a>)</span></code></pre></div>
+<div class="sourceCode" id="cb1208"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1208-1"><a href="21-targets.html#cb1208-1"></a><span class="co"># Packages nécessaires pour ce script</span></span>
+<span id="cb1208-2"><a href="21-targets.html#cb1208-2"></a><span class="kw">library</span>(targets)</span>
+<span id="cb1208-3"><a href="21-targets.html#cb1208-3"></a><span class="kw">library</span>(tarchetypes)</span>
+<span id="cb1208-4"><a href="21-targets.html#cb1208-4"></a></span>
+<span id="cb1208-5"><a href="21-targets.html#cb1208-5"></a><span class="co"># Chargement des fonctions</span></span>
+<span id="cb1208-6"><a href="21-targets.html#cb1208-6"></a><span class="kw">source</span>(<span class="st">&quot;R/fonctions_recode.R&quot;</span>)</span>
+<span id="cb1208-7"><a href="21-targets.html#cb1208-7"></a><span class="kw">source</span>(<span class="st">&quot;R/fonctions_calculs.R&quot;</span>)</span>
+<span id="cb1208-8"><a href="21-targets.html#cb1208-8"></a></span>
+<span id="cb1208-9"><a href="21-targets.html#cb1208-9"></a><span class="co"># Options pour les différentes étapes</span></span>
+<span id="cb1208-10"><a href="21-targets.html#cb1208-10"></a><span class="kw">options</span>(<span class="dt">tidyverse.quiet =</span> <span class="ot">TRUE</span>)</span>
+<span id="cb1208-11"><a href="21-targets.html#cb1208-11"></a><span class="kw">tar_option_set</span>(<span class="dt">packages =</span> <span class="st">&quot;tidyverse&quot;</span>)</span>
+<span id="cb1208-12"><a href="21-targets.html#cb1208-12"></a></span>
+<span id="cb1208-13"><a href="21-targets.html#cb1208-13"></a><span class="co"># Définition du pipeline</span></span>
+<span id="cb1208-14"><a href="21-targets.html#cb1208-14"></a><span class="kw">tar_plan</span>(</span>
+<span id="cb1208-15"><a href="21-targets.html#cb1208-15"></a>    <span class="co"># Chargement du fichier CSV</span></span>
+<span id="cb1208-16"><a href="21-targets.html#cb1208-16"></a>    <span class="kw">tar_file</span>(csv_file, <span class="st">&quot;data/nat2020.csv&quot;</span>),</span>
+<span id="cb1208-17"><a href="21-targets.html#cb1208-17"></a>    <span class="dt">donnees_brutes =</span> <span class="kw">read_csv2</span>(csv_file),</span>
+<span id="cb1208-18"><a href="21-targets.html#cb1208-18"></a></span>
+<span id="cb1208-19"><a href="21-targets.html#cb1208-19"></a>    <span class="co"># Mise en forme des données</span></span>
+<span id="cb1208-20"><a href="21-targets.html#cb1208-20"></a>    <span class="dt">donnees =</span> donnees_brutes <span class="op">%&gt;%</span></span>
+<span id="cb1208-21"><a href="21-targets.html#cb1208-21"></a><span class="st">        </span><span class="kw">filter_data</span>() <span class="op">%&gt;%</span></span>
+<span id="cb1208-22"><a href="21-targets.html#cb1208-22"></a><span class="st">        </span><span class="kw">pivot_2019_2020</span>(),</span>
+<span id="cb1208-23"><a href="21-targets.html#cb1208-23"></a></span>
+<span id="cb1208-24"><a href="21-targets.html#cb1208-24"></a>    <span class="co"># Calcul indicateurs</span></span>
+<span id="cb1208-25"><a href="21-targets.html#cb1208-25"></a>    <span class="dt">donnees_evo =</span> donnees <span class="op">%&gt;%</span></span>
+<span id="cb1208-26"><a href="21-targets.html#cb1208-26"></a><span class="st">        </span><span class="kw">calcule_evo</span>(<span class="dt">min_n =</span> <span class="dv">1000</span>)</span>
+<span id="cb1208-27"><a href="21-targets.html#cb1208-27"></a></span>
+<span id="cb1208-28"><a href="21-targets.html#cb1208-28"></a>)</span></code></pre></div>
 <div class="rmdnote">
 <p>
 <code>targets</code> offre aussi la possibilité de définir notre pipeline directement dans un fichier RMarkdown, ce qui peut permettre notamment de mieux le documenter. Pour plus d’information on pourra se référer au chapitre <a href="https://books.ropensci.org/targets/markdown.html">Target Markdown</a> du manuel en ligne.
@@ -771,98 +778,98 @@ On notera que les cibles doivent toutes avoir des noms différents. Si on exécu
 <div id="exécution-du-pipeline" class="section level2">
 <h2><span class="header-section-number">21.2</span> Exécution du pipeline</h2>
 <p>Une fois notre pipeline défini, <code>targets</code> fournit des outils permettant de visualiser sa structure et son état, notamment la fonction <code>tar_visnetwork()</code>.</p>
-<div class="sourceCode" id="cb1205"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1205-1"><a href="21-targets.html#cb1205-1"></a><span class="kw">tar_visnetwork</span>()</span></code></pre></div>
+<div class="sourceCode" id="cb1209"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1209-1"><a href="21-targets.html#cb1209-1"></a><span class="kw">tar_visnetwork</span>()</span></code></pre></div>
 <div id="htmlwidget-ab473f9b51ec58faf600" style="width:672px;height:480px;" class="visNetwork html-widget"></div>
 <script type="application/json" data-for="htmlwidget-ab473f9b51ec58faf600">{"x":{"nodes":{"name":["csv_file","donnees","donnees_brutes","donnees_evo","filter_data","pivot_2019_2020","calcule_evo"],"type":["stem","stem","stem","stem","function","function","function"],"status":["outdated","outdated","outdated","outdated","outdated","outdated","outdated"],"seconds":[null,null,null,null,null,null,null],"bytes":[null,null,null,null,null,null,null],"branches":[null,null,null,null,null,null,null],"id":["csv_file","donnees","donnees_brutes","donnees_evo","filter_data","pivot_2019_2020","calcule_evo"],"label":["csv_file","donnees","donnees_brutes","donnees_evo","filter_data","pivot_2019_2020","calcule_evo"],"level":[1,3,2,4,1,1,1],"color":["#78B7C5","#78B7C5","#78B7C5","#78B7C5","#78B7C5","#78B7C5","#78B7C5"],"shape":["dot","dot","dot","dot","triangle","triangle","triangle"]},"edges":{"from":["csv_file","calcule_evo","donnees","donnees_brutes","filter_data","pivot_2019_2020"],"to":["donnees_brutes","donnees_evo","donnees_evo","donnees","donnees","donnees"],"arrows":["to","to","to","to","to","to"]},"nodesToDataframe":true,"edgesToDataframe":true,"options":{"width":"100%","height":"100%","nodes":{"shape":"dot","physics":false},"manipulation":{"enabled":false},"edges":{"smooth":{"type":"cubicBezier","forceDirection":"horizontal"}},"physics":{"stabilization":false},"layout":{"hierarchical":{"enabled":true,"direction":"LR"}}},"groups":null,"width":null,"height":null,"idselection":{"enabled":false,"style":"width: 150px; height: 26px","useLabels":true,"main":"Select by id"},"byselection":{"enabled":false,"style":"width: 150px; height: 26px","multiple":false,"hideColor":"rgba(200,200,200,0.5)","highlight":false},"main":{"text":"","style":"font-family:Georgia, Times New Roman, Times, serif;font-weight:bold;font-size:20px;text-align:center;"},"submain":null,"footer":null,"background":"rgba(0, 0, 0, 0)","highlight":{"enabled":true,"hoverNearest":false,"degree":{"from":1,"to":1},"algorithm":"hierarchical","hideColor":"rgba(200,200,200,0.5)","labelOnly":true},"collapse":{"enabled":true,"fit":false,"resetHighlight":true,"clusterOptions":null,"keepCoord":true,"labelSuffix":"(cluster)"},"legend":{"width":0.2,"useGroups":false,"position":"right","ncol":1,"stepX":100,"stepY":100,"zoom":true,"nodes":{"label":["Outdated","Stem","Function"],"color":["#78B7C5","#899DA4","#899DA4"],"shape":["dot","dot","triangle"]},"nodesToDataframe":true}},"evals":[],"jsHooks":[]}</script>
 <p>Les différentes cibles apparaissent sous forme de cercles, et les fonctions qui leur sont appliquées sous forme de triangles. Les flèches indiquent que <code>targets</code> a automatiquement créé un <em>réseau de dépendances</em> entre cibles et fonctions : ainsi la cible <code>donnees</code> dépend des fonctions <code>filter_data</code>, <code>pivot_2019_2020</code> et de la cible <code>donnees_brutes</code>, qui elle-même dépend de la cible <code>csv_file</code>.</p>
 <p>La couleur des différents éléments montrent que ceux-ci sont à l’état <em>outdated</em> : ils ne sont pas à jour.</p>
 <p>On va donc exécuter notre pipeline, en utilisant la fonction <code>tar_make()</code>.</p>
-<div class="sourceCode" id="cb1206"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1206-1"><a href="21-targets.html#cb1206-1"></a><span class="kw">tar_make</span>()</span>
-<span id="cb1206-2"><a href="21-targets.html#cb1206-2"></a><span class="co">#&gt; • start target csv_file</span></span>
-<span id="cb1206-3"><a href="21-targets.html#cb1206-3"></a><span class="co">#&gt; • built target csv_file</span></span>
-<span id="cb1206-4"><a href="21-targets.html#cb1206-4"></a><span class="co">#&gt; • start target donnees_brutes</span></span>
-<span id="cb1206-5"><a href="21-targets.html#cb1206-5"></a><span class="co">#&gt; ℹ Using &quot;&#39;,&#39;&quot; as decimal and &quot;&#39;.&#39;&quot; as grouping mark. Use `read_delim()` for more control.</span></span>
-<span id="cb1206-6"><a href="21-targets.html#cb1206-6"></a><span class="co">#&gt; Rows: 667364 Columns: 4</span></span>
-<span id="cb1206-7"><a href="21-targets.html#cb1206-7"></a><span class="co">#&gt; ── Column specification ────────────────────────────────────────────────────────</span></span>
-<span id="cb1206-8"><a href="21-targets.html#cb1206-8"></a><span class="co">#&gt; Delimiter: &quot;;&quot;</span></span>
-<span id="cb1206-9"><a href="21-targets.html#cb1206-9"></a><span class="co">#&gt; chr (2): preusuel, annais</span></span>
-<span id="cb1206-10"><a href="21-targets.html#cb1206-10"></a><span class="co">#&gt; dbl (2): sexe, nombre</span></span>
-<span id="cb1206-11"><a href="21-targets.html#cb1206-11"></a><span class="co">#&gt; </span></span>
-<span id="cb1206-12"><a href="21-targets.html#cb1206-12"></a><span class="co">#&gt; ℹ Use `spec()` to retrieve the full column specification for this data.</span></span>
-<span id="cb1206-13"><a href="21-targets.html#cb1206-13"></a><span class="co">#&gt; ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</span></span>
-<span id="cb1206-14"><a href="21-targets.html#cb1206-14"></a><span class="co">#&gt; • built target donnees_brutes</span></span>
-<span id="cb1206-15"><a href="21-targets.html#cb1206-15"></a><span class="co">#&gt; • start target donnees</span></span>
-<span id="cb1206-16"><a href="21-targets.html#cb1206-16"></a><span class="co">#&gt; • built target donnees</span></span>
-<span id="cb1206-17"><a href="21-targets.html#cb1206-17"></a><span class="co">#&gt; • start target donnees_evo</span></span>
-<span id="cb1206-18"><a href="21-targets.html#cb1206-18"></a><span class="co">#&gt; • built target donnees_evo</span></span>
-<span id="cb1206-19"><a href="21-targets.html#cb1206-19"></a><span class="co">#&gt; • end pipeline</span></span></code></pre></div>
+<div class="sourceCode" id="cb1210"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1210-1"><a href="21-targets.html#cb1210-1"></a><span class="kw">tar_make</span>()</span>
+<span id="cb1210-2"><a href="21-targets.html#cb1210-2"></a><span class="co">#&gt; • start target csv_file</span></span>
+<span id="cb1210-3"><a href="21-targets.html#cb1210-3"></a><span class="co">#&gt; • built target csv_file</span></span>
+<span id="cb1210-4"><a href="21-targets.html#cb1210-4"></a><span class="co">#&gt; • start target donnees_brutes</span></span>
+<span id="cb1210-5"><a href="21-targets.html#cb1210-5"></a><span class="co">#&gt; ℹ Using &quot;&#39;,&#39;&quot; as decimal and &quot;&#39;.&#39;&quot; as grouping mark. Use `read_delim()` for more control.</span></span>
+<span id="cb1210-6"><a href="21-targets.html#cb1210-6"></a><span class="co">#&gt; Rows: 667364 Columns: 4</span></span>
+<span id="cb1210-7"><a href="21-targets.html#cb1210-7"></a><span class="co">#&gt; ── Column specification ────────────────────────────────────────────────────────</span></span>
+<span id="cb1210-8"><a href="21-targets.html#cb1210-8"></a><span class="co">#&gt; Delimiter: &quot;;&quot;</span></span>
+<span id="cb1210-9"><a href="21-targets.html#cb1210-9"></a><span class="co">#&gt; chr (2): preusuel, annais</span></span>
+<span id="cb1210-10"><a href="21-targets.html#cb1210-10"></a><span class="co">#&gt; dbl (2): sexe, nombre</span></span>
+<span id="cb1210-11"><a href="21-targets.html#cb1210-11"></a><span class="co">#&gt; </span></span>
+<span id="cb1210-12"><a href="21-targets.html#cb1210-12"></a><span class="co">#&gt; ℹ Use `spec()` to retrieve the full column specification for this data.</span></span>
+<span id="cb1210-13"><a href="21-targets.html#cb1210-13"></a><span class="co">#&gt; ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</span></span>
+<span id="cb1210-14"><a href="21-targets.html#cb1210-14"></a><span class="co">#&gt; • built target donnees_brutes</span></span>
+<span id="cb1210-15"><a href="21-targets.html#cb1210-15"></a><span class="co">#&gt; • start target donnees</span></span>
+<span id="cb1210-16"><a href="21-targets.html#cb1210-16"></a><span class="co">#&gt; • built target donnees</span></span>
+<span id="cb1210-17"><a href="21-targets.html#cb1210-17"></a><span class="co">#&gt; • start target donnees_evo</span></span>
+<span id="cb1210-18"><a href="21-targets.html#cb1210-18"></a><span class="co">#&gt; • built target donnees_evo</span></span>
+<span id="cb1210-19"><a href="21-targets.html#cb1210-19"></a><span class="co">#&gt; • end pipeline</span></span></code></pre></div>
 <p>Lorsqu’on utilise <code>tar_make()</code>, <code>targets</code> lance une nouvelle session R (pour éviter tout problème ou conflit lié à l’état de notre session actuelle), charge les extensions définies via <code>tar_option_set()</code>, et exécute les cibles définies avec <code>tar_plan()</code>.</p>
 <p>On visualise le nouvel état de notre pipeline, et on voit que toutes les cibles sont passées à l’état <em>up to date</em>.</p>
-<div class="sourceCode" id="cb1207"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1207-1"><a href="21-targets.html#cb1207-1"></a><span class="kw">tar_visnetwork</span>()</span></code></pre></div>
+<div class="sourceCode" id="cb1211"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1211-1"><a href="21-targets.html#cb1211-1"></a><span class="kw">tar_visnetwork</span>()</span></code></pre></div>
 <div id="htmlwidget-08fcdacd6646b367ac6b" style="width:672px;height:480px;" class="visNetwork html-widget"></div>
-<script type="application/json" data-for="htmlwidget-08fcdacd6646b367ac6b">{"x":{"nodes":{"name":["csv_file","donnees","donnees_brutes","donnees_evo","filter_data","pivot_2019_2020","calcule_evo"],"type":["stem","stem","stem","stem","function","function","function"],"status":["uptodate","uptodate","uptodate","uptodate","uptodate","uptodate","uptodate"],"seconds":[1.041,0.177,0.324,0.011,null,null,null],"bytes":[12147948,98882,1406709,2451,null,null,null],"branches":[null,null,null,null,null,null,null],"id":["csv_file","donnees","donnees_brutes","donnees_evo","filter_data","pivot_2019_2020","calcule_evo"],"label":["csv_file","donnees","donnees_brutes","donnees_evo","filter_data","pivot_2019_2020","calcule_evo"],"level":[1,3,2,4,1,1,1],"color":["#354823","#354823","#354823","#354823","#354823","#354823","#354823"],"shape":["dot","dot","dot","dot","triangle","triangle","triangle"]},"edges":{"from":["csv_file","calcule_evo","donnees","donnees_brutes","filter_data","pivot_2019_2020"],"to":["donnees_brutes","donnees_evo","donnees_evo","donnees","donnees","donnees"],"arrows":["to","to","to","to","to","to"]},"nodesToDataframe":true,"edgesToDataframe":true,"options":{"width":"100%","height":"100%","nodes":{"shape":"dot","physics":false},"manipulation":{"enabled":false},"edges":{"smooth":{"type":"cubicBezier","forceDirection":"horizontal"}},"physics":{"stabilization":false},"layout":{"hierarchical":{"enabled":true,"direction":"LR"}}},"groups":null,"width":null,"height":null,"idselection":{"enabled":false,"style":"width: 150px; height: 26px","useLabels":true,"main":"Select by id"},"byselection":{"enabled":false,"style":"width: 150px; height: 26px","multiple":false,"hideColor":"rgba(200,200,200,0.5)","highlight":false},"main":{"text":"","style":"font-family:Georgia, Times New Roman, Times, serif;font-weight:bold;font-size:20px;text-align:center;"},"submain":null,"footer":null,"background":"rgba(0, 0, 0, 0)","highlight":{"enabled":true,"hoverNearest":false,"degree":{"from":1,"to":1},"algorithm":"hierarchical","hideColor":"rgba(200,200,200,0.5)","labelOnly":true},"collapse":{"enabled":true,"fit":false,"resetHighlight":true,"clusterOptions":null,"keepCoord":true,"labelSuffix":"(cluster)"},"legend":{"width":0.2,"useGroups":false,"position":"right","ncol":1,"stepX":100,"stepY":100,"zoom":true,"nodes":{"label":["Up to date","Stem","Function"],"color":["#354823","#899DA4","#899DA4"],"shape":["dot","dot","triangle"]},"nodesToDataframe":true}},"evals":[],"jsHooks":[]}</script>
+<script type="application/json" data-for="htmlwidget-08fcdacd6646b367ac6b">{"x":{"nodes":{"name":["csv_file","donnees","donnees_brutes","donnees_evo","filter_data","pivot_2019_2020","calcule_evo"],"type":["stem","stem","stem","stem","function","function","function"],"status":["uptodate","uptodate","uptodate","uptodate","uptodate","uptodate","uptodate"],"seconds":[1.011,0.161,0.302,0.011,null,null,null],"bytes":[12147948,98882,1406709,2451,null,null,null],"branches":[null,null,null,null,null,null,null],"id":["csv_file","donnees","donnees_brutes","donnees_evo","filter_data","pivot_2019_2020","calcule_evo"],"label":["csv_file","donnees","donnees_brutes","donnees_evo","filter_data","pivot_2019_2020","calcule_evo"],"level":[1,3,2,4,1,1,1],"color":["#354823","#354823","#354823","#354823","#354823","#354823","#354823"],"shape":["dot","dot","dot","dot","triangle","triangle","triangle"]},"edges":{"from":["csv_file","calcule_evo","donnees","donnees_brutes","filter_data","pivot_2019_2020"],"to":["donnees_brutes","donnees_evo","donnees_evo","donnees","donnees","donnees"],"arrows":["to","to","to","to","to","to"]},"nodesToDataframe":true,"edgesToDataframe":true,"options":{"width":"100%","height":"100%","nodes":{"shape":"dot","physics":false},"manipulation":{"enabled":false},"edges":{"smooth":{"type":"cubicBezier","forceDirection":"horizontal"}},"physics":{"stabilization":false},"layout":{"hierarchical":{"enabled":true,"direction":"LR"}}},"groups":null,"width":null,"height":null,"idselection":{"enabled":false,"style":"width: 150px; height: 26px","useLabels":true,"main":"Select by id"},"byselection":{"enabled":false,"style":"width: 150px; height: 26px","multiple":false,"hideColor":"rgba(200,200,200,0.5)","highlight":false},"main":{"text":"","style":"font-family:Georgia, Times New Roman, Times, serif;font-weight:bold;font-size:20px;text-align:center;"},"submain":null,"footer":null,"background":"rgba(0, 0, 0, 0)","highlight":{"enabled":true,"hoverNearest":false,"degree":{"from":1,"to":1},"algorithm":"hierarchical","hideColor":"rgba(200,200,200,0.5)","labelOnly":true},"collapse":{"enabled":true,"fit":false,"resetHighlight":true,"clusterOptions":null,"keepCoord":true,"labelSuffix":"(cluster)"},"legend":{"width":0.2,"useGroups":false,"position":"right","ncol":1,"stepX":100,"stepY":100,"zoom":true,"nodes":{"label":["Up to date","Stem","Function"],"color":["#354823","#899DA4","#899DA4"],"shape":["dot","dot","triangle"]},"nodesToDataframe":true}},"evals":[],"jsHooks":[]}</script>
 <p>À chaque étape, <code>targets</code> crée et stocke dans un cache chacun des objets correspondants aux différentes cibles (<code>donnees_brutes</code>, <code>donnees</code>, etc.). On peut charger à tout moment ces objets dans notre session avec la fonction <code>tar_load()</code><a href="#fn41" class="footnote-ref" id="fnref41"><sup>41</sup></a>.</p>
-<div class="sourceCode" id="cb1208"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1208-1"><a href="21-targets.html#cb1208-1"></a><span class="kw">tar_load</span>(donnees_evo)</span>
-<span id="cb1208-2"><a href="21-targets.html#cb1208-2"></a>donnees_evo</span>
-<span id="cb1208-3"><a href="21-targets.html#cb1208-3"></a><span class="co">#&gt; # A tibble: 128 × 6</span></span>
-<span id="cb1208-4"><a href="21-targets.html#cb1208-4"></a><span class="co">#&gt;     sexe preusuel  `2019` `2020`   evo `evo%`</span></span>
-<span id="cb1208-5"><a href="21-targets.html#cb1208-5"></a><span class="co">#&gt;    &lt;dbl&gt; &lt;chr&gt;      &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt;</span></span>
-<span id="cb1208-6"><a href="21-targets.html#cb1208-6"></a><span class="co">#&gt;  1     1 AARON       2443   2312  -131  -5.36</span></span>
-<span id="cb1208-7"><a href="21-targets.html#cb1208-7"></a><span class="co">#&gt;  2     1 ADAM        3670   3386  -284  -7.74</span></span>
-<span id="cb1208-8"><a href="21-targets.html#cb1208-8"></a><span class="co">#&gt;  3     1 ALEXANDRE   1154   1039  -115  -9.97</span></span>
-<span id="cb1208-9"><a href="21-targets.html#cb1208-9"></a><span class="co">#&gt;  4     1 AMIR        1588   1360  -228 -14.4 </span></span>
-<span id="cb1208-10"><a href="21-targets.html#cb1208-10"></a><span class="co">#&gt;  5     1 ANTOINE     1786   1455  -331 -18.5 </span></span>
-<span id="cb1208-11"><a href="21-targets.html#cb1208-11"></a><span class="co">#&gt;  6     1 ARTHUR      4008   3800  -208  -5.19</span></span>
-<span id="cb1208-12"><a href="21-targets.html#cb1208-12"></a><span class="co">#&gt;  7     1 AUGUSTIN    1546   1379  -167 -10.8 </span></span>
-<span id="cb1208-13"><a href="21-targets.html#cb1208-13"></a><span class="co">#&gt;  8     1 AXEL        1809   1683  -126  -6.97</span></span>
-<span id="cb1208-14"><a href="21-targets.html#cb1208-14"></a><span class="co">#&gt;  9     1 AYDEN       1524   1786   262  17.2 </span></span>
-<span id="cb1208-15"><a href="21-targets.html#cb1208-15"></a><span class="co">#&gt; 10     1 BAPTISTE    1403   1202  -201 -14.3 </span></span>
-<span id="cb1208-16"><a href="21-targets.html#cb1208-16"></a><span class="co">#&gt; # … with 118 more rows</span></span></code></pre></div>
+<div class="sourceCode" id="cb1212"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1212-1"><a href="21-targets.html#cb1212-1"></a><span class="kw">tar_load</span>(donnees_evo)</span>
+<span id="cb1212-2"><a href="21-targets.html#cb1212-2"></a>donnees_evo</span>
+<span id="cb1212-3"><a href="21-targets.html#cb1212-3"></a><span class="co">#&gt; # A tibble: 128 × 6</span></span>
+<span id="cb1212-4"><a href="21-targets.html#cb1212-4"></a><span class="co">#&gt;     sexe preusuel  `2019` `2020`   evo `evo%`</span></span>
+<span id="cb1212-5"><a href="21-targets.html#cb1212-5"></a><span class="co">#&gt;    &lt;dbl&gt; &lt;chr&gt;      &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt;</span></span>
+<span id="cb1212-6"><a href="21-targets.html#cb1212-6"></a><span class="co">#&gt;  1     1 AARON       2443   2312  -131  -5.36</span></span>
+<span id="cb1212-7"><a href="21-targets.html#cb1212-7"></a><span class="co">#&gt;  2     1 ADAM        3670   3386  -284  -7.74</span></span>
+<span id="cb1212-8"><a href="21-targets.html#cb1212-8"></a><span class="co">#&gt;  3     1 ALEXANDRE   1154   1039  -115  -9.97</span></span>
+<span id="cb1212-9"><a href="21-targets.html#cb1212-9"></a><span class="co">#&gt;  4     1 AMIR        1588   1360  -228 -14.4 </span></span>
+<span id="cb1212-10"><a href="21-targets.html#cb1212-10"></a><span class="co">#&gt;  5     1 ANTOINE     1786   1455  -331 -18.5 </span></span>
+<span id="cb1212-11"><a href="21-targets.html#cb1212-11"></a><span class="co">#&gt;  6     1 ARTHUR      4008   3800  -208  -5.19</span></span>
+<span id="cb1212-12"><a href="21-targets.html#cb1212-12"></a><span class="co">#&gt;  7     1 AUGUSTIN    1546   1379  -167 -10.8 </span></span>
+<span id="cb1212-13"><a href="21-targets.html#cb1212-13"></a><span class="co">#&gt;  8     1 AXEL        1809   1683  -126  -6.97</span></span>
+<span id="cb1212-14"><a href="21-targets.html#cb1212-14"></a><span class="co">#&gt;  9     1 AYDEN       1524   1786   262  17.2 </span></span>
+<span id="cb1212-15"><a href="21-targets.html#cb1212-15"></a><span class="co">#&gt; 10     1 BAPTISTE    1403   1202  -201 -14.3 </span></span>
+<span id="cb1212-16"><a href="21-targets.html#cb1212-16"></a><span class="co">#&gt; # … with 118 more rows</span></span></code></pre></div>
 <p>On peut aussi utiliser <code>tar_read()</code>, qui lit et retourne les résultats d’une des cibles, permettant de les stocker dans un nouvel objet.</p>
-<div class="sourceCode" id="cb1209"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1209-1"><a href="21-targets.html#cb1209-1"></a>evo &lt;-<span class="st"> </span><span class="kw">tar_read</span>(donnees_evo)</span></code></pre></div>
+<div class="sourceCode" id="cb1213"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1213-1"><a href="21-targets.html#cb1213-1"></a>evo &lt;-<span class="st"> </span><span class="kw">tar_read</span>(donnees_evo)</span></code></pre></div>
 </div>
 <div id="modification-du-pipeline" class="section level2">
 <h2><span class="header-section-number">21.3</span> Modification du pipeline</h2>
 <p>Essayons de lancer à nouveau notre pipeline :</p>
-<div class="sourceCode" id="cb1210"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1210-1"><a href="21-targets.html#cb1210-1"></a><span class="kw">tar_make</span>()</span>
-<span id="cb1210-2"><a href="21-targets.html#cb1210-2"></a><span class="co">#&gt; ✔ skip target csv_file</span></span>
-<span id="cb1210-3"><a href="21-targets.html#cb1210-3"></a><span class="co">#&gt; ✔ skip target donnees_brutes</span></span>
-<span id="cb1210-4"><a href="21-targets.html#cb1210-4"></a><span class="co">#&gt; ✔ skip target donnees</span></span>
-<span id="cb1210-5"><a href="21-targets.html#cb1210-5"></a><span class="co">#&gt; ✔ skip target donnees_evo</span></span>
-<span id="cb1210-6"><a href="21-targets.html#cb1210-6"></a><span class="co">#&gt; ✔ skip pipeline</span></span></code></pre></div>
-<p>On voit que toutes les cibles ont été “skippées” : quand on lance <code>tar_make()</code>, seules les cibles qui sont à l’état <em>outdated</em> sont recalculées. Les résultats des autres sont conservés tels quels.</p>
-<p>On va maintenant modifier légèrement notre fichier <code>R/fonctions_calculs.R</code> : plutôt que d’arrondir les évolutions en pourcentages à deux décimale, on n’en conserve plus qu’une.</p>
-<div class="sourceCode" id="cb1211"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1211-1"><a href="21-targets.html#cb1211-1"></a><span class="co"># Calcul des indicateurs d&#39;évolution en effectifs et pourcentages</span></span>
-<span id="cb1211-2"><a href="21-targets.html#cb1211-2"></a><span class="co"># pour les prénoms dont la fréquence est &gt; à min_n</span></span>
-<span id="cb1211-3"><a href="21-targets.html#cb1211-3"></a>calcule_evo &lt;-<span class="st"> </span><span class="cf">function</span>(df, <span class="dt">min_n =</span> <span class="dv">200</span>) {</span>
-<span id="cb1211-4"><a href="21-targets.html#cb1211-4"></a>    df <span class="op">%&gt;%</span></span>
-<span id="cb1211-5"><a href="21-targets.html#cb1211-5"></a><span class="st">        </span><span class="kw">filter</span>(<span class="st">`</span><span class="dt">2020</span><span class="st">`</span> <span class="op">&gt;</span><span class="st"> </span>min_n <span class="op">|</span><span class="st"> `</span><span class="dt">2019</span><span class="st">`</span> <span class="op">&gt;</span><span class="st"> </span>min_n) <span class="op">%&gt;%</span></span>
-<span id="cb1211-6"><a href="21-targets.html#cb1211-6"></a><span class="st">        </span><span class="kw">mutate</span>(</span>
-<span id="cb1211-7"><a href="21-targets.html#cb1211-7"></a>            <span class="dt">evo =</span> (<span class="st">`</span><span class="dt">2020</span><span class="st">`</span> <span class="op">-</span><span class="st"> `</span><span class="dt">2019</span><span class="st">`</span>),</span>
-<span id="cb1211-8"><a href="21-targets.html#cb1211-8"></a>            <span class="st">`</span><span class="dt">evo%</span><span class="st">`</span> =<span class="st"> </span><span class="kw">round</span>(evo <span class="op">/</span><span class="st"> `</span><span class="dt">2019</span><span class="st">`</span> <span class="op">*</span><span class="st"> </span><span class="dv">100</span>, <span class="dv">1</span>)</span>
-<span id="cb1211-9"><a href="21-targets.html#cb1211-9"></a>        ) <span class="op">%&gt;%</span></span>
-<span id="cb1211-10"><a href="21-targets.html#cb1211-10"></a><span class="st">        </span><span class="kw">drop_na</span>(evo)</span>
-<span id="cb1211-11"><a href="21-targets.html#cb1211-11"></a>}</span></code></pre></div>
-<p>On visualise à nouveau l’état de notre pipeline :</p>
-<div class="sourceCode" id="cb1212"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1212-1"><a href="21-targets.html#cb1212-1"></a><span class="kw">tar_visnetwork</span>()</span></code></pre></div>
-<div id="htmlwidget-f026c2cc6248a21382df" style="width:672px;height:480px;" class="visNetwork html-widget"></div>
-<script type="application/json" data-for="htmlwidget-f026c2cc6248a21382df">{"x":{"nodes":{"name":["csv_file","donnees","donnees_brutes","donnees_evo","filter_data","pivot_2019_2020","calcule_evo"],"type":["stem","stem","stem","stem","function","function","function"],"status":["uptodate","uptodate","uptodate","outdated","uptodate","uptodate","outdated"],"seconds":[1.041,0.177,0.324,0.011,null,null,null],"bytes":[12147948,98882,1406709,2451,null,null,null],"branches":[null,null,null,null,null,null,null],"id":["csv_file","donnees","donnees_brutes","donnees_evo","filter_data","pivot_2019_2020","calcule_evo"],"label":["csv_file","donnees","donnees_brutes","donnees_evo","filter_data","pivot_2019_2020","calcule_evo"],"level":[1,3,2,4,1,1,1],"color":["#354823","#354823","#354823","#78B7C5","#354823","#354823","#78B7C5"],"shape":["dot","dot","dot","dot","triangle","triangle","triangle"]},"edges":{"from":["csv_file","calcule_evo","donnees","donnees_brutes","filter_data","pivot_2019_2020"],"to":["donnees_brutes","donnees_evo","donnees_evo","donnees","donnees","donnees"],"arrows":["to","to","to","to","to","to"]},"nodesToDataframe":true,"edgesToDataframe":true,"options":{"width":"100%","height":"100%","nodes":{"shape":"dot","physics":false},"manipulation":{"enabled":false},"edges":{"smooth":{"type":"cubicBezier","forceDirection":"horizontal"}},"physics":{"stabilization":false},"layout":{"hierarchical":{"enabled":true,"direction":"LR"}}},"groups":null,"width":null,"height":null,"idselection":{"enabled":false,"style":"width: 150px; height: 26px","useLabels":true,"main":"Select by id"},"byselection":{"enabled":false,"style":"width: 150px; height: 26px","multiple":false,"hideColor":"rgba(200,200,200,0.5)","highlight":false},"main":{"text":"","style":"font-family:Georgia, Times New Roman, Times, serif;font-weight:bold;font-size:20px;text-align:center;"},"submain":null,"footer":null,"background":"rgba(0, 0, 0, 0)","highlight":{"enabled":true,"hoverNearest":false,"degree":{"from":1,"to":1},"algorithm":"hierarchical","hideColor":"rgba(200,200,200,0.5)","labelOnly":true},"collapse":{"enabled":true,"fit":false,"resetHighlight":true,"clusterOptions":null,"keepCoord":true,"labelSuffix":"(cluster)"},"legend":{"width":0.2,"useGroups":false,"position":"right","ncol":1,"stepX":100,"stepY":100,"zoom":true,"nodes":{"label":["Up to date","Outdated","Stem","Function"],"color":["#354823","#78B7C5","#899DA4","#899DA4"],"shape":["dot","dot","dot","triangle"]},"nodesToDataframe":true}},"evals":[],"jsHooks":[]}</script>
-<p>Grâce à sa gestion interne des dépendances entre les cibles, <code>targets</code> a vu que la fonction <code>calcule_evo</code> a été modifiée (elle est passée en statut <em>outdated</em>), et comme la cible <code>donnees_evo</code> dépend de cette fonction, celle-ci a également été placée en <em>outdated</em>. On peut obtenir directement une liste des cibles qui ne sont plus à jour à l’aide de la fonction <code>tar_outdated()</code> :</p>
-<div class="sourceCode" id="cb1213"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1213-1"><a href="21-targets.html#cb1213-1"></a><span class="kw">tar_outdated</span>()</span>
-<span id="cb1213-2"><a href="21-targets.html#cb1213-2"></a><span class="co">#&gt; [1] &quot;donnees_evo&quot;</span></span></code></pre></div>
-<p>On relance notre pipeline :</p>
 <div class="sourceCode" id="cb1214"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1214-1"><a href="21-targets.html#cb1214-1"></a><span class="kw">tar_make</span>()</span>
 <span id="cb1214-2"><a href="21-targets.html#cb1214-2"></a><span class="co">#&gt; ✔ skip target csv_file</span></span>
 <span id="cb1214-3"><a href="21-targets.html#cb1214-3"></a><span class="co">#&gt; ✔ skip target donnees_brutes</span></span>
 <span id="cb1214-4"><a href="21-targets.html#cb1214-4"></a><span class="co">#&gt; ✔ skip target donnees</span></span>
-<span id="cb1214-5"><a href="21-targets.html#cb1214-5"></a><span class="co">#&gt; • start target donnees_evo</span></span>
-<span id="cb1214-6"><a href="21-targets.html#cb1214-6"></a><span class="co">#&gt; • built target donnees_evo</span></span>
-<span id="cb1214-7"><a href="21-targets.html#cb1214-7"></a><span class="co">#&gt; • end pipeline</span></span></code></pre></div>
+<span id="cb1214-5"><a href="21-targets.html#cb1214-5"></a><span class="co">#&gt; ✔ skip target donnees_evo</span></span>
+<span id="cb1214-6"><a href="21-targets.html#cb1214-6"></a><span class="co">#&gt; ✔ skip pipeline</span></span></code></pre></div>
+<p>On voit que toutes les cibles ont été “skippées” : quand on lance <code>tar_make()</code>, seules les cibles qui sont à l’état <em>outdated</em> sont recalculées. Les résultats des autres sont conservés tels quels.</p>
+<p>On va maintenant modifier légèrement notre fichier <code>R/fonctions_calculs.R</code> : plutôt que d’arrondir les évolutions en pourcentages à deux décimale, on n’en conserve plus qu’une.</p>
+<div class="sourceCode" id="cb1215"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1215-1"><a href="21-targets.html#cb1215-1"></a><span class="co"># Calcul des indicateurs d&#39;évolution en effectifs et pourcentages</span></span>
+<span id="cb1215-2"><a href="21-targets.html#cb1215-2"></a><span class="co"># pour les prénoms dont la fréquence est &gt; à min_n</span></span>
+<span id="cb1215-3"><a href="21-targets.html#cb1215-3"></a>calcule_evo &lt;-<span class="st"> </span><span class="cf">function</span>(df, <span class="dt">min_n =</span> <span class="dv">200</span>) {</span>
+<span id="cb1215-4"><a href="21-targets.html#cb1215-4"></a>    df <span class="op">%&gt;%</span></span>
+<span id="cb1215-5"><a href="21-targets.html#cb1215-5"></a><span class="st">        </span><span class="kw">filter</span>(<span class="st">`</span><span class="dt">2020</span><span class="st">`</span> <span class="op">&gt;</span><span class="st"> </span>min_n <span class="op">|</span><span class="st"> `</span><span class="dt">2019</span><span class="st">`</span> <span class="op">&gt;</span><span class="st"> </span>min_n) <span class="op">%&gt;%</span></span>
+<span id="cb1215-6"><a href="21-targets.html#cb1215-6"></a><span class="st">        </span><span class="kw">mutate</span>(</span>
+<span id="cb1215-7"><a href="21-targets.html#cb1215-7"></a>            <span class="dt">evo =</span> (<span class="st">`</span><span class="dt">2020</span><span class="st">`</span> <span class="op">-</span><span class="st"> `</span><span class="dt">2019</span><span class="st">`</span>),</span>
+<span id="cb1215-8"><a href="21-targets.html#cb1215-8"></a>            <span class="st">`</span><span class="dt">evo%</span><span class="st">`</span> =<span class="st"> </span><span class="kw">round</span>(evo <span class="op">/</span><span class="st"> `</span><span class="dt">2019</span><span class="st">`</span> <span class="op">*</span><span class="st"> </span><span class="dv">100</span>, <span class="dv">1</span>)</span>
+<span id="cb1215-9"><a href="21-targets.html#cb1215-9"></a>        ) <span class="op">%&gt;%</span></span>
+<span id="cb1215-10"><a href="21-targets.html#cb1215-10"></a><span class="st">        </span><span class="kw">drop_na</span>(evo)</span>
+<span id="cb1215-11"><a href="21-targets.html#cb1215-11"></a>}</span></code></pre></div>
+<p>On visualise à nouveau l’état de notre pipeline :</p>
+<div class="sourceCode" id="cb1216"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1216-1"><a href="21-targets.html#cb1216-1"></a><span class="kw">tar_visnetwork</span>()</span></code></pre></div>
+<div id="htmlwidget-f026c2cc6248a21382df" style="width:672px;height:480px;" class="visNetwork html-widget"></div>
+<script type="application/json" data-for="htmlwidget-f026c2cc6248a21382df">{"x":{"nodes":{"name":["csv_file","donnees","donnees_brutes","donnees_evo","filter_data","pivot_2019_2020","calcule_evo"],"type":["stem","stem","stem","stem","function","function","function"],"status":["uptodate","uptodate","uptodate","outdated","uptodate","uptodate","outdated"],"seconds":[1.011,0.161,0.302,0.011,null,null,null],"bytes":[12147948,98882,1406709,2451,null,null,null],"branches":[null,null,null,null,null,null,null],"id":["csv_file","donnees","donnees_brutes","donnees_evo","filter_data","pivot_2019_2020","calcule_evo"],"label":["csv_file","donnees","donnees_brutes","donnees_evo","filter_data","pivot_2019_2020","calcule_evo"],"level":[1,3,2,4,1,1,1],"color":["#354823","#354823","#354823","#78B7C5","#354823","#354823","#78B7C5"],"shape":["dot","dot","dot","dot","triangle","triangle","triangle"]},"edges":{"from":["csv_file","calcule_evo","donnees","donnees_brutes","filter_data","pivot_2019_2020"],"to":["donnees_brutes","donnees_evo","donnees_evo","donnees","donnees","donnees"],"arrows":["to","to","to","to","to","to"]},"nodesToDataframe":true,"edgesToDataframe":true,"options":{"width":"100%","height":"100%","nodes":{"shape":"dot","physics":false},"manipulation":{"enabled":false},"edges":{"smooth":{"type":"cubicBezier","forceDirection":"horizontal"}},"physics":{"stabilization":false},"layout":{"hierarchical":{"enabled":true,"direction":"LR"}}},"groups":null,"width":null,"height":null,"idselection":{"enabled":false,"style":"width: 150px; height: 26px","useLabels":true,"main":"Select by id"},"byselection":{"enabled":false,"style":"width: 150px; height: 26px","multiple":false,"hideColor":"rgba(200,200,200,0.5)","highlight":false},"main":{"text":"","style":"font-family:Georgia, Times New Roman, Times, serif;font-weight:bold;font-size:20px;text-align:center;"},"submain":null,"footer":null,"background":"rgba(0, 0, 0, 0)","highlight":{"enabled":true,"hoverNearest":false,"degree":{"from":1,"to":1},"algorithm":"hierarchical","hideColor":"rgba(200,200,200,0.5)","labelOnly":true},"collapse":{"enabled":true,"fit":false,"resetHighlight":true,"clusterOptions":null,"keepCoord":true,"labelSuffix":"(cluster)"},"legend":{"width":0.2,"useGroups":false,"position":"right","ncol":1,"stepX":100,"stepY":100,"zoom":true,"nodes":{"label":["Up to date","Outdated","Stem","Function"],"color":["#354823","#78B7C5","#899DA4","#899DA4"],"shape":["dot","dot","dot","triangle"]},"nodesToDataframe":true}},"evals":[],"jsHooks":[]}</script>
+<p>Grâce à sa gestion interne des dépendances entre les cibles, <code>targets</code> a vu que la fonction <code>calcule_evo</code> a été modifiée (elle est passée en statut <em>outdated</em>), et comme la cible <code>donnees_evo</code> dépend de cette fonction, celle-ci a également été placée en <em>outdated</em>. On peut obtenir directement une liste des cibles qui ne sont plus à jour à l’aide de la fonction <code>tar_outdated()</code> :</p>
+<div class="sourceCode" id="cb1217"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1217-1"><a href="21-targets.html#cb1217-1"></a><span class="kw">tar_outdated</span>()</span>
+<span id="cb1217-2"><a href="21-targets.html#cb1217-2"></a><span class="co">#&gt; [1] &quot;donnees_evo&quot;</span></span></code></pre></div>
+<p>On relance notre pipeline :</p>
+<div class="sourceCode" id="cb1218"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1218-1"><a href="21-targets.html#cb1218-1"></a><span class="kw">tar_make</span>()</span>
+<span id="cb1218-2"><a href="21-targets.html#cb1218-2"></a><span class="co">#&gt; ✔ skip target csv_file</span></span>
+<span id="cb1218-3"><a href="21-targets.html#cb1218-3"></a><span class="co">#&gt; ✔ skip target donnees_brutes</span></span>
+<span id="cb1218-4"><a href="21-targets.html#cb1218-4"></a><span class="co">#&gt; ✔ skip target donnees</span></span>
+<span id="cb1218-5"><a href="21-targets.html#cb1218-5"></a><span class="co">#&gt; • start target donnees_evo</span></span>
+<span id="cb1218-6"><a href="21-targets.html#cb1218-6"></a><span class="co">#&gt; • built target donnees_evo</span></span>
+<span id="cb1218-7"><a href="21-targets.html#cb1218-7"></a><span class="co">#&gt; • end pipeline</span></span></code></pre></div>
 <p>On voit que les cibles <code>csv_file</code>, <code>donnees_brutes</code> et <code>donnees</code> ont été “skippées” : <code>targets</code> est allé prendre directement leurs valeurs déjà stockées en cache. Par contre <code>donnees_evo</code> a bien été recalculée.</p>
 <p>On peut vérifier que notre pipeline est désormais entièrement à jour :</p>
-<div class="sourceCode" id="cb1215"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1215-1"><a href="21-targets.html#cb1215-1"></a><span class="kw">tar_visnetwork</span>()</span></code></pre></div>
+<div class="sourceCode" id="cb1219"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1219-1"><a href="21-targets.html#cb1219-1"></a><span class="kw">tar_visnetwork</span>()</span></code></pre></div>
 <div id="htmlwidget-17c4283745739102c822" style="width:672px;height:480px;" class="visNetwork html-widget"></div>
-<script type="application/json" data-for="htmlwidget-17c4283745739102c822">{"x":{"nodes":{"name":["csv_file","donnees","donnees_brutes","donnees_evo","filter_data","pivot_2019_2020","calcule_evo"],"type":["stem","stem","stem","stem","function","function","function"],"status":["uptodate","uptodate","uptodate","uptodate","uptodate","uptodate","uptodate"],"seconds":[1.041,0.177,0.324,1.054,null,null,null],"bytes":[12147948,98882,1406709,2297,null,null,null],"branches":[null,null,null,null,null,null,null],"id":["csv_file","donnees","donnees_brutes","donnees_evo","filter_data","pivot_2019_2020","calcule_evo"],"label":["csv_file","donnees","donnees_brutes","donnees_evo","filter_data","pivot_2019_2020","calcule_evo"],"level":[1,3,2,4,1,1,1],"color":["#354823","#354823","#354823","#354823","#354823","#354823","#354823"],"shape":["dot","dot","dot","dot","triangle","triangle","triangle"]},"edges":{"from":["csv_file","calcule_evo","donnees","donnees_brutes","filter_data","pivot_2019_2020"],"to":["donnees_brutes","donnees_evo","donnees_evo","donnees","donnees","donnees"],"arrows":["to","to","to","to","to","to"]},"nodesToDataframe":true,"edgesToDataframe":true,"options":{"width":"100%","height":"100%","nodes":{"shape":"dot","physics":false},"manipulation":{"enabled":false},"edges":{"smooth":{"type":"cubicBezier","forceDirection":"horizontal"}},"physics":{"stabilization":false},"layout":{"hierarchical":{"enabled":true,"direction":"LR"}}},"groups":null,"width":null,"height":null,"idselection":{"enabled":false,"style":"width: 150px; height: 26px","useLabels":true,"main":"Select by id"},"byselection":{"enabled":false,"style":"width: 150px; height: 26px","multiple":false,"hideColor":"rgba(200,200,200,0.5)","highlight":false},"main":{"text":"","style":"font-family:Georgia, Times New Roman, Times, serif;font-weight:bold;font-size:20px;text-align:center;"},"submain":null,"footer":null,"background":"rgba(0, 0, 0, 0)","highlight":{"enabled":true,"hoverNearest":false,"degree":{"from":1,"to":1},"algorithm":"hierarchical","hideColor":"rgba(200,200,200,0.5)","labelOnly":true},"collapse":{"enabled":true,"fit":false,"resetHighlight":true,"clusterOptions":null,"keepCoord":true,"labelSuffix":"(cluster)"},"legend":{"width":0.2,"useGroups":false,"position":"right","ncol":1,"stepX":100,"stepY":100,"zoom":true,"nodes":{"label":["Up to date","Stem","Function"],"color":["#354823","#899DA4","#899DA4"],"shape":["dot","dot","triangle"]},"nodesToDataframe":true}},"evals":[],"jsHooks":[]}</script>
+<script type="application/json" data-for="htmlwidget-17c4283745739102c822">{"x":{"nodes":{"name":["csv_file","donnees","donnees_brutes","donnees_evo","filter_data","pivot_2019_2020","calcule_evo"],"type":["stem","stem","stem","stem","function","function","function"],"status":["uptodate","uptodate","uptodate","uptodate","uptodate","uptodate","uptodate"],"seconds":[1.011,0.161,0.302,1.021,null,null,null],"bytes":[12147948,98882,1406709,2297,null,null,null],"branches":[null,null,null,null,null,null,null],"id":["csv_file","donnees","donnees_brutes","donnees_evo","filter_data","pivot_2019_2020","calcule_evo"],"label":["csv_file","donnees","donnees_brutes","donnees_evo","filter_data","pivot_2019_2020","calcule_evo"],"level":[1,3,2,4,1,1,1],"color":["#354823","#354823","#354823","#354823","#354823","#354823","#354823"],"shape":["dot","dot","dot","dot","triangle","triangle","triangle"]},"edges":{"from":["csv_file","calcule_evo","donnees","donnees_brutes","filter_data","pivot_2019_2020"],"to":["donnees_brutes","donnees_evo","donnees_evo","donnees","donnees","donnees"],"arrows":["to","to","to","to","to","to"]},"nodesToDataframe":true,"edgesToDataframe":true,"options":{"width":"100%","height":"100%","nodes":{"shape":"dot","physics":false},"manipulation":{"enabled":false},"edges":{"smooth":{"type":"cubicBezier","forceDirection":"horizontal"}},"physics":{"stabilization":false},"layout":{"hierarchical":{"enabled":true,"direction":"LR"}}},"groups":null,"width":null,"height":null,"idselection":{"enabled":false,"style":"width: 150px; height: 26px","useLabels":true,"main":"Select by id"},"byselection":{"enabled":false,"style":"width: 150px; height: 26px","multiple":false,"hideColor":"rgba(200,200,200,0.5)","highlight":false},"main":{"text":"","style":"font-family:Georgia, Times New Roman, Times, serif;font-weight:bold;font-size:20px;text-align:center;"},"submain":null,"footer":null,"background":"rgba(0, 0, 0, 0)","highlight":{"enabled":true,"hoverNearest":false,"degree":{"from":1,"to":1},"algorithm":"hierarchical","hideColor":"rgba(200,200,200,0.5)","labelOnly":true},"collapse":{"enabled":true,"fit":false,"resetHighlight":true,"clusterOptions":null,"keepCoord":true,"labelSuffix":"(cluster)"},"legend":{"width":0.2,"useGroups":false,"position":"right","ncol":1,"stepX":100,"stepY":100,"zoom":true,"nodes":{"label":["Up to date","Stem","Function"],"color":["#354823","#899DA4","#899DA4"],"shape":["dot","dot","triangle"]},"nodesToDataframe":true}},"evals":[],"jsHooks":[]}</script>
 <div class="rmdnote">
 <p>
 À noter que <code>targets</code> gère aussi les modifications des fichiers externes. Ainsi, si on modifie le contenu de <code>nat2020.csv</code>, la cible <code>csv_file</code> passerait en <em>outdated</em>, tout comme l’ensemble des autres cibles puisqu’elles dépendent directement ou indirectement de celle-ci. Dans ce cas, un <code>tar_make()</code> aurait pour effet de recalculer l’intégralité du pipeline.
@@ -882,7 +889,7 @@ reports/
 _targets.R</code></pre>
 <p>Quand on utilise un document RMarkdown dans un pipeline, on doit accéder aux données en utilisant les fonctions <code>tar_read()</code> ou <code>tar_load()</code> : ceci permet de s’assurer qu’on récupère les données “à jour”, et cela permet aussi à <code>targets</code> de déterminer un lien de dépendance entre le document et les données.</p>
 <p>Comme on souhaite utiliser les données de <code>donnees_evo</code>, on devra donc utiliser quelque chose comme :</p>
-<div class="sourceCode" id="cb1217"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1217-1"><a href="21-targets.html#cb1217-1"></a>d &lt;-<span class="st"> </span><span class="kw">tar_read</span>(donnees_evo)</span></code></pre></div>
+<div class="sourceCode" id="cb1221"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1221-1"><a href="21-targets.html#cb1221-1"></a>d &lt;-<span class="st"> </span><span class="kw">tar_read</span>(donnees_evo)</span></code></pre></div>
 <p>Au final, le contenu de notre fichier RMarkdown est le suivant :</p>
 <pre><code>---
 title: &quot;Évolutions des prénoms 2019-2020&quot;
@@ -914,50 +921,50 @@ d %&gt;%
     head(10)
 ```</code></pre>
 <p>Pour ajouter ce rapport à notre pipeline, on crée une nouvelle cible dans le <code>tar_plan()</code> de <code>_targets.R</code>. Comme il s’agit d’un document RMarkdown, on utilise la fonction <code>tar_render()</code>.</p>
-<div class="sourceCode" id="cb1219"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1219-1"><a href="21-targets.html#cb1219-1"></a><span class="co"># Packages nécessaires pour ce script</span></span>
-<span id="cb1219-2"><a href="21-targets.html#cb1219-2"></a><span class="kw">library</span>(targets)</span>
-<span id="cb1219-3"><a href="21-targets.html#cb1219-3"></a><span class="kw">library</span>(tarchetypes)</span>
-<span id="cb1219-4"><a href="21-targets.html#cb1219-4"></a></span>
-<span id="cb1219-5"><a href="21-targets.html#cb1219-5"></a><span class="co"># Chargement des fonctions</span></span>
-<span id="cb1219-6"><a href="21-targets.html#cb1219-6"></a><span class="kw">source</span>(<span class="st">&quot;R/fonctions_recode.R&quot;</span>)</span>
-<span id="cb1219-7"><a href="21-targets.html#cb1219-7"></a><span class="kw">source</span>(<span class="st">&quot;R/fonctions_calculs.R&quot;</span>)</span>
-<span id="cb1219-8"><a href="21-targets.html#cb1219-8"></a></span>
-<span id="cb1219-9"><a href="21-targets.html#cb1219-9"></a><span class="co"># Options pour les différentes étapes</span></span>
-<span id="cb1219-10"><a href="21-targets.html#cb1219-10"></a><span class="kw">options</span>(<span class="dt">tidyverse.quiet =</span> <span class="ot">TRUE</span>)</span>
-<span id="cb1219-11"><a href="21-targets.html#cb1219-11"></a><span class="kw">tar_option_set</span>(<span class="dt">packages =</span> <span class="st">&quot;tidyverse&quot;</span>)</span>
-<span id="cb1219-12"><a href="21-targets.html#cb1219-12"></a></span>
-<span id="cb1219-13"><a href="21-targets.html#cb1219-13"></a><span class="co"># Définition du pipeline</span></span>
-<span id="cb1219-14"><a href="21-targets.html#cb1219-14"></a><span class="kw">tar_plan</span>(</span>
-<span id="cb1219-15"><a href="21-targets.html#cb1219-15"></a>    <span class="co"># Chargement du fichier CSV</span></span>
-<span id="cb1219-16"><a href="21-targets.html#cb1219-16"></a>    <span class="kw">tar_file</span>(csv_file, <span class="st">&quot;data/nat2020.csv&quot;</span>),</span>
-<span id="cb1219-17"><a href="21-targets.html#cb1219-17"></a>    <span class="dt">donnees_brutes =</span> <span class="kw">read_csv2</span>(csv_file),</span>
-<span id="cb1219-18"><a href="21-targets.html#cb1219-18"></a></span>
-<span id="cb1219-19"><a href="21-targets.html#cb1219-19"></a>    <span class="co"># Mise en forme des données</span></span>
-<span id="cb1219-20"><a href="21-targets.html#cb1219-20"></a>    <span class="dt">donnees =</span> donnees_brutes <span class="op">%&gt;%</span></span>
-<span id="cb1219-21"><a href="21-targets.html#cb1219-21"></a><span class="st">        </span><span class="kw">filter_data</span>() <span class="op">%&gt;%</span></span>
-<span id="cb1219-22"><a href="21-targets.html#cb1219-22"></a><span class="st">        </span><span class="kw">pivot_2019_2020</span>(),</span>
-<span id="cb1219-23"><a href="21-targets.html#cb1219-23"></a></span>
-<span id="cb1219-24"><a href="21-targets.html#cb1219-24"></a>    <span class="co"># Calcul indicateurs</span></span>
-<span id="cb1219-25"><a href="21-targets.html#cb1219-25"></a>    <span class="dt">donnees_evo =</span> donnees <span class="op">%&gt;%</span></span>
-<span id="cb1219-26"><a href="21-targets.html#cb1219-26"></a><span class="st">        </span><span class="kw">calcule_evo</span>(<span class="dt">min_n =</span> <span class="dv">1000</span>),</span>
-<span id="cb1219-27"><a href="21-targets.html#cb1219-27"></a></span>
-<span id="cb1219-28"><a href="21-targets.html#cb1219-28"></a>    <span class="co"># Génération rapport</span></span>
-<span id="cb1219-29"><a href="21-targets.html#cb1219-29"></a>    <span class="kw">tar_render</span>(report_evo, <span class="st">&quot;reports/evolution.Rmd&quot;</span>)</span>
-<span id="cb1219-30"><a href="21-targets.html#cb1219-30"></a>)</span></code></pre></div>
+<div class="sourceCode" id="cb1223"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1223-1"><a href="21-targets.html#cb1223-1"></a><span class="co"># Packages nécessaires pour ce script</span></span>
+<span id="cb1223-2"><a href="21-targets.html#cb1223-2"></a><span class="kw">library</span>(targets)</span>
+<span id="cb1223-3"><a href="21-targets.html#cb1223-3"></a><span class="kw">library</span>(tarchetypes)</span>
+<span id="cb1223-4"><a href="21-targets.html#cb1223-4"></a></span>
+<span id="cb1223-5"><a href="21-targets.html#cb1223-5"></a><span class="co"># Chargement des fonctions</span></span>
+<span id="cb1223-6"><a href="21-targets.html#cb1223-6"></a><span class="kw">source</span>(<span class="st">&quot;R/fonctions_recode.R&quot;</span>)</span>
+<span id="cb1223-7"><a href="21-targets.html#cb1223-7"></a><span class="kw">source</span>(<span class="st">&quot;R/fonctions_calculs.R&quot;</span>)</span>
+<span id="cb1223-8"><a href="21-targets.html#cb1223-8"></a></span>
+<span id="cb1223-9"><a href="21-targets.html#cb1223-9"></a><span class="co"># Options pour les différentes étapes</span></span>
+<span id="cb1223-10"><a href="21-targets.html#cb1223-10"></a><span class="kw">options</span>(<span class="dt">tidyverse.quiet =</span> <span class="ot">TRUE</span>)</span>
+<span id="cb1223-11"><a href="21-targets.html#cb1223-11"></a><span class="kw">tar_option_set</span>(<span class="dt">packages =</span> <span class="st">&quot;tidyverse&quot;</span>)</span>
+<span id="cb1223-12"><a href="21-targets.html#cb1223-12"></a></span>
+<span id="cb1223-13"><a href="21-targets.html#cb1223-13"></a><span class="co"># Définition du pipeline</span></span>
+<span id="cb1223-14"><a href="21-targets.html#cb1223-14"></a><span class="kw">tar_plan</span>(</span>
+<span id="cb1223-15"><a href="21-targets.html#cb1223-15"></a>    <span class="co"># Chargement du fichier CSV</span></span>
+<span id="cb1223-16"><a href="21-targets.html#cb1223-16"></a>    <span class="kw">tar_file</span>(csv_file, <span class="st">&quot;data/nat2020.csv&quot;</span>),</span>
+<span id="cb1223-17"><a href="21-targets.html#cb1223-17"></a>    <span class="dt">donnees_brutes =</span> <span class="kw">read_csv2</span>(csv_file),</span>
+<span id="cb1223-18"><a href="21-targets.html#cb1223-18"></a></span>
+<span id="cb1223-19"><a href="21-targets.html#cb1223-19"></a>    <span class="co"># Mise en forme des données</span></span>
+<span id="cb1223-20"><a href="21-targets.html#cb1223-20"></a>    <span class="dt">donnees =</span> donnees_brutes <span class="op">%&gt;%</span></span>
+<span id="cb1223-21"><a href="21-targets.html#cb1223-21"></a><span class="st">        </span><span class="kw">filter_data</span>() <span class="op">%&gt;%</span></span>
+<span id="cb1223-22"><a href="21-targets.html#cb1223-22"></a><span class="st">        </span><span class="kw">pivot_2019_2020</span>(),</span>
+<span id="cb1223-23"><a href="21-targets.html#cb1223-23"></a></span>
+<span id="cb1223-24"><a href="21-targets.html#cb1223-24"></a>    <span class="co"># Calcul indicateurs</span></span>
+<span id="cb1223-25"><a href="21-targets.html#cb1223-25"></a>    <span class="dt">donnees_evo =</span> donnees <span class="op">%&gt;%</span></span>
+<span id="cb1223-26"><a href="21-targets.html#cb1223-26"></a><span class="st">        </span><span class="kw">calcule_evo</span>(<span class="dt">min_n =</span> <span class="dv">1000</span>),</span>
+<span id="cb1223-27"><a href="21-targets.html#cb1223-27"></a></span>
+<span id="cb1223-28"><a href="21-targets.html#cb1223-28"></a>    <span class="co"># Génération rapport</span></span>
+<span id="cb1223-29"><a href="21-targets.html#cb1223-29"></a>    <span class="kw">tar_render</span>(report_evo, <span class="st">&quot;reports/evolution.Rmd&quot;</span>)</span>
+<span id="cb1223-30"><a href="21-targets.html#cb1223-30"></a>)</span></code></pre></div>
 <p>Visualisons notre pipeline modifié :</p>
-<div class="sourceCode" id="cb1220"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1220-1"><a href="21-targets.html#cb1220-1"></a><span class="kw">tar_visnetwork</span>()</span></code></pre></div>
+<div class="sourceCode" id="cb1224"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1224-1"><a href="21-targets.html#cb1224-1"></a><span class="kw">tar_visnetwork</span>()</span></code></pre></div>
 <div id="htmlwidget-7631fe3f785e5e8cd8bf" style="width:672px;height:480px;" class="visNetwork html-widget"></div>
-<script type="application/json" data-for="htmlwidget-7631fe3f785e5e8cd8bf">{"x":{"nodes":{"name":["csv_file","donnees","donnees_brutes","donnees_evo","report_evo","filter_data","pivot_2019_2020","calcule_evo"],"type":["stem","stem","stem","stem","stem","function","function","function"],"status":["uptodate","uptodate","uptodate","uptodate","outdated","uptodate","uptodate","uptodate"],"seconds":[1.041,0.177,0.324,1.054,null,null,null,null],"bytes":[12147948,98882,1406709,2297,null,null,null,null],"branches":[null,null,null,null,null,null,null,null],"id":["csv_file","donnees","donnees_brutes","donnees_evo","report_evo","filter_data","pivot_2019_2020","calcule_evo"],"label":["csv_file","donnees","donnees_brutes","donnees_evo","report_evo","filter_data","pivot_2019_2020","calcule_evo"],"level":[1,3,2,4,5,1,1,1],"color":["#354823","#354823","#354823","#354823","#78B7C5","#354823","#354823","#354823"],"shape":["dot","dot","dot","dot","dot","triangle","triangle","triangle"]},"edges":{"from":["csv_file","calcule_evo","donnees","donnees_brutes","filter_data","pivot_2019_2020","donnees_evo"],"to":["donnees_brutes","donnees_evo","donnees_evo","donnees","donnees","donnees","report_evo"],"arrows":["to","to","to","to","to","to","to"]},"nodesToDataframe":true,"edgesToDataframe":true,"options":{"width":"100%","height":"100%","nodes":{"shape":"dot","physics":false},"manipulation":{"enabled":false},"edges":{"smooth":{"type":"cubicBezier","forceDirection":"horizontal"}},"physics":{"stabilization":false},"layout":{"hierarchical":{"enabled":true,"direction":"LR"}}},"groups":null,"width":null,"height":null,"idselection":{"enabled":false,"style":"width: 150px; height: 26px","useLabels":true,"main":"Select by id"},"byselection":{"enabled":false,"style":"width: 150px; height: 26px","multiple":false,"hideColor":"rgba(200,200,200,0.5)","highlight":false},"main":{"text":"","style":"font-family:Georgia, Times New Roman, Times, serif;font-weight:bold;font-size:20px;text-align:center;"},"submain":null,"footer":null,"background":"rgba(0, 0, 0, 0)","highlight":{"enabled":true,"hoverNearest":false,"degree":{"from":1,"to":1},"algorithm":"hierarchical","hideColor":"rgba(200,200,200,0.5)","labelOnly":true},"collapse":{"enabled":true,"fit":false,"resetHighlight":true,"clusterOptions":null,"keepCoord":true,"labelSuffix":"(cluster)"},"legend":{"width":0.2,"useGroups":false,"position":"right","ncol":1,"stepX":100,"stepY":100,"zoom":true,"nodes":{"label":["Up to date","Outdated","Stem","Function"],"color":["#354823","#78B7C5","#899DA4","#899DA4"],"shape":["dot","dot","dot","triangle"]},"nodesToDataframe":true}},"evals":[],"jsHooks":[]}</script>
+<script type="application/json" data-for="htmlwidget-7631fe3f785e5e8cd8bf">{"x":{"nodes":{"name":["csv_file","donnees","donnees_brutes","donnees_evo","report_evo","filter_data","pivot_2019_2020","calcule_evo"],"type":["stem","stem","stem","stem","stem","function","function","function"],"status":["uptodate","uptodate","uptodate","uptodate","outdated","uptodate","uptodate","uptodate"],"seconds":[1.011,0.161,0.302,1.021,null,null,null,null],"bytes":[12147948,98882,1406709,2297,null,null,null,null],"branches":[null,null,null,null,null,null,null,null],"id":["csv_file","donnees","donnees_brutes","donnees_evo","report_evo","filter_data","pivot_2019_2020","calcule_evo"],"label":["csv_file","donnees","donnees_brutes","donnees_evo","report_evo","filter_data","pivot_2019_2020","calcule_evo"],"level":[1,3,2,4,5,1,1,1],"color":["#354823","#354823","#354823","#354823","#78B7C5","#354823","#354823","#354823"],"shape":["dot","dot","dot","dot","dot","triangle","triangle","triangle"]},"edges":{"from":["csv_file","calcule_evo","donnees","donnees_brutes","filter_data","pivot_2019_2020","donnees_evo"],"to":["donnees_brutes","donnees_evo","donnees_evo","donnees","donnees","donnees","report_evo"],"arrows":["to","to","to","to","to","to","to"]},"nodesToDataframe":true,"edgesToDataframe":true,"options":{"width":"100%","height":"100%","nodes":{"shape":"dot","physics":false},"manipulation":{"enabled":false},"edges":{"smooth":{"type":"cubicBezier","forceDirection":"horizontal"}},"physics":{"stabilization":false},"layout":{"hierarchical":{"enabled":true,"direction":"LR"}}},"groups":null,"width":null,"height":null,"idselection":{"enabled":false,"style":"width: 150px; height: 26px","useLabels":true,"main":"Select by id"},"byselection":{"enabled":false,"style":"width: 150px; height: 26px","multiple":false,"hideColor":"rgba(200,200,200,0.5)","highlight":false},"main":{"text":"","style":"font-family:Georgia, Times New Roman, Times, serif;font-weight:bold;font-size:20px;text-align:center;"},"submain":null,"footer":null,"background":"rgba(0, 0, 0, 0)","highlight":{"enabled":true,"hoverNearest":false,"degree":{"from":1,"to":1},"algorithm":"hierarchical","hideColor":"rgba(200,200,200,0.5)","labelOnly":true},"collapse":{"enabled":true,"fit":false,"resetHighlight":true,"clusterOptions":null,"keepCoord":true,"labelSuffix":"(cluster)"},"legend":{"width":0.2,"useGroups":false,"position":"right","ncol":1,"stepX":100,"stepY":100,"zoom":true,"nodes":{"label":["Up to date","Outdated","Stem","Function"],"color":["#354823","#78B7C5","#899DA4","#899DA4"],"shape":["dot","dot","dot","triangle"]},"nodesToDataframe":true}},"evals":[],"jsHooks":[]}</script>
 <p>On voit que notre nouvelle cible <code>report_evo</code> a bien été prise en compte, qu’elle dépend bien de <code>donnees_evo</code> et qu’elle est à l’état <em>outdated</em>.</p>
 <p>Si on exécute notre pipeline :</p>
-<div class="sourceCode" id="cb1221"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1221-1"><a href="21-targets.html#cb1221-1"></a><span class="kw">tar_make</span>()</span>
-<span id="cb1221-2"><a href="21-targets.html#cb1221-2"></a><span class="co">#&gt; ✔ skip target csv_file</span></span>
-<span id="cb1221-3"><a href="21-targets.html#cb1221-3"></a><span class="co">#&gt; ✔ skip target donnees_brutes</span></span>
-<span id="cb1221-4"><a href="21-targets.html#cb1221-4"></a><span class="co">#&gt; ✔ skip target donnees</span></span>
-<span id="cb1221-5"><a href="21-targets.html#cb1221-5"></a><span class="co">#&gt; ✔ skip target donnees_evo</span></span>
-<span id="cb1221-6"><a href="21-targets.html#cb1221-6"></a><span class="co">#&gt; • start target report_evo</span></span>
-<span id="cb1221-7"><a href="21-targets.html#cb1221-7"></a><span class="co">#&gt; • built target report_evo</span></span>
-<span id="cb1221-8"><a href="21-targets.html#cb1221-8"></a><span class="co">#&gt; • end pipeline</span></span></code></pre></div>
+<div class="sourceCode" id="cb1225"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1225-1"><a href="21-targets.html#cb1225-1"></a><span class="kw">tar_make</span>()</span>
+<span id="cb1225-2"><a href="21-targets.html#cb1225-2"></a><span class="co">#&gt; ✔ skip target csv_file</span></span>
+<span id="cb1225-3"><a href="21-targets.html#cb1225-3"></a><span class="co">#&gt; ✔ skip target donnees_brutes</span></span>
+<span id="cb1225-4"><a href="21-targets.html#cb1225-4"></a><span class="co">#&gt; ✔ skip target donnees</span></span>
+<span id="cb1225-5"><a href="21-targets.html#cb1225-5"></a><span class="co">#&gt; ✔ skip target donnees_evo</span></span>
+<span id="cb1225-6"><a href="21-targets.html#cb1225-6"></a><span class="co">#&gt; • start target report_evo</span></span>
+<span id="cb1225-7"><a href="21-targets.html#cb1225-7"></a><span class="co">#&gt; • built target report_evo</span></span>
+<span id="cb1225-8"><a href="21-targets.html#cb1225-8"></a><span class="co">#&gt; • end pipeline</span></span></code></pre></div>
 <p>La cible <code>report_evo</code> a bien été calculée, et on devrait retrouver notre rapport compilé au format HTML dans le dossier <code>reports</code>.</p>
 </div>
 <div id="gestion-des-données-en-cache" class="section level2">
@@ -988,7 +995,7 @@ d %&gt;%
 <div id="interactivité-et-développement-du-pipeline" class="section level3">
 <h3><span class="header-section-number">21.6.2</span> Interactivité et développement du pipeline</h3>
 <p>Une des limitations de <code>targets</code> est que le pipeline ne permet pas l’utilisation de fonctions “interactives”. Par exemple, on pourrait ajouter une étape affichant un graphique dans <code>tar_plan()</code> :</p>
-<div class="sourceCode" id="cb1222"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1222-1"><a href="21-targets.html#cb1222-1"></a>graphique =<span class="st"> </span><span class="kw">ggplot</span>(donnees_evo) <span class="op">+</span><span class="st"> </span><span class="kw">geom_histogram</span>(<span class="kw">aes</span>(<span class="dt">x =</span> evo))</span></code></pre></div>
+<div class="sourceCode" id="cb1226"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1226-1"><a href="21-targets.html#cb1226-1"></a>graphique =<span class="st"> </span><span class="kw">ggplot</span>(donnees_evo) <span class="op">+</span><span class="st"> </span><span class="kw">geom_histogram</span>(<span class="kw">aes</span>(<span class="dt">x =</span> evo))</span></code></pre></div>
 <p>Ceci fonctionne, mais ne provoque pas l’affichage du graphique. Il faut faire un <code>tar_read(graphique)</code> pour pouvoir le visualiser.</p>
 <p>De la même manière, on ne peut pas utiliser d’interfaces interactives comme celles vues pour faciliter les recodages de variables (par exemple section <a href="09-recodages.html#irec">9.3.2.1</a>). Il est donc souvent pratique de commencer à développer des transformations, calculs ou analyses de façon “interactive”, via un script classique dans lequel on importe les données nécessaires via <code>tar_read()</code>. Une fois qu’on obtient le résultat souhaité, on transforme ce code en une ou plusieurs fonctions et on les intègre au pipeline de <code>targets</code>.</p>
 <div class="rmdnote">
