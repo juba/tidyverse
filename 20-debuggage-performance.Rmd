@@ -10,146 +10,148 @@ Lorsqu'on commence à écrire des fonctions un peu complexes, avec des `if`, des
 
 Trouver la cause d'un bug n'est pas toujours évident, mais heureusement il existe plusieurs outils permettant de faciliter les choses.
 
+On commence par charger les extensions et les jeux de données dont on aura besoin par la suite.
+
+```{r message=FALSE}
+library(tidyverse)
+library(questionr)
+data(hdv2003)
+data(starwars)
+```
+
 ### print()
 
 L'outil le plus simple, parfois décrié mais souvent efficace, est de rajouter un simple `print()` dans le code de notre fonction pour examiner le contenu d'un objet à un moment donné.
 
-Dans l'exemple suivant, on a écrit une fonction `phrase_max()` qui prend en entrée une chaîne de caractères et une lettre. La fonction découpe la chaîne en phrases, et retourne la phrase qui comporte le plus de fois la lettre.
+Prenons un premier exemple. La fonction suivante prend en argument un tableau de données et un nom de variable, et retourne la moyenne et l'écart-type de cette variable.
 
 ```{r}
-phrase_max <- function(str, lettre) {
-    phrases <- str_split(str, ".", simplify = TRUE)
-    n_lettre <- str_detect(phrases, lettre)
-    phrases[n_lettre == max(n_lettre)]
+indicateurs <- function(df, var) {
+    valeurs <- df[, var]
+    if (!is.numeric(valeurs)) return(NA)
+    c(moyenne = mean(valeurs), sd = sd(valeurs))
 }
 ```
 
-Du moins en théorie, car en pratique ça n'est pas tout à fait ça...
+On teste notre fonction sur une variable du jeu de données `mtcars` inclus dans R base. Tout semble fonctionner.
 
 ```{r}
-texte <- "Le chat dort. Le félin roupille. Le chat dort tout le temps."
-phrase_max(texte, "t")
+indicateurs(mtcars, "mpg")
 ```
 
-Pour essayer de comprendre ce qui se passe, on va rajouter un `print()` qui va nous permettre d'afficher le contenu de `phrases` juste après le `str_split()`.
+On teste à nouveau, cette fois sur une variable du jeu de données `starwars` de `dplyr`.
 
 ```{r}
-phrase_max <- function(str, lettre) {
-    phrases <- str_split(str, ".", simplify = TRUE)
-    print(phrases)
-    n_lettre <- str_detect(phrases, lettre)
-    phrases[n_lettre == max(n_lettre)]
-}
-
-phrase_max(texte, "t")
+indicateurs(starwars, "height")
 ```
 
-Il y a donc un problème : plutôt que d'obtenir des phrases on n'obtient que des chaînes vides. Pourquoi ? Car on a oublié que l'argument `pattern` de `str_split()`, celui à qui on a donné la valeur `"."`, admet par défaut une expression régulière. Or dans une expression régulière, le `.` est un symbole spécial qui correspond à n'importe quel caractère.
+On obtient `NA` en résultat, alors que notre variable `height` est bien numérique, on devrait donc obtenir un vecteur avec la moyenne et l'écart-type. Comment expliquer ce résultat ?
 
-On corrige donc le problème en entourant notre `pattern` de la fonction `fixed()` de `stringr`, qui permet de spécifier qu'on souhaite bien découper notre texte selon le caractère `"."`.
+Comme on n'a pas d'explication immédiate juste en relisant le code de notre fonction, on va ajouter temporairement une instruction `print()` qui va afficher le contenu de `valeurs` avant le `if`.
 
 ```{r}
-phrase_max <- function(str, lettre) {
-    phrases <- str_split(str, fixed("."), simplify = TRUE)
-    n_lettre <- str_detect(phrases, lettre)
-    phrases[n_lettre == max(n_lettre)]
+indicateurs <- function(df, var) {
+    valeurs <- df[, var]
+    print(valeurs)
+    if (!is.numeric(valeurs)) return(NA)
+    c(moyenne = mean(valeurs), sd = sd(valeurs))
 }
 ```
 
-On teste cette version corrigée.
+On teste à nouveau sur `starwars` :
+
 ```{r}
-phrase_max(texte, "t")
+indicateurs(starwars, "height")
 ```
 
-C'est un peu mieux, mais pas encore tout à fait ça puisque la fonction nous retourne plusieurs phrases et pas seulement celle qui comporte le plus de "t"...
-
-On rajoute donc un `print()` pour voir ce que vaut le résultat du `str_detect()`.
+Le `print()` nous indique que `valeurs` n'est pas un vecteur mais un tableau de données à une seule colonne. Or dans ce cas, le test `is.numeric`, qui est sensé s'appliquer à un vecteur atomique, renvoie `FALSE` :
 
 ```{r}
-phrase_max <- function(str, lettre) {
-    phrases <- str_split(str, fixed("."), simplify = TRUE)
-    n_lettre <- str_detect(phrases, lettre)
-    print(n_lettre)
-    phrases[n_lettre == max(n_lettre)]
+is.numeric(starwars[, "height"])
+```
+
+C'est donc la raison pour laquelle on obtient le résultat final `NA`.
+
+Certes, mais alors pourquoi cela fonctionne-t-il dans notre exemple avec `mtcars` ? 
+
+```{r}
+indicateurs(mtcars, "mpg")
+```
+
+Ah ! Dans ce cas là `valeurs` est bien un vecteur, et on obtient donc le résultat attendu. Pourquoi cette différence ? On est en fait tombé sur une source d'erreur relativement fréquente qui est la différence de comportement, mentionnée section \@ref(df-sel), entre les *data frames* et les *tibbles* : lorsqu'on sélectionne une seule colonne avec l'opérateur `[,]`, un *data frame* retourne un vecteur tandis qu'un *tibble* retourne un tableau à une colonne.
+
+Comment résoudre ce problème ? Il y a différentes manières, mais la plus simple est sans doute de remplacer `[,]` par `[[]]`, qui lui a le même comportement dans les deux cas. On peut donc modifier notre fonction (en n'oubliant pas d'enlever le `print()`) et vérifier que ça fonctionne désormais.
+
+```{r}
+indicateurs <- function(df, var) {
+    valeurs <- df[[var]]
+     if (!is.numeric(valeurs)) return(NA)
+    c(moyenne = mean(valeurs), sd = sd(valeurs))
 }
 
-phrase_max(texte, "t")
+indicateurs(mtcars, "mpg")
+indicateurs(starwars, "height")
 ```
 
-Ce qui nous permet de constater que `n_lettre` ne contient pas le nombre d'occurrences de "t", mais juste une valeur logique indiquant si la phrase contient ou non un "t". Pourquoi ? Tout simplement parce qu'on n'a pas utilisé la bonne fonction ! Il faut en effet remplacer `str_detect()` par `str_count()`.
 
-```{r}
-phrase_max <- function(str, lettre) {
-    phrases <- str_split(str, fixed("."), simplify = TRUE)
-    n_lettre <- str_count(phrases, lettre)
-    phrases[n_lettre == max(n_lettre)]
-}
+```{block type='rmdimportant'}
+Quand on ajoute des `print()` pour essayer d'identifier un problème, il faut bien penser à les supprimer une fois ce problème résolu, sinon on risque de se retrouver avec des messages "parasites" dans la console.
 ```
 
-On teste cette nouvelle version :
-
-```{r}
-phrase_max(texte, "t")
-```
-
-Cette fois ça semble fonctionner !
 
 ### Localiser une erreur
 
-`print()` peut aussi être utile pour savoir à quel moment une erreur se produit.
+`print()` peut aussi être utile pour savoir à quel moment une erreur se produit, notamment lorsqu'on utilise une boucle.
 
-Dans l'exemple suivant, on crée une fonction `prop_values()` qui prend en argument un tableau de données `df` et une proportion `prop` et retourne une liste comportant les modalités de variables qui apparaissent au moins dans la proportion correspondante.
+Dans l'exemple suivant, on crée une fonction `min_freq_values()` qui prend en argument un tableau de données `df` et un effectif `n_min` et retourne une liste comportant les modalités de variables qui apparaissent dans au moins `n_min` lignes de `df` (on utilise ici une boucle `for`, mais on aurait aussi pu utiliser `map()`).
 
 ```{r}
-prop_values <- function(df, prop = 0.5) {
-    min_freq <- prop * nrow(df)
+min_freq_values <- function(df, n_min) {
     res <- list()
-    for (var in names(df)) {
-        freq <- table(df[[var]])
-        freq <- freq[freq >= min_freq]
-        if (length(freq) > 0) {
-            res[[var]] <- freq
-        }
+    for (col in names(df)) {
+        # On fait le tri à plat des valeurs de la colonne
+        freq <- table(df[[col]])
+        # On ne conserve que les modalités avec effectif >= n
+        freq <- freq[freq >= n_min]
+        # On ajoute la colonne au résultat que s'il y a au moins une modalité
+        if (length(freq) > 0) res[[col]] <- freq
     }
     res
 }
 ```
 
-Si on applique `prop_values()` à `hdv2003` avec une valeur de `prop` à 0.75, on obtient toutes les modalités correspondant à au moins trois quart des observations.
+Si on applique `min_freq_values()` à `hdv2003` avec une valeur de `n` à 1500, on obtient toutes les modalités correspondant à au moins 1500 observations.
 
 ```{r}
-data(hdv2003)
-prop_values(hdv2003, 0.75)
+min_freq_values(hdv2003, 1500)
 ```
 
-Essayons maintenant d'appliquer `prop_values()` au jeu de données `starwars` de `dplyr`.
+Essayons maintenant d'appliquer `min_freq_values()` au jeu de données `starwars` de `dplyr`.
 
 ```{r error=TRUE}
-library(dplyr)
-data(starwars)
-prop_values(starwars, 0.75)
+min_freq_values(starwars, 50)
 ```
 
-On obtient une erreur plus ou moins sybilline : apparemment une erreur se produit au moment de faire le tri à plat des valeurs avec `table(df[[var]])`. Mais comme ce tri à plat s'effectue dans une boucle, on ne sait pas quelle variable de `starwars` cause le problème.
+On obtient une erreur plus ou moins sybilline : apparemment une erreur se produit au moment de faire le tri à plat des valeurs avec `table()`. Mais comme ce tri à plat s'effectue dans une boucle, on ne sait pas quelle variable de `starwars` cause le problème.
 
-On va donc rajouter comme première instruction de la boucle un `print(var)`.
+On va donc rajouter comme première instruction de la fonction du `for` un `print(col)`.
 
-```{r error=TRUE}
-prop_values <- function(df, prop = 0.5) {
-    min_freq <- prop * nrow(df)
+```{r}
+min_freq_values <- function(df, n_min) {
     res <- list()
-    for (var in names(df)) {
-        print(var) # debug
-        freq <- table(df[[var]])
-        freq <- freq[freq >= min_freq]
-        if (length(freq) > 0) {
-            res[[var]] <- freq
-        }
+    for (col in names(df)) {
+        print(col)
+        # On fait le tri à plat des valeurs de la colonne
+        freq <- table(df[[col]])
+        # On ne conserve que les modalités avec effectif >= n
+        freq <- freq[freq >= n_min]
+        # On ajoute la colonne au résultat que s'il y a au moins une modalité
+        if (length(freq) > 0) res[[col]] <- freq
     }
     res
 }
 
-prop_values(starwars, 0.75)
+min_freq_values(starwars, 50)
 ```
 
 On voit que tout semble bien se passer pour les premières variables de notre tableau, et que l'erreur survient au moment de traiter la variable `films`. On regarde donc à quoi ressemble cette variable.
@@ -158,56 +160,59 @@ On voit que tout semble bien se passer pour les premières variables de notre ta
 head(starwars$films, 3)
 ```
 
-Damn, cette variable n'est pas un vecteur atomique mais une liste ! Un tableau de données peut en effet contenir ce que l'on appelle des colonnes-listes. Comme ça n'est pas fréquent, on ne l'avait clairement pas prévu au moment de la création de la fonction.
+*Damn*, cette variable n'est pas un vecteur atomique mais une liste ! Un tableau de données peut en effet contenir ce que l'on appelle des colonnes-listes. Comme ça n'est pas fréquent, on ne l'avait clairement pas prévu au moment de la création de la fonction.
 
 On a désormais identifié le problème, on peut donc le corriger par exemple en ignorant les colonnes de type liste en utilisant `is.list()` et l'instruction `next`.
 
 ```{r}
-prop_values <- function(df, prop = 0.5) {
-    min_freq <- prop * nrow(df)
+min_freq_values <- function(df, n_min) {
     res <- list()
-    for (var in names(df)) {
-        if (is.list(df[[var]])) next
-        freq <- table(df[[var]])
-        freq <- freq[freq >= min_freq]
-        if (length(freq) > 0) {
-            res[[var]] <- freq
-        }
+    for (col in names(df)) {
+        # On passe à la colonne suivante si la colonne est une colonne-liste
+        if (is.list(df[[col]])) next
+        # On fait le tri à plat des valeurs de la colonne
+        freq <- table(df[[col]])
+        # On ne conserve que les modalités avec effectif >= n
+        freq <- freq[freq >= n_min]
+        # On ajoute la colonne au résultat que s'il y a au moins une modalité
+        if (length(freq) > 0) res[[col]] <- freq
     }
     res
 }
 
-prop_values(starwars, 0.75)
+min_freq_values(starwars, 50)
 ```
+
 
 ### browser()
 
-Il y a des alternatives plus efficaces à l'utilisation de `print()` pour identifier et comprendre les bugs. La plus utilisée est la fonction `browser()`. Celle-ci peut s'insérer à n'importe quel endroit du code, et lorsqu'elle est rencontrée par R celui-ci s'interrompt et affiche une invite de commande permettant notamment d'inspecter des objets.
+Il y a des alternatives plus efficaces à l'utilisation de `print()` pour identifier et résoudre des bugs. La plus utilisée est la fonction `browser()`. Celle-ci peut s'insérer à n'importe quel endroit du code, et lorsqu'elle est rencontrée par R celui-ci s'interrompt et affiche une invite de commande permettant notamment d'inspecter des objets.
 
-On reprend l'exemple précédent en remplaçant le `print(var)` que nous avions inséré pour débugguer la fonction `prop_values` par un appel à `browser()`.
+On reprend l'exemple précédent en remplaçant le `print(col)` que nous avions inséré pour débugguer la fonction `min_freq_values` par un appel à `browser()`.
 
-```{r eval=FALSE}
-prop_values <- function(df, prop = 0.5) {
-    min_freq <- prop * nrow(df)
+
+```{r}
+min_freq_values <- function(df, n_min) {
     res <- list()
-    for (var in names(df)) {
+    for (col in names(df)) {
         browser()
-        freq <- table(df[[var]])
-        freq <- freq[freq >= min_freq]
-        if (length(freq) > 0) {
-            res[[var]] <- freq
-        }
+        # On fait le tri à plat des valeurs de la colonne
+        freq <- table(df[[col]])
+        # On ne conserve que les modalités avec effectif >= n
+        freq <- freq[freq >= n_min]
+        # On ajoute la colonne au résultat que s'il y a au moins une modalité
+        if (length(freq) > 0) res[[col]] <- freq
     }
     res
 }
 
-prop_values(starwars, 0.75)
+min_freq_values(starwars, 50)
 ```
 
 Lorsqu'on lance ce code, R s'interrompt et affiche l'invite de commande suivant :
 
 ```
-Called from: prop_values(starwars, 0.75)
+Called from: min_freq_values(starwars, 50)
 
 Browse[1]>
 ```
@@ -215,7 +220,7 @@ Browse[1]>
 Cette invite de commande offre plusieurs possibilités. On peut lui indiquer du code R qui sera exécuté dans le contexte du moment de l'interruption. Notamment, si on indique un nom d'objet, on pourra voir sa valeur. Ainsi, si on tape `var`, R nous affiche la valeur actuelle de `var`, donc au moment de la première itération de la boucle.
 
 ```
-Browse[1]> var                                         
+Browse[1]> col                                       
 [1] "name"
 ```
 
@@ -223,14 +228,14 @@ On peut également fournir des commandes spécifiques : si on tape `n`, R va pas
 
 ```
 Browse[1]> n                                           
-debug à #6 : freq <- table(df[[var]])
+debug à #6 : freq <- table(df[[col]])
 ```
 
 Si on tape `c`, R va relancer l'exécution jusqu'à la fin, ou jusqu'à la prochaine rencontre d'un `browser()`. Dans notre cas, cela signifie qu'on va continuer jusqu'au `browser()` de la deuxième itération de la boucle.
 
 ```
 Browse[2]> c                                           
-Called from: prop_values(starwars, 0.75)
+Called from: min_freq_values(starwars, 50)
 
 Browse[1]> var                                         
 [1] "height"
@@ -246,8 +251,16 @@ Cette section n'offre qu'un petit aperçu des possibilités de debugging. R prop
 Pour plus d'informations on pourra se reporter aux ressources indiquées dans la section ci-dessous.
 ```
 
+
+## Comparer la performance
+
+
+## Identifier les problèmes de performance
+
+
 ## Ressources
 
 L'ouvrage *Advanced R* (en anglais) consacre un chapitre entier [au debuggage](https://adv-r.hadley.nz/debugging.html).
 
 Le site de RStudio propose une page entière détaillant ses [fonctionnalités de debugging](https://support.rstudio.com/hc/en-us/articles/205612627-Debugging-with-RStudio) (en anglais). Pour les utilisateurs de Visual Studio Code, on pourra se référer à l'extension [VSCode-R-Debugger](https://github.com/ManuelHentschel/VSCode-R-Debugger).
+
