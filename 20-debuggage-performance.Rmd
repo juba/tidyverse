@@ -252,10 +252,112 @@ Pour plus d'informations on pourra se reporter aux ressources indiquées dans la
 ```
 
 
-## Comparer la performance
+## benchmarking : mesurer et comparer les temps d'exécution
+
+Lorsqu'on commence à créer ses propres fonctions et de manière générale à écrire du code de plus en plus complexe ou à travailler sur des données de plus en plus volumineuses, on peut arriver sur des problèmes de performance et d'optimisation : les temps d'exécution deviennent longs et on aimerait essayer de les optimiser.
+
+Un premier outil utile consiste à faire du *benchmarking* : comparer plusieurs manières différentes de faire la même chose, et mesurer leurs différences de vitesse d'exécution.
+
+L'intruction la plus simple pour cela est sans doute `system.time()`. Celle-ci prend en argument une expression R, et affiche en retour le temps d'exécution en secondes.
+
+```{r}
+system.time(runif(1000000))
+```
+
+On peut passer plusieurs instruction à `system.time()`, soit en les isolant dans une fonction, soit en les indiquant directement entre une paire d'accolades.
+
+```{r}
+system.time({
+    v <- runif(1000000)
+    moy <- mean(v)
+})
+```
+
+`system.time()` est cependant très limitée : on ne peut exécuter qu'une expression à la fois, on ne peut donc pas en comparer plusieurs, et surtout le temps d'exécution peut varier assez sensiblement selon l'utilisation du processeur de la machine sur lequel on l'exécute.
+
+Il existe plusieurs extensions dédiées au *benchmarking*. On va utiliser ici l'extension [bench](https://bench.r-lib.org/), installable avec :
+
+```{r eval=FALSE}
+install.packages("bench")
+```
+
+`bench` propose une fonction principale, nommée `mark()`, qu'on peut donc appeler directement avec `bench::mark()`^[L'avantage d'utiliser `bench::mark()` est qu'on n'a pas besoin d'ajouter un `library(bench)` dans notre script.]. On passe à cette fonction plusieurs expressions, et `mark()` va effectuer les actions suivante :
+
+- elle vérifie que les expressions retournent bien le même résultat
+- elle lance ces expressions plusieurs fois et mesure à chaque fois leur temps d'exécution
+- elle affiche un résumé de ces temps d'exécution en indiquant leur minimum et leur médiane
+
+Exécuter chaque expression plusieurs fois permet de prendre en compte les fluctuation liées à l'activité du processeur de la machine.
+
+Dans l'exemple suivant, on crée deux fonctions qui font la même chose : ajouter 10 à tous les éléments d'un vecteur passé en argument. Dans la première fonction `plus10_for` on utilise une boucle `for` qui ajoute 10 à tous les éléments l'un après l'autre (ce qu'il ne faut évidemment pas faire !), tandis que la deuxième fonction `plus10_vec` on utilise simplement la forme vectorisée `x + 10`.
+
+```{r}
+plus10_for <- function(x) {
+    for (i in seq_along(x)) {
+        x[i] <- x[i] + 10
+    }
+    x
+}
+
+plus10_vec <- function(x) {
+    x + 10
+}
+```
+
+On lance un benchmark avec `bench::mark()` et on stocke le résultat dans un objet.
+
+```{r}
+x <- 1:10000
+bnch <- bench::mark(
+    plus10_for(x),
+    plus10_vec(x)
+)
+```
+
+On affiche les résultats obtenus :
+
+```{r}
+bnch
+```
+
+La colonne la plus importante est sans doute la colonne `median`, qui affiche le temps médian d'exécution des deux expressions. Attention, l'unité de temps n'est pas forcément la même, ici l'exécution de `plus10_for` est affichée en millisecondes ("ms"), tandis que celle de `plus10_vec` l'est en microsecondes ("µs") donc avec une unité mille fois plus petite.
+
+Si on préfère, on peut afficher les performances relatives des deux fonctions avec :
+
+```{r}
+summary(bnch, relative = TRUE)
+```
+
+Ces résultats nous permettent de voir que la version `vec` est 40 fois plus rapide que la version `for` ! Ce qui confirme le fait qu'il faut toujours prioriser l'utilisation de fonctions vectorisées lorsqu'elles existent.
+
+On prend un second exemple : on souhaite mesurer si l'utilisation de `map` est plus rapide ou non qu'une boucle `for` pour une tache équivalente.
+
+Pour cela on commence par créer artificiellement une liste de 200 tableaux de données en dupliquant 100 fois une liste composée des tableaux `rp2012` et `hdv2003`.
+
+```{r}
+dfs <- list(rp2012, hdv2003)
+dfs <- rep(dfs, 100)
+```
+
+Puis on lance un benchmark sur une boucle `for` et un `map` qui retournent le nombre de lignes  de chacun des 200 tableaux. Cette-fois on ne crée pas de fonctions : on passe le code directement à `bench::mark()`, avec des noms permettant de les identifier plus facilement dans les résultats.
+
+```{r}
+bench::mark(
+    boucle_for = {
+        res <- list()
+        for (df in dfs) {
+            res <- c(res, nrow(df))
+        }
+        res
+    },
+    map = map(dfs, ~ nrow(.x) )
+)
+```
+
+La lecture du résultat indique que dans ce cas de figure la boucle `for` est environ 4 fois plus lente que le `map`.
 
 
-## Identifier les problèmes de performance
+## profiling : identifier les problèmes de performance
 
 
 ## Ressources
