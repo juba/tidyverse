@@ -139,7 +139,7 @@ Pour plus d'informations, voir [le site de l'extension `haven`](http://haven.tid
 
 Le format dBase est encore utilisé, notamment par l'INSEE, pour la diffusion de données volumineuses.
 
-Les fichiers au format `dbf` peuvent être importées à l'aide de la fonction `read.dbf` de l'extension `foreign` ^[`foreign` est une extension installée de base avec R, vous n'avez pas besoin de l'installer, il vous suffit de la charger avec `library`] :
+Les fichiers au format `dbf` peuvent être importées à l'aide de la fonction `read.dbf` de l'extension `foreign` ^[`foreign` est une extension installée de base avec R, vous n'avez pas besoin de l'installer, il vous suffit de la charger avec `library`.] :
 
 ```{r, eval = FALSE}
 library(foreign)
@@ -284,9 +284,8 @@ Il n'existe par contre pas de fonctions permettant d'enregistrer directement au 
 
 Ces fonctions sont utiles si on souhaite diffuser des données à quelqu'un d'autre, ou entre deux logiciels.
 
-Si vous travaillez sur des données de grandes dimensions, les formats texte peuvent être lents à exporter et importer. Dans ce cas, l'extension `feather` peut être utile : elle permet d'enregistrer un *data frame* au format feather, qui n'est pas le plus compact mais qui est extrêmement rapide à lire et écrire ^[`feather` est un format compatible avec Python, R et Julia. Pour plus d'informations voir https://github.com/wesm/feather].
+Si vous travaillez sur des données de grandes dimensions, les formats texte peuvent être lents à exporter et importer. Dans ce cas, d'autres extensions comme `arrow` ou `fst` peuvent être utiles : elles permettent d'enregistrer des *data frames* dans des formats plus rapides. Les formats proposés par `arrow` permettent en outre l'échange de données tabulaires avec d'autres langages de programmation comme Python ou JavaScript.
 
-Les fonctions `read_feather` et `write_feather` permettent d'importer et exporter des tableaux de données dans ce format.
 
 ### Sauvegarder des objets
 
@@ -307,10 +306,15 @@ load("fichier.RData")
 Les objets `d`, `rp2012` et `tab` devraient alors apparaître dans votre environnement.
 
 ```{block, type='rmdimportant'}
-Attention, quand on utilise `load`, les objets chargés sont importés directement dans l'environnement en cours avec leur nom d'origine. Si d'autres objets du même nom existaient déjà, ils sont écrasés sans avertissement.
+Attention, quand on utilise `load`, les objets chargés sont importés directement dans l'environnement en cours avec leur nom d'origine. Si d'autres objets du même nom existent déjà, ils sont écrasés sans avertissement.
 ```
 
+Une alternative est d'utiliser les fonctions `saveRDS` et `readRDS`, qui permettent d'enregistrer un unique objet, et de le charger dans notre session avec le nom que l'on souhaite.
 
+```{r, eval = FALSE}
+saveRDS(rp2012, "fichier.rds")
+df <- readRDS("fichier.rds")
+```
 
 
 
