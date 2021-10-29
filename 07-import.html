@@ -830,8 +830,7 @@ Dans ce cas la nouvelle colonne <code>type</code> est bien créée et on peut y 
 </ul>
 <p>Il n’existe par contre pas de fonctions permettant d’enregistrer directement au format <code>xls</code> ou <code>xlsx</code>. On peut dans ce cas passer par un fichier CSV.</p>
 <p>Ces fonctions sont utiles si on souhaite diffuser des données à quelqu’un d’autre, ou entre deux logiciels.</p>
-<p>Si vous travaillez sur des données de grandes dimensions, les formats texte peuvent être lents à exporter et importer. Dans ce cas, l’extension <code>feather</code> peut être utile : elle permet d’enregistrer un <em>data frame</em> au format feather, qui n’est pas le plus compact mais qui est extrêmement rapide à lire et écrire <a href="#fn13" class="footnote-ref" id="fnref13"><sup>13</sup></a>.</p>
-<p>Les fonctions <code>read_feather</code> et <code>write_feather</code> permettent d’importer et exporter des tableaux de données dans ce format.</p>
+<p>Si vous travaillez sur des données de grandes dimensions, les formats texte peuvent être lents à exporter et importer. Dans ce cas, d’autres extensions comme <code>arrow</code> ou <code>fst</code> peuvent être utiles : elles permettent d’enregistrer des <em>data frames</em> dans des formats plus rapides. Les formats proposés par <code>arrow</code> permettent en outre l’échange de données tabulaires avec d’autres langages de programmation comme Python ou JavaScript.</p>
 </div>
 <div id="sauvegarder-des-objets" class="section level3">
 <h3><span class="header-section-number">7.6.2</span> Sauvegarder des objets</h3>
@@ -843,9 +842,12 @@ Dans ce cas la nouvelle colonne <code>type</code> est bien créée et on peut y 
 <p>Les objets <code>d</code>, <code>rp2012</code> et <code>tab</code> devraient alors apparaître dans votre environnement.</p>
 <div class="rmdimportant">
 <p>
-Attention, quand on utilise <code>load</code>, les objets chargés sont importés directement dans l’environnement en cours avec leur nom d’origine. Si d’autres objets du même nom existaient déjà, ils sont écrasés sans avertissement.
+Attention, quand on utilise <code>load</code>, les objets chargés sont importés directement dans l’environnement en cours avec leur nom d’origine. Si d’autres objets du même nom existent déjà, ils sont écrasés sans avertissement.
 </p>
 </div>
+<p>Une alternative est d’utiliser les fonctions <code>saveRDS</code> et <code>readRDS</code>, qui permettent d’enregistrer un unique objet, et de le charger dans notre session avec le nom que l’on souhaite.</p>
+<div class="sourceCode" id="cb178"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb178-1"><a href="07-import.html#cb178-1"></a><span class="kw">saveRDS</span>(rp2012, <span class="st">&quot;fichier.rds&quot;</span>)</span>
+<span id="cb178-2"><a href="07-import.html#cb178-2"></a>df &lt;-<span class="st"> </span><span class="kw">readRDS</span>(<span class="st">&quot;fichier.rds&quot;</span>)</span></code></pre></div>
 
 </div>
 </div>
@@ -853,8 +855,7 @@ Attention, quand on utilise <code>load</code>, les objets chargés sont importé
 <div class="footnotes">
 <hr />
 <ol start="12">
-<li id="fn12"><p><code>foreign</code> est une extension installée de base avec R, vous n’avez pas besoin de l’installer, il vous suffit de la charger avec <code>library</code><a href="07-import.html#fnref12" class="footnote-back">↩︎</a></p></li>
-<li id="fn13"><p><code>feather</code> est un format compatible avec Python, R et Julia. Pour plus d’informations voir <a href="https://github.com/wesm/feather" class="uri">https://github.com/wesm/feather</a><a href="07-import.html#fnref13" class="footnote-back">↩︎</a></p></li>
+<li id="fn12"><p><code>foreign</code> est une extension installée de base avec R, vous n’avez pas besoin de l’installer, il vous suffit de la charger avec <code>library</code>.<a href="07-import.html#fnref12" class="footnote-back">↩︎</a></p></li>
 </ol>
 </div>
 <script src="js/tidyverse.js"></script>
