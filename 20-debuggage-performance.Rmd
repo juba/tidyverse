@@ -406,7 +406,7 @@ La fonction suivante prend en entrée un tableau de données `d` et une chaîne 
 nb_chaine1 <- function(d, chr) {
     res <- numeric()
     for (var in names(d)) {
-        # Conversion des colonnes de d et de chr en minuscules
+        # Conversion de chr et des colonnes de d en minuscules
         d <- d %>% modify(str_to_lower)
         chr <- str_to_lower(chr)
         # Comptage des occurrences de chr dans la colonne var
@@ -421,13 +421,13 @@ nb_chaine1(d, "oui")
 
 Ça fonctionne, mais si on regarde un peu plus attentivement le code de la fonction on peut vite se rendre compte d'un problème : les conversions en minuscules sont faites à l'intérieur de la boucle, et sont donc répétées pour chaque colonne de `d`. Or ceci n'est absolument pas nécessaire puisque cette conversion ne dépend pas des colonnes et qu'elle peut être faite une seule et unique fois en début de fonction.
 
-On décide donc de sortir les conversion en minuscules de la boucle.
+On décide donc de sortir les conversions en minuscules de la boucle.
 
 ```{r}
 nb_chaine2 <- function(d, chr) {
     res <- numeric()
-    
-    # Conversion des colonnes de d et de chr en minuscules
+
+    # Conversion de chr et des colonnes de d en minuscules
     d <- d %>% modify(str_to_lower)
     chr <- str_to_lower(chr)
 
@@ -457,20 +457,27 @@ Ce qui permet de constater que la deuxième version est quatre fois plus rapide 
 
 Si on travaille sur des fichiers de données volumineux, les temps de chargement et de sauvegarde des données peuvent devenir importants.
 
-Il existe différents formats de fichiers qui pourront être plus ou moins efficaces et pratiques selon l'utilisation qu'on en fait :
+Il existe différents formats de fichiers qui peuvont être plus ou moins rapides et pratiques selon l'utilisation qu'on en fait. Il n'est malheureusement pas toujours simple de s'y retrouver d'autant que les formats et les performances peuvent évoluer assez rapidement, mais on peut quand même donner quelques indications :
 
-- le format CSV est pratique pour échanger des données d'un système à un autre, mais ces fichiers sont assez volumineux et les temps de lecture / écriture assez longs. À noter que si `read_csv()` de `readr` est plus rapide que `read.csv()` de R base, il existe des alternatives encore plus rapides comme `fread()` de `data.table` ou les fonctions de l'extension `vroom`.
-- pour un usage interne à R, les formats `Rdata` (utilisé par `load()` et `save()`) et `RDS` (utilisé par `readRDS()` et `saveRDS()`) ont des temps de lecture plus rapides et conservent les informations sur les types de données. Avec ces formats on peut faire varier le niveau de compression des données et donc jouer sur le rapport entre espace disque utilisé et temps d'accès.
-- pour des données vraiment volumineuses, les formats `parquet` (du package `arrow`) ou `fst` proposent des temps de lecture et d'écriture très rapides.
+Le format **CSV** est pratique pour échanger des données tabulaires d'un système ou d'un logiciel à un autre, mais il présente plusieurs inconvénients :
 
-Il n'est malheureusement pas toujours simple de s'y retrouver d'autant que les formats et les performances peuvent évoluer assez rapidement. 
+- les fichiers sont volumineux
+- les temps de lecture/écriture sont assez longs
+- ils n'incluent pas de métadonnées comme les types des colonnes, et nécessitent donc des opérations de conversion plus ou moins "risquées"
 
-À titre indicatif, le billet (en anglais) [a shallow benchmark of R data frame export/import methods](https://data.nozav.org/post/2019-r-data-frame-benchmark/) propose un comparatif entre les performances de différents formats de fichiers. Attention cependant, il date de 2019 et les performances des fonctions testées ont pu évoluer depuis.
+À noter que plusieurs extensions et fonctions existent pour lire et/ou écrire les fichiers CSV. Outre `read.csv` de R base et `read_csv` de `readr`, on pourra mentionner `fread` de `data.table`, particulièrement rapide, ou l'extension `vroom`, qui ne charge pas toutes les informations d'un coup mais y accède "à la demande".
+
+
+Les formats **Rdata** (utilisé par `load()` et `save()`) et **RDS** (utilisé par `readRDS()` et `saveRDS()`), propres à R, permettent de sauvegarder des objets dans un fichier. Ils ont des temps de lecture et d'écriture rapides, et permettent d'enregistrer n'importe quel objet R et d'être sûr de le retrouver à peu près à l'identique. À noter que ces formats permettent de faire varier le niveau de compression des données et donc jouer sur le rapport entre espace disque utilisé et temps d'accès. Ces formats sont intéressants notamment pour enregistrer des résultats intermédiaires. À noter que le format **fst**, proposé par [l'extension du même nom](https://www.fstpackage.org/), offre des performances encore supérieures mais ne gère que les données tabulaires.
+
+Pour des données vraiment volumineuses, le package `arrow` permet la lecture et l'enregistrement dans différents formats, dont **arrow** et **parquet**. Très optimisés mais limités aux données tabulaires, ils permettent également des échanges avec d'autres langages de programmation comme Python, JavaScript, etc.
+
+À titre indicatif, le billet [a shallow benchmark of R data frame export/import methods](https://data.nozav.org/post/2019-r-data-frame-benchmark/) propose un comparatif entre les performances de différents formats de fichiers pour des données tabulaires. Attention cependant, il date de 2019 et les performances des fonctions testées ont pu évoluer depuis.
 
 
 ### Repérer les opérations coûteuses avec du *profiling*
 
-Quand on commence à écrire du code un peu long, il n'est pas toujours évident de savoir quelles sont les opérations qui sont les plus coûteuses en termes de performance. Il peut alors être utile d'utiliser un outil de *profiling*, qui consiste justement à exécuter du code tout en mesurant les temps d'exécution de chaque instruction, ce qui permet ensuite de visualiser et repérer les opérations qui prennent le plus de temps et qui seraient donc les plus intéressantes à optimiser (si c'est possible).
+Quand on commence à écrire du code un peu long, il n'est pas toujours évident de savoir quelles sont les opérations qui sont les plus coûteuses en termes de performance. Il peut alors être utile d'utiliser un outil de *profiling*, qui consiste à exécuter du code tout en mesurant les temps d'exécution de chaque instruction, ce qui permet ensuite de visualiser et repérer les opérations qui prennent le plus de temps et qui seraient donc les plus intéressantes à optimiser (si c'est possible).
 
 L'extension `profvis` fournit un outil de *profiling* sous R pratique et utile. On passe des instructions ou un script entier à la fonction `profvis()`, et celle-ci fournit une visualisation interactive des différentes opérations, de leur temps d'exécution, de leur utilisation de la mémoire...
 
@@ -479,22 +486,20 @@ L'extension `profvis` fournit un outil de *profiling* sous R pratique et utile. 
 L'utilisation de `profvis()` dépasse le cadre de ce document, mais on pourra trouver des explications (en anglais) dans la partie [profiling](https://adv-r.hadley.nz/perf-measure.html#profiling)  d'Advanced R.
 
 
-### Mettre en cache les résultats intermédiaires
+### Mettre en cache des résultats intermédiaires
 
 Selon la taille des données et le type d'opérations réalisées, les temps de calculs même optimisés peuvent demeurer longs. Dans ce cas il peut être intéressant de "mettre en cache" des résultats intermédiaires dans des fichiers pour pouvoir les charger directement sans avoir à tout recalculer.
 
-Par exemple, si on travaille sur un corpus de données textuelles, on peut enregistrer dans un fichier `RDS` ou `Rdata` le résultat de toutes les opérations de prétraitement du corpus pour n'avoir qu'à charger ces fichiers si on souhaite effectuer de nouvelles analyses.
+Par exemple, si on travaille sur un corpus de données textuelles, on peut enregistrer dans un fichier `RDS` ou `Rdata` le résultat de toutes les opérations de prétraitement du corpus : si on souhaite faire des analyses par la suite on aura juste à charger les données depuis ce fichier sans avoir à relancer le calcul de tous les prétraitements.
 
-L'idéal cependant est d'utiliser une extension comme `targets`, présentée section \@ref(targets), qui gère automatiquement les dépendances entre les étapes d'un projet et la mise en cache des résultats, et permet ainsi d'optimiser les temps de traitement.
+L'extension `targets`, présentée section \@ref(targets), est particulièrement adaptée pour les projets de ce type car elle gère automatiquement les dépendances entre les étapes d'un projet et la mise en cache des résultats, et permet ainsi d'optimiser les temps de traitement.
 
 
 ### Utiliser d'autres extensions
 
 Enfin, si ce document est basé sur les extensions du *tidyverse*, qui offrent une syntaxe cohérente et plus facile d'accès, il existe d'autres extensions notamment dans le domaine de la manipulation des données qui permettent des opérations plus rapides.
 
-C'est notamment le cas de l'extension `data.table`, qui utilise une syntaxe moins accessible que celle de `dplyr`, mais propose des performances en général [assez nettement supérieures](https://h2oai.github.io/db-benchmark/).
-
-On trouvera la documentation détaillée de `data.table` (en anglais) [sur le site de l'extension](https://rdatatable.gitlab.io/data.table/).
+C'est en particulier le cas de l'extension `data.table`, qui utilise une syntaxe moins accessible que celle de `dplyr`, mais propose des performances en général [assez nettement supérieures](https://h2oai.github.io/db-benchmark/). On trouvera la documentation détaillée de `data.table` (en anglais) [sur le site de l'extension](https://rdatatable.gitlab.io/data.table/).
 
 
 ## Ressources
