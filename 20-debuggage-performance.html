@@ -628,7 +628,7 @@ code span.wa { color: #bf0303; } /* Warning */
 <div id="print" class="section level3">
 <h3><span class="header-section-number">20.1.1</span> print()</h3>
 <p>L’outil le plus simple, rudimentaire et parfois décrié mais qui reste efficace, est de rajouter un <code>print()</code> dans le code de notre fonction pour examiner le contenu d’un objet à un moment donné.</p>
-<p>Prenons un exemple. La fonction suivante prend en argument un tableau de données et un nom de variable, et retourne la moyenne et l’écart-type de cette variable.</p>
+<p>Prenons un exemple. La fonction suivante prend en argument un tableau de données <code>df</code> et un nom de variable <code>var</code>, et retourne la moyenne et l’écart-type de cette variable.</p>
 <div class="sourceCode" id="cb1165"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1165-1"><a href="20-debuggage-performance.html#cb1165-1"></a>indicateurs &lt;-<span class="st"> </span><span class="cf">function</span>(df, var) {</span>
 <span id="cb1165-2"><a href="20-debuggage-performance.html#cb1165-2"></a>    valeurs &lt;-<span class="st"> </span>df[, var]</span>
 <span id="cb1165-3"><a href="20-debuggage-performance.html#cb1165-3"></a>    <span class="cf">if</span> (<span class="op">!</span><span class="kw">is.numeric</span>(valeurs)) <span class="kw">return</span>(<span class="ot">NA</span>)</span>
@@ -647,7 +647,7 @@ code span.wa { color: #bf0303; } /* Warning */
 <p>On teste à nouveau, cette fois sur une variable du jeu de données <code>starwars</code> de <code>dplyr</code>.</p>
 <div class="sourceCode" id="cb1167"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1167-1"><a href="20-debuggage-performance.html#cb1167-1"></a><span class="kw">indicateurs</span>(starwars, <span class="st">&quot;height&quot;</span>)</span>
 <span id="cb1167-2"><a href="20-debuggage-performance.html#cb1167-2"></a><span class="co">#&gt; [1] NA</span></span></code></pre></div>
-<p>Sapristi, on obtient <code>NA</code> en résultat, alors que notre variable <code>height</code> est bien numérique, on devrait donc obtenir un vecteur avec la moyenne et l’écart-type. Comment expliquer ce résultat ?</p>
+<p>Sapristi, on obtient <code>NA</code> en résultat alors que notre variable <code>height</code> est bien numérique : on devrait donc obtenir la moyenne et l’écart-type. Comment expliquer ce résultat ?</p>
 <p>Comme on n’a pas d’explication immédiate juste en relisant le code de notre fonction, on va ajouter temporairement une instruction <code>print()</code> qui va afficher le contenu de <code>valeurs</code> juste après qu’elle soit calculée.</p>
 <div class="sourceCode" id="cb1168"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1168-1"><a href="20-debuggage-performance.html#cb1168-1"></a>indicateurs &lt;-<span class="st"> </span><span class="cf">function</span>(df, var) {</span>
 <span id="cb1168-2"><a href="20-debuggage-performance.html#cb1168-2"></a>    valeurs &lt;-<span class="st"> </span>df[, var]</span>
@@ -678,7 +678,7 @@ code span.wa { color: #bf0303; } /* Warning */
 <p>Le <code>print()</code> nous indique que <code>valeurs</code> n’est pas un vecteur mais un tableau de données à une seule colonne. Or dans ce cas, le test <code>is.numeric</code>, qui est sensé s’appliquer à un vecteur atomique, renvoie <code>FALSE</code>.</p>
 <div class="sourceCode" id="cb1170"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1170-1"><a href="20-debuggage-performance.html#cb1170-1"></a><span class="kw">is.numeric</span>(starwars[, <span class="st">&quot;height&quot;</span>])</span>
 <span id="cb1170-2"><a href="20-debuggage-performance.html#cb1170-2"></a><span class="co">#&gt; [1] FALSE</span></span></code></pre></div>
-<p>C’est donc la raison pour laquelle on obtient le résultat final <code>NA</code>.</p>
+<p>C’est donc la raison pour laquelle on obtient <code>NA</code> comme résultat.</p>
 <p>Certes, mais alors pourquoi cela fonctionne-t-il dans notre exemple avec <code>hdv2003</code> ?</p>
 <div class="sourceCode" id="cb1171"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1171-1"><a href="20-debuggage-performance.html#cb1171-1"></a><span class="kw">indicateurs</span>(hdv2003, <span class="st">&quot;age&quot;</span>)</span>
 <span id="cb1171-2"><a href="20-debuggage-performance.html#cb1171-2"></a><span class="co">#&gt;   [1] 28 23 59 34 71 35 60 47 20 28 65 47 63 67 76 49 62 20 70 39 30 30 37 79 20</span></span>
@@ -695,12 +695,12 @@ code span.wa { color: #bf0303; } /* Warning */
 <span id="cb1171-13"><a href="20-debuggage-performance.html#cb1171-13"></a><span class="co">#&gt; </span></span>
 <span id="cb1171-14"><a href="20-debuggage-performance.html#cb1171-14"></a><span class="co">#&gt; $sd</span></span>
 <span id="cb1171-15"><a href="20-debuggage-performance.html#cb1171-15"></a><span class="co">#&gt; [1] 16.94181</span></span></code></pre></div>
-<p>Ah ! Dans ce cas là <code>valeurs</code> est bien un vecteur, et on obtient donc le résultat attendu. Pourquoi cette différence ? On est en fait tombé sur une source d’erreur relativement fréquente qui est la différence de comportement, mentionnée section <a href="16-structures-donnees.html#df-sel">16.3.3</a>, entre les <em>data frames</em> et les <em>tibbles</em> : lorsqu’on sélectionne une seule colonne avec l’opérateur <code>[,]</code>, un <em>data frame</em> retourne un vecteur tandis qu’un <em>tibble</em> retourne un tableau à une colonne. Or, ici, <code>hdv2003</code> est un <em>data frame</em>, et <code>starwars</code> un <em>tibble</em>.</p>
+<p>Ah ! Dans ce cas là <code>valeurs</code> est bien un vecteur, et on obtient donc le résultat attendu. Pourquoi cette différence ? On est en fait tombé sur une différence de comportement entre les <em>data frames</em> et les <em>tibbles</em>, mentionnée section <a href="16-structures-donnees.html#df-sel">16.3.3</a> : lorsqu’on sélectionne une seule colonne avec l’opérateur <code>[,]</code>, un <em>data frame</em> retourne un vecteur tandis qu’un <em>tibble</em> retourne un tableau à une colonne. Or, ici, <code>hdv2003</code> est un <em>data frame</em>, et <code>starwars</code> un <em>tibble</em>.</p>
 <p>Comment résoudre ce problème ? Il y a différentes manières, mais la plus simple est sans doute de remplacer <code>[,]</code> par <code>[[]]</code>, qui lui a le même comportement dans les deux cas. On peut donc modifier notre fonction (en n’oubliant pas d’enlever le <code>print()</code>) et vérifier que ça fonctionne désormais.</p>
 <div class="sourceCode" id="cb1172"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1172-1"><a href="20-debuggage-performance.html#cb1172-1"></a>indicateurs &lt;-<span class="st"> </span><span class="cf">function</span>(df, var) {</span>
 <span id="cb1172-2"><a href="20-debuggage-performance.html#cb1172-2"></a>    valeurs &lt;-<span class="st"> </span>df[[var]]</span>
-<span id="cb1172-3"><a href="20-debuggage-performance.html#cb1172-3"></a>     <span class="cf">if</span> (<span class="op">!</span><span class="kw">is.numeric</span>(valeurs)) <span class="kw">return</span>(<span class="ot">NA</span>)</span>
-<span id="cb1172-4"><a href="20-debuggage-performance.html#cb1172-4"></a>     <span class="kw">list</span>(</span>
+<span id="cb1172-3"><a href="20-debuggage-performance.html#cb1172-3"></a>    <span class="cf">if</span> (<span class="op">!</span><span class="kw">is.numeric</span>(valeurs)) <span class="kw">return</span>(<span class="ot">NA</span>)</span>
+<span id="cb1172-4"><a href="20-debuggage-performance.html#cb1172-4"></a>    <span class="kw">list</span>(</span>
 <span id="cb1172-5"><a href="20-debuggage-performance.html#cb1172-5"></a>        <span class="dt">moyenne =</span> <span class="kw">mean</span>(valeurs, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>),</span>
 <span id="cb1172-6"><a href="20-debuggage-performance.html#cb1172-6"></a>        <span class="dt">sd =</span> <span class="kw">sd</span>(valeurs, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>)</span>
 <span id="cb1172-7"><a href="20-debuggage-performance.html#cb1172-7"></a>    )</span>
@@ -731,11 +731,11 @@ Quand on ajoute des <code>print()</code> pour essayer d’identifier un problèm
 <div class="sourceCode" id="cb1173"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1173-1"><a href="20-debuggage-performance.html#cb1173-1"></a>min_freq_values &lt;-<span class="st"> </span><span class="cf">function</span>(df, n_min) {</span>
 <span id="cb1173-2"><a href="20-debuggage-performance.html#cb1173-2"></a>    res &lt;-<span class="st"> </span><span class="kw">list</span>()</span>
 <span id="cb1173-3"><a href="20-debuggage-performance.html#cb1173-3"></a>    <span class="cf">for</span> (col <span class="cf">in</span> <span class="kw">names</span>(df)) {</span>
-<span id="cb1173-4"><a href="20-debuggage-performance.html#cb1173-4"></a>        <span class="co"># On fait le tri à plat des valeurs de la colonne</span></span>
+<span id="cb1173-4"><a href="20-debuggage-performance.html#cb1173-4"></a>        <span class="co"># Tri à plat des valeurs de la colonne</span></span>
 <span id="cb1173-5"><a href="20-debuggage-performance.html#cb1173-5"></a>        freq &lt;-<span class="st"> </span><span class="kw">table</span>(df[[col]])</span>
-<span id="cb1173-6"><a href="20-debuggage-performance.html#cb1173-6"></a>        <span class="co"># On ne conserve que les modalités avec effectif &gt;= n</span></span>
+<span id="cb1173-6"><a href="20-debuggage-performance.html#cb1173-6"></a>        <span class="co"># On conserve les modalités avec effectif &gt;= n</span></span>
 <span id="cb1173-7"><a href="20-debuggage-performance.html#cb1173-7"></a>        freq &lt;-<span class="st"> </span>freq[freq <span class="op">&gt;=</span><span class="st"> </span>n_min]</span>
-<span id="cb1173-8"><a href="20-debuggage-performance.html#cb1173-8"></a>        <span class="co"># On ajoute la colonne au résultat que s&#39;il y a au moins une modalité</span></span>
+<span id="cb1173-8"><a href="20-debuggage-performance.html#cb1173-8"></a>        <span class="co"># On ajoute la colonne au résultat s&#39;il y a au moins une modalité</span></span>
 <span id="cb1173-9"><a href="20-debuggage-performance.html#cb1173-9"></a>        <span class="cf">if</span> (<span class="kw">length</span>(freq) <span class="op">&gt;</span><span class="st"> </span><span class="dv">0</span>) res[[col]] &lt;-<span class="st"> </span>freq</span>
 <span id="cb1173-10"><a href="20-debuggage-performance.html#cb1173-10"></a>    }</span>
 <span id="cb1173-11"><a href="20-debuggage-performance.html#cb1173-11"></a>    res</span>
@@ -757,16 +757,16 @@ Quand on ajoute des <code>print()</code> pour essayer d’identifier un problèm
 <div class="sourceCode" id="cb1175"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1175-1"><a href="20-debuggage-performance.html#cb1175-1"></a><span class="kw">min_freq_values</span>(starwars, <span class="dv">50</span>)</span>
 <span id="cb1175-2"><a href="20-debuggage-performance.html#cb1175-2"></a><span class="co">#&gt; Error in table(df[[col]]): tous les arguments doivent avoir la même longueur</span></span></code></pre></div>
 <p>On obtient un message quelque peu sybillin : apparemment une erreur se produit au moment de faire le tri à plat des valeurs avec <code>table()</code>. Mais comme ce tri à plat s’effectue dans une boucle, on ne sait pas quelle variable de <code>starwars</code> est à l’origine du problème.</p>
-<p>On va donc rajouter comme première instruction de la fonction du <code>for</code> un <code>print(col)</code>.</p>
+<p>On va donc rajouter un <code>print(col)</code> comme première instruction de la boucle <code>for</code>.</p>
 <div class="sourceCode" id="cb1176"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1176-1"><a href="20-debuggage-performance.html#cb1176-1"></a>min_freq_values &lt;-<span class="st"> </span><span class="cf">function</span>(df, n_min) {</span>
 <span id="cb1176-2"><a href="20-debuggage-performance.html#cb1176-2"></a>    res &lt;-<span class="st"> </span><span class="kw">list</span>()</span>
 <span id="cb1176-3"><a href="20-debuggage-performance.html#cb1176-3"></a>    <span class="cf">for</span> (col <span class="cf">in</span> <span class="kw">names</span>(df)) {</span>
 <span id="cb1176-4"><a href="20-debuggage-performance.html#cb1176-4"></a>        <span class="kw">print</span>(col)</span>
-<span id="cb1176-5"><a href="20-debuggage-performance.html#cb1176-5"></a>        <span class="co"># On fait le tri à plat des valeurs de la colonne</span></span>
+<span id="cb1176-5"><a href="20-debuggage-performance.html#cb1176-5"></a>        <span class="co"># Tri à plat des valeurs de la colonne</span></span>
 <span id="cb1176-6"><a href="20-debuggage-performance.html#cb1176-6"></a>        freq &lt;-<span class="st"> </span><span class="kw">table</span>(df[[col]])</span>
-<span id="cb1176-7"><a href="20-debuggage-performance.html#cb1176-7"></a>        <span class="co"># On ne conserve que les modalités avec effectif &gt;= n</span></span>
+<span id="cb1176-7"><a href="20-debuggage-performance.html#cb1176-7"></a>        <span class="co"># On conserve les modalités avec effectif &gt;= n</span></span>
 <span id="cb1176-8"><a href="20-debuggage-performance.html#cb1176-8"></a>        freq &lt;-<span class="st"> </span>freq[freq <span class="op">&gt;=</span><span class="st"> </span>n_min]</span>
-<span id="cb1176-9"><a href="20-debuggage-performance.html#cb1176-9"></a>        <span class="co"># On ajoute la colonne au résultat que s&#39;il y a au moins une modalité</span></span>
+<span id="cb1176-9"><a href="20-debuggage-performance.html#cb1176-9"></a>        <span class="co"># On ajoute la colonne au résultat s&#39;il y a au moins une modalité</span></span>
 <span id="cb1176-10"><a href="20-debuggage-performance.html#cb1176-10"></a>        <span class="cf">if</span> (<span class="kw">length</span>(freq) <span class="op">&gt;</span><span class="st"> </span><span class="dv">0</span>) res[[col]] &lt;-<span class="st"> </span>freq</span>
 <span id="cb1176-11"><a href="20-debuggage-performance.html#cb1176-11"></a>    }</span>
 <span id="cb1176-12"><a href="20-debuggage-performance.html#cb1176-12"></a>    res</span>
@@ -786,7 +786,7 @@ Quand on ajoute des <code>print()</code> pour essayer d’identifier un problèm
 <span id="cb1176-26"><a href="20-debuggage-performance.html#cb1176-26"></a><span class="co">#&gt; [1] &quot;species&quot;</span></span>
 <span id="cb1176-27"><a href="20-debuggage-performance.html#cb1176-27"></a><span class="co">#&gt; [1] &quot;films&quot;</span></span>
 <span id="cb1176-28"><a href="20-debuggage-performance.html#cb1176-28"></a><span class="co">#&gt; Error in table(df[[col]]): tous les arguments doivent avoir la même longueur</span></span></code></pre></div>
-<p>On voit que tout se passe bien pour les premières variables de notre tableau, et que l’erreur survient au moment de traiter la variable <code>films</code>. On regarde donc à quoi ressemble cette variable.</p>
+<p>Ce <code>print(col)</code> nous permet de voir que tout se passe bien pour les premières variables du tableau, et que l’erreur survient au moment de traiter la variable <code>films</code>. On regarde donc à quoi ressemble cette variable.</p>
 <div class="sourceCode" id="cb1177"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1177-1"><a href="20-debuggage-performance.html#cb1177-1"></a><span class="kw">head</span>(starwars<span class="op">$</span>films, <span class="dv">3</span>)</span>
 <span id="cb1177-2"><a href="20-debuggage-performance.html#cb1177-2"></a><span class="co">#&gt; [[1]]</span></span>
 <span id="cb1177-3"><a href="20-debuggage-performance.html#cb1177-3"></a><span class="co">#&gt; [1] &quot;The Empire Strikes Back&quot; &quot;Revenge of the Sith&quot;    </span></span>
@@ -803,18 +803,18 @@ Quand on ajoute des <code>print()</code> pour essayer d’identifier un problèm
 <span id="cb1177-14"><a href="20-debuggage-performance.html#cb1177-14"></a><span class="co">#&gt; [3] &quot;The Phantom Menace&quot;      &quot;Revenge of the Sith&quot;    </span></span>
 <span id="cb1177-15"><a href="20-debuggage-performance.html#cb1177-15"></a><span class="co">#&gt; [5] &quot;Return of the Jedi&quot;      &quot;A New Hope&quot;             </span></span>
 <span id="cb1177-16"><a href="20-debuggage-performance.html#cb1177-16"></a><span class="co">#&gt; [7] &quot;The Force Awakens&quot;</span></span></code></pre></div>
-<p><em>Damn</em>, cette variable n’est pas un vecteur atomique mais une liste ! Un tableau de données peut en effet contenir ce que l’on appelle des colonnes-listes. Comme ça n’est pas fréquent, on ne l’avait clairement pas prévu au moment de la création de la fonction.</p>
-<p>On a désormais identifié le problème, on peut donc le corriger par exemple en ignorant les colonnes de type liste en utilisant <code>is.list()</code> et l’instruction <code>next</code>.</p>
+<p><em>Damn</em>, cette variable n’est pas un vecteur atomique mais une liste ! Un tableau de données peut en effet contenir ce que l’on appelle des <em>colonnes-listes</em>. Comme ça n’est pas courant, on ne l’avait clairement pas prévu au moment de la création de la fonction.</p>
+<p>On a désormais identifié le problème, on peut donc le corriger par exemple en ignorant les colonnes de type liste. Pour cela on utilise <code>is.list()</code> et l’instruction <code>next</code>.</p>
 <div class="sourceCode" id="cb1178"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1178-1"><a href="20-debuggage-performance.html#cb1178-1"></a>min_freq_values &lt;-<span class="st"> </span><span class="cf">function</span>(df, n_min) {</span>
 <span id="cb1178-2"><a href="20-debuggage-performance.html#cb1178-2"></a>    res &lt;-<span class="st"> </span><span class="kw">list</span>()</span>
 <span id="cb1178-3"><a href="20-debuggage-performance.html#cb1178-3"></a>    <span class="cf">for</span> (col <span class="cf">in</span> <span class="kw">names</span>(df)) {</span>
 <span id="cb1178-4"><a href="20-debuggage-performance.html#cb1178-4"></a>        <span class="co"># On passe à la colonne suivante si la colonne est une colonne-liste</span></span>
 <span id="cb1178-5"><a href="20-debuggage-performance.html#cb1178-5"></a>        <span class="cf">if</span> (<span class="kw">is.list</span>(df[[col]])) <span class="cf">next</span></span>
-<span id="cb1178-6"><a href="20-debuggage-performance.html#cb1178-6"></a>        <span class="co"># On fait le tri à plat des valeurs de la colonne</span></span>
+<span id="cb1178-6"><a href="20-debuggage-performance.html#cb1178-6"></a>        <span class="co"># Tri à plat des valeurs de la colonne</span></span>
 <span id="cb1178-7"><a href="20-debuggage-performance.html#cb1178-7"></a>        freq &lt;-<span class="st"> </span><span class="kw">table</span>(df[[col]])</span>
-<span id="cb1178-8"><a href="20-debuggage-performance.html#cb1178-8"></a>        <span class="co"># On ne conserve que les modalités avec effectif &gt;= n</span></span>
+<span id="cb1178-8"><a href="20-debuggage-performance.html#cb1178-8"></a>        <span class="co"># On conserve les modalités avec effectif &gt;= n</span></span>
 <span id="cb1178-9"><a href="20-debuggage-performance.html#cb1178-9"></a>        freq &lt;-<span class="st"> </span>freq[freq <span class="op">&gt;=</span><span class="st"> </span>n_min]</span>
-<span id="cb1178-10"><a href="20-debuggage-performance.html#cb1178-10"></a>        <span class="co"># On ajoute la colonne au résultat que s&#39;il y a au moins une modalité</span></span>
+<span id="cb1178-10"><a href="20-debuggage-performance.html#cb1178-10"></a>        <span class="co"># On ajoute la colonne au résultat s&#39;il y a au moins une modalité</span></span>
 <span id="cb1178-11"><a href="20-debuggage-performance.html#cb1178-11"></a>        <span class="cf">if</span> (<span class="kw">length</span>(freq) <span class="op">&gt;</span><span class="st"> </span><span class="dv">0</span>) res[[col]] &lt;-<span class="st"> </span>freq</span>
 <span id="cb1178-12"><a href="20-debuggage-performance.html#cb1178-12"></a>    }</span>
 <span id="cb1178-13"><a href="20-debuggage-performance.html#cb1178-13"></a>    res</span>
@@ -828,20 +828,21 @@ Quand on ajoute des <code>print()</code> pour essayer d’identifier un problèm
 <span id="cb1178-21"><a href="20-debuggage-performance.html#cb1178-21"></a><span class="co">#&gt; $gender</span></span>
 <span id="cb1178-22"><a href="20-debuggage-performance.html#cb1178-22"></a><span class="co">#&gt; masculine </span></span>
 <span id="cb1178-23"><a href="20-debuggage-performance.html#cb1178-23"></a><span class="co">#&gt;        66</span></span></code></pre></div>
+<p>Ça fonctionne ! Et cela nous permet de repérer au passage une “légère” sur-représentation des personnages masculins…</p>
 </div>
 <div id="browser" class="section level3">
 <h3><span class="header-section-number">20.1.3</span> browser()</h3>
-<p>Il y a cependant des alternatives à <code>print()</code> plus efficaces pour identifier et résoudre des bugs. La plus utilisée est la fonction <code>browser()</code>. Celle-ci peut s’insérer à n’importe quel endroit du code, et lorsqu’elle est rencontrée par R celui-ci s’interrompt et affiche une invite de commande permettant notamment d’inspecter des objets.</p>
+<p>Il existe des alternatives à <code>print()</code> plus efficaces pour identifier et résoudre des bugs. La plus utilisée est la fonction <code>browser()</code> : celle-ci peut s’insérer à n’importe quel endroit du code, et lorsqu’elle est rencontrée par R celui-ci s’interrompt et affiche une invite de commande permettant notamment d’inspecter des objets.</p>
 <p>On reprend l’exemple précédent en remplaçant le <code>print(col)</code> que nous avions inséré pour débugguer la fonction <code>min_freq_values</code> par un appel à <code>browser()</code>.</p>
 <div class="sourceCode" id="cb1179"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1179-1"><a href="20-debuggage-performance.html#cb1179-1"></a>min_freq_values &lt;-<span class="st"> </span><span class="cf">function</span>(df, n_min) {</span>
 <span id="cb1179-2"><a href="20-debuggage-performance.html#cb1179-2"></a>    res &lt;-<span class="st"> </span><span class="kw">list</span>()</span>
 <span id="cb1179-3"><a href="20-debuggage-performance.html#cb1179-3"></a>    <span class="cf">for</span> (col <span class="cf">in</span> <span class="kw">names</span>(df)) {</span>
 <span id="cb1179-4"><a href="20-debuggage-performance.html#cb1179-4"></a>        <span class="kw">browser</span>()</span>
-<span id="cb1179-5"><a href="20-debuggage-performance.html#cb1179-5"></a>        <span class="co"># On fait le tri à plat des valeurs de la colonne</span></span>
+<span id="cb1179-5"><a href="20-debuggage-performance.html#cb1179-5"></a>        <span class="co"># Tri à plat des valeurs de la colonne</span></span>
 <span id="cb1179-6"><a href="20-debuggage-performance.html#cb1179-6"></a>        freq &lt;-<span class="st"> </span><span class="kw">table</span>(df[[col]])</span>
-<span id="cb1179-7"><a href="20-debuggage-performance.html#cb1179-7"></a>        <span class="co"># On ne conserve que les modalités avec effectif &gt;= n</span></span>
+<span id="cb1179-7"><a href="20-debuggage-performance.html#cb1179-7"></a>        <span class="co"># On conserve les modalités avec effectif &gt;= n</span></span>
 <span id="cb1179-8"><a href="20-debuggage-performance.html#cb1179-8"></a>        freq &lt;-<span class="st"> </span>freq[freq <span class="op">&gt;=</span><span class="st"> </span>n_min]</span>
-<span id="cb1179-9"><a href="20-debuggage-performance.html#cb1179-9"></a>        <span class="co"># On ajoute la colonne au résultat que s&#39;il y a au moins une modalité</span></span>
+<span id="cb1179-9"><a href="20-debuggage-performance.html#cb1179-9"></a>        <span class="co"># On ajoute la colonne au résultat s&#39;il y a au moins une modalité</span></span>
 <span id="cb1179-10"><a href="20-debuggage-performance.html#cb1179-10"></a>        <span class="cf">if</span> (<span class="kw">length</span>(freq) <span class="op">&gt;</span><span class="st"> </span><span class="dv">0</span>) res[[col]] &lt;-<span class="st"> </span>freq</span>
 <span id="cb1179-11"><a href="20-debuggage-performance.html#cb1179-11"></a>    }</span>
 <span id="cb1179-12"><a href="20-debuggage-performance.html#cb1179-12"></a>    res</span>
@@ -852,7 +853,7 @@ Quand on ajoute des <code>print()</code> pour essayer d’identifier un problèm
 <pre><code>Called from: min_freq_values(starwars, 50)
 
 Browse[1]&gt;</code></pre>
-<p>Cette invite de commande offre plusieurs possibilités. En particulier, on peut lui indiquer du code R qui sera exécuté dans le contexte au moment de l’interruption : si on indique un nom d’objet, on pourra donc afficher sa valeur. Ainsi, si on tape <code>col</code>, R nous affiche la valeur actuelle de <code>col</code>, donc au moment de la première itération de la boucle.</p>
+<p>Cette invite de commande offre plusieurs possibilités. La première est d’indiquer du code R qui sera exécuté dans le contexte au moment de l’interruption : si on indique un nom d’objet, on pourra donc afficher sa valeur. Ainsi, si on tape <code>col</code>, R nous affiche la valeur actuelle de <code>col</code>, donc au moment de la première itération de la boucle.</p>
 <pre><code>Browse[1]&gt; col                                       
 [1] &quot;name&quot;</code></pre>
 <p>On peut également fournir des commandes spécifiques : si on tape <code>n</code>, R va passer à l’instruction suivante puis s’interrompre à nouveau<a href="#fn38" class="footnote-ref" id="fnref38"><sup>38</sup></a>.</p>
@@ -879,7 +880,7 @@ Pour plus d’informations on pourra se reporter aux ressources en fin de chapit
 <div id="benchmarking-mesurer-et-comparer-les-temps-dexécution" class="section level2">
 <h2><span class="header-section-number">20.2</span> benchmarking : mesurer et comparer les temps d’exécution</h2>
 <p>Lorsqu’on commence à créer ses propres fonctions et de manière générale à écrire du code de plus en plus complexe ou à travailler sur des données de plus en plus volumineuses, on peut arriver sur des problèmes de performance : les temps d’exécution deviennent longs et on aimerait essayer de les optimiser.</p>
-<p>Un outil utile consiste à faire du <em>benchmarking</em> : comparer plusieurs manières différentes de faire la même chose, et mesurer leurs différences de vitesse d’exécution.</p>
+<p>Il est alors parfois utile de faire du <em>benchmarking</em>, c’est-à-dire comparer plusieurs manières différentes de faire la même chose en mesurant leurs différences de vitesse d’exécution.</p>
 <p>L’intruction la plus simple pour cela est sans doute <code>system.time()</code>. Celle-ci prend en argument une expression R, et affiche en retour le temps d’exécution en secondes.</p>
 <div class="sourceCode" id="cb1184"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1184-1"><a href="20-debuggage-performance.html#cb1184-1"></a><span class="kw">system.time</span>(<span class="kw">runif</span>(<span class="dv">1000000</span>))</span>
 <span id="cb1184-2"><a href="20-debuggage-performance.html#cb1184-2"></a><span class="co">#&gt; utilisateur     système      écoulé </span></span>
@@ -891,16 +892,16 @@ Pour plus d’informations on pourra se reporter aux ressources en fin de chapit
 <span id="cb1185-4"><a href="20-debuggage-performance.html#cb1185-4"></a>})</span>
 <span id="cb1185-5"><a href="20-debuggage-performance.html#cb1185-5"></a><span class="co">#&gt; utilisateur     système      écoulé </span></span>
 <span id="cb1185-6"><a href="20-debuggage-performance.html#cb1185-6"></a><span class="co">#&gt;       0.031       0.000       0.030</span></span></code></pre></div>
-<p><code>system.time()</code> est cependant très limitée : on ne peut exécuter qu’une expression à la fois, on ne peut donc pas en comparer plusieurs directement, et surtout le temps d’exécution peut varier assez sensiblement selon l’utilisation du processeur de la machine au moment où on le lance.</p>
+<p><code>system.time()</code> est cependant très limitée : on ne peut exécuter qu’une expression à la fois, on ne peut donc pas en comparer plusieurs directement, et surtout le temps d’exécution peut varier assez sensiblement selon l’utilisation du processeur de la machine au moment où on lance la commande.</p>
 <p>Il existe donc en complément plusieurs extensions dédiées au <em>benchmarking</em>. On va utiliser ici l’extension <a href="https://bench.r-lib.org/">bench</a>, installable avec :</p>
 <div class="sourceCode" id="cb1186"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1186-1"><a href="20-debuggage-performance.html#cb1186-1"></a><span class="kw">install.packages</span>(<span class="st">&quot;bench&quot;</span>)</span></code></pre></div>
-<p><code>bench</code> propose une fonction principale, nommée <code>mark()</code>, qu’on peut donc appeler directement avec <code>bench::mark()</code><a href="#fn39" class="footnote-ref" id="fnref39"><sup>39</sup></a>. On passe à cette fonction plusieurs expressions, et <code>mark()</code> va effectuer les actions suivante :</p>
+<p><code>bench</code> propose une fonction principale, nommée <code>mark()</code>, qu’on peut donc appeler directement avec <code>bench::mark()</code><a href="#fn39" class="footnote-ref" id="fnref39"><sup>39</sup></a>. On passe à cette fonction plusieurs expressions, et <code>bench::mark()</code> va effectuer les actions suivante :</p>
 <ul>
 <li>elle vérifie que les expressions retournent bien le même résultat (si on souhaite comparer des expressions qui renvoient des résultats différents, il faut ajouter l’argument <code>check = FALSE</code>)</li>
-<li>elle lance ces expressions plusieurs fois et mesure à chaque fois leur temps d’exécution</li>
+<li>elle lance chacune de ces expressions plusieurs fois et mesure à chaque fois leur temps d’exécution</li>
 <li>elle affiche un résumé de ces temps d’exécution en indiquant notamment leur minimum et leur médiane</li>
 </ul>
-<p>Exécuter chaque expression plusieurs fois permet de prendre en compte les fluctuation liées à l’activité du processeur de la machine. Par défaut, <code>bench::mark()</code> exécute chaque instruction au minimum une fois et au moins suffisamment de fois pour atteindre 0,5s d’exécution (ces valeurs peuvent être modifiées via les paramètres <code>min_iterations</code> et <code>min_time</code>).</p>
+<p>Exécuter chaque expression plusieurs fois permet de prendre en compte les fluctuations liées à l’activité du processeur de la machine. Par défaut, <code>bench::mark()</code> exécute chaque instruction au minimum une fois et au moins suffisamment de fois pour atteindre 0,5s d’exécution (ces valeurs peuvent être modifiées via les paramètres <code>min_iterations</code> et <code>min_time</code>).</p>
 <p>Dans l’exemple suivant, on crée deux fonctions qui font la même chose : ajouter 10 à tous les éléments d’un vecteur passé en argument. Dans la première fonction <code>plus10_for</code> on utilise une boucle <code>for</code> qui ajoute 10 à tous les éléments l’un après l’autre (ce qu’il ne faut évidemment pas faire !), tandis que la deuxième fonction <code>plus10_vec</code> utilise la forme vectorisée <code>x + 10</code>.</p>
 <div class="sourceCode" id="cb1187"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1187-1"><a href="20-debuggage-performance.html#cb1187-1"></a>plus10_for &lt;-<span class="st"> </span><span class="cf">function</span>(x) {</span>
 <span id="cb1187-2"><a href="20-debuggage-performance.html#cb1187-2"></a>    <span class="cf">for</span> (i <span class="cf">in</span> <span class="kw">seq_along</span>(x)) {</span>
@@ -933,8 +934,8 @@ Pour plus d’informations on pourra se reporter aux ressources en fin de chapit
 <span id="cb1190-4"><a href="20-debuggage-performance.html#cb1190-4"></a><span class="co">#&gt;   &lt;bch:expr&gt;    &lt;dbl&gt;  &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;</span></span>
 <span id="cb1190-5"><a href="20-debuggage-performance.html#cb1190-5"></a><span class="co">#&gt; 1 plus10_for(x)  32.7   12.1       1        1        1   </span></span>
 <span id="cb1190-6"><a href="20-debuggage-performance.html#cb1190-6"></a><span class="co">#&gt; 2 plus10_vec(x)   1      1        13.0      1.15     9.73</span></span></code></pre></div>
-<p>Ces résultats nous permettent de voir que la version <code>vec</code> est nettement plus rapide que la version <code>for</code> ! Ce qui confirme le fait qu’il faut toujours prioriser l’utilisation de fonctions vectorisées lorsqu’elles existent.</p>
-<p>On prend un second exemple : on souhaite mesurer si l’utilisation de <code>map</code> est plus rapide ou non qu’une boucle <code>for</code> pour une tache équivalente.</p>
+<p>Ces résultats nous permettent de voir que la version <code>vec</code> est très nettement plus rapide que la version <code>for</code> ! Ce qui confirme le fait qu’il faut toujours prioriser l’utilisation de fonctions vectorisées lorsqu’elles existent.</p>
+<p>On prend un second exemple : on souhaite mesurer si l’utilisation de <code>map</code> est plus rapide ou non qu’une boucle <code>for</code> pour une tâche équivalente.</p>
 <p>Pour cela on commence par créer artificiellement une liste de 200 tableaux de données en dupliquant 100 fois une liste composée des tableaux <code>rp2012</code> et <code>hdv2003</code>.</p>
 <div class="sourceCode" id="cb1191"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1191-1"><a href="20-debuggage-performance.html#cb1191-1"></a>dfs &lt;-<span class="st"> </span><span class="kw">list</span>(rp2012, hdv2003)</span>
 <span id="cb1191-2"><a href="20-debuggage-performance.html#cb1191-2"></a>dfs &lt;-<span class="st"> </span><span class="kw">rep</span>(dfs, <span class="dv">100</span>)</span></code></pre></div>
@@ -955,74 +956,93 @@ Pour plus d’informations on pourra se reporter aux ressources en fin de chapit
 <span id="cb1192-14"><a href="20-debuggage-performance.html#cb1192-14"></a><span class="co">#&gt; 1 boucle_for   3.31ms   3.48ms      286.  199.32KB     6.40</span></span>
 <span id="cb1192-15"><a href="20-debuggage-performance.html#cb1192-15"></a><span class="co">#&gt; 2 map        841.91µs 915.81µs     1094.    6.81KB    10.7</span></span></code></pre></div>
 <p>La lecture du résultat indique que le <code>map</code> est environ 4 fois plus rapide que la boucle <code>for</code>.</p>
+<p>Attention cependant en lisant ces résultats : dans la comparaison précédente les temps d’exécution étant en millisecondes, même une différence du type “4 fois plus rapide” peut être quasiment imperceptible. Dans l’exemple suivant on compare de la même manière <code>for</code> et <code>map</code>, mais cette fois en effectuant une action plus coûteuse en temps de calcul (on génère des vecteurs de nombres aléatoires).</p>
+<div class="sourceCode" id="cb1193"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1193-1"><a href="20-debuggage-performance.html#cb1193-1"></a>bench<span class="op">::</span><span class="kw">mark</span>(</span>
+<span id="cb1193-2"><a href="20-debuggage-performance.html#cb1193-2"></a>    <span class="dt">boucle_for =</span> {</span>
+<span id="cb1193-3"><a href="20-debuggage-performance.html#cb1193-3"></a>        res &lt;-<span class="st"> </span><span class="kw">numeric</span>()</span>
+<span id="cb1193-4"><a href="20-debuggage-performance.html#cb1193-4"></a>        <span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span><span class="dv">100</span>) {</span>
+<span id="cb1193-5"><a href="20-debuggage-performance.html#cb1193-5"></a>            res &lt;-<span class="st"> </span><span class="kw">c</span>(res, <span class="kw">mean</span>(<span class="kw">runif</span>(<span class="dv">50000</span>)))</span>
+<span id="cb1193-6"><a href="20-debuggage-performance.html#cb1193-6"></a>        }</span>
+<span id="cb1193-7"><a href="20-debuggage-performance.html#cb1193-7"></a>        res</span>
+<span id="cb1193-8"><a href="20-debuggage-performance.html#cb1193-8"></a>    },</span>
+<span id="cb1193-9"><a href="20-debuggage-performance.html#cb1193-9"></a>    <span class="dt">map =</span> <span class="kw">map_dbl</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">100</span>, <span class="op">~</span><span class="st"> </span><span class="kw">mean</span>(<span class="kw">runif</span>(<span class="dv">50000</span>))),</span>
+<span id="cb1193-10"><a href="20-debuggage-performance.html#cb1193-10"></a>    <span class="dt">check =</span> <span class="ot">FALSE</span></span>
+<span id="cb1193-11"><a href="20-debuggage-performance.html#cb1193-11"></a>)</span>
+<span id="cb1193-12"><a href="20-debuggage-performance.html#cb1193-12"></a><span class="co">#&gt; Warning: Some expressions had a GC in every iteration; so filtering is disabled.</span></span>
+<span id="cb1193-13"><a href="20-debuggage-performance.html#cb1193-13"></a><span class="co">#&gt; # A tibble: 2 × 6</span></span>
+<span id="cb1193-14"><a href="20-debuggage-performance.html#cb1193-14"></a><span class="co">#&gt;   expression      min   median `itr/sec` mem_alloc `gc/sec`</span></span>
+<span id="cb1193-15"><a href="20-debuggage-performance.html#cb1193-15"></a><span class="co">#&gt;   &lt;bch:expr&gt; &lt;bch:tm&gt; &lt;bch:tm&gt;     &lt;dbl&gt; &lt;bch:byt&gt;    &lt;dbl&gt;</span></span>
+<span id="cb1193-16"><a href="20-debuggage-performance.html#cb1193-16"></a><span class="co">#&gt; 1 boucle_for    221ms    252ms      3.97    38.5MB     3.97</span></span>
+<span id="cb1193-17"><a href="20-debuggage-performance.html#cb1193-17"></a><span class="co">#&gt; 2 map           226ms    228ms      4.25    38.4MB     4.25</span></span></code></pre></div>
+<p>Dans ce cas la différence entre <code>for</code> et <code>map</code> devient négligeable par rapport aux temps de calcul des opérations effectuées dans les boucles : au final les temps d’exécution sont presque identiques.</p>
 </div>
 <div id="quelques-conseils-doptimisation" class="section level2">
 <h2><span class="header-section-number">20.3</span> Quelques conseils d’optimisation</h2>
 <div id="privilégier-les-fonctions-vectorisées" class="section level3">
 <h3><span class="header-section-number">20.3.1</span> Privilégier les fonctions vectorisées</h3>
 <p>On l’a déjà dit, redit et reredit, une des forces de R est de proposer un grand nombre de fonctions vectorisées, c’est-à-dire prévues et optimisées pour s’appliquer à tous les éléments d’un vecteur. Quand une fonction vectorisée existe, il est donc toujours préférable de l’utiliser plutôt qu’une boucle ou un <code>map</code>.</p>
-<div class="sourceCode" id="cb1193"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1193-1"><a href="20-debuggage-performance.html#cb1193-1"></a>v &lt;-<span class="st"> </span><span class="kw">rep</span>(<span class="kw">c</span>(<span class="st">&quot;Pomme&quot;</span>, <span class="st">&quot;Poire&quot;</span>, <span class="st">&quot;Fraise&quot;</span>), <span class="dv">100</span>)</span>
-<span id="cb1193-2"><a href="20-debuggage-performance.html#cb1193-2"></a>bench<span class="op">::</span><span class="kw">mark</span>(</span>
-<span id="cb1193-3"><a href="20-debuggage-performance.html#cb1193-3"></a>    <span class="dt">boucle =</span> {</span>
-<span id="cb1193-4"><a href="20-debuggage-performance.html#cb1193-4"></a>        <span class="kw">map_int</span>(v, str_count, <span class="st">&quot;m&quot;</span>)</span>
-<span id="cb1193-5"><a href="20-debuggage-performance.html#cb1193-5"></a>    },</span>
-<span id="cb1193-6"><a href="20-debuggage-performance.html#cb1193-6"></a>    <span class="dt">vec =</span> <span class="kw">str_count</span>(v, <span class="st">&quot;m&quot;</span>)</span>
-<span id="cb1193-7"><a href="20-debuggage-performance.html#cb1193-7"></a>)</span>
-<span id="cb1193-8"><a href="20-debuggage-performance.html#cb1193-8"></a><span class="co">#&gt; # A tibble: 2 × 6</span></span>
-<span id="cb1193-9"><a href="20-debuggage-performance.html#cb1193-9"></a><span class="co">#&gt;   expression      min   median `itr/sec` mem_alloc `gc/sec`</span></span>
-<span id="cb1193-10"><a href="20-debuggage-performance.html#cb1193-10"></a><span class="co">#&gt;   &lt;bch:expr&gt; &lt;bch:tm&gt; &lt;bch:tm&gt;     &lt;dbl&gt; &lt;bch:byt&gt;    &lt;dbl&gt;</span></span>
-<span id="cb1193-11"><a href="20-debuggage-performance.html#cb1193-11"></a><span class="co">#&gt; 1 boucle        2.7ms   2.82ms      345.   20.96KB     6.30</span></span>
-<span id="cb1193-12"><a href="20-debuggage-performance.html#cb1193-12"></a><span class="co">#&gt; 2 vec          64.6µs   66.5µs    14920.    1.22KB     2.03</span></span></code></pre></div>
+<div class="sourceCode" id="cb1194"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1194-1"><a href="20-debuggage-performance.html#cb1194-1"></a>v &lt;-<span class="st"> </span><span class="kw">rep</span>(<span class="kw">c</span>(<span class="st">&quot;Pomme&quot;</span>, <span class="st">&quot;Poire&quot;</span>, <span class="st">&quot;Fraise&quot;</span>), <span class="dv">100</span>)</span>
+<span id="cb1194-2"><a href="20-debuggage-performance.html#cb1194-2"></a>bench<span class="op">::</span><span class="kw">mark</span>(</span>
+<span id="cb1194-3"><a href="20-debuggage-performance.html#cb1194-3"></a>    <span class="dt">boucle =</span> {</span>
+<span id="cb1194-4"><a href="20-debuggage-performance.html#cb1194-4"></a>        <span class="kw">map_int</span>(v, str_count, <span class="st">&quot;m&quot;</span>)</span>
+<span id="cb1194-5"><a href="20-debuggage-performance.html#cb1194-5"></a>    },</span>
+<span id="cb1194-6"><a href="20-debuggage-performance.html#cb1194-6"></a>    <span class="dt">vec =</span> <span class="kw">str_count</span>(v, <span class="st">&quot;m&quot;</span>)</span>
+<span id="cb1194-7"><a href="20-debuggage-performance.html#cb1194-7"></a>)</span>
+<span id="cb1194-8"><a href="20-debuggage-performance.html#cb1194-8"></a><span class="co">#&gt; # A tibble: 2 × 6</span></span>
+<span id="cb1194-9"><a href="20-debuggage-performance.html#cb1194-9"></a><span class="co">#&gt;   expression      min   median `itr/sec` mem_alloc `gc/sec`</span></span>
+<span id="cb1194-10"><a href="20-debuggage-performance.html#cb1194-10"></a><span class="co">#&gt;   &lt;bch:expr&gt; &lt;bch:tm&gt; &lt;bch:tm&gt;     &lt;dbl&gt; &lt;bch:byt&gt;    &lt;dbl&gt;</span></span>
+<span id="cb1194-11"><a href="20-debuggage-performance.html#cb1194-11"></a><span class="co">#&gt; 1 boucle       3.54ms   3.93ms      239.   20.96KB     6.41</span></span>
+<span id="cb1194-12"><a href="20-debuggage-performance.html#cb1194-12"></a><span class="co">#&gt; 2 vec          74.3µs   78.3µs     9386.    1.22KB     2.04</span></span></code></pre></div>
 </div>
 <div id="mettre-le-minimum-dopérations-dans-les-boucles" class="section level3">
 <h3><span class="header-section-number">20.3.2</span> Mettre le minimum d’opérations dans les boucles</h3>
 <p>Si vous utilisez une boucle, toute opération qu’elle contient, comme elle va être répétée, peut devenir rapidement très coûteuse. Il ne faut donc y mettre que les opérations réellement nécessaires.</p>
 <p>La fonction suivante prend en entrée un tableau de données <code>d</code> et une chaîne de caractères <code>chr</code>, et retourne un vecteur nommé indiquant le nombre de fois ou cette valeur apparaît dans chaque colonne du tableau. On a décidé de convertir en minuscules à la fois la valeur de <code>chr</code> et l’ensemble des colonnes du tableau pour que le comptage ne prenne pas en compte les différences de majuscules/minuscules.</p>
-<div class="sourceCode" id="cb1194"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1194-1"><a href="20-debuggage-performance.html#cb1194-1"></a>nb_chaine1 &lt;-<span class="st"> </span><span class="cf">function</span>(d, chr) {</span>
-<span id="cb1194-2"><a href="20-debuggage-performance.html#cb1194-2"></a>    res &lt;-<span class="st"> </span><span class="kw">numeric</span>()</span>
-<span id="cb1194-3"><a href="20-debuggage-performance.html#cb1194-3"></a>    <span class="cf">for</span> (var <span class="cf">in</span> <span class="kw">names</span>(d)) {</span>
-<span id="cb1194-4"><a href="20-debuggage-performance.html#cb1194-4"></a>        <span class="co"># Conversion des colonnes de d et de chr en minuscules</span></span>
-<span id="cb1194-5"><a href="20-debuggage-performance.html#cb1194-5"></a>        d &lt;-<span class="st"> </span>d <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">modify</span>(str_to_lower)</span>
-<span id="cb1194-6"><a href="20-debuggage-performance.html#cb1194-6"></a>        chr &lt;-<span class="st"> </span><span class="kw">str_to_lower</span>(chr)</span>
-<span id="cb1194-7"><a href="20-debuggage-performance.html#cb1194-7"></a>        <span class="co"># Comptage des occurrences de chr dans la colonne var</span></span>
-<span id="cb1194-8"><a href="20-debuggage-performance.html#cb1194-8"></a>        res[[var]] &lt;-<span class="st"> </span><span class="kw">sum</span>(d[[var]] <span class="op">==</span><span class="st"> </span>chr, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>)</span>
-<span id="cb1194-9"><a href="20-debuggage-performance.html#cb1194-9"></a>    }</span>
-<span id="cb1194-10"><a href="20-debuggage-performance.html#cb1194-10"></a>    res</span>
-<span id="cb1194-11"><a href="20-debuggage-performance.html#cb1194-11"></a>}</span>
-<span id="cb1194-12"><a href="20-debuggage-performance.html#cb1194-12"></a></span>
-<span id="cb1194-13"><a href="20-debuggage-performance.html#cb1194-13"></a>d &lt;-<span class="st"> </span>hdv2003[, <span class="kw">c</span>(<span class="st">&quot;hard.rock&quot;</span>, <span class="st">&quot;qualif&quot;</span>, <span class="st">&quot;clso&quot;</span>, <span class="st">&quot;bricol&quot;</span>)]</span>
-<span id="cb1194-14"><a href="20-debuggage-performance.html#cb1194-14"></a><span class="kw">nb_chaine1</span>(d, <span class="st">&quot;oui&quot;</span>)</span>
-<span id="cb1194-15"><a href="20-debuggage-performance.html#cb1194-15"></a><span class="co">#&gt; hard.rock    qualif      clso    bricol </span></span>
-<span id="cb1194-16"><a href="20-debuggage-performance.html#cb1194-16"></a><span class="co">#&gt;        14         0       936       853</span></span></code></pre></div>
+<div class="sourceCode" id="cb1195"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1195-1"><a href="20-debuggage-performance.html#cb1195-1"></a>nb_chaine1 &lt;-<span class="st"> </span><span class="cf">function</span>(d, chr) {</span>
+<span id="cb1195-2"><a href="20-debuggage-performance.html#cb1195-2"></a>    res &lt;-<span class="st"> </span><span class="kw">numeric</span>()</span>
+<span id="cb1195-3"><a href="20-debuggage-performance.html#cb1195-3"></a>    <span class="cf">for</span> (var <span class="cf">in</span> <span class="kw">names</span>(d)) {</span>
+<span id="cb1195-4"><a href="20-debuggage-performance.html#cb1195-4"></a>        <span class="co"># Conversion des colonnes de d et de chr en minuscules</span></span>
+<span id="cb1195-5"><a href="20-debuggage-performance.html#cb1195-5"></a>        d &lt;-<span class="st"> </span>d <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">modify</span>(str_to_lower)</span>
+<span id="cb1195-6"><a href="20-debuggage-performance.html#cb1195-6"></a>        chr &lt;-<span class="st"> </span><span class="kw">str_to_lower</span>(chr)</span>
+<span id="cb1195-7"><a href="20-debuggage-performance.html#cb1195-7"></a>        <span class="co"># Comptage des occurrences de chr dans la colonne var</span></span>
+<span id="cb1195-8"><a href="20-debuggage-performance.html#cb1195-8"></a>        res[[var]] &lt;-<span class="st"> </span><span class="kw">sum</span>(d[[var]] <span class="op">==</span><span class="st"> </span>chr, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>)</span>
+<span id="cb1195-9"><a href="20-debuggage-performance.html#cb1195-9"></a>    }</span>
+<span id="cb1195-10"><a href="20-debuggage-performance.html#cb1195-10"></a>    res</span>
+<span id="cb1195-11"><a href="20-debuggage-performance.html#cb1195-11"></a>}</span>
+<span id="cb1195-12"><a href="20-debuggage-performance.html#cb1195-12"></a></span>
+<span id="cb1195-13"><a href="20-debuggage-performance.html#cb1195-13"></a>d &lt;-<span class="st"> </span>hdv2003[, <span class="kw">c</span>(<span class="st">&quot;hard.rock&quot;</span>, <span class="st">&quot;qualif&quot;</span>, <span class="st">&quot;clso&quot;</span>, <span class="st">&quot;bricol&quot;</span>)]</span>
+<span id="cb1195-14"><a href="20-debuggage-performance.html#cb1195-14"></a><span class="kw">nb_chaine1</span>(d, <span class="st">&quot;oui&quot;</span>)</span>
+<span id="cb1195-15"><a href="20-debuggage-performance.html#cb1195-15"></a><span class="co">#&gt; hard.rock    qualif      clso    bricol </span></span>
+<span id="cb1195-16"><a href="20-debuggage-performance.html#cb1195-16"></a><span class="co">#&gt;        14         0       936       853</span></span></code></pre></div>
 <p>Ça fonctionne, mais si on regarde un peu plus attentivement le code de la fonction on peut vite se rendre compte d’un problème : les conversions en minuscules sont faites à l’intérieur de la boucle, et sont donc répétées pour chaque colonne de <code>d</code>. Or ceci n’est absolument pas nécessaire puisque cette conversion ne dépend pas des colonnes et qu’elle peut être faite une seule et unique fois en début de fonction.</p>
 <p>On décide donc de sortir les conversion en minuscules de la boucle.</p>
-<div class="sourceCode" id="cb1195"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1195-1"><a href="20-debuggage-performance.html#cb1195-1"></a>nb_chaine2 &lt;-<span class="st"> </span><span class="cf">function</span>(d, chr) {</span>
-<span id="cb1195-2"><a href="20-debuggage-performance.html#cb1195-2"></a>    res &lt;-<span class="st"> </span><span class="kw">numeric</span>()</span>
-<span id="cb1195-3"><a href="20-debuggage-performance.html#cb1195-3"></a>    </span>
-<span id="cb1195-4"><a href="20-debuggage-performance.html#cb1195-4"></a>    <span class="co"># Conversion des colonnes de d et de chr en minuscules</span></span>
-<span id="cb1195-5"><a href="20-debuggage-performance.html#cb1195-5"></a>    d &lt;-<span class="st"> </span>d <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">modify</span>(str_to_lower)</span>
-<span id="cb1195-6"><a href="20-debuggage-performance.html#cb1195-6"></a>    chr &lt;-<span class="st"> </span><span class="kw">str_to_lower</span>(chr)</span>
-<span id="cb1195-7"><a href="20-debuggage-performance.html#cb1195-7"></a></span>
-<span id="cb1195-8"><a href="20-debuggage-performance.html#cb1195-8"></a>    <span class="cf">for</span> (var <span class="cf">in</span> <span class="kw">names</span>(d)) {</span>
-<span id="cb1195-9"><a href="20-debuggage-performance.html#cb1195-9"></a>        <span class="co"># Comptage des occurrences de chr dans la colonne var</span></span>
-<span id="cb1195-10"><a href="20-debuggage-performance.html#cb1195-10"></a>        res[[var]] &lt;-<span class="st"> </span><span class="kw">sum</span>(d[[var]] <span class="op">==</span><span class="st"> </span>chr, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>)</span>
-<span id="cb1195-11"><a href="20-debuggage-performance.html#cb1195-11"></a>    }</span>
-<span id="cb1195-12"><a href="20-debuggage-performance.html#cb1195-12"></a>    res</span>
-<span id="cb1195-13"><a href="20-debuggage-performance.html#cb1195-13"></a>}</span>
-<span id="cb1195-14"><a href="20-debuggage-performance.html#cb1195-14"></a></span>
-<span id="cb1195-15"><a href="20-debuggage-performance.html#cb1195-15"></a><span class="kw">nb_chaine2</span>(d, <span class="st">&quot;oui&quot;</span>)</span>
-<span id="cb1195-16"><a href="20-debuggage-performance.html#cb1195-16"></a><span class="co">#&gt; hard.rock    qualif      clso    bricol </span></span>
-<span id="cb1195-17"><a href="20-debuggage-performance.html#cb1195-17"></a><span class="co">#&gt;        14         0       936       853</span></span></code></pre></div>
+<div class="sourceCode" id="cb1196"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1196-1"><a href="20-debuggage-performance.html#cb1196-1"></a>nb_chaine2 &lt;-<span class="st"> </span><span class="cf">function</span>(d, chr) {</span>
+<span id="cb1196-2"><a href="20-debuggage-performance.html#cb1196-2"></a>    res &lt;-<span class="st"> </span><span class="kw">numeric</span>()</span>
+<span id="cb1196-3"><a href="20-debuggage-performance.html#cb1196-3"></a>    </span>
+<span id="cb1196-4"><a href="20-debuggage-performance.html#cb1196-4"></a>    <span class="co"># Conversion des colonnes de d et de chr en minuscules</span></span>
+<span id="cb1196-5"><a href="20-debuggage-performance.html#cb1196-5"></a>    d &lt;-<span class="st"> </span>d <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">modify</span>(str_to_lower)</span>
+<span id="cb1196-6"><a href="20-debuggage-performance.html#cb1196-6"></a>    chr &lt;-<span class="st"> </span><span class="kw">str_to_lower</span>(chr)</span>
+<span id="cb1196-7"><a href="20-debuggage-performance.html#cb1196-7"></a></span>
+<span id="cb1196-8"><a href="20-debuggage-performance.html#cb1196-8"></a>    <span class="cf">for</span> (var <span class="cf">in</span> <span class="kw">names</span>(d)) {</span>
+<span id="cb1196-9"><a href="20-debuggage-performance.html#cb1196-9"></a>        <span class="co"># Comptage des occurrences de chr dans la colonne var</span></span>
+<span id="cb1196-10"><a href="20-debuggage-performance.html#cb1196-10"></a>        res[[var]] &lt;-<span class="st"> </span><span class="kw">sum</span>(d[[var]] <span class="op">==</span><span class="st"> </span>chr, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>)</span>
+<span id="cb1196-11"><a href="20-debuggage-performance.html#cb1196-11"></a>    }</span>
+<span id="cb1196-12"><a href="20-debuggage-performance.html#cb1196-12"></a>    res</span>
+<span id="cb1196-13"><a href="20-debuggage-performance.html#cb1196-13"></a>}</span>
+<span id="cb1196-14"><a href="20-debuggage-performance.html#cb1196-14"></a></span>
+<span id="cb1196-15"><a href="20-debuggage-performance.html#cb1196-15"></a><span class="kw">nb_chaine2</span>(d, <span class="st">&quot;oui&quot;</span>)</span>
+<span id="cb1196-16"><a href="20-debuggage-performance.html#cb1196-16"></a><span class="co">#&gt; hard.rock    qualif      clso    bricol </span></span>
+<span id="cb1196-17"><a href="20-debuggage-performance.html#cb1196-17"></a><span class="co">#&gt;        14         0       936       853</span></span></code></pre></div>
 <p>Le résultat des deux fonctions est identique. On compare leur temps d’exécution à l’aide de <code>bench::mark()</code>.</p>
-<div class="sourceCode" id="cb1196"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1196-1"><a href="20-debuggage-performance.html#cb1196-1"></a>bench<span class="op">::</span><span class="kw">mark</span>(</span>
-<span id="cb1196-2"><a href="20-debuggage-performance.html#cb1196-2"></a>    <span class="kw">nb_chaine1</span>(d, <span class="st">&quot;oui&quot;</span>),</span>
-<span id="cb1196-3"><a href="20-debuggage-performance.html#cb1196-3"></a>    <span class="kw">nb_chaine2</span>(d, <span class="st">&quot;oui&quot;</span>),</span>
-<span id="cb1196-4"><a href="20-debuggage-performance.html#cb1196-4"></a>)</span>
-<span id="cb1196-5"><a href="20-debuggage-performance.html#cb1196-5"></a><span class="co">#&gt; # A tibble: 2 × 6</span></span>
-<span id="cb1196-6"><a href="20-debuggage-performance.html#cb1196-6"></a><span class="co">#&gt;   expression                min   median `itr/sec` mem_alloc `gc/sec`</span></span>
-<span id="cb1196-7"><a href="20-debuggage-performance.html#cb1196-7"></a><span class="co">#&gt;   &lt;bch:expr&gt;           &lt;bch:tm&gt; &lt;bch:tm&gt;     &lt;dbl&gt; &lt;bch:byt&gt;    &lt;dbl&gt;</span></span>
-<span id="cb1196-8"><a href="20-debuggage-performance.html#cb1196-8"></a><span class="co">#&gt; 1 nb_chaine1(d, &quot;oui&quot;)   4.03ms   4.07ms      245.     345KB     2.01</span></span>
-<span id="cb1196-9"><a href="20-debuggage-performance.html#cb1196-9"></a><span class="co">#&gt; 2 nb_chaine2(d, &quot;oui&quot;)   1.13ms   1.17ms      835.     157KB     0</span></span></code></pre></div>
+<div class="sourceCode" id="cb1197"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1197-1"><a href="20-debuggage-performance.html#cb1197-1"></a>bench<span class="op">::</span><span class="kw">mark</span>(</span>
+<span id="cb1197-2"><a href="20-debuggage-performance.html#cb1197-2"></a>    <span class="kw">nb_chaine1</span>(d, <span class="st">&quot;oui&quot;</span>),</span>
+<span id="cb1197-3"><a href="20-debuggage-performance.html#cb1197-3"></a>    <span class="kw">nb_chaine2</span>(d, <span class="st">&quot;oui&quot;</span>),</span>
+<span id="cb1197-4"><a href="20-debuggage-performance.html#cb1197-4"></a>)</span>
+<span id="cb1197-5"><a href="20-debuggage-performance.html#cb1197-5"></a><span class="co">#&gt; # A tibble: 2 × 6</span></span>
+<span id="cb1197-6"><a href="20-debuggage-performance.html#cb1197-6"></a><span class="co">#&gt;   expression                min   median `itr/sec` mem_alloc `gc/sec`</span></span>
+<span id="cb1197-7"><a href="20-debuggage-performance.html#cb1197-7"></a><span class="co">#&gt;   &lt;bch:expr&gt;           &lt;bch:tm&gt; &lt;bch:tm&gt;     &lt;dbl&gt; &lt;bch:byt&gt;    &lt;dbl&gt;</span></span>
+<span id="cb1197-8"><a href="20-debuggage-performance.html#cb1197-8"></a><span class="co">#&gt; 1 nb_chaine1(d, &quot;oui&quot;)   7.05ms   7.64ms      128.     345KB     4.21</span></span>
+<span id="cb1197-9"><a href="20-debuggage-performance.html#cb1197-9"></a><span class="co">#&gt; 2 nb_chaine2(d, &quot;oui&quot;)   1.96ms   2.12ms      442.     157KB     2.03</span></span></code></pre></div>
 <p>Ce qui permet de constater que la deuxième version est quatre fois plus rapide (et elle sera d’autant plus rapide que le nombre de colonnes du tableau sera grand).</p>
 </div>
 <div id="choisir-un-format-de-fichier-adapté" class="section level3">
