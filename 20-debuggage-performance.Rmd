@@ -19,7 +19,7 @@ data(starwars)
 
 L'outil le plus simple, rudimentaire et parfois décrié mais qui reste efficace, est de rajouter un `print()` dans le code de notre fonction pour examiner le contenu d'un objet à un moment donné.
 
-Prenons un exemple. La fonction suivante prend en argument un tableau de données et un nom de variable, et retourne la moyenne et l'écart-type de cette variable.
+Prenons un exemple. La fonction suivante prend en argument un tableau de données `df` et un nom de variable `var`, et retourne la moyenne et l'écart-type de cette variable.
 
 ```{r}
 indicateurs <- function(df, var) {
@@ -44,7 +44,7 @@ On teste à nouveau, cette fois sur une variable du jeu de données `starwars` d
 indicateurs(starwars, "height")
 ```
 
-Sapristi, on obtient `NA` en résultat, alors que notre variable `height` est bien numérique, on devrait donc obtenir un vecteur avec la moyenne et l'écart-type. Comment expliquer ce résultat ?
+Sapristi, on obtient `NA` en résultat alors que notre variable `height` est bien numérique : on devrait donc obtenir la moyenne et l'écart-type. Comment expliquer ce résultat ?
 
 Comme on n'a pas d'explication immédiate juste en relisant le code de notre fonction, on va ajouter temporairement une instruction `print()` qui va afficher le contenu de `valeurs` juste après qu'elle soit calculée.
 
@@ -72,7 +72,7 @@ Le `print()` nous indique que `valeurs` n'est pas un vecteur mais un tableau de 
 is.numeric(starwars[, "height"])
 ```
 
-C'est donc la raison pour laquelle on obtient le résultat final `NA`.
+C'est donc la raison pour laquelle on obtient `NA` comme résultat.
 
 Certes, mais alors pourquoi cela fonctionne-t-il dans notre exemple avec `hdv2003` ? 
 
@@ -80,15 +80,15 @@ Certes, mais alors pourquoi cela fonctionne-t-il dans notre exemple avec `hdv200
 indicateurs(hdv2003, "age")
 ```
 
-Ah ! Dans ce cas là `valeurs` est bien un vecteur, et on obtient donc le résultat attendu. Pourquoi cette différence ? On est en fait tombé sur une source d'erreur relativement fréquente qui est la différence de comportement, mentionnée section \@ref(df-sel), entre les *data frames* et les *tibbles* : lorsqu'on sélectionne une seule colonne avec l'opérateur `[,]`, un *data frame* retourne un vecteur tandis qu'un *tibble* retourne un tableau à une colonne. Or, ici, `hdv2003` est un *data frame*, et `starwars` un *tibble*.
+Ah ! Dans ce cas là `valeurs` est bien un vecteur, et on obtient donc le résultat attendu. Pourquoi cette différence ? On est en fait tombé sur une différence de comportement entre les *data frames* et les *tibbles*, mentionnée section \@ref(df-sel) : lorsqu'on sélectionne une seule colonne avec l'opérateur `[,]`, un *data frame* retourne un vecteur tandis qu'un *tibble* retourne un tableau à une colonne. Or, ici, `hdv2003` est un *data frame*, et `starwars` un *tibble*.
 
 Comment résoudre ce problème ? Il y a différentes manières, mais la plus simple est sans doute de remplacer `[,]` par `[[]]`, qui lui a le même comportement dans les deux cas. On peut donc modifier notre fonction (en n'oubliant pas d'enlever le `print()`) et vérifier que ça fonctionne désormais.
 
 ```{r}
 indicateurs <- function(df, var) {
     valeurs <- df[[var]]
-     if (!is.numeric(valeurs)) return(NA)
-     list(
+    if (!is.numeric(valeurs)) return(NA)
+    list(
         moyenne = mean(valeurs, na.rm = TRUE),
         sd = sd(valeurs, na.rm = TRUE)
     )
@@ -114,11 +114,11 @@ Dans l'exemple suivant, on crée une fonction `min_freq_values()` qui prend en a
 min_freq_values <- function(df, n_min) {
     res <- list()
     for (col in names(df)) {
-        # On fait le tri à plat des valeurs de la colonne
+        # Tri à plat des valeurs de la colonne
         freq <- table(df[[col]])
-        # On ne conserve que les modalités avec effectif >= n
+        # On conserve les modalités avec effectif >= n
         freq <- freq[freq >= n_min]
-        # On ajoute la colonne au résultat que s'il y a au moins une modalité
+        # On ajoute la colonne au résultat s'il y a au moins une modalité
         if (length(freq) > 0) res[[col]] <- freq
     }
     res
@@ -139,18 +139,18 @@ min_freq_values(starwars, 50)
 
 On obtient un message quelque peu sybillin : apparemment une erreur se produit au moment de faire le tri à plat des valeurs avec `table()`. Mais comme ce tri à plat s'effectue dans une boucle, on ne sait pas quelle variable de `starwars` est à l'origine du problème.
 
-On va donc rajouter comme première instruction de la fonction du `for` un `print(col)`.
+On va donc rajouter un `print(col)` comme première instruction de la boucle `for`.
 
 ```{r error=TRUE}
 min_freq_values <- function(df, n_min) {
     res <- list()
     for (col in names(df)) {
         print(col)
-        # On fait le tri à plat des valeurs de la colonne
+        # Tri à plat des valeurs de la colonne
         freq <- table(df[[col]])
-        # On ne conserve que les modalités avec effectif >= n
+        # On conserve les modalités avec effectif >= n
         freq <- freq[freq >= n_min]
-        # On ajoute la colonne au résultat que s'il y a au moins une modalité
+        # On ajoute la colonne au résultat s'il y a au moins une modalité
         if (length(freq) > 0) res[[col]] <- freq
     }
     res
@@ -159,15 +159,15 @@ min_freq_values <- function(df, n_min) {
 min_freq_values(starwars, 50)
 ```
 
-On voit que tout se passe bien pour les premières variables de notre tableau, et que l'erreur survient au moment de traiter la variable `films`. On regarde donc à quoi ressemble cette variable.
+Ce `print(col)` nous permet de voir que tout se passe bien pour les premières variables du tableau, et que l'erreur survient au moment de traiter la variable `films`. On regarde donc à quoi ressemble cette variable.
 
 ```{r}
 head(starwars$films, 3)
 ```
 
-*Damn*, cette variable n'est pas un vecteur atomique mais une liste ! Un tableau de données peut en effet contenir ce que l'on appelle des colonnes-listes. Comme ça n'est pas fréquent, on ne l'avait clairement pas prévu au moment de la création de la fonction.
+*Damn*, cette variable n'est pas un vecteur atomique mais une liste ! Un tableau de données peut en effet contenir ce que l'on appelle des *colonnes-listes*. Comme ça n'est pas courant, on ne l'avait clairement pas prévu au moment de la création de la fonction.
 
-On a désormais identifié le problème, on peut donc le corriger par exemple en ignorant les colonnes de type liste en utilisant `is.list()` et l'instruction `next`.
+On a désormais identifié le problème, on peut donc le corriger par exemple en ignorant les colonnes de type liste. Pour cela on utilise `is.list()` et l'instruction `next`.
 
 ```{r}
 min_freq_values <- function(df, n_min) {
@@ -175,11 +175,11 @@ min_freq_values <- function(df, n_min) {
     for (col in names(df)) {
         # On passe à la colonne suivante si la colonne est une colonne-liste
         if (is.list(df[[col]])) next
-        # On fait le tri à plat des valeurs de la colonne
+        # Tri à plat des valeurs de la colonne
         freq <- table(df[[col]])
-        # On ne conserve que les modalités avec effectif >= n
+        # On conserve les modalités avec effectif >= n
         freq <- freq[freq >= n_min]
-        # On ajoute la colonne au résultat que s'il y a au moins une modalité
+        # On ajoute la colonne au résultat s'il y a au moins une modalité
         if (length(freq) > 0) res[[col]] <- freq
     }
     res
@@ -188,10 +188,11 @@ min_freq_values <- function(df, n_min) {
 min_freq_values(starwars, 50)
 ```
 
+Ça fonctionne ! Et cela nous permet de repérer au passage une "légère" sur-représentation des personnages masculins...
 
 ### browser()
 
-Il y a cependant des alternatives à `print()` plus efficaces pour identifier et résoudre des bugs. La plus utilisée est la fonction `browser()`. Celle-ci peut s'insérer à n'importe quel endroit du code, et lorsqu'elle est rencontrée par R celui-ci s'interrompt et affiche une invite de commande permettant notamment d'inspecter des objets.
+Il existe des alternatives à `print()` plus efficaces pour identifier et résoudre des bugs. La plus utilisée est la fonction `browser()` : celle-ci peut s'insérer à n'importe quel endroit du code, et lorsqu'elle est rencontrée par R celui-ci s'interrompt et affiche une invite de commande permettant notamment d'inspecter des objets.
 
 On reprend l'exemple précédent en remplaçant le `print(col)` que nous avions inséré pour débugguer la fonction `min_freq_values` par un appel à `browser()`.
 
@@ -201,11 +202,11 @@ min_freq_values <- function(df, n_min) {
     res <- list()
     for (col in names(df)) {
         browser()
-        # On fait le tri à plat des valeurs de la colonne
+        # Tri à plat des valeurs de la colonne
         freq <- table(df[[col]])
-        # On ne conserve que les modalités avec effectif >= n
+        # On conserve les modalités avec effectif >= n
         freq <- freq[freq >= n_min]
-        # On ajoute la colonne au résultat que s'il y a au moins une modalité
+        # On ajoute la colonne au résultat s'il y a au moins une modalité
         if (length(freq) > 0) res[[col]] <- freq
     }
     res
@@ -222,7 +223,7 @@ Called from: min_freq_values(starwars, 50)
 Browse[1]>
 ```
 
-Cette invite de commande offre plusieurs possibilités. En particulier, on peut lui indiquer du code R qui sera exécuté dans le contexte au moment de l'interruption : si on indique un nom d'objet, on pourra donc afficher sa valeur. Ainsi, si on tape `col`, R nous affiche la valeur actuelle de `col`, donc au moment de la première itération de la boucle.
+Cette invite de commande offre plusieurs possibilités. La première est d'indiquer du code R qui sera exécuté dans le contexte au moment de l'interruption : si on indique un nom d'objet, on pourra donc afficher sa valeur. Ainsi, si on tape `col`, R nous affiche la valeur actuelle de `col`, donc au moment de la première itération de la boucle.
 
 ```
 Browse[1]> col                                       
@@ -261,7 +262,7 @@ Pour plus d'informations on pourra se reporter aux ressources en fin de chapitre
 
 Lorsqu'on commence à créer ses propres fonctions et de manière générale à écrire du code de plus en plus complexe ou à travailler sur des données de plus en plus volumineuses, on peut arriver sur des problèmes de performance : les temps d'exécution deviennent longs et on aimerait essayer de les optimiser.
 
-Un outil utile consiste à faire du *benchmarking* : comparer plusieurs manières différentes de faire la même chose, et mesurer leurs différences de vitesse d'exécution.
+Il est alors parfois utile de faire du *benchmarking*, c'est-à-dire comparer plusieurs manières différentes de faire la même chose en mesurant leurs différences de vitesse d'exécution.
 
 L'intruction la plus simple pour cela est sans doute `system.time()`. Celle-ci prend en argument une expression R, et affiche en retour le temps d'exécution en secondes.
 
@@ -278,7 +279,7 @@ system.time({
 })
 ```
 
-`system.time()` est cependant très limitée : on ne peut exécuter qu'une expression à la fois, on ne peut donc pas en comparer plusieurs directement, et surtout le temps d'exécution peut varier assez sensiblement selon l'utilisation du processeur de la machine au moment où on le lance.
+`system.time()` est cependant très limitée : on ne peut exécuter qu'une expression à la fois, on ne peut donc pas en comparer plusieurs directement, et surtout le temps d'exécution peut varier assez sensiblement selon l'utilisation du processeur de la machine au moment où on lance la commande.
 
 Il existe donc en complément plusieurs extensions dédiées au *benchmarking*. On va utiliser ici l'extension [bench](https://bench.r-lib.org/), installable avec :
 
@@ -286,13 +287,13 @@ Il existe donc en complément plusieurs extensions dédiées au *benchmarking*. 
 install.packages("bench")
 ```
 
-`bench` propose une fonction principale, nommée `mark()`, qu'on peut donc appeler directement avec `bench::mark()`^[L'avantage d'utiliser `bench::mark()` est qu'on n'a pas besoin d'ajouter un `library(bench)` dans notre script.]. On passe à cette fonction plusieurs expressions, et `mark()` va effectuer les actions suivante :
+`bench` propose une fonction principale, nommée `mark()`, qu'on peut donc appeler directement avec `bench::mark()`^[L'avantage d'utiliser `bench::mark()` est qu'on n'a pas besoin d'ajouter un `library(bench)` dans notre script.]. On passe à cette fonction plusieurs expressions, et `bench::mark()` va effectuer les actions suivante :
 
 - elle vérifie que les expressions retournent bien le même résultat (si on souhaite comparer des expressions qui renvoient des résultats différents, il faut ajouter l'argument `check = FALSE`)
-- elle lance ces expressions plusieurs fois et mesure à chaque fois leur temps d'exécution
+- elle lance chacune de ces expressions plusieurs fois et mesure à chaque fois leur temps d'exécution
 - elle affiche un résumé de ces temps d'exécution en indiquant notamment leur minimum et leur médiane
 
-Exécuter chaque expression plusieurs fois permet de prendre en compte les fluctuation liées à l'activité du processeur de la machine. Par défaut, `bench::mark()` exécute chaque instruction au minimum une fois et au moins suffisamment de fois pour atteindre 0,5s d'exécution (ces valeurs peuvent être modifiées via les paramètres `min_iterations` et `min_time`).
+Exécuter chaque expression plusieurs fois permet de prendre en compte les fluctuations liées à l'activité du processeur de la machine. Par défaut, `bench::mark()` exécute chaque instruction au minimum une fois et au moins suffisamment de fois pour atteindre 0,5s d'exécution (ces valeurs peuvent être modifiées via les paramètres `min_iterations` et `min_time`).
 
 Dans l'exemple suivant, on crée deux fonctions qui font la même chose : ajouter 10 à tous les éléments d'un vecteur passé en argument. Dans la première fonction `plus10_for` on utilise une boucle `for` qui ajoute 10 à tous les éléments l'un après l'autre (ce qu'il ne faut évidemment pas faire !), tandis que la deuxième fonction `plus10_vec` utilise la forme vectorisée `x + 10`.
 
@@ -333,9 +334,9 @@ Si on préfère, on peut afficher les performances relatives des deux fonctions 
 summary(bnch, relative = TRUE)
 ```
 
-Ces résultats nous permettent de voir que la version `vec` est nettement plus rapide que la version `for` ! Ce qui confirme le fait qu'il faut toujours prioriser l'utilisation de fonctions vectorisées lorsqu'elles existent.
+Ces résultats nous permettent de voir que la version `vec` est très nettement plus rapide que la version `for` ! Ce qui confirme le fait qu'il faut toujours prioriser l'utilisation de fonctions vectorisées lorsqu'elles existent.
 
-On prend un second exemple : on souhaite mesurer si l'utilisation de `map` est plus rapide ou non qu'une boucle `for` pour une tache équivalente.
+On prend un second exemple : on souhaite mesurer si l'utilisation de `map` est plus rapide ou non qu'une boucle `for` pour une tâche équivalente.
 
 Pour cela on commence par créer artificiellement une liste de 200 tableaux de données en dupliquant 100 fois une liste composée des tableaux `rp2012` et `hdv2003`.
 
@@ -361,6 +362,23 @@ bench::mark(
 
 La lecture du résultat indique que le `map` est environ 4 fois plus rapide que la boucle `for`.
 
+Attention cependant en lisant ces résultats : dans la comparaison précédente les temps d'exécution étant en millisecondes, même une différence du type "4 fois plus rapide" peut être quasiment imperceptible. Dans l'exemple suivant on compare de la même manière `for` et `map`, mais cette fois en effectuant une action plus coûteuse en temps de calcul (on génère des vecteurs de nombres aléatoires).
+
+```{r}
+bench::mark(
+    boucle_for = {
+        res <- numeric()
+        for (i in 1:100) {
+            res <- c(res, mean(runif(50000)))
+        }
+        res
+    },
+    map = map_dbl(1:100, ~ mean(runif(50000))),
+    check = FALSE
+)
+```
+
+Dans ce cas la différence entre `for` et `map` devient négligeable par rapport aux temps de calcul des opérations effectuées dans les boucles : au final les temps d'exécution sont presque identiques.
 
 ## Quelques conseils d'optimisation
 
