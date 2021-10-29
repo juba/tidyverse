@@ -560,7 +560,7 @@ code span.wa { color: #bf0303; } /* Warning */
 <li class="chapter" data-level="20.3.2" data-path="20-debuggage-performance.html"><a href="20-debuggage-performance.html#mettre-le-minimum-dopérations-dans-les-boucles"><i class="fa fa-check"></i><b>20.3.2</b> Mettre le minimum d’opérations dans les boucles</a></li>
 <li class="chapter" data-level="20.3.3" data-path="20-debuggage-performance.html"><a href="20-debuggage-performance.html#choisir-un-format-de-fichier-adapté"><i class="fa fa-check"></i><b>20.3.3</b> Choisir un format de fichier adapté</a></li>
 <li class="chapter" data-level="20.3.4" data-path="20-debuggage-performance.html"><a href="20-debuggage-performance.html#repérer-les-opérations-coûteuses-avec-du-profiling"><i class="fa fa-check"></i><b>20.3.4</b> Repérer les opérations coûteuses avec du <em>profiling</em></a></li>
-<li class="chapter" data-level="20.3.5" data-path="20-debuggage-performance.html"><a href="20-debuggage-performance.html#mettre-en-cache-les-résultats-intermédiaires"><i class="fa fa-check"></i><b>20.3.5</b> Mettre en cache les résultats intermédiaires</a></li>
+<li class="chapter" data-level="20.3.5" data-path="20-debuggage-performance.html"><a href="20-debuggage-performance.html#mettre-en-cache-des-résultats-intermédiaires"><i class="fa fa-check"></i><b>20.3.5</b> Mettre en cache des résultats intermédiaires</a></li>
 <li class="chapter" data-level="20.3.6" data-path="20-debuggage-performance.html"><a href="20-debuggage-performance.html#utiliser-dautres-extensions"><i class="fa fa-check"></i><b>20.3.6</b> Utiliser d’autres extensions</a></li>
 </ul></li>
 <li class="chapter" data-level="20.4" data-path="20-debuggage-performance.html"><a href="20-debuggage-performance.html#ressources-11"><i class="fa fa-check"></i><b>20.4</b> Ressources</a></li>
@@ -1001,7 +1001,7 @@ Pour plus d’informations on pourra se reporter aux ressources en fin de chapit
 <div class="sourceCode" id="cb1195"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1195-1"><a href="20-debuggage-performance.html#cb1195-1"></a>nb_chaine1 &lt;-<span class="st"> </span><span class="cf">function</span>(d, chr) {</span>
 <span id="cb1195-2"><a href="20-debuggage-performance.html#cb1195-2"></a>    res &lt;-<span class="st"> </span><span class="kw">numeric</span>()</span>
 <span id="cb1195-3"><a href="20-debuggage-performance.html#cb1195-3"></a>    <span class="cf">for</span> (var <span class="cf">in</span> <span class="kw">names</span>(d)) {</span>
-<span id="cb1195-4"><a href="20-debuggage-performance.html#cb1195-4"></a>        <span class="co"># Conversion des colonnes de d et de chr en minuscules</span></span>
+<span id="cb1195-4"><a href="20-debuggage-performance.html#cb1195-4"></a>        <span class="co"># Conversion de chr et des colonnes de d en minuscules</span></span>
 <span id="cb1195-5"><a href="20-debuggage-performance.html#cb1195-5"></a>        d &lt;-<span class="st"> </span>d <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">modify</span>(str_to_lower)</span>
 <span id="cb1195-6"><a href="20-debuggage-performance.html#cb1195-6"></a>        chr &lt;-<span class="st"> </span><span class="kw">str_to_lower</span>(chr)</span>
 <span id="cb1195-7"><a href="20-debuggage-performance.html#cb1195-7"></a>        <span class="co"># Comptage des occurrences de chr dans la colonne var</span></span>
@@ -1015,11 +1015,11 @@ Pour plus d’informations on pourra se reporter aux ressources en fin de chapit
 <span id="cb1195-15"><a href="20-debuggage-performance.html#cb1195-15"></a><span class="co">#&gt; hard.rock    qualif      clso    bricol </span></span>
 <span id="cb1195-16"><a href="20-debuggage-performance.html#cb1195-16"></a><span class="co">#&gt;        14         0       936       853</span></span></code></pre></div>
 <p>Ça fonctionne, mais si on regarde un peu plus attentivement le code de la fonction on peut vite se rendre compte d’un problème : les conversions en minuscules sont faites à l’intérieur de la boucle, et sont donc répétées pour chaque colonne de <code>d</code>. Or ceci n’est absolument pas nécessaire puisque cette conversion ne dépend pas des colonnes et qu’elle peut être faite une seule et unique fois en début de fonction.</p>
-<p>On décide donc de sortir les conversion en minuscules de la boucle.</p>
+<p>On décide donc de sortir les conversions en minuscules de la boucle.</p>
 <div class="sourceCode" id="cb1196"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1196-1"><a href="20-debuggage-performance.html#cb1196-1"></a>nb_chaine2 &lt;-<span class="st"> </span><span class="cf">function</span>(d, chr) {</span>
 <span id="cb1196-2"><a href="20-debuggage-performance.html#cb1196-2"></a>    res &lt;-<span class="st"> </span><span class="kw">numeric</span>()</span>
-<span id="cb1196-3"><a href="20-debuggage-performance.html#cb1196-3"></a>    </span>
-<span id="cb1196-4"><a href="20-debuggage-performance.html#cb1196-4"></a>    <span class="co"># Conversion des colonnes de d et de chr en minuscules</span></span>
+<span id="cb1196-3"><a href="20-debuggage-performance.html#cb1196-3"></a></span>
+<span id="cb1196-4"><a href="20-debuggage-performance.html#cb1196-4"></a>    <span class="co"># Conversion de chr et des colonnes de d en minuscules</span></span>
 <span id="cb1196-5"><a href="20-debuggage-performance.html#cb1196-5"></a>    d &lt;-<span class="st"> </span>d <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">modify</span>(str_to_lower)</span>
 <span id="cb1196-6"><a href="20-debuggage-performance.html#cb1196-6"></a>    chr &lt;-<span class="st"> </span><span class="kw">str_to_lower</span>(chr)</span>
 <span id="cb1196-7"><a href="20-debuggage-performance.html#cb1196-7"></a></span>
@@ -1048,18 +1048,21 @@ Pour plus d’informations on pourra se reporter aux ressources en fin de chapit
 <div id="choisir-un-format-de-fichier-adapté" class="section level3">
 <h3><span class="header-section-number">20.3.3</span> Choisir un format de fichier adapté</h3>
 <p>Si on travaille sur des fichiers de données volumineux, les temps de chargement et de sauvegarde des données peuvent devenir importants.</p>
-<p>Il existe différents formats de fichiers qui pourront être plus ou moins efficaces et pratiques selon l’utilisation qu’on en fait :</p>
+<p>Il existe différents formats de fichiers qui peuvont être plus ou moins rapides et pratiques selon l’utilisation qu’on en fait. Il n’est malheureusement pas toujours simple de s’y retrouver d’autant que les formats et les performances peuvent évoluer assez rapidement, mais on peut quand même donner quelques indications :</p>
+<p>Le format <strong>CSV</strong> est pratique pour échanger des données tabulaires d’un système ou d’un logiciel à un autre, mais il présente plusieurs inconvénients :</p>
 <ul>
-<li>le format CSV est pratique pour échanger des données d’un système à un autre, mais ces fichiers sont assez volumineux et les temps de lecture / écriture assez longs. À noter que si <code>read_csv()</code> de <code>readr</code> est plus rapide que <code>read.csv()</code> de R base, il existe des alternatives encore plus rapides comme <code>fread()</code> de <code>data.table</code> ou les fonctions de l’extension <code>vroom</code>.</li>
-<li>pour un usage interne à R, les formats <code>Rdata</code> (utilisé par <code>load()</code> et <code>save()</code>) et <code>RDS</code> (utilisé par <code>readRDS()</code> et <code>saveRDS()</code>) ont des temps de lecture plus rapides et conservent les informations sur les types de données. Avec ces formats on peut faire varier le niveau de compression des données et donc jouer sur le rapport entre espace disque utilisé et temps d’accès.</li>
-<li>pour des données vraiment volumineuses, les formats <code>parquet</code> (du package <code>arrow</code>) ou <code>fst</code> proposent des temps de lecture et d’écriture très rapides.</li>
+<li>les fichiers sont volumineux</li>
+<li>les temps de lecture/écriture sont assez longs</li>
+<li>ils n’incluent pas de métadonnées comme les types des colonnes, et nécessitent donc des opérations de conversion plus ou moins “risquées”</li>
 </ul>
-<p>Il n’est malheureusement pas toujours simple de s’y retrouver d’autant que les formats et les performances peuvent évoluer assez rapidement.</p>
-<p>À titre indicatif, le billet (en anglais) <a href="https://data.nozav.org/post/2019-r-data-frame-benchmark/">a shallow benchmark of R data frame export/import methods</a> propose un comparatif entre les performances de différents formats de fichiers. Attention cependant, il date de 2019 et les performances des fonctions testées ont pu évoluer depuis.</p>
+<p>À noter que plusieurs extensions et fonctions existent pour lire et/ou écrire les fichiers CSV. Outre <code>read.csv</code> de R base et <code>read_csv</code> de <code>readr</code>, on pourra mentionner <code>fread</code> de <code>data.table</code>, particulièrement rapide, ou l’extension <code>vroom</code>, qui ne charge pas toutes les informations d’un coup mais y accède “à la demande”.</p>
+<p>Les formats <strong>Rdata</strong> (utilisé par <code>load()</code> et <code>save()</code>) et <strong>RDS</strong> (utilisé par <code>readRDS()</code> et <code>saveRDS()</code>), propres à R, permettent de sauvegarder des objets dans un fichier. Ils ont des temps de lecture et d’écriture rapides, et permettent d’enregistrer n’importe quel objet R et d’être sûr de le retrouver à peu près à l’identique. À noter que ces formats permettent de faire varier le niveau de compression des données et donc jouer sur le rapport entre espace disque utilisé et temps d’accès. Ces formats sont intéressants notamment pour enregistrer des résultats intermédiaires. À noter que le format <strong>fst</strong>, proposé par <a href="https://www.fstpackage.org/">l’extension du même nom</a>, offre des performances encore supérieures mais ne gère que les données tabulaires.</p>
+<p>Pour des données vraiment volumineuses, le package <code>arrow</code> permet la lecture et l’enregistrement dans différents formats, dont <strong>arrow</strong> et <strong>parquet</strong>. Très optimisés mais limités aux données tabulaires, ils permettent également des échanges avec d’autres langages de programmation comme Python, JavaScript, etc.</p>
+<p>À titre indicatif, le billet <a href="https://data.nozav.org/post/2019-r-data-frame-benchmark/">a shallow benchmark of R data frame export/import methods</a> propose un comparatif entre les performances de différents formats de fichiers pour des données tabulaires. Attention cependant, il date de 2019 et les performances des fonctions testées ont pu évoluer depuis.</p>
 </div>
 <div id="repérer-les-opérations-coûteuses-avec-du-profiling" class="section level3">
 <h3><span class="header-section-number">20.3.4</span> Repérer les opérations coûteuses avec du <em>profiling</em></h3>
-<p>Quand on commence à écrire du code un peu long, il n’est pas toujours évident de savoir quelles sont les opérations qui sont les plus coûteuses en termes de performance. Il peut alors être utile d’utiliser un outil de <em>profiling</em>, qui consiste justement à exécuter du code tout en mesurant les temps d’exécution de chaque instruction, ce qui permet ensuite de visualiser et repérer les opérations qui prennent le plus de temps et qui seraient donc les plus intéressantes à optimiser (si c’est possible).</p>
+<p>Quand on commence à écrire du code un peu long, il n’est pas toujours évident de savoir quelles sont les opérations qui sont les plus coûteuses en termes de performance. Il peut alors être utile d’utiliser un outil de <em>profiling</em>, qui consiste à exécuter du code tout en mesurant les temps d’exécution de chaque instruction, ce qui permet ensuite de visualiser et repérer les opérations qui prennent le plus de temps et qui seraient donc les plus intéressantes à optimiser (si c’est possible).</p>
 <p>L’extension <code>profvis</code> fournit un outil de <em>profiling</em> sous R pratique et utile. On passe des instructions ou un script entier à la fonction <code>profvis()</code>, et celle-ci fournit une visualisation interactive des différentes opérations, de leur temps d’exécution, de leur utilisation de la mémoire…</p>
 <div class="figure">
 <img src="resources/screenshots/profvis.png" alt="" />
@@ -1067,17 +1070,16 @@ Pour plus d’informations on pourra se reporter aux ressources en fin de chapit
 </div>
 <p>L’utilisation de <code>profvis()</code> dépasse le cadre de ce document, mais on pourra trouver des explications (en anglais) dans la partie <a href="https://adv-r.hadley.nz/perf-measure.html#profiling">profiling</a> d’Advanced R.</p>
 </div>
-<div id="mettre-en-cache-les-résultats-intermédiaires" class="section level3">
-<h3><span class="header-section-number">20.3.5</span> Mettre en cache les résultats intermédiaires</h3>
+<div id="mettre-en-cache-des-résultats-intermédiaires" class="section level3">
+<h3><span class="header-section-number">20.3.5</span> Mettre en cache des résultats intermédiaires</h3>
 <p>Selon la taille des données et le type d’opérations réalisées, les temps de calculs même optimisés peuvent demeurer longs. Dans ce cas il peut être intéressant de “mettre en cache” des résultats intermédiaires dans des fichiers pour pouvoir les charger directement sans avoir à tout recalculer.</p>
-<p>Par exemple, si on travaille sur un corpus de données textuelles, on peut enregistrer dans un fichier <code>RDS</code> ou <code>Rdata</code> le résultat de toutes les opérations de prétraitement du corpus pour n’avoir qu’à charger ces fichiers si on souhaite effectuer de nouvelles analyses.</p>
-<p>L’idéal cependant est d’utiliser une extension comme <code>targets</code>, présentée section <a href="21-targets.html#targets">21</a>, qui gère automatiquement les dépendances entre les étapes d’un projet et la mise en cache des résultats, et permet ainsi d’optimiser les temps de traitement.</p>
+<p>Par exemple, si on travaille sur un corpus de données textuelles, on peut enregistrer dans un fichier <code>RDS</code> ou <code>Rdata</code> le résultat de toutes les opérations de prétraitement du corpus : si on souhaite faire des analyses par la suite on aura juste à charger les données depuis ce fichier sans avoir à relancer le calcul de tous les prétraitements.</p>
+<p>L’extension <code>targets</code>, présentée section <a href="21-targets.html#targets">21</a>, est particulièrement adaptée pour les projets de ce type car elle gère automatiquement les dépendances entre les étapes d’un projet et la mise en cache des résultats, et permet ainsi d’optimiser les temps de traitement.</p>
 </div>
 <div id="utiliser-dautres-extensions" class="section level3">
 <h3><span class="header-section-number">20.3.6</span> Utiliser d’autres extensions</h3>
 <p>Enfin, si ce document est basé sur les extensions du <em>tidyverse</em>, qui offrent une syntaxe cohérente et plus facile d’accès, il existe d’autres extensions notamment dans le domaine de la manipulation des données qui permettent des opérations plus rapides.</p>
-<p>C’est notamment le cas de l’extension <code>data.table</code>, qui utilise une syntaxe moins accessible que celle de <code>dplyr</code>, mais propose des performances en général <a href="https://h2oai.github.io/db-benchmark/">assez nettement supérieures</a>.</p>
-<p>On trouvera la documentation détaillée de <code>data.table</code> (en anglais) <a href="https://rdatatable.gitlab.io/data.table/">sur le site de l’extension</a>.</p>
+<p>C’est en particulier le cas de l’extension <code>data.table</code>, qui utilise une syntaxe moins accessible que celle de <code>dplyr</code>, mais propose des performances en général <a href="https://h2oai.github.io/db-benchmark/">assez nettement supérieures</a>. On trouvera la documentation détaillée de <code>data.table</code> (en anglais) <a href="https://rdatatable.gitlab.io/data.table/">sur le site de l’extension</a>.</p>
 </div>
 </div>
 <div id="ressources-11" class="section level2">
