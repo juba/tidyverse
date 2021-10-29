@@ -24,7 +24,7 @@
 <meta name="author" content="Julien Barnier" />
 
 
-<meta name="date" content="2021-10-28" />
+<meta name="date" content="2021-10-29" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -618,8 +618,8 @@ code span.wa { color: #bf0303; } /* Warning */
 <h1><span class="header-section-number">Partie 20</span> Débuggage et performance</h1>
 <div id="débugguer-une-fonction" class="section level2">
 <h2><span class="header-section-number">20.1</span> Débugguer une fonction</h2>
-<p>Lorsqu’on commence à écrire des fonctions un peu complexes, avec des <code>if</code>, des <code>for</code>, et autres joyeusetés, arrive forcément un moment où ça ne fonctionne pas comme on le souhaiterait et où on ne comprend pas pourquoi. Bref, il y a un bug.</p>
-<p>Trouver la cause d’un bug n’est pas toujours évident, mais heureusement il existe plusieurs méthodes et outils permettant de faciliter un peu les choses.</p>
+<p>Lorsqu’on commence à écrire des fonctions un peu complexes, avec des <code>if</code>, des <code>for</code>, et autres joyeusetés, arrive forcément un moment où ça ne fonctionne pas comme on le souhaiterait et où on ne comprend pas pourquoi. Bref, <em>il y a un bug</em>.</p>
+<p>Trouver la cause d’un bug n’est pas toujours évident, mais il existe plusieurs méthodes et outils permettant de faciliter un peu les choses.</p>
 <p>On commence par charger les extensions et les jeux de données dont on aura besoin par la suite.</p>
 <div class="sourceCode" id="cb1164"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1164-1"><a href="20-debuggage-performance.html#cb1164-1"></a><span class="kw">library</span>(tidyverse)</span>
 <span id="cb1164-2"><a href="20-debuggage-performance.html#cb1164-2"></a><span class="kw">library</span>(questionr)</span>
@@ -627,7 +627,7 @@ code span.wa { color: #bf0303; } /* Warning */
 <span id="cb1164-4"><a href="20-debuggage-performance.html#cb1164-4"></a><span class="kw">data</span>(starwars)</span></code></pre></div>
 <div id="print" class="section level3">
 <h3><span class="header-section-number">20.1.1</span> print()</h3>
-<p>L’outil le plus simple, rudimentaire et parfois décrié mais qui reste efficace, est de rajouter un simple <code>print()</code> dans le code de notre fonction pour examiner le contenu d’un objet à un moment donné.</p>
+<p>L’outil le plus simple, rudimentaire et parfois décrié mais qui reste efficace, est de rajouter un <code>print()</code> dans le code de notre fonction pour examiner le contenu d’un objet à un moment donné.</p>
 <p>Prenons un exemple. La fonction suivante prend en argument un tableau de données et un nom de variable, et retourne la moyenne et l’écart-type de cette variable.</p>
 <div class="sourceCode" id="cb1165"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1165-1"><a href="20-debuggage-performance.html#cb1165-1"></a>indicateurs &lt;-<span class="st"> </span><span class="cf">function</span>(df, var) {</span>
 <span id="cb1165-2"><a href="20-debuggage-performance.html#cb1165-2"></a>    valeurs &lt;-<span class="st"> </span>df[, var]</span>
@@ -637,7 +637,7 @@ code span.wa { color: #bf0303; } /* Warning */
 <span id="cb1165-6"><a href="20-debuggage-performance.html#cb1165-6"></a>        <span class="dt">sd =</span> <span class="kw">sd</span>(valeurs, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>)</span>
 <span id="cb1165-7"><a href="20-debuggage-performance.html#cb1165-7"></a>    )</span>
 <span id="cb1165-8"><a href="20-debuggage-performance.html#cb1165-8"></a>}</span></code></pre></div>
-<p>On teste notre fonction sur une variable du jeu de données <code>hdv2003</code> inclus dans R base. Tout semble fonctionner.</p>
+<p>On teste notre fonction sur une variable du jeu de données <code>hdv2003</code>. Tout semble fonctionner.</p>
 <div class="sourceCode" id="cb1166"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1166-1"><a href="20-debuggage-performance.html#cb1166-1"></a><span class="kw">indicateurs</span>(hdv2003, <span class="st">&quot;age&quot;</span>)</span>
 <span id="cb1166-2"><a href="20-debuggage-performance.html#cb1166-2"></a><span class="co">#&gt; $moyenne</span></span>
 <span id="cb1166-3"><a href="20-debuggage-performance.html#cb1166-3"></a><span class="co">#&gt; [1] 48.157</span></span>
@@ -1041,6 +1041,10 @@ Pour plus d’informations on pourra se reporter aux ressources en fin de chapit
 <h3><span class="header-section-number">20.3.4</span> Repérer les opérations coûteuses avec du <em>profiling</em></h3>
 <p>Quand on commence à écrire du code un peu long, il n’est pas toujours évident de savoir quelles sont les opérations qui sont les plus coûteuses en termes de performance. Il peut alors être utile d’utiliser un outil de <em>profiling</em>, qui consiste justement à exécuter du code tout en mesurant les temps d’exécution de chaque instruction, ce qui permet ensuite de visualiser et repérer les opérations qui prennent le plus de temps et qui seraient donc les plus intéressantes à optimiser (si c’est possible).</p>
 <p>L’extension <code>profvis</code> fournit un outil de <em>profiling</em> sous R pratique et utile. On passe des instructions ou un script entier à la fonction <code>profvis()</code>, et celle-ci fournit une visualisation interactive des différentes opérations, de leur temps d’exécution, de leur utilisation de la mémoire…</p>
+<div class="figure">
+<img src="resources/screenshots/profvis.png" alt="" />
+<p class="caption">Exemple de visualisation générée par profvis()</p>
+</div>
 <p>L’utilisation de <code>profvis()</code> dépasse le cadre de ce document, mais on pourra trouver des explications (en anglais) dans la partie <a href="https://adv-r.hadley.nz/perf-measure.html#profiling">profiling</a> d’Advanced R.</p>
 </div>
 <div id="mettre-en-cache-les-résultats-intermédiaires" class="section level3">
