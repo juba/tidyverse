@@ -24,7 +24,7 @@
 <meta name="author" content="Julien Barnier" />
 
 
-<meta name="date" content="2021-10-29" />
+<meta name="date" content="2021-11-17" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -841,7 +841,7 @@ Les actions “visibles” dans notre session R accomplies par une fonction en-d
 <span id="cb598-6"><a href="14-fonctions.html#cb598-6"></a></span>
 <span id="cb598-7"><a href="14-fonctions.html#cb598-7"></a><span class="kw">min_alea</span>(<span class="dv">50000</span>)</span>
 <span id="cb598-8"><a href="14-fonctions.html#cb598-8"></a><span class="co">#&gt; Génération de 50000 nombres aléatoires...</span></span>
-<span id="cb598-9"><a href="14-fonctions.html#cb598-9"></a><span class="co">#&gt; Le plus petit nombre généré vaut 1.085363e-05</span></span></code></pre></div>
+<span id="cb598-9"><a href="14-fonctions.html#cb598-9"></a><span class="co">#&gt; Le plus petit nombre généré vaut 3.264286e-07</span></span></code></pre></div>
 </div>
 <div id="utilité-des-fonctions" class="section level3">
 <h3><span class="header-section-number">14.1.4</span> Utilité des fonctions</h3>
@@ -1333,78 +1333,73 @@ Quand on passe une fonction comme argument à une autre fonction, on utilise don
 </div>
 
 <p><strong>Exercice 1.3</strong></p>
-<p>Écrire une fonction nommée <code>alea</code> qui tire un nombre au hasard entre 0 et 100. Cette fonction ne prend pas d’argument et son corps est constitué des étapes suivantes :</p>
-<ul>
-<li>tirer un nombre aléatoire entre 0 et 1 avec <code>runif(1)</code></li>
-<li>multiplier ce nombre par 100</li>
-<li>l’arrondir à l’entier le plus proche avec <code>round</code></li>
-<li>retourner le résultat</li>
-</ul>
+<p>Écrire une fonction nommée <code>alea</code> qui accepte un argument <code>n</code>, génère un vecteur de <code>n</code> valeurs aléatoires entre 0 et 1 avec la fonction <code>runif(n)</code> et retourne ce vecteur comme résultat.</p>
 
 <div class="solution-exo">
-<div class="sourceCode" id="cb653"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb653-1"><a href="14-fonctions.html#cb653-1"></a>alea &lt;-<span class="st"> </span><span class="cf">function</span>() {</span>
-<span id="cb653-2"><a href="14-fonctions.html#cb653-2"></a>  n &lt;-<span class="st"> </span><span class="kw">runif</span>(<span class="dv">1</span>)</span>
-<span id="cb653-3"><a href="14-fonctions.html#cb653-3"></a>  n &lt;-<span class="st"> </span>n <span class="op">*</span><span class="st"> </span><span class="dv">100</span></span>
-<span id="cb653-4"><a href="14-fonctions.html#cb653-4"></a>  n &lt;-<span class="st"> </span><span class="kw">round</span>(n)</span>
-<span id="cb653-5"><a href="14-fonctions.html#cb653-5"></a>  <span class="kw">return</span>(n)</span>
-<span id="cb653-6"><a href="14-fonctions.html#cb653-6"></a>}</span></code></pre></div>
+<div class="sourceCode" id="cb653"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb653-1"><a href="14-fonctions.html#cb653-1"></a>alea &lt;-<span class="st"> </span><span class="cf">function</span>(n) {</span>
+<span id="cb653-2"><a href="14-fonctions.html#cb653-2"></a>  v &lt;-<span class="st"> </span><span class="kw">runif</span>(n)</span>
+<span id="cb653-3"><a href="14-fonctions.html#cb653-3"></a>  <span class="kw">return</span>(v)</span>
+<span id="cb653-4"><a href="14-fonctions.html#cb653-4"></a>}</span></code></pre></div>
 </div>
 
-<p>Modifier cette fonction pour qu’elle accepte un argument <code>max</code> et qu’elle génère un nombre entier au hasard entre 0 et <code>max</code>.</p>
+<p>Modifier la fonction pour qu’elle accepte deux arguments supplémentaires <code>min</code> et <code>max</code> et qu’elle retourne un vecteur de <code>n</code> valeurs aléatoires comprises entre <code>min</code> et <code>max</code> avec la fonction <code>runif(n, min, max)</code>.</p>
 
 <div class="solution-exo">
-<div class="sourceCode" id="cb654"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb654-1"><a href="14-fonctions.html#cb654-1"></a>alea &lt;-<span class="st"> </span><span class="cf">function</span>(max) {</span>
-<span id="cb654-2"><a href="14-fonctions.html#cb654-2"></a>  n &lt;-<span class="st"> </span><span class="kw">runif</span>(<span class="dv">1</span>)</span>
-<span id="cb654-3"><a href="14-fonctions.html#cb654-3"></a>  n &lt;-<span class="st"> </span>n <span class="op">*</span><span class="st"> </span>max</span>
-<span id="cb654-4"><a href="14-fonctions.html#cb654-4"></a>  n &lt;-<span class="st"> </span><span class="kw">round</span>(n)</span>
-<span id="cb654-5"><a href="14-fonctions.html#cb654-5"></a>  <span class="kw">return</span>(n)</span>
-<span id="cb654-6"><a href="14-fonctions.html#cb654-6"></a>}</span></code></pre></div>
+<div class="sourceCode" id="cb654"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb654-1"><a href="14-fonctions.html#cb654-1"></a>alea &lt;-<span class="st"> </span><span class="cf">function</span>(n, min, max) {</span>
+<span id="cb654-2"><a href="14-fonctions.html#cb654-2"></a>  v &lt;-<span class="st"> </span><span class="kw">runif</span>(n, min, max)</span>
+<span id="cb654-3"><a href="14-fonctions.html#cb654-3"></a>  <span class="kw">return</span>(v)</span>
+<span id="cb654-4"><a href="14-fonctions.html#cb654-4"></a>}</span></code></pre></div>
 </div>
 
-<p><em>Facultatif :</em> Modifier à nouveau la fonction pour qu’elle accepte deux arguments <code>min</code> et <code>max</code> et qu’elle génère un nombre entier au hasard compris entre <code>min</code> et <code>max</code>.</p>
+<p>Modifier à nouveau la fonction pour qu’elle retourne un vecteur de <code>n</code> nombres <em>entiers</em> aléatoires compris entre <code>min</code> et <code>max</code> en appliquant la fonction <code>trunc()</code> au vecteur généré par <code>runif()</code>.</p>
+<p>Vérifier le résultat avec :</p>
+<div class="sourceCode" id="cb655"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb655-1"><a href="14-fonctions.html#cb655-1"></a>v &lt;-<span class="st"> </span><span class="kw">alea</span>(<span class="dv">10000</span>, <span class="dv">1</span>, <span class="dv">6</span>)</span>
+<span id="cb655-2"><a href="14-fonctions.html#cb655-2"></a><span class="kw">table</span>(v)</span>
+<span id="cb655-3"><a href="14-fonctions.html#cb655-3"></a><span class="co">#&gt; v</span></span>
+<span id="cb655-4"><a href="14-fonctions.html#cb655-4"></a><span class="co">#&gt;    1    2    3    4    5    6 </span></span>
+<span id="cb655-5"><a href="14-fonctions.html#cb655-5"></a><span class="co">#&gt; 1656 1645 1721 1646 1675 1657</span></span></code></pre></div>
 
 <div class="solution-exo">
-<div class="sourceCode" id="cb655"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb655-1"><a href="14-fonctions.html#cb655-1"></a>alea &lt;-<span class="st"> </span><span class="cf">function</span>(min, max) {</span>
-<span id="cb655-2"><a href="14-fonctions.html#cb655-2"></a>  n &lt;-<span class="st"> </span><span class="kw">runif</span>(<span class="dv">1</span>)</span>
-<span id="cb655-3"><a href="14-fonctions.html#cb655-3"></a>  n &lt;-<span class="st"> </span>n <span class="op">*</span><span class="st"> </span>(max <span class="op">-</span><span class="st"> </span>min) <span class="op">+</span><span class="st"> </span>min</span>
-<span id="cb655-4"><a href="14-fonctions.html#cb655-4"></a>  n &lt;-<span class="st"> </span><span class="kw">round</span>(n)</span>
-<span id="cb655-5"><a href="14-fonctions.html#cb655-5"></a>  <span class="kw">return</span>(n)</span>
-<span id="cb655-6"><a href="14-fonctions.html#cb655-6"></a>}</span></code></pre></div>
+<div class="sourceCode" id="cb656"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb656-1"><a href="14-fonctions.html#cb656-1"></a>alea &lt;-<span class="st"> </span><span class="cf">function</span>(n, min, max) {</span>
+<span id="cb656-2"><a href="14-fonctions.html#cb656-2"></a>  v &lt;-<span class="st"> </span><span class="kw">runif</span>(n, min, max <span class="op">+</span><span class="st"> </span><span class="dv">1</span>)</span>
+<span id="cb656-3"><a href="14-fonctions.html#cb656-3"></a>  v &lt;-<span class="st"> </span><span class="kw">trunc</span>(v)</span>
+<span id="cb656-4"><a href="14-fonctions.html#cb656-4"></a>  <span class="kw">return</span>(v)</span>
+<span id="cb656-5"><a href="14-fonctions.html#cb656-5"></a>}</span></code></pre></div>
 </div>
 
 <p><strong>Exercice 1.4</strong></p>
 <p>Écrire une fonction nommée <code>meteo</code> qui prend un argument nommé <code>ville</code> avec le corps suivant :</p>
-<div class="sourceCode" id="cb656"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb656-1"><a href="14-fonctions.html#cb656-1"></a>out &lt;-<span class="st"> </span><span class="kw">readLines</span>(<span class="kw">paste0</span>(<span class="st">&quot;https://v2.wttr.in/&quot;</span>, ville, <span class="st">&quot;?A&quot;</span>))</span>
-<span id="cb656-2"><a href="14-fonctions.html#cb656-2"></a><span class="kw">cat</span>(out, <span class="dt">sep =</span> <span class="st">&quot;</span><span class="ch">\n</span><span class="st">&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb657"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb657-1"><a href="14-fonctions.html#cb657-1"></a>out &lt;-<span class="st"> </span><span class="kw">readLines</span>(<span class="kw">paste0</span>(<span class="st">&quot;https://v2.wttr.in/&quot;</span>, ville, <span class="st">&quot;?A&quot;</span>))</span>
+<span id="cb657-2"><a href="14-fonctions.html#cb657-2"></a><span class="kw">cat</span>(out, <span class="dt">sep =</span> <span class="st">&quot;</span><span class="ch">\n</span><span class="st">&quot;</span>)</span></code></pre></div>
 <p>Tester la fonction avec par exemple <code>meteo("Lyon")</code>.</p>
 
 <div class="solution-exo">
-<div class="sourceCode" id="cb657"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb657-1"><a href="14-fonctions.html#cb657-1"></a>meteo &lt;-<span class="st"> </span><span class="cf">function</span>(ville) {</span>
-<span id="cb657-2"><a href="14-fonctions.html#cb657-2"></a>  out &lt;-<span class="st"> </span><span class="kw">readLines</span>(<span class="kw">paste0</span>(<span class="st">&quot;https://v2.wttr.in/&quot;</span>, ville, <span class="st">&quot;?A&quot;</span>))</span>
-<span id="cb657-3"><a href="14-fonctions.html#cb657-3"></a>  <span class="kw">cat</span>(out, <span class="dt">sep =</span> <span class="st">&quot;</span><span class="ch">\n</span><span class="st">&quot;</span>)</span>
-<span id="cb657-4"><a href="14-fonctions.html#cb657-4"></a>}</span></code></pre></div>
+<div class="sourceCode" id="cb658"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb658-1"><a href="14-fonctions.html#cb658-1"></a>meteo &lt;-<span class="st"> </span><span class="cf">function</span>(ville) {</span>
+<span id="cb658-2"><a href="14-fonctions.html#cb658-2"></a>  out &lt;-<span class="st"> </span><span class="kw">readLines</span>(<span class="kw">paste0</span>(<span class="st">&quot;https://v2.wttr.in/&quot;</span>, ville, <span class="st">&quot;?A&quot;</span>))</span>
+<span id="cb658-3"><a href="14-fonctions.html#cb658-3"></a>  <span class="kw">cat</span>(out, <span class="dt">sep =</span> <span class="st">&quot;</span><span class="ch">\n</span><span class="st">&quot;</span>)</span>
+<span id="cb658-4"><a href="14-fonctions.html#cb658-4"></a>}</span></code></pre></div>
 </div>
 
 <p><strong>Exercice 1.5</strong></p>
 <p>Soit le code suivant, qui recode une variable du jeu de données <code>hdv2003</code> en utilisant <code>str_to_lower()</code> puis <code>fct_recode()</code> :</p>
-<div class="sourceCode" id="cb658"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb658-1"><a href="14-fonctions.html#cb658-1"></a><span class="kw">library</span>(questionr)</span>
-<span id="cb658-2"><a href="14-fonctions.html#cb658-2"></a><span class="kw">library</span>(tidyverse)</span>
-<span id="cb658-3"><a href="14-fonctions.html#cb658-3"></a><span class="kw">data</span>(hdv2003)</span>
-<span id="cb658-4"><a href="14-fonctions.html#cb658-4"></a></span>
-<span id="cb658-5"><a href="14-fonctions.html#cb658-5"></a>hdv2003<span class="op">$</span>hard.rock &lt;-<span class="st"> </span><span class="kw">str_to_lower</span>(hdv2003<span class="op">$</span>hard.rock)</span>
-<span id="cb658-6"><a href="14-fonctions.html#cb658-6"></a>hdv2003<span class="op">$</span>hard.rock &lt;-<span class="st"> </span><span class="kw">fct_recode</span>(hdv2003<span class="op">$</span>hard.rock, <span class="st">&quot;o&quot;</span> =<span class="st"> &quot;oui&quot;</span>, <span class="st">&quot;n&quot;</span> =<span class="st"> &quot;non&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb659"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb659-1"><a href="14-fonctions.html#cb659-1"></a><span class="kw">library</span>(questionr)</span>
+<span id="cb659-2"><a href="14-fonctions.html#cb659-2"></a><span class="kw">library</span>(tidyverse)</span>
+<span id="cb659-3"><a href="14-fonctions.html#cb659-3"></a><span class="kw">data</span>(hdv2003)</span>
+<span id="cb659-4"><a href="14-fonctions.html#cb659-4"></a></span>
+<span id="cb659-5"><a href="14-fonctions.html#cb659-5"></a>hdv2003<span class="op">$</span>hard.rock &lt;-<span class="st"> </span><span class="kw">str_to_lower</span>(hdv2003<span class="op">$</span>hard.rock)</span>
+<span id="cb659-6"><a href="14-fonctions.html#cb659-6"></a>hdv2003<span class="op">$</span>hard.rock &lt;-<span class="st"> </span><span class="kw">fct_recode</span>(hdv2003<span class="op">$</span>hard.rock, <span class="st">&quot;o&quot;</span> =<span class="st"> &quot;oui&quot;</span>, <span class="st">&quot;n&quot;</span> =<span class="st"> &quot;non&quot;</span>)</span></code></pre></div>
 <p>Transformer ce code en une fonction nommée <code>recode_oui_non</code>, et appliquer cette fonction à <code>hard.rock</code>, <code>lecture.bd</code> et <code>cuisine</code>.</p>
 
 <div class="solution-exo">
-<div class="sourceCode" id="cb659"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb659-1"><a href="14-fonctions.html#cb659-1"></a>recode_oui_non &lt;-<span class="st"> </span><span class="cf">function</span>(var) {</span>
-<span id="cb659-2"><a href="14-fonctions.html#cb659-2"></a>  var_rec &lt;-<span class="st"> </span><span class="kw">str_to_lower</span>(var)</span>
-<span id="cb659-3"><a href="14-fonctions.html#cb659-3"></a>  var_rec &lt;-<span class="st"> </span><span class="kw">fct_recode</span>(var_rec, <span class="st">&quot;o&quot;</span> =<span class="st"> &quot;Oui&quot;</span>, <span class="st">&quot;n&quot;</span> =<span class="st"> &quot;Non&quot;</span>)</span>
-<span id="cb659-4"><a href="14-fonctions.html#cb659-4"></a>  <span class="kw">return</span>(var_rec)</span>
-<span id="cb659-5"><a href="14-fonctions.html#cb659-5"></a>}</span>
-<span id="cb659-6"><a href="14-fonctions.html#cb659-6"></a></span>
-<span id="cb659-7"><a href="14-fonctions.html#cb659-7"></a>hdv2003<span class="op">$</span>hard.rock &lt;-<span class="st"> </span><span class="kw">recode_oui_non</span>(hdv2003<span class="op">$</span>hard.rock)</span>
-<span id="cb659-8"><a href="14-fonctions.html#cb659-8"></a>hdv2003<span class="op">$</span>lecture.bd &lt;-<span class="st"> </span><span class="kw">recode_oui_non</span>(hdv2003<span class="op">$</span>lecture.bd)</span>
-<span id="cb659-9"><a href="14-fonctions.html#cb659-9"></a>hdv2003<span class="op">$</span>cuisine &lt;-<span class="st"> </span><span class="kw">recode_oui_non</span>(hdv2003<span class="op">$</span>cuisine)</span></code></pre></div>
+<div class="sourceCode" id="cb660"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb660-1"><a href="14-fonctions.html#cb660-1"></a>recode_oui_non &lt;-<span class="st"> </span><span class="cf">function</span>(var) {</span>
+<span id="cb660-2"><a href="14-fonctions.html#cb660-2"></a>  var_rec &lt;-<span class="st"> </span><span class="kw">str_to_lower</span>(var)</span>
+<span id="cb660-3"><a href="14-fonctions.html#cb660-3"></a>  var_rec &lt;-<span class="st"> </span><span class="kw">fct_recode</span>(var_rec, <span class="st">&quot;o&quot;</span> =<span class="st"> &quot;Oui&quot;</span>, <span class="st">&quot;n&quot;</span> =<span class="st"> &quot;Non&quot;</span>)</span>
+<span id="cb660-4"><a href="14-fonctions.html#cb660-4"></a>  <span class="kw">return</span>(var_rec)</span>
+<span id="cb660-5"><a href="14-fonctions.html#cb660-5"></a>}</span>
+<span id="cb660-6"><a href="14-fonctions.html#cb660-6"></a></span>
+<span id="cb660-7"><a href="14-fonctions.html#cb660-7"></a>hdv2003<span class="op">$</span>hard.rock &lt;-<span class="st"> </span><span class="kw">recode_oui_non</span>(hdv2003<span class="op">$</span>hard.rock)</span>
+<span id="cb660-8"><a href="14-fonctions.html#cb660-8"></a>hdv2003<span class="op">$</span>lecture.bd &lt;-<span class="st"> </span><span class="kw">recode_oui_non</span>(hdv2003<span class="op">$</span>lecture.bd)</span>
+<span id="cb660-9"><a href="14-fonctions.html#cb660-9"></a>hdv2003<span class="op">$</span>cuisine &lt;-<span class="st"> </span><span class="kw">recode_oui_non</span>(hdv2003<span class="op">$</span>cuisine)</span></code></pre></div>
 </div>
 
 </div>
@@ -1412,71 +1407,71 @@ Quand on passe une fonction comme argument à une autre fonction, on utilise don
 <h3><span class="header-section-number">14.6.2</span> Arguments et résultat</h3>
 <p><strong>Exercice 2.1</strong></p>
 <p>Observer le code de la fonction suivante pour comprendre à quoi correspondent chacun de ses trois arguments, puis réordonner et renommer ces arguments de manière plus pertinente :</p>
-<div class="sourceCode" id="cb660"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb660-1"><a href="14-fonctions.html#cb660-1"></a>moyenne_arrondie &lt;-<span class="st"> </span><span class="cf">function</span>(d, vecteur_contenant_les_donnees, supprimer_les_na) {</span>
-<span id="cb660-2"><a href="14-fonctions.html#cb660-2"></a>  res &lt;-<span class="st"> </span><span class="kw">mean</span>(vecteur_contenant_les_donnees, <span class="dt">na.rm =</span> supprimer_les_na)</span>
-<span id="cb660-3"><a href="14-fonctions.html#cb660-3"></a>  res &lt;-<span class="st"> </span><span class="kw">round</span>(res, d)</span>
-<span id="cb660-4"><a href="14-fonctions.html#cb660-4"></a>  <span class="kw">return</span>(res)</span>
-<span id="cb660-5"><a href="14-fonctions.html#cb660-5"></a>}</span></code></pre></div>
-
-<div class="solution-exo">
-<div class="sourceCode" id="cb661"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb661-1"><a href="14-fonctions.html#cb661-1"></a>moyenne_arrondie &lt;-<span class="st"> </span><span class="cf">function</span>(v, decimales, na.rm) {</span>
-<span id="cb661-2"><a href="14-fonctions.html#cb661-2"></a>  res &lt;-<span class="st"> </span><span class="kw">mean</span>(v, <span class="dt">na.rm =</span> na.rm)</span>
-<span id="cb661-3"><a href="14-fonctions.html#cb661-3"></a>  res &lt;-<span class="st"> </span><span class="kw">round</span>(res, decimales)</span>
+<div class="sourceCode" id="cb661"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb661-1"><a href="14-fonctions.html#cb661-1"></a>moyenne_arrondie &lt;-<span class="st"> </span><span class="cf">function</span>(d, vecteur_contenant_les_donnees, supprimer_les_na) {</span>
+<span id="cb661-2"><a href="14-fonctions.html#cb661-2"></a>  res &lt;-<span class="st"> </span><span class="kw">mean</span>(vecteur_contenant_les_donnees, <span class="dt">na.rm =</span> supprimer_les_na)</span>
+<span id="cb661-3"><a href="14-fonctions.html#cb661-3"></a>  res &lt;-<span class="st"> </span><span class="kw">round</span>(res, d)</span>
 <span id="cb661-4"><a href="14-fonctions.html#cb661-4"></a>  <span class="kw">return</span>(res)</span>
 <span id="cb661-5"><a href="14-fonctions.html#cb661-5"></a>}</span></code></pre></div>
-</div>
-
-<p>Donner aux arguments une valeur par défaut.</p>
 
 <div class="solution-exo">
-<div class="sourceCode" id="cb662"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb662-1"><a href="14-fonctions.html#cb662-1"></a>moyenne_arrondie &lt;-<span class="st"> </span><span class="cf">function</span>(v, <span class="dt">decimales =</span> <span class="dv">2</span>, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>) {</span>
+<div class="sourceCode" id="cb662"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb662-1"><a href="14-fonctions.html#cb662-1"></a>moyenne_arrondie &lt;-<span class="st"> </span><span class="cf">function</span>(v, decimales, na.rm) {</span>
 <span id="cb662-2"><a href="14-fonctions.html#cb662-2"></a>  res &lt;-<span class="st"> </span><span class="kw">mean</span>(v, <span class="dt">na.rm =</span> na.rm)</span>
 <span id="cb662-3"><a href="14-fonctions.html#cb662-3"></a>  res &lt;-<span class="st"> </span><span class="kw">round</span>(res, decimales)</span>
 <span id="cb662-4"><a href="14-fonctions.html#cb662-4"></a>  <span class="kw">return</span>(res)</span>
 <span id="cb662-5"><a href="14-fonctions.html#cb662-5"></a>}</span></code></pre></div>
 </div>
 
-<p>Simplifier la fonction en utilisant la syntaxe plus compacte qui ne fait pas appel à <code>return()</code>.</p>
+<p>Donner aux arguments une valeur par défaut.</p>
 
 <div class="solution-exo">
 <div class="sourceCode" id="cb663"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb663-1"><a href="14-fonctions.html#cb663-1"></a>moyenne_arrondie &lt;-<span class="st"> </span><span class="cf">function</span>(v, <span class="dt">decimales =</span> <span class="dv">2</span>, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>) {</span>
 <span id="cb663-2"><a href="14-fonctions.html#cb663-2"></a>  res &lt;-<span class="st"> </span><span class="kw">mean</span>(v, <span class="dt">na.rm =</span> na.rm)</span>
-<span id="cb663-3"><a href="14-fonctions.html#cb663-3"></a>  <span class="kw">round</span>(res, decimales)</span>
-<span id="cb663-4"><a href="14-fonctions.html#cb663-4"></a>}</span></code></pre></div>
+<span id="cb663-3"><a href="14-fonctions.html#cb663-3"></a>  res &lt;-<span class="st"> </span><span class="kw">round</span>(res, decimales)</span>
+<span id="cb663-4"><a href="14-fonctions.html#cb663-4"></a>  <span class="kw">return</span>(res)</span>
+<span id="cb663-5"><a href="14-fonctions.html#cb663-5"></a>}</span></code></pre></div>
+</div>
+
+<p>Simplifier la fonction en utilisant la syntaxe plus compacte qui ne fait pas appel à <code>return()</code>.</p>
+
+<div class="solution-exo">
+<div class="sourceCode" id="cb664"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb664-1"><a href="14-fonctions.html#cb664-1"></a>moyenne_arrondie &lt;-<span class="st"> </span><span class="cf">function</span>(v, <span class="dt">decimales =</span> <span class="dv">2</span>, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>) {</span>
+<span id="cb664-2"><a href="14-fonctions.html#cb664-2"></a>  res &lt;-<span class="st"> </span><span class="kw">mean</span>(v, <span class="dt">na.rm =</span> na.rm)</span>
+<span id="cb664-3"><a href="14-fonctions.html#cb664-3"></a>  <span class="kw">round</span>(res, decimales)</span>
+<span id="cb664-4"><a href="14-fonctions.html#cb664-4"></a>}</span></code></pre></div>
 </div>
 
 <p><strong>Exercice 2.2</strong></p>
 <p>Simplifier la fonction suivante pour que son corps ne fasse plus qu’une seule ligne :</p>
-<div class="sourceCode" id="cb664"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb664-1"><a href="14-fonctions.html#cb664-1"></a>centrer_reduire &lt;-<span class="st"> </span><span class="cf">function</span>(x) {</span>
-<span id="cb664-2"><a href="14-fonctions.html#cb664-2"></a>  res &lt;-<span class="st"> </span>x <span class="op">-</span><span class="st"> </span><span class="kw">mean</span>(x)</span>
-<span id="cb664-3"><a href="14-fonctions.html#cb664-3"></a>  res &lt;-<span class="st"> </span>res <span class="op">/</span><span class="st"> </span><span class="kw">sd</span>(x)</span>
-<span id="cb664-4"><a href="14-fonctions.html#cb664-4"></a>  <span class="kw">return</span>(res)</span>
-<span id="cb664-5"><a href="14-fonctions.html#cb664-5"></a>}</span></code></pre></div>
+<div class="sourceCode" id="cb665"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb665-1"><a href="14-fonctions.html#cb665-1"></a>centrer_reduire &lt;-<span class="st"> </span><span class="cf">function</span>(x) {</span>
+<span id="cb665-2"><a href="14-fonctions.html#cb665-2"></a>  res &lt;-<span class="st"> </span>x <span class="op">-</span><span class="st"> </span><span class="kw">mean</span>(x)</span>
+<span id="cb665-3"><a href="14-fonctions.html#cb665-3"></a>  res &lt;-<span class="st"> </span>res <span class="op">/</span><span class="st"> </span><span class="kw">sd</span>(x)</span>
+<span id="cb665-4"><a href="14-fonctions.html#cb665-4"></a>  <span class="kw">return</span>(res)</span>
+<span id="cb665-5"><a href="14-fonctions.html#cb665-5"></a>}</span></code></pre></div>
 
 <div class="solution-exo">
-<div class="sourceCode" id="cb665"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb665-1"><a href="14-fonctions.html#cb665-1"></a>centrer_reduire &lt;-<span class="st"> </span><span class="cf">function</span>(x) {</span>
-<span id="cb665-2"><a href="14-fonctions.html#cb665-2"></a>  (x <span class="op">-</span><span class="st"> </span><span class="kw">mean</span>(x)) <span class="op">/</span><span class="st"> </span><span class="kw">sd</span>(x)</span>
-<span id="cb665-3"><a href="14-fonctions.html#cb665-3"></a>}</span></code></pre></div>
+<div class="sourceCode" id="cb666"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb666-1"><a href="14-fonctions.html#cb666-1"></a>centrer_reduire &lt;-<span class="st"> </span><span class="cf">function</span>(x) {</span>
+<span id="cb666-2"><a href="14-fonctions.html#cb666-2"></a>  (x <span class="op">-</span><span class="st"> </span><span class="kw">mean</span>(x)) <span class="op">/</span><span class="st"> </span><span class="kw">sd</span>(x)</span>
+<span id="cb666-3"><a href="14-fonctions.html#cb666-3"></a>}</span></code></pre></div>
 </div>
 
 <p><strong>Exercice 2.3</strong></p>
 <p>Le code suivant permet de déterminer la lettre initiale et la longueur d’un mot.</p>
-<div class="sourceCode" id="cb666"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb666-1"><a href="14-fonctions.html#cb666-1"></a>initiale &lt;-<span class="st"> </span><span class="kw">str_sub</span>(mot, <span class="dv">1</span>, <span class="dv">1</span>)</span>
-<span id="cb666-2"><a href="14-fonctions.html#cb666-2"></a>longueur &lt;-<span class="st"> </span><span class="kw">nchar</span>(mot)</span></code></pre></div>
+<div class="sourceCode" id="cb667"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb667-1"><a href="14-fonctions.html#cb667-1"></a>initiale &lt;-<span class="st"> </span><span class="kw">str_sub</span>(mot, <span class="dv">1</span>, <span class="dv">1</span>)</span>
+<span id="cb667-2"><a href="14-fonctions.html#cb667-2"></a>longueur &lt;-<span class="st"> </span><span class="kw">nchar</span>(mot)</span></code></pre></div>
 <p>Utiliser ce code pour créer une fonction <code>caracteristiques_mot()</code> qui prend un argument <code>mot</code> et retourne à la fois son initiale et sa longueur.</p>
-<div class="sourceCode" id="cb667"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb667-1"><a href="14-fonctions.html#cb667-1"></a><span class="kw">caracteristiques_mot</span>(<span class="st">&quot;Bidonnage&quot;</span>)</span>
-<span id="cb667-2"><a href="14-fonctions.html#cb667-2"></a><span class="co">#&gt; $initiale</span></span>
-<span id="cb667-3"><a href="14-fonctions.html#cb667-3"></a><span class="co">#&gt; [1] &quot;B&quot;</span></span>
-<span id="cb667-4"><a href="14-fonctions.html#cb667-4"></a><span class="co">#&gt; </span></span>
-<span id="cb667-5"><a href="14-fonctions.html#cb667-5"></a><span class="co">#&gt; $longueur</span></span>
-<span id="cb667-6"><a href="14-fonctions.html#cb667-6"></a><span class="co">#&gt; [1] 9</span></span></code></pre></div>
+<div class="sourceCode" id="cb668"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb668-1"><a href="14-fonctions.html#cb668-1"></a><span class="kw">caracteristiques_mot</span>(<span class="st">&quot;Bidonnage&quot;</span>)</span>
+<span id="cb668-2"><a href="14-fonctions.html#cb668-2"></a><span class="co">#&gt; $initiale</span></span>
+<span id="cb668-3"><a href="14-fonctions.html#cb668-3"></a><span class="co">#&gt; [1] &quot;B&quot;</span></span>
+<span id="cb668-4"><a href="14-fonctions.html#cb668-4"></a><span class="co">#&gt; </span></span>
+<span id="cb668-5"><a href="14-fonctions.html#cb668-5"></a><span class="co">#&gt; $longueur</span></span>
+<span id="cb668-6"><a href="14-fonctions.html#cb668-6"></a><span class="co">#&gt; [1] 9</span></span></code></pre></div>
 
 <div class="solution-exo">
-<div class="sourceCode" id="cb668"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb668-1"><a href="14-fonctions.html#cb668-1"></a>caracteristiques_mot &lt;-<span class="st"> </span><span class="cf">function</span>(mot) {</span>
-<span id="cb668-2"><a href="14-fonctions.html#cb668-2"></a>  initiale &lt;-<span class="st"> </span><span class="kw">str_sub</span>(mot, <span class="dv">1</span>, <span class="dv">1</span>)</span>
-<span id="cb668-3"><a href="14-fonctions.html#cb668-3"></a>  longueur &lt;-<span class="st"> </span><span class="kw">nchar</span>(mot)</span>
-<span id="cb668-4"><a href="14-fonctions.html#cb668-4"></a>  <span class="kw">list</span>(<span class="dt">initiale =</span> initiale, <span class="dt">longueur =</span> longueur)</span>
-<span id="cb668-5"><a href="14-fonctions.html#cb668-5"></a>}</span></code></pre></div>
+<div class="sourceCode" id="cb669"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb669-1"><a href="14-fonctions.html#cb669-1"></a>caracteristiques_mot &lt;-<span class="st"> </span><span class="cf">function</span>(mot) {</span>
+<span id="cb669-2"><a href="14-fonctions.html#cb669-2"></a>  initiale &lt;-<span class="st"> </span><span class="kw">str_sub</span>(mot, <span class="dv">1</span>, <span class="dv">1</span>)</span>
+<span id="cb669-3"><a href="14-fonctions.html#cb669-3"></a>  longueur &lt;-<span class="st"> </span><span class="kw">nchar</span>(mot)</span>
+<span id="cb669-4"><a href="14-fonctions.html#cb669-4"></a>  <span class="kw">list</span>(<span class="dt">initiale =</span> initiale, <span class="dt">longueur =</span> longueur)</span>
+<span id="cb669-5"><a href="14-fonctions.html#cb669-5"></a>}</span></code></pre></div>
 </div>
 
 <p><em>Facultatif :</em> modifier la fonction pour qu’elle retourne un vecteur plutôt qu’une liste, et l’appliquer sur un mot de votre choix. Que constatez-vous ?</p>
@@ -1490,66 +1485,66 @@ Quand on passe une fonction comme argument à une autre fonction, on utilise don
 <h3><span class="header-section-number">14.6.3</span> Portée des variables</h3>
 <p><strong>Exercice 3.1</strong></p>
 <p>En lisant les codes suivants, essayer de prévoir quelle va être la valeur affichée par la dernière ligne. Vérifier en exécutant le code :</p>
-<div class="sourceCode" id="cb669"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb669-1"><a href="14-fonctions.html#cb669-1"></a>f &lt;-<span class="st"> </span><span class="cf">function</span>() {</span>
-<span id="cb669-2"><a href="14-fonctions.html#cb669-2"></a>  x &lt;-<span class="st"> </span><span class="dv">3</span></span>
-<span id="cb669-3"><a href="14-fonctions.html#cb669-3"></a>  x</span>
-<span id="cb669-4"><a href="14-fonctions.html#cb669-4"></a>}</span>
-<span id="cb669-5"><a href="14-fonctions.html#cb669-5"></a></span>
-<span id="cb669-6"><a href="14-fonctions.html#cb669-6"></a><span class="kw">f</span>()</span></code></pre></div>
 <div class="sourceCode" id="cb670"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb670-1"><a href="14-fonctions.html#cb670-1"></a>f &lt;-<span class="st"> </span><span class="cf">function</span>() {</span>
-<span id="cb670-2"><a href="14-fonctions.html#cb670-2"></a>  x</span>
-<span id="cb670-3"><a href="14-fonctions.html#cb670-3"></a>}</span>
-<span id="cb670-4"><a href="14-fonctions.html#cb670-4"></a></span>
-<span id="cb670-5"><a href="14-fonctions.html#cb670-5"></a>x &lt;-<span class="st"> </span><span class="dv">5</span></span>
+<span id="cb670-2"><a href="14-fonctions.html#cb670-2"></a>  x &lt;-<span class="st"> </span><span class="dv">3</span></span>
+<span id="cb670-3"><a href="14-fonctions.html#cb670-3"></a>  x</span>
+<span id="cb670-4"><a href="14-fonctions.html#cb670-4"></a>}</span>
+<span id="cb670-5"><a href="14-fonctions.html#cb670-5"></a></span>
 <span id="cb670-6"><a href="14-fonctions.html#cb670-6"></a><span class="kw">f</span>()</span></code></pre></div>
-<div class="sourceCode" id="cb671"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb671-1"><a href="14-fonctions.html#cb671-1"></a>f &lt;-<span class="st"> </span><span class="cf">function</span>(x) {</span>
+<div class="sourceCode" id="cb671"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb671-1"><a href="14-fonctions.html#cb671-1"></a>f &lt;-<span class="st"> </span><span class="cf">function</span>() {</span>
 <span id="cb671-2"><a href="14-fonctions.html#cb671-2"></a>  x</span>
 <span id="cb671-3"><a href="14-fonctions.html#cb671-3"></a>}</span>
 <span id="cb671-4"><a href="14-fonctions.html#cb671-4"></a></span>
 <span id="cb671-5"><a href="14-fonctions.html#cb671-5"></a>x &lt;-<span class="st"> </span><span class="dv">5</span></span>
-<span id="cb671-6"><a href="14-fonctions.html#cb671-6"></a><span class="kw">f</span>(<span class="dv">30</span>)</span></code></pre></div>
-<div class="sourceCode" id="cb672"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb672-1"><a href="14-fonctions.html#cb672-1"></a>f &lt;-<span class="st"> </span><span class="cf">function</span>(<span class="dt">x =</span> <span class="dv">100</span>) {</span>
+<span id="cb671-6"><a href="14-fonctions.html#cb671-6"></a><span class="kw">f</span>()</span></code></pre></div>
+<div class="sourceCode" id="cb672"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb672-1"><a href="14-fonctions.html#cb672-1"></a>f &lt;-<span class="st"> </span><span class="cf">function</span>(x) {</span>
 <span id="cb672-2"><a href="14-fonctions.html#cb672-2"></a>  x</span>
 <span id="cb672-3"><a href="14-fonctions.html#cb672-3"></a>}</span>
 <span id="cb672-4"><a href="14-fonctions.html#cb672-4"></a></span>
 <span id="cb672-5"><a href="14-fonctions.html#cb672-5"></a>x &lt;-<span class="st"> </span><span class="dv">5</span></span>
-<span id="cb672-6"><a href="14-fonctions.html#cb672-6"></a><span class="kw">f</span>()</span></code></pre></div>
+<span id="cb672-6"><a href="14-fonctions.html#cb672-6"></a><span class="kw">f</span>(<span class="dv">30</span>)</span></code></pre></div>
 <div class="sourceCode" id="cb673"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb673-1"><a href="14-fonctions.html#cb673-1"></a>f &lt;-<span class="st"> </span><span class="cf">function</span>(<span class="dt">x =</span> <span class="dv">100</span>) {</span>
-<span id="cb673-2"><a href="14-fonctions.html#cb673-2"></a>  x &lt;-<span class="st"> </span><span class="dv">150</span></span>
-<span id="cb673-3"><a href="14-fonctions.html#cb673-3"></a>  x</span>
-<span id="cb673-4"><a href="14-fonctions.html#cb673-4"></a>}</span>
-<span id="cb673-5"><a href="14-fonctions.html#cb673-5"></a></span>
-<span id="cb673-6"><a href="14-fonctions.html#cb673-6"></a>x &lt;-<span class="st"> </span><span class="dv">5</span></span>
-<span id="cb673-7"><a href="14-fonctions.html#cb673-7"></a><span class="kw">f</span>(<span class="dv">30</span>)</span></code></pre></div>
-<div class="sourceCode" id="cb674"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb674-1"><a href="14-fonctions.html#cb674-1"></a>f &lt;-<span class="st"> </span><span class="cf">function</span>() {</span>
-<span id="cb674-2"><a href="14-fonctions.html#cb674-2"></a>  x &lt;-<span class="st"> </span><span class="dv">5</span></span>
-<span id="cb674-3"><a href="14-fonctions.html#cb674-3"></a>}</span>
-<span id="cb674-4"><a href="14-fonctions.html#cb674-4"></a></span>
-<span id="cb674-5"><a href="14-fonctions.html#cb674-5"></a>x &lt;-<span class="st"> </span><span class="dv">1000</span></span>
-<span id="cb674-6"><a href="14-fonctions.html#cb674-6"></a><span class="kw">f</span>()</span>
-<span id="cb674-7"><a href="14-fonctions.html#cb674-7"></a>x</span></code></pre></div>
+<span id="cb673-2"><a href="14-fonctions.html#cb673-2"></a>  x</span>
+<span id="cb673-3"><a href="14-fonctions.html#cb673-3"></a>}</span>
+<span id="cb673-4"><a href="14-fonctions.html#cb673-4"></a></span>
+<span id="cb673-5"><a href="14-fonctions.html#cb673-5"></a>x &lt;-<span class="st"> </span><span class="dv">5</span></span>
+<span id="cb673-6"><a href="14-fonctions.html#cb673-6"></a><span class="kw">f</span>()</span></code></pre></div>
+<div class="sourceCode" id="cb674"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb674-1"><a href="14-fonctions.html#cb674-1"></a>f &lt;-<span class="st"> </span><span class="cf">function</span>(<span class="dt">x =</span> <span class="dv">100</span>) {</span>
+<span id="cb674-2"><a href="14-fonctions.html#cb674-2"></a>  x &lt;-<span class="st"> </span><span class="dv">150</span></span>
+<span id="cb674-3"><a href="14-fonctions.html#cb674-3"></a>  x</span>
+<span id="cb674-4"><a href="14-fonctions.html#cb674-4"></a>}</span>
+<span id="cb674-5"><a href="14-fonctions.html#cb674-5"></a></span>
+<span id="cb674-6"><a href="14-fonctions.html#cb674-6"></a>x &lt;-<span class="st"> </span><span class="dv">5</span></span>
+<span id="cb674-7"><a href="14-fonctions.html#cb674-7"></a><span class="kw">f</span>(<span class="dv">30</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb675"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb675-1"><a href="14-fonctions.html#cb675-1"></a>f &lt;-<span class="st"> </span><span class="cf">function</span>() {</span>
+<span id="cb675-2"><a href="14-fonctions.html#cb675-2"></a>  x &lt;-<span class="st"> </span><span class="dv">5</span></span>
+<span id="cb675-3"><a href="14-fonctions.html#cb675-3"></a>}</span>
+<span id="cb675-4"><a href="14-fonctions.html#cb675-4"></a></span>
+<span id="cb675-5"><a href="14-fonctions.html#cb675-5"></a>x &lt;-<span class="st"> </span><span class="dv">1000</span></span>
+<span id="cb675-6"><a href="14-fonctions.html#cb675-6"></a><span class="kw">f</span>()</span>
+<span id="cb675-7"><a href="14-fonctions.html#cb675-7"></a>x</span></code></pre></div>
 <p><strong>Exercice 3.2</strong></p>
 <p>Dans le code suivant, on a essayé de créer une fonction qui modifie un tableau de données passé en argument pour ne conserver que les lignes correspondant aux pommes. Est-ce que ça fonctionne ?</p>
-<div class="sourceCode" id="cb675"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb675-1"><a href="14-fonctions.html#cb675-1"></a>df &lt;-<span class="st"> </span><span class="kw">data.frame</span>(</span>
-<span id="cb675-2"><a href="14-fonctions.html#cb675-2"></a>  <span class="dt">fruit =</span> <span class="kw">c</span>(<span class="st">&quot;Pomme&quot;</span>, <span class="st">&quot;Pomme&quot;</span>, <span class="st">&quot;Citron&quot;</span>, <span class="st">&quot;Citron&quot;</span>),</span>
-<span id="cb675-3"><a href="14-fonctions.html#cb675-3"></a>  <span class="dt">poids =</span> <span class="kw">c</span>(<span class="dv">147</span>, <span class="dv">189</span>, <span class="dv">76</span>, <span class="dv">91</span>)</span>
-<span id="cb675-4"><a href="14-fonctions.html#cb675-4"></a>)</span>
-<span id="cb675-5"><a href="14-fonctions.html#cb675-5"></a></span>
-<span id="cb675-6"><a href="14-fonctions.html#cb675-6"></a>filtre_pommes &lt;-<span class="st"> </span><span class="cf">function</span>(d) {</span>
-<span id="cb675-7"><a href="14-fonctions.html#cb675-7"></a>  d &lt;-<span class="st"> </span>dplyr<span class="op">::</span><span class="kw">filter</span>(d, fruit <span class="op">==</span><span class="st"> &quot;Pomme&quot;</span>)</span>
-<span id="cb675-8"><a href="14-fonctions.html#cb675-8"></a>}</span>
-<span id="cb675-9"><a href="14-fonctions.html#cb675-9"></a></span>
-<span id="cb675-10"><a href="14-fonctions.html#cb675-10"></a><span class="kw">filtre_pommes</span>(df)</span>
-<span id="cb675-11"><a href="14-fonctions.html#cb675-11"></a>df</span></code></pre></div>
+<div class="sourceCode" id="cb676"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb676-1"><a href="14-fonctions.html#cb676-1"></a>df &lt;-<span class="st"> </span><span class="kw">data.frame</span>(</span>
+<span id="cb676-2"><a href="14-fonctions.html#cb676-2"></a>  <span class="dt">fruit =</span> <span class="kw">c</span>(<span class="st">&quot;Pomme&quot;</span>, <span class="st">&quot;Pomme&quot;</span>, <span class="st">&quot;Citron&quot;</span>, <span class="st">&quot;Citron&quot;</span>),</span>
+<span id="cb676-3"><a href="14-fonctions.html#cb676-3"></a>  <span class="dt">poids =</span> <span class="kw">c</span>(<span class="dv">147</span>, <span class="dv">189</span>, <span class="dv">76</span>, <span class="dv">91</span>)</span>
+<span id="cb676-4"><a href="14-fonctions.html#cb676-4"></a>)</span>
+<span id="cb676-5"><a href="14-fonctions.html#cb676-5"></a></span>
+<span id="cb676-6"><a href="14-fonctions.html#cb676-6"></a>filtre_pommes &lt;-<span class="st"> </span><span class="cf">function</span>(d) {</span>
+<span id="cb676-7"><a href="14-fonctions.html#cb676-7"></a>  d &lt;-<span class="st"> </span>dplyr<span class="op">::</span><span class="kw">filter</span>(d, fruit <span class="op">==</span><span class="st"> &quot;Pomme&quot;</span>)</span>
+<span id="cb676-8"><a href="14-fonctions.html#cb676-8"></a>}</span>
+<span id="cb676-9"><a href="14-fonctions.html#cb676-9"></a></span>
+<span id="cb676-10"><a href="14-fonctions.html#cb676-10"></a><span class="kw">filtre_pommes</span>(df)</span>
+<span id="cb676-11"><a href="14-fonctions.html#cb676-11"></a>df</span></code></pre></div>
 <p>Modifier le code pour obtenir le résultat souhaité.</p>
 
 <div class="solution-exo">
-<div class="sourceCode" id="cb676"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb676-1"><a href="14-fonctions.html#cb676-1"></a>filtre_pommes &lt;-<span class="st"> </span><span class="cf">function</span>(d) {</span>
-<span id="cb676-2"><a href="14-fonctions.html#cb676-2"></a>  dplyr<span class="op">::</span><span class="kw">filter</span>(d, fruit <span class="op">==</span><span class="st"> &quot;Pomme&quot;</span>)</span>
-<span id="cb676-3"><a href="14-fonctions.html#cb676-3"></a>}</span>
-<span id="cb676-4"><a href="14-fonctions.html#cb676-4"></a></span>
-<span id="cb676-5"><a href="14-fonctions.html#cb676-5"></a>df &lt;-<span class="st"> </span><span class="kw">filtre_pommes</span>(df)</span>
-<span id="cb676-6"><a href="14-fonctions.html#cb676-6"></a>df</span></code></pre></div>
+<div class="sourceCode" id="cb677"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb677-1"><a href="14-fonctions.html#cb677-1"></a>filtre_pommes &lt;-<span class="st"> </span><span class="cf">function</span>(d) {</span>
+<span id="cb677-2"><a href="14-fonctions.html#cb677-2"></a>  dplyr<span class="op">::</span><span class="kw">filter</span>(d, fruit <span class="op">==</span><span class="st"> &quot;Pomme&quot;</span>)</span>
+<span id="cb677-3"><a href="14-fonctions.html#cb677-3"></a>}</span>
+<span id="cb677-4"><a href="14-fonctions.html#cb677-4"></a></span>
+<span id="cb677-5"><a href="14-fonctions.html#cb677-5"></a>df &lt;-<span class="st"> </span><span class="kw">filtre_pommes</span>(df)</span>
+<span id="cb677-6"><a href="14-fonctions.html#cb677-6"></a>df</span></code></pre></div>
 </div>
 
 </div>
@@ -1559,9 +1554,9 @@ Quand on passe une fonction comme argument à une autre fonction, on utilise don
 <p>Écrire une fonction nommée <code>bonjour</code> qui ne prend aucun argument et affiche juste le texte “Bonjour !” dans la console.</p>
 
 <div class="solution-exo">
-<div class="sourceCode" id="cb677"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb677-1"><a href="14-fonctions.html#cb677-1"></a>bonjour &lt;-<span class="st"> </span><span class="cf">function</span>() {</span>
-<span id="cb677-2"><a href="14-fonctions.html#cb677-2"></a>  <span class="kw">cat</span>(<span class="st">&quot;Bonjour !&quot;</span>)</span>
-<span id="cb677-3"><a href="14-fonctions.html#cb677-3"></a>}</span></code></pre></div>
+<div class="sourceCode" id="cb678"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb678-1"><a href="14-fonctions.html#cb678-1"></a>bonjour &lt;-<span class="st"> </span><span class="cf">function</span>() {</span>
+<span id="cb678-2"><a href="14-fonctions.html#cb678-2"></a>  <span class="kw">cat</span>(<span class="st">&quot;Bonjour !&quot;</span>)</span>
+<span id="cb678-3"><a href="14-fonctions.html#cb678-3"></a>}</span></code></pre></div>
 </div>
 
 <p>Exécuter dans la console les deux commandes suivantes tour à tour :</p>
@@ -1573,17 +1568,17 @@ Quand on passe une fonction comme argument à une autre fonction, on utilise don
 <p>Copier la fonction dans un nouvel objet nommé <code>salut</code>. Exécuter la nouvelle fonction ainsi créée.</p>
 
 <div class="solution-exo">
-<div class="sourceCode" id="cb678"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb678-1"><a href="14-fonctions.html#cb678-1"></a>salut &lt;-<span class="st"> </span>bonjour</span>
-<span id="cb678-2"><a href="14-fonctions.html#cb678-2"></a><span class="kw">salut</span>()</span></code></pre></div>
+<div class="sourceCode" id="cb679"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb679-1"><a href="14-fonctions.html#cb679-1"></a>salut &lt;-<span class="st"> </span>bonjour</span>
+<span id="cb679-2"><a href="14-fonctions.html#cb679-2"></a><span class="kw">salut</span>()</span></code></pre></div>
 </div>
 
 <p><strong>Exercice 4.2</strong></p>
 <p>Construire une fonction <code>etendue()</code> qui prend en entrée un vecteur numérique et retourne la différence entre la valeur maximale et la valeur minimale de ce vecteur (vous pouvez récupérer le code de l’exercice 1.2).</p>
 
 <div class="solution-exo">
-<div class="sourceCode" id="cb679"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb679-1"><a href="14-fonctions.html#cb679-1"></a>etendue &lt;-<span class="st"> </span><span class="cf">function</span>(v) {</span>
-<span id="cb679-2"><a href="14-fonctions.html#cb679-2"></a>  <span class="kw">max</span>(v) <span class="op">-</span><span class="st"> </span><span class="kw">min</span>(v)</span>
-<span id="cb679-3"><a href="14-fonctions.html#cb679-3"></a>}</span></code></pre></div>
+<div class="sourceCode" id="cb680"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb680-1"><a href="14-fonctions.html#cb680-1"></a>etendue &lt;-<span class="st"> </span><span class="cf">function</span>(v) {</span>
+<span id="cb680-2"><a href="14-fonctions.html#cb680-2"></a>  <span class="kw">max</span>(v) <span class="op">-</span><span class="st"> </span><span class="kw">min</span>(v)</span>
+<span id="cb680-3"><a href="14-fonctions.html#cb680-3"></a>}</span></code></pre></div>
 </div>
 
 <p>À l’aide de <code>tapply()</code>, appliquez la fonction <code>etendue()</code> à la variable <code>age</code> pour chaque valeur de <code>qualif</code> dans le jeu de données <code>hdv2003</code>.</p>
@@ -1595,32 +1590,32 @@ Quand on passe une fonction comme argument à une autre fonction, on utilise don
 #&gt;                       78</code></pre>
 
 <div class="solution-exo">
-<div class="sourceCode" id="cb681"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb681-1"><a href="14-fonctions.html#cb681-1"></a><span class="kw">library</span>(questionr)</span>
-<span id="cb681-2"><a href="14-fonctions.html#cb681-2"></a><span class="kw">data</span>(hdv2003)</span>
-<span id="cb681-3"><a href="14-fonctions.html#cb681-3"></a></span>
-<span id="cb681-4"><a href="14-fonctions.html#cb681-4"></a><span class="kw">tapply</span>(hdv2003<span class="op">$</span>age, hdv2003<span class="op">$</span>qualif, etendue)</span></code></pre></div>
+<div class="sourceCode" id="cb682"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb682-1"><a href="14-fonctions.html#cb682-1"></a><span class="kw">library</span>(questionr)</span>
+<span id="cb682-2"><a href="14-fonctions.html#cb682-2"></a><span class="kw">data</span>(hdv2003)</span>
+<span id="cb682-3"><a href="14-fonctions.html#cb682-3"></a></span>
+<span id="cb682-4"><a href="14-fonctions.html#cb682-4"></a><span class="kw">tapply</span>(hdv2003<span class="op">$</span>age, hdv2003<span class="op">$</span>qualif, etendue)</span></code></pre></div>
 </div>
 
 <p>Réécrire le code précédent en utilisant une fonction anonyme (<em>ie</em> en définissant la fonction directement dans le <code>tapply</code>).</p>
 
 <div class="solution-exo">
-<div class="sourceCode" id="cb682"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb682-1"><a href="14-fonctions.html#cb682-1"></a><span class="kw">tapply</span>(hdv2003<span class="op">$</span>age, hdv2003<span class="op">$</span>qualif, <span class="cf">function</span>(v) {</span>
-<span id="cb682-2"><a href="14-fonctions.html#cb682-2"></a>  <span class="kw">max</span>(v) <span class="op">-</span><span class="st"> </span><span class="kw">min</span>(v)</span>
-<span id="cb682-3"><a href="14-fonctions.html#cb682-3"></a>})</span></code></pre></div>
+<div class="sourceCode" id="cb683"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb683-1"><a href="14-fonctions.html#cb683-1"></a><span class="kw">tapply</span>(hdv2003<span class="op">$</span>age, hdv2003<span class="op">$</span>qualif, <span class="cf">function</span>(v) {</span>
+<span id="cb683-2"><a href="14-fonctions.html#cb683-2"></a>  <span class="kw">max</span>(v) <span class="op">-</span><span class="st"> </span><span class="kw">min</span>(v)</span>
+<span id="cb683-3"><a href="14-fonctions.html#cb683-3"></a>})</span></code></pre></div>
 </div>
 
 <p><strong>Exercice 4.3</strong></p>
 <p>Exécutez le code suivant. Comprenez-vous les résultats obtenus ?</p>
-<div class="sourceCode" id="cb683"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb683-1"><a href="14-fonctions.html#cb683-1"></a>f &lt;-<span class="st"> </span><span class="cf">function</span>(y) {</span>
-<span id="cb683-2"><a href="14-fonctions.html#cb683-2"></a>  y <span class="op">*</span><span class="st"> </span><span class="dv">4</span></span>
-<span id="cb683-3"><a href="14-fonctions.html#cb683-3"></a>}</span>
-<span id="cb683-4"><a href="14-fonctions.html#cb683-4"></a></span>
-<span id="cb683-5"><a href="14-fonctions.html#cb683-5"></a><span class="kw">body</span>(f)</span>
-<span id="cb683-6"><a href="14-fonctions.html#cb683-6"></a><span class="kw">f</span>(<span class="dv">5</span>)</span>
-<span id="cb683-7"><a href="14-fonctions.html#cb683-7"></a></span>
-<span id="cb683-8"><a href="14-fonctions.html#cb683-8"></a><span class="kw">body</span>(f) &lt;-<span class="st"> </span><span class="kw">quote</span>(y <span class="op">+</span><span class="st"> </span><span class="dv">2</span>)</span>
-<span id="cb683-9"><a href="14-fonctions.html#cb683-9"></a><span class="kw">body</span>(f)</span>
-<span id="cb683-10"><a href="14-fonctions.html#cb683-10"></a><span class="kw">f</span>(<span class="dv">5</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb684"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb684-1"><a href="14-fonctions.html#cb684-1"></a>f &lt;-<span class="st"> </span><span class="cf">function</span>(y) {</span>
+<span id="cb684-2"><a href="14-fonctions.html#cb684-2"></a>  y <span class="op">*</span><span class="st"> </span><span class="dv">4</span></span>
+<span id="cb684-3"><a href="14-fonctions.html#cb684-3"></a>}</span>
+<span id="cb684-4"><a href="14-fonctions.html#cb684-4"></a></span>
+<span id="cb684-5"><a href="14-fonctions.html#cb684-5"></a><span class="kw">body</span>(f)</span>
+<span id="cb684-6"><a href="14-fonctions.html#cb684-6"></a><span class="kw">f</span>(<span class="dv">5</span>)</span>
+<span id="cb684-7"><a href="14-fonctions.html#cb684-7"></a></span>
+<span id="cb684-8"><a href="14-fonctions.html#cb684-8"></a><span class="kw">body</span>(f) &lt;-<span class="st"> </span><span class="kw">quote</span>(y <span class="op">+</span><span class="st"> </span><span class="dv">2</span>)</span>
+<span id="cb684-9"><a href="14-fonctions.html#cb684-9"></a><span class="kw">body</span>(f)</span>
+<span id="cb684-10"><a href="14-fonctions.html#cb684-10"></a><span class="kw">f</span>(<span class="dv">5</span>)</span></code></pre></div>
 <p>Intuitivement, comprenez-vous à quoi sert la fonction <code>quote</code> ?</p>
 
 </div>
