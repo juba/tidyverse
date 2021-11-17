@@ -369,7 +369,7 @@ L'objectif de `modify()` est de permettre de "modifier" une liste ou un vecteur 
 
 L'intérêt principal de `modify()` est qu'elle propose deux variantes, `modify_if()` et `modify_at()`, qui sélectionnent les éléments respectivement via une fonction et via leur nom ou leur position, et qui n'appliquent la fonction de transformation qu'aux éléments sélectionnés.
 
-Cela peut être particulièrement utile quand on l'applique à un tableau de données. Par exemple le code suivant transforme uniquement les colonnes de type `factor` de `hdv2003` en `character`, et laisse les autres inchangées.
+Cela peut être particulièrement utile quand on l'applique à un tableau de données. Par exemple le code suivant utilise `modify_if()` pour transformer uniquement les colonnes de type `factor` de `hdv2003` en `character`, et laisser les autres inchangées.
 
 ```{r include=FALSE}
 hdv2003 <- as_tibble(hdv2003)
@@ -390,6 +390,33 @@ hdv2003 %>%
         )
     )
 ```
+
+`modify_at` permet d'appliquer une fonction à certaines variables à partir de leurs noms.
+
+```{r results="hide"}
+hdv2003 %>%
+    modify_at(c("sexe", "qualif"), as.character)
+```
+
+En utilisant `vars()`, on peut sélectionner les variables avec toutes les possibilités offertes par la *tidy selection*.
+
+```{r results="hide"}
+hdv2003 %>%
+    modify_at(vars(hard.rock:sport), as.character)
+```
+
+Là aussi, on peut obtenir le même résultat en utilisant `across()`.
+
+```{r results="hide"}
+hdv2003 %>%
+    mutate(
+        across(
+            hard.rock:sport,
+            as.character
+        )
+    )
+```
+
 
 ## `imap`
 
