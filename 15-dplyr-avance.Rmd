@@ -1133,6 +1133,66 @@ hdv2003 %>%
 
 **Exercice 3.1**
 
+Dans un exercice précédent, on a vu que le code ci-dessous permet de calculer l'étendue des variables `height` et `mass` du jeu de données `starwars`.
+
+```{r eval=FALSE}
+etendue <- function(v) {
+    max(v, na.rm = TRUE) - min(v, na.rm = TRUE)
+}
+
+starwars %>%
+    group_by(sex) %>%
+    summarise(
+        across(
+            c(height, mass),
+            etendue
+        )
+    )
+```
+
+Modifier ce code en supprimant la définition de `etendue` et en utilisant à la place une fonction anonyme directement dans le `across()`.
+
+\iffalse
+<div class="solution-exo">
+
+```{r eval=FALSE}
+starwars %>%
+    group_by(sex) %>%
+    summarise(
+        across(
+            c(height, mass),
+            function(v) {
+               max(v, na.rm = TRUE) - min(v, na.rm = TRUE)
+            }
+        )
+    )
+```
+</div>
+\fi
+
+
+Modifier à nouveau ce code pour utiliser la syntaxe abrégée de type "formule" du *tidyverse*.
+
+\iffalse
+<div class="solution-exo">
+
+```{r eval=FALSE}
+starwars %>%
+    group_by(sex) %>%
+    summarise(
+        across(
+            c(height, mass),
+            ~ max(.x, na.rm = TRUE) - min(.x, na.rm = TRUE)
+        )
+    )
+```
+</div>
+\fi
+
+
+
+**Exercice 3.2**
+
 Soit le code suivant, qui renomme les colonnes du tableau `starwars` de type liste en leur ajoutant le préfixe "liste_".
 
 ```{r eval=FALSE}
@@ -1175,7 +1235,7 @@ starwars %>%
 </div>
 \fi
 
-**Exercice 3.2**
+**Exercice 3.3**
 
 Le code suivant indique, pour chaque région du jeu de données `rp2012`, le nom de la commune ayant la valeur maximale pour les variables `dipl_aucun` et `dipl_sup`.
 
