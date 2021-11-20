@@ -24,7 +24,7 @@
 <meta name="author" content="Julien Barnier" />
 
 
-<meta name="date" content="2021-11-18" />
+<meta name="date" content="2021-11-20" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -621,103 +621,103 @@ code span.wa { color: #bf0303; } /* Warning */
 <p>Lorsqu’on commence à écrire des fonctions un peu complexes, avec des <code>if</code>, des <code>for</code>, et autres joyeusetés, arrive forcément un moment où ça ne fonctionne pas comme on le souhaiterait et où on ne comprend pas pourquoi. Bref, <em>il y a un bug</em>.</p>
 <p>Trouver la cause d’un bug n’est pas toujours évident, mais il existe plusieurs méthodes et outils permettant de faciliter un peu les choses.</p>
 <p>On commence par charger les extensions et les jeux de données dont on aura besoin par la suite.</p>
-<div class="sourceCode" id="cb1169"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1169-1"><a href="20-debuggage-performance.html#cb1169-1"></a><span class="kw">library</span>(tidyverse)</span>
-<span id="cb1169-2"><a href="20-debuggage-performance.html#cb1169-2"></a><span class="kw">library</span>(questionr)</span>
-<span id="cb1169-3"><a href="20-debuggage-performance.html#cb1169-3"></a><span class="kw">data</span>(hdv2003)</span>
-<span id="cb1169-4"><a href="20-debuggage-performance.html#cb1169-4"></a><span class="kw">data</span>(starwars)</span></code></pre></div>
+<div class="sourceCode" id="cb1172"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1172-1"><a href="20-debuggage-performance.html#cb1172-1"></a><span class="kw">library</span>(tidyverse)</span>
+<span id="cb1172-2"><a href="20-debuggage-performance.html#cb1172-2"></a><span class="kw">library</span>(questionr)</span>
+<span id="cb1172-3"><a href="20-debuggage-performance.html#cb1172-3"></a><span class="kw">data</span>(hdv2003)</span>
+<span id="cb1172-4"><a href="20-debuggage-performance.html#cb1172-4"></a><span class="kw">data</span>(starwars)</span></code></pre></div>
 <div id="print" class="section level3">
 <h3><span class="header-section-number">20.1.1</span> print()</h3>
 <p>L’outil le plus simple, rudimentaire et parfois décrié mais qui reste efficace, est de rajouter un <code>print()</code> dans le code de notre fonction pour examiner le contenu d’un objet à un moment donné.</p>
 <p>Prenons un exemple. La fonction suivante prend en argument un tableau de données <code>df</code> et un nom de variable <code>var</code>, et retourne la moyenne et l’écart-type de cette variable.</p>
-<div class="sourceCode" id="cb1170"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1170-1"><a href="20-debuggage-performance.html#cb1170-1"></a>indicateurs &lt;-<span class="st"> </span><span class="cf">function</span>(df, var) {</span>
-<span id="cb1170-2"><a href="20-debuggage-performance.html#cb1170-2"></a>    valeurs &lt;-<span class="st"> </span>df[, var]</span>
-<span id="cb1170-3"><a href="20-debuggage-performance.html#cb1170-3"></a>    <span class="cf">if</span> (<span class="op">!</span><span class="kw">is.numeric</span>(valeurs)) <span class="kw">return</span>(<span class="ot">NA</span>)</span>
-<span id="cb1170-4"><a href="20-debuggage-performance.html#cb1170-4"></a>    <span class="kw">list</span>(</span>
-<span id="cb1170-5"><a href="20-debuggage-performance.html#cb1170-5"></a>        <span class="dt">moyenne =</span> <span class="kw">mean</span>(valeurs, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>),</span>
-<span id="cb1170-6"><a href="20-debuggage-performance.html#cb1170-6"></a>        <span class="dt">sd =</span> <span class="kw">sd</span>(valeurs, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>)</span>
-<span id="cb1170-7"><a href="20-debuggage-performance.html#cb1170-7"></a>    )</span>
-<span id="cb1170-8"><a href="20-debuggage-performance.html#cb1170-8"></a>}</span></code></pre></div>
-<p>On teste notre fonction sur une variable du jeu de données <code>hdv2003</code>. Tout semble fonctionner.</p>
-<div class="sourceCode" id="cb1171"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1171-1"><a href="20-debuggage-performance.html#cb1171-1"></a><span class="kw">indicateurs</span>(hdv2003, <span class="st">&quot;age&quot;</span>)</span>
-<span id="cb1171-2"><a href="20-debuggage-performance.html#cb1171-2"></a><span class="co">#&gt; $moyenne</span></span>
-<span id="cb1171-3"><a href="20-debuggage-performance.html#cb1171-3"></a><span class="co">#&gt; [1] 48.157</span></span>
-<span id="cb1171-4"><a href="20-debuggage-performance.html#cb1171-4"></a><span class="co">#&gt; </span></span>
-<span id="cb1171-5"><a href="20-debuggage-performance.html#cb1171-5"></a><span class="co">#&gt; $sd</span></span>
-<span id="cb1171-6"><a href="20-debuggage-performance.html#cb1171-6"></a><span class="co">#&gt; [1] 16.94181</span></span></code></pre></div>
-<p>On teste à nouveau, cette fois sur une variable du jeu de données <code>starwars</code> de <code>dplyr</code>.</p>
-<div class="sourceCode" id="cb1172"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1172-1"><a href="20-debuggage-performance.html#cb1172-1"></a><span class="kw">indicateurs</span>(starwars, <span class="st">&quot;height&quot;</span>)</span>
-<span id="cb1172-2"><a href="20-debuggage-performance.html#cb1172-2"></a><span class="co">#&gt; [1] NA</span></span></code></pre></div>
-<p>Sapristi, on obtient <code>NA</code> en résultat alors que notre variable <code>height</code> est bien numérique : on devrait donc obtenir la moyenne et l’écart-type. Comment expliquer ce résultat ?</p>
-<p>Comme on n’a pas d’explication immédiate juste en relisant le code de notre fonction, on va ajouter temporairement une instruction <code>print()</code> qui va afficher le contenu de <code>valeurs</code> juste après qu’elle soit calculée.</p>
 <div class="sourceCode" id="cb1173"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1173-1"><a href="20-debuggage-performance.html#cb1173-1"></a>indicateurs &lt;-<span class="st"> </span><span class="cf">function</span>(df, var) {</span>
 <span id="cb1173-2"><a href="20-debuggage-performance.html#cb1173-2"></a>    valeurs &lt;-<span class="st"> </span>df[, var]</span>
-<span id="cb1173-3"><a href="20-debuggage-performance.html#cb1173-3"></a>    <span class="kw">print</span>(valeurs)</span>
-<span id="cb1173-4"><a href="20-debuggage-performance.html#cb1173-4"></a>    <span class="cf">if</span> (<span class="op">!</span><span class="kw">is.numeric</span>(valeurs)) <span class="kw">return</span>(<span class="ot">NA</span>)</span>
-<span id="cb1173-5"><a href="20-debuggage-performance.html#cb1173-5"></a>    <span class="kw">list</span>(</span>
-<span id="cb1173-6"><a href="20-debuggage-performance.html#cb1173-6"></a>        <span class="dt">moyenne =</span> <span class="kw">mean</span>(valeurs, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>),</span>
-<span id="cb1173-7"><a href="20-debuggage-performance.html#cb1173-7"></a>        <span class="dt">sd =</span> <span class="kw">sd</span>(valeurs, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>)</span>
-<span id="cb1173-8"><a href="20-debuggage-performance.html#cb1173-8"></a>    )</span>
-<span id="cb1173-9"><a href="20-debuggage-performance.html#cb1173-9"></a>}</span></code></pre></div>
+<span id="cb1173-3"><a href="20-debuggage-performance.html#cb1173-3"></a>    <span class="cf">if</span> (<span class="op">!</span><span class="kw">is.numeric</span>(valeurs)) <span class="kw">return</span>(<span class="ot">NA</span>)</span>
+<span id="cb1173-4"><a href="20-debuggage-performance.html#cb1173-4"></a>    <span class="kw">list</span>(</span>
+<span id="cb1173-5"><a href="20-debuggage-performance.html#cb1173-5"></a>        <span class="dt">moyenne =</span> <span class="kw">mean</span>(valeurs, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>),</span>
+<span id="cb1173-6"><a href="20-debuggage-performance.html#cb1173-6"></a>        <span class="dt">sd =</span> <span class="kw">sd</span>(valeurs, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>)</span>
+<span id="cb1173-7"><a href="20-debuggage-performance.html#cb1173-7"></a>    )</span>
+<span id="cb1173-8"><a href="20-debuggage-performance.html#cb1173-8"></a>}</span></code></pre></div>
+<p>On teste notre fonction sur une variable du jeu de données <code>hdv2003</code>. Tout semble fonctionner.</p>
+<div class="sourceCode" id="cb1174"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1174-1"><a href="20-debuggage-performance.html#cb1174-1"></a><span class="kw">indicateurs</span>(hdv2003, <span class="st">&quot;age&quot;</span>)</span>
+<span id="cb1174-2"><a href="20-debuggage-performance.html#cb1174-2"></a><span class="co">#&gt; $moyenne</span></span>
+<span id="cb1174-3"><a href="20-debuggage-performance.html#cb1174-3"></a><span class="co">#&gt; [1] 48.157</span></span>
+<span id="cb1174-4"><a href="20-debuggage-performance.html#cb1174-4"></a><span class="co">#&gt; </span></span>
+<span id="cb1174-5"><a href="20-debuggage-performance.html#cb1174-5"></a><span class="co">#&gt; $sd</span></span>
+<span id="cb1174-6"><a href="20-debuggage-performance.html#cb1174-6"></a><span class="co">#&gt; [1] 16.94181</span></span></code></pre></div>
+<p>On teste à nouveau, cette fois sur une variable du jeu de données <code>starwars</code> de <code>dplyr</code>.</p>
+<div class="sourceCode" id="cb1175"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1175-1"><a href="20-debuggage-performance.html#cb1175-1"></a><span class="kw">indicateurs</span>(starwars, <span class="st">&quot;height&quot;</span>)</span>
+<span id="cb1175-2"><a href="20-debuggage-performance.html#cb1175-2"></a><span class="co">#&gt; [1] NA</span></span></code></pre></div>
+<p>Sapristi, on obtient <code>NA</code> en résultat alors que notre variable <code>height</code> est bien numérique : on devrait donc obtenir la moyenne et l’écart-type. Comment expliquer ce résultat ?</p>
+<p>Comme on n’a pas d’explication immédiate juste en relisant le code de notre fonction, on va ajouter temporairement une instruction <code>print()</code> qui va afficher le contenu de <code>valeurs</code> juste après qu’elle soit calculée.</p>
+<div class="sourceCode" id="cb1176"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1176-1"><a href="20-debuggage-performance.html#cb1176-1"></a>indicateurs &lt;-<span class="st"> </span><span class="cf">function</span>(df, var) {</span>
+<span id="cb1176-2"><a href="20-debuggage-performance.html#cb1176-2"></a>    valeurs &lt;-<span class="st"> </span>df[, var]</span>
+<span id="cb1176-3"><a href="20-debuggage-performance.html#cb1176-3"></a>    <span class="kw">print</span>(valeurs)</span>
+<span id="cb1176-4"><a href="20-debuggage-performance.html#cb1176-4"></a>    <span class="cf">if</span> (<span class="op">!</span><span class="kw">is.numeric</span>(valeurs)) <span class="kw">return</span>(<span class="ot">NA</span>)</span>
+<span id="cb1176-5"><a href="20-debuggage-performance.html#cb1176-5"></a>    <span class="kw">list</span>(</span>
+<span id="cb1176-6"><a href="20-debuggage-performance.html#cb1176-6"></a>        <span class="dt">moyenne =</span> <span class="kw">mean</span>(valeurs, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>),</span>
+<span id="cb1176-7"><a href="20-debuggage-performance.html#cb1176-7"></a>        <span class="dt">sd =</span> <span class="kw">sd</span>(valeurs, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>)</span>
+<span id="cb1176-8"><a href="20-debuggage-performance.html#cb1176-8"></a>    )</span>
+<span id="cb1176-9"><a href="20-debuggage-performance.html#cb1176-9"></a>}</span></code></pre></div>
 <p>On lance cette fonction modifiée sur <code>starwars</code> :</p>
-<div class="sourceCode" id="cb1174"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1174-1"><a href="20-debuggage-performance.html#cb1174-1"></a><span class="kw">indicateurs</span>(starwars, <span class="st">&quot;height&quot;</span>)</span>
-<span id="cb1174-2"><a href="20-debuggage-performance.html#cb1174-2"></a><span class="co">#&gt; # A tibble: 87 × 1</span></span>
-<span id="cb1174-3"><a href="20-debuggage-performance.html#cb1174-3"></a><span class="co">#&gt;    height</span></span>
-<span id="cb1174-4"><a href="20-debuggage-performance.html#cb1174-4"></a><span class="co">#&gt;     &lt;int&gt;</span></span>
-<span id="cb1174-5"><a href="20-debuggage-performance.html#cb1174-5"></a><span class="co">#&gt;  1    172</span></span>
-<span id="cb1174-6"><a href="20-debuggage-performance.html#cb1174-6"></a><span class="co">#&gt;  2    167</span></span>
-<span id="cb1174-7"><a href="20-debuggage-performance.html#cb1174-7"></a><span class="co">#&gt;  3     96</span></span>
-<span id="cb1174-8"><a href="20-debuggage-performance.html#cb1174-8"></a><span class="co">#&gt;  4    202</span></span>
-<span id="cb1174-9"><a href="20-debuggage-performance.html#cb1174-9"></a><span class="co">#&gt;  5    150</span></span>
-<span id="cb1174-10"><a href="20-debuggage-performance.html#cb1174-10"></a><span class="co">#&gt;  6    178</span></span>
-<span id="cb1174-11"><a href="20-debuggage-performance.html#cb1174-11"></a><span class="co">#&gt;  7    165</span></span>
-<span id="cb1174-12"><a href="20-debuggage-performance.html#cb1174-12"></a><span class="co">#&gt;  8     97</span></span>
-<span id="cb1174-13"><a href="20-debuggage-performance.html#cb1174-13"></a><span class="co">#&gt;  9    183</span></span>
-<span id="cb1174-14"><a href="20-debuggage-performance.html#cb1174-14"></a><span class="co">#&gt; 10    182</span></span>
-<span id="cb1174-15"><a href="20-debuggage-performance.html#cb1174-15"></a><span class="co">#&gt; # … with 77 more rows</span></span>
-<span id="cb1174-16"><a href="20-debuggage-performance.html#cb1174-16"></a><span class="co">#&gt; [1] NA</span></span></code></pre></div>
+<div class="sourceCode" id="cb1177"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1177-1"><a href="20-debuggage-performance.html#cb1177-1"></a><span class="kw">indicateurs</span>(starwars, <span class="st">&quot;height&quot;</span>)</span>
+<span id="cb1177-2"><a href="20-debuggage-performance.html#cb1177-2"></a><span class="co">#&gt; # A tibble: 87 × 1</span></span>
+<span id="cb1177-3"><a href="20-debuggage-performance.html#cb1177-3"></a><span class="co">#&gt;    height</span></span>
+<span id="cb1177-4"><a href="20-debuggage-performance.html#cb1177-4"></a><span class="co">#&gt;     &lt;int&gt;</span></span>
+<span id="cb1177-5"><a href="20-debuggage-performance.html#cb1177-5"></a><span class="co">#&gt;  1    172</span></span>
+<span id="cb1177-6"><a href="20-debuggage-performance.html#cb1177-6"></a><span class="co">#&gt;  2    167</span></span>
+<span id="cb1177-7"><a href="20-debuggage-performance.html#cb1177-7"></a><span class="co">#&gt;  3     96</span></span>
+<span id="cb1177-8"><a href="20-debuggage-performance.html#cb1177-8"></a><span class="co">#&gt;  4    202</span></span>
+<span id="cb1177-9"><a href="20-debuggage-performance.html#cb1177-9"></a><span class="co">#&gt;  5    150</span></span>
+<span id="cb1177-10"><a href="20-debuggage-performance.html#cb1177-10"></a><span class="co">#&gt;  6    178</span></span>
+<span id="cb1177-11"><a href="20-debuggage-performance.html#cb1177-11"></a><span class="co">#&gt;  7    165</span></span>
+<span id="cb1177-12"><a href="20-debuggage-performance.html#cb1177-12"></a><span class="co">#&gt;  8     97</span></span>
+<span id="cb1177-13"><a href="20-debuggage-performance.html#cb1177-13"></a><span class="co">#&gt;  9    183</span></span>
+<span id="cb1177-14"><a href="20-debuggage-performance.html#cb1177-14"></a><span class="co">#&gt; 10    182</span></span>
+<span id="cb1177-15"><a href="20-debuggage-performance.html#cb1177-15"></a><span class="co">#&gt; # … with 77 more rows</span></span>
+<span id="cb1177-16"><a href="20-debuggage-performance.html#cb1177-16"></a><span class="co">#&gt; [1] NA</span></span></code></pre></div>
 <p>Le <code>print()</code> nous indique que <code>valeurs</code> n’est pas un vecteur mais un tableau de données à une seule colonne. Or dans ce cas, le test <code>is.numeric</code>, qui est sensé s’appliquer à un vecteur atomique, renvoie <code>FALSE</code>.</p>
-<div class="sourceCode" id="cb1175"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1175-1"><a href="20-debuggage-performance.html#cb1175-1"></a><span class="kw">is.numeric</span>(starwars[, <span class="st">&quot;height&quot;</span>])</span>
-<span id="cb1175-2"><a href="20-debuggage-performance.html#cb1175-2"></a><span class="co">#&gt; [1] FALSE</span></span></code></pre></div>
+<div class="sourceCode" id="cb1178"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1178-1"><a href="20-debuggage-performance.html#cb1178-1"></a><span class="kw">is.numeric</span>(starwars[, <span class="st">&quot;height&quot;</span>])</span>
+<span id="cb1178-2"><a href="20-debuggage-performance.html#cb1178-2"></a><span class="co">#&gt; [1] FALSE</span></span></code></pre></div>
 <p>C’est donc la raison pour laquelle on obtient <code>NA</code> comme résultat.</p>
 <p>Certes, mais alors pourquoi cela fonctionne-t-il dans notre exemple avec <code>hdv2003</code> ?</p>
-<div class="sourceCode" id="cb1176"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1176-1"><a href="20-debuggage-performance.html#cb1176-1"></a><span class="kw">indicateurs</span>(hdv2003, <span class="st">&quot;age&quot;</span>)</span>
-<span id="cb1176-2"><a href="20-debuggage-performance.html#cb1176-2"></a><span class="co">#&gt;   [1] 28 23 59 34 71 35 60 47 20 28 65 47 63 67 76 49 62 20 70 39 30 30 37 79 20</span></span>
-<span id="cb1176-3"><a href="20-debuggage-performance.html#cb1176-3"></a><span class="co">#&gt;  [26] 74 31 35 35 30 54 29 49 59 41 41 53 19 77 56 54 35 40 62 68 77 39 57 43 34</span></span>
-<span id="cb1176-4"><a href="20-debuggage-performance.html#cb1176-4"></a><span class="co">#&gt;  [51] 60 41 54 23 26 23 74 60 23 57 55 71 39 56 54 27 40 42 44 41 30 48 59 46 33</span></span>
-<span id="cb1176-5"><a href="20-debuggage-performance.html#cb1176-5"></a><span class="co">#&gt;  [76] 70 67 75 22 51 41 53 70 79 31 34 72 59 63 77 48 25 62 23 66 90 43 32 54 19</span></span>
-<span id="cb1176-6"><a href="20-debuggage-performance.html#cb1176-6"></a><span class="co">#&gt; [101] 61 57 54 31 33 86 84 74 49 47 25 52 71 56 58 66 70 51 54 73 35 64 51 68 42</span></span>
-<span id="cb1176-7"><a href="20-debuggage-performance.html#cb1176-7"></a><span class="co">#&gt; [126] 49 55 49 60 71 75 36 78 19 23 81 41 58 37 49 55 51 58 29 47 78 31 55 42 35</span></span>
-<span id="cb1176-8"><a href="20-debuggage-performance.html#cb1176-8"></a><span class="co">#&gt; [151] 50 78 56 40 35 46 50 69 73 32 38 18 43 62 35 28 51 65 47 66 48 27 71 38 61</span></span>
-<span id="cb1176-9"><a href="20-debuggage-performance.html#cb1176-9"></a><span class="co">#&gt; [176] 39 69 79 57 64 59 47 24 54 50 32 60 57 50 23 48 49 70 27 52 19 54 45 64 71</span></span>
-<span id="cb1176-10"><a href="20-debuggage-performance.html#cb1176-10"></a><span class="co">#&gt;  [ reached getOption(&quot;max.print&quot;) -- omitted 1800 entries ]</span></span>
-<span id="cb1176-11"><a href="20-debuggage-performance.html#cb1176-11"></a><span class="co">#&gt; $moyenne</span></span>
-<span id="cb1176-12"><a href="20-debuggage-performance.html#cb1176-12"></a><span class="co">#&gt; [1] 48.157</span></span>
-<span id="cb1176-13"><a href="20-debuggage-performance.html#cb1176-13"></a><span class="co">#&gt; </span></span>
-<span id="cb1176-14"><a href="20-debuggage-performance.html#cb1176-14"></a><span class="co">#&gt; $sd</span></span>
-<span id="cb1176-15"><a href="20-debuggage-performance.html#cb1176-15"></a><span class="co">#&gt; [1] 16.94181</span></span></code></pre></div>
+<div class="sourceCode" id="cb1179"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1179-1"><a href="20-debuggage-performance.html#cb1179-1"></a><span class="kw">indicateurs</span>(hdv2003, <span class="st">&quot;age&quot;</span>)</span>
+<span id="cb1179-2"><a href="20-debuggage-performance.html#cb1179-2"></a><span class="co">#&gt;   [1] 28 23 59 34 71 35 60 47 20 28 65 47 63 67 76 49 62 20 70 39 30 30 37 79 20</span></span>
+<span id="cb1179-3"><a href="20-debuggage-performance.html#cb1179-3"></a><span class="co">#&gt;  [26] 74 31 35 35 30 54 29 49 59 41 41 53 19 77 56 54 35 40 62 68 77 39 57 43 34</span></span>
+<span id="cb1179-4"><a href="20-debuggage-performance.html#cb1179-4"></a><span class="co">#&gt;  [51] 60 41 54 23 26 23 74 60 23 57 55 71 39 56 54 27 40 42 44 41 30 48 59 46 33</span></span>
+<span id="cb1179-5"><a href="20-debuggage-performance.html#cb1179-5"></a><span class="co">#&gt;  [76] 70 67 75 22 51 41 53 70 79 31 34 72 59 63 77 48 25 62 23 66 90 43 32 54 19</span></span>
+<span id="cb1179-6"><a href="20-debuggage-performance.html#cb1179-6"></a><span class="co">#&gt; [101] 61 57 54 31 33 86 84 74 49 47 25 52 71 56 58 66 70 51 54 73 35 64 51 68 42</span></span>
+<span id="cb1179-7"><a href="20-debuggage-performance.html#cb1179-7"></a><span class="co">#&gt; [126] 49 55 49 60 71 75 36 78 19 23 81 41 58 37 49 55 51 58 29 47 78 31 55 42 35</span></span>
+<span id="cb1179-8"><a href="20-debuggage-performance.html#cb1179-8"></a><span class="co">#&gt; [151] 50 78 56 40 35 46 50 69 73 32 38 18 43 62 35 28 51 65 47 66 48 27 71 38 61</span></span>
+<span id="cb1179-9"><a href="20-debuggage-performance.html#cb1179-9"></a><span class="co">#&gt; [176] 39 69 79 57 64 59 47 24 54 50 32 60 57 50 23 48 49 70 27 52 19 54 45 64 71</span></span>
+<span id="cb1179-10"><a href="20-debuggage-performance.html#cb1179-10"></a><span class="co">#&gt;  [ reached getOption(&quot;max.print&quot;) -- omitted 1800 entries ]</span></span>
+<span id="cb1179-11"><a href="20-debuggage-performance.html#cb1179-11"></a><span class="co">#&gt; $moyenne</span></span>
+<span id="cb1179-12"><a href="20-debuggage-performance.html#cb1179-12"></a><span class="co">#&gt; [1] 48.157</span></span>
+<span id="cb1179-13"><a href="20-debuggage-performance.html#cb1179-13"></a><span class="co">#&gt; </span></span>
+<span id="cb1179-14"><a href="20-debuggage-performance.html#cb1179-14"></a><span class="co">#&gt; $sd</span></span>
+<span id="cb1179-15"><a href="20-debuggage-performance.html#cb1179-15"></a><span class="co">#&gt; [1] 16.94181</span></span></code></pre></div>
 <p>Ah ! Dans ce cas là <code>valeurs</code> est bien un vecteur, et on obtient donc le résultat attendu. Pourquoi cette différence ? On est en fait tombé sur une différence de comportement entre les <em>data frames</em> et les <em>tibbles</em>, mentionnée section <a href="16-structures-donnees.html#df-sel">16.3.3</a> : lorsqu’on sélectionne une seule colonne avec l’opérateur <code>[,]</code>, un <em>data frame</em> retourne un vecteur tandis qu’un <em>tibble</em> retourne un tableau à une colonne. Or, ici, <code>hdv2003</code> est un <em>data frame</em>, et <code>starwars</code> un <em>tibble</em>.</p>
 <p>Comment résoudre ce problème ? Il y a différentes manières, mais la plus simple est sans doute de remplacer <code>[,]</code> par <code>[[]]</code>, qui lui a le même comportement dans les deux cas. On peut donc modifier notre fonction (en n’oubliant pas d’enlever le <code>print()</code>) et vérifier que ça fonctionne désormais.</p>
-<div class="sourceCode" id="cb1177"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1177-1"><a href="20-debuggage-performance.html#cb1177-1"></a>indicateurs &lt;-<span class="st"> </span><span class="cf">function</span>(df, var) {</span>
-<span id="cb1177-2"><a href="20-debuggage-performance.html#cb1177-2"></a>    valeurs &lt;-<span class="st"> </span>df[[var]]</span>
-<span id="cb1177-3"><a href="20-debuggage-performance.html#cb1177-3"></a>    <span class="cf">if</span> (<span class="op">!</span><span class="kw">is.numeric</span>(valeurs)) <span class="kw">return</span>(<span class="ot">NA</span>)</span>
-<span id="cb1177-4"><a href="20-debuggage-performance.html#cb1177-4"></a>    <span class="kw">list</span>(</span>
-<span id="cb1177-5"><a href="20-debuggage-performance.html#cb1177-5"></a>        <span class="dt">moyenne =</span> <span class="kw">mean</span>(valeurs, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>),</span>
-<span id="cb1177-6"><a href="20-debuggage-performance.html#cb1177-6"></a>        <span class="dt">sd =</span> <span class="kw">sd</span>(valeurs, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>)</span>
-<span id="cb1177-7"><a href="20-debuggage-performance.html#cb1177-7"></a>    )</span>
-<span id="cb1177-8"><a href="20-debuggage-performance.html#cb1177-8"></a>}</span>
-<span id="cb1177-9"><a href="20-debuggage-performance.html#cb1177-9"></a></span>
-<span id="cb1177-10"><a href="20-debuggage-performance.html#cb1177-10"></a><span class="kw">indicateurs</span>(hdv2003, <span class="st">&quot;age&quot;</span>)</span>
-<span id="cb1177-11"><a href="20-debuggage-performance.html#cb1177-11"></a><span class="co">#&gt; $moyenne</span></span>
-<span id="cb1177-12"><a href="20-debuggage-performance.html#cb1177-12"></a><span class="co">#&gt; [1] 48.157</span></span>
-<span id="cb1177-13"><a href="20-debuggage-performance.html#cb1177-13"></a><span class="co">#&gt; </span></span>
-<span id="cb1177-14"><a href="20-debuggage-performance.html#cb1177-14"></a><span class="co">#&gt; $sd</span></span>
-<span id="cb1177-15"><a href="20-debuggage-performance.html#cb1177-15"></a><span class="co">#&gt; [1] 16.94181</span></span>
-<span id="cb1177-16"><a href="20-debuggage-performance.html#cb1177-16"></a><span class="kw">indicateurs</span>(starwars, <span class="st">&quot;height&quot;</span>)</span>
-<span id="cb1177-17"><a href="20-debuggage-performance.html#cb1177-17"></a><span class="co">#&gt; $moyenne</span></span>
-<span id="cb1177-18"><a href="20-debuggage-performance.html#cb1177-18"></a><span class="co">#&gt; [1] 174.358</span></span>
-<span id="cb1177-19"><a href="20-debuggage-performance.html#cb1177-19"></a><span class="co">#&gt; </span></span>
-<span id="cb1177-20"><a href="20-debuggage-performance.html#cb1177-20"></a><span class="co">#&gt; $sd</span></span>
-<span id="cb1177-21"><a href="20-debuggage-performance.html#cb1177-21"></a><span class="co">#&gt; [1] 34.77043</span></span></code></pre></div>
+<div class="sourceCode" id="cb1180"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1180-1"><a href="20-debuggage-performance.html#cb1180-1"></a>indicateurs &lt;-<span class="st"> </span><span class="cf">function</span>(df, var) {</span>
+<span id="cb1180-2"><a href="20-debuggage-performance.html#cb1180-2"></a>    valeurs &lt;-<span class="st"> </span>df[[var]]</span>
+<span id="cb1180-3"><a href="20-debuggage-performance.html#cb1180-3"></a>    <span class="cf">if</span> (<span class="op">!</span><span class="kw">is.numeric</span>(valeurs)) <span class="kw">return</span>(<span class="ot">NA</span>)</span>
+<span id="cb1180-4"><a href="20-debuggage-performance.html#cb1180-4"></a>    <span class="kw">list</span>(</span>
+<span id="cb1180-5"><a href="20-debuggage-performance.html#cb1180-5"></a>        <span class="dt">moyenne =</span> <span class="kw">mean</span>(valeurs, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>),</span>
+<span id="cb1180-6"><a href="20-debuggage-performance.html#cb1180-6"></a>        <span class="dt">sd =</span> <span class="kw">sd</span>(valeurs, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>)</span>
+<span id="cb1180-7"><a href="20-debuggage-performance.html#cb1180-7"></a>    )</span>
+<span id="cb1180-8"><a href="20-debuggage-performance.html#cb1180-8"></a>}</span>
+<span id="cb1180-9"><a href="20-debuggage-performance.html#cb1180-9"></a></span>
+<span id="cb1180-10"><a href="20-debuggage-performance.html#cb1180-10"></a><span class="kw">indicateurs</span>(hdv2003, <span class="st">&quot;age&quot;</span>)</span>
+<span id="cb1180-11"><a href="20-debuggage-performance.html#cb1180-11"></a><span class="co">#&gt; $moyenne</span></span>
+<span id="cb1180-12"><a href="20-debuggage-performance.html#cb1180-12"></a><span class="co">#&gt; [1] 48.157</span></span>
+<span id="cb1180-13"><a href="20-debuggage-performance.html#cb1180-13"></a><span class="co">#&gt; </span></span>
+<span id="cb1180-14"><a href="20-debuggage-performance.html#cb1180-14"></a><span class="co">#&gt; $sd</span></span>
+<span id="cb1180-15"><a href="20-debuggage-performance.html#cb1180-15"></a><span class="co">#&gt; [1] 16.94181</span></span>
+<span id="cb1180-16"><a href="20-debuggage-performance.html#cb1180-16"></a><span class="kw">indicateurs</span>(starwars, <span class="st">&quot;height&quot;</span>)</span>
+<span id="cb1180-17"><a href="20-debuggage-performance.html#cb1180-17"></a><span class="co">#&gt; $moyenne</span></span>
+<span id="cb1180-18"><a href="20-debuggage-performance.html#cb1180-18"></a><span class="co">#&gt; [1] 174.358</span></span>
+<span id="cb1180-19"><a href="20-debuggage-performance.html#cb1180-19"></a><span class="co">#&gt; </span></span>
+<span id="cb1180-20"><a href="20-debuggage-performance.html#cb1180-20"></a><span class="co">#&gt; $sd</span></span>
+<span id="cb1180-21"><a href="20-debuggage-performance.html#cb1180-21"></a><span class="co">#&gt; [1] 34.77043</span></span></code></pre></div>
 <div class="rmdimportant">
 <p>
 Quand on ajoute des <code>print()</code> pour essayer d’identifier un problème, il faut bien penser à les supprimer une fois ce problème résolu, sinon on risque de se retrouver avec des messages “parasites” dans la console.
@@ -728,116 +728,40 @@ Quand on ajoute des <code>print()</code> pour essayer d’identifier un problèm
 <h3><span class="header-section-number">20.1.2</span> Localiser une erreur</h3>
 <p><code>print()</code> peut aussi être utile pour savoir à quel moment une erreur se produit, notamment lorsqu’on utilise une boucle.</p>
 <p>Dans l’exemple suivant, on crée une fonction <code>min_freq_values()</code> qui prend en argument un tableau de données <code>df</code> et un effectif <code>n_min</code> et retourne une liste des modalités de variables qui apparaissent dans au moins <code>n_min</code> lignes de <code>df</code> (on utilise ici une boucle <code>for</code>, mais on aurait aussi pu utiliser <code>map()</code>).</p>
-<div class="sourceCode" id="cb1178"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1178-1"><a href="20-debuggage-performance.html#cb1178-1"></a>min_freq_values &lt;-<span class="st"> </span><span class="cf">function</span>(df, n_min) {</span>
-<span id="cb1178-2"><a href="20-debuggage-performance.html#cb1178-2"></a>    res &lt;-<span class="st"> </span><span class="kw">list</span>()</span>
-<span id="cb1178-3"><a href="20-debuggage-performance.html#cb1178-3"></a>    <span class="cf">for</span> (col <span class="cf">in</span> <span class="kw">names</span>(df)) {</span>
-<span id="cb1178-4"><a href="20-debuggage-performance.html#cb1178-4"></a>        <span class="co"># Tri à plat des valeurs de la colonne</span></span>
-<span id="cb1178-5"><a href="20-debuggage-performance.html#cb1178-5"></a>        freq &lt;-<span class="st"> </span><span class="kw">table</span>(df[[col]])</span>
-<span id="cb1178-6"><a href="20-debuggage-performance.html#cb1178-6"></a>        <span class="co"># On conserve les modalités avec effectif &gt;= n</span></span>
-<span id="cb1178-7"><a href="20-debuggage-performance.html#cb1178-7"></a>        freq &lt;-<span class="st"> </span>freq[freq <span class="op">&gt;=</span><span class="st"> </span>n_min]</span>
-<span id="cb1178-8"><a href="20-debuggage-performance.html#cb1178-8"></a>        <span class="co"># On ajoute la colonne au résultat s&#39;il y a au moins une modalité</span></span>
-<span id="cb1178-9"><a href="20-debuggage-performance.html#cb1178-9"></a>        <span class="cf">if</span> (<span class="kw">length</span>(freq) <span class="op">&gt;</span><span class="st"> </span><span class="dv">0</span>) res[[col]] &lt;-<span class="st"> </span>freq</span>
-<span id="cb1178-10"><a href="20-debuggage-performance.html#cb1178-10"></a>    }</span>
-<span id="cb1178-11"><a href="20-debuggage-performance.html#cb1178-11"></a>    res</span>
-<span id="cb1178-12"><a href="20-debuggage-performance.html#cb1178-12"></a>}</span></code></pre></div>
-<p>Si on applique <code>min_freq_values()</code> à <code>hdv2003</code> avec une valeur de <code>n</code> à 1500, on obtient toutes les modalités correspondant à au moins 1500 observations.</p>
-<div class="sourceCode" id="cb1179"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1179-1"><a href="20-debuggage-performance.html#cb1179-1"></a><span class="kw">min_freq_values</span>(hdv2003, <span class="dv">1500</span>)</span>
-<span id="cb1179-2"><a href="20-debuggage-performance.html#cb1179-2"></a><span class="co">#&gt; $hard.rock</span></span>
-<span id="cb1179-3"><a href="20-debuggage-performance.html#cb1179-3"></a><span class="co">#&gt;  Non </span></span>
-<span id="cb1179-4"><a href="20-debuggage-performance.html#cb1179-4"></a><span class="co">#&gt; 1986 </span></span>
-<span id="cb1179-5"><a href="20-debuggage-performance.html#cb1179-5"></a><span class="co">#&gt; </span></span>
-<span id="cb1179-6"><a href="20-debuggage-performance.html#cb1179-6"></a><span class="co">#&gt; $lecture.bd</span></span>
-<span id="cb1179-7"><a href="20-debuggage-performance.html#cb1179-7"></a><span class="co">#&gt;  Non </span></span>
-<span id="cb1179-8"><a href="20-debuggage-performance.html#cb1179-8"></a><span class="co">#&gt; 1953 </span></span>
-<span id="cb1179-9"><a href="20-debuggage-performance.html#cb1179-9"></a><span class="co">#&gt; </span></span>
-<span id="cb1179-10"><a href="20-debuggage-performance.html#cb1179-10"></a><span class="co">#&gt; $peche.chasse</span></span>
-<span id="cb1179-11"><a href="20-debuggage-performance.html#cb1179-11"></a><span class="co">#&gt;  Non </span></span>
-<span id="cb1179-12"><a href="20-debuggage-performance.html#cb1179-12"></a><span class="co">#&gt; 1776</span></span></code></pre></div>
-<p>Essayons maintenant d’appliquer <code>min_freq_values()</code> au jeu de données <code>starwars</code> de <code>dplyr</code>.</p>
-<div class="sourceCode" id="cb1180"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1180-1"><a href="20-debuggage-performance.html#cb1180-1"></a><span class="kw">min_freq_values</span>(starwars, <span class="dv">50</span>)</span>
-<span id="cb1180-2"><a href="20-debuggage-performance.html#cb1180-2"></a><span class="co">#&gt; Error in table(df[[col]]): tous les arguments doivent avoir la même longueur</span></span></code></pre></div>
-<p>On obtient un message quelque peu sybillin : apparemment une erreur se produit au moment de faire le tri à plat des valeurs avec <code>table()</code>. Mais comme ce tri à plat s’effectue dans une boucle, on ne sait pas quelle variable de <code>starwars</code> est à l’origine du problème.</p>
-<p>On va donc rajouter un <code>print(col)</code> comme première instruction de la boucle <code>for</code>.</p>
 <div class="sourceCode" id="cb1181"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1181-1"><a href="20-debuggage-performance.html#cb1181-1"></a>min_freq_values &lt;-<span class="st"> </span><span class="cf">function</span>(df, n_min) {</span>
 <span id="cb1181-2"><a href="20-debuggage-performance.html#cb1181-2"></a>    res &lt;-<span class="st"> </span><span class="kw">list</span>()</span>
 <span id="cb1181-3"><a href="20-debuggage-performance.html#cb1181-3"></a>    <span class="cf">for</span> (col <span class="cf">in</span> <span class="kw">names</span>(df)) {</span>
-<span id="cb1181-4"><a href="20-debuggage-performance.html#cb1181-4"></a>        <span class="kw">print</span>(col)</span>
-<span id="cb1181-5"><a href="20-debuggage-performance.html#cb1181-5"></a>        <span class="co"># Tri à plat des valeurs de la colonne</span></span>
-<span id="cb1181-6"><a href="20-debuggage-performance.html#cb1181-6"></a>        freq &lt;-<span class="st"> </span><span class="kw">table</span>(df[[col]])</span>
-<span id="cb1181-7"><a href="20-debuggage-performance.html#cb1181-7"></a>        <span class="co"># On conserve les modalités avec effectif &gt;= n</span></span>
-<span id="cb1181-8"><a href="20-debuggage-performance.html#cb1181-8"></a>        freq &lt;-<span class="st"> </span>freq[freq <span class="op">&gt;=</span><span class="st"> </span>n_min]</span>
-<span id="cb1181-9"><a href="20-debuggage-performance.html#cb1181-9"></a>        <span class="co"># On ajoute la colonne au résultat s&#39;il y a au moins une modalité</span></span>
-<span id="cb1181-10"><a href="20-debuggage-performance.html#cb1181-10"></a>        <span class="cf">if</span> (<span class="kw">length</span>(freq) <span class="op">&gt;</span><span class="st"> </span><span class="dv">0</span>) res[[col]] &lt;-<span class="st"> </span>freq</span>
-<span id="cb1181-11"><a href="20-debuggage-performance.html#cb1181-11"></a>    }</span>
-<span id="cb1181-12"><a href="20-debuggage-performance.html#cb1181-12"></a>    res</span>
-<span id="cb1181-13"><a href="20-debuggage-performance.html#cb1181-13"></a>}</span>
-<span id="cb1181-14"><a href="20-debuggage-performance.html#cb1181-14"></a></span>
-<span id="cb1181-15"><a href="20-debuggage-performance.html#cb1181-15"></a><span class="kw">min_freq_values</span>(starwars, <span class="dv">50</span>)</span>
-<span id="cb1181-16"><a href="20-debuggage-performance.html#cb1181-16"></a><span class="co">#&gt; [1] &quot;name&quot;</span></span>
-<span id="cb1181-17"><a href="20-debuggage-performance.html#cb1181-17"></a><span class="co">#&gt; [1] &quot;height&quot;</span></span>
-<span id="cb1181-18"><a href="20-debuggage-performance.html#cb1181-18"></a><span class="co">#&gt; [1] &quot;mass&quot;</span></span>
-<span id="cb1181-19"><a href="20-debuggage-performance.html#cb1181-19"></a><span class="co">#&gt; [1] &quot;hair_color&quot;</span></span>
-<span id="cb1181-20"><a href="20-debuggage-performance.html#cb1181-20"></a><span class="co">#&gt; [1] &quot;skin_color&quot;</span></span>
-<span id="cb1181-21"><a href="20-debuggage-performance.html#cb1181-21"></a><span class="co">#&gt; [1] &quot;eye_color&quot;</span></span>
-<span id="cb1181-22"><a href="20-debuggage-performance.html#cb1181-22"></a><span class="co">#&gt; [1] &quot;birth_year&quot;</span></span>
-<span id="cb1181-23"><a href="20-debuggage-performance.html#cb1181-23"></a><span class="co">#&gt; [1] &quot;sex&quot;</span></span>
-<span id="cb1181-24"><a href="20-debuggage-performance.html#cb1181-24"></a><span class="co">#&gt; [1] &quot;gender&quot;</span></span>
-<span id="cb1181-25"><a href="20-debuggage-performance.html#cb1181-25"></a><span class="co">#&gt; [1] &quot;homeworld&quot;</span></span>
-<span id="cb1181-26"><a href="20-debuggage-performance.html#cb1181-26"></a><span class="co">#&gt; [1] &quot;species&quot;</span></span>
-<span id="cb1181-27"><a href="20-debuggage-performance.html#cb1181-27"></a><span class="co">#&gt; [1] &quot;films&quot;</span></span>
-<span id="cb1181-28"><a href="20-debuggage-performance.html#cb1181-28"></a><span class="co">#&gt; Error in table(df[[col]]): tous les arguments doivent avoir la même longueur</span></span></code></pre></div>
-<p>Ce <code>print(col)</code> nous permet de voir que tout se passe bien pour les premières variables du tableau, et que l’erreur survient au moment de traiter la variable <code>films</code>. On regarde donc à quoi ressemble cette variable.</p>
-<div class="sourceCode" id="cb1182"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1182-1"><a href="20-debuggage-performance.html#cb1182-1"></a><span class="kw">head</span>(starwars<span class="op">$</span>films, <span class="dv">3</span>)</span>
-<span id="cb1182-2"><a href="20-debuggage-performance.html#cb1182-2"></a><span class="co">#&gt; [[1]]</span></span>
-<span id="cb1182-3"><a href="20-debuggage-performance.html#cb1182-3"></a><span class="co">#&gt; [1] &quot;The Empire Strikes Back&quot; &quot;Revenge of the Sith&quot;    </span></span>
-<span id="cb1182-4"><a href="20-debuggage-performance.html#cb1182-4"></a><span class="co">#&gt; [3] &quot;Return of the Jedi&quot;      &quot;A New Hope&quot;             </span></span>
-<span id="cb1182-5"><a href="20-debuggage-performance.html#cb1182-5"></a><span class="co">#&gt; [5] &quot;The Force Awakens&quot;      </span></span>
-<span id="cb1182-6"><a href="20-debuggage-performance.html#cb1182-6"></a><span class="co">#&gt; </span></span>
-<span id="cb1182-7"><a href="20-debuggage-performance.html#cb1182-7"></a><span class="co">#&gt; [[2]]</span></span>
-<span id="cb1182-8"><a href="20-debuggage-performance.html#cb1182-8"></a><span class="co">#&gt; [1] &quot;The Empire Strikes Back&quot; &quot;Attack of the Clones&quot;   </span></span>
-<span id="cb1182-9"><a href="20-debuggage-performance.html#cb1182-9"></a><span class="co">#&gt; [3] &quot;The Phantom Menace&quot;      &quot;Revenge of the Sith&quot;    </span></span>
-<span id="cb1182-10"><a href="20-debuggage-performance.html#cb1182-10"></a><span class="co">#&gt; [5] &quot;Return of the Jedi&quot;      &quot;A New Hope&quot;             </span></span>
-<span id="cb1182-11"><a href="20-debuggage-performance.html#cb1182-11"></a><span class="co">#&gt; </span></span>
-<span id="cb1182-12"><a href="20-debuggage-performance.html#cb1182-12"></a><span class="co">#&gt; [[3]]</span></span>
-<span id="cb1182-13"><a href="20-debuggage-performance.html#cb1182-13"></a><span class="co">#&gt; [1] &quot;The Empire Strikes Back&quot; &quot;Attack of the Clones&quot;   </span></span>
-<span id="cb1182-14"><a href="20-debuggage-performance.html#cb1182-14"></a><span class="co">#&gt; [3] &quot;The Phantom Menace&quot;      &quot;Revenge of the Sith&quot;    </span></span>
-<span id="cb1182-15"><a href="20-debuggage-performance.html#cb1182-15"></a><span class="co">#&gt; [5] &quot;Return of the Jedi&quot;      &quot;A New Hope&quot;             </span></span>
-<span id="cb1182-16"><a href="20-debuggage-performance.html#cb1182-16"></a><span class="co">#&gt; [7] &quot;The Force Awakens&quot;</span></span></code></pre></div>
-<p><em>Damn</em>, cette variable n’est pas un vecteur atomique mais une liste ! Un tableau de données peut en effet contenir ce que l’on appelle des <em>colonnes-listes</em>. Comme ça n’est pas courant, on ne l’avait clairement pas prévu au moment de la création de la fonction.</p>
-<p>On a désormais identifié le problème, on peut donc le corriger par exemple en ignorant les colonnes de type liste. Pour cela on utilise <code>is.list()</code> et l’instruction <code>next</code>.</p>
-<div class="sourceCode" id="cb1183"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1183-1"><a href="20-debuggage-performance.html#cb1183-1"></a>min_freq_values &lt;-<span class="st"> </span><span class="cf">function</span>(df, n_min) {</span>
-<span id="cb1183-2"><a href="20-debuggage-performance.html#cb1183-2"></a>    res &lt;-<span class="st"> </span><span class="kw">list</span>()</span>
-<span id="cb1183-3"><a href="20-debuggage-performance.html#cb1183-3"></a>    <span class="cf">for</span> (col <span class="cf">in</span> <span class="kw">names</span>(df)) {</span>
-<span id="cb1183-4"><a href="20-debuggage-performance.html#cb1183-4"></a>        <span class="co"># On passe à la colonne suivante si la colonne est une colonne-liste</span></span>
-<span id="cb1183-5"><a href="20-debuggage-performance.html#cb1183-5"></a>        <span class="cf">if</span> (<span class="kw">is.list</span>(df[[col]])) <span class="cf">next</span></span>
-<span id="cb1183-6"><a href="20-debuggage-performance.html#cb1183-6"></a>        <span class="co"># Tri à plat des valeurs de la colonne</span></span>
-<span id="cb1183-7"><a href="20-debuggage-performance.html#cb1183-7"></a>        freq &lt;-<span class="st"> </span><span class="kw">table</span>(df[[col]])</span>
-<span id="cb1183-8"><a href="20-debuggage-performance.html#cb1183-8"></a>        <span class="co"># On conserve les modalités avec effectif &gt;= n</span></span>
-<span id="cb1183-9"><a href="20-debuggage-performance.html#cb1183-9"></a>        freq &lt;-<span class="st"> </span>freq[freq <span class="op">&gt;=</span><span class="st"> </span>n_min]</span>
-<span id="cb1183-10"><a href="20-debuggage-performance.html#cb1183-10"></a>        <span class="co"># On ajoute la colonne au résultat s&#39;il y a au moins une modalité</span></span>
-<span id="cb1183-11"><a href="20-debuggage-performance.html#cb1183-11"></a>        <span class="cf">if</span> (<span class="kw">length</span>(freq) <span class="op">&gt;</span><span class="st"> </span><span class="dv">0</span>) res[[col]] &lt;-<span class="st"> </span>freq</span>
-<span id="cb1183-12"><a href="20-debuggage-performance.html#cb1183-12"></a>    }</span>
-<span id="cb1183-13"><a href="20-debuggage-performance.html#cb1183-13"></a>    res</span>
-<span id="cb1183-14"><a href="20-debuggage-performance.html#cb1183-14"></a>}</span>
-<span id="cb1183-15"><a href="20-debuggage-performance.html#cb1183-15"></a></span>
-<span id="cb1183-16"><a href="20-debuggage-performance.html#cb1183-16"></a><span class="kw">min_freq_values</span>(starwars, <span class="dv">50</span>)</span>
-<span id="cb1183-17"><a href="20-debuggage-performance.html#cb1183-17"></a><span class="co">#&gt; $sex</span></span>
-<span id="cb1183-18"><a href="20-debuggage-performance.html#cb1183-18"></a><span class="co">#&gt; male </span></span>
-<span id="cb1183-19"><a href="20-debuggage-performance.html#cb1183-19"></a><span class="co">#&gt;   60 </span></span>
-<span id="cb1183-20"><a href="20-debuggage-performance.html#cb1183-20"></a><span class="co">#&gt; </span></span>
-<span id="cb1183-21"><a href="20-debuggage-performance.html#cb1183-21"></a><span class="co">#&gt; $gender</span></span>
-<span id="cb1183-22"><a href="20-debuggage-performance.html#cb1183-22"></a><span class="co">#&gt; masculine </span></span>
-<span id="cb1183-23"><a href="20-debuggage-performance.html#cb1183-23"></a><span class="co">#&gt;        66</span></span></code></pre></div>
-<p>Ça fonctionne ! Et cela nous permet de repérer au passage une “légère” sur-représentation des personnages masculins…</p>
-</div>
-<div id="browser" class="section level3">
-<h3><span class="header-section-number">20.1.3</span> browser()</h3>
-<p>Il existe des alternatives à <code>print()</code> plus efficaces pour identifier et résoudre des bugs. La plus utilisée est la fonction <code>browser()</code> : celle-ci peut s’insérer à n’importe quel endroit du code, et lorsqu’elle est rencontrée par R celui-ci s’interrompt et affiche une invite de commande permettant notamment d’inspecter des objets.</p>
-<p>On reprend l’exemple précédent en remplaçant le <code>print(col)</code> que nous avions inséré pour débugguer la fonction <code>min_freq_values</code> par un appel à <code>browser()</code>.</p>
+<span id="cb1181-4"><a href="20-debuggage-performance.html#cb1181-4"></a>        <span class="co"># Tri à plat des valeurs de la colonne</span></span>
+<span id="cb1181-5"><a href="20-debuggage-performance.html#cb1181-5"></a>        freq &lt;-<span class="st"> </span><span class="kw">table</span>(df[[col]])</span>
+<span id="cb1181-6"><a href="20-debuggage-performance.html#cb1181-6"></a>        <span class="co"># On conserve les modalités avec effectif &gt;= n</span></span>
+<span id="cb1181-7"><a href="20-debuggage-performance.html#cb1181-7"></a>        freq &lt;-<span class="st"> </span>freq[freq <span class="op">&gt;=</span><span class="st"> </span>n_min]</span>
+<span id="cb1181-8"><a href="20-debuggage-performance.html#cb1181-8"></a>        <span class="co"># On ajoute la colonne au résultat s&#39;il y a au moins une modalité</span></span>
+<span id="cb1181-9"><a href="20-debuggage-performance.html#cb1181-9"></a>        <span class="cf">if</span> (<span class="kw">length</span>(freq) <span class="op">&gt;</span><span class="st"> </span><span class="dv">0</span>) res[[col]] &lt;-<span class="st"> </span>freq</span>
+<span id="cb1181-10"><a href="20-debuggage-performance.html#cb1181-10"></a>    }</span>
+<span id="cb1181-11"><a href="20-debuggage-performance.html#cb1181-11"></a>    res</span>
+<span id="cb1181-12"><a href="20-debuggage-performance.html#cb1181-12"></a>}</span></code></pre></div>
+<p>Si on applique <code>min_freq_values()</code> à <code>hdv2003</code> avec une valeur de <code>n</code> à 1500, on obtient toutes les modalités correspondant à au moins 1500 observations.</p>
+<div class="sourceCode" id="cb1182"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1182-1"><a href="20-debuggage-performance.html#cb1182-1"></a><span class="kw">min_freq_values</span>(hdv2003, <span class="dv">1500</span>)</span>
+<span id="cb1182-2"><a href="20-debuggage-performance.html#cb1182-2"></a><span class="co">#&gt; $hard.rock</span></span>
+<span id="cb1182-3"><a href="20-debuggage-performance.html#cb1182-3"></a><span class="co">#&gt;  Non </span></span>
+<span id="cb1182-4"><a href="20-debuggage-performance.html#cb1182-4"></a><span class="co">#&gt; 1986 </span></span>
+<span id="cb1182-5"><a href="20-debuggage-performance.html#cb1182-5"></a><span class="co">#&gt; </span></span>
+<span id="cb1182-6"><a href="20-debuggage-performance.html#cb1182-6"></a><span class="co">#&gt; $lecture.bd</span></span>
+<span id="cb1182-7"><a href="20-debuggage-performance.html#cb1182-7"></a><span class="co">#&gt;  Non </span></span>
+<span id="cb1182-8"><a href="20-debuggage-performance.html#cb1182-8"></a><span class="co">#&gt; 1953 </span></span>
+<span id="cb1182-9"><a href="20-debuggage-performance.html#cb1182-9"></a><span class="co">#&gt; </span></span>
+<span id="cb1182-10"><a href="20-debuggage-performance.html#cb1182-10"></a><span class="co">#&gt; $peche.chasse</span></span>
+<span id="cb1182-11"><a href="20-debuggage-performance.html#cb1182-11"></a><span class="co">#&gt;  Non </span></span>
+<span id="cb1182-12"><a href="20-debuggage-performance.html#cb1182-12"></a><span class="co">#&gt; 1776</span></span></code></pre></div>
+<p>Essayons maintenant d’appliquer <code>min_freq_values()</code> au jeu de données <code>starwars</code> de <code>dplyr</code>.</p>
+<div class="sourceCode" id="cb1183"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1183-1"><a href="20-debuggage-performance.html#cb1183-1"></a><span class="kw">min_freq_values</span>(starwars, <span class="dv">50</span>)</span>
+<span id="cb1183-2"><a href="20-debuggage-performance.html#cb1183-2"></a><span class="co">#&gt; Error in table(df[[col]]): tous les arguments doivent avoir la même longueur</span></span></code></pre></div>
+<p>On obtient un message quelque peu sybillin : apparemment une erreur se produit au moment de faire le tri à plat des valeurs avec <code>table()</code>. Mais comme ce tri à plat s’effectue dans une boucle, on ne sait pas quelle variable de <code>starwars</code> est à l’origine du problème.</p>
+<p>On va donc rajouter un <code>print(col)</code> comme première instruction de la boucle <code>for</code>.</p>
 <div class="sourceCode" id="cb1184"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1184-1"><a href="20-debuggage-performance.html#cb1184-1"></a>min_freq_values &lt;-<span class="st"> </span><span class="cf">function</span>(df, n_min) {</span>
 <span id="cb1184-2"><a href="20-debuggage-performance.html#cb1184-2"></a>    res &lt;-<span class="st"> </span><span class="kw">list</span>()</span>
 <span id="cb1184-3"><a href="20-debuggage-performance.html#cb1184-3"></a>    <span class="cf">for</span> (col <span class="cf">in</span> <span class="kw">names</span>(df)) {</span>
-<span id="cb1184-4"><a href="20-debuggage-performance.html#cb1184-4"></a>        <span class="kw">browser</span>()</span>
+<span id="cb1184-4"><a href="20-debuggage-performance.html#cb1184-4"></a>        <span class="kw">print</span>(col)</span>
 <span id="cb1184-5"><a href="20-debuggage-performance.html#cb1184-5"></a>        <span class="co"># Tri à plat des valeurs de la colonne</span></span>
 <span id="cb1184-6"><a href="20-debuggage-performance.html#cb1184-6"></a>        freq &lt;-<span class="st"> </span><span class="kw">table</span>(df[[col]])</span>
 <span id="cb1184-7"><a href="20-debuggage-performance.html#cb1184-7"></a>        <span class="co"># On conserve les modalités avec effectif &gt;= n</span></span>
@@ -848,7 +772,83 @@ Quand on ajoute des <code>print()</code> pour essayer d’identifier un problèm
 <span id="cb1184-12"><a href="20-debuggage-performance.html#cb1184-12"></a>    res</span>
 <span id="cb1184-13"><a href="20-debuggage-performance.html#cb1184-13"></a>}</span>
 <span id="cb1184-14"><a href="20-debuggage-performance.html#cb1184-14"></a></span>
-<span id="cb1184-15"><a href="20-debuggage-performance.html#cb1184-15"></a><span class="kw">min_freq_values</span>(starwars, <span class="dv">50</span>)</span></code></pre></div>
+<span id="cb1184-15"><a href="20-debuggage-performance.html#cb1184-15"></a><span class="kw">min_freq_values</span>(starwars, <span class="dv">50</span>)</span>
+<span id="cb1184-16"><a href="20-debuggage-performance.html#cb1184-16"></a><span class="co">#&gt; [1] &quot;name&quot;</span></span>
+<span id="cb1184-17"><a href="20-debuggage-performance.html#cb1184-17"></a><span class="co">#&gt; [1] &quot;height&quot;</span></span>
+<span id="cb1184-18"><a href="20-debuggage-performance.html#cb1184-18"></a><span class="co">#&gt; [1] &quot;mass&quot;</span></span>
+<span id="cb1184-19"><a href="20-debuggage-performance.html#cb1184-19"></a><span class="co">#&gt; [1] &quot;hair_color&quot;</span></span>
+<span id="cb1184-20"><a href="20-debuggage-performance.html#cb1184-20"></a><span class="co">#&gt; [1] &quot;skin_color&quot;</span></span>
+<span id="cb1184-21"><a href="20-debuggage-performance.html#cb1184-21"></a><span class="co">#&gt; [1] &quot;eye_color&quot;</span></span>
+<span id="cb1184-22"><a href="20-debuggage-performance.html#cb1184-22"></a><span class="co">#&gt; [1] &quot;birth_year&quot;</span></span>
+<span id="cb1184-23"><a href="20-debuggage-performance.html#cb1184-23"></a><span class="co">#&gt; [1] &quot;sex&quot;</span></span>
+<span id="cb1184-24"><a href="20-debuggage-performance.html#cb1184-24"></a><span class="co">#&gt; [1] &quot;gender&quot;</span></span>
+<span id="cb1184-25"><a href="20-debuggage-performance.html#cb1184-25"></a><span class="co">#&gt; [1] &quot;homeworld&quot;</span></span>
+<span id="cb1184-26"><a href="20-debuggage-performance.html#cb1184-26"></a><span class="co">#&gt; [1] &quot;species&quot;</span></span>
+<span id="cb1184-27"><a href="20-debuggage-performance.html#cb1184-27"></a><span class="co">#&gt; [1] &quot;films&quot;</span></span>
+<span id="cb1184-28"><a href="20-debuggage-performance.html#cb1184-28"></a><span class="co">#&gt; Error in table(df[[col]]): tous les arguments doivent avoir la même longueur</span></span></code></pre></div>
+<p>Ce <code>print(col)</code> nous permet de voir que tout se passe bien pour les premières variables du tableau, et que l’erreur survient au moment de traiter la variable <code>films</code>. On regarde donc à quoi ressemble cette variable.</p>
+<div class="sourceCode" id="cb1185"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1185-1"><a href="20-debuggage-performance.html#cb1185-1"></a><span class="kw">head</span>(starwars<span class="op">$</span>films, <span class="dv">3</span>)</span>
+<span id="cb1185-2"><a href="20-debuggage-performance.html#cb1185-2"></a><span class="co">#&gt; [[1]]</span></span>
+<span id="cb1185-3"><a href="20-debuggage-performance.html#cb1185-3"></a><span class="co">#&gt; [1] &quot;The Empire Strikes Back&quot; &quot;Revenge of the Sith&quot;    </span></span>
+<span id="cb1185-4"><a href="20-debuggage-performance.html#cb1185-4"></a><span class="co">#&gt; [3] &quot;Return of the Jedi&quot;      &quot;A New Hope&quot;             </span></span>
+<span id="cb1185-5"><a href="20-debuggage-performance.html#cb1185-5"></a><span class="co">#&gt; [5] &quot;The Force Awakens&quot;      </span></span>
+<span id="cb1185-6"><a href="20-debuggage-performance.html#cb1185-6"></a><span class="co">#&gt; </span></span>
+<span id="cb1185-7"><a href="20-debuggage-performance.html#cb1185-7"></a><span class="co">#&gt; [[2]]</span></span>
+<span id="cb1185-8"><a href="20-debuggage-performance.html#cb1185-8"></a><span class="co">#&gt; [1] &quot;The Empire Strikes Back&quot; &quot;Attack of the Clones&quot;   </span></span>
+<span id="cb1185-9"><a href="20-debuggage-performance.html#cb1185-9"></a><span class="co">#&gt; [3] &quot;The Phantom Menace&quot;      &quot;Revenge of the Sith&quot;    </span></span>
+<span id="cb1185-10"><a href="20-debuggage-performance.html#cb1185-10"></a><span class="co">#&gt; [5] &quot;Return of the Jedi&quot;      &quot;A New Hope&quot;             </span></span>
+<span id="cb1185-11"><a href="20-debuggage-performance.html#cb1185-11"></a><span class="co">#&gt; </span></span>
+<span id="cb1185-12"><a href="20-debuggage-performance.html#cb1185-12"></a><span class="co">#&gt; [[3]]</span></span>
+<span id="cb1185-13"><a href="20-debuggage-performance.html#cb1185-13"></a><span class="co">#&gt; [1] &quot;The Empire Strikes Back&quot; &quot;Attack of the Clones&quot;   </span></span>
+<span id="cb1185-14"><a href="20-debuggage-performance.html#cb1185-14"></a><span class="co">#&gt; [3] &quot;The Phantom Menace&quot;      &quot;Revenge of the Sith&quot;    </span></span>
+<span id="cb1185-15"><a href="20-debuggage-performance.html#cb1185-15"></a><span class="co">#&gt; [5] &quot;Return of the Jedi&quot;      &quot;A New Hope&quot;             </span></span>
+<span id="cb1185-16"><a href="20-debuggage-performance.html#cb1185-16"></a><span class="co">#&gt; [7] &quot;The Force Awakens&quot;</span></span></code></pre></div>
+<p><em>Damn</em>, cette variable n’est pas un vecteur atomique mais une liste ! Un tableau de données peut en effet contenir ce que l’on appelle des <em>colonnes-listes</em>. Comme ça n’est pas courant, on ne l’avait clairement pas prévu au moment de la création de la fonction.</p>
+<p>On a désormais identifié le problème, on peut donc le corriger par exemple en ignorant les colonnes de type liste. Pour cela on utilise <code>is.list()</code> et l’instruction <code>next</code>.</p>
+<div class="sourceCode" id="cb1186"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1186-1"><a href="20-debuggage-performance.html#cb1186-1"></a>min_freq_values &lt;-<span class="st"> </span><span class="cf">function</span>(df, n_min) {</span>
+<span id="cb1186-2"><a href="20-debuggage-performance.html#cb1186-2"></a>    res &lt;-<span class="st"> </span><span class="kw">list</span>()</span>
+<span id="cb1186-3"><a href="20-debuggage-performance.html#cb1186-3"></a>    <span class="cf">for</span> (col <span class="cf">in</span> <span class="kw">names</span>(df)) {</span>
+<span id="cb1186-4"><a href="20-debuggage-performance.html#cb1186-4"></a>        <span class="co"># On passe à la colonne suivante si la colonne est une colonne-liste</span></span>
+<span id="cb1186-5"><a href="20-debuggage-performance.html#cb1186-5"></a>        <span class="cf">if</span> (<span class="kw">is.list</span>(df[[col]])) <span class="cf">next</span></span>
+<span id="cb1186-6"><a href="20-debuggage-performance.html#cb1186-6"></a>        <span class="co"># Tri à plat des valeurs de la colonne</span></span>
+<span id="cb1186-7"><a href="20-debuggage-performance.html#cb1186-7"></a>        freq &lt;-<span class="st"> </span><span class="kw">table</span>(df[[col]])</span>
+<span id="cb1186-8"><a href="20-debuggage-performance.html#cb1186-8"></a>        <span class="co"># On conserve les modalités avec effectif &gt;= n</span></span>
+<span id="cb1186-9"><a href="20-debuggage-performance.html#cb1186-9"></a>        freq &lt;-<span class="st"> </span>freq[freq <span class="op">&gt;=</span><span class="st"> </span>n_min]</span>
+<span id="cb1186-10"><a href="20-debuggage-performance.html#cb1186-10"></a>        <span class="co"># On ajoute la colonne au résultat s&#39;il y a au moins une modalité</span></span>
+<span id="cb1186-11"><a href="20-debuggage-performance.html#cb1186-11"></a>        <span class="cf">if</span> (<span class="kw">length</span>(freq) <span class="op">&gt;</span><span class="st"> </span><span class="dv">0</span>) res[[col]] &lt;-<span class="st"> </span>freq</span>
+<span id="cb1186-12"><a href="20-debuggage-performance.html#cb1186-12"></a>    }</span>
+<span id="cb1186-13"><a href="20-debuggage-performance.html#cb1186-13"></a>    res</span>
+<span id="cb1186-14"><a href="20-debuggage-performance.html#cb1186-14"></a>}</span>
+<span id="cb1186-15"><a href="20-debuggage-performance.html#cb1186-15"></a></span>
+<span id="cb1186-16"><a href="20-debuggage-performance.html#cb1186-16"></a><span class="kw">min_freq_values</span>(starwars, <span class="dv">50</span>)</span>
+<span id="cb1186-17"><a href="20-debuggage-performance.html#cb1186-17"></a><span class="co">#&gt; $sex</span></span>
+<span id="cb1186-18"><a href="20-debuggage-performance.html#cb1186-18"></a><span class="co">#&gt; male </span></span>
+<span id="cb1186-19"><a href="20-debuggage-performance.html#cb1186-19"></a><span class="co">#&gt;   60 </span></span>
+<span id="cb1186-20"><a href="20-debuggage-performance.html#cb1186-20"></a><span class="co">#&gt; </span></span>
+<span id="cb1186-21"><a href="20-debuggage-performance.html#cb1186-21"></a><span class="co">#&gt; $gender</span></span>
+<span id="cb1186-22"><a href="20-debuggage-performance.html#cb1186-22"></a><span class="co">#&gt; masculine </span></span>
+<span id="cb1186-23"><a href="20-debuggage-performance.html#cb1186-23"></a><span class="co">#&gt;        66</span></span></code></pre></div>
+<p>Ça fonctionne ! Et cela nous permet de repérer au passage une “légère” sur-représentation des personnages masculins…</p>
+</div>
+<div id="browser" class="section level3">
+<h3><span class="header-section-number">20.1.3</span> browser()</h3>
+<p>Il existe des alternatives à <code>print()</code> plus efficaces pour identifier et résoudre des bugs. La plus utilisée est la fonction <code>browser()</code> : celle-ci peut s’insérer à n’importe quel endroit du code, et lorsqu’elle est rencontrée par R celui-ci s’interrompt et affiche une invite de commande permettant notamment d’inspecter des objets.</p>
+<p>On reprend l’exemple précédent en remplaçant le <code>print(col)</code> que nous avions inséré pour débugguer la fonction <code>min_freq_values</code> par un appel à <code>browser()</code>.</p>
+<div class="sourceCode" id="cb1187"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1187-1"><a href="20-debuggage-performance.html#cb1187-1"></a>min_freq_values &lt;-<span class="st"> </span><span class="cf">function</span>(df, n_min) {</span>
+<span id="cb1187-2"><a href="20-debuggage-performance.html#cb1187-2"></a>    res &lt;-<span class="st"> </span><span class="kw">list</span>()</span>
+<span id="cb1187-3"><a href="20-debuggage-performance.html#cb1187-3"></a>    <span class="cf">for</span> (col <span class="cf">in</span> <span class="kw">names</span>(df)) {</span>
+<span id="cb1187-4"><a href="20-debuggage-performance.html#cb1187-4"></a>        <span class="kw">browser</span>()</span>
+<span id="cb1187-5"><a href="20-debuggage-performance.html#cb1187-5"></a>        <span class="co"># Tri à plat des valeurs de la colonne</span></span>
+<span id="cb1187-6"><a href="20-debuggage-performance.html#cb1187-6"></a>        freq &lt;-<span class="st"> </span><span class="kw">table</span>(df[[col]])</span>
+<span id="cb1187-7"><a href="20-debuggage-performance.html#cb1187-7"></a>        <span class="co"># On conserve les modalités avec effectif &gt;= n</span></span>
+<span id="cb1187-8"><a href="20-debuggage-performance.html#cb1187-8"></a>        freq &lt;-<span class="st"> </span>freq[freq <span class="op">&gt;=</span><span class="st"> </span>n_min]</span>
+<span id="cb1187-9"><a href="20-debuggage-performance.html#cb1187-9"></a>        <span class="co"># On ajoute la colonne au résultat s&#39;il y a au moins une modalité</span></span>
+<span id="cb1187-10"><a href="20-debuggage-performance.html#cb1187-10"></a>        <span class="cf">if</span> (<span class="kw">length</span>(freq) <span class="op">&gt;</span><span class="st"> </span><span class="dv">0</span>) res[[col]] &lt;-<span class="st"> </span>freq</span>
+<span id="cb1187-11"><a href="20-debuggage-performance.html#cb1187-11"></a>    }</span>
+<span id="cb1187-12"><a href="20-debuggage-performance.html#cb1187-12"></a>    res</span>
+<span id="cb1187-13"><a href="20-debuggage-performance.html#cb1187-13"></a>}</span>
+<span id="cb1187-14"><a href="20-debuggage-performance.html#cb1187-14"></a></span>
+<span id="cb1187-15"><a href="20-debuggage-performance.html#cb1187-15"></a><span class="kw">min_freq_values</span>(starwars, <span class="dv">50</span>)</span></code></pre></div>
 <p>Lorsqu’on lance ce code, R s’interrompt et affiche l’invite de commande suivant :</p>
 <pre><code>Called from: min_freq_values(starwars, 50)
 
@@ -882,19 +882,19 @@ Pour plus d’informations on pourra se reporter aux ressources en fin de chapit
 <p>Lorsqu’on commence à créer ses propres fonctions et de manière générale à écrire du code de plus en plus complexe ou à travailler sur des données de plus en plus volumineuses, on peut arriver sur des problèmes de performance : les temps d’exécution deviennent longs et on aimerait essayer de les optimiser.</p>
 <p>Il est alors parfois utile de faire du <em>benchmarking</em>, c’est-à-dire comparer plusieurs manières différentes de faire la même chose en mesurant leurs différences de vitesse d’exécution.</p>
 <p>L’intruction la plus simple pour cela est sans doute <code>system.time()</code>. Celle-ci prend en argument une expression R, et affiche en retour le temps d’exécution en secondes.</p>
-<div class="sourceCode" id="cb1189"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1189-1"><a href="20-debuggage-performance.html#cb1189-1"></a><span class="kw">system.time</span>(<span class="kw">runif</span>(<span class="dv">1000000</span>))</span>
-<span id="cb1189-2"><a href="20-debuggage-performance.html#cb1189-2"></a><span class="co">#&gt; utilisateur     système      écoulé </span></span>
-<span id="cb1189-3"><a href="20-debuggage-performance.html#cb1189-3"></a><span class="co">#&gt;        0.04        0.00        0.04</span></span></code></pre></div>
+<div class="sourceCode" id="cb1192"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1192-1"><a href="20-debuggage-performance.html#cb1192-1"></a><span class="kw">system.time</span>(<span class="kw">runif</span>(<span class="dv">1000000</span>))</span>
+<span id="cb1192-2"><a href="20-debuggage-performance.html#cb1192-2"></a><span class="co">#&gt; utilisateur     système      écoulé </span></span>
+<span id="cb1192-3"><a href="20-debuggage-performance.html#cb1192-3"></a><span class="co">#&gt;       0.034       0.000       0.034</span></span></code></pre></div>
 <p>L’expression peut comporter plusieurs instructions, dans ce cas on les entoure d’accolades.</p>
-<div class="sourceCode" id="cb1190"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1190-1"><a href="20-debuggage-performance.html#cb1190-1"></a><span class="kw">system.time</span>({</span>
-<span id="cb1190-2"><a href="20-debuggage-performance.html#cb1190-2"></a>    v &lt;-<span class="st"> </span><span class="kw">runif</span>(<span class="dv">1000000</span>)</span>
-<span id="cb1190-3"><a href="20-debuggage-performance.html#cb1190-3"></a>    moy &lt;-<span class="st"> </span><span class="kw">mean</span>(v)</span>
-<span id="cb1190-4"><a href="20-debuggage-performance.html#cb1190-4"></a>})</span>
-<span id="cb1190-5"><a href="20-debuggage-performance.html#cb1190-5"></a><span class="co">#&gt; utilisateur     système      écoulé </span></span>
-<span id="cb1190-6"><a href="20-debuggage-performance.html#cb1190-6"></a><span class="co">#&gt;       0.038       0.000       0.038</span></span></code></pre></div>
+<div class="sourceCode" id="cb1193"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1193-1"><a href="20-debuggage-performance.html#cb1193-1"></a><span class="kw">system.time</span>({</span>
+<span id="cb1193-2"><a href="20-debuggage-performance.html#cb1193-2"></a>    v &lt;-<span class="st"> </span><span class="kw">runif</span>(<span class="dv">1000000</span>)</span>
+<span id="cb1193-3"><a href="20-debuggage-performance.html#cb1193-3"></a>    moy &lt;-<span class="st"> </span><span class="kw">mean</span>(v)</span>
+<span id="cb1193-4"><a href="20-debuggage-performance.html#cb1193-4"></a>})</span>
+<span id="cb1193-5"><a href="20-debuggage-performance.html#cb1193-5"></a><span class="co">#&gt; utilisateur     système      écoulé </span></span>
+<span id="cb1193-6"><a href="20-debuggage-performance.html#cb1193-6"></a><span class="co">#&gt;       0.036       0.000       0.036</span></span></code></pre></div>
 <p><code>system.time()</code> est cependant très limitée : on ne peut exécuter qu’une expression à la fois, on ne peut donc pas en comparer plusieurs directement, et surtout le temps d’exécution peut varier assez sensiblement selon l’utilisation du processeur de la machine au moment où on lance la commande.</p>
 <p>Il existe donc en complément plusieurs extensions dédiées au <em>benchmarking</em>. On va utiliser ici l’extension <a href="https://bench.r-lib.org/">bench</a>, installable avec :</p>
-<div class="sourceCode" id="cb1191"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1191-1"><a href="20-debuggage-performance.html#cb1191-1"></a><span class="kw">install.packages</span>(<span class="st">&quot;bench&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb1194"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1194-1"><a href="20-debuggage-performance.html#cb1194-1"></a><span class="kw">install.packages</span>(<span class="st">&quot;bench&quot;</span>)</span></code></pre></div>
 <p><code>bench</code> propose une fonction principale, nommée <code>mark()</code>, qu’on peut donc appeler directement avec <code>bench::mark()</code><a href="#fn38" class="footnote-ref" id="fnref38"><sup>38</sup></a>. On passe à cette fonction plusieurs expressions, et <code>bench::mark()</code> va effectuer les actions suivante :</p>
 <ul>
 <li>elle vérifie que les expressions retournent bien le même résultat (si on souhaite comparer des expressions qui renvoient des résultats différents, il faut ajouter l’argument <code>check = FALSE</code>)</li>
@@ -903,76 +903,76 @@ Pour plus d’informations on pourra se reporter aux ressources en fin de chapit
 </ul>
 <p>Exécuter chaque expression plusieurs fois permet de prendre en compte les fluctuations liées à l’activité du processeur de la machine. Par défaut, <code>bench::mark()</code> exécute chaque instruction au minimum une fois et au moins suffisamment de fois pour atteindre 0,5s d’exécution (ces valeurs peuvent être modifiées via les paramètres <code>min_iterations</code> et <code>min_time</code>).</p>
 <p>Dans l’exemple suivant, on crée deux fonctions qui font la même chose : ajouter 10 à tous les éléments d’un vecteur passé en argument. Dans la première fonction <code>plus10_for</code> on utilise une boucle <code>for</code> qui ajoute 10 à tous les éléments l’un après l’autre (ce qu’il ne faut évidemment pas faire !), tandis que la deuxième fonction <code>plus10_vec</code> utilise la forme vectorisée <code>x + 10</code>.</p>
-<div class="sourceCode" id="cb1192"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1192-1"><a href="20-debuggage-performance.html#cb1192-1"></a>plus10_for &lt;-<span class="st"> </span><span class="cf">function</span>(x) {</span>
-<span id="cb1192-2"><a href="20-debuggage-performance.html#cb1192-2"></a>    <span class="cf">for</span> (i <span class="cf">in</span> <span class="kw">seq_along</span>(x)) {</span>
-<span id="cb1192-3"><a href="20-debuggage-performance.html#cb1192-3"></a>        x[i] &lt;-<span class="st"> </span>x[i] <span class="op">+</span><span class="st"> </span><span class="dv">10</span></span>
-<span id="cb1192-4"><a href="20-debuggage-performance.html#cb1192-4"></a>    }</span>
-<span id="cb1192-5"><a href="20-debuggage-performance.html#cb1192-5"></a>    x</span>
-<span id="cb1192-6"><a href="20-debuggage-performance.html#cb1192-6"></a>}</span>
-<span id="cb1192-7"><a href="20-debuggage-performance.html#cb1192-7"></a></span>
-<span id="cb1192-8"><a href="20-debuggage-performance.html#cb1192-8"></a>plus10_vec &lt;-<span class="st"> </span><span class="cf">function</span>(x) {</span>
-<span id="cb1192-9"><a href="20-debuggage-performance.html#cb1192-9"></a>    x <span class="op">+</span><span class="st"> </span><span class="dv">10</span></span>
-<span id="cb1192-10"><a href="20-debuggage-performance.html#cb1192-10"></a>}</span></code></pre></div>
+<div class="sourceCode" id="cb1195"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1195-1"><a href="20-debuggage-performance.html#cb1195-1"></a>plus10_for &lt;-<span class="st"> </span><span class="cf">function</span>(x) {</span>
+<span id="cb1195-2"><a href="20-debuggage-performance.html#cb1195-2"></a>    <span class="cf">for</span> (i <span class="cf">in</span> <span class="kw">seq_along</span>(x)) {</span>
+<span id="cb1195-3"><a href="20-debuggage-performance.html#cb1195-3"></a>        x[i] &lt;-<span class="st"> </span>x[i] <span class="op">+</span><span class="st"> </span><span class="dv">10</span></span>
+<span id="cb1195-4"><a href="20-debuggage-performance.html#cb1195-4"></a>    }</span>
+<span id="cb1195-5"><a href="20-debuggage-performance.html#cb1195-5"></a>    x</span>
+<span id="cb1195-6"><a href="20-debuggage-performance.html#cb1195-6"></a>}</span>
+<span id="cb1195-7"><a href="20-debuggage-performance.html#cb1195-7"></a></span>
+<span id="cb1195-8"><a href="20-debuggage-performance.html#cb1195-8"></a>plus10_vec &lt;-<span class="st"> </span><span class="cf">function</span>(x) {</span>
+<span id="cb1195-9"><a href="20-debuggage-performance.html#cb1195-9"></a>    x <span class="op">+</span><span class="st"> </span><span class="dv">10</span></span>
+<span id="cb1195-10"><a href="20-debuggage-performance.html#cb1195-10"></a>}</span></code></pre></div>
 <p>On lance un benchmark avec <code>bench::mark()</code> et on stocke le résultat dans un objet.</p>
-<div class="sourceCode" id="cb1193"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1193-1"><a href="20-debuggage-performance.html#cb1193-1"></a>x &lt;-<span class="st"> </span><span class="dv">1</span><span class="op">:</span><span class="dv">10000</span></span>
-<span id="cb1193-2"><a href="20-debuggage-performance.html#cb1193-2"></a>bnch &lt;-<span class="st"> </span>bench<span class="op">::</span><span class="kw">mark</span>(</span>
-<span id="cb1193-3"><a href="20-debuggage-performance.html#cb1193-3"></a>    <span class="kw">plus10_for</span>(x),</span>
-<span id="cb1193-4"><a href="20-debuggage-performance.html#cb1193-4"></a>    <span class="kw">plus10_vec</span>(x)</span>
-<span id="cb1193-5"><a href="20-debuggage-performance.html#cb1193-5"></a>)</span></code></pre></div>
+<div class="sourceCode" id="cb1196"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1196-1"><a href="20-debuggage-performance.html#cb1196-1"></a>x &lt;-<span class="st"> </span><span class="dv">1</span><span class="op">:</span><span class="dv">10000</span></span>
+<span id="cb1196-2"><a href="20-debuggage-performance.html#cb1196-2"></a>bnch &lt;-<span class="st"> </span>bench<span class="op">::</span><span class="kw">mark</span>(</span>
+<span id="cb1196-3"><a href="20-debuggage-performance.html#cb1196-3"></a>    <span class="kw">plus10_for</span>(x),</span>
+<span id="cb1196-4"><a href="20-debuggage-performance.html#cb1196-4"></a>    <span class="kw">plus10_vec</span>(x)</span>
+<span id="cb1196-5"><a href="20-debuggage-performance.html#cb1196-5"></a>)</span></code></pre></div>
 <p>On affiche les résultats obtenus :</p>
-<div class="sourceCode" id="cb1194"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1194-1"><a href="20-debuggage-performance.html#cb1194-1"></a>bnch</span>
-<span id="cb1194-2"><a href="20-debuggage-performance.html#cb1194-2"></a><span class="co">#&gt; # A tibble: 2 × 6</span></span>
-<span id="cb1194-3"><a href="20-debuggage-performance.html#cb1194-3"></a><span class="co">#&gt;   expression         min   median `itr/sec` mem_alloc `gc/sec`</span></span>
-<span id="cb1194-4"><a href="20-debuggage-performance.html#cb1194-4"></a><span class="co">#&gt;   &lt;bch:expr&gt;    &lt;bch:tm&gt; &lt;bch:tm&gt;     &lt;dbl&gt; &lt;bch:byt&gt;    &lt;dbl&gt;</span></span>
-<span id="cb1194-5"><a href="20-debuggage-performance.html#cb1194-5"></a><span class="co">#&gt; 1 plus10_for(x)    705µs  837.2µs     1120.    97.6KB     4.13</span></span>
-<span id="cb1194-6"><a href="20-debuggage-performance.html#cb1194-6"></a><span class="co">#&gt; 2 plus10_vec(x)     15µs   17.7µs    49350.   117.3KB   124.</span></span></code></pre></div>
+<div class="sourceCode" id="cb1197"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1197-1"><a href="20-debuggage-performance.html#cb1197-1"></a>bnch</span>
+<span id="cb1197-2"><a href="20-debuggage-performance.html#cb1197-2"></a><span class="co">#&gt; # A tibble: 2 × 6</span></span>
+<span id="cb1197-3"><a href="20-debuggage-performance.html#cb1197-3"></a><span class="co">#&gt;   expression         min   median `itr/sec` mem_alloc `gc/sec`</span></span>
+<span id="cb1197-4"><a href="20-debuggage-performance.html#cb1197-4"></a><span class="co">#&gt;   &lt;bch:expr&gt;    &lt;bch:tm&gt; &lt;bch:tm&gt;     &lt;dbl&gt; &lt;bch:byt&gt;    &lt;dbl&gt;</span></span>
+<span id="cb1197-5"><a href="20-debuggage-performance.html#cb1197-5"></a><span class="co">#&gt; 1 plus10_for(x)  681.3µs  832.6µs     1183.    97.6KB     4.15</span></span>
+<span id="cb1197-6"><a href="20-debuggage-performance.html#cb1197-6"></a><span class="co">#&gt; 2 plus10_vec(x)   14.9µs   17.2µs    51384.   117.3KB   139.</span></span></code></pre></div>
 <p>La colonne la plus importante est sans doute la colonne <code>median</code>, qui affiche le temps médian d’exécution des deux expressions. Attention, l’unité de temps n’est pas forcément la même, ici l’exécution de <code>plus10_for</code> est affichée en millisecondes (“ms”), tandis que celle de <code>plus10_vec</code> l’est en microsecondes (“µs”) donc avec une unité mille fois plus petite.</p>
 <p>Si on préfère, on peut afficher les performances relatives des deux fonctions avec :</p>
-<div class="sourceCode" id="cb1195"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1195-1"><a href="20-debuggage-performance.html#cb1195-1"></a><span class="kw">summary</span>(bnch, <span class="dt">relative =</span> <span class="ot">TRUE</span>)</span>
-<span id="cb1195-2"><a href="20-debuggage-performance.html#cb1195-2"></a><span class="co">#&gt; # A tibble: 2 × 6</span></span>
-<span id="cb1195-3"><a href="20-debuggage-performance.html#cb1195-3"></a><span class="co">#&gt;   expression      min median `itr/sec` mem_alloc `gc/sec`</span></span>
-<span id="cb1195-4"><a href="20-debuggage-performance.html#cb1195-4"></a><span class="co">#&gt;   &lt;bch:expr&gt;    &lt;dbl&gt;  &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;</span></span>
-<span id="cb1195-5"><a href="20-debuggage-performance.html#cb1195-5"></a><span class="co">#&gt; 1 plus10_for(x)  47.0   47.3       1        1         1  </span></span>
-<span id="cb1195-6"><a href="20-debuggage-performance.html#cb1195-6"></a><span class="co">#&gt; 2 plus10_vec(x)   1      1        44.1      1.20     29.9</span></span></code></pre></div>
+<div class="sourceCode" id="cb1198"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1198-1"><a href="20-debuggage-performance.html#cb1198-1"></a><span class="kw">summary</span>(bnch, <span class="dt">relative =</span> <span class="ot">TRUE</span>)</span>
+<span id="cb1198-2"><a href="20-debuggage-performance.html#cb1198-2"></a><span class="co">#&gt; # A tibble: 2 × 6</span></span>
+<span id="cb1198-3"><a href="20-debuggage-performance.html#cb1198-3"></a><span class="co">#&gt;   expression      min median `itr/sec` mem_alloc `gc/sec`</span></span>
+<span id="cb1198-4"><a href="20-debuggage-performance.html#cb1198-4"></a><span class="co">#&gt;   &lt;bch:expr&gt;    &lt;dbl&gt;  &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;</span></span>
+<span id="cb1198-5"><a href="20-debuggage-performance.html#cb1198-5"></a><span class="co">#&gt; 1 plus10_for(x)  45.7   48.4       1        1         1  </span></span>
+<span id="cb1198-6"><a href="20-debuggage-performance.html#cb1198-6"></a><span class="co">#&gt; 2 plus10_vec(x)   1      1        43.4      1.20     33.5</span></span></code></pre></div>
 <p>Ces résultats nous permettent de voir que la version <code>vec</code> est très nettement plus rapide que la version <code>for</code> ! Ce qui confirme le fait qu’il faut toujours prioriser l’utilisation de fonctions vectorisées lorsqu’elles existent.</p>
 <p>On prend un second exemple : on souhaite mesurer si l’utilisation de <code>map</code> est plus rapide ou non qu’une boucle <code>for</code> pour une tâche équivalente.</p>
 <p>Pour cela on commence par créer artificiellement une liste de 200 tableaux de données en dupliquant 100 fois une liste composée des tableaux <code>rp2012</code> et <code>hdv2003</code>.</p>
-<div class="sourceCode" id="cb1196"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1196-1"><a href="20-debuggage-performance.html#cb1196-1"></a>dfs &lt;-<span class="st"> </span><span class="kw">list</span>(rp2012, hdv2003)</span>
-<span id="cb1196-2"><a href="20-debuggage-performance.html#cb1196-2"></a>dfs &lt;-<span class="st"> </span><span class="kw">rep</span>(dfs, <span class="dv">100</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb1199"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1199-1"><a href="20-debuggage-performance.html#cb1199-1"></a>dfs &lt;-<span class="st"> </span><span class="kw">list</span>(rp2012, hdv2003)</span>
+<span id="cb1199-2"><a href="20-debuggage-performance.html#cb1199-2"></a>dfs &lt;-<span class="st"> </span><span class="kw">rep</span>(dfs, <span class="dv">100</span>)</span></code></pre></div>
 <p>Puis on lance un benchmark sur une boucle <code>for</code> et un <code>map</code> qui retournent chacun les nombres de ligne des 200 tableaux. Cette-fois on ne crée pas de fonctions : on passe le code directement à <code>bench::mark()</code>, avec des noms permettant de les identifier plus facilement dans les résultats.</p>
-<div class="sourceCode" id="cb1197"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1197-1"><a href="20-debuggage-performance.html#cb1197-1"></a>bench<span class="op">::</span><span class="kw">mark</span>(</span>
-<span id="cb1197-2"><a href="20-debuggage-performance.html#cb1197-2"></a>    <span class="dt">boucle_for =</span> {</span>
-<span id="cb1197-3"><a href="20-debuggage-performance.html#cb1197-3"></a>        res &lt;-<span class="st"> </span><span class="kw">list</span>()</span>
-<span id="cb1197-4"><a href="20-debuggage-performance.html#cb1197-4"></a>        <span class="cf">for</span> (df <span class="cf">in</span> dfs) {</span>
-<span id="cb1197-5"><a href="20-debuggage-performance.html#cb1197-5"></a>            res &lt;-<span class="st"> </span><span class="kw">c</span>(res, <span class="kw">nrow</span>(df))</span>
-<span id="cb1197-6"><a href="20-debuggage-performance.html#cb1197-6"></a>        }</span>
-<span id="cb1197-7"><a href="20-debuggage-performance.html#cb1197-7"></a>        res</span>
-<span id="cb1197-8"><a href="20-debuggage-performance.html#cb1197-8"></a>    },</span>
-<span id="cb1197-9"><a href="20-debuggage-performance.html#cb1197-9"></a>    <span class="dt">map =</span> <span class="kw">map</span>(dfs, <span class="op">~</span><span class="st"> </span><span class="kw">nrow</span>(.x) )</span>
-<span id="cb1197-10"><a href="20-debuggage-performance.html#cb1197-10"></a>)</span>
-<span id="cb1197-11"><a href="20-debuggage-performance.html#cb1197-11"></a><span class="co">#&gt; # A tibble: 2 × 6</span></span>
-<span id="cb1197-12"><a href="20-debuggage-performance.html#cb1197-12"></a><span class="co">#&gt;   expression      min   median `itr/sec` mem_alloc `gc/sec`</span></span>
-<span id="cb1197-13"><a href="20-debuggage-performance.html#cb1197-13"></a><span class="co">#&gt;   &lt;bch:expr&gt; &lt;bch:tm&gt; &lt;bch:tm&gt;     &lt;dbl&gt; &lt;bch:byt&gt;    &lt;dbl&gt;</span></span>
-<span id="cb1197-14"><a href="20-debuggage-performance.html#cb1197-14"></a><span class="co">#&gt; 1 boucle_for   4.14ms   4.78ms      202.  177.42KB     4.22</span></span>
-<span id="cb1197-15"><a href="20-debuggage-performance.html#cb1197-15"></a><span class="co">#&gt; 2 map        883.11µs   1.15ms      831.    6.81KB     6.30</span></span></code></pre></div>
+<div class="sourceCode" id="cb1200"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1200-1"><a href="20-debuggage-performance.html#cb1200-1"></a>bench<span class="op">::</span><span class="kw">mark</span>(</span>
+<span id="cb1200-2"><a href="20-debuggage-performance.html#cb1200-2"></a>    <span class="dt">boucle_for =</span> {</span>
+<span id="cb1200-3"><a href="20-debuggage-performance.html#cb1200-3"></a>        res &lt;-<span class="st"> </span><span class="kw">list</span>()</span>
+<span id="cb1200-4"><a href="20-debuggage-performance.html#cb1200-4"></a>        <span class="cf">for</span> (df <span class="cf">in</span> dfs) {</span>
+<span id="cb1200-5"><a href="20-debuggage-performance.html#cb1200-5"></a>            res &lt;-<span class="st"> </span><span class="kw">c</span>(res, <span class="kw">nrow</span>(df))</span>
+<span id="cb1200-6"><a href="20-debuggage-performance.html#cb1200-6"></a>        }</span>
+<span id="cb1200-7"><a href="20-debuggage-performance.html#cb1200-7"></a>        res</span>
+<span id="cb1200-8"><a href="20-debuggage-performance.html#cb1200-8"></a>    },</span>
+<span id="cb1200-9"><a href="20-debuggage-performance.html#cb1200-9"></a>    <span class="dt">map =</span> <span class="kw">map</span>(dfs, <span class="op">~</span><span class="st"> </span><span class="kw">nrow</span>(.x) )</span>
+<span id="cb1200-10"><a href="20-debuggage-performance.html#cb1200-10"></a>)</span>
+<span id="cb1200-11"><a href="20-debuggage-performance.html#cb1200-11"></a><span class="co">#&gt; # A tibble: 2 × 6</span></span>
+<span id="cb1200-12"><a href="20-debuggage-performance.html#cb1200-12"></a><span class="co">#&gt;   expression      min   median `itr/sec` mem_alloc `gc/sec`</span></span>
+<span id="cb1200-13"><a href="20-debuggage-performance.html#cb1200-13"></a><span class="co">#&gt;   &lt;bch:expr&gt; &lt;bch:tm&gt; &lt;bch:tm&gt;     &lt;dbl&gt; &lt;bch:byt&gt;    &lt;dbl&gt;</span></span>
+<span id="cb1200-14"><a href="20-debuggage-performance.html#cb1200-14"></a><span class="co">#&gt; 1 boucle_for   3.96ms   4.55ms      218.  177.42KB     4.23</span></span>
+<span id="cb1200-15"><a href="20-debuggage-performance.html#cb1200-15"></a><span class="co">#&gt; 2 map        891.29µs   1.11ms      868.    6.81KB     6.32</span></span></code></pre></div>
 <p>La lecture du résultat indique que le <code>map</code> est environ 4 fois plus rapide que la boucle <code>for</code>.</p>
 <p>Attention cependant en lisant ces résultats : dans la comparaison précédente les temps d’exécution étant en millisecondes, même une différence du type “4 fois plus rapide” peut être quasiment imperceptible. Dans l’exemple suivant on compare de la même manière <code>for</code> et <code>map</code>, mais cette fois en effectuant une action plus coûteuse en temps de calcul (on génère des vecteurs de nombres aléatoires).</p>
-<div class="sourceCode" id="cb1198"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1198-1"><a href="20-debuggage-performance.html#cb1198-1"></a>bench<span class="op">::</span><span class="kw">mark</span>(</span>
-<span id="cb1198-2"><a href="20-debuggage-performance.html#cb1198-2"></a>    <span class="dt">boucle_for =</span> {</span>
-<span id="cb1198-3"><a href="20-debuggage-performance.html#cb1198-3"></a>        res &lt;-<span class="st"> </span><span class="kw">numeric</span>()</span>
-<span id="cb1198-4"><a href="20-debuggage-performance.html#cb1198-4"></a>        <span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span><span class="dv">100</span>) {</span>
-<span id="cb1198-5"><a href="20-debuggage-performance.html#cb1198-5"></a>            res &lt;-<span class="st"> </span><span class="kw">c</span>(res, <span class="kw">mean</span>(<span class="kw">runif</span>(<span class="dv">50000</span>)))</span>
-<span id="cb1198-6"><a href="20-debuggage-performance.html#cb1198-6"></a>        }</span>
-<span id="cb1198-7"><a href="20-debuggage-performance.html#cb1198-7"></a>        res</span>
-<span id="cb1198-8"><a href="20-debuggage-performance.html#cb1198-8"></a>    },</span>
-<span id="cb1198-9"><a href="20-debuggage-performance.html#cb1198-9"></a>    <span class="dt">map =</span> <span class="kw">map_dbl</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">100</span>, <span class="op">~</span><span class="st"> </span><span class="kw">mean</span>(<span class="kw">runif</span>(<span class="dv">50000</span>))),</span>
-<span id="cb1198-10"><a href="20-debuggage-performance.html#cb1198-10"></a>    <span class="dt">check =</span> <span class="ot">FALSE</span></span>
-<span id="cb1198-11"><a href="20-debuggage-performance.html#cb1198-11"></a>)</span>
-<span id="cb1198-12"><a href="20-debuggage-performance.html#cb1198-12"></a><span class="co">#&gt; # A tibble: 2 × 6</span></span>
-<span id="cb1198-13"><a href="20-debuggage-performance.html#cb1198-13"></a><span class="co">#&gt;   expression      min   median `itr/sec` mem_alloc `gc/sec`</span></span>
-<span id="cb1198-14"><a href="20-debuggage-performance.html#cb1198-14"></a><span class="co">#&gt;   &lt;bch:expr&gt; &lt;bch:tm&gt; &lt;bch:tm&gt;     &lt;dbl&gt; &lt;bch:byt&gt;    &lt;dbl&gt;</span></span>
-<span id="cb1198-15"><a href="20-debuggage-performance.html#cb1198-15"></a><span class="co">#&gt; 1 boucle_for    208ms    221ms      4.58    38.5MB     0   </span></span>
-<span id="cb1198-16"><a href="20-debuggage-performance.html#cb1198-16"></a><span class="co">#&gt; 2 map           203ms    210ms      4.77    38.4MB     2.39</span></span></code></pre></div>
+<div class="sourceCode" id="cb1201"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1201-1"><a href="20-debuggage-performance.html#cb1201-1"></a>bench<span class="op">::</span><span class="kw">mark</span>(</span>
+<span id="cb1201-2"><a href="20-debuggage-performance.html#cb1201-2"></a>    <span class="dt">boucle_for =</span> {</span>
+<span id="cb1201-3"><a href="20-debuggage-performance.html#cb1201-3"></a>        res &lt;-<span class="st"> </span><span class="kw">numeric</span>()</span>
+<span id="cb1201-4"><a href="20-debuggage-performance.html#cb1201-4"></a>        <span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span><span class="dv">100</span>) {</span>
+<span id="cb1201-5"><a href="20-debuggage-performance.html#cb1201-5"></a>            res &lt;-<span class="st"> </span><span class="kw">c</span>(res, <span class="kw">mean</span>(<span class="kw">runif</span>(<span class="dv">50000</span>)))</span>
+<span id="cb1201-6"><a href="20-debuggage-performance.html#cb1201-6"></a>        }</span>
+<span id="cb1201-7"><a href="20-debuggage-performance.html#cb1201-7"></a>        res</span>
+<span id="cb1201-8"><a href="20-debuggage-performance.html#cb1201-8"></a>    },</span>
+<span id="cb1201-9"><a href="20-debuggage-performance.html#cb1201-9"></a>    <span class="dt">map =</span> <span class="kw">map_dbl</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">100</span>, <span class="op">~</span><span class="st"> </span><span class="kw">mean</span>(<span class="kw">runif</span>(<span class="dv">50000</span>))),</span>
+<span id="cb1201-10"><a href="20-debuggage-performance.html#cb1201-10"></a>    <span class="dt">check =</span> <span class="ot">FALSE</span></span>
+<span id="cb1201-11"><a href="20-debuggage-performance.html#cb1201-11"></a>)</span>
+<span id="cb1201-12"><a href="20-debuggage-performance.html#cb1201-12"></a><span class="co">#&gt; # A tibble: 2 × 6</span></span>
+<span id="cb1201-13"><a href="20-debuggage-performance.html#cb1201-13"></a><span class="co">#&gt;   expression      min   median `itr/sec` mem_alloc `gc/sec`</span></span>
+<span id="cb1201-14"><a href="20-debuggage-performance.html#cb1201-14"></a><span class="co">#&gt;   &lt;bch:expr&gt; &lt;bch:tm&gt; &lt;bch:tm&gt;     &lt;dbl&gt; &lt;bch:byt&gt;    &lt;dbl&gt;</span></span>
+<span id="cb1201-15"><a href="20-debuggage-performance.html#cb1201-15"></a><span class="co">#&gt; 1 boucle_for    208ms    213ms      4.70    38.5MB     0   </span></span>
+<span id="cb1201-16"><a href="20-debuggage-performance.html#cb1201-16"></a><span class="co">#&gt; 2 map           202ms    207ms      4.83    38.4MB     2.42</span></span></code></pre></div>
 <p>Dans ce cas la différence entre <code>for</code> et <code>map</code> devient négligeable par rapport aux temps de calcul des opérations effectuées dans les boucles : au final les temps d’exécution sont presque identiques.</p>
 </div>
 <div id="quelques-conseils-doptimisation" class="section level2">
@@ -980,68 +980,68 @@ Pour plus d’informations on pourra se reporter aux ressources en fin de chapit
 <div id="privilégier-les-fonctions-vectorisées" class="section level3">
 <h3><span class="header-section-number">20.3.1</span> Privilégier les fonctions vectorisées</h3>
 <p>On l’a déjà dit, redit et reredit, une des forces de R est de proposer un grand nombre de fonctions vectorisées, c’est-à-dire prévues et optimisées pour s’appliquer à tous les éléments d’un vecteur. Quand une fonction vectorisée existe, il est donc toujours préférable de l’utiliser plutôt qu’une boucle ou un <code>map</code>.</p>
-<div class="sourceCode" id="cb1199"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1199-1"><a href="20-debuggage-performance.html#cb1199-1"></a>v &lt;-<span class="st"> </span><span class="kw">rep</span>(<span class="kw">c</span>(<span class="st">&quot;Pomme&quot;</span>, <span class="st">&quot;Poire&quot;</span>, <span class="st">&quot;Fraise&quot;</span>), <span class="dv">100</span>)</span>
-<span id="cb1199-2"><a href="20-debuggage-performance.html#cb1199-2"></a>bench<span class="op">::</span><span class="kw">mark</span>(</span>
-<span id="cb1199-3"><a href="20-debuggage-performance.html#cb1199-3"></a>    <span class="dt">boucle =</span> {</span>
-<span id="cb1199-4"><a href="20-debuggage-performance.html#cb1199-4"></a>        <span class="kw">map_int</span>(v, str_count, <span class="st">&quot;m&quot;</span>)</span>
-<span id="cb1199-5"><a href="20-debuggage-performance.html#cb1199-5"></a>    },</span>
-<span id="cb1199-6"><a href="20-debuggage-performance.html#cb1199-6"></a>    <span class="dt">vec =</span> <span class="kw">str_count</span>(v, <span class="st">&quot;m&quot;</span>)</span>
-<span id="cb1199-7"><a href="20-debuggage-performance.html#cb1199-7"></a>)</span>
-<span id="cb1199-8"><a href="20-debuggage-performance.html#cb1199-8"></a><span class="co">#&gt; # A tibble: 2 × 6</span></span>
-<span id="cb1199-9"><a href="20-debuggage-performance.html#cb1199-9"></a><span class="co">#&gt;   expression      min   median `itr/sec` mem_alloc `gc/sec`</span></span>
-<span id="cb1199-10"><a href="20-debuggage-performance.html#cb1199-10"></a><span class="co">#&gt;   &lt;bch:expr&gt; &lt;bch:tm&gt; &lt;bch:tm&gt;     &lt;dbl&gt; &lt;bch:byt&gt;    &lt;dbl&gt;</span></span>
-<span id="cb1199-11"><a href="20-debuggage-performance.html#cb1199-11"></a><span class="co">#&gt; 1 boucle        3.4ms   3.89ms      247.    1.22KB     2.04</span></span>
-<span id="cb1199-12"><a href="20-debuggage-performance.html#cb1199-12"></a><span class="co">#&gt; 2 vec          58.7µs   71.7µs    12566.    1.22KB     2.03</span></span></code></pre></div>
+<div class="sourceCode" id="cb1202"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1202-1"><a href="20-debuggage-performance.html#cb1202-1"></a>v &lt;-<span class="st"> </span><span class="kw">rep</span>(<span class="kw">c</span>(<span class="st">&quot;Pomme&quot;</span>, <span class="st">&quot;Poire&quot;</span>, <span class="st">&quot;Fraise&quot;</span>), <span class="dv">100</span>)</span>
+<span id="cb1202-2"><a href="20-debuggage-performance.html#cb1202-2"></a>bench<span class="op">::</span><span class="kw">mark</span>(</span>
+<span id="cb1202-3"><a href="20-debuggage-performance.html#cb1202-3"></a>    <span class="dt">boucle =</span> {</span>
+<span id="cb1202-4"><a href="20-debuggage-performance.html#cb1202-4"></a>        <span class="kw">map_int</span>(v, str_count, <span class="st">&quot;m&quot;</span>)</span>
+<span id="cb1202-5"><a href="20-debuggage-performance.html#cb1202-5"></a>    },</span>
+<span id="cb1202-6"><a href="20-debuggage-performance.html#cb1202-6"></a>    <span class="dt">vec =</span> <span class="kw">str_count</span>(v, <span class="st">&quot;m&quot;</span>)</span>
+<span id="cb1202-7"><a href="20-debuggage-performance.html#cb1202-7"></a>)</span>
+<span id="cb1202-8"><a href="20-debuggage-performance.html#cb1202-8"></a><span class="co">#&gt; # A tibble: 2 × 6</span></span>
+<span id="cb1202-9"><a href="20-debuggage-performance.html#cb1202-9"></a><span class="co">#&gt;   expression      min   median `itr/sec` mem_alloc `gc/sec`</span></span>
+<span id="cb1202-10"><a href="20-debuggage-performance.html#cb1202-10"></a><span class="co">#&gt;   &lt;bch:expr&gt; &lt;bch:tm&gt; &lt;bch:tm&gt;     &lt;dbl&gt; &lt;bch:byt&gt;    &lt;dbl&gt;</span></span>
+<span id="cb1202-11"><a href="20-debuggage-performance.html#cb1202-11"></a><span class="co">#&gt; 1 boucle       3.16ms   3.73ms      266.    1.22KB     2.04</span></span>
+<span id="cb1202-12"><a href="20-debuggage-performance.html#cb1202-12"></a><span class="co">#&gt; 2 vec          60.6µs   71.1µs    12813.    1.22KB     2.04</span></span></code></pre></div>
 </div>
 <div id="mettre-le-minimum-dopérations-dans-les-boucles" class="section level3">
 <h3><span class="header-section-number">20.3.2</span> Mettre le minimum d’opérations dans les boucles</h3>
 <p>Si vous utilisez une boucle, toute opération qu’elle contient, comme elle va être répétée, peut devenir rapidement très coûteuse. Il ne faut donc y mettre que les opérations réellement nécessaires.</p>
 <p>La fonction suivante prend en entrée un tableau de données <code>d</code> et une chaîne de caractères <code>chr</code>, et retourne un vecteur nommé indiquant le nombre de fois ou cette valeur apparaît dans chaque colonne du tableau. On a décidé de convertir en minuscules à la fois la valeur de <code>chr</code> et l’ensemble des colonnes du tableau pour que le comptage ne prenne pas en compte les différences de majuscules/minuscules.</p>
-<div class="sourceCode" id="cb1200"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1200-1"><a href="20-debuggage-performance.html#cb1200-1"></a>nb_chaine1 &lt;-<span class="st"> </span><span class="cf">function</span>(d, chr) {</span>
-<span id="cb1200-2"><a href="20-debuggage-performance.html#cb1200-2"></a>    res &lt;-<span class="st"> </span><span class="kw">numeric</span>()</span>
-<span id="cb1200-3"><a href="20-debuggage-performance.html#cb1200-3"></a>    <span class="cf">for</span> (var <span class="cf">in</span> <span class="kw">names</span>(d)) {</span>
-<span id="cb1200-4"><a href="20-debuggage-performance.html#cb1200-4"></a>        <span class="co"># Conversion de chr et des colonnes de d en minuscules</span></span>
-<span id="cb1200-5"><a href="20-debuggage-performance.html#cb1200-5"></a>        d &lt;-<span class="st"> </span>d <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">modify</span>(str_to_lower)</span>
-<span id="cb1200-6"><a href="20-debuggage-performance.html#cb1200-6"></a>        chr &lt;-<span class="st"> </span><span class="kw">str_to_lower</span>(chr)</span>
-<span id="cb1200-7"><a href="20-debuggage-performance.html#cb1200-7"></a>        <span class="co"># Comptage des occurrences de chr dans la colonne var</span></span>
-<span id="cb1200-8"><a href="20-debuggage-performance.html#cb1200-8"></a>        res[[var]] &lt;-<span class="st"> </span><span class="kw">sum</span>(d[[var]] <span class="op">==</span><span class="st"> </span>chr, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>)</span>
-<span id="cb1200-9"><a href="20-debuggage-performance.html#cb1200-9"></a>    }</span>
-<span id="cb1200-10"><a href="20-debuggage-performance.html#cb1200-10"></a>    res</span>
-<span id="cb1200-11"><a href="20-debuggage-performance.html#cb1200-11"></a>}</span>
-<span id="cb1200-12"><a href="20-debuggage-performance.html#cb1200-12"></a></span>
-<span id="cb1200-13"><a href="20-debuggage-performance.html#cb1200-13"></a>d &lt;-<span class="st"> </span>hdv2003[, <span class="kw">c</span>(<span class="st">&quot;hard.rock&quot;</span>, <span class="st">&quot;qualif&quot;</span>, <span class="st">&quot;clso&quot;</span>, <span class="st">&quot;bricol&quot;</span>)]</span>
-<span id="cb1200-14"><a href="20-debuggage-performance.html#cb1200-14"></a><span class="kw">nb_chaine1</span>(d, <span class="st">&quot;oui&quot;</span>)</span>
-<span id="cb1200-15"><a href="20-debuggage-performance.html#cb1200-15"></a><span class="co">#&gt; hard.rock    qualif      clso    bricol </span></span>
-<span id="cb1200-16"><a href="20-debuggage-performance.html#cb1200-16"></a><span class="co">#&gt;        14         0       936       853</span></span></code></pre></div>
+<div class="sourceCode" id="cb1203"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1203-1"><a href="20-debuggage-performance.html#cb1203-1"></a>nb_chaine1 &lt;-<span class="st"> </span><span class="cf">function</span>(d, chr) {</span>
+<span id="cb1203-2"><a href="20-debuggage-performance.html#cb1203-2"></a>    res &lt;-<span class="st"> </span><span class="kw">numeric</span>()</span>
+<span id="cb1203-3"><a href="20-debuggage-performance.html#cb1203-3"></a>    <span class="cf">for</span> (var <span class="cf">in</span> <span class="kw">names</span>(d)) {</span>
+<span id="cb1203-4"><a href="20-debuggage-performance.html#cb1203-4"></a>        <span class="co"># Conversion de chr et des colonnes de d en minuscules</span></span>
+<span id="cb1203-5"><a href="20-debuggage-performance.html#cb1203-5"></a>        d &lt;-<span class="st"> </span>d <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">modify</span>(str_to_lower)</span>
+<span id="cb1203-6"><a href="20-debuggage-performance.html#cb1203-6"></a>        chr &lt;-<span class="st"> </span><span class="kw">str_to_lower</span>(chr)</span>
+<span id="cb1203-7"><a href="20-debuggage-performance.html#cb1203-7"></a>        <span class="co"># Comptage des occurrences de chr dans la colonne var</span></span>
+<span id="cb1203-8"><a href="20-debuggage-performance.html#cb1203-8"></a>        res[[var]] &lt;-<span class="st"> </span><span class="kw">sum</span>(d[[var]] <span class="op">==</span><span class="st"> </span>chr, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>)</span>
+<span id="cb1203-9"><a href="20-debuggage-performance.html#cb1203-9"></a>    }</span>
+<span id="cb1203-10"><a href="20-debuggage-performance.html#cb1203-10"></a>    res</span>
+<span id="cb1203-11"><a href="20-debuggage-performance.html#cb1203-11"></a>}</span>
+<span id="cb1203-12"><a href="20-debuggage-performance.html#cb1203-12"></a></span>
+<span id="cb1203-13"><a href="20-debuggage-performance.html#cb1203-13"></a>d &lt;-<span class="st"> </span>hdv2003[, <span class="kw">c</span>(<span class="st">&quot;hard.rock&quot;</span>, <span class="st">&quot;qualif&quot;</span>, <span class="st">&quot;clso&quot;</span>, <span class="st">&quot;bricol&quot;</span>)]</span>
+<span id="cb1203-14"><a href="20-debuggage-performance.html#cb1203-14"></a><span class="kw">nb_chaine1</span>(d, <span class="st">&quot;oui&quot;</span>)</span>
+<span id="cb1203-15"><a href="20-debuggage-performance.html#cb1203-15"></a><span class="co">#&gt; hard.rock    qualif      clso    bricol </span></span>
+<span id="cb1203-16"><a href="20-debuggage-performance.html#cb1203-16"></a><span class="co">#&gt;        14         0       936       853</span></span></code></pre></div>
 <p>Ça fonctionne, mais si on regarde un peu plus attentivement le code de la fonction on peut vite se rendre compte d’un problème : les conversions en minuscules sont faites à l’intérieur de la boucle, et sont donc répétées pour chaque colonne de <code>d</code>. Or ceci n’est absolument pas nécessaire puisque cette conversion ne dépend pas des colonnes et qu’elle peut être faite une seule et unique fois en début de fonction.</p>
 <p>On décide donc de sortir les conversions en minuscules de la boucle.</p>
-<div class="sourceCode" id="cb1201"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1201-1"><a href="20-debuggage-performance.html#cb1201-1"></a>nb_chaine2 &lt;-<span class="st"> </span><span class="cf">function</span>(d, chr) {</span>
-<span id="cb1201-2"><a href="20-debuggage-performance.html#cb1201-2"></a>    res &lt;-<span class="st"> </span><span class="kw">numeric</span>()</span>
-<span id="cb1201-3"><a href="20-debuggage-performance.html#cb1201-3"></a></span>
-<span id="cb1201-4"><a href="20-debuggage-performance.html#cb1201-4"></a>    <span class="co"># Conversion de chr et des colonnes de d en minuscules</span></span>
-<span id="cb1201-5"><a href="20-debuggage-performance.html#cb1201-5"></a>    d &lt;-<span class="st"> </span>d <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">modify</span>(str_to_lower)</span>
-<span id="cb1201-6"><a href="20-debuggage-performance.html#cb1201-6"></a>    chr &lt;-<span class="st"> </span><span class="kw">str_to_lower</span>(chr)</span>
-<span id="cb1201-7"><a href="20-debuggage-performance.html#cb1201-7"></a></span>
-<span id="cb1201-8"><a href="20-debuggage-performance.html#cb1201-8"></a>    <span class="cf">for</span> (var <span class="cf">in</span> <span class="kw">names</span>(d)) {</span>
-<span id="cb1201-9"><a href="20-debuggage-performance.html#cb1201-9"></a>        <span class="co"># Comptage des occurrences de chr dans la colonne var</span></span>
-<span id="cb1201-10"><a href="20-debuggage-performance.html#cb1201-10"></a>        res[[var]] &lt;-<span class="st"> </span><span class="kw">sum</span>(d[[var]] <span class="op">==</span><span class="st"> </span>chr, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>)</span>
-<span id="cb1201-11"><a href="20-debuggage-performance.html#cb1201-11"></a>    }</span>
-<span id="cb1201-12"><a href="20-debuggage-performance.html#cb1201-12"></a>    res</span>
-<span id="cb1201-13"><a href="20-debuggage-performance.html#cb1201-13"></a>}</span>
-<span id="cb1201-14"><a href="20-debuggage-performance.html#cb1201-14"></a></span>
-<span id="cb1201-15"><a href="20-debuggage-performance.html#cb1201-15"></a><span class="kw">nb_chaine2</span>(d, <span class="st">&quot;oui&quot;</span>)</span>
-<span id="cb1201-16"><a href="20-debuggage-performance.html#cb1201-16"></a><span class="co">#&gt; hard.rock    qualif      clso    bricol </span></span>
-<span id="cb1201-17"><a href="20-debuggage-performance.html#cb1201-17"></a><span class="co">#&gt;        14         0       936       853</span></span></code></pre></div>
+<div class="sourceCode" id="cb1204"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1204-1"><a href="20-debuggage-performance.html#cb1204-1"></a>nb_chaine2 &lt;-<span class="st"> </span><span class="cf">function</span>(d, chr) {</span>
+<span id="cb1204-2"><a href="20-debuggage-performance.html#cb1204-2"></a>    res &lt;-<span class="st"> </span><span class="kw">numeric</span>()</span>
+<span id="cb1204-3"><a href="20-debuggage-performance.html#cb1204-3"></a></span>
+<span id="cb1204-4"><a href="20-debuggage-performance.html#cb1204-4"></a>    <span class="co"># Conversion de chr et des colonnes de d en minuscules</span></span>
+<span id="cb1204-5"><a href="20-debuggage-performance.html#cb1204-5"></a>    d &lt;-<span class="st"> </span>d <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">modify</span>(str_to_lower)</span>
+<span id="cb1204-6"><a href="20-debuggage-performance.html#cb1204-6"></a>    chr &lt;-<span class="st"> </span><span class="kw">str_to_lower</span>(chr)</span>
+<span id="cb1204-7"><a href="20-debuggage-performance.html#cb1204-7"></a></span>
+<span id="cb1204-8"><a href="20-debuggage-performance.html#cb1204-8"></a>    <span class="cf">for</span> (var <span class="cf">in</span> <span class="kw">names</span>(d)) {</span>
+<span id="cb1204-9"><a href="20-debuggage-performance.html#cb1204-9"></a>        <span class="co"># Comptage des occurrences de chr dans la colonne var</span></span>
+<span id="cb1204-10"><a href="20-debuggage-performance.html#cb1204-10"></a>        res[[var]] &lt;-<span class="st"> </span><span class="kw">sum</span>(d[[var]] <span class="op">==</span><span class="st"> </span>chr, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>)</span>
+<span id="cb1204-11"><a href="20-debuggage-performance.html#cb1204-11"></a>    }</span>
+<span id="cb1204-12"><a href="20-debuggage-performance.html#cb1204-12"></a>    res</span>
+<span id="cb1204-13"><a href="20-debuggage-performance.html#cb1204-13"></a>}</span>
+<span id="cb1204-14"><a href="20-debuggage-performance.html#cb1204-14"></a></span>
+<span id="cb1204-15"><a href="20-debuggage-performance.html#cb1204-15"></a><span class="kw">nb_chaine2</span>(d, <span class="st">&quot;oui&quot;</span>)</span>
+<span id="cb1204-16"><a href="20-debuggage-performance.html#cb1204-16"></a><span class="co">#&gt; hard.rock    qualif      clso    bricol </span></span>
+<span id="cb1204-17"><a href="20-debuggage-performance.html#cb1204-17"></a><span class="co">#&gt;        14         0       936       853</span></span></code></pre></div>
 <p>Le résultat des deux fonctions est identique. On compare leur temps d’exécution à l’aide de <code>bench::mark()</code>.</p>
-<div class="sourceCode" id="cb1202"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1202-1"><a href="20-debuggage-performance.html#cb1202-1"></a>bench<span class="op">::</span><span class="kw">mark</span>(</span>
-<span id="cb1202-2"><a href="20-debuggage-performance.html#cb1202-2"></a>    <span class="kw">nb_chaine1</span>(d, <span class="st">&quot;oui&quot;</span>),</span>
-<span id="cb1202-3"><a href="20-debuggage-performance.html#cb1202-3"></a>    <span class="kw">nb_chaine2</span>(d, <span class="st">&quot;oui&quot;</span>),</span>
-<span id="cb1202-4"><a href="20-debuggage-performance.html#cb1202-4"></a>)</span>
-<span id="cb1202-5"><a href="20-debuggage-performance.html#cb1202-5"></a><span class="co">#&gt; # A tibble: 2 × 6</span></span>
-<span id="cb1202-6"><a href="20-debuggage-performance.html#cb1202-6"></a><span class="co">#&gt;   expression                min   median `itr/sec` mem_alloc `gc/sec`</span></span>
-<span id="cb1202-7"><a href="20-debuggage-performance.html#cb1202-7"></a><span class="co">#&gt;   &lt;bch:expr&gt;           &lt;bch:tm&gt; &lt;bch:tm&gt;     &lt;dbl&gt; &lt;bch:byt&gt;    &lt;dbl&gt;</span></span>
-<span id="cb1202-8"><a href="20-debuggage-performance.html#cb1202-8"></a><span class="co">#&gt; 1 nb_chaine1(d, &quot;oui&quot;)   3.83ms   4.78ms      206.     345KB        0</span></span>
-<span id="cb1202-9"><a href="20-debuggage-performance.html#cb1202-9"></a><span class="co">#&gt; 2 nb_chaine2(d, &quot;oui&quot;)   1.12ms   1.46ms      648.     157KB        0</span></span></code></pre></div>
+<div class="sourceCode" id="cb1205"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1205-1"><a href="20-debuggage-performance.html#cb1205-1"></a>bench<span class="op">::</span><span class="kw">mark</span>(</span>
+<span id="cb1205-2"><a href="20-debuggage-performance.html#cb1205-2"></a>    <span class="kw">nb_chaine1</span>(d, <span class="st">&quot;oui&quot;</span>),</span>
+<span id="cb1205-3"><a href="20-debuggage-performance.html#cb1205-3"></a>    <span class="kw">nb_chaine2</span>(d, <span class="st">&quot;oui&quot;</span>),</span>
+<span id="cb1205-4"><a href="20-debuggage-performance.html#cb1205-4"></a>)</span>
+<span id="cb1205-5"><a href="20-debuggage-performance.html#cb1205-5"></a><span class="co">#&gt; # A tibble: 2 × 6</span></span>
+<span id="cb1205-6"><a href="20-debuggage-performance.html#cb1205-6"></a><span class="co">#&gt;   expression                min   median `itr/sec` mem_alloc `gc/sec`</span></span>
+<span id="cb1205-7"><a href="20-debuggage-performance.html#cb1205-7"></a><span class="co">#&gt;   &lt;bch:expr&gt;           &lt;bch:tm&gt; &lt;bch:tm&gt;     &lt;dbl&gt; &lt;bch:byt&gt;    &lt;dbl&gt;</span></span>
+<span id="cb1205-8"><a href="20-debuggage-performance.html#cb1205-8"></a><span class="co">#&gt; 1 nb_chaine1(d, &quot;oui&quot;)   4.45ms   5.09ms      193.     345KB        0</span></span>
+<span id="cb1205-9"><a href="20-debuggage-performance.html#cb1205-9"></a><span class="co">#&gt; 2 nb_chaine2(d, &quot;oui&quot;)   1.28ms   1.55ms      636.     157KB        0</span></span></code></pre></div>
 <p>Ce qui permet de constater que la deuxième version est quatre fois plus rapide (et elle sera d’autant plus rapide que le nombre de colonnes du tableau sera grand).</p>
 </div>
 <div id="choisir-un-format-de-fichier-adapté" class="section level3">

@@ -24,7 +24,7 @@
 <meta name="author" content="Julien Barnier" />
 
 
-<meta name="date" content="2021-11-18" />
+<meta name="date" content="2021-11-20" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -1638,13 +1638,55 @@ Il faut bien penser à passer la fonction comme argument du <code>across()</code
 <div id="fonctions-anonymes-et-notations-abrégées" class="section level3">
 <h3><span class="header-section-number">15.6.3</span> Fonctions anonymes et notations abrégées</h3>
 <p><strong>Exercice 3.1</strong></p>
-<p>Soit le code suivant, qui renomme les colonnes du tableau <code>starwars</code> de type liste en leur ajoutant le préfixe “liste_”.</p>
-<div class="sourceCode" id="cb766"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb766-1"><a href="15-dplyr-avance.html#cb766-1"></a>ajoute_prefixe_liste &lt;-<span class="st"> </span><span class="cf">function</span>(nom) {</span>
-<span id="cb766-2"><a href="15-dplyr-avance.html#cb766-2"></a>    <span class="kw">paste0</span>(<span class="st">&quot;liste_&quot;</span>, nom)</span>
+<p>Dans un exercice précédent, on a vu que le code ci-dessous permet de calculer l’étendue des variables <code>height</code> et <code>mass</code> du jeu de données <code>starwars</code>.</p>
+<div class="sourceCode" id="cb766"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb766-1"><a href="15-dplyr-avance.html#cb766-1"></a>etendue &lt;-<span class="st"> </span><span class="cf">function</span>(v) {</span>
+<span id="cb766-2"><a href="15-dplyr-avance.html#cb766-2"></a>    <span class="kw">max</span>(v, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>) <span class="op">-</span><span class="st"> </span><span class="kw">min</span>(v, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>)</span>
 <span id="cb766-3"><a href="15-dplyr-avance.html#cb766-3"></a>}</span>
 <span id="cb766-4"><a href="15-dplyr-avance.html#cb766-4"></a></span>
 <span id="cb766-5"><a href="15-dplyr-avance.html#cb766-5"></a>starwars <span class="op">%&gt;%</span></span>
-<span id="cb766-6"><a href="15-dplyr-avance.html#cb766-6"></a><span class="st">    </span><span class="kw">rename_with</span>(ajoute_prefixe_liste, <span class="dt">.cols =</span> <span class="kw">where</span>(is.list))</span></code></pre></div>
+<span id="cb766-6"><a href="15-dplyr-avance.html#cb766-6"></a><span class="st">    </span><span class="kw">group_by</span>(sex) <span class="op">%&gt;%</span></span>
+<span id="cb766-7"><a href="15-dplyr-avance.html#cb766-7"></a><span class="st">    </span><span class="kw">summarise</span>(</span>
+<span id="cb766-8"><a href="15-dplyr-avance.html#cb766-8"></a>        <span class="kw">across</span>(</span>
+<span id="cb766-9"><a href="15-dplyr-avance.html#cb766-9"></a>            <span class="kw">c</span>(height, mass),</span>
+<span id="cb766-10"><a href="15-dplyr-avance.html#cb766-10"></a>            etendue</span>
+<span id="cb766-11"><a href="15-dplyr-avance.html#cb766-11"></a>        )</span>
+<span id="cb766-12"><a href="15-dplyr-avance.html#cb766-12"></a>    )</span></code></pre></div>
+<p>Modifier ce code en supprimant la définition de <code>etendue</code> et en utilisant à la place une fonction anonyme directement dans le <code>across()</code>.</p>
+
+<div class="solution-exo">
+<div class="sourceCode" id="cb767"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb767-1"><a href="15-dplyr-avance.html#cb767-1"></a>starwars <span class="op">%&gt;%</span></span>
+<span id="cb767-2"><a href="15-dplyr-avance.html#cb767-2"></a><span class="st">    </span><span class="kw">group_by</span>(sex) <span class="op">%&gt;%</span></span>
+<span id="cb767-3"><a href="15-dplyr-avance.html#cb767-3"></a><span class="st">    </span><span class="kw">summarise</span>(</span>
+<span id="cb767-4"><a href="15-dplyr-avance.html#cb767-4"></a>        <span class="kw">across</span>(</span>
+<span id="cb767-5"><a href="15-dplyr-avance.html#cb767-5"></a>            <span class="kw">c</span>(height, mass),</span>
+<span id="cb767-6"><a href="15-dplyr-avance.html#cb767-6"></a>            <span class="cf">function</span>(v) {</span>
+<span id="cb767-7"><a href="15-dplyr-avance.html#cb767-7"></a>               <span class="kw">max</span>(v, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>) <span class="op">-</span><span class="st"> </span><span class="kw">min</span>(v, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>)</span>
+<span id="cb767-8"><a href="15-dplyr-avance.html#cb767-8"></a>            }</span>
+<span id="cb767-9"><a href="15-dplyr-avance.html#cb767-9"></a>        )</span>
+<span id="cb767-10"><a href="15-dplyr-avance.html#cb767-10"></a>    )</span></code></pre></div>
+</div>
+
+<p>Modifier à nouveau ce code pour utiliser la syntaxe abrégée de type “formule” du <em>tidyverse</em>.</p>
+
+<div class="solution-exo">
+<div class="sourceCode" id="cb768"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb768-1"><a href="15-dplyr-avance.html#cb768-1"></a>starwars <span class="op">%&gt;%</span></span>
+<span id="cb768-2"><a href="15-dplyr-avance.html#cb768-2"></a><span class="st">    </span><span class="kw">group_by</span>(sex) <span class="op">%&gt;%</span></span>
+<span id="cb768-3"><a href="15-dplyr-avance.html#cb768-3"></a><span class="st">    </span><span class="kw">summarise</span>(</span>
+<span id="cb768-4"><a href="15-dplyr-avance.html#cb768-4"></a>        <span class="kw">across</span>(</span>
+<span id="cb768-5"><a href="15-dplyr-avance.html#cb768-5"></a>            <span class="kw">c</span>(height, mass),</span>
+<span id="cb768-6"><a href="15-dplyr-avance.html#cb768-6"></a>            <span class="op">~</span><span class="st"> </span><span class="kw">max</span>(.x, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>) <span class="op">-</span><span class="st"> </span><span class="kw">min</span>(.x, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>)</span>
+<span id="cb768-7"><a href="15-dplyr-avance.html#cb768-7"></a>        )</span>
+<span id="cb768-8"><a href="15-dplyr-avance.html#cb768-8"></a>    )</span></code></pre></div>
+</div>
+
+<p><strong>Exercice 3.2</strong></p>
+<p>Soit le code suivant, qui renomme les colonnes du tableau <code>starwars</code> de type liste en leur ajoutant le préfixe “liste_”.</p>
+<div class="sourceCode" id="cb769"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb769-1"><a href="15-dplyr-avance.html#cb769-1"></a>ajoute_prefixe_liste &lt;-<span class="st"> </span><span class="cf">function</span>(nom) {</span>
+<span id="cb769-2"><a href="15-dplyr-avance.html#cb769-2"></a>    <span class="kw">paste0</span>(<span class="st">&quot;liste_&quot;</span>, nom)</span>
+<span id="cb769-3"><a href="15-dplyr-avance.html#cb769-3"></a>}</span>
+<span id="cb769-4"><a href="15-dplyr-avance.html#cb769-4"></a></span>
+<span id="cb769-5"><a href="15-dplyr-avance.html#cb769-5"></a>starwars <span class="op">%&gt;%</span></span>
+<span id="cb769-6"><a href="15-dplyr-avance.html#cb769-6"></a><span class="st">    </span><span class="kw">rename_with</span>(ajoute_prefixe_liste, <span class="dt">.cols =</span> <span class="kw">where</span>(is.list))</span></code></pre></div>
 <p>Réécrire ce code avec une fonction anonyme en utilisant les trois notations :</p>
 <ul>
 <li>classique (avec <code>function()</code>)</li>
@@ -1653,119 +1695,119 @@ Il faut bien penser à passer la fonction comme argument du <code>across()</code
 </ul>
 
 <div class="solution-exo">
-<div class="sourceCode" id="cb767"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb767-1"><a href="15-dplyr-avance.html#cb767-1"></a><span class="co"># Classique</span></span>
-<span id="cb767-2"><a href="15-dplyr-avance.html#cb767-2"></a>starwars <span class="op">%&gt;%</span></span>
-<span id="cb767-3"><a href="15-dplyr-avance.html#cb767-3"></a><span class="st">    </span><span class="kw">rename_with</span>(</span>
-<span id="cb767-4"><a href="15-dplyr-avance.html#cb767-4"></a>        <span class="cf">function</span>(nom) { <span class="kw">paste0</span>(<span class="st">&quot;liste_&quot;</span>, nom) },</span>
-<span id="cb767-5"><a href="15-dplyr-avance.html#cb767-5"></a>        <span class="dt">.cols =</span> <span class="kw">where</span>(is.list)</span>
-<span id="cb767-6"><a href="15-dplyr-avance.html#cb767-6"></a>    )</span>
-<span id="cb767-7"><a href="15-dplyr-avance.html#cb767-7"></a><span class="co"># Formule</span></span>
-<span id="cb767-8"><a href="15-dplyr-avance.html#cb767-8"></a>starwars <span class="op">%&gt;%</span></span>
-<span id="cb767-9"><a href="15-dplyr-avance.html#cb767-9"></a><span class="st">    </span><span class="kw">rename_with</span>(</span>
-<span id="cb767-10"><a href="15-dplyr-avance.html#cb767-10"></a>        <span class="op">~</span><span class="st"> </span><span class="kw">paste0</span>(<span class="st">&quot;liste_&quot;</span>, .x),</span>
-<span id="cb767-11"><a href="15-dplyr-avance.html#cb767-11"></a>        <span class="dt">.cols =</span> <span class="kw">where</span>(is.list)</span>
-<span id="cb767-12"><a href="15-dplyr-avance.html#cb767-12"></a>    )</span>
-<span id="cb767-13"><a href="15-dplyr-avance.html#cb767-13"></a><span class="co"># Compacte</span></span>
-<span id="cb767-14"><a href="15-dplyr-avance.html#cb767-14"></a>starwars <span class="op">%&gt;%</span></span>
-<span id="cb767-15"><a href="15-dplyr-avance.html#cb767-15"></a><span class="st">    </span><span class="kw">rename_with</span>(</span>
-<span id="cb767-16"><a href="15-dplyr-avance.html#cb767-16"></a>        \(nom) <span class="kw">paste0</span>(<span class="st">&quot;liste_&quot;</span>, nom),</span>
-<span id="cb767-17"><a href="15-dplyr-avance.html#cb767-17"></a>        <span class="dt">.cols =</span> <span class="kw">where</span>(is.list)</span>
-<span id="cb767-18"><a href="15-dplyr-avance.html#cb767-18"></a>    )</span></code></pre></div>
+<div class="sourceCode" id="cb770"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb770-1"><a href="15-dplyr-avance.html#cb770-1"></a><span class="co"># Classique</span></span>
+<span id="cb770-2"><a href="15-dplyr-avance.html#cb770-2"></a>starwars <span class="op">%&gt;%</span></span>
+<span id="cb770-3"><a href="15-dplyr-avance.html#cb770-3"></a><span class="st">    </span><span class="kw">rename_with</span>(</span>
+<span id="cb770-4"><a href="15-dplyr-avance.html#cb770-4"></a>        <span class="cf">function</span>(nom) { <span class="kw">paste0</span>(<span class="st">&quot;liste_&quot;</span>, nom) },</span>
+<span id="cb770-5"><a href="15-dplyr-avance.html#cb770-5"></a>        <span class="dt">.cols =</span> <span class="kw">where</span>(is.list)</span>
+<span id="cb770-6"><a href="15-dplyr-avance.html#cb770-6"></a>    )</span>
+<span id="cb770-7"><a href="15-dplyr-avance.html#cb770-7"></a><span class="co"># Formule</span></span>
+<span id="cb770-8"><a href="15-dplyr-avance.html#cb770-8"></a>starwars <span class="op">%&gt;%</span></span>
+<span id="cb770-9"><a href="15-dplyr-avance.html#cb770-9"></a><span class="st">    </span><span class="kw">rename_with</span>(</span>
+<span id="cb770-10"><a href="15-dplyr-avance.html#cb770-10"></a>        <span class="op">~</span><span class="st"> </span><span class="kw">paste0</span>(<span class="st">&quot;liste_&quot;</span>, .x),</span>
+<span id="cb770-11"><a href="15-dplyr-avance.html#cb770-11"></a>        <span class="dt">.cols =</span> <span class="kw">where</span>(is.list)</span>
+<span id="cb770-12"><a href="15-dplyr-avance.html#cb770-12"></a>    )</span>
+<span id="cb770-13"><a href="15-dplyr-avance.html#cb770-13"></a><span class="co"># Compacte</span></span>
+<span id="cb770-14"><a href="15-dplyr-avance.html#cb770-14"></a>starwars <span class="op">%&gt;%</span></span>
+<span id="cb770-15"><a href="15-dplyr-avance.html#cb770-15"></a><span class="st">    </span><span class="kw">rename_with</span>(</span>
+<span id="cb770-16"><a href="15-dplyr-avance.html#cb770-16"></a>        \(nom) <span class="kw">paste0</span>(<span class="st">&quot;liste_&quot;</span>, nom),</span>
+<span id="cb770-17"><a href="15-dplyr-avance.html#cb770-17"></a>        <span class="dt">.cols =</span> <span class="kw">where</span>(is.list)</span>
+<span id="cb770-18"><a href="15-dplyr-avance.html#cb770-18"></a>    )</span></code></pre></div>
 </div>
 
-<p><strong>Exercice 3.2</strong></p>
+<p><strong>Exercice 3.3</strong></p>
 <p>Le code suivant indique, pour chaque région du jeu de données <code>rp2012</code>, le nom de la commune ayant la valeur maximale pour les variables <code>dipl_aucun</code> et <code>dipl_sup</code>.</p>
-<div class="sourceCode" id="cb768"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb768-1"><a href="15-dplyr-avance.html#cb768-1"></a>nom_commune_max &lt;-<span class="st"> </span><span class="cf">function</span>(valeurs, communes) {</span>
-<span id="cb768-2"><a href="15-dplyr-avance.html#cb768-2"></a>    communes[valeurs <span class="op">==</span><span class="st"> </span><span class="kw">max</span>(valeurs)]</span>
-<span id="cb768-3"><a href="15-dplyr-avance.html#cb768-3"></a>}</span>
-<span id="cb768-4"><a href="15-dplyr-avance.html#cb768-4"></a></span>
-<span id="cb768-5"><a href="15-dplyr-avance.html#cb768-5"></a>rp2012 <span class="op">%&gt;%</span></span>
-<span id="cb768-6"><a href="15-dplyr-avance.html#cb768-6"></a><span class="st">    </span><span class="kw">group_by</span>(region) <span class="op">%&gt;%</span></span>
-<span id="cb768-7"><a href="15-dplyr-avance.html#cb768-7"></a><span class="st">    </span><span class="kw">summarise</span>(</span>
-<span id="cb768-8"><a href="15-dplyr-avance.html#cb768-8"></a>        <span class="kw">across</span>(</span>
-<span id="cb768-9"><a href="15-dplyr-avance.html#cb768-9"></a>            <span class="kw">c</span>(dipl_aucun, dipl_sup),</span>
-<span id="cb768-10"><a href="15-dplyr-avance.html#cb768-10"></a>            nom_commune_max,</span>
-<span id="cb768-11"><a href="15-dplyr-avance.html#cb768-11"></a>            commune</span>
-<span id="cb768-12"><a href="15-dplyr-avance.html#cb768-12"></a>        )</span>
-<span id="cb768-13"><a href="15-dplyr-avance.html#cb768-13"></a>    )</span>
-<span id="cb768-14"><a href="15-dplyr-avance.html#cb768-14"></a><span class="co">#&gt; # A tibble: 26 × 3</span></span>
-<span id="cb768-15"><a href="15-dplyr-avance.html#cb768-15"></a><span class="co">#&gt;    region            dipl_aucun                  dipl_sup            </span></span>
-<span id="cb768-16"><a href="15-dplyr-avance.html#cb768-16"></a><span class="co">#&gt;    &lt;chr&gt;             &lt;chr&gt;                       &lt;chr&gt;               </span></span>
-<span id="cb768-17"><a href="15-dplyr-avance.html#cb768-17"></a><span class="co">#&gt;  1 Alsace            Bischwiller                 Strasbourg          </span></span>
-<span id="cb768-18"><a href="15-dplyr-avance.html#cb768-18"></a><span class="co">#&gt;  2 Aquitaine         Les Églisottes-et-Chalaures Bordeaux            </span></span>
-<span id="cb768-19"><a href="15-dplyr-avance.html#cb768-19"></a><span class="co">#&gt;  3 Auvergne          Aigueperse                  Chamalières         </span></span>
-<span id="cb768-20"><a href="15-dplyr-avance.html#cb768-20"></a><span class="co">#&gt;  4 Basse-Normandie   Périers                     Saint-Contest       </span></span>
-<span id="cb768-21"><a href="15-dplyr-avance.html#cb768-21"></a><span class="co">#&gt;  5 Bourgogne         Saint-Florentin             Fontaine-lès-Dijon  </span></span>
-<span id="cb768-22"><a href="15-dplyr-avance.html#cb768-22"></a><span class="co">#&gt;  6 Bretagne          La Guerche-de-Bretagne      Saint-Grégoire      </span></span>
-<span id="cb768-23"><a href="15-dplyr-avance.html#cb768-23"></a><span class="co">#&gt;  7 Centre            Gièvres                     Olivet              </span></span>
-<span id="cb768-24"><a href="15-dplyr-avance.html#cb768-24"></a><span class="co">#&gt;  8 Champagne-Ardenne Pargny-sur-Saulx            Taissy              </span></span>
-<span id="cb768-25"><a href="15-dplyr-avance.html#cb768-25"></a><span class="co">#&gt;  9 Corse             Ghisonaccia                 Ville-di-Pietrabugno</span></span>
-<span id="cb768-26"><a href="15-dplyr-avance.html#cb768-26"></a><span class="co">#&gt; 10 Franche-Comté     Saint-Loup-sur-Semouse      Pirey               </span></span>
-<span id="cb768-27"><a href="15-dplyr-avance.html#cb768-27"></a><span class="co">#&gt; # … with 16 more rows</span></span></code></pre></div>
+<div class="sourceCode" id="cb771"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb771-1"><a href="15-dplyr-avance.html#cb771-1"></a>nom_commune_max &lt;-<span class="st"> </span><span class="cf">function</span>(valeurs, communes) {</span>
+<span id="cb771-2"><a href="15-dplyr-avance.html#cb771-2"></a>    communes[valeurs <span class="op">==</span><span class="st"> </span><span class="kw">max</span>(valeurs)]</span>
+<span id="cb771-3"><a href="15-dplyr-avance.html#cb771-3"></a>}</span>
+<span id="cb771-4"><a href="15-dplyr-avance.html#cb771-4"></a></span>
+<span id="cb771-5"><a href="15-dplyr-avance.html#cb771-5"></a>rp2012 <span class="op">%&gt;%</span></span>
+<span id="cb771-6"><a href="15-dplyr-avance.html#cb771-6"></a><span class="st">    </span><span class="kw">group_by</span>(region) <span class="op">%&gt;%</span></span>
+<span id="cb771-7"><a href="15-dplyr-avance.html#cb771-7"></a><span class="st">    </span><span class="kw">summarise</span>(</span>
+<span id="cb771-8"><a href="15-dplyr-avance.html#cb771-8"></a>        <span class="kw">across</span>(</span>
+<span id="cb771-9"><a href="15-dplyr-avance.html#cb771-9"></a>            <span class="kw">c</span>(dipl_aucun, dipl_sup),</span>
+<span id="cb771-10"><a href="15-dplyr-avance.html#cb771-10"></a>            nom_commune_max,</span>
+<span id="cb771-11"><a href="15-dplyr-avance.html#cb771-11"></a>            commune</span>
+<span id="cb771-12"><a href="15-dplyr-avance.html#cb771-12"></a>        )</span>
+<span id="cb771-13"><a href="15-dplyr-avance.html#cb771-13"></a>    )</span>
+<span id="cb771-14"><a href="15-dplyr-avance.html#cb771-14"></a><span class="co">#&gt; # A tibble: 26 × 3</span></span>
+<span id="cb771-15"><a href="15-dplyr-avance.html#cb771-15"></a><span class="co">#&gt;    region            dipl_aucun                  dipl_sup            </span></span>
+<span id="cb771-16"><a href="15-dplyr-avance.html#cb771-16"></a><span class="co">#&gt;    &lt;chr&gt;             &lt;chr&gt;                       &lt;chr&gt;               </span></span>
+<span id="cb771-17"><a href="15-dplyr-avance.html#cb771-17"></a><span class="co">#&gt;  1 Alsace            Bischwiller                 Strasbourg          </span></span>
+<span id="cb771-18"><a href="15-dplyr-avance.html#cb771-18"></a><span class="co">#&gt;  2 Aquitaine         Les Églisottes-et-Chalaures Bordeaux            </span></span>
+<span id="cb771-19"><a href="15-dplyr-avance.html#cb771-19"></a><span class="co">#&gt;  3 Auvergne          Aigueperse                  Chamalières         </span></span>
+<span id="cb771-20"><a href="15-dplyr-avance.html#cb771-20"></a><span class="co">#&gt;  4 Basse-Normandie   Périers                     Saint-Contest       </span></span>
+<span id="cb771-21"><a href="15-dplyr-avance.html#cb771-21"></a><span class="co">#&gt;  5 Bourgogne         Saint-Florentin             Fontaine-lès-Dijon  </span></span>
+<span id="cb771-22"><a href="15-dplyr-avance.html#cb771-22"></a><span class="co">#&gt;  6 Bretagne          La Guerche-de-Bretagne      Saint-Grégoire      </span></span>
+<span id="cb771-23"><a href="15-dplyr-avance.html#cb771-23"></a><span class="co">#&gt;  7 Centre            Gièvres                     Olivet              </span></span>
+<span id="cb771-24"><a href="15-dplyr-avance.html#cb771-24"></a><span class="co">#&gt;  8 Champagne-Ardenne Pargny-sur-Saulx            Taissy              </span></span>
+<span id="cb771-25"><a href="15-dplyr-avance.html#cb771-25"></a><span class="co">#&gt;  9 Corse             Ghisonaccia                 Ville-di-Pietrabugno</span></span>
+<span id="cb771-26"><a href="15-dplyr-avance.html#cb771-26"></a><span class="co">#&gt; 10 Franche-Comté     Saint-Loup-sur-Semouse      Pirey               </span></span>
+<span id="cb771-27"><a href="15-dplyr-avance.html#cb771-27"></a><span class="co">#&gt; # … with 16 more rows</span></span></code></pre></div>
 <p>Réécrire ce code en utilisant une fonction anonyme, avec la syntaxe de votre choix (classique, formule ou compacte).</p>
 
 <div class="solution-exo">
-<div class="sourceCode" id="cb769"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb769-1"><a href="15-dplyr-avance.html#cb769-1"></a><span class="co"># Classique</span></span>
-<span id="cb769-2"><a href="15-dplyr-avance.html#cb769-2"></a>rp2012 <span class="op">%&gt;%</span></span>
-<span id="cb769-3"><a href="15-dplyr-avance.html#cb769-3"></a><span class="st">    </span><span class="kw">group_by</span>(region) <span class="op">%&gt;%</span></span>
-<span id="cb769-4"><a href="15-dplyr-avance.html#cb769-4"></a><span class="st">    </span><span class="kw">summarise</span>(</span>
-<span id="cb769-5"><a href="15-dplyr-avance.html#cb769-5"></a>        <span class="kw">across</span>(</span>
-<span id="cb769-6"><a href="15-dplyr-avance.html#cb769-6"></a>            <span class="kw">c</span>(dipl_aucun, dipl_sup),</span>
-<span id="cb769-7"><a href="15-dplyr-avance.html#cb769-7"></a>            <span class="cf">function</span>(valeurs, communes) { communes[valeurs <span class="op">==</span><span class="st"> </span><span class="kw">max</span>(valeurs)] },</span>
-<span id="cb769-8"><a href="15-dplyr-avance.html#cb769-8"></a>            commune</span>
-<span id="cb769-9"><a href="15-dplyr-avance.html#cb769-9"></a>        )</span>
-<span id="cb769-10"><a href="15-dplyr-avance.html#cb769-10"></a>    )</span>
-<span id="cb769-11"><a href="15-dplyr-avance.html#cb769-11"></a><span class="co"># Formule</span></span>
-<span id="cb769-12"><a href="15-dplyr-avance.html#cb769-12"></a>rp2012 <span class="op">%&gt;%</span></span>
-<span id="cb769-13"><a href="15-dplyr-avance.html#cb769-13"></a><span class="st">    </span><span class="kw">group_by</span>(region) <span class="op">%&gt;%</span></span>
-<span id="cb769-14"><a href="15-dplyr-avance.html#cb769-14"></a><span class="st">    </span><span class="kw">summarise</span>(</span>
-<span id="cb769-15"><a href="15-dplyr-avance.html#cb769-15"></a>        <span class="kw">across</span>(</span>
-<span id="cb769-16"><a href="15-dplyr-avance.html#cb769-16"></a>            <span class="kw">c</span>(dipl_aucun, dipl_sup),</span>
-<span id="cb769-17"><a href="15-dplyr-avance.html#cb769-17"></a>            <span class="op">~</span><span class="st"> </span>.y[.x <span class="op">==</span><span class="st"> </span><span class="kw">max</span>(.x)],</span>
-<span id="cb769-18"><a href="15-dplyr-avance.html#cb769-18"></a>            commune</span>
-<span id="cb769-19"><a href="15-dplyr-avance.html#cb769-19"></a>        )</span>
-<span id="cb769-20"><a href="15-dplyr-avance.html#cb769-20"></a>    )</span>
-<span id="cb769-21"><a href="15-dplyr-avance.html#cb769-21"></a><span class="co"># Compacte</span></span>
-<span id="cb769-22"><a href="15-dplyr-avance.html#cb769-22"></a>rp2012 <span class="op">%&gt;%</span></span>
-<span id="cb769-23"><a href="15-dplyr-avance.html#cb769-23"></a><span class="st">    </span><span class="kw">group_by</span>(region) <span class="op">%&gt;%</span></span>
-<span id="cb769-24"><a href="15-dplyr-avance.html#cb769-24"></a><span class="st">    </span><span class="kw">summarise</span>(</span>
-<span id="cb769-25"><a href="15-dplyr-avance.html#cb769-25"></a>        <span class="kw">across</span>(</span>
-<span id="cb769-26"><a href="15-dplyr-avance.html#cb769-26"></a>            <span class="kw">c</span>(dipl_aucun, dipl_sup),</span>
-<span id="cb769-27"><a href="15-dplyr-avance.html#cb769-27"></a>            \(valeurs, communes) communes[valeurs <span class="op">==</span><span class="st"> </span><span class="kw">max</span>(valeurs)],</span>
-<span id="cb769-28"><a href="15-dplyr-avance.html#cb769-28"></a>            commune</span>
-<span id="cb769-29"><a href="15-dplyr-avance.html#cb769-29"></a>        )</span>
-<span id="cb769-30"><a href="15-dplyr-avance.html#cb769-30"></a>    )</span></code></pre></div>
+<div class="sourceCode" id="cb772"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb772-1"><a href="15-dplyr-avance.html#cb772-1"></a><span class="co"># Classique</span></span>
+<span id="cb772-2"><a href="15-dplyr-avance.html#cb772-2"></a>rp2012 <span class="op">%&gt;%</span></span>
+<span id="cb772-3"><a href="15-dplyr-avance.html#cb772-3"></a><span class="st">    </span><span class="kw">group_by</span>(region) <span class="op">%&gt;%</span></span>
+<span id="cb772-4"><a href="15-dplyr-avance.html#cb772-4"></a><span class="st">    </span><span class="kw">summarise</span>(</span>
+<span id="cb772-5"><a href="15-dplyr-avance.html#cb772-5"></a>        <span class="kw">across</span>(</span>
+<span id="cb772-6"><a href="15-dplyr-avance.html#cb772-6"></a>            <span class="kw">c</span>(dipl_aucun, dipl_sup),</span>
+<span id="cb772-7"><a href="15-dplyr-avance.html#cb772-7"></a>            <span class="cf">function</span>(valeurs, communes) { communes[valeurs <span class="op">==</span><span class="st"> </span><span class="kw">max</span>(valeurs)] },</span>
+<span id="cb772-8"><a href="15-dplyr-avance.html#cb772-8"></a>            commune</span>
+<span id="cb772-9"><a href="15-dplyr-avance.html#cb772-9"></a>        )</span>
+<span id="cb772-10"><a href="15-dplyr-avance.html#cb772-10"></a>    )</span>
+<span id="cb772-11"><a href="15-dplyr-avance.html#cb772-11"></a><span class="co"># Formule</span></span>
+<span id="cb772-12"><a href="15-dplyr-avance.html#cb772-12"></a>rp2012 <span class="op">%&gt;%</span></span>
+<span id="cb772-13"><a href="15-dplyr-avance.html#cb772-13"></a><span class="st">    </span><span class="kw">group_by</span>(region) <span class="op">%&gt;%</span></span>
+<span id="cb772-14"><a href="15-dplyr-avance.html#cb772-14"></a><span class="st">    </span><span class="kw">summarise</span>(</span>
+<span id="cb772-15"><a href="15-dplyr-avance.html#cb772-15"></a>        <span class="kw">across</span>(</span>
+<span id="cb772-16"><a href="15-dplyr-avance.html#cb772-16"></a>            <span class="kw">c</span>(dipl_aucun, dipl_sup),</span>
+<span id="cb772-17"><a href="15-dplyr-avance.html#cb772-17"></a>            <span class="op">~</span><span class="st"> </span>.y[.x <span class="op">==</span><span class="st"> </span><span class="kw">max</span>(.x)],</span>
+<span id="cb772-18"><a href="15-dplyr-avance.html#cb772-18"></a>            commune</span>
+<span id="cb772-19"><a href="15-dplyr-avance.html#cb772-19"></a>        )</span>
+<span id="cb772-20"><a href="15-dplyr-avance.html#cb772-20"></a>    )</span>
+<span id="cb772-21"><a href="15-dplyr-avance.html#cb772-21"></a><span class="co"># Compacte</span></span>
+<span id="cb772-22"><a href="15-dplyr-avance.html#cb772-22"></a>rp2012 <span class="op">%&gt;%</span></span>
+<span id="cb772-23"><a href="15-dplyr-avance.html#cb772-23"></a><span class="st">    </span><span class="kw">group_by</span>(region) <span class="op">%&gt;%</span></span>
+<span id="cb772-24"><a href="15-dplyr-avance.html#cb772-24"></a><span class="st">    </span><span class="kw">summarise</span>(</span>
+<span id="cb772-25"><a href="15-dplyr-avance.html#cb772-25"></a>        <span class="kw">across</span>(</span>
+<span id="cb772-26"><a href="15-dplyr-avance.html#cb772-26"></a>            <span class="kw">c</span>(dipl_aucun, dipl_sup),</span>
+<span id="cb772-27"><a href="15-dplyr-avance.html#cb772-27"></a>            \(valeurs, communes) communes[valeurs <span class="op">==</span><span class="st"> </span><span class="kw">max</span>(valeurs)],</span>
+<span id="cb772-28"><a href="15-dplyr-avance.html#cb772-28"></a>            commune</span>
+<span id="cb772-29"><a href="15-dplyr-avance.html#cb772-29"></a>        )</span>
+<span id="cb772-30"><a href="15-dplyr-avance.html#cb772-30"></a>    )</span></code></pre></div>
 </div>
 
 <p>À l’aide d’une fonction anonyme supplémentaire, modifier le code pour qu’il retourne également, pour les mêmes variables, le nom des communes avec les valeurs minimales.</p>
 
 <div class="solution-exo">
-<div class="sourceCode" id="cb770"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb770-1"><a href="15-dplyr-avance.html#cb770-1"></a><span class="co"># Formule</span></span>
-<span id="cb770-2"><a href="15-dplyr-avance.html#cb770-2"></a>rp2012 <span class="op">%&gt;%</span></span>
-<span id="cb770-3"><a href="15-dplyr-avance.html#cb770-3"></a><span class="st">    </span><span class="kw">group_by</span>(region) <span class="op">%&gt;%</span></span>
-<span id="cb770-4"><a href="15-dplyr-avance.html#cb770-4"></a><span class="st">    </span><span class="kw">summarise</span>(</span>
-<span id="cb770-5"><a href="15-dplyr-avance.html#cb770-5"></a>        <span class="kw">across</span>(</span>
-<span id="cb770-6"><a href="15-dplyr-avance.html#cb770-6"></a>            <span class="kw">c</span>(dipl_aucun, dipl_sup),</span>
-<span id="cb770-7"><a href="15-dplyr-avance.html#cb770-7"></a>            <span class="kw">list</span>(</span>
-<span id="cb770-8"><a href="15-dplyr-avance.html#cb770-8"></a>                <span class="dt">max =</span> <span class="op">~</span><span class="st"> </span>.y[.x <span class="op">==</span><span class="st"> </span><span class="kw">max</span>(.x)],</span>
-<span id="cb770-9"><a href="15-dplyr-avance.html#cb770-9"></a>                <span class="dt">min =</span> <span class="op">~</span><span class="st"> </span>.y[.x <span class="op">==</span><span class="st"> </span><span class="kw">min</span>(.x)]</span>
-<span id="cb770-10"><a href="15-dplyr-avance.html#cb770-10"></a>            ),</span>
-<span id="cb770-11"><a href="15-dplyr-avance.html#cb770-11"></a>            commune</span>
-<span id="cb770-12"><a href="15-dplyr-avance.html#cb770-12"></a>        )</span>
-<span id="cb770-13"><a href="15-dplyr-avance.html#cb770-13"></a>    )</span>
-<span id="cb770-14"><a href="15-dplyr-avance.html#cb770-14"></a><span class="co"># Compacte</span></span>
-<span id="cb770-15"><a href="15-dplyr-avance.html#cb770-15"></a>rp2012 <span class="op">%&gt;%</span></span>
-<span id="cb770-16"><a href="15-dplyr-avance.html#cb770-16"></a><span class="st">    </span><span class="kw">group_by</span>(region) <span class="op">%&gt;%</span></span>
-<span id="cb770-17"><a href="15-dplyr-avance.html#cb770-17"></a><span class="st">    </span><span class="kw">summarise</span>(</span>
-<span id="cb770-18"><a href="15-dplyr-avance.html#cb770-18"></a>        <span class="kw">across</span>(</span>
-<span id="cb770-19"><a href="15-dplyr-avance.html#cb770-19"></a>            <span class="kw">c</span>(dipl_aucun, dipl_sup),</span>
-<span id="cb770-20"><a href="15-dplyr-avance.html#cb770-20"></a>            <span class="kw">list</span>(</span>
-<span id="cb770-21"><a href="15-dplyr-avance.html#cb770-21"></a>                <span class="dt">max =</span> \(valeurs, communes) communes[valeurs <span class="op">==</span><span class="st"> </span><span class="kw">max</span>(valeurs)],</span>
-<span id="cb770-22"><a href="15-dplyr-avance.html#cb770-22"></a>                <span class="dt">min =</span> \(valeurs, communes) communes[valeurs <span class="op">==</span><span class="st"> </span><span class="kw">min</span>(valeurs)]</span>
-<span id="cb770-23"><a href="15-dplyr-avance.html#cb770-23"></a>            ),</span>
-<span id="cb770-24"><a href="15-dplyr-avance.html#cb770-24"></a>            commune</span>
-<span id="cb770-25"><a href="15-dplyr-avance.html#cb770-25"></a>        )</span>
-<span id="cb770-26"><a href="15-dplyr-avance.html#cb770-26"></a>    ) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">View</span>()</span></code></pre></div>
+<div class="sourceCode" id="cb773"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb773-1"><a href="15-dplyr-avance.html#cb773-1"></a><span class="co"># Formule</span></span>
+<span id="cb773-2"><a href="15-dplyr-avance.html#cb773-2"></a>rp2012 <span class="op">%&gt;%</span></span>
+<span id="cb773-3"><a href="15-dplyr-avance.html#cb773-3"></a><span class="st">    </span><span class="kw">group_by</span>(region) <span class="op">%&gt;%</span></span>
+<span id="cb773-4"><a href="15-dplyr-avance.html#cb773-4"></a><span class="st">    </span><span class="kw">summarise</span>(</span>
+<span id="cb773-5"><a href="15-dplyr-avance.html#cb773-5"></a>        <span class="kw">across</span>(</span>
+<span id="cb773-6"><a href="15-dplyr-avance.html#cb773-6"></a>            <span class="kw">c</span>(dipl_aucun, dipl_sup),</span>
+<span id="cb773-7"><a href="15-dplyr-avance.html#cb773-7"></a>            <span class="kw">list</span>(</span>
+<span id="cb773-8"><a href="15-dplyr-avance.html#cb773-8"></a>                <span class="dt">max =</span> <span class="op">~</span><span class="st"> </span>.y[.x <span class="op">==</span><span class="st"> </span><span class="kw">max</span>(.x)],</span>
+<span id="cb773-9"><a href="15-dplyr-avance.html#cb773-9"></a>                <span class="dt">min =</span> <span class="op">~</span><span class="st"> </span>.y[.x <span class="op">==</span><span class="st"> </span><span class="kw">min</span>(.x)]</span>
+<span id="cb773-10"><a href="15-dplyr-avance.html#cb773-10"></a>            ),</span>
+<span id="cb773-11"><a href="15-dplyr-avance.html#cb773-11"></a>            commune</span>
+<span id="cb773-12"><a href="15-dplyr-avance.html#cb773-12"></a>        )</span>
+<span id="cb773-13"><a href="15-dplyr-avance.html#cb773-13"></a>    )</span>
+<span id="cb773-14"><a href="15-dplyr-avance.html#cb773-14"></a><span class="co"># Compacte</span></span>
+<span id="cb773-15"><a href="15-dplyr-avance.html#cb773-15"></a>rp2012 <span class="op">%&gt;%</span></span>
+<span id="cb773-16"><a href="15-dplyr-avance.html#cb773-16"></a><span class="st">    </span><span class="kw">group_by</span>(region) <span class="op">%&gt;%</span></span>
+<span id="cb773-17"><a href="15-dplyr-avance.html#cb773-17"></a><span class="st">    </span><span class="kw">summarise</span>(</span>
+<span id="cb773-18"><a href="15-dplyr-avance.html#cb773-18"></a>        <span class="kw">across</span>(</span>
+<span id="cb773-19"><a href="15-dplyr-avance.html#cb773-19"></a>            <span class="kw">c</span>(dipl_aucun, dipl_sup),</span>
+<span id="cb773-20"><a href="15-dplyr-avance.html#cb773-20"></a>            <span class="kw">list</span>(</span>
+<span id="cb773-21"><a href="15-dplyr-avance.html#cb773-21"></a>                <span class="dt">max =</span> \(valeurs, communes) communes[valeurs <span class="op">==</span><span class="st"> </span><span class="kw">max</span>(valeurs)],</span>
+<span id="cb773-22"><a href="15-dplyr-avance.html#cb773-22"></a>                <span class="dt">min =</span> \(valeurs, communes) communes[valeurs <span class="op">==</span><span class="st"> </span><span class="kw">min</span>(valeurs)]</span>
+<span id="cb773-23"><a href="15-dplyr-avance.html#cb773-23"></a>            ),</span>
+<span id="cb773-24"><a href="15-dplyr-avance.html#cb773-24"></a>            commune</span>
+<span id="cb773-25"><a href="15-dplyr-avance.html#cb773-25"></a>        )</span>
+<span id="cb773-26"><a href="15-dplyr-avance.html#cb773-26"></a>    ) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">View</span>()</span></code></pre></div>
 </div>
 
 </div>
@@ -1773,81 +1815,81 @@ Il faut bien penser à passer la fonction comme argument du <code>across()</code
 <h3><span class="header-section-number">15.6.4</span> <code>rowwise()</code> et <code>c_across()</code></h3>
 <p><strong>Exercice 4.1</strong></p>
 <p>On repart du code final de l’exercice 2.3, qui recodait une série de variables de <code>hdv2003</code> en valeurs <code>TRUE</code>/<code>FALSE</code> dans de nouvelles variables avec le suffixe <code>"_true"</code>.</p>
-<div class="sourceCode" id="cb771"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb771-1"><a href="15-dplyr-avance.html#cb771-1"></a>detecte_oui &lt;-<span class="st"> </span><span class="cf">function</span>(v) {</span>
-<span id="cb771-2"><a href="15-dplyr-avance.html#cb771-2"></a>    v <span class="op">==</span><span class="st"> &quot;Oui&quot;</span></span>
-<span id="cb771-3"><a href="15-dplyr-avance.html#cb771-3"></a>}</span>
-<span id="cb771-4"><a href="15-dplyr-avance.html#cb771-4"></a>hdv2003 &lt;-<span class="st"> </span>hdv2003 <span class="op">%&gt;%</span></span>
-<span id="cb771-5"><a href="15-dplyr-avance.html#cb771-5"></a><span class="st">    </span><span class="kw">mutate</span>(</span>
-<span id="cb771-6"><a href="15-dplyr-avance.html#cb771-6"></a>        <span class="kw">across</span>(</span>
-<span id="cb771-7"><a href="15-dplyr-avance.html#cb771-7"></a>            hard.rock<span class="op">:</span>sport,</span>
-<span id="cb771-8"><a href="15-dplyr-avance.html#cb771-8"></a>            detecte_oui,</span>
-<span id="cb771-9"><a href="15-dplyr-avance.html#cb771-9"></a>            <span class="dt">.names =</span> <span class="st">&quot;{.col}_true&quot;</span></span>
-<span id="cb771-10"><a href="15-dplyr-avance.html#cb771-10"></a>        )</span>
-<span id="cb771-11"><a href="15-dplyr-avance.html#cb771-11"></a>    )</span></code></pre></div>
+<div class="sourceCode" id="cb774"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb774-1"><a href="15-dplyr-avance.html#cb774-1"></a>detecte_oui &lt;-<span class="st"> </span><span class="cf">function</span>(v) {</span>
+<span id="cb774-2"><a href="15-dplyr-avance.html#cb774-2"></a>    v <span class="op">==</span><span class="st"> &quot;Oui&quot;</span></span>
+<span id="cb774-3"><a href="15-dplyr-avance.html#cb774-3"></a>}</span>
+<span id="cb774-4"><a href="15-dplyr-avance.html#cb774-4"></a>hdv2003 &lt;-<span class="st"> </span>hdv2003 <span class="op">%&gt;%</span></span>
+<span id="cb774-5"><a href="15-dplyr-avance.html#cb774-5"></a><span class="st">    </span><span class="kw">mutate</span>(</span>
+<span id="cb774-6"><a href="15-dplyr-avance.html#cb774-6"></a>        <span class="kw">across</span>(</span>
+<span id="cb774-7"><a href="15-dplyr-avance.html#cb774-7"></a>            hard.rock<span class="op">:</span>sport,</span>
+<span id="cb774-8"><a href="15-dplyr-avance.html#cb774-8"></a>            detecte_oui,</span>
+<span id="cb774-9"><a href="15-dplyr-avance.html#cb774-9"></a>            <span class="dt">.names =</span> <span class="st">&quot;{.col}_true&quot;</span></span>
+<span id="cb774-10"><a href="15-dplyr-avance.html#cb774-10"></a>        )</span>
+<span id="cb774-11"><a href="15-dplyr-avance.html#cb774-11"></a>    )</span></code></pre></div>
 <p>Calculer le plus simplement possible une nouvelle variable <code>total</code> qui contient, pour chaque ligne, le nombre de valeurs <code>TRUE</code> des deux variables <code>cinema_true</code> et <code>sport_true</code> (si une ligne contient <code>TRUE</code> pour ces deux variables, <code>total</code> doit valoir 2, etc.)</p>
 
 <div class="solution-exo">
-<div class="sourceCode" id="cb772"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb772-1"><a href="15-dplyr-avance.html#cb772-1"></a>hdv2003 <span class="op">%&gt;%</span></span>
-<span id="cb772-2"><a href="15-dplyr-avance.html#cb772-2"></a><span class="st">    </span><span class="kw">mutate</span>(<span class="dt">total =</span> cuisine_true <span class="op">+</span><span class="st"> </span>sport_true)</span></code></pre></div>
+<div class="sourceCode" id="cb775"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb775-1"><a href="15-dplyr-avance.html#cb775-1"></a>hdv2003 <span class="op">%&gt;%</span></span>
+<span id="cb775-2"><a href="15-dplyr-avance.html#cb775-2"></a><span class="st">    </span><span class="kw">mutate</span>(<span class="dt">total =</span> cuisine_true <span class="op">+</span><span class="st"> </span>sport_true)</span></code></pre></div>
 </div>
 
 <p>Recalculer la variable <code>total</code> pour qu’elle contienne le nombre de <code>TRUE</code> par ligne pour les variables <code>bricol_true</code>, <code>cinema_true</code> et <code>sport_true</code>.</p>
 
 <div class="solution-exo">
-<div class="sourceCode" id="cb773"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb773-1"><a href="15-dplyr-avance.html#cb773-1"></a>hdv2003 <span class="op">%&gt;%</span></span>
-<span id="cb773-2"><a href="15-dplyr-avance.html#cb773-2"></a><span class="st">    </span><span class="kw">rowwise</span>() <span class="op">%&gt;%</span></span>
-<span id="cb773-3"><a href="15-dplyr-avance.html#cb773-3"></a><span class="st">    </span><span class="kw">mutate</span>(<span class="dt">total =</span> <span class="kw">sum</span>(cuisine_true, sport_true, bricol_true))</span></code></pre></div>
+<div class="sourceCode" id="cb776"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb776-1"><a href="15-dplyr-avance.html#cb776-1"></a>hdv2003 <span class="op">%&gt;%</span></span>
+<span id="cb776-2"><a href="15-dplyr-avance.html#cb776-2"></a><span class="st">    </span><span class="kw">rowwise</span>() <span class="op">%&gt;%</span></span>
+<span id="cb776-3"><a href="15-dplyr-avance.html#cb776-3"></a><span class="st">    </span><span class="kw">mutate</span>(<span class="dt">total =</span> <span class="kw">sum</span>(cuisine_true, sport_true, bricol_true))</span></code></pre></div>
 </div>
 
 <p>Recalculer la variable <code>total</code> pour qu’elle contienne le nombre de <code>TRUE</code> par ligne pour toutes les variables se terminant par <code>"_true"</code>.</p>
 
 <div class="solution-exo">
-<div class="sourceCode" id="cb774"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb774-1"><a href="15-dplyr-avance.html#cb774-1"></a>hdv2003 <span class="op">%&gt;%</span></span>
-<span id="cb774-2"><a href="15-dplyr-avance.html#cb774-2"></a><span class="st">    </span><span class="kw">rowwise</span>() <span class="op">%&gt;%</span></span>
-<span id="cb774-3"><a href="15-dplyr-avance.html#cb774-3"></a><span class="st">    </span><span class="kw">mutate</span>(<span class="dt">total =</span> <span class="kw">sum</span>(<span class="kw">c_across</span>(<span class="kw">ends_with</span>(<span class="st">&quot;_true&quot;</span>))))</span></code></pre></div>
+<div class="sourceCode" id="cb777"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb777-1"><a href="15-dplyr-avance.html#cb777-1"></a>hdv2003 <span class="op">%&gt;%</span></span>
+<span id="cb777-2"><a href="15-dplyr-avance.html#cb777-2"></a><span class="st">    </span><span class="kw">rowwise</span>() <span class="op">%&gt;%</span></span>
+<span id="cb777-3"><a href="15-dplyr-avance.html#cb777-3"></a><span class="st">    </span><span class="kw">mutate</span>(<span class="dt">total =</span> <span class="kw">sum</span>(<span class="kw">c_across</span>(<span class="kw">ends_with</span>(<span class="st">&quot;_true&quot;</span>))))</span></code></pre></div>
 </div>
 
 <p>Reprendre le code précédent pour qu’il puisse s’appliquer directement sur les variables <code>hard.rock</code>…<code>sport</code>, sans passer par le recodage en <code>TRUE</code>/<code>FALSE</code>.</p>
 
 <div class="solution-exo">
-<div class="sourceCode" id="cb775"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb775-1"><a href="15-dplyr-avance.html#cb775-1"></a>count_oui &lt;-<span class="st"> </span><span class="cf">function</span>(v) {</span>
-<span id="cb775-2"><a href="15-dplyr-avance.html#cb775-2"></a>    <span class="kw">sum</span>(v <span class="op">==</span><span class="st"> &quot;Oui&quot;</span>)</span>
-<span id="cb775-3"><a href="15-dplyr-avance.html#cb775-3"></a>}</span>
-<span id="cb775-4"><a href="15-dplyr-avance.html#cb775-4"></a></span>
-<span id="cb775-5"><a href="15-dplyr-avance.html#cb775-5"></a>hdv2003 <span class="op">%&gt;%</span></span>
-<span id="cb775-6"><a href="15-dplyr-avance.html#cb775-6"></a><span class="st">    </span><span class="kw">rowwise</span>() <span class="op">%&gt;%</span></span>
-<span id="cb775-7"><a href="15-dplyr-avance.html#cb775-7"></a><span class="st">    </span><span class="kw">mutate</span>(</span>
-<span id="cb775-8"><a href="15-dplyr-avance.html#cb775-8"></a>        <span class="dt">total =</span> <span class="kw">count_oui</span>(<span class="kw">c_across</span>(hard.rock<span class="op">:</span>sport))</span>
-<span id="cb775-9"><a href="15-dplyr-avance.html#cb775-9"></a>    )</span></code></pre></div>
+<div class="sourceCode" id="cb778"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb778-1"><a href="15-dplyr-avance.html#cb778-1"></a>count_oui &lt;-<span class="st"> </span><span class="cf">function</span>(v) {</span>
+<span id="cb778-2"><a href="15-dplyr-avance.html#cb778-2"></a>    <span class="kw">sum</span>(v <span class="op">==</span><span class="st"> &quot;Oui&quot;</span>)</span>
+<span id="cb778-3"><a href="15-dplyr-avance.html#cb778-3"></a>}</span>
+<span id="cb778-4"><a href="15-dplyr-avance.html#cb778-4"></a></span>
+<span id="cb778-5"><a href="15-dplyr-avance.html#cb778-5"></a>hdv2003 <span class="op">%&gt;%</span></span>
+<span id="cb778-6"><a href="15-dplyr-avance.html#cb778-6"></a><span class="st">    </span><span class="kw">rowwise</span>() <span class="op">%&gt;%</span></span>
+<span id="cb778-7"><a href="15-dplyr-avance.html#cb778-7"></a><span class="st">    </span><span class="kw">mutate</span>(</span>
+<span id="cb778-8"><a href="15-dplyr-avance.html#cb778-8"></a>        <span class="dt">total =</span> <span class="kw">count_oui</span>(<span class="kw">c_across</span>(hard.rock<span class="op">:</span>sport))</span>
+<span id="cb778-9"><a href="15-dplyr-avance.html#cb778-9"></a>    )</span></code></pre></div>
 </div>
 
 <p><strong>Exercice 4.2</strong></p>
 <p>Dans le jeu de données <code>starwars</code>, la colonne <code>films</code> contient la liste des films dans lesquels apparaissent les différents personnages. Cette colonne a une forme un peu particulière puisqu’il s’agit d’une “colonne-liste” : les éléments de cette colonne sont eux-mêmes des listes.</p>
-<div class="sourceCode" id="cb776"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb776-1"><a href="15-dplyr-avance.html#cb776-1"></a><span class="kw">head</span>(starwars<span class="op">$</span>films, <span class="dv">3</span>)</span>
-<span id="cb776-2"><a href="15-dplyr-avance.html#cb776-2"></a><span class="co">#&gt; [[1]]</span></span>
-<span id="cb776-3"><a href="15-dplyr-avance.html#cb776-3"></a><span class="co">#&gt; [1] &quot;The Empire Strikes Back&quot; &quot;Revenge of the Sith&quot;    </span></span>
-<span id="cb776-4"><a href="15-dplyr-avance.html#cb776-4"></a><span class="co">#&gt; [3] &quot;Return of the Jedi&quot;      &quot;A New Hope&quot;             </span></span>
-<span id="cb776-5"><a href="15-dplyr-avance.html#cb776-5"></a><span class="co">#&gt; [5] &quot;The Force Awakens&quot;      </span></span>
-<span id="cb776-6"><a href="15-dplyr-avance.html#cb776-6"></a><span class="co">#&gt; </span></span>
-<span id="cb776-7"><a href="15-dplyr-avance.html#cb776-7"></a><span class="co">#&gt; [[2]]</span></span>
-<span id="cb776-8"><a href="15-dplyr-avance.html#cb776-8"></a><span class="co">#&gt; [1] &quot;The Empire Strikes Back&quot; &quot;Attack of the Clones&quot;   </span></span>
-<span id="cb776-9"><a href="15-dplyr-avance.html#cb776-9"></a><span class="co">#&gt; [3] &quot;The Phantom Menace&quot;      &quot;Revenge of the Sith&quot;    </span></span>
-<span id="cb776-10"><a href="15-dplyr-avance.html#cb776-10"></a><span class="co">#&gt; [5] &quot;Return of the Jedi&quot;      &quot;A New Hope&quot;             </span></span>
-<span id="cb776-11"><a href="15-dplyr-avance.html#cb776-11"></a><span class="co">#&gt; </span></span>
-<span id="cb776-12"><a href="15-dplyr-avance.html#cb776-12"></a><span class="co">#&gt; [[3]]</span></span>
-<span id="cb776-13"><a href="15-dplyr-avance.html#cb776-13"></a><span class="co">#&gt; [1] &quot;The Empire Strikes Back&quot; &quot;Attack of the Clones&quot;   </span></span>
-<span id="cb776-14"><a href="15-dplyr-avance.html#cb776-14"></a><span class="co">#&gt; [3] &quot;The Phantom Menace&quot;      &quot;Revenge of the Sith&quot;    </span></span>
-<span id="cb776-15"><a href="15-dplyr-avance.html#cb776-15"></a><span class="co">#&gt; [5] &quot;Return of the Jedi&quot;      &quot;A New Hope&quot;             </span></span>
-<span id="cb776-16"><a href="15-dplyr-avance.html#cb776-16"></a><span class="co">#&gt; [7] &quot;The Force Awakens&quot;</span></span></code></pre></div>
+<div class="sourceCode" id="cb779"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb779-1"><a href="15-dplyr-avance.html#cb779-1"></a><span class="kw">head</span>(starwars<span class="op">$</span>films, <span class="dv">3</span>)</span>
+<span id="cb779-2"><a href="15-dplyr-avance.html#cb779-2"></a><span class="co">#&gt; [[1]]</span></span>
+<span id="cb779-3"><a href="15-dplyr-avance.html#cb779-3"></a><span class="co">#&gt; [1] &quot;The Empire Strikes Back&quot; &quot;Revenge of the Sith&quot;    </span></span>
+<span id="cb779-4"><a href="15-dplyr-avance.html#cb779-4"></a><span class="co">#&gt; [3] &quot;Return of the Jedi&quot;      &quot;A New Hope&quot;             </span></span>
+<span id="cb779-5"><a href="15-dplyr-avance.html#cb779-5"></a><span class="co">#&gt; [5] &quot;The Force Awakens&quot;      </span></span>
+<span id="cb779-6"><a href="15-dplyr-avance.html#cb779-6"></a><span class="co">#&gt; </span></span>
+<span id="cb779-7"><a href="15-dplyr-avance.html#cb779-7"></a><span class="co">#&gt; [[2]]</span></span>
+<span id="cb779-8"><a href="15-dplyr-avance.html#cb779-8"></a><span class="co">#&gt; [1] &quot;The Empire Strikes Back&quot; &quot;Attack of the Clones&quot;   </span></span>
+<span id="cb779-9"><a href="15-dplyr-avance.html#cb779-9"></a><span class="co">#&gt; [3] &quot;The Phantom Menace&quot;      &quot;Revenge of the Sith&quot;    </span></span>
+<span id="cb779-10"><a href="15-dplyr-avance.html#cb779-10"></a><span class="co">#&gt; [5] &quot;Return of the Jedi&quot;      &quot;A New Hope&quot;             </span></span>
+<span id="cb779-11"><a href="15-dplyr-avance.html#cb779-11"></a><span class="co">#&gt; </span></span>
+<span id="cb779-12"><a href="15-dplyr-avance.html#cb779-12"></a><span class="co">#&gt; [[3]]</span></span>
+<span id="cb779-13"><a href="15-dplyr-avance.html#cb779-13"></a><span class="co">#&gt; [1] &quot;The Empire Strikes Back&quot; &quot;Attack of the Clones&quot;   </span></span>
+<span id="cb779-14"><a href="15-dplyr-avance.html#cb779-14"></a><span class="co">#&gt; [3] &quot;The Phantom Menace&quot;      &quot;Revenge of the Sith&quot;    </span></span>
+<span id="cb779-15"><a href="15-dplyr-avance.html#cb779-15"></a><span class="co">#&gt; [5] &quot;Return of the Jedi&quot;      &quot;A New Hope&quot;             </span></span>
+<span id="cb779-16"><a href="15-dplyr-avance.html#cb779-16"></a><span class="co">#&gt; [7] &quot;The Force Awakens&quot;</span></span></code></pre></div>
 <p>On essaye de calculer le nombre de films pour chaque personnage avec le code suivant. Est-ce que ça fonctionne ? Pourquoi ?</p>
-<div class="sourceCode" id="cb777"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb777-1"><a href="15-dplyr-avance.html#cb777-1"></a>starwars <span class="op">%&gt;%</span></span>
-<span id="cb777-2"><a href="15-dplyr-avance.html#cb777-2"></a><span class="st">    </span><span class="kw">mutate</span>(<span class="dt">n_films =</span> <span class="kw">length</span>(films))</span></code></pre></div>
+<div class="sourceCode" id="cb780"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb780-1"><a href="15-dplyr-avance.html#cb780-1"></a>starwars <span class="op">%&gt;%</span></span>
+<span id="cb780-2"><a href="15-dplyr-avance.html#cb780-2"></a><span class="st">    </span><span class="kw">mutate</span>(<span class="dt">n_films =</span> <span class="kw">length</span>(films))</span></code></pre></div>
 <p>Trouver une manière d’obtenir le résultat attendu.</p>
 
 <div class="solution-exo">
-<div class="sourceCode" id="cb778"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb778-1"><a href="15-dplyr-avance.html#cb778-1"></a>starwars <span class="op">%&gt;%</span></span>
-<span id="cb778-2"><a href="15-dplyr-avance.html#cb778-2"></a><span class="st">    </span><span class="kw">rowwise</span>() <span class="op">%&gt;%</span></span>
-<span id="cb778-3"><a href="15-dplyr-avance.html#cb778-3"></a><span class="st">    </span><span class="kw">mutate</span>(<span class="dt">n_films =</span> <span class="kw">length</span>(films))</span></code></pre></div>
+<div class="sourceCode" id="cb781"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb781-1"><a href="15-dplyr-avance.html#cb781-1"></a>starwars <span class="op">%&gt;%</span></span>
+<span id="cb781-2"><a href="15-dplyr-avance.html#cb781-2"></a><span class="st">    </span><span class="kw">rowwise</span>() <span class="op">%&gt;%</span></span>
+<span id="cb781-3"><a href="15-dplyr-avance.html#cb781-3"></a><span class="st">    </span><span class="kw">mutate</span>(<span class="dt">n_films =</span> <span class="kw">length</span>(films))</span></code></pre></div>
 </div>
 
 
