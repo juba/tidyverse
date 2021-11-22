@@ -461,15 +461,31 @@ summaries <- function(d, vars) {
 summaries(hdv2003, c("sexe", "age", "heures.tv"))
 ```
 
-Un "pattern" relativement fréquent est de vouloir itérer sur les éléments d'un vecteur par leur position. Il est du coup assez naturel d'utiliser quelque chose comme `for (i in 1:length(x))`. Il est cependant préférable dans ces cas-là d'utiliser la fonction dédiée `seq_along(x)`^[L'intérêt de `seq_along(x)` est notamment qu'elle n'essaie pas d'exécuter le bloc de code si jamais `x` est de longueur nulle. *Cf.* des explications supplémentaires dans [Advanced R](https://adv-r.hadley.nz/control-flow.html#common-pitfalls).].
+Parfois on souhaite itérer sur les éléments par leur position plutôt que par leur valeur. Dans l'exemple suivant, la fonction `affiche_dimensions` affiche le nombre de lignes et de colonnes des tableaux de données contenus dans une liste :
+
+```{r}
+affiche_dimensions <- function(dfs) {
+    for (df in dfs) {
+        message("Dimensions : ", nrow(df), "x", ncol(df))
+    }
+}
+
+l <- list(
+    hdv = hdv2003,
+    rp = rp2012
+)
+
+affiche_dimensions(l)
+```
+
+Si on souhaite afficher le nom du tableau en plus de ses dimensions afin de rendre les résultats plus lisibles, on doit itérer sur la position des éléments pour pouvoir récupérer à la fois leur nom (dans `names(dfs)`) et leur valeur (dans `dfs`). Dans ces cas-là on peut utiliser la fonction `seq_along()` qui génère une liste d'entiers correspondant au nombre d'éléments de l'objet qu'on lui passe en argument.
 
 ```{r}
 x <- c("rouge", "vert", "bleu")
-1:length(x)
 seq_along(x)
 ```
 
-Dans l'exemple suivant, la fonction `affiche_dimensions` prend en entrée une liste de tableaux de données et affiche leur nombre de lignes et de colonnes.
+On peut du coup réécrire `affiche_dimensions` de la façon suivante.
 
 ```{r}
 affiche_dimensions <- function(dfs) {
@@ -480,11 +496,13 @@ affiche_dimensions <- function(dfs) {
     }
 }
 
-l <- list(
-    hdv = hdv2003,
-    rp = rp2012
-)
 affiche_dimensions(l)
+```
+
+```{block type='rmdnote'}
+Il est assez naturel d'utiliser `for (i in 1:length(x))` plutôt que `for (i in seq_along(x))`. L'utilisation de `seq_along(x)` est cependant préférable, notamment lorsqu'on est dans une fonction, car elle n'essaie pas d'exécuter le bloc de code si jamais `x` est de longueur nulle.
+
+En effet, si `length(x)` vaut 0 alors `1:length(x)` vaut `1:0`, c'est-à-dire le vecteur `c(1, 0)`, ce qui signifie que la boucle sera exécutée et risque de générer une erreur. De son côté, `seq_along(x)` garantit dans ces cas-là qu'aucune itération du `for` n'est exécutée.
 ```
 
 À noter que quand on sort d'une boucle `for`, l'objet utilisé pour itérer sur les valeurs du vecteur existe toujours, et contient la dernière valeur qu'il a prise.
