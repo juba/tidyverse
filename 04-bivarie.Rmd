@@ -2,7 +2,7 @@
 
 Faire une analyse bivariée, c'est étudier la relation entre deux variables : sont-elles liées ? les valeurs de l'une influencent-elles les valeurs de l'autre ? ou sont-elles au contraire indépendantes ?
 
-À noter qu'on va parler ici d'influence ou de lien, mais pas de relation de cause à effet : les outils présentés permettent de visualiser ou de déterminer une relation, mais des liens de causalité proprement dit sont plus difficiles à mettre en évidence. Il faut en effet vérifier que c'est bien telle variable qui influence telle autre et pas l'inverse, qu'il n'y a pas de "variable cachée", etc.
+À noter qu'on va parler ici d'influence ou de lien, mais pas de relation de cause à effet. Les outils présentés permettent de visualiser ou de déterminer une relation, mais la mise en évidence de liens de causalité proprement dit est nettement plus complexe : il faut en effet vérifier que c'est bien telle variable qui influence telle autre et pas l'inverse, qu'il n'y a pas de "variable cachée", etc.
 
 Là encore, le type d'analyse ou de visualisation est déterminé par la nature qualitative ou quantitative des deux variables.
 
@@ -11,7 +11,7 @@ Là encore, le type d'analyse ou de visualisation est déterminé par la nature 
 
 ### Tableaux croisés
 
-On va continuer à travailler avec le jeu de données tiré de l'enquête *Histoire de vie* inclus dans l'extension `questionr`. On commence donc par charger l'extension, le jeu de données, et à le renommer en un nom plus court pour gagner un peu de temps de saisie au clavier :
+On continue à travailler avec le jeu de données tiré de l'enquête *Histoire de vie* inclus dans l'extension `questionr`. On commence donc par charger l'extension, le jeu de données, et à le renommer en un nom plus court pour gagner un peu de temps de saisie au clavier.
 
 ```{r}
 library(questionr)
@@ -53,18 +53,18 @@ Pour faciliter la lecture d'un tableau croisé, il est recommandé de **faire le
 
 ### Test du χ²
 
-Comme on travaille sur un échantillon et pas sur une population entière, on peut compléter ce tableau croisé par un test d'indépendance du χ². Celui-ci permet de rejeter l'hypothèse d'indépendance des lignes et des colonnes du tableau, c'est à dire de rejeter l'hypothèse que les écarts à l'indépendance observés seraient uniquement dus au biais d'échantillonnage (au fait qu'on n'a pas interrogé toute notre population).
+Comme on travaille sur un échantillon et pas sur une population entière, on peut compléter ce tableau croisé par un test d'indépendance du χ². Celui-ci permet de tester, et éventuellement de rejeter, l'hypothèse d'indépendance des lignes et des colonnes du tableau, c'est à dire l'hypothèse que les écarts à l'indépendance observés seraient uniquement dus au biais d'échantillonnage (au fait qu'on n'a pas interrogé toute notre population).
 
-Pour effectuer un test de ce type, on applique la fonction `chisq.test` au tableau croisé calculé précédemment :
+Pour effectuer un test de ce type, on applique la fonction `chisq.test` au tableau croisé calculé précédemment.
 
 ```{r}
 chisq.test(tab)
 ```
 
-Le résultat nous indique trois valeurs : 
+Le résultat nous indique trois valeurs :
 
 - `X-squared`, la valeur de la statistique du χ² pour notre tableau, c'est-à-dire une "distance" entre notre tableau observé et celui attendu si les deux variables étaient indépendantes.
-- `df`, le nombre de degrés de libertés du test.
+- `df`, le nombre de degrés de libertés du test, qui dépend des dimensions du tableau.
 - `p-value`, le fameux *p*, qui indique la probabilité d'obtenir une valeur de la statistique du χ² au moins aussi extrême sous l'hypothèse d'indépendance.
 
 Ici, le *p* est extrêmement petit (la notation `< 2.2e-16` indique qu'il est plus petit que la plus petite valeur proche de zéro calculable par R), donc certainement en-dessous du seuil de décision choisi préalablement au test (souvent 5%, soit 0.05). On peut donc rejeter l'hypothèse d'indépendance des lignes et des colonnes du tableau.
@@ -100,7 +100,6 @@ mosaicplot(tab, las = 3, shade = TRUE)
 ```
 
 Chaque rectangle de ce graphique représente une case de tableau. Sa largeur correspond au pourcentage des modalités en colonnes (il y'a beaucoup d'employés et d'ouvriers et très peu d'"autres"). Sa hauteur correspond aux pourcentages colonnes : la proportion d'hommes chez les cadres est plus élevée que chez les employés. Enfin, la couleur de la case correspond au résidu du test du χ² correspondant : les cases en rouge sont sous-représentées, les cases en bleu sur-représentées, et les cases blanches sont proches des effectifs attendus sous l'hypothèse d'indépendance.
-
 
 
 
@@ -195,7 +194,7 @@ hist(d_nonsport$age)
 
 Si l'âge dans le groupe des non sportifs se rapproche d'une distribution normale, celui des sportifs en semble assez éloigné, notamment du fait de la limite d'âge à 18 ans imposée par construction de l'enquête.
 
-On peut tester cette normalité à l'aide du test de Shapiro-Wilk et de la fonction `shapiro.test` : 
+On peut tester cette normalité à l'aide du test de Shapiro-Wilk et de la fonction `shapiro.test` :
 
 
 ```{r}
@@ -220,13 +219,13 @@ La valeur *p* étant à nouveau extrêmement petite, on peut rejeter l'hypothès
 
 ## Croisement de deux variables quantitatives
 
-Le jeu de données `hdv2003` comportant assez peu de variables quantitatives, on va s'intéresser maintenant à un autre jeu de données comportant des informations du recensement de la population de 2012. On le charge avec :
+Le jeu de données `hdv2003` comportant assez peu de variables quantitatives, on va s'intéresser maintenant à un autre jeu de données comportant des informations du recensement de la population de 2018. On le charge avec :
 
 ```{r}
-data(rp2012)
+data(rp2018)
 ```
 
-Un nouveau tableau de données `rp2012` devrait apparaître dans votre environnement. Celui-ci comprend les 5170 communes de France métropolitaine de plus de 2000 habitants, et une soixantaine de variables telles que le département, la population, le taux de chômage, etc. Pour une description plus complète et une liste des variables, voir section \@ref(rp2012).
+Un nouveau tableau de données `rp2018` devrait apparaître dans votre environnement. Celui-ci comprend les 5417 communes françaises de plus de 2000 habitants, et une soixantaine de variables telles que le département, la population, le taux de chômage, etc. Pour une description plus complète et une liste des variables, voir section \@ref(rp2018).
 
 
 ### Représentation graphique
@@ -234,56 +233,58 @@ Un nouveau tableau de données `rp2012` devrait apparaître dans votre environne
 Quand on croise deux variables quantitatives, l'idéal est de faire une représentation graphique sous forme de nuage de points à l'aide de la fonction `plot`. On va représenter le croisement entre le pourcentage de cadres et le pourcentage de propriétaires dans la commune :
 
 ```{r}
-plot(rp2012$cadres, rp2012$proprio)
+plot(rp2018$cadres, rp2018$proprio)
 ```
 
 Une représentation graphique est l'idéal pour visualiser l'existence d'un lien entre les deux variables. Voici quelques exemples d'interprétation :
 
 ```{r, echo = FALSE, fig.height=10, fig.width=6}
-par(mfrow=c(3,2))
+set.seed(1337)
+
+par(mfrow = c(3, 2))
 
 x <- rnorm(100)
-y <- 2*x + 1 + rnorm(100, 0, 0.4)
-plot(x, y, main = "Dépendance linéaire positive", 
-     xlab = "", ylab = "", col="red")
+y <- 2 * x + 1 + rnorm(100, 0, 0.4)
+plot(x, y, main = "Dépendance linéaire positive",
+     xlab = "", ylab = "", col = "red")
 
 x <- rnorm(100)
-y <- -3*x + 15 + rnorm(100, 0, 0.4)
-plot(x, y, main = "Dépendance linéaire négative", 
-     xlab = "", ylab = "", col="red")
+y <- -3 * x + 15 + rnorm(100, 0, 0.4)
+plot(x, y, main = "Dépendance linéaire négative",
+     xlab = "", ylab = "", col = "red")
 
 x <- rnorm(100)
 y <- exp(x) + 1 + rnorm(100, 0, 0.4)
-plot(x, y, main = "Dépendance non-linéaire monotone", 
-     xlab = "", ylab = "", col="red")
+plot(x, y, main = "Dépendance non-linéaire monotone",
+     xlab = "", ylab = "", col = "red")
 
 x <- rnorm(100)
-y <- 2*x^2 + 1 + rnorm(100, 0, 0.4)
-plot(x, y, main = "Dépendance non-linéaire non monotone", 
-     xlab = "", ylab = "", col="red")
+y <- 2 * x^2 + 1 + rnorm(100, 0, 0.4)
+plot(x, y, main = "Dépendance non-linéaire non monotone",
+     xlab = "", ylab = "", col = "red")
 
 x <- rnorm(100)
 y <- rnorm(100)
-plot(x, y, main = "Indépendance", 
-     xlab = "", ylab = "", col="red")
+plot(x, y, main = "Indépendance",
+     xlab = "", ylab = "", col = "red")
 
 x <- rnorm(100)
 y <- rnorm(100, 0, 0.03)
-plot(x, y, main = "Indépendance", 
-     xlab = "", ylab = "", col="red", ylim = c(-2,2))
+plot(x, y, main = "Indépendance",
+     xlab = "", ylab = "", col = "red", ylim = c(-2, 2))
 
 ```
 
 
-Dans ce premier graphique généré sur nos données, il semble difficile de mettre en évidence une relation de dépendance. Si par contre on croise le pourcentage de cadres et celui de diplômés du supérieur, on obtient une belle relation de dépendance linéaire.
+Dans ce premier graphique généré sur nos données, il semble difficile de mettre en évidence une relation de dépendance. Si par contre on croise le pourcentage de cadres et celui de diplômés de niveau Bac+5 ou plus, on obtient une belle relation de dépendance linéaire.
 
 ```{r}
-plot(rp2012$cadres, rp2012$dipl_sup)
+plot(rp2018$cadres, rp2018$dipl_sup)
 ```
 
 
 
-### Calcul d'indicateurs 
+### Calcul d'indicateurs
 
 En plus d'une représentation graphique, on peut calculer certains indicateurs permettant de mesurer le degré d'association de deux variables quantitatives.
 
@@ -296,7 +297,7 @@ On la calcule dans R à l'aide de la fonction `cor`.
 Ainsi la corrélation entre le pourcentage de cadres et celui de diplômés du supérieur vaut :
 
 ```{r}
-cor(rp2012$cadres, rp2012$dipl_sup)
+cor(rp2018$cadres, rp2018$dipl_sup)
 ```
 
 Ce qui est extrêmement fort. Il y a donc un lien linéaire et positif entre les deux variables (quand la valeur de l'une augmente, la valeur de l'autre augmente également).
@@ -304,7 +305,7 @@ Ce qui est extrêmement fort. Il y a donc un lien linéaire et positif entre les
 À l'inverse, la corrélation entre le pourcentage de cadres et le pourcentage de propriétaires vaut :
 
 ```{r}
-cor(rp2012$cadres, rp2012$proprio)
+cor(rp2018$cadres, rp2018$proprio)
 ```
 
 Ce qui indique, pour nos données, une absence de liaison linéaire entre les deux variables.
@@ -322,78 +323,78 @@ Ainsi, si la valeur la plus basse de la première variable est associée à la v
 
 
 ```{r, echo = FALSE, fig.height=10, fig.width=6}
-par(mfrow=c(3,2))
+set.seed(1337)
+
+par(mfrow = c(3, 2))
 
 x <- rnorm(100)
-y <- 2*x + 1 + rnorm(100, 0, 0.4)
+y <- 2 * x + 1 + rnorm(100, 0, 0.4)
 p <- round(cor(x, y), 2)
 s <- round(cor(x, y, method = "spearman"), 2)
-title <- paste0("Pearson : ", p, " - Spearman : ", s)  
-plot(x, y, main = title, 
-     xlab = "", ylab = "", col="red")
+title <- paste0("Pearson : ", p, " - Spearman : ", s)
+plot(x, y, main = title,
+     xlab = "", ylab = "", col = "red")
 
-x <- rnorm(100)
-y <- -3*x + 15 + rnorm(100, 0, 0.4)
+x <- rnorm(100, 0, 1)
+y <- -3 * x + 15 + rnorm(100, 0, 0.4)
 p <- round(cor(x, y), 2)
 s <- round(cor(x, y, method = "spearman"), 2)
-title <- paste0("Pearson : ", p, " - Spearman : ", s)  
-plot(x, y, main = title, 
-     xlab = "", ylab = "", col="red")
+title <- paste0("Pearson : ", p, " - Spearman : ", s)
+plot(x, y, main = title,
+     xlab = "", ylab = "", col = "red")
 
-x <- rnorm(100)
+x <- rnorm(100, 0, 1.5)
 y <- exp(x) + 1 + rnorm(100, 0, 0.4)
 p <- round(cor(x, y), 2)
 s <- round(cor(x, y, method = "spearman"), 2)
-title <- paste0("Pearson : ", p, " - Spearman : ", s)  
-plot(x, y, main = title, 
-     xlab = "", ylab = "", col="red")
+title <- paste0("Pearson : ", p, " - Spearman : ", s)
+plot(x, y, main = title,
+     xlab = "", ylab = "", col = "red")
 
 x <- rnorm(100)
-y <- 2*x^2 + 1 + rnorm(100, 0, 0.4)
+y <- 2 * x^2 + 1 + rnorm(100, 0, 0.4)
 p <- round(cor(x, y), 2)
 s <- round(cor(x, y, method = "spearman"), 2)
-title <- paste0("Pearson : ", p, " - Spearman : ", s)  
-plot(x, y, main = title, 
-     xlab = "", ylab = "", col="red")
+title <- paste0("Pearson : ", p, " - Spearman : ", s)
+plot(x, y, main = title,
+     xlab = "", ylab = "", col = "red")
 
 x <- rnorm(100)
 y <- rnorm(100)
 p <- round(cor(x, y), 2)
 s <- round(cor(x, y, method = "spearman"), 2)
-title <- paste0("Pearson : ", p, " - Spearman : ", s)  
-plot(x, y, main = title, 
-     xlab = "", ylab = "", col="red")
+title <- paste0("Pearson : ", p, " - Spearman : ", s)
+plot(x, y, main = title,
+     xlab = "", ylab = "", col = "red")
 
-x <- rnorm(20)
-y <- x + 1 + rnorm(20, 0, 0.4)
-x <- c(x, 2, 1.8)
-y <- c(y, -2, -1.9)
+x <- rnorm(50)
+y <- x + 1
+x <- c(x, 2, -2.5)
+y <- c(y, -3, 3.1)
 p <- round(cor(x, y), 2)
 s <- round(cor(x, y, method = "spearman"), 2)
-title <- paste0("Pearson : ", p, " - Spearman : ", s)  
-plot(x, y, main = title, 
-     xlab = "", ylab = "", col="red", ylim = c(-2,2))
-
-
+title <- paste0("Pearson : ", p, " - Spearman : ", s)
+plot(x, y, main = title,
+     xlab = "", ylab = "", col = "red")
 
 ```
 
 La corrélation des rangs a aussi pour avantage d'être moins sensibles aux valeurs extrêmes ou aux points isolés. On dit qu'elle est plus "robuste".
 
-Pour calculer une corrélation de Spearman, on utilise la fonction `cor` mais avec l'argument `method = "spearman"` :
+Pour calculer une corrélation de Spearman, on utilise la fonction `cor` mais avec l'argument `method = "spearman"`.
 
 ```{r}
-cor(rp2012$cadres, rp2012$dipl_sup, method = "spearman")
+cor(rp2018$cadres, rp2018$dipl_sup, method = "spearman")
 ```
 
 ### Régression linéaire
 
-Quand on est en présence d'une association linéaire entre deux variables, on peut vouloir faire la régression linéaire d'une des variables sur l'autres. 
+Quand on est en présence d'une association linéaire entre deux variables, on peut vouloir faire la régression linéaire d'une des variables sur l'autres.
 
 Une régression linéaire simple se fait à l'aide de la fonction `lm` :
 
 ```{r}
-lm(rp2012$cadres ~ rp2012$dipl_sup)
+lm(rp2018$cadres ~ rp2018$dipl_sup)
 ```
 
 ```{block type='rmdnote'}
@@ -402,24 +403,24 @@ On retrouve avec `lm` la syntaxe "formule" déjà rencontrée avec `boxplot`. El
 
 `lm` nous renvoie par défaut les coefficients de la droite de régression :
 
-- l'ordonnée à l'origine `(Intercept)` vaut 0.92
-- le coefficient associé à `dipl_sup` vaut 1.08
+- l'ordonnée à l'origine `(Intercept)` vaut 3.578
+- le coefficient associé à `dipl_sup` vaut 1.256
 
-Pour des résultats plus détaillés, on peut stocker le résultat de la régression dans un objet et utiliser la fonction `summary` :
+Pour des résultats plus détaillés, on peut stocker le résultat de la régression dans un objet et lui appliquer la fonction `summary`.
 
 ```{r}
-reg <- lm(rp2012$cadres ~ rp2012$dipl_sup)
+reg <- lm(rp2018$cadres ~ rp2018$dipl_sup)
 summary(reg)
 ```
 
 Ces résultats montrent notamment que les coefficients sont significativement
-différents de 0. La part de cadres augmente donc bien avec celle de diplômés du supérieur. 
+différents de 0. La part de cadres augmente donc bien avec celle de diplômés du supérieur.
 
-On peut enfin représenter la droite de régression sur notre nuage de points à l'aide de la fonction `abline` :
+On peut enfin représenter la droite de régression sur notre nuage de points à l'aide de la fonction `abline`.
 
 ```{r}
-plot(rp2012$dipl_sup, rp2012$cadres)
-abline(reg, col="red")
+plot(rp2018$dipl_sup, rp2018$cadres)
+abline(reg, col = "red")
 ```
 
 
@@ -442,12 +443,13 @@ mosaicplot(tab, shade=TRUE)
 
 \iffalse
 <div class="solution-exo">
+
 ```{r eval=FALSE}
 library(questionr)
 data(hdv2003)
 tab <- table(hdv2003$qualif, hdv2003$clso)
 
-## Ici la variable indépendante est `qualif`, on calcule donc 
+## Ici la variable indépendante est `qualif`, on calcule donc
 ## les pourcentages lignes
 lprop(tab)
 ```
@@ -459,10 +461,11 @@ Faire un test du χ². Peut-on rejeter l'hypothèse d'indépendance ?
 
 \iffalse
 <div class="solution-exo">
+
 ```{r eval=FALSE}
 chisq.test(tab)
 
-## On peut rejeter l'hypothèse d'indépendance au seuil de 0.05, 
+## On peut rejeter l'hypothèse d'indépendance au seuil de 0.05,
 ## et même au seuil de 0.001
 ```
 </div>
@@ -473,6 +476,7 @@ Représenter ce tableau croisé sous la forme d'un `mosaicplot` en colorant les 
 
 \iffalse
 <div class="solution-exo">
+
 ```{r eval=FALSE}
 mosaicplot(tab, shade = TRUE)
 ```
@@ -487,6 +491,7 @@ Toujours sur le jeu de données `hdv2003`, faire le boxplot qui croise le nombre
 
 \iffalse
 <div class="solution-exo">
+
 ```{r eval=FALSE}
 boxplot(hdv2003$heures.tv ~ hdv2003$occup)
 ```
@@ -499,9 +504,9 @@ Calculer la durée moyenne devant la télévision en fonction du statut d'occupa
 
 \iffalse
 <div class="solution-exo">
+
 ```{r eval=FALSE}
 tapply(hdv2003$heures.tv, hdv2003$occup, mean, na.rm = TRUE)
-
 ```
 </div>
 \fi
@@ -511,14 +516,15 @@ tapply(hdv2003$heures.tv, hdv2003$occup, mean, na.rm = TRUE)
 
 **Exercice 3**
 
-Sur le jeu de données `rp2012`, représenter le nuage de points croisant le pourcentage de personnes sans diplôme (variable `dipl_aucun`) et le pourcentage de propriétaires (variable `proprio`).
+Sur le jeu de données `rp2018`, représenter le nuage de points croisant le pourcentage de personnes sans diplôme (variable `dipl_aucun`) et le pourcentage de propriétaires (variable `proprio`).
 
 \iffalse
 <div class="solution-exo">
+
 ```{r eval=FALSE}
 library(questionr)
-data(rp2012)
-plot(rp2012$dipl_aucun, rp2012$proprio)
+data(rp2018)
+plot(rp2018$dipl_aucun, rp2018$proprio)
 ```
 </div>
 \fi
@@ -528,8 +534,9 @@ Calculer le coefficient de corrélation linéaire correspondant.
 
 \iffalse
 <div class="solution-exo">
+
 ```{r eval=FALSE}
-cor(rp2012$dipl_aucun, rp2012$proprio)
+cor(rp2018$dipl_aucun, rp2018$proprio)
 ```
 </div>
 \fi
