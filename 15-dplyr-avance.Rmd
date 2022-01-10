@@ -2,18 +2,18 @@
 
 L'extension `dplyr` a déjà été présentée dans la partie \@ref(dplyr). On va voir ici comment aller un peu plus loin dans l'utilisation du *package*, notamment en utilisant nos propres fonctions et en appliquant des transformations à des ensembles de colonnes.
 
-On commence par charger les extensions du *tidyverse* ainsi que les jeux de données `hdv2003` et `rp2012` de l'extension `questionr`.
+On commence par charger les extensions du *tidyverse* ainsi que les jeux de données `hdv2003` et `rp2018` de l'extension `questionr`.
 
 ```{r}
 library(tidyverse)
 library(questionr)
 data(hdv2003)
-data(rp2012)
+data(rp2018)
 ```
 
 ```{r include=FALSE}
 hdv2003 <- as_tibble(hdv2003)
-rp2012 <- as_tibble(rp2012)
+rp2018 <- as_tibble(rp2018)
 ```
 
 ## Appliquer ses propres fonctions 
@@ -92,12 +92,12 @@ Le code est plus court, plus lisible, on évite les erreurs de copier/coller, et
 
 ### Exemple avec `summarise`
 
-Autre exemple, cette fois sur le jeu de données `rp2012`. Imaginons qu'on souhaite calculer, pour chaque région, le pourcentage de communes dont le nom se termine par une série de caractères donnée : par exemple, le pourcentage de communes dont le nom se termine par "ac".
+Autre exemple, cette fois sur le jeu de données `rp2018`. Imaginons qu'on souhaite calculer, pour chaque région, le pourcentage de communes dont le nom se termine par une série de caractères donnée : par exemple, le pourcentage de communes dont le nom se termine par "ac".
 
-Comme il ne s'agit pas forcément d'une question triviale, on va décomposer le problème et rappeler (comme vu section \@ref(str-detect)) que la fonction `str_detect()` de l'extension `stringr` permet de détecter quels éléments d'un vecteur de chaînes de caractères correspondent à une expression régulière. Ainsi, si on veut détecter si un nom de commune (variable `rp2012$commune`) se termine par `"ac"`, on utilisera :
+Comme il ne s'agit pas forcément d'une question triviale, on va décomposer le problème et rappeler (comme vu section \@ref(str-detect)) que la fonction `str_detect()` de l'extension `stringr` permet de détecter quels éléments d'un vecteur de chaînes de caractères correspondent à une expression régulière. Ainsi, si on veut détecter si un nom de commune (variable `rp2018$commune`) se termine par `"ac"`, on utilisera :
 
 ```{r results="hide"}
-str_detect(rp2012$commune, "ac$")
+str_detect(rp2018$commune, "ac$")
 ```
 
 ```{block type='rmdnote'}
@@ -107,13 +107,13 @@ Le symbole \\$ dans l'expression régulière `"ac$"` représente la fin de la ch
 Si on veut compter le nombre de communes pour lesquelles on a détecté une terminaison en "ac", on peut utiliser un idiome courant en R et appliquer la fonction `sum()` au résultat précédent : les `TRUE` du résultat du `str_detect` sont alors convertis en 1, les `FALSE` en 0, et le `sum()` renverra donc le nombre de `TRUE`.
 
 ```{r}
-sum(str_detect(rp2012$commune, "ac$"))
+sum(str_detect(rp2018$commune, "ac$"))
 ```
 
 Si on souhaite convertir ce résultat en pourcentage, il faut qu'on divise par le nombre total de communes, et qu'on multiplie par 100.
 
 ```{r}
-sum(str_detect(rp2012$commune, "ac$")) / length(rp2012$commune) * 100
+sum(str_detect(rp2018$commune, "ac$")) / length(rp2018$commune) * 100
 ```
 
 On crée une fonction nommée `prop_suffixe` qui a pour objectif d'effectuer ce calcul. Elle prend en entrée deux arguments : un vecteur de chaînes de caractères et un suffixe à détecter, et retourne le pourcentage d'éléments du vecteur se terminant par le suffixe. On rajoute nous-même le "$" à la fin du suffixe en question pour faciliter l'usage de la fonction. 
@@ -134,15 +134,15 @@ prop_suffixe <- function(v, suffixe) {
 On peut utiliser notre fonction de la manière suivante :
 
 ```{r}
-prop_suffixe(rp2012$commune, "ac")
+prop_suffixe(rp2018$commune, "ac")
 ```
 
-On a donc dans notre jeu de données `r round(prop_suffixe(rp2012$commune, "ac"), 2)`% de communes dont le nom se termine par "ac"^[Attention, le jeu de données ne comporte que les communes de plus de 2000 habitants.].
+On a donc dans notre jeu de données `r round(prop_suffixe(rp2018$commune, "ac"), 2)`% de communes dont le nom se termine par "ac"^[Attention, le jeu de données ne comporte que les communes de plus de 2000 habitants.].
 
 Si maintenant on souhaite calculer ce pourcentage pour toutes les régions françaises, il suffit d'appeler notre fonction dans un `summarise` :
 
 ```{r}
-rp2012 %>%
+rp2018 %>%
     group_by(region) %>%
     summarise(prop_ac = prop_suffixe(commune, "ac")) %>%
     arrange(desc(prop_ac))
@@ -151,7 +151,7 @@ rp2012 %>%
 L'avantage d'avoir créé une fonction pour effectuer cette opération et qu'on peut du coup très facilement faire le même calcul en faisant varier le suffixe recherché.
 
 ```{r}
-rp2012 %>%
+rp2018 %>%
     group_by(region) %>%
     summarise(prop_ac = prop_suffixe(commune, "ieu")) %>%
     arrange(desc(prop_ac))
@@ -871,12 +871,12 @@ prop_prefixe <- function(v, prefixe) {
 </div>
 \fi
 
-Utiliser `prop_prefixe` dans un `summarise` appliqué à `rp2012` pour calculer le pourcentage de communes commençant par "Saint" selon le département. Ordonner les résultats par pourcentage décroissant.
+Utiliser `prop_prefixe` dans un `summarise` appliqué à `rp2018` pour calculer le pourcentage de communes commençant par "Saint" selon le département. Ordonner les résultats par pourcentage décroissant.
 
 \iffalse
 <div class="solution-exo">
 ```{r eval=FALSE}
-rp2012 %>%
+rp2018 %>%
     group_by(departement) %>%
     summarise(
         prop_saint = prop_prefixe(commune, "Saint")
@@ -892,7 +892,7 @@ Créer une fonction `tab_prefixe` qui prend un seul argument `prefixe` et renvoi
 <div class="solution-exo">
 ```{r eval=FALSE}
 tab_prefixe <- function(prefixe) {
-    rp2012 %>%
+    rp2018 %>%
         group_by(departement) %>%
         summarise(
             prop = prop_prefixe(commune, prefixe)
@@ -1237,14 +1237,14 @@ starwars %>%
 
 **Exercice 3.3**
 
-Le code suivant indique, pour chaque région du jeu de données `rp2012`, le nom de la commune ayant la valeur maximale pour les variables `dipl_aucun` et `dipl_sup`.
+Le code suivant indique, pour chaque région du jeu de données `rp2018`, le nom de la commune ayant la valeur maximale pour les variables `dipl_aucun` et `dipl_sup`.
 
 ```{r}
 nom_commune_max <- function(valeurs, communes) {
     communes[valeurs == max(valeurs)]
 }
 
-rp2012 %>%
+rp2018 %>%
     group_by(region) %>%
     summarise(
         across(
@@ -1261,7 +1261,7 @@ Réécrire ce code en utilisant une fonction anonyme, avec la syntaxe de votre c
 <div class="solution-exo">
 ```{r eval=FALSE}
 # Classique
-rp2012 %>%
+rp2018 %>%
     group_by(region) %>%
     summarise(
         across(
@@ -1271,7 +1271,7 @@ rp2012 %>%
         )
     )
 # Formule
-rp2012 %>%
+rp2018 %>%
     group_by(region) %>%
     summarise(
         across(
@@ -1281,7 +1281,7 @@ rp2012 %>%
         )
     )
 # Compacte
-rp2012 %>%
+rp2018 %>%
     group_by(region) %>%
     summarise(
         across(
@@ -1300,7 +1300,7 @@ rp2012 %>%
 <div class="solution-exo">
 ```{r eval=FALSE}
 # Formule
-rp2012 %>%
+rp2018 %>%
     group_by(region) %>%
     summarise(
         across(
@@ -1313,7 +1313,7 @@ rp2012 %>%
         )
     )
 # Compacte
-rp2012 %>%
+rp2018 %>%
     group_by(region) %>%
     summarise(
         across(

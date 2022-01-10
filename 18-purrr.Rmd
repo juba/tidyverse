@@ -2,13 +2,13 @@
 
 `purrr` est une extension du *tidyverse* qui fournit des outils pour travailler avec les vecteurs et les fonctions, et notamment pour itérer sur les éléments de vecteurs ou de listes en leur appliquant une fonction.
 
-Dans cette section on aura besoin des extensions du *tidyverse* (dont `purrr` fait partie), que nous chargeons donc immédiatement, de même que les jeux de données `rp2012` et `hdv2003` de `questionr`.
+Dans cette section on aura besoin des extensions du *tidyverse* (dont `purrr` fait partie), que nous chargeons donc immédiatement, de même que les jeux de données `rp2018` et `hdv2003` de `questionr`.
 
 ```{r message=FALSE}
 library(tidyverse)
 library(questionr)
 data(hdv2003)
-data(rp2012)
+data(rp2018)
 ```
 
 ## Exemple d'application
@@ -199,13 +199,13 @@ mots %>%
 
 ### `map_dfr()` et `map_dfc()`
 
-La page suivante contient les données du jeu de données `rp2012` sous la forme de fichiers CSV, avec un fichier par département :
+La page suivante contient les données du jeu de données `rp2018` sous la forme de fichiers CSV, avec un fichier par département :
 
-https://github.com/juba/tidyverse/tree/main/resources/data/rp2012
+https://github.com/juba/tidyverse/tree/main/resources/data/rp2018
 
 À partir de cette page, on peut télécharger les fichiers CSV en utilisant des adresses de la forme :
 
-https://raw.githubusercontent.com/juba/tidyverse/main/resources/data/rp2012/rp2012_01.csv
+https://raw.githubusercontent.com/juba/tidyverse/main/resources/data/rp2018/rp2018_01.csv
 
 En remplaçant "01" par le code du département souhaité.
 
@@ -214,7 +214,7 @@ On peut créer une fonction `genere_url()` qui, à partir d'une liste de codes d
 ```{r}
 genere_url <- function(codes) {
     paste0(
-        "https://raw.githubusercontent.com/juba/tidyverse/main/resources/data/rp2012/rp2012_",
+        "https://raw.githubusercontent.com/juba/tidyverse/main/resources/data/rp2018/rp2018_",
         codes,
         ".csv"
     )
@@ -515,7 +515,7 @@ Au final, on notera que l'utilisation de `walk()`, comme elle ne retourne pas de
 
 ## `map2` et `pmap` : itérer sur plusieurs vecteurs en parallèle
 
-Supposons qu'un.e collègue, qui travaille avec nous sur le jeu de données `rp2012`, nous a envoyé une liste de variables dont elle voudrait connaître les corrélations. Cette liste a été saisie dans un tableur sur deux colonnes, chaque ligne indiquant deux variables pour lesquelles elle souhaite qu'on effectue ce calcul.
+Supposons qu'un.e collègue, qui travaille avec nous sur le jeu de données `rp2018`, nous a envoyé une liste de variables dont elle voudrait connaître les corrélations. Cette liste a été saisie dans un tableur sur deux colonnes, chaque ligne indiquant deux variables pour lesquelles elle souhaite qu'on effectue ce calcul.
 
 Après importation dans R on obtient le tableau de données suivant.
 
@@ -532,20 +532,20 @@ correlations <- tribble(
 correlations
 ```
 
-Pour pouvoir calculer les corrélations souhaitées, on doit itérer sur les deux vecteurs `var1` et `var2` *en parallèle*, et calculer la corrélation entre la colonne de `rp2012` correspondant à la valeur courante de `var1` et celle correspondant à la valeur courante de `var2`.
+Pour pouvoir calculer les corrélations souhaitées, on doit itérer sur les deux vecteurs `var1` et `var2` *en parallèle*, et calculer la corrélation entre la colonne de `rp2018` correspondant à la valeur courante de `var1` et celle correspondant à la valeur courante de `var2`.
 
 C'est précisément ce que fait la fonction `map2()`. Celle-ci prend trois arguments en entrée :
 
 1. deux listes ou vecteurs qui seront itérés en parallèle
 2. une fonction qui accepte deux arguments : ceux-ci prendront tour à tour les deux valeurs courantes des deux listes ou vecteurs itérés
 
-On peut donc utiliser `map2` pour itérer parallèlement sur les deux colonnes `var1` et `var2` de notre tableau `correlations`, et calculer la corrélation des deux colonnes correspondantes de `rp2012`.
+On peut donc utiliser `map2` pour itérer parallèlement sur les deux colonnes `var1` et `var2` de notre tableau `correlations`, et calculer la corrélation des deux colonnes correspondantes de `rp2018`.
 
 ```{r}
 map2(
     correlations$var1,
     correlations$var2, 
-    ~ cor(rp2012[[.x]], rp2012[[.y]])
+    ~ cor(rp2018[[.x]], rp2018[[.y]])
 )
 ```
 
@@ -555,7 +555,7 @@ map2(
 correlations$corr <- map2_dbl(
     correlations$var1,
     correlations$var2,
-    ~ cor(rp2012[[.x]], rp2012[[.y]])
+    ~ cor(rp2018[[.x]], rp2018[[.y]])
 )
 
 correlations
@@ -587,9 +587,9 @@ On est dans une situation similaire à la précédente, sauf que cette fois on d
 Dans notre exemple on aurait donc un appel de la forme suivante.
 
 ```{r include=FALSE}
-data(rp2012)
-rp2012_orig <- rp2012
-rp2012 <- sample_n(rp2012, size = 500)
+data(rp2018)
+rp2018_orig <- rp2018
+rp2018 <- sample_n(rp2018, size = 500)
 ```
 
 ```{r eval=FALSE}
@@ -597,7 +597,7 @@ pwalk(
     list(nuages$var1, nuages$var2, nuages$titre),
     function(var1, var2, titre) {
         plot(
-            rp2012[[var1]], rp2012[[var2]],
+            rp2018[[var1]], rp2018[[var2]],
             xlab = var1, ylab = var2, main = titre
         )
     }
@@ -610,7 +610,7 @@ pwalk(
     list(nuages$var1, nuages$var2, nuages$titre),
     function(var1, var2, titre) {
         plot(
-            rp2012[[var1]], rp2012[[var2]],
+            rp2018[[var1]], rp2018[[var2]],
             xlab = var1, ylab = var2, main = titre
         )
     }
@@ -625,7 +625,7 @@ pwalk(
     list(v1 = nuages$var1, v2 = nuages$var2, titre = nuages$titre),
     function(v1, v2, titre) {
         plot(
-            rp2012[[v1]], rp2012[[v2]],
+            rp2018[[v1]], rp2018[[v2]],
             xlab = v1, ylab = v2, main = titre
         )
     }
@@ -640,7 +640,7 @@ pwalk(
     nuages,
     function(var1, var2, titre) {
         plot(
-            rp2012[[var1]], rp2012[[var2]],
+            rp2018[[var1]], rp2018[[var2]],
             xlab = var1, ylab = var2, main = titre
         )
     }
@@ -654,7 +654,7 @@ pwalk(
     nuages,
     ~ {
         plot(
-            rp2012[[..1]], rp2012[[..2]],
+            rp2018[[..1]], rp2018[[..2]],
             xlab = ..1, ylab = ..2, main = ..3
         )
     }
@@ -664,7 +664,7 @@ pwalk(
 Comme pour `map()` et `map2()`, `pmap()` propose aussi les variantes `pmap_int()`, `pmap_chr()`, etc.
 
 ```{r include=FALSE}
-rp2012 <- rp2012_orig
+rp2018 <- rp2018_orig
 ```
 
 
@@ -913,12 +913,12 @@ parcours <- parcours %>%
 
 **Exercice 1.3**
 
-Le vecteur suivant contient les adresses de deux fichiers CSV contenant les données de `rp2012` pour les départements de l'Ain et du Rhône :
+Le vecteur suivant contient les adresses de deux fichiers CSV contenant les données de `rp2018` pour les départements de l'Ain et du Rhône :
 
 ```{r}
 urls <- c(
-    "https://raw.githubusercontent.com/juba/tidyverse/main/resources/data/rp2012/rp2012_01.csv",
-    "https://raw.githubusercontent.com/juba/tidyverse/main/resources/data/rp2012/rp2012_69.csv"
+    "https://raw.githubusercontent.com/juba/tidyverse/main/resources/data/rp2018/rp2018_01.csv",
+    "https://raw.githubusercontent.com/juba/tidyverse/main/resources/data/rp2018/rp2018_69.csv"
 )
 ```
 
@@ -1118,7 +1118,7 @@ affiche_dimensions <- function(dfs) {
 
 l <- list(
     hdv = hdv2003,
-    rp = rp2012
+    rp = rp2018
 )
 
 affiche_dimensions(l)
