@@ -244,6 +244,48 @@ economics
 ggplot(economics) + geom_line(aes(x = date, y = unemploy))
 ```
 
+
+## `geom_hex` et `geom_bin2d`
+
+Lorsque le nombre de points est important, la représentation sous forme de nuage peut vite devenir illisible : la superposition des données empêche de voir précisément leur répartition.
+
+```{r}
+ggplot(rp2018) + geom_point(aes(x = cadres, y = dipl_sup))
+```
+
+Dans ces cas-là, on peut utiliser `geom_bin2d`, qui va créer une grille sur toute la zone du graphique et colorier chaque carré selon le nombre de points qu'il contient (les carrés n'en contenant aucun restant transparents).
+
+```{r}
+ggplot(rp2018) +
+  geom_bin2d(aes(x = cadres, y = dipl_sup))
+```
+
+Une variante fonctionnant de manière très semblable est `geom_hex`, qui elle crée une grille constituée d'hexagones.
+
+```{r}
+ggplot(rp2018) +
+  geom_hex(aes(x = cadres, y = dipl_sup))
+```
+
+Dans les deux cas, on peut faire varier le nombre de zones, et donc la finesse du "quadrillage", en utilisant l'argument `bins` (dont la valeur par défaut est 30).
+
+```{r}
+ggplot(rp2018) +
+  geom_bin2d(
+    aes(x = cadres, y = dipl_sup), 
+    bins = 50
+  )
+```
+
+```{r}
+ggplot(rp2018) +
+  geom_hex(
+    aes(x = cadres, y = dipl_sup), 
+    bins = 70
+  )
+```
+
+
 ## Mappages
 
 Un *mappage*, dans `ggplot2`, est une mise en relation entre un **attribut graphique** du `geom` (position, couleur, taille...) et une **variable** du tableau de données.
