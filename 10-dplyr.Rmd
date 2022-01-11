@@ -5,7 +5,7 @@ editor_options:
 ---
 # Manipuler les données avec `dplyr` {#dplyr}
 
-`dplyr` est une extension facilitant le traitement et la manipulation de données contenues dans une ou plusieurs tables. Elle propose une syntaxe claire et cohérente, sous formes de verbes, pour la plupart des opérations de ce type. Ses fonctions sont en général plus rapides que leur équivalent sous R de base, elles permettent donc de traiter efficacement des données de grande dimension.
+`dplyr` est une extension facilitant le traitement et la manipulation de données contenues dans une ou plusieurs tables. Elle propose une syntaxe claire et cohérente, sous formes de verbes, pour la plupart des opérations de ce type.
 
 `dplyr` part du principe que les données sont organisées selon le modèle des *tidy data* (voir la section \@ref(tidydata)). Les fonctions de l'extension peuvent s'appliquer à des tableaux de type `data.frame` ou `tibble`, et elles retournent systématiquement un `tibble` (voir la section \@ref(tibbles)).
 
@@ -19,7 +19,7 @@ Le code présent dans ce document nécessite d'avoir installé la version 1.0 de
 library(tidyverse)
 ```
 
-On peut également la charger individuellement avec :
+On peut également la charger individuellement.
 
 ```{r}
 library(dplyr)
@@ -107,18 +107,19 @@ Si on fait précéder le nom d'un `-`, la colonne est éliminée plutôt que sé
 select(airports, -lat, -lon)
 ```
 
-`select` comprend toute une série de fonctions facilitant la sélection de colonnes multiples. Par exemple, `starts_with`, `ends_width`, `contains` ou `matches` permettent d'exprimer des conditions sur les noms de variables :
+`select` comprend toute une série de fonctions facilitant la sélection de colonnes multiples. Par exemple, `starts_with`, `ends_width`, `contains` ou `matches` permettent d'exprimer des conditions sur les noms de variables.
 
 ```{r}
 select(flights, starts_with("dep_"))
 ```
 
-La syntaxe `colonne1:colonne2` permet de sélectionner toutes les colonnes situées entre `colonne1` et `colonne2` incluses^[À noter que cette opération est un peu plus "fragile" que les autres, car si l'ordre des colonnes change elle peut renvoyer un résultat différent.] :
+La syntaxe `colonne1:colonne2` permet de sélectionner toutes les colonnes situées entre `colonne1` et `colonne2` incluses^[À noter que cette opération est un peu plus "fragile" que les autres, car si l'ordre des colonnes change elle peut renvoyer un résultat différent.].
 
 ```{r}
 select(flights, year:day)
 ```
 
+`select` propose de nombreuses autres possibilités de sélection qui sont décrites dans [la documentation de l'extension `tidyselect`](https://tidyselect.r-lib.org/reference/language.html).
 
 Une variante de `select` est `rename`^[Il est également possible de renommer des colonnes directement avec `select`, avec la même syntaxe que pour `rename`.], qui permet de renommer des colonnes. On l'utilise en lui passant des paramètres de la forme `nouveau_nom = ancien_nom`. Ainsi, si on veut renommer les colonnes `lon` et `lat` de `airports` en `longitude` et `latitude` :
 
@@ -251,7 +252,7 @@ filter(flights, dest == "LAX")
 flights %>% filter(dest == "LAX")
 ```
 
-Ce qui est intéressant dans cette histoire, c'est qu'on va pouvoir enchaîner les *pipes*. Plutôt que d'écrire :
+Ce qui est particulièrement intéressant, c'est qu'on va pouvoir enchaîner les *pipes*. Plutôt que d'écrire :
 
 ```{r eval=FALSE}
 select(filter(flights, dest == "LAX"), dep_delay, arr_delay)
@@ -280,7 +281,7 @@ flights %>%
 On appelle une suite d'instructions de ce type un *pipeline*.
 ```
 
-Évidemment, il est naturel de vouloir récupérer le résultat final d'un *pipeline* pour le stocker dans un objet. Par exemple, on peut stocker le résultat du *pipeline* ci-dessus dans un nouveau tableau `delay_la` de la manière suivante :
+Évidemment, il est naturel de vouloir récupérer le résultat final d'un *pipeline* pour le stocker dans un objet. On peut stocker le résultat du *pipeline* ci-dessus dans un nouveau tableau `delay_la` de la manière suivante :
 
 ```{r}
 delay_la <- flights %>%
@@ -291,7 +292,7 @@ delay_la <- flights %>%
 
 Dans ce cas, `delay_la` contiendra le tableau final, obtenu après application des trois instructions `filter`, `select` et `arrange`.
 
-Cette notation n'est pas forcément très intuitive au départ. Il faut bien comprendre que c'est le résultat final, une fois application de toutes les opérations du *pipeline*, qui est renvoyé et stocké dans l'objet en début de ligne.
+Cette notation n'est pas forcément très intuitive au départ : il faut bien comprendre que c'est le résultat final, une fois application de toutes les opérations du *pipeline*, qui est renvoyé et stocké dans l'objet en début de ligne.
 
 Une manière de le comprendre peut être de voir que la notation suivante :
 
@@ -522,7 +523,9 @@ flights %>%
   summarise(nb = n())
 ```
 
-Cela peut permettre "d'enchaîner" les opérations groupées. Dans l'exemple suivant on calcule le pourcentage des trajets pour chaque destination par rapport à tous les trajets du mois :
+R nous le signale d'ailleurs via un message d'avertissement : `summarise() has grouped output by 'month', 'origin'`.
+
+Ce dégroupage progressif peut permettre "d'enchaîner" les opérations groupées. Dans l'exemple suivant on calcule le pourcentage des trajets pour chaque destination par rapport à tous les trajets du mois :
 
 ```{r}
 flights %>%
@@ -541,7 +544,15 @@ flights %>%
   mutate(pourcentage = nb / sum(nb) * 100)
 ```
 
-À noter que `count`, par contre, renvoie un tableau non groupé :
+On peut aussi spécifier précisément le comportement de dégroupage de `summarise` en lui fournissant un argument supplémentaire `.groups` qui peut prendre notamment les valeurs suivantes :
+
+- `"drop_last"` : dégroupe seulement de la dernière variable de groupage 
+- `"drop"` : dégroupe totalement le tableau résultat (équivaut à l'application d'un `ungroup`)
+- `"keep"` : conserve toutes les variables de groupage
+
+Ce concept de dégroupage successif peut être un peu déroutant de prime abord. Il est donc utile de faire attention aux avertissements affichés par ces opérations, et il ne faut pas hésiter à ajouter un `ungroup` en fin de pipeline si on sait qu'on ne souhaite pas utiliser les groupes encore existants par la suite.
+
+À noter que la fonction `count`, de son côté, renvoie un tableau non groupé :
 
 ```{r}
 flights %>%
@@ -635,7 +646,7 @@ flights %>%
 ```{r}
 flights %>%
   select(day, month) %>%
-  distinct
+  distinct()
 ```
 
 On peut lui spécifier une liste de variables : dans ce cas, pour toutes les observations ayant des valeurs identiques pour les variables en question, `distinct` ne conservera que la première d'entre elles.
@@ -666,13 +677,13 @@ flights %>%
 
 ### `relocate`
 
-`relocate` peut être utilisé pour réordonner les colonnes d'une table. Par défaut, si on lui passe un ou plusieurs noms de colonnes, `relocate` les place en début de tableau :
+`relocate` peut être utilisé pour réordonner les colonnes d'une table. Par défaut, si on lui passe un ou plusieurs noms de colonnes, `relocate` les place en début de tableau.
 
 ```{r}
 airports %>% relocate(lat, lon)
 ```
 
-Les arguments supplémentaires `.before` et `.after` permettent de préciser à quel endroit déplacer la ou les colonnes indiquées :
+Les arguments supplémentaires `.before` et `.after` permettent de préciser à quel endroit déplacer la ou les colonnes indiquées.
 
 ```{r}
 airports %>% relocate(starts_with('tz'), .after = name)
@@ -746,7 +757,7 @@ bind_cols(t1, t2, t3)
 
 #### Clés implicites
 
-Très souvent, les données relatives à une analyse sont réparties dans plusieurs tables différentes. Dans notre exemple, on peut voir que la table `flights` contient seulement le code de la compagnie aérienne du vol dans la variable `carrier` :
+Très souvent, les données relatives à une analyse sont réparties dans plusieurs tables différentes. Dans notre exemple, on peut voir que la table `flights` contient le code de la compagnie aérienne du vol dans la variable `carrier` :
 
 ```{r}
 flights %>% select(carrier)
@@ -758,7 +769,7 @@ Et que par ailleurs la table `airlines` contient une information supplémentaire
 airlines
 ```
 
-Il est donc naturel de vouloir associer les deux, en l'occurrence pour ajouter les noms complets des compagnies à la table `flights`. Dans ce cas on va faire une *jointure* : les lignes d'une table seront associées à une autre en se basant non pas sur leur position, mais sur les valeurs d'une ou plusieurs colonnes. Ces colonnes sont appelées des *clés*.
+Il est donc naturel de vouloir associer les deux, ici pour ajouter les noms complets des compagnies à la table `flights`. Pour cela on va effectuer une *jointure* : les lignes d'une table seront associées à une autre en se basant non pas sur leur position, mais sur les valeurs d'une ou plusieurs colonnes. Ces colonnes sont appelées des *clés*.
 
 Pour faire une jointure de ce type, on va utiliser la fonction `left_join` :
 
@@ -773,7 +784,7 @@ left_join(flights, airlines) %>%
   select(month, day, carrier, name)
 ```
 
-On voit que la table résultat est bien la fusion des deux tables d'origine selon les valeurs des deux colonnes clés `carrier`. On est parti de la table `flights`, et pour chaque ligne on a ajouté les colonnes de `airlines` pour lesquelles la valeur de `carrier` est la même. On a donc bien une nouvelle colonne `name` dans notre table résultat, avec le nom complet de la compagnie aérienne.
+On voit que la table résultat est bien la fusion des deux tables d'origine selon les valeurs des deux colonnes clés `carrier`. On est parti de la table `flights`, et pour chaque ligne de celle-ci on a ajouté les colonnes de `airlines` pour lesquelles la valeur de `carrier` est la même. On a donc bien une nouvelle colonne `name` dans notre table résultat, avec le nom complet de la compagnie aérienne.
 
 ```{block type='rmdnote'}
 À noter qu'on peut tout à fait utiliser le *pipe* avec les fonctions de jointure :
@@ -781,11 +792,12 @@ On voit que la table résultat est bien la fusion des deux tables d'origine selo
 `flights %>% left_join(airlines)`.
 ```
 
-Nous sommes ici dans le cas le plus simple concernant les clés de jointure : les deux clés sont uniques et portent le même nom dans les deux tables. Par défaut, si on ne lui spécifie pas explicitement les clés, `dplyr` fusionne en utilisant l'ensemble des colonnes communes aux deux tables. On peut d'ailleurs voir dans cet exemple qu'un message a été affiché précisant que la jointure s'est faite sur la variable `carrier`.
+Nous sommes ici dans le cas le plus simple concernant les clés de jointure : les deux clés sont uniques et portent le même nom dans les deux tables. Par défaut, si on ne lui spécifie pas explicitement les clés, `dplyr` fusionne en utilisant l'ensemble des colonnes communes aux deux tables. On peut d'ailleurs voir dans cet exemple qu'un message a été affiché précisant que la jointure s'est bien faite sur la variable `carrier`.
+
 
 #### Clés explicites
 
-La table `airports`, elle, contient des informations supplémentaires sur les aéroports : nom complet, altitude, position géographique, etc. Chaque aéroport est identifié par un code contenu dans la colonne `faa`.
+La table `airports`, contient des informations supplémentaires sur les aéroports : nom complet, altitude, position géographique, etc. Chaque aéroport est identifié par un code contenu dans la colonne `faa`.
 
 Si on regarde la table `flights`, on voit que le code d'identification des aéroports apparaît à deux endroits différents : pour l'aéroport de départ dans la colonne `origin`, et pour celui d'arrivée dans la colonne `dest`. On a donc deux clés de jointure possibles, et qui portent un nom différent de la clé de `airports`.
 
@@ -799,13 +811,14 @@ airports_ex <- airports %>% select(faa, alt, name)
 Si on se contente d'un `left_join` comme à l'étape précédente, on obtient un message d'erreur car aucune colonne commune ne peut être identifiée comme clé de jointure :
 
 ```{r error=TRUE}
-left_join(flights_ex, airports_ex)
+flights_ex %>% left_join(airports_ex)
 ```
 
 On doit donc spécifier explicitement les clés avec l'argument `by` de `left_join`. Ici la clé est nommée `origin` dans la première table, et `faa` dans la seconde. La syntaxe est donc la suivante :
 
 ```{r}
-left_join(flights_ex, airports_ex, by = c("origin" = "faa"))
+flights_ex %>% 
+  left_join(airports_ex, by = c("origin" = "faa"))
 ```
 
 On constate que les deux nouvelles colonnes `name` et `alt` contiennent bien les données correspondant à l'aéroport de départ.
@@ -820,17 +833,21 @@ flights_ex <- flights_ex %>%
 Supposons qu'on souhaite maintenant fusionner à nouveau les informations de la table `airports`, mais cette fois pour les aéroports d'arrivée de notre nouvelle table `flights_ex`. Les deux clés sont donc désormais `dest` dans la première table, et `faa` dans la deuxième. La syntaxe est donc la suivante :
 
 ```{r}
-left_join(flights_ex, airports_ex, by=c("dest" = "faa"))
+flights_ex %>%
+  left_join(airports_ex, by = c("dest" = "faa"))
 ```
 
 Cela fonctionne, les informations de l'aéroport d'arrivée ont bien été ajoutées, mais on constate que les colonnes ont été renommées. En effet, ici les deux tables fusionnées contenaient toutes les deux des colonnes `name` et `alt`. Comme on ne peut pas avoir deux colonnes avec le même nom dans un tableau, `dplyr` a renommé les colonnes de la première table en `name.x` et `alt.x`, et celles de la deuxième en `name.y` et `alt.y`.
 
-C'est pratique, mais pas forcément très parlant. On pourrait renommer manuellement les colonnes avec `rename` avant de faire la jointure pour avoir des intitulés plus explicites, mais on peut aussi utiliser l'argument `suffix` de `left_join`, qui permet d'indiquer les suffixes à ajouter aux colonnes. Ainsi, on peut faire :
+C'est pratique, mais pas forcément très parlant. On pourrait renommer manuellement les colonnes avec `rename` avant de faire la jointure pour avoir des intitulés plus explicites, mais on peut aussi utiliser l'argument `suffix` de `left_join`, qui permet d'indiquer les suffixes à ajouter aux colonnes.
 
 ```{r}
-left_join(flights_ex, airports_ex,
-          by = c("dest" = "faa"),
-          suffix = c("_depart", "_arrivee"))
+flights_ex %>%
+  left_join(
+    airports_ex,
+    by = c("dest" = "faa"),
+    suffix = c("_depart", "_arrivee")
+  )
 ```
 
 On obtient ainsi directement des noms de colonnes nettement plus clairs.
@@ -871,11 +888,11 @@ kable(voitures)
 Si on fait un `left_join` de `voitures` sur `personnes` :
 
 ```{r, echo=TRUE, eval=FALSE}
-left_join(personnes, voitures)
+personnes %>% left_join(voitures)
 ```
 
 ```{r, echo=FALSE, eval=TRUE}
-kable(left_join(personnes, voitures))
+kable(personnes %>% left_join(voitures))
 ```
 
 On voit que chaque ligne de `personnes` est bien présente, et qu'on lui a ajouté une ligne de `voitures` correspondante si elle existe. Dans le cas du `Scenic`, il n'y a avait pas de ligne dans `voitures`, donc `vitesse` a été mise à `NA`. Dans le cas de `208`, présente dans `voitures` mais pas dans `personnes`, la ligne n'apparaît pas.
@@ -883,11 +900,11 @@ On voit que chaque ligne de `personnes` est bien présente, et qu'on lui a ajout
 Si on fait un `left_join` cette fois de `personnes` sur `voitures`, c'est l'inverse :
 
 ```{r, echo=TRUE, eval=FALSE}
-left_join(voitures, personnes)
+voitures %>% left_join(personnes)
 ```
 
 ```{r, echo=FALSE, eval=TRUE}
-kable(left_join(voitures, personnes))
+kable(voitures %>% left_join(personnes))
 ```
 
 La ligne `208` est là, mais `nom` est à `NA`. Par contre `Monique` est absente. Et on remarquera que la ligne `Twingo`, présente deux fois dans `personnes`, a été dupliquée pour être associée aux deux lignes de données de `Sylvie` et `Rayan`.
@@ -903,12 +920,12 @@ En général, `left_join` sera le type de jointures le plus fréquemment utilis�
 La jointure `right_join` est l'exacte symétrique de `left_join`, c'est-à dire que `right_join(x, y)` est équivalent à `left_join(y, x)` :
 
 ```{r, echo=TRUE, eval=FALSE}
-right_join(personnes, voitures)
+personnes %>% right_join(voitures)
 ```
 
 
 ```{r, echo=FALSE, eval=TRUE}
-kable(right_join(personnes, voitures))
+kable(personnes %>% right_join(voitures))
 ```
 
 
@@ -917,12 +934,12 @@ kable(right_join(personnes, voitures))
 Dans le cas de `inner_join(x, y)`, seules les lignes présentes à la fois dans `x` et `y` sont conservées (et si nécessaire dupliquées) dans la table résultat :
 
 ```{r, echo=TRUE, eval=FALSE}
-inner_join(personnes, voitures)
+personnes %>% inner_join(voitures)
 ```
 
 
 ```{r, echo=FALSE, eval=TRUE}
-kable(inner_join(personnes, voitures))
+kable(personnes %>% inner_join(voitures))
 ```
 
 Ici la ligne `208` est absente, ainsi que la ligne `Monique`, qui dans le cas d'un `left_join` avait été conservée et s'était vue attribuer une `vitesse` à `NA`.
@@ -932,11 +949,11 @@ Ici la ligne `208` est absente, ainsi que la ligne `Monique`, qui dans le cas d'
 Dans le cas de `full_join(x, y)`, toutes les lignes de `x` et toutes les lignes de `y` sont conservées (avec des `NA` ajoutés si nécessaire) même si elles sont absentes de l'autre table :
 
 ```{r, echo=TRUE, eval=FALSE}
-full_join(personnes, voitures)
+personnes %>% full_join(voitures)
 ```
 
 ```{r, echo=FALSE, eval=TRUE}
-kable(full_join(personnes, voitures))
+kable(personnes %>% full_join(voitures))
 ```
 
 
@@ -947,22 +964,22 @@ kable(full_join(personnes, voitures))
 Ainsi, `semi_join` ne conservera que les lignes de `x` pour lesquelles une ligne de `y` existe également, et supprimera les autres. Dans notre exemple, la ligne `Monique` est donc supprimée :
 
 ```{r, echo=TRUE, eval=FALSE}
-semi_join(personnes, voitures)
+personnes %>% semi_join(voitures)
 ```
 
 ```{r, echo=FALSE, eval=TRUE}
-kable(semi_join(personnes, voitures))
+kable(personnes %>% semi_join(voitures))
 ```
 
 
 Un `anti_join` fait l'inverse, il ne conserve que les lignes de `x` absentes de `y`. Dans notre exemple, on ne garde donc que la ligne `Monique` :
 
 ```{r, echo=TRUE, eval=FALSE}
-anti_join(personnes, voitures)
+personnes %>% anti_join(voitures)
 ```
 
 ```{r, echo=FALSE, eval=TRUE}
-kable(anti_join(personnes, voitures))
+kable(personnes %>% anti_join(voitures))
 ```
 
 
