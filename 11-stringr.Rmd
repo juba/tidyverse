@@ -18,7 +18,7 @@ Dans ce qui suit on va utiliser le court tableau d'exemple `d` suivant :
 d <- tibble(
   nom = c("Mr Félicien Machin", "Mme Raymonde Bidule", "M. Martial Truc", "Mme Huguette Chose"),
   adresse = c("3 rue des Fleurs", "47 ave de la Libération", "12 rue du 17 octobre 1961", "221 avenue de la Libération"),
-  ville = c("Nouméa", "Marseille", "Vénissieux", "Marseille") 
+  ville = c("Nouméa", "Marseille", "Vénissieux", "Marseille")
 )
 ```
 
@@ -28,7 +28,7 @@ kable(d)
 
 ## Expressions régulières
 
-Les fonctions présentées ci-dessous sont pour la plupart prévues pour fonctionner avec des *expressions régulières*. Celles-ci constituent un mini-langage, qui peut paraître assez cryptique, mais qui est très puissant pour spécifier des motifs de chaînes de caractères. 
+Les fonctions présentées ci-dessous sont pour la plupart prévues pour fonctionner avec des *expressions régulières*. Celles-ci constituent un mini-langage, qui peut paraître assez cryptique, mais qui est très puissant pour spécifier des motifs de chaînes de caractères.
 
 Elles permettent par exemple de sélectionner le dernier mot avant la fin d'une chaîne, l'ensemble des suites alphanumériques commençant par une majuscule, des nombres de 3 ou 4 chiffres situés en début de chaîne, et beaucoup beaucoup d'autres choses encore bien plus complexes.
 
@@ -126,7 +126,7 @@ d %>% separate(nom, c("genre", "prenom", "nom"), sep = " ")
 
 ## Extraire des sous-chaînes par position
 
-La fonction `str_sub` permet d'extraire des sous-chaînes par position, en indiquant simplement les positions des premier et dernier caractères : 
+La fonction `str_sub` permet d'extraire des sous-chaînes par position, en indiquant simplement les positions des premier et dernier caractères :
 
 ```{r}
 str_sub(d$ville, 1, 3)
@@ -200,26 +200,26 @@ d %>% extract(adresse, "type_rue", "^\\d+ (.*?) ", remove = FALSE)
 
 ## Remplacer des motifs
 
-La fonction `str_replace` permet de remplacer une chaîne ou un motif par une autre.
+La fonction `str_replace_all` permet de remplacer une chaîne ou un motif par une autre.
 
-Par exemple, on peut remplace les occurrence de "Mr" par "M." dans les noms de notre tableau :
+Par exemple, on peut remplacer les occurrence de "Mr" par "M." dans notre variable `nom` :
 
 ```{r}
-str_replace(d$nom, "Mr", "M.")
+str_replace_all(d$nom, "Mr", "M.")
 ```
 
-La variante `str_replace_all` permet de spécifier plusieurs remplacements d'un coup :
+On peut également spécifier plusieurs remplacements en une seule fois :
 
 ```{r}
 str_replace_all(
-    d$adresse, 
+    d$adresse,
     c("avenue" = "Avenue", "ave" = "Avenue", "rue" = "Rue")
 )
 ```
 
 ## Modificateurs de motifs {#modificateurs}
 
-Par défaut, les motifs passés aux fonctions comme `str_detect`, `str_extract` ou `str_replace` sont des expressions régulières classiques. 
+Par défaut, les motifs passés aux fonctions comme `str_detect`, `str_extract` ou `str_replace` sont des expressions régulières classiques.
 
 On peut spécifier qu'un motif n'est pas une expression régulière mais une chaîne de caractères normale en lui appliquant la fonction `fixed`. Par exemple, si on veut compter le nombre de points dans les noms de notre tableau, le paramétrage par défaut ne fonctionnera pas car dans une expression régulière le `.` est un symbole signifiant "n'importe quel caractère" :
 
@@ -263,7 +263,7 @@ Dans ces exercices on utilise un tableau `d`, généré par le code suivant :
 d <- tibble(
   nom = c("M. rené Bézigue", "Mme Paulette fouchin", "Mme yvonne duluc", "M. Jean-Yves Pernoud"),
   naissance = c("18/04/1937 Vesoul", "En 1947 à Grenoble (38)", "Le 5 mars 1931 à Bar-le-Duc", "Marseille, juin 1938"),
-  profession = c("Ouvrier agric", "ouvrière qualifiée", "Institutrice", "Exploitant agric") 
+  profession = c("Ouvrier agric", "ouvrière qualifiée", "Institutrice", "Exploitant agric")
 )
 ```
 
@@ -333,7 +333,7 @@ str_detect(d$profession, regex("Ouvr", ignore_case = TRUE))
 \iffalse
 <div class="solution-exo">
 ```{r str4, eval=FALSE}
-d %>% 
+d %>%
   mutate(sexe = case_when(
           str_detect(nom, fixed("Mme")) ~ "Femme",
           str_detect(nom, fixed("M.")) ~ "Homme"
@@ -373,11 +373,11 @@ str_extract(d$naissance, "\\d\\d\\d\\d")
 <div class="solution-exo">
 ```{r str5b, eval=FALSE}
 library(tidyr)
-d %>% 
+d %>%
     extract(
         naissance,
         "annee",
-        "(\\d\\d\\d\\d)", 
+        "(\\d\\d\\d\\d)",
         remove = FALSE
     )
 ```
