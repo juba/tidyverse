@@ -24,7 +24,7 @@
 <meta name="author" content="Julien Barnier" />
 
 
-<meta name="date" content="2022-01-11" />
+<meta name="date" content="2022-01-20" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -285,7 +285,7 @@ code span.wa { color: #bf0303; } /* Warning */
 <li class="chapter" data-level="9.3.3" data-path="09-recodages.html"><a href="09-recodages.html#ordonner-les-modalités-dune-variable-qualitative"><i class="fa fa-check"></i><b>9.3.3</b> Ordonner les modalités d’une variable qualitative</a></li>
 </ul></li>
 <li class="chapter" data-level="9.4" data-path="09-recodages.html"><a href="09-recodages.html#combiner-plusieurs-variables"><i class="fa fa-check"></i><b>9.4</b> Combiner plusieurs variables</a><ul>
-<li class="chapter" data-level="9.4.1" data-path="09-recodages.html"><a href="09-recodages.html#if-else"><i class="fa fa-check"></i><b>9.4.1</b> <code>if_else</code></a></li>
+<li class="chapter" data-level="9.4.1" data-path="09-recodages.html"><a href="09-recodages.html#if-else"><i class="fa fa-check"></i><b>9.4.1</b> <code>ifelse</code></a></li>
 <li class="chapter" data-level="9.4.2" data-path="09-recodages.html"><a href="09-recodages.html#case_when"><i class="fa fa-check"></i><b>9.4.2</b> <code>case_when</code></a></li>
 </ul></li>
 <li class="chapter" data-level="9.5" data-path="09-recodages.html"><a href="09-recodages.html#découper-une-variable-numérique-en-classes"><i class="fa fa-check"></i><b>9.5</b> Découper une variable numérique en classes</a><ul>
@@ -634,7 +634,7 @@ code span.wa { color: #bf0303; } /* Warning */
 <div id="installation" class="section level2">
 <h2><span class="header-section-number">6.2</span> Installation</h2>
 <p><code>tidyverse</code> est également le nom d’une extension qu’on peut installer de manière classique, soit via le bouton <em>Install</em> de l’onglet <em>Packages</em> de RStudio, soit en utilisant la commande :</p>
-<div class="sourceCode" id="cb147"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb147-1"><a href="06-tidyverse.html#cb147-1"></a><span class="kw">install.packages</span>(<span class="st">&quot;tidyverse&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb148"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb148-1"><a href="06-tidyverse.html#cb148-1"></a><span class="kw">install.packages</span>(<span class="st">&quot;tidyverse&quot;</span>)</span></code></pre></div>
 <p>Cette commande va en fait installer plusieurs extensions qui constituent le “coeur” du <em>tidyverse</em>, à savoir :</p>
 <ul>
 <li><code>ggplot2</code> (visualisation)</li>
@@ -651,7 +651,7 @@ code span.wa { color: #bf0303; } /* Warning */
 <p class="caption">Packages de l’extension tidyverse</p>
 </div>
 <p>De la même manière, charger l’extension avec :</p>
-<div class="sourceCode" id="cb148"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb148-1"><a href="06-tidyverse.html#cb148-1"></a><span class="kw">library</span>(tidyverse)</span></code></pre></div>
+<div class="sourceCode" id="cb149"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb149-1"><a href="06-tidyverse.html#cb149-1"></a><span class="kw">library</span>(tidyverse)</span></code></pre></div>
 <p>Chargera l’ensemble des extensions précédentes.</p>
 <p>Il existe d’autres extensions qui font partie du <em>tidyverse</em> mais qui doivent être chargées explicitement, comme par exemple <code>readxl</code> (pour l’importation de données depuis des fichiers Excel). La liste complète se trouve sur <a href="https://www.tidyverse.org/packages/">le site officiel du <em>tidyverse</em></a>.</p>
 <p>Ce document est basé sur les versions d’extension suivantes :</p>
@@ -685,80 +685,80 @@ code span.wa { color: #bf0303; } /* Warning */
 <li>affichent un avertissement si on essaie d’accéder à une colonne qui n’existe pas</li>
 </ul>
 <p>Pour autant, les tibbles restent compatibles avec les <em>data frames</em>. On peut ainsi facilement convertir un <em>data frame</em> en tibble avec <code>as_tibble</code> :</p>
-<div class="sourceCode" id="cb150"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb150-1"><a href="06-tidyverse.html#cb150-1"></a><span class="kw">as_tibble</span>(mtcars)</span>
-<span id="cb150-2"><a href="06-tidyverse.html#cb150-2"></a><span class="co">#&gt; # A tibble: 32 × 11</span></span>
-<span id="cb150-3"><a href="06-tidyverse.html#cb150-3"></a><span class="co">#&gt;      mpg   cyl  disp    hp  drat    wt  qsec    vs    am  gear  carb</span></span>
-<span id="cb150-4"><a href="06-tidyverse.html#cb150-4"></a><span class="co">#&gt;    &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;</span></span>
-<span id="cb150-5"><a href="06-tidyverse.html#cb150-5"></a><span class="co">#&gt;  1  21       6  160    110  3.9   2.62  16.5     0     1     4     4</span></span>
-<span id="cb150-6"><a href="06-tidyverse.html#cb150-6"></a><span class="co">#&gt;  2  21       6  160    110  3.9   2.88  17.0     0     1     4     4</span></span>
-<span id="cb150-7"><a href="06-tidyverse.html#cb150-7"></a><span class="co">#&gt;  3  22.8     4  108     93  3.85  2.32  18.6     1     1     4     1</span></span>
-<span id="cb150-8"><a href="06-tidyverse.html#cb150-8"></a><span class="co">#&gt;  4  21.4     6  258    110  3.08  3.22  19.4     1     0     3     1</span></span>
-<span id="cb150-9"><a href="06-tidyverse.html#cb150-9"></a><span class="co">#&gt;  5  18.7     8  360    175  3.15  3.44  17.0     0     0     3     2</span></span>
-<span id="cb150-10"><a href="06-tidyverse.html#cb150-10"></a><span class="co">#&gt;  6  18.1     6  225    105  2.76  3.46  20.2     1     0     3     1</span></span>
-<span id="cb150-11"><a href="06-tidyverse.html#cb150-11"></a><span class="co">#&gt;  7  14.3     8  360    245  3.21  3.57  15.8     0     0     3     4</span></span>
-<span id="cb150-12"><a href="06-tidyverse.html#cb150-12"></a><span class="co">#&gt;  8  24.4     4  147.    62  3.69  3.19  20       1     0     4     2</span></span>
-<span id="cb150-13"><a href="06-tidyverse.html#cb150-13"></a><span class="co">#&gt;  9  22.8     4  141.    95  3.92  3.15  22.9     1     0     4     2</span></span>
-<span id="cb150-14"><a href="06-tidyverse.html#cb150-14"></a><span class="co">#&gt; 10  19.2     6  168.   123  3.92  3.44  18.3     1     0     4     4</span></span>
-<span id="cb150-15"><a href="06-tidyverse.html#cb150-15"></a><span class="co">#&gt; # … with 22 more rows</span></span></code></pre></div>
+<div class="sourceCode" id="cb151"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb151-1"><a href="06-tidyverse.html#cb151-1"></a><span class="kw">as_tibble</span>(mtcars)</span>
+<span id="cb151-2"><a href="06-tidyverse.html#cb151-2"></a><span class="co">#&gt; # A tibble: 32 × 11</span></span>
+<span id="cb151-3"><a href="06-tidyverse.html#cb151-3"></a><span class="co">#&gt;      mpg   cyl  disp    hp  drat    wt  qsec    vs    am  gear  carb</span></span>
+<span id="cb151-4"><a href="06-tidyverse.html#cb151-4"></a><span class="co">#&gt;    &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;</span></span>
+<span id="cb151-5"><a href="06-tidyverse.html#cb151-5"></a><span class="co">#&gt;  1  21       6  160    110  3.9   2.62  16.5     0     1     4     4</span></span>
+<span id="cb151-6"><a href="06-tidyverse.html#cb151-6"></a><span class="co">#&gt;  2  21       6  160    110  3.9   2.88  17.0     0     1     4     4</span></span>
+<span id="cb151-7"><a href="06-tidyverse.html#cb151-7"></a><span class="co">#&gt;  3  22.8     4  108     93  3.85  2.32  18.6     1     1     4     1</span></span>
+<span id="cb151-8"><a href="06-tidyverse.html#cb151-8"></a><span class="co">#&gt;  4  21.4     6  258    110  3.08  3.22  19.4     1     0     3     1</span></span>
+<span id="cb151-9"><a href="06-tidyverse.html#cb151-9"></a><span class="co">#&gt;  5  18.7     8  360    175  3.15  3.44  17.0     0     0     3     2</span></span>
+<span id="cb151-10"><a href="06-tidyverse.html#cb151-10"></a><span class="co">#&gt;  6  18.1     6  225    105  2.76  3.46  20.2     1     0     3     1</span></span>
+<span id="cb151-11"><a href="06-tidyverse.html#cb151-11"></a><span class="co">#&gt;  7  14.3     8  360    245  3.21  3.57  15.8     0     0     3     4</span></span>
+<span id="cb151-12"><a href="06-tidyverse.html#cb151-12"></a><span class="co">#&gt;  8  24.4     4  147.    62  3.69  3.19  20       1     0     4     2</span></span>
+<span id="cb151-13"><a href="06-tidyverse.html#cb151-13"></a><span class="co">#&gt;  9  22.8     4  141.    95  3.92  3.15  22.9     1     0     4     2</span></span>
+<span id="cb151-14"><a href="06-tidyverse.html#cb151-14"></a><span class="co">#&gt; 10  19.2     6  168.   123  3.92  3.44  18.3     1     0     4     4</span></span>
+<span id="cb151-15"><a href="06-tidyverse.html#cb151-15"></a><span class="co">#&gt; # … with 22 more rows</span></span></code></pre></div>
 <p>Si le <em>data frame</em> d’origine a des <em>rownames</em>, on peut d’abord les convertir en colonnes avec <code>rownames_to_columns</code> :</p>
-<div class="sourceCode" id="cb151"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb151-1"><a href="06-tidyverse.html#cb151-1"></a>d &lt;-<span class="st"> </span><span class="kw">as_tibble</span>(<span class="kw">rownames_to_column</span>(mtcars))</span>
-<span id="cb151-2"><a href="06-tidyverse.html#cb151-2"></a>d</span>
-<span id="cb151-3"><a href="06-tidyverse.html#cb151-3"></a><span class="co">#&gt; # A tibble: 32 × 12</span></span>
-<span id="cb151-4"><a href="06-tidyverse.html#cb151-4"></a><span class="co">#&gt;    rowname       mpg   cyl  disp    hp  drat    wt  qsec    vs    am  gear  carb</span></span>
-<span id="cb151-5"><a href="06-tidyverse.html#cb151-5"></a><span class="co">#&gt;    &lt;chr&gt;       &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;</span></span>
-<span id="cb151-6"><a href="06-tidyverse.html#cb151-6"></a><span class="co">#&gt;  1 Mazda RX4    21       6  160    110  3.9   2.62  16.5     0     1     4     4</span></span>
-<span id="cb151-7"><a href="06-tidyverse.html#cb151-7"></a><span class="co">#&gt;  2 Mazda RX4 …  21       6  160    110  3.9   2.88  17.0     0     1     4     4</span></span>
-<span id="cb151-8"><a href="06-tidyverse.html#cb151-8"></a><span class="co">#&gt;  3 Datsun 710   22.8     4  108     93  3.85  2.32  18.6     1     1     4     1</span></span>
-<span id="cb151-9"><a href="06-tidyverse.html#cb151-9"></a><span class="co">#&gt;  4 Hornet 4 D…  21.4     6  258    110  3.08  3.22  19.4     1     0     3     1</span></span>
-<span id="cb151-10"><a href="06-tidyverse.html#cb151-10"></a><span class="co">#&gt;  5 Hornet Spo…  18.7     8  360    175  3.15  3.44  17.0     0     0     3     2</span></span>
-<span id="cb151-11"><a href="06-tidyverse.html#cb151-11"></a><span class="co">#&gt;  6 Valiant      18.1     6  225    105  2.76  3.46  20.2     1     0     3     1</span></span>
-<span id="cb151-12"><a href="06-tidyverse.html#cb151-12"></a><span class="co">#&gt;  7 Duster 360   14.3     8  360    245  3.21  3.57  15.8     0     0     3     4</span></span>
-<span id="cb151-13"><a href="06-tidyverse.html#cb151-13"></a><span class="co">#&gt;  8 Merc 240D    24.4     4  147.    62  3.69  3.19  20       1     0     4     2</span></span>
-<span id="cb151-14"><a href="06-tidyverse.html#cb151-14"></a><span class="co">#&gt;  9 Merc 230     22.8     4  141.    95  3.92  3.15  22.9     1     0     4     2</span></span>
-<span id="cb151-15"><a href="06-tidyverse.html#cb151-15"></a><span class="co">#&gt; 10 Merc 280     19.2     6  168.   123  3.92  3.44  18.3     1     0     4     4</span></span>
-<span id="cb151-16"><a href="06-tidyverse.html#cb151-16"></a><span class="co">#&gt; # … with 22 more rows</span></span></code></pre></div>
+<div class="sourceCode" id="cb152"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb152-1"><a href="06-tidyverse.html#cb152-1"></a>d &lt;-<span class="st"> </span><span class="kw">as_tibble</span>(<span class="kw">rownames_to_column</span>(mtcars))</span>
+<span id="cb152-2"><a href="06-tidyverse.html#cb152-2"></a>d</span>
+<span id="cb152-3"><a href="06-tidyverse.html#cb152-3"></a><span class="co">#&gt; # A tibble: 32 × 12</span></span>
+<span id="cb152-4"><a href="06-tidyverse.html#cb152-4"></a><span class="co">#&gt;    rowname       mpg   cyl  disp    hp  drat    wt  qsec    vs    am  gear  carb</span></span>
+<span id="cb152-5"><a href="06-tidyverse.html#cb152-5"></a><span class="co">#&gt;    &lt;chr&gt;       &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;</span></span>
+<span id="cb152-6"><a href="06-tidyverse.html#cb152-6"></a><span class="co">#&gt;  1 Mazda RX4    21       6  160    110  3.9   2.62  16.5     0     1     4     4</span></span>
+<span id="cb152-7"><a href="06-tidyverse.html#cb152-7"></a><span class="co">#&gt;  2 Mazda RX4 …  21       6  160    110  3.9   2.88  17.0     0     1     4     4</span></span>
+<span id="cb152-8"><a href="06-tidyverse.html#cb152-8"></a><span class="co">#&gt;  3 Datsun 710   22.8     4  108     93  3.85  2.32  18.6     1     1     4     1</span></span>
+<span id="cb152-9"><a href="06-tidyverse.html#cb152-9"></a><span class="co">#&gt;  4 Hornet 4 D…  21.4     6  258    110  3.08  3.22  19.4     1     0     3     1</span></span>
+<span id="cb152-10"><a href="06-tidyverse.html#cb152-10"></a><span class="co">#&gt;  5 Hornet Spo…  18.7     8  360    175  3.15  3.44  17.0     0     0     3     2</span></span>
+<span id="cb152-11"><a href="06-tidyverse.html#cb152-11"></a><span class="co">#&gt;  6 Valiant      18.1     6  225    105  2.76  3.46  20.2     1     0     3     1</span></span>
+<span id="cb152-12"><a href="06-tidyverse.html#cb152-12"></a><span class="co">#&gt;  7 Duster 360   14.3     8  360    245  3.21  3.57  15.8     0     0     3     4</span></span>
+<span id="cb152-13"><a href="06-tidyverse.html#cb152-13"></a><span class="co">#&gt;  8 Merc 240D    24.4     4  147.    62  3.69  3.19  20       1     0     4     2</span></span>
+<span id="cb152-14"><a href="06-tidyverse.html#cb152-14"></a><span class="co">#&gt;  9 Merc 230     22.8     4  141.    95  3.92  3.15  22.9     1     0     4     2</span></span>
+<span id="cb152-15"><a href="06-tidyverse.html#cb152-15"></a><span class="co">#&gt; 10 Merc 280     19.2     6  168.   123  3.92  3.44  18.3     1     0     4     4</span></span>
+<span id="cb152-16"><a href="06-tidyverse.html#cb152-16"></a><span class="co">#&gt; # … with 22 more rows</span></span></code></pre></div>
 <p>À l’inverse, on peut à tout moment convertir un tibble en <em>data frame</em> avec <code>as.data.frame</code> :</p>
-<div class="sourceCode" id="cb152"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb152-1"><a href="06-tidyverse.html#cb152-1"></a><span class="kw">as.data.frame</span>(d)</span>
-<span id="cb152-2"><a href="06-tidyverse.html#cb152-2"></a><span class="co">#&gt;                rowname  mpg cyl  disp  hp drat    wt  qsec vs am gear carb</span></span>
-<span id="cb152-3"><a href="06-tidyverse.html#cb152-3"></a><span class="co">#&gt; 1            Mazda RX4 21.0   6 160.0 110 3.90 2.620 16.46  0  1    4    4</span></span>
-<span id="cb152-4"><a href="06-tidyverse.html#cb152-4"></a><span class="co">#&gt; 2        Mazda RX4 Wag 21.0   6 160.0 110 3.90 2.875 17.02  0  1    4    4</span></span>
-<span id="cb152-5"><a href="06-tidyverse.html#cb152-5"></a><span class="co">#&gt; 3           Datsun 710 22.8   4 108.0  93 3.85 2.320 18.61  1  1    4    1</span></span>
-<span id="cb152-6"><a href="06-tidyverse.html#cb152-6"></a><span class="co">#&gt; 4       Hornet 4 Drive 21.4   6 258.0 110 3.08 3.215 19.44  1  0    3    1</span></span>
-<span id="cb152-7"><a href="06-tidyverse.html#cb152-7"></a><span class="co">#&gt; 5    Hornet Sportabout 18.7   8 360.0 175 3.15 3.440 17.02  0  0    3    2</span></span>
-<span id="cb152-8"><a href="06-tidyverse.html#cb152-8"></a><span class="co">#&gt; 6              Valiant 18.1   6 225.0 105 2.76 3.460 20.22  1  0    3    1</span></span>
-<span id="cb152-9"><a href="06-tidyverse.html#cb152-9"></a><span class="co">#&gt; 7           Duster 360 14.3   8 360.0 245 3.21 3.570 15.84  0  0    3    4</span></span>
-<span id="cb152-10"><a href="06-tidyverse.html#cb152-10"></a><span class="co">#&gt; 8            Merc 240D 24.4   4 146.7  62 3.69 3.190 20.00  1  0    4    2</span></span>
-<span id="cb152-11"><a href="06-tidyverse.html#cb152-11"></a><span class="co">#&gt; 9             Merc 230 22.8   4 140.8  95 3.92 3.150 22.90  1  0    4    2</span></span>
-<span id="cb152-12"><a href="06-tidyverse.html#cb152-12"></a><span class="co">#&gt; 10            Merc 280 19.2   6 167.6 123 3.92 3.440 18.30  1  0    4    4</span></span>
-<span id="cb152-13"><a href="06-tidyverse.html#cb152-13"></a><span class="co">#&gt; 11           Merc 280C 17.8   6 167.6 123 3.92 3.440 18.90  1  0    4    4</span></span>
-<span id="cb152-14"><a href="06-tidyverse.html#cb152-14"></a><span class="co">#&gt; 12          Merc 450SE 16.4   8 275.8 180 3.07 4.070 17.40  0  0    3    3</span></span>
-<span id="cb152-15"><a href="06-tidyverse.html#cb152-15"></a><span class="co">#&gt; 13          Merc 450SL 17.3   8 275.8 180 3.07 3.730 17.60  0  0    3    3</span></span>
-<span id="cb152-16"><a href="06-tidyverse.html#cb152-16"></a><span class="co">#&gt; 14         Merc 450SLC 15.2   8 275.8 180 3.07 3.780 18.00  0  0    3    3</span></span>
-<span id="cb152-17"><a href="06-tidyverse.html#cb152-17"></a><span class="co">#&gt; 15  Cadillac Fleetwood 10.4   8 472.0 205 2.93 5.250 17.98  0  0    3    4</span></span>
-<span id="cb152-18"><a href="06-tidyverse.html#cb152-18"></a><span class="co">#&gt; 16 Lincoln Continental 10.4   8 460.0 215 3.00 5.424 17.82  0  0    3    4</span></span>
-<span id="cb152-19"><a href="06-tidyverse.html#cb152-19"></a><span class="co">#&gt;  [ reached &#39;max&#39; / getOption(&quot;max.print&quot;) -- omitted 16 rows ]</span></span></code></pre></div>
+<div class="sourceCode" id="cb153"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb153-1"><a href="06-tidyverse.html#cb153-1"></a><span class="kw">as.data.frame</span>(d)</span>
+<span id="cb153-2"><a href="06-tidyverse.html#cb153-2"></a><span class="co">#&gt;                rowname  mpg cyl  disp  hp drat    wt  qsec vs am gear carb</span></span>
+<span id="cb153-3"><a href="06-tidyverse.html#cb153-3"></a><span class="co">#&gt; 1            Mazda RX4 21.0   6 160.0 110 3.90 2.620 16.46  0  1    4    4</span></span>
+<span id="cb153-4"><a href="06-tidyverse.html#cb153-4"></a><span class="co">#&gt; 2        Mazda RX4 Wag 21.0   6 160.0 110 3.90 2.875 17.02  0  1    4    4</span></span>
+<span id="cb153-5"><a href="06-tidyverse.html#cb153-5"></a><span class="co">#&gt; 3           Datsun 710 22.8   4 108.0  93 3.85 2.320 18.61  1  1    4    1</span></span>
+<span id="cb153-6"><a href="06-tidyverse.html#cb153-6"></a><span class="co">#&gt; 4       Hornet 4 Drive 21.4   6 258.0 110 3.08 3.215 19.44  1  0    3    1</span></span>
+<span id="cb153-7"><a href="06-tidyverse.html#cb153-7"></a><span class="co">#&gt; 5    Hornet Sportabout 18.7   8 360.0 175 3.15 3.440 17.02  0  0    3    2</span></span>
+<span id="cb153-8"><a href="06-tidyverse.html#cb153-8"></a><span class="co">#&gt; 6              Valiant 18.1   6 225.0 105 2.76 3.460 20.22  1  0    3    1</span></span>
+<span id="cb153-9"><a href="06-tidyverse.html#cb153-9"></a><span class="co">#&gt; 7           Duster 360 14.3   8 360.0 245 3.21 3.570 15.84  0  0    3    4</span></span>
+<span id="cb153-10"><a href="06-tidyverse.html#cb153-10"></a><span class="co">#&gt; 8            Merc 240D 24.4   4 146.7  62 3.69 3.190 20.00  1  0    4    2</span></span>
+<span id="cb153-11"><a href="06-tidyverse.html#cb153-11"></a><span class="co">#&gt; 9             Merc 230 22.8   4 140.8  95 3.92 3.150 22.90  1  0    4    2</span></span>
+<span id="cb153-12"><a href="06-tidyverse.html#cb153-12"></a><span class="co">#&gt; 10            Merc 280 19.2   6 167.6 123 3.92 3.440 18.30  1  0    4    4</span></span>
+<span id="cb153-13"><a href="06-tidyverse.html#cb153-13"></a><span class="co">#&gt; 11           Merc 280C 17.8   6 167.6 123 3.92 3.440 18.90  1  0    4    4</span></span>
+<span id="cb153-14"><a href="06-tidyverse.html#cb153-14"></a><span class="co">#&gt; 12          Merc 450SE 16.4   8 275.8 180 3.07 4.070 17.40  0  0    3    3</span></span>
+<span id="cb153-15"><a href="06-tidyverse.html#cb153-15"></a><span class="co">#&gt; 13          Merc 450SL 17.3   8 275.8 180 3.07 3.730 17.60  0  0    3    3</span></span>
+<span id="cb153-16"><a href="06-tidyverse.html#cb153-16"></a><span class="co">#&gt; 14         Merc 450SLC 15.2   8 275.8 180 3.07 3.780 18.00  0  0    3    3</span></span>
+<span id="cb153-17"><a href="06-tidyverse.html#cb153-17"></a><span class="co">#&gt; 15  Cadillac Fleetwood 10.4   8 472.0 205 2.93 5.250 17.98  0  0    3    4</span></span>
+<span id="cb153-18"><a href="06-tidyverse.html#cb153-18"></a><span class="co">#&gt; 16 Lincoln Continental 10.4   8 460.0 215 3.00 5.424 17.82  0  0    3    4</span></span>
+<span id="cb153-19"><a href="06-tidyverse.html#cb153-19"></a><span class="co">#&gt;  [ reached &#39;max&#39; / getOption(&quot;max.print&quot;) -- omitted 16 rows ]</span></span></code></pre></div>
 <p>Là encore, on peut convertir la colonne <code>rowname</code> en “vrais” <em>rownames</em> avec <code>column_to_rownames</code> :</p>
-<div class="sourceCode" id="cb153"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb153-1"><a href="06-tidyverse.html#cb153-1"></a><span class="kw">column_to_rownames</span>(<span class="kw">as.data.frame</span>(d))</span>
-<span id="cb153-2"><a href="06-tidyverse.html#cb153-2"></a><span class="co">#&gt;                      mpg cyl  disp  hp drat    wt  qsec vs am gear carb</span></span>
-<span id="cb153-3"><a href="06-tidyverse.html#cb153-3"></a><span class="co">#&gt; Mazda RX4           21.0   6 160.0 110 3.90 2.620 16.46  0  1    4    4</span></span>
-<span id="cb153-4"><a href="06-tidyverse.html#cb153-4"></a><span class="co">#&gt; Mazda RX4 Wag       21.0   6 160.0 110 3.90 2.875 17.02  0  1    4    4</span></span>
-<span id="cb153-5"><a href="06-tidyverse.html#cb153-5"></a><span class="co">#&gt; Datsun 710          22.8   4 108.0  93 3.85 2.320 18.61  1  1    4    1</span></span>
-<span id="cb153-6"><a href="06-tidyverse.html#cb153-6"></a><span class="co">#&gt; Hornet 4 Drive      21.4   6 258.0 110 3.08 3.215 19.44  1  0    3    1</span></span>
-<span id="cb153-7"><a href="06-tidyverse.html#cb153-7"></a><span class="co">#&gt; Hornet Sportabout   18.7   8 360.0 175 3.15 3.440 17.02  0  0    3    2</span></span>
-<span id="cb153-8"><a href="06-tidyverse.html#cb153-8"></a><span class="co">#&gt; Valiant             18.1   6 225.0 105 2.76 3.460 20.22  1  0    3    1</span></span>
-<span id="cb153-9"><a href="06-tidyverse.html#cb153-9"></a><span class="co">#&gt; Duster 360          14.3   8 360.0 245 3.21 3.570 15.84  0  0    3    4</span></span>
-<span id="cb153-10"><a href="06-tidyverse.html#cb153-10"></a><span class="co">#&gt; Merc 240D           24.4   4 146.7  62 3.69 3.190 20.00  1  0    4    2</span></span>
-<span id="cb153-11"><a href="06-tidyverse.html#cb153-11"></a><span class="co">#&gt; Merc 230            22.8   4 140.8  95 3.92 3.150 22.90  1  0    4    2</span></span>
-<span id="cb153-12"><a href="06-tidyverse.html#cb153-12"></a><span class="co">#&gt; Merc 280            19.2   6 167.6 123 3.92 3.440 18.30  1  0    4    4</span></span>
-<span id="cb153-13"><a href="06-tidyverse.html#cb153-13"></a><span class="co">#&gt; Merc 280C           17.8   6 167.6 123 3.92 3.440 18.90  1  0    4    4</span></span>
-<span id="cb153-14"><a href="06-tidyverse.html#cb153-14"></a><span class="co">#&gt; Merc 450SE          16.4   8 275.8 180 3.07 4.070 17.40  0  0    3    3</span></span>
-<span id="cb153-15"><a href="06-tidyverse.html#cb153-15"></a><span class="co">#&gt; Merc 450SL          17.3   8 275.8 180 3.07 3.730 17.60  0  0    3    3</span></span>
-<span id="cb153-16"><a href="06-tidyverse.html#cb153-16"></a><span class="co">#&gt; Merc 450SLC         15.2   8 275.8 180 3.07 3.780 18.00  0  0    3    3</span></span>
-<span id="cb153-17"><a href="06-tidyverse.html#cb153-17"></a><span class="co">#&gt; Cadillac Fleetwood  10.4   8 472.0 205 2.93 5.250 17.98  0  0    3    4</span></span>
-<span id="cb153-18"><a href="06-tidyverse.html#cb153-18"></a><span class="co">#&gt; Lincoln Continental 10.4   8 460.0 215 3.00 5.424 17.82  0  0    3    4</span></span>
-<span id="cb153-19"><a href="06-tidyverse.html#cb153-19"></a><span class="co">#&gt; Chrysler Imperial   14.7   8 440.0 230 3.23 5.345 17.42  0  0    3    4</span></span>
-<span id="cb153-20"><a href="06-tidyverse.html#cb153-20"></a><span class="co">#&gt; Fiat 128            32.4   4  78.7  66 4.08 2.200 19.47  1  1    4    1</span></span>
-<span id="cb153-21"><a href="06-tidyverse.html#cb153-21"></a><span class="co">#&gt;  [ reached &#39;max&#39; / getOption(&quot;max.print&quot;) -- omitted 14 rows ]</span></span></code></pre></div>
+<div class="sourceCode" id="cb154"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb154-1"><a href="06-tidyverse.html#cb154-1"></a><span class="kw">column_to_rownames</span>(<span class="kw">as.data.frame</span>(d))</span>
+<span id="cb154-2"><a href="06-tidyverse.html#cb154-2"></a><span class="co">#&gt;                      mpg cyl  disp  hp drat    wt  qsec vs am gear carb</span></span>
+<span id="cb154-3"><a href="06-tidyverse.html#cb154-3"></a><span class="co">#&gt; Mazda RX4           21.0   6 160.0 110 3.90 2.620 16.46  0  1    4    4</span></span>
+<span id="cb154-4"><a href="06-tidyverse.html#cb154-4"></a><span class="co">#&gt; Mazda RX4 Wag       21.0   6 160.0 110 3.90 2.875 17.02  0  1    4    4</span></span>
+<span id="cb154-5"><a href="06-tidyverse.html#cb154-5"></a><span class="co">#&gt; Datsun 710          22.8   4 108.0  93 3.85 2.320 18.61  1  1    4    1</span></span>
+<span id="cb154-6"><a href="06-tidyverse.html#cb154-6"></a><span class="co">#&gt; Hornet 4 Drive      21.4   6 258.0 110 3.08 3.215 19.44  1  0    3    1</span></span>
+<span id="cb154-7"><a href="06-tidyverse.html#cb154-7"></a><span class="co">#&gt; Hornet Sportabout   18.7   8 360.0 175 3.15 3.440 17.02  0  0    3    2</span></span>
+<span id="cb154-8"><a href="06-tidyverse.html#cb154-8"></a><span class="co">#&gt; Valiant             18.1   6 225.0 105 2.76 3.460 20.22  1  0    3    1</span></span>
+<span id="cb154-9"><a href="06-tidyverse.html#cb154-9"></a><span class="co">#&gt; Duster 360          14.3   8 360.0 245 3.21 3.570 15.84  0  0    3    4</span></span>
+<span id="cb154-10"><a href="06-tidyverse.html#cb154-10"></a><span class="co">#&gt; Merc 240D           24.4   4 146.7  62 3.69 3.190 20.00  1  0    4    2</span></span>
+<span id="cb154-11"><a href="06-tidyverse.html#cb154-11"></a><span class="co">#&gt; Merc 230            22.8   4 140.8  95 3.92 3.150 22.90  1  0    4    2</span></span>
+<span id="cb154-12"><a href="06-tidyverse.html#cb154-12"></a><span class="co">#&gt; Merc 280            19.2   6 167.6 123 3.92 3.440 18.30  1  0    4    4</span></span>
+<span id="cb154-13"><a href="06-tidyverse.html#cb154-13"></a><span class="co">#&gt; Merc 280C           17.8   6 167.6 123 3.92 3.440 18.90  1  0    4    4</span></span>
+<span id="cb154-14"><a href="06-tidyverse.html#cb154-14"></a><span class="co">#&gt; Merc 450SE          16.4   8 275.8 180 3.07 4.070 17.40  0  0    3    3</span></span>
+<span id="cb154-15"><a href="06-tidyverse.html#cb154-15"></a><span class="co">#&gt; Merc 450SL          17.3   8 275.8 180 3.07 3.730 17.60  0  0    3    3</span></span>
+<span id="cb154-16"><a href="06-tidyverse.html#cb154-16"></a><span class="co">#&gt; Merc 450SLC         15.2   8 275.8 180 3.07 3.780 18.00  0  0    3    3</span></span>
+<span id="cb154-17"><a href="06-tidyverse.html#cb154-17"></a><span class="co">#&gt; Cadillac Fleetwood  10.4   8 472.0 205 2.93 5.250 17.98  0  0    3    4</span></span>
+<span id="cb154-18"><a href="06-tidyverse.html#cb154-18"></a><span class="co">#&gt; Lincoln Continental 10.4   8 460.0 215 3.00 5.424 17.82  0  0    3    4</span></span>
+<span id="cb154-19"><a href="06-tidyverse.html#cb154-19"></a><span class="co">#&gt; Chrysler Imperial   14.7   8 440.0 230 3.23 5.345 17.42  0  0    3    4</span></span>
+<span id="cb154-20"><a href="06-tidyverse.html#cb154-20"></a><span class="co">#&gt; Fiat 128            32.4   4  78.7  66 4.08 2.200 19.47  1  1    4    1</span></span>
+<span id="cb154-21"><a href="06-tidyverse.html#cb154-21"></a><span class="co">#&gt;  [ reached &#39;max&#39; / getOption(&quot;max.print&quot;) -- omitted 14 rows ]</span></span></code></pre></div>
 <div class="rmdnote">
 <p>
 Les deux fonctions <code>column_to_rownames</code> et <code>rownames_to_column</code> acceptent un argument supplémentaire <code>var</code> qui permet d’indiquer un nom de colonne autre que le nom <code>rowname</code> utilisé par défaut pour créer ou identifier la colonne contenant les noms de lignes.

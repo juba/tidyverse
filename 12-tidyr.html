@@ -24,7 +24,7 @@
 <meta name="author" content="Julien Barnier" />
 
 
-<meta name="date" content="2022-01-11" />
+<meta name="date" content="2022-01-20" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -285,7 +285,7 @@ code span.wa { color: #bf0303; } /* Warning */
 <li class="chapter" data-level="9.3.3" data-path="09-recodages.html"><a href="09-recodages.html#ordonner-les-modalités-dune-variable-qualitative"><i class="fa fa-check"></i><b>9.3.3</b> Ordonner les modalités d’une variable qualitative</a></li>
 </ul></li>
 <li class="chapter" data-level="9.4" data-path="09-recodages.html"><a href="09-recodages.html#combiner-plusieurs-variables"><i class="fa fa-check"></i><b>9.4</b> Combiner plusieurs variables</a><ul>
-<li class="chapter" data-level="9.4.1" data-path="09-recodages.html"><a href="09-recodages.html#if-else"><i class="fa fa-check"></i><b>9.4.1</b> <code>if_else</code></a></li>
+<li class="chapter" data-level="9.4.1" data-path="09-recodages.html"><a href="09-recodages.html#if-else"><i class="fa fa-check"></i><b>9.4.1</b> <code>ifelse</code></a></li>
 <li class="chapter" data-level="9.4.2" data-path="09-recodages.html"><a href="09-recodages.html#case_when"><i class="fa fa-check"></i><b>9.4.2</b> <code>case_when</code></a></li>
 </ul></li>
 <li class="chapter" data-level="9.5" data-path="09-recodages.html"><a href="09-recodages.html#découper-une-variable-numérique-en-classes"><i class="fa fa-check"></i><b>9.5</b> Découper une variable numérique en classes</a><ul>
@@ -728,20 +728,20 @@ code span.wa { color: #bf0303; } /* Warning */
 </tbody>
 </table>
 <p>C’est seulement avec les données dans ce format qu’on peut réaliser le graphique :</p>
-<div class="sourceCode" id="cb538"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb538-1"><a href="12-tidyr.html#cb538-1"></a><span class="kw">ggplot</span>(d) <span class="op">+</span></span>
-<span id="cb538-2"><a href="12-tidyr.html#cb538-2"></a><span class="st">  </span><span class="kw">geom_line</span>(<span class="kw">aes</span>(<span class="dt">x =</span> annee, <span class="dt">y =</span> population, <span class="dt">color =</span> country)) <span class="op">+</span></span>
-<span id="cb538-3"><a href="12-tidyr.html#cb538-3"></a><span class="st">  </span><span class="kw">scale_x_continuous</span>(<span class="dt">breaks =</span> <span class="kw">unique</span>(d<span class="op">$</span>annee))</span></code></pre></div>
-<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-543-1.png" width="672" /></p>
+<div class="sourceCode" id="cb543"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb543-1"><a href="12-tidyr.html#cb543-1"></a><span class="kw">ggplot</span>(d) <span class="op">+</span></span>
+<span id="cb543-2"><a href="12-tidyr.html#cb543-2"></a><span class="st">  </span><span class="kw">geom_line</span>(<span class="kw">aes</span>(<span class="dt">x =</span> annee, <span class="dt">y =</span> population, <span class="dt">color =</span> country)) <span class="op">+</span></span>
+<span id="cb543-3"><a href="12-tidyr.html#cb543-3"></a><span class="st">  </span><span class="kw">scale_x_continuous</span>(<span class="dt">breaks =</span> <span class="kw">unique</span>(d<span class="op">$</span>annee))</span></code></pre></div>
+<p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-548-1.png" width="672" /></p>
 <p>C’est la même chose pour <code>dplyr</code>, par exemple si on voulait calculer la population minimale pour chaque pays avec <code>summarise</code> :</p>
-<div class="sourceCode" id="cb539"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb539-1"><a href="12-tidyr.html#cb539-1"></a>d <span class="op">%&gt;%</span></span>
-<span id="cb539-2"><a href="12-tidyr.html#cb539-2"></a><span class="st">  </span><span class="kw">group_by</span>(country) <span class="op">%&gt;%</span></span>
-<span id="cb539-3"><a href="12-tidyr.html#cb539-3"></a><span class="st">  </span><span class="kw">summarise</span>(<span class="dt">pop_min =</span> <span class="kw">min</span>(population))</span>
-<span id="cb539-4"><a href="12-tidyr.html#cb539-4"></a><span class="co">#&gt; # A tibble: 3 × 2</span></span>
-<span id="cb539-5"><a href="12-tidyr.html#cb539-5"></a><span class="co">#&gt;   country  pop_min</span></span>
-<span id="cb539-6"><a href="12-tidyr.html#cb539-6"></a><span class="co">#&gt;   &lt;fct&gt;      &lt;int&gt;</span></span>
-<span id="cb539-7"><a href="12-tidyr.html#cb539-7"></a><span class="co">#&gt; 1 Belgium 10045622</span></span>
-<span id="cb539-8"><a href="12-tidyr.html#cb539-8"></a><span class="co">#&gt; 2 France  57374179</span></span>
-<span id="cb539-9"><a href="12-tidyr.html#cb539-9"></a><span class="co">#&gt; 3 Germany 80597764</span></span></code></pre></div>
+<div class="sourceCode" id="cb544"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb544-1"><a href="12-tidyr.html#cb544-1"></a>d <span class="op">%&gt;%</span></span>
+<span id="cb544-2"><a href="12-tidyr.html#cb544-2"></a><span class="st">  </span><span class="kw">group_by</span>(country) <span class="op">%&gt;%</span></span>
+<span id="cb544-3"><a href="12-tidyr.html#cb544-3"></a><span class="st">  </span><span class="kw">summarise</span>(<span class="dt">pop_min =</span> <span class="kw">min</span>(population))</span>
+<span id="cb544-4"><a href="12-tidyr.html#cb544-4"></a><span class="co">#&gt; # A tibble: 3 × 2</span></span>
+<span id="cb544-5"><a href="12-tidyr.html#cb544-5"></a><span class="co">#&gt;   country  pop_min</span></span>
+<span id="cb544-6"><a href="12-tidyr.html#cb544-6"></a><span class="co">#&gt;   &lt;fct&gt;      &lt;int&gt;</span></span>
+<span id="cb544-7"><a href="12-tidyr.html#cb544-7"></a><span class="co">#&gt; 1 Belgium 10045622</span></span>
+<span id="cb544-8"><a href="12-tidyr.html#cb544-8"></a><span class="co">#&gt; 2 France  57374179</span></span>
+<span id="cb544-9"><a href="12-tidyr.html#cb544-9"></a><span class="co">#&gt; 3 Germany 80597764</span></span></code></pre></div>
 </div>
 <div id="trois-règles-pour-des-données-bien-rangées" class="section level2">
 <h2><span class="header-section-number">12.2</span> Trois règles pour des données bien rangées</h2>
@@ -1080,61 +1080,61 @@ code span.wa { color: #bf0303; } /* Warning */
 </table>
 <p>Dans ce tableau, une même variable (la population) est répartie sur plusieurs colonnes, chacune représentant une observation à un moment différent. On souhaite que la variable ne représente plus qu’une seule colonne, et que les observations soient réparties sur plusieurs lignes.</p>
 <p>Pour cela on va utiliser la fonction <code>pivot_longer</code><a href="#fn19" class="footnote-ref" id="fnref19"><sup>19</sup></a> :</p>
-<div class="sourceCode" id="cb540"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb540-1"><a href="12-tidyr.html#cb540-1"></a>d <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">pivot_longer</span>(<span class="kw">c</span>(<span class="st">`</span><span class="dt">2002</span><span class="st">`</span>, <span class="st">`</span><span class="dt">2007</span><span class="st">`</span>))</span>
-<span id="cb540-2"><a href="12-tidyr.html#cb540-2"></a><span class="co">#&gt; # A tibble: 12 × 3</span></span>
-<span id="cb540-3"><a href="12-tidyr.html#cb540-3"></a><span class="co">#&gt;    country     name     value</span></span>
-<span id="cb540-4"><a href="12-tidyr.html#cb540-4"></a><span class="co">#&gt;    &lt;fct&gt;       &lt;chr&gt;    &lt;int&gt;</span></span>
-<span id="cb540-5"><a href="12-tidyr.html#cb540-5"></a><span class="co">#&gt;  1 Belgium     2002  10311970</span></span>
-<span id="cb540-6"><a href="12-tidyr.html#cb540-6"></a><span class="co">#&gt;  2 Belgium     2007  10392226</span></span>
-<span id="cb540-7"><a href="12-tidyr.html#cb540-7"></a><span class="co">#&gt;  3 France      2002  59925035</span></span>
-<span id="cb540-8"><a href="12-tidyr.html#cb540-8"></a><span class="co">#&gt;  4 France      2007  61083916</span></span>
-<span id="cb540-9"><a href="12-tidyr.html#cb540-9"></a><span class="co">#&gt;  5 Germany     2002  82350671</span></span>
-<span id="cb540-10"><a href="12-tidyr.html#cb540-10"></a><span class="co">#&gt;  6 Germany     2007  82400996</span></span>
-<span id="cb540-11"><a href="12-tidyr.html#cb540-11"></a><span class="co">#&gt;  7 Italy       2002  57926999</span></span>
-<span id="cb540-12"><a href="12-tidyr.html#cb540-12"></a><span class="co">#&gt;  8 Italy       2007  58147733</span></span>
-<span id="cb540-13"><a href="12-tidyr.html#cb540-13"></a><span class="co">#&gt;  9 Spain       2002  40152517</span></span>
-<span id="cb540-14"><a href="12-tidyr.html#cb540-14"></a><span class="co">#&gt; 10 Spain       2007  40448191</span></span>
-<span id="cb540-15"><a href="12-tidyr.html#cb540-15"></a><span class="co">#&gt; 11 Switzerland 2002   7361757</span></span>
-<span id="cb540-16"><a href="12-tidyr.html#cb540-16"></a><span class="co">#&gt; 12 Switzerland 2007   7554661</span></span></code></pre></div>
+<div class="sourceCode" id="cb545"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb545-1"><a href="12-tidyr.html#cb545-1"></a>d <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">pivot_longer</span>(<span class="kw">c</span>(<span class="st">`</span><span class="dt">2002</span><span class="st">`</span>, <span class="st">`</span><span class="dt">2007</span><span class="st">`</span>))</span>
+<span id="cb545-2"><a href="12-tidyr.html#cb545-2"></a><span class="co">#&gt; # A tibble: 12 × 3</span></span>
+<span id="cb545-3"><a href="12-tidyr.html#cb545-3"></a><span class="co">#&gt;    country     name     value</span></span>
+<span id="cb545-4"><a href="12-tidyr.html#cb545-4"></a><span class="co">#&gt;    &lt;fct&gt;       &lt;chr&gt;    &lt;int&gt;</span></span>
+<span id="cb545-5"><a href="12-tidyr.html#cb545-5"></a><span class="co">#&gt;  1 Belgium     2002  10311970</span></span>
+<span id="cb545-6"><a href="12-tidyr.html#cb545-6"></a><span class="co">#&gt;  2 Belgium     2007  10392226</span></span>
+<span id="cb545-7"><a href="12-tidyr.html#cb545-7"></a><span class="co">#&gt;  3 France      2002  59925035</span></span>
+<span id="cb545-8"><a href="12-tidyr.html#cb545-8"></a><span class="co">#&gt;  4 France      2007  61083916</span></span>
+<span id="cb545-9"><a href="12-tidyr.html#cb545-9"></a><span class="co">#&gt;  5 Germany     2002  82350671</span></span>
+<span id="cb545-10"><a href="12-tidyr.html#cb545-10"></a><span class="co">#&gt;  6 Germany     2007  82400996</span></span>
+<span id="cb545-11"><a href="12-tidyr.html#cb545-11"></a><span class="co">#&gt;  7 Italy       2002  57926999</span></span>
+<span id="cb545-12"><a href="12-tidyr.html#cb545-12"></a><span class="co">#&gt;  8 Italy       2007  58147733</span></span>
+<span id="cb545-13"><a href="12-tidyr.html#cb545-13"></a><span class="co">#&gt;  9 Spain       2002  40152517</span></span>
+<span id="cb545-14"><a href="12-tidyr.html#cb545-14"></a><span class="co">#&gt; 10 Spain       2007  40448191</span></span>
+<span id="cb545-15"><a href="12-tidyr.html#cb545-15"></a><span class="co">#&gt; 11 Switzerland 2002   7361757</span></span>
+<span id="cb545-16"><a href="12-tidyr.html#cb545-16"></a><span class="co">#&gt; 12 Switzerland 2007   7554661</span></span></code></pre></div>
 <p>La fonction <code>pivot_longer</code> prend comme premier argument la liste des colonnes à rassembler (ici on a mis <code>2002</code> et <code>2007</code> entre <em>backticks</em> (<code>`2002`</code>) pour indiquer à <code>pivot_longer</code> qu’il s’agit d’un nom de colonne et pas d’un nombre). Ces colonnes peuvent être spécifiées avec la même syntaxe que celle de la fonction <code>select</code> de <code>dplyr</code>.</p>
 <p>Par exemple, il est parfois plus rapide d’indiquer à <code>pivot_longer</code> les colonnes qu’on ne souhaite pas “rassembler”. On peut le faire avec la syntaxe suivante :</p>
-<div class="sourceCode" id="cb541"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb541-1"><a href="12-tidyr.html#cb541-1"></a>d <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">pivot_longer</span>(<span class="op">-</span>country)</span>
-<span id="cb541-2"><a href="12-tidyr.html#cb541-2"></a><span class="co">#&gt; # A tibble: 12 × 3</span></span>
-<span id="cb541-3"><a href="12-tidyr.html#cb541-3"></a><span class="co">#&gt;    country     name     value</span></span>
-<span id="cb541-4"><a href="12-tidyr.html#cb541-4"></a><span class="co">#&gt;    &lt;fct&gt;       &lt;chr&gt;    &lt;int&gt;</span></span>
-<span id="cb541-5"><a href="12-tidyr.html#cb541-5"></a><span class="co">#&gt;  1 Belgium     2002  10311970</span></span>
-<span id="cb541-6"><a href="12-tidyr.html#cb541-6"></a><span class="co">#&gt;  2 Belgium     2007  10392226</span></span>
-<span id="cb541-7"><a href="12-tidyr.html#cb541-7"></a><span class="co">#&gt;  3 France      2002  59925035</span></span>
-<span id="cb541-8"><a href="12-tidyr.html#cb541-8"></a><span class="co">#&gt;  4 France      2007  61083916</span></span>
-<span id="cb541-9"><a href="12-tidyr.html#cb541-9"></a><span class="co">#&gt;  5 Germany     2002  82350671</span></span>
-<span id="cb541-10"><a href="12-tidyr.html#cb541-10"></a><span class="co">#&gt;  6 Germany     2007  82400996</span></span>
-<span id="cb541-11"><a href="12-tidyr.html#cb541-11"></a><span class="co">#&gt;  7 Italy       2002  57926999</span></span>
-<span id="cb541-12"><a href="12-tidyr.html#cb541-12"></a><span class="co">#&gt;  8 Italy       2007  58147733</span></span>
-<span id="cb541-13"><a href="12-tidyr.html#cb541-13"></a><span class="co">#&gt;  9 Spain       2002  40152517</span></span>
-<span id="cb541-14"><a href="12-tidyr.html#cb541-14"></a><span class="co">#&gt; 10 Spain       2007  40448191</span></span>
-<span id="cb541-15"><a href="12-tidyr.html#cb541-15"></a><span class="co">#&gt; 11 Switzerland 2002   7361757</span></span>
-<span id="cb541-16"><a href="12-tidyr.html#cb541-16"></a><span class="co">#&gt; 12 Switzerland 2007   7554661</span></span></code></pre></div>
+<div class="sourceCode" id="cb546"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb546-1"><a href="12-tidyr.html#cb546-1"></a>d <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">pivot_longer</span>(<span class="op">-</span>country)</span>
+<span id="cb546-2"><a href="12-tidyr.html#cb546-2"></a><span class="co">#&gt; # A tibble: 12 × 3</span></span>
+<span id="cb546-3"><a href="12-tidyr.html#cb546-3"></a><span class="co">#&gt;    country     name     value</span></span>
+<span id="cb546-4"><a href="12-tidyr.html#cb546-4"></a><span class="co">#&gt;    &lt;fct&gt;       &lt;chr&gt;    &lt;int&gt;</span></span>
+<span id="cb546-5"><a href="12-tidyr.html#cb546-5"></a><span class="co">#&gt;  1 Belgium     2002  10311970</span></span>
+<span id="cb546-6"><a href="12-tidyr.html#cb546-6"></a><span class="co">#&gt;  2 Belgium     2007  10392226</span></span>
+<span id="cb546-7"><a href="12-tidyr.html#cb546-7"></a><span class="co">#&gt;  3 France      2002  59925035</span></span>
+<span id="cb546-8"><a href="12-tidyr.html#cb546-8"></a><span class="co">#&gt;  4 France      2007  61083916</span></span>
+<span id="cb546-9"><a href="12-tidyr.html#cb546-9"></a><span class="co">#&gt;  5 Germany     2002  82350671</span></span>
+<span id="cb546-10"><a href="12-tidyr.html#cb546-10"></a><span class="co">#&gt;  6 Germany     2007  82400996</span></span>
+<span id="cb546-11"><a href="12-tidyr.html#cb546-11"></a><span class="co">#&gt;  7 Italy       2002  57926999</span></span>
+<span id="cb546-12"><a href="12-tidyr.html#cb546-12"></a><span class="co">#&gt;  8 Italy       2007  58147733</span></span>
+<span id="cb546-13"><a href="12-tidyr.html#cb546-13"></a><span class="co">#&gt;  9 Spain       2002  40152517</span></span>
+<span id="cb546-14"><a href="12-tidyr.html#cb546-14"></a><span class="co">#&gt; 10 Spain       2007  40448191</span></span>
+<span id="cb546-15"><a href="12-tidyr.html#cb546-15"></a><span class="co">#&gt; 11 Switzerland 2002   7361757</span></span>
+<span id="cb546-16"><a href="12-tidyr.html#cb546-16"></a><span class="co">#&gt; 12 Switzerland 2007   7554661</span></span></code></pre></div>
 <p>Par défaut, les colonnes qui contiennent les noms des colonnes d’origine et leurs valeurs sont nommées <code>name</code> et <code>value</code>. Si cela ne convient pas, on peut indiquer les noms à utiliser via les arguments <code>names_to</code> et <code>values_to</code> :</p>
-<div class="sourceCode" id="cb542"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb542-1"><a href="12-tidyr.html#cb542-1"></a>d <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">pivot_longer</span>(</span>
-<span id="cb542-2"><a href="12-tidyr.html#cb542-2"></a>    <span class="kw">c</span>(<span class="st">`</span><span class="dt">2002</span><span class="st">`</span>, <span class="st">`</span><span class="dt">2007</span><span class="st">`</span>), </span>
-<span id="cb542-3"><a href="12-tidyr.html#cb542-3"></a>    <span class="dt">names_to =</span> <span class="st">&quot;annee&quot;</span>, </span>
-<span id="cb542-4"><a href="12-tidyr.html#cb542-4"></a>    <span class="dt">values_to =</span> <span class="st">&quot;population&quot;</span></span>
-<span id="cb542-5"><a href="12-tidyr.html#cb542-5"></a>)</span>
-<span id="cb542-6"><a href="12-tidyr.html#cb542-6"></a><span class="co">#&gt; # A tibble: 12 × 3</span></span>
-<span id="cb542-7"><a href="12-tidyr.html#cb542-7"></a><span class="co">#&gt;    country     annee population</span></span>
-<span id="cb542-8"><a href="12-tidyr.html#cb542-8"></a><span class="co">#&gt;    &lt;fct&gt;       &lt;chr&gt;      &lt;int&gt;</span></span>
-<span id="cb542-9"><a href="12-tidyr.html#cb542-9"></a><span class="co">#&gt;  1 Belgium     2002    10311970</span></span>
-<span id="cb542-10"><a href="12-tidyr.html#cb542-10"></a><span class="co">#&gt;  2 Belgium     2007    10392226</span></span>
-<span id="cb542-11"><a href="12-tidyr.html#cb542-11"></a><span class="co">#&gt;  3 France      2002    59925035</span></span>
-<span id="cb542-12"><a href="12-tidyr.html#cb542-12"></a><span class="co">#&gt;  4 France      2007    61083916</span></span>
-<span id="cb542-13"><a href="12-tidyr.html#cb542-13"></a><span class="co">#&gt;  5 Germany     2002    82350671</span></span>
-<span id="cb542-14"><a href="12-tidyr.html#cb542-14"></a><span class="co">#&gt;  6 Germany     2007    82400996</span></span>
-<span id="cb542-15"><a href="12-tidyr.html#cb542-15"></a><span class="co">#&gt;  7 Italy       2002    57926999</span></span>
-<span id="cb542-16"><a href="12-tidyr.html#cb542-16"></a><span class="co">#&gt;  8 Italy       2007    58147733</span></span>
-<span id="cb542-17"><a href="12-tidyr.html#cb542-17"></a><span class="co">#&gt;  9 Spain       2002    40152517</span></span>
-<span id="cb542-18"><a href="12-tidyr.html#cb542-18"></a><span class="co">#&gt; 10 Spain       2007    40448191</span></span>
-<span id="cb542-19"><a href="12-tidyr.html#cb542-19"></a><span class="co">#&gt; 11 Switzerland 2002     7361757</span></span>
-<span id="cb542-20"><a href="12-tidyr.html#cb542-20"></a><span class="co">#&gt; 12 Switzerland 2007     7554661</span></span></code></pre></div>
+<div class="sourceCode" id="cb547"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb547-1"><a href="12-tidyr.html#cb547-1"></a>d <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">pivot_longer</span>(</span>
+<span id="cb547-2"><a href="12-tidyr.html#cb547-2"></a>    <span class="kw">c</span>(<span class="st">`</span><span class="dt">2002</span><span class="st">`</span>, <span class="st">`</span><span class="dt">2007</span><span class="st">`</span>), </span>
+<span id="cb547-3"><a href="12-tidyr.html#cb547-3"></a>    <span class="dt">names_to =</span> <span class="st">&quot;annee&quot;</span>, </span>
+<span id="cb547-4"><a href="12-tidyr.html#cb547-4"></a>    <span class="dt">values_to =</span> <span class="st">&quot;population&quot;</span></span>
+<span id="cb547-5"><a href="12-tidyr.html#cb547-5"></a>)</span>
+<span id="cb547-6"><a href="12-tidyr.html#cb547-6"></a><span class="co">#&gt; # A tibble: 12 × 3</span></span>
+<span id="cb547-7"><a href="12-tidyr.html#cb547-7"></a><span class="co">#&gt;    country     annee population</span></span>
+<span id="cb547-8"><a href="12-tidyr.html#cb547-8"></a><span class="co">#&gt;    &lt;fct&gt;       &lt;chr&gt;      &lt;int&gt;</span></span>
+<span id="cb547-9"><a href="12-tidyr.html#cb547-9"></a><span class="co">#&gt;  1 Belgium     2002    10311970</span></span>
+<span id="cb547-10"><a href="12-tidyr.html#cb547-10"></a><span class="co">#&gt;  2 Belgium     2007    10392226</span></span>
+<span id="cb547-11"><a href="12-tidyr.html#cb547-11"></a><span class="co">#&gt;  3 France      2002    59925035</span></span>
+<span id="cb547-12"><a href="12-tidyr.html#cb547-12"></a><span class="co">#&gt;  4 France      2007    61083916</span></span>
+<span id="cb547-13"><a href="12-tidyr.html#cb547-13"></a><span class="co">#&gt;  5 Germany     2002    82350671</span></span>
+<span id="cb547-14"><a href="12-tidyr.html#cb547-14"></a><span class="co">#&gt;  6 Germany     2007    82400996</span></span>
+<span id="cb547-15"><a href="12-tidyr.html#cb547-15"></a><span class="co">#&gt;  7 Italy       2002    57926999</span></span>
+<span id="cb547-16"><a href="12-tidyr.html#cb547-16"></a><span class="co">#&gt;  8 Italy       2007    58147733</span></span>
+<span id="cb547-17"><a href="12-tidyr.html#cb547-17"></a><span class="co">#&gt;  9 Spain       2002    40152517</span></span>
+<span id="cb547-18"><a href="12-tidyr.html#cb547-18"></a><span class="co">#&gt; 10 Spain       2007    40448191</span></span>
+<span id="cb547-19"><a href="12-tidyr.html#cb547-19"></a><span class="co">#&gt; 11 Switzerland 2002     7361757</span></span>
+<span id="cb547-20"><a href="12-tidyr.html#cb547-20"></a><span class="co">#&gt; 12 Switzerland 2007     7554661</span></span></code></pre></div>
 <p>Au final, la nom de <code>pivot_longer</code> s’explique par le fait qu’on fait “pivoter” notre tableau de départ d’un format “large” (avec plus de colonnes) vers un format “long” (avec plus de lignes).</p>
 </div>
 <div id="pivot_wider-transformer-des-lignes-en-colonnes" class="section level3">
@@ -1212,14 +1212,14 @@ code span.wa { color: #bf0303; } /* Warning */
 </table>
 <p>Ce tableau a le problème inverse du précédent : on a deux variables, <code>lifeExp</code> et <code>pop</code> qui, plutôt que d’être réparties en deux colonnes, sont réparties entre plusieurs lignes.</p>
 <p>On va donc utiliser <code>pivot_wider</code> pour répartir ces lignes dans deux colonnes différentes :</p>
-<div class="sourceCode" id="cb543"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb543-1"><a href="12-tidyr.html#cb543-1"></a>d <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">pivot_wider</span>(<span class="dt">names_from =</span> variable, <span class="dt">values_from =</span> value)</span>
-<span id="cb543-2"><a href="12-tidyr.html#cb543-2"></a><span class="co">#&gt; # A tibble: 4 × 5</span></span>
-<span id="cb543-3"><a href="12-tidyr.html#cb543-3"></a><span class="co">#&gt;   country continent  year lifeExp      pop</span></span>
-<span id="cb543-4"><a href="12-tidyr.html#cb543-4"></a><span class="co">#&gt;   &lt;fct&gt;   &lt;fct&gt;     &lt;int&gt;   &lt;dbl&gt;    &lt;dbl&gt;</span></span>
-<span id="cb543-5"><a href="12-tidyr.html#cb543-5"></a><span class="co">#&gt; 1 Belgium Europe     2002    78.3 10311970</span></span>
-<span id="cb543-6"><a href="12-tidyr.html#cb543-6"></a><span class="co">#&gt; 2 Belgium Europe     2007    79.4 10392226</span></span>
-<span id="cb543-7"><a href="12-tidyr.html#cb543-7"></a><span class="co">#&gt; 3 France  Europe     2002    79.6 59925035</span></span>
-<span id="cb543-8"><a href="12-tidyr.html#cb543-8"></a><span class="co">#&gt; 4 France  Europe     2007    80.7 61083916</span></span></code></pre></div>
+<div class="sourceCode" id="cb548"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb548-1"><a href="12-tidyr.html#cb548-1"></a>d <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">pivot_wider</span>(<span class="dt">names_from =</span> variable, <span class="dt">values_from =</span> value)</span>
+<span id="cb548-2"><a href="12-tidyr.html#cb548-2"></a><span class="co">#&gt; # A tibble: 4 × 5</span></span>
+<span id="cb548-3"><a href="12-tidyr.html#cb548-3"></a><span class="co">#&gt;   country continent  year lifeExp      pop</span></span>
+<span id="cb548-4"><a href="12-tidyr.html#cb548-4"></a><span class="co">#&gt;   &lt;fct&gt;   &lt;fct&gt;     &lt;int&gt;   &lt;dbl&gt;    &lt;dbl&gt;</span></span>
+<span id="cb548-5"><a href="12-tidyr.html#cb548-5"></a><span class="co">#&gt; 1 Belgium Europe     2002    78.3 10311970</span></span>
+<span id="cb548-6"><a href="12-tidyr.html#cb548-6"></a><span class="co">#&gt; 2 Belgium Europe     2007    79.4 10392226</span></span>
+<span id="cb548-7"><a href="12-tidyr.html#cb548-7"></a><span class="co">#&gt; 3 France  Europe     2002    79.6 59925035</span></span>
+<span id="cb548-8"><a href="12-tidyr.html#cb548-8"></a><span class="co">#&gt; 4 France  Europe     2007    80.7 61083916</span></span></code></pre></div>
 <p><code>pivot_wider</code> prend deux arguments principaux :</p>
 <ul>
 <li><code>names_from</code> indique la colonne contenant les noms des nouvelles variables à créer</li>
@@ -1303,27 +1303,27 @@ code span.wa { color: #bf0303; } /* Warning */
 </tr>
 </tbody>
 </table>
-<div class="sourceCode" id="cb544"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb544-1"><a href="12-tidyr.html#cb544-1"></a>d <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb544-2"><a href="12-tidyr.html#cb544-2"></a><span class="st">  </span><span class="kw">pivot_wider</span>(<span class="dt">names_from =</span> variable, <span class="dt">values_from =</span> value)</span>
-<span id="cb544-3"><a href="12-tidyr.html#cb544-3"></a><span class="co">#&gt; # A tibble: 4 × 6</span></span>
-<span id="cb544-4"><a href="12-tidyr.html#cb544-4"></a><span class="co">#&gt;   country continent  year lifeExp      pop density</span></span>
-<span id="cb544-5"><a href="12-tidyr.html#cb544-5"></a><span class="co">#&gt;   &lt;chr&gt;   &lt;chr&gt;     &lt;dbl&gt;   &lt;dbl&gt;    &lt;dbl&gt;   &lt;dbl&gt;</span></span>
-<span id="cb544-6"><a href="12-tidyr.html#cb544-6"></a><span class="co">#&gt; 1 Belgium Europe     2002    78.3 10311970      NA</span></span>
-<span id="cb544-7"><a href="12-tidyr.html#cb544-7"></a><span class="co">#&gt; 2 Belgium Europe     2007    79.4 10392226      NA</span></span>
-<span id="cb544-8"><a href="12-tidyr.html#cb544-8"></a><span class="co">#&gt; 3 France  Europe     2002    79.6 59925035      94</span></span>
-<span id="cb544-9"><a href="12-tidyr.html#cb544-9"></a><span class="co">#&gt; 4 France  Europe     2007    80.7 61083916      NA</span></span></code></pre></div>
-<div class="sourceCode" id="cb545"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb545-1"><a href="12-tidyr.html#cb545-1"></a>d <span class="op">%&gt;%</span></span>
-<span id="cb545-2"><a href="12-tidyr.html#cb545-2"></a><span class="st">  </span><span class="kw">pivot_wider</span>(</span>
-<span id="cb545-3"><a href="12-tidyr.html#cb545-3"></a>    <span class="dt">names_from =</span> variable, <span class="dt">values_from =</span> value,</span>
-<span id="cb545-4"><a href="12-tidyr.html#cb545-4"></a>    <span class="dt">values_fill =</span> <span class="kw">list</span>(<span class="dt">value =</span> <span class="dv">0</span>)</span>
-<span id="cb545-5"><a href="12-tidyr.html#cb545-5"></a>  )</span>
-<span id="cb545-6"><a href="12-tidyr.html#cb545-6"></a><span class="co">#&gt; # A tibble: 4 × 6</span></span>
-<span id="cb545-7"><a href="12-tidyr.html#cb545-7"></a><span class="co">#&gt;   country continent  year lifeExp      pop density</span></span>
-<span id="cb545-8"><a href="12-tidyr.html#cb545-8"></a><span class="co">#&gt;   &lt;chr&gt;   &lt;chr&gt;     &lt;dbl&gt;   &lt;dbl&gt;    &lt;dbl&gt;   &lt;dbl&gt;</span></span>
-<span id="cb545-9"><a href="12-tidyr.html#cb545-9"></a><span class="co">#&gt; 1 Belgium Europe     2002    78.3 10311970       0</span></span>
-<span id="cb545-10"><a href="12-tidyr.html#cb545-10"></a><span class="co">#&gt; 2 Belgium Europe     2007    79.4 10392226       0</span></span>
-<span id="cb545-11"><a href="12-tidyr.html#cb545-11"></a><span class="co">#&gt; 3 France  Europe     2002    79.6 59925035      94</span></span>
-<span id="cb545-12"><a href="12-tidyr.html#cb545-12"></a><span class="co">#&gt; 4 France  Europe     2007    80.7 61083916       0</span></span></code></pre></div>
+<div class="sourceCode" id="cb549"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb549-1"><a href="12-tidyr.html#cb549-1"></a>d <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb549-2"><a href="12-tidyr.html#cb549-2"></a><span class="st">  </span><span class="kw">pivot_wider</span>(<span class="dt">names_from =</span> variable, <span class="dt">values_from =</span> value)</span>
+<span id="cb549-3"><a href="12-tidyr.html#cb549-3"></a><span class="co">#&gt; # A tibble: 4 × 6</span></span>
+<span id="cb549-4"><a href="12-tidyr.html#cb549-4"></a><span class="co">#&gt;   country continent  year lifeExp      pop density</span></span>
+<span id="cb549-5"><a href="12-tidyr.html#cb549-5"></a><span class="co">#&gt;   &lt;chr&gt;   &lt;chr&gt;     &lt;dbl&gt;   &lt;dbl&gt;    &lt;dbl&gt;   &lt;dbl&gt;</span></span>
+<span id="cb549-6"><a href="12-tidyr.html#cb549-6"></a><span class="co">#&gt; 1 Belgium Europe     2002    78.3 10311970      NA</span></span>
+<span id="cb549-7"><a href="12-tidyr.html#cb549-7"></a><span class="co">#&gt; 2 Belgium Europe     2007    79.4 10392226      NA</span></span>
+<span id="cb549-8"><a href="12-tidyr.html#cb549-8"></a><span class="co">#&gt; 3 France  Europe     2002    79.6 59925035      94</span></span>
+<span id="cb549-9"><a href="12-tidyr.html#cb549-9"></a><span class="co">#&gt; 4 France  Europe     2007    80.7 61083916      NA</span></span></code></pre></div>
+<div class="sourceCode" id="cb550"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb550-1"><a href="12-tidyr.html#cb550-1"></a>d <span class="op">%&gt;%</span></span>
+<span id="cb550-2"><a href="12-tidyr.html#cb550-2"></a><span class="st">  </span><span class="kw">pivot_wider</span>(</span>
+<span id="cb550-3"><a href="12-tidyr.html#cb550-3"></a>    <span class="dt">names_from =</span> variable, <span class="dt">values_from =</span> value,</span>
+<span id="cb550-4"><a href="12-tidyr.html#cb550-4"></a>    <span class="dt">values_fill =</span> <span class="kw">list</span>(<span class="dt">value =</span> <span class="dv">0</span>)</span>
+<span id="cb550-5"><a href="12-tidyr.html#cb550-5"></a>  )</span>
+<span id="cb550-6"><a href="12-tidyr.html#cb550-6"></a><span class="co">#&gt; # A tibble: 4 × 6</span></span>
+<span id="cb550-7"><a href="12-tidyr.html#cb550-7"></a><span class="co">#&gt;   country continent  year lifeExp      pop density</span></span>
+<span id="cb550-8"><a href="12-tidyr.html#cb550-8"></a><span class="co">#&gt;   &lt;chr&gt;   &lt;chr&gt;     &lt;dbl&gt;   &lt;dbl&gt;    &lt;dbl&gt;   &lt;dbl&gt;</span></span>
+<span id="cb550-9"><a href="12-tidyr.html#cb550-9"></a><span class="co">#&gt; 1 Belgium Europe     2002    78.3 10311970       0</span></span>
+<span id="cb550-10"><a href="12-tidyr.html#cb550-10"></a><span class="co">#&gt; 2 Belgium Europe     2007    79.4 10392226       0</span></span>
+<span id="cb550-11"><a href="12-tidyr.html#cb550-11"></a><span class="co">#&gt; 3 France  Europe     2002    79.6 59925035      94</span></span>
+<span id="cb550-12"><a href="12-tidyr.html#cb550-12"></a><span class="co">#&gt; 4 France  Europe     2007    80.7 61083916       0</span></span></code></pre></div>
 <p>Au final, la nom de <code>pivot_wider</code> s’explique par le fait qu’on fait “pivoter” notre tableau de départ d’un format “long” (avec plus de lignes) vers un format “large” (avec plus de colonnes).</p>
 </div>
 <div id="separate" class="section level3">
@@ -1352,21 +1352,21 @@ code span.wa { color: #bf0303; } /* Warning */
 </tbody>
 </table>
 <p><code>separate</code> permet de séparer la colonne <code>note</code> en deux nouvelles colonnes <code>note</code> et <code>note_sur</code> :</p>
-<div class="sourceCode" id="cb546"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb546-1"><a href="12-tidyr.html#cb546-1"></a>df <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">separate</span>(note, <span class="kw">c</span>(<span class="st">&quot;note&quot;</span>, <span class="st">&quot;note_sur&quot;</span>))</span>
-<span id="cb546-2"><a href="12-tidyr.html#cb546-2"></a><span class="co">#&gt; # A tibble: 3 × 3</span></span>
-<span id="cb546-3"><a href="12-tidyr.html#cb546-3"></a><span class="co">#&gt;   eleve           note  note_sur</span></span>
-<span id="cb546-4"><a href="12-tidyr.html#cb546-4"></a><span class="co">#&gt;   &lt;chr&gt;           &lt;chr&gt; &lt;chr&gt;   </span></span>
-<span id="cb546-5"><a href="12-tidyr.html#cb546-5"></a><span class="co">#&gt; 1 Félicien Machin 5     20      </span></span>
-<span id="cb546-6"><a href="12-tidyr.html#cb546-6"></a><span class="co">#&gt; 2 Raymonde Bidule 6     10      </span></span>
-<span id="cb546-7"><a href="12-tidyr.html#cb546-7"></a><span class="co">#&gt; 3 Martial Truc    87    100</span></span></code></pre></div>
+<div class="sourceCode" id="cb551"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb551-1"><a href="12-tidyr.html#cb551-1"></a>df <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">separate</span>(note, <span class="kw">c</span>(<span class="st">&quot;note&quot;</span>, <span class="st">&quot;note_sur&quot;</span>))</span>
+<span id="cb551-2"><a href="12-tidyr.html#cb551-2"></a><span class="co">#&gt; # A tibble: 3 × 3</span></span>
+<span id="cb551-3"><a href="12-tidyr.html#cb551-3"></a><span class="co">#&gt;   eleve           note  note_sur</span></span>
+<span id="cb551-4"><a href="12-tidyr.html#cb551-4"></a><span class="co">#&gt;   &lt;chr&gt;           &lt;chr&gt; &lt;chr&gt;   </span></span>
+<span id="cb551-5"><a href="12-tidyr.html#cb551-5"></a><span class="co">#&gt; 1 Félicien Machin 5     20      </span></span>
+<span id="cb551-6"><a href="12-tidyr.html#cb551-6"></a><span class="co">#&gt; 2 Raymonde Bidule 6     10      </span></span>
+<span id="cb551-7"><a href="12-tidyr.html#cb551-7"></a><span class="co">#&gt; 3 Martial Truc    87    100</span></span></code></pre></div>
 <p><code>separate</code> prend deux arguments principaux, le nom de la colonne à séparer et un vecteur indiquant les noms des nouvelles variables à créer. Par défaut <code>separate</code> “sépare” au niveau des caractères non-alphanumérique (espace, symbole, etc.). On peut lui indiquer explicitement le caractère sur lequel séparer avec l’argument <code>sep</code> :</p>
-<div class="sourceCode" id="cb547"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb547-1"><a href="12-tidyr.html#cb547-1"></a>df <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">separate</span>(eleve, <span class="kw">c</span>(<span class="st">&quot;prenom&quot;</span>, <span class="st">&quot;nom&quot;</span>), <span class="dt">sep =</span> <span class="st">&quot; &quot;</span>)</span>
-<span id="cb547-2"><a href="12-tidyr.html#cb547-2"></a><span class="co">#&gt; # A tibble: 3 × 3</span></span>
-<span id="cb547-3"><a href="12-tidyr.html#cb547-3"></a><span class="co">#&gt;   prenom   nom    note  </span></span>
-<span id="cb547-4"><a href="12-tidyr.html#cb547-4"></a><span class="co">#&gt;   &lt;chr&gt;    &lt;chr&gt;  &lt;chr&gt; </span></span>
-<span id="cb547-5"><a href="12-tidyr.html#cb547-5"></a><span class="co">#&gt; 1 Félicien Machin 5/20  </span></span>
-<span id="cb547-6"><a href="12-tidyr.html#cb547-6"></a><span class="co">#&gt; 2 Raymonde Bidule 6/10  </span></span>
-<span id="cb547-7"><a href="12-tidyr.html#cb547-7"></a><span class="co">#&gt; 3 Martial  Truc   87/100</span></span></code></pre></div>
+<div class="sourceCode" id="cb552"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb552-1"><a href="12-tidyr.html#cb552-1"></a>df <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">separate</span>(eleve, <span class="kw">c</span>(<span class="st">&quot;prenom&quot;</span>, <span class="st">&quot;nom&quot;</span>), <span class="dt">sep =</span> <span class="st">&quot; &quot;</span>)</span>
+<span id="cb552-2"><a href="12-tidyr.html#cb552-2"></a><span class="co">#&gt; # A tibble: 3 × 3</span></span>
+<span id="cb552-3"><a href="12-tidyr.html#cb552-3"></a><span class="co">#&gt;   prenom   nom    note  </span></span>
+<span id="cb552-4"><a href="12-tidyr.html#cb552-4"></a><span class="co">#&gt;   &lt;chr&gt;    &lt;chr&gt;  &lt;chr&gt; </span></span>
+<span id="cb552-5"><a href="12-tidyr.html#cb552-5"></a><span class="co">#&gt; 1 Félicien Machin 5/20  </span></span>
+<span id="cb552-6"><a href="12-tidyr.html#cb552-6"></a><span class="co">#&gt; 2 Raymonde Bidule 6/10  </span></span>
+<span id="cb552-7"><a href="12-tidyr.html#cb552-7"></a><span class="co">#&gt; 3 Martial  Truc   87/100</span></span></code></pre></div>
 </div>
 <div id="separate-rows" class="section level3">
 <h3><span class="header-section-number">12.3.4</span> <code>separate_rows</code> : séparer une colonne en plusieurs lignes</h3>
@@ -1399,18 +1399,18 @@ code span.wa { color: #bf0303; } /* Warning */
 </tbody>
 </table>
 <p>Si on applique <code>separate_rows</code> à la colonne <code>notes</code>, chaque note se retrouve dans une ligne différente (et les autres colonnes sont dupliquées) :</p>
-<div class="sourceCode" id="cb548"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb548-1"><a href="12-tidyr.html#cb548-1"></a><span class="kw">separate_rows</span>(df, notes)</span>
-<span id="cb548-2"><a href="12-tidyr.html#cb548-2"></a><span class="co">#&gt; # A tibble: 6 × 3</span></span>
-<span id="cb548-3"><a href="12-tidyr.html#cb548-3"></a><span class="co">#&gt;   eleve           classe notes</span></span>
-<span id="cb548-4"><a href="12-tidyr.html#cb548-4"></a><span class="co">#&gt;   &lt;chr&gt;           &lt;chr&gt;  &lt;chr&gt;</span></span>
-<span id="cb548-5"><a href="12-tidyr.html#cb548-5"></a><span class="co">#&gt; 1 Félicien Machin 6e     5    </span></span>
-<span id="cb548-6"><a href="12-tidyr.html#cb548-6"></a><span class="co">#&gt; 2 Félicien Machin 6e     16   </span></span>
-<span id="cb548-7"><a href="12-tidyr.html#cb548-7"></a><span class="co">#&gt; 3 Félicien Machin 6e     11   </span></span>
-<span id="cb548-8"><a href="12-tidyr.html#cb548-8"></a><span class="co">#&gt; 4 Raymonde Bidule 5e     15   </span></span>
-<span id="cb548-9"><a href="12-tidyr.html#cb548-9"></a><span class="co">#&gt; 5 Martial Truc    6e     11   </span></span>
-<span id="cb548-10"><a href="12-tidyr.html#cb548-10"></a><span class="co">#&gt; 6 Martial Truc    6e     17</span></span></code></pre></div>
+<div class="sourceCode" id="cb553"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb553-1"><a href="12-tidyr.html#cb553-1"></a><span class="kw">separate_rows</span>(df, notes)</span>
+<span id="cb553-2"><a href="12-tidyr.html#cb553-2"></a><span class="co">#&gt; # A tibble: 6 × 3</span></span>
+<span id="cb553-3"><a href="12-tidyr.html#cb553-3"></a><span class="co">#&gt;   eleve           classe notes</span></span>
+<span id="cb553-4"><a href="12-tidyr.html#cb553-4"></a><span class="co">#&gt;   &lt;chr&gt;           &lt;chr&gt;  &lt;chr&gt;</span></span>
+<span id="cb553-5"><a href="12-tidyr.html#cb553-5"></a><span class="co">#&gt; 1 Félicien Machin 6e     5    </span></span>
+<span id="cb553-6"><a href="12-tidyr.html#cb553-6"></a><span class="co">#&gt; 2 Félicien Machin 6e     16   </span></span>
+<span id="cb553-7"><a href="12-tidyr.html#cb553-7"></a><span class="co">#&gt; 3 Félicien Machin 6e     11   </span></span>
+<span id="cb553-8"><a href="12-tidyr.html#cb553-8"></a><span class="co">#&gt; 4 Raymonde Bidule 5e     15   </span></span>
+<span id="cb553-9"><a href="12-tidyr.html#cb553-9"></a><span class="co">#&gt; 5 Martial Truc    6e     11   </span></span>
+<span id="cb553-10"><a href="12-tidyr.html#cb553-10"></a><span class="co">#&gt; 6 Martial Truc    6e     17</span></span></code></pre></div>
 <p>Par défaut <code>separate_rows</code> sépare les valeurs dès qu’elle trouve un caractère qui ne soit ni un chiffre ni une lettre, mais on peut spécifier le séparateur à l’aide de l’argument <code>sep</code> (qui accepte une chaîne de caractère ou même une expression régulière) :</p>
-<div class="sourceCode" id="cb549"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb549-1"><a href="12-tidyr.html#cb549-1"></a><span class="kw">separate_rows</span>(df, notes, <span class="dt">sep =</span> <span class="st">&quot;,&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb554"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb554-1"><a href="12-tidyr.html#cb554-1"></a><span class="kw">separate_rows</span>(df, notes, <span class="dt">sep =</span> <span class="st">&quot;,&quot;</span>)</span></code></pre></div>
 </div>
 <div id="unite-regrouper-plusieurs-colonnes-en-une-seule" class="section level3">
 <h3><span class="header-section-number">12.3.5</span> <code>unite</code> : regrouper plusieurs colonnes en une seule</h3>
@@ -1464,31 +1464,31 @@ code span.wa { color: #bf0303; } /* Warning */
 </tbody>
 </table>
 <p>On souhaite reconstruire une colonne <code>code_insee</code> qui indique le code INSEE de la commune, et qui s’obtient en concaténant le code du département et celui de la commune. On peut utiliser <code>unite</code> pour cela :</p>
-<div class="sourceCode" id="cb550"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb550-1"><a href="12-tidyr.html#cb550-1"></a>d <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">unite</span>(code_insee, code_departement, code_commune)</span>
-<span id="cb550-2"><a href="12-tidyr.html#cb550-2"></a><span class="co">#&gt; # A tibble: 6 × 3</span></span>
-<span id="cb550-3"><a href="12-tidyr.html#cb550-3"></a><span class="co">#&gt;   code_insee commune           pop_tot</span></span>
-<span id="cb550-4"><a href="12-tidyr.html#cb550-4"></a><span class="co">#&gt;   &lt;chr&gt;      &lt;chr&gt;               &lt;dbl&gt;</span></span>
-<span id="cb550-5"><a href="12-tidyr.html#cb550-5"></a><span class="co">#&gt; 1 01_004     Ambérieu-en-Bugey  14204 </span></span>
-<span id="cb550-6"><a href="12-tidyr.html#cb550-6"></a><span class="co">#&gt; 2 01_007     Ambronay            2763 </span></span>
-<span id="cb550-7"><a href="12-tidyr.html#cb550-7"></a><span class="co">#&gt; 3 01_014     Arbent              3356 </span></span>
-<span id="cb550-8"><a href="12-tidyr.html#cb550-8"></a><span class="co">#&gt; 4 01_024     Attignat            3196 </span></span>
-<span id="cb550-9"><a href="12-tidyr.html#cb550-9"></a><span class="co">#&gt; 5 01_025     Bâgé-Dommartin      4078.</span></span>
-<span id="cb550-10"><a href="12-tidyr.html#cb550-10"></a><span class="co">#&gt; 6 01_027     Balan               2513</span></span></code></pre></div>
+<div class="sourceCode" id="cb555"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb555-1"><a href="12-tidyr.html#cb555-1"></a>d <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">unite</span>(code_insee, code_departement, code_commune)</span>
+<span id="cb555-2"><a href="12-tidyr.html#cb555-2"></a><span class="co">#&gt; # A tibble: 6 × 3</span></span>
+<span id="cb555-3"><a href="12-tidyr.html#cb555-3"></a><span class="co">#&gt;   code_insee commune           pop_tot</span></span>
+<span id="cb555-4"><a href="12-tidyr.html#cb555-4"></a><span class="co">#&gt;   &lt;chr&gt;      &lt;chr&gt;               &lt;dbl&gt;</span></span>
+<span id="cb555-5"><a href="12-tidyr.html#cb555-5"></a><span class="co">#&gt; 1 01_004     Ambérieu-en-Bugey  14204 </span></span>
+<span id="cb555-6"><a href="12-tidyr.html#cb555-6"></a><span class="co">#&gt; 2 01_007     Ambronay            2763 </span></span>
+<span id="cb555-7"><a href="12-tidyr.html#cb555-7"></a><span class="co">#&gt; 3 01_014     Arbent              3356 </span></span>
+<span id="cb555-8"><a href="12-tidyr.html#cb555-8"></a><span class="co">#&gt; 4 01_024     Attignat            3196 </span></span>
+<span id="cb555-9"><a href="12-tidyr.html#cb555-9"></a><span class="co">#&gt; 5 01_025     Bâgé-Dommartin      4078.</span></span>
+<span id="cb555-10"><a href="12-tidyr.html#cb555-10"></a><span class="co">#&gt; 6 01_027     Balan               2513</span></span></code></pre></div>
 <p>Le résultat n’est pas idéal : par défaut <code>unite</code> ajoute un caractère <code>_</code> entre les deux valeurs concaténées, alors qu’on ne veut aucun séparateur. De plus, on souhaite conserver nos deux colonnes d’origine, qui peuvent nous être utiles. On peut résoudre ces deux problèmes à l’aide des arguments <code>sep</code> et <code>remove</code> :</p>
-<div class="sourceCode" id="cb551"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb551-1"><a href="12-tidyr.html#cb551-1"></a>d <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb551-2"><a href="12-tidyr.html#cb551-2"></a><span class="st">  </span><span class="kw">unite</span>(</span>
-<span id="cb551-3"><a href="12-tidyr.html#cb551-3"></a>      code_insee, code_departement, code_commune, </span>
-<span id="cb551-4"><a href="12-tidyr.html#cb551-4"></a>      <span class="dt">sep =</span> <span class="st">&quot;&quot;</span>, <span class="dt">remove =</span> <span class="ot">FALSE</span></span>
-<span id="cb551-5"><a href="12-tidyr.html#cb551-5"></a>  )</span>
-<span id="cb551-6"><a href="12-tidyr.html#cb551-6"></a><span class="co">#&gt; # A tibble: 6 × 5</span></span>
-<span id="cb551-7"><a href="12-tidyr.html#cb551-7"></a><span class="co">#&gt;   code_insee code_departement code_commune commune           pop_tot</span></span>
-<span id="cb551-8"><a href="12-tidyr.html#cb551-8"></a><span class="co">#&gt;   &lt;chr&gt;      &lt;chr&gt;            &lt;chr&gt;        &lt;chr&gt;               &lt;dbl&gt;</span></span>
-<span id="cb551-9"><a href="12-tidyr.html#cb551-9"></a><span class="co">#&gt; 1 01004      01               004          Ambérieu-en-Bugey  14204 </span></span>
-<span id="cb551-10"><a href="12-tidyr.html#cb551-10"></a><span class="co">#&gt; 2 01007      01               007          Ambronay            2763 </span></span>
-<span id="cb551-11"><a href="12-tidyr.html#cb551-11"></a><span class="co">#&gt; 3 01014      01               014          Arbent              3356 </span></span>
-<span id="cb551-12"><a href="12-tidyr.html#cb551-12"></a><span class="co">#&gt; 4 01024      01               024          Attignat            3196 </span></span>
-<span id="cb551-13"><a href="12-tidyr.html#cb551-13"></a><span class="co">#&gt; 5 01025      01               025          Bâgé-Dommartin      4078.</span></span>
-<span id="cb551-14"><a href="12-tidyr.html#cb551-14"></a><span class="co">#&gt; 6 01027      01               027          Balan               2513</span></span></code></pre></div>
+<div class="sourceCode" id="cb556"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb556-1"><a href="12-tidyr.html#cb556-1"></a>d <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb556-2"><a href="12-tidyr.html#cb556-2"></a><span class="st">  </span><span class="kw">unite</span>(</span>
+<span id="cb556-3"><a href="12-tidyr.html#cb556-3"></a>      code_insee, code_departement, code_commune, </span>
+<span id="cb556-4"><a href="12-tidyr.html#cb556-4"></a>      <span class="dt">sep =</span> <span class="st">&quot;&quot;</span>, <span class="dt">remove =</span> <span class="ot">FALSE</span></span>
+<span id="cb556-5"><a href="12-tidyr.html#cb556-5"></a>  )</span>
+<span id="cb556-6"><a href="12-tidyr.html#cb556-6"></a><span class="co">#&gt; # A tibble: 6 × 5</span></span>
+<span id="cb556-7"><a href="12-tidyr.html#cb556-7"></a><span class="co">#&gt;   code_insee code_departement code_commune commune           pop_tot</span></span>
+<span id="cb556-8"><a href="12-tidyr.html#cb556-8"></a><span class="co">#&gt;   &lt;chr&gt;      &lt;chr&gt;            &lt;chr&gt;        &lt;chr&gt;               &lt;dbl&gt;</span></span>
+<span id="cb556-9"><a href="12-tidyr.html#cb556-9"></a><span class="co">#&gt; 1 01004      01               004          Ambérieu-en-Bugey  14204 </span></span>
+<span id="cb556-10"><a href="12-tidyr.html#cb556-10"></a><span class="co">#&gt; 2 01007      01               007          Ambronay            2763 </span></span>
+<span id="cb556-11"><a href="12-tidyr.html#cb556-11"></a><span class="co">#&gt; 3 01014      01               014          Arbent              3356 </span></span>
+<span id="cb556-12"><a href="12-tidyr.html#cb556-12"></a><span class="co">#&gt; 4 01024      01               024          Attignat            3196 </span></span>
+<span id="cb556-13"><a href="12-tidyr.html#cb556-13"></a><span class="co">#&gt; 5 01025      01               025          Bâgé-Dommartin      4078.</span></span>
+<span id="cb556-14"><a href="12-tidyr.html#cb556-14"></a><span class="co">#&gt; 6 01027      01               027          Balan               2513</span></span></code></pre></div>
 </div>
 <div id="extract" class="section level3">
 <h3><span class="header-section-number">12.3.6</span> <code>extract</code> : créer de nouvelles colonnes à partir d’une colonne de texte</h3>
@@ -1517,33 +1517,33 @@ code span.wa { color: #bf0303; } /* Warning */
 </tbody>
 </table>
 <p>On peut extraire les noms et prénoms dans deux nouvelles colonnes avec :</p>
-<div class="sourceCode" id="cb552"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb552-1"><a href="12-tidyr.html#cb552-1"></a>df <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb552-2"><a href="12-tidyr.html#cb552-2"></a><span class="st">    </span><span class="kw">extract</span>(</span>
-<span id="cb552-3"><a href="12-tidyr.html#cb552-3"></a>        eleve,</span>
-<span id="cb552-4"><a href="12-tidyr.html#cb552-4"></a>        <span class="kw">c</span>(<span class="st">&quot;prenom&quot;</span>, <span class="st">&quot;nom&quot;</span>),</span>
-<span id="cb552-5"><a href="12-tidyr.html#cb552-5"></a>        <span class="st">&quot;^(.*) (.*)$&quot;</span></span>
-<span id="cb552-6"><a href="12-tidyr.html#cb552-6"></a>    )</span>
-<span id="cb552-7"><a href="12-tidyr.html#cb552-7"></a><span class="co">#&gt; # A tibble: 3 × 3</span></span>
-<span id="cb552-8"><a href="12-tidyr.html#cb552-8"></a><span class="co">#&gt;   prenom   nom    note  </span></span>
-<span id="cb552-9"><a href="12-tidyr.html#cb552-9"></a><span class="co">#&gt;   &lt;chr&gt;    &lt;chr&gt;  &lt;chr&gt; </span></span>
-<span id="cb552-10"><a href="12-tidyr.html#cb552-10"></a><span class="co">#&gt; 1 Félicien Machin 5/20  </span></span>
-<span id="cb552-11"><a href="12-tidyr.html#cb552-11"></a><span class="co">#&gt; 2 Raymonde Bidule 6/10  </span></span>
-<span id="cb552-12"><a href="12-tidyr.html#cb552-12"></a><span class="co">#&gt; 3 Martial  Truc   87/100</span></span></code></pre></div>
+<div class="sourceCode" id="cb557"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb557-1"><a href="12-tidyr.html#cb557-1"></a>df <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb557-2"><a href="12-tidyr.html#cb557-2"></a><span class="st">    </span><span class="kw">extract</span>(</span>
+<span id="cb557-3"><a href="12-tidyr.html#cb557-3"></a>        eleve,</span>
+<span id="cb557-4"><a href="12-tidyr.html#cb557-4"></a>        <span class="kw">c</span>(<span class="st">&quot;prenom&quot;</span>, <span class="st">&quot;nom&quot;</span>),</span>
+<span id="cb557-5"><a href="12-tidyr.html#cb557-5"></a>        <span class="st">&quot;^(.*) (.*)$&quot;</span></span>
+<span id="cb557-6"><a href="12-tidyr.html#cb557-6"></a>    )</span>
+<span id="cb557-7"><a href="12-tidyr.html#cb557-7"></a><span class="co">#&gt; # A tibble: 3 × 3</span></span>
+<span id="cb557-8"><a href="12-tidyr.html#cb557-8"></a><span class="co">#&gt;   prenom   nom    note  </span></span>
+<span id="cb557-9"><a href="12-tidyr.html#cb557-9"></a><span class="co">#&gt;   &lt;chr&gt;    &lt;chr&gt;  &lt;chr&gt; </span></span>
+<span id="cb557-10"><a href="12-tidyr.html#cb557-10"></a><span class="co">#&gt; 1 Félicien Machin 5/20  </span></span>
+<span id="cb557-11"><a href="12-tidyr.html#cb557-11"></a><span class="co">#&gt; 2 Raymonde Bidule 6/10  </span></span>
+<span id="cb557-12"><a href="12-tidyr.html#cb557-12"></a><span class="co">#&gt; 3 Martial  Truc   87/100</span></span></code></pre></div>
 <p>On passe donc à <code>extract</code> trois arguments : la colonne d’où on doit extraire les valeurs, un vecteur avec les noms des nouvelles colonnes à créer, et une expression régulière comportant autant de groupes (identifiés par des parenthèses) que de nouvelles colonnes.</p>
 <p>Par défaut la colonne d’origine n’est pas conservée dans la table résultat. On peut modifier ce comportement avec l’argument <code>remove = FALSE</code>. Ainsi, le code suivant extrait les initiales du prénom et du nom mais conserve la colonne d’origine :</p>
-<div class="sourceCode" id="cb553"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb553-1"><a href="12-tidyr.html#cb553-1"></a>df <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb553-2"><a href="12-tidyr.html#cb553-2"></a><span class="st">    </span><span class="kw">extract</span>(</span>
-<span id="cb553-3"><a href="12-tidyr.html#cb553-3"></a>        eleve,</span>
-<span id="cb553-4"><a href="12-tidyr.html#cb553-4"></a>        <span class="kw">c</span>(<span class="st">&quot;initiale_prenom&quot;</span>, <span class="st">&quot;initiale_nom&quot;</span>),</span>
-<span id="cb553-5"><a href="12-tidyr.html#cb553-5"></a>        <span class="st">&quot;^(.).* (.).*$&quot;</span>,</span>
-<span id="cb553-6"><a href="12-tidyr.html#cb553-6"></a>        <span class="dt">remove =</span> <span class="ot">FALSE</span></span>
-<span id="cb553-7"><a href="12-tidyr.html#cb553-7"></a>    )</span>
-<span id="cb553-8"><a href="12-tidyr.html#cb553-8"></a><span class="co">#&gt; # A tibble: 3 × 4</span></span>
-<span id="cb553-9"><a href="12-tidyr.html#cb553-9"></a><span class="co">#&gt;   eleve           initiale_prenom initiale_nom note  </span></span>
-<span id="cb553-10"><a href="12-tidyr.html#cb553-10"></a><span class="co">#&gt;   &lt;chr&gt;           &lt;chr&gt;           &lt;chr&gt;        &lt;chr&gt; </span></span>
-<span id="cb553-11"><a href="12-tidyr.html#cb553-11"></a><span class="co">#&gt; 1 Félicien Machin F               M            5/20  </span></span>
-<span id="cb553-12"><a href="12-tidyr.html#cb553-12"></a><span class="co">#&gt; 2 Raymonde Bidule R               B            6/10  </span></span>
-<span id="cb553-13"><a href="12-tidyr.html#cb553-13"></a><span class="co">#&gt; 3 Martial Truc    M               T            87/100</span></span></code></pre></div>
+<div class="sourceCode" id="cb558"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb558-1"><a href="12-tidyr.html#cb558-1"></a>df <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb558-2"><a href="12-tidyr.html#cb558-2"></a><span class="st">    </span><span class="kw">extract</span>(</span>
+<span id="cb558-3"><a href="12-tidyr.html#cb558-3"></a>        eleve,</span>
+<span id="cb558-4"><a href="12-tidyr.html#cb558-4"></a>        <span class="kw">c</span>(<span class="st">&quot;initiale_prenom&quot;</span>, <span class="st">&quot;initiale_nom&quot;</span>),</span>
+<span id="cb558-5"><a href="12-tidyr.html#cb558-5"></a>        <span class="st">&quot;^(.).* (.).*$&quot;</span>,</span>
+<span id="cb558-6"><a href="12-tidyr.html#cb558-6"></a>        <span class="dt">remove =</span> <span class="ot">FALSE</span></span>
+<span id="cb558-7"><a href="12-tidyr.html#cb558-7"></a>    )</span>
+<span id="cb558-8"><a href="12-tidyr.html#cb558-8"></a><span class="co">#&gt; # A tibble: 3 × 4</span></span>
+<span id="cb558-9"><a href="12-tidyr.html#cb558-9"></a><span class="co">#&gt;   eleve           initiale_prenom initiale_nom note  </span></span>
+<span id="cb558-10"><a href="12-tidyr.html#cb558-10"></a><span class="co">#&gt;   &lt;chr&gt;           &lt;chr&gt;           &lt;chr&gt;        &lt;chr&gt; </span></span>
+<span id="cb558-11"><a href="12-tidyr.html#cb558-11"></a><span class="co">#&gt; 1 Félicien Machin F               M            5/20  </span></span>
+<span id="cb558-12"><a href="12-tidyr.html#cb558-12"></a><span class="co">#&gt; 2 Raymonde Bidule R               B            6/10  </span></span>
+<span id="cb558-13"><a href="12-tidyr.html#cb558-13"></a><span class="co">#&gt; 3 Martial Truc    M               T            87/100</span></span></code></pre></div>
 </div>
 <div id="complete-compléter-des-combinaisons-de-variables-manquantes" class="section level3">
 <h3><span class="header-section-number">12.3.7</span> <code>complete</code> : compléter des combinaisons de variables manquantes</h3>
@@ -1582,28 +1582,28 @@ code span.wa { color: #bf0303; } /* Warning */
 <p>Les élèves Barnabé et Chantal n’ont pas de notes dans toutes les matières. Supposons que c’est parce qu’ils étaient absents et que leur note est en fait un 0. Si on veut calculer les moyennes des élèves, on doit compléter ces notes manquantes.</p>
 <p>La fonction <code>complete</code> est prévue pour ce cas de figure : elle permet de compléter des combinaisons manquantes de valeurs de plusieurs colonnes.</p>
 <p>On peut l’utiliser de cette manière :</p>
-<div class="sourceCode" id="cb554"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb554-1"><a href="12-tidyr.html#cb554-1"></a>df <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">complete</span>(eleve, matiere)</span>
-<span id="cb554-2"><a href="12-tidyr.html#cb554-2"></a><span class="co">#&gt; # A tibble: 6 × 3</span></span>
-<span id="cb554-3"><a href="12-tidyr.html#cb554-3"></a><span class="co">#&gt;   eleve   matiere   note</span></span>
-<span id="cb554-4"><a href="12-tidyr.html#cb554-4"></a><span class="co">#&gt;   &lt;chr&gt;   &lt;chr&gt;    &lt;dbl&gt;</span></span>
-<span id="cb554-5"><a href="12-tidyr.html#cb554-5"></a><span class="co">#&gt; 1 Alain   Français     9</span></span>
-<span id="cb554-6"><a href="12-tidyr.html#cb554-6"></a><span class="co">#&gt; 2 Alain   Maths       16</span></span>
-<span id="cb554-7"><a href="12-tidyr.html#cb554-7"></a><span class="co">#&gt; 3 Barnabé Français    NA</span></span>
-<span id="cb554-8"><a href="12-tidyr.html#cb554-8"></a><span class="co">#&gt; 4 Barnabé Maths       17</span></span>
-<span id="cb554-9"><a href="12-tidyr.html#cb554-9"></a><span class="co">#&gt; 5 Chantal Français    11</span></span>
-<span id="cb554-10"><a href="12-tidyr.html#cb554-10"></a><span class="co">#&gt; 6 Chantal Maths       NA</span></span></code></pre></div>
+<div class="sourceCode" id="cb559"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb559-1"><a href="12-tidyr.html#cb559-1"></a>df <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">complete</span>(eleve, matiere)</span>
+<span id="cb559-2"><a href="12-tidyr.html#cb559-2"></a><span class="co">#&gt; # A tibble: 6 × 3</span></span>
+<span id="cb559-3"><a href="12-tidyr.html#cb559-3"></a><span class="co">#&gt;   eleve   matiere   note</span></span>
+<span id="cb559-4"><a href="12-tidyr.html#cb559-4"></a><span class="co">#&gt;   &lt;chr&gt;   &lt;chr&gt;    &lt;dbl&gt;</span></span>
+<span id="cb559-5"><a href="12-tidyr.html#cb559-5"></a><span class="co">#&gt; 1 Alain   Français     9</span></span>
+<span id="cb559-6"><a href="12-tidyr.html#cb559-6"></a><span class="co">#&gt; 2 Alain   Maths       16</span></span>
+<span id="cb559-7"><a href="12-tidyr.html#cb559-7"></a><span class="co">#&gt; 3 Barnabé Français    NA</span></span>
+<span id="cb559-8"><a href="12-tidyr.html#cb559-8"></a><span class="co">#&gt; 4 Barnabé Maths       17</span></span>
+<span id="cb559-9"><a href="12-tidyr.html#cb559-9"></a><span class="co">#&gt; 5 Chantal Français    11</span></span>
+<span id="cb559-10"><a href="12-tidyr.html#cb559-10"></a><span class="co">#&gt; 6 Chantal Maths       NA</span></span></code></pre></div>
 <p>On voit que les combinaisons manquante “Barnabé - Français” et “Chantal - Maths” ont bien été ajoutées par <code>complete</code>.</p>
 <p>Par défaut les lignes insérées récupèrent des valeurs manquantes <code>NA</code> pour les colonnes restantes. On peut néanmoins choisir une autre valeur avec l’argument <code>fill</code>, qui prend la forme d’une liste nommée :</p>
-<div class="sourceCode" id="cb555"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb555-1"><a href="12-tidyr.html#cb555-1"></a>df <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">complete</span>(eleve, matiere, <span class="dt">fill =</span> <span class="kw">list</span>(<span class="dt">note =</span> <span class="dv">0</span>))</span>
-<span id="cb555-2"><a href="12-tidyr.html#cb555-2"></a><span class="co">#&gt; # A tibble: 6 × 3</span></span>
-<span id="cb555-3"><a href="12-tidyr.html#cb555-3"></a><span class="co">#&gt;   eleve   matiere   note</span></span>
-<span id="cb555-4"><a href="12-tidyr.html#cb555-4"></a><span class="co">#&gt;   &lt;chr&gt;   &lt;chr&gt;    &lt;dbl&gt;</span></span>
-<span id="cb555-5"><a href="12-tidyr.html#cb555-5"></a><span class="co">#&gt; 1 Alain   Français     9</span></span>
-<span id="cb555-6"><a href="12-tidyr.html#cb555-6"></a><span class="co">#&gt; 2 Alain   Maths       16</span></span>
-<span id="cb555-7"><a href="12-tidyr.html#cb555-7"></a><span class="co">#&gt; 3 Barnabé Français     0</span></span>
-<span id="cb555-8"><a href="12-tidyr.html#cb555-8"></a><span class="co">#&gt; 4 Barnabé Maths       17</span></span>
-<span id="cb555-9"><a href="12-tidyr.html#cb555-9"></a><span class="co">#&gt; 5 Chantal Français    11</span></span>
-<span id="cb555-10"><a href="12-tidyr.html#cb555-10"></a><span class="co">#&gt; 6 Chantal Maths        0</span></span></code></pre></div>
+<div class="sourceCode" id="cb560"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb560-1"><a href="12-tidyr.html#cb560-1"></a>df <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">complete</span>(eleve, matiere, <span class="dt">fill =</span> <span class="kw">list</span>(<span class="dt">note =</span> <span class="dv">0</span>))</span>
+<span id="cb560-2"><a href="12-tidyr.html#cb560-2"></a><span class="co">#&gt; # A tibble: 6 × 3</span></span>
+<span id="cb560-3"><a href="12-tidyr.html#cb560-3"></a><span class="co">#&gt;   eleve   matiere   note</span></span>
+<span id="cb560-4"><a href="12-tidyr.html#cb560-4"></a><span class="co">#&gt;   &lt;chr&gt;   &lt;chr&gt;    &lt;dbl&gt;</span></span>
+<span id="cb560-5"><a href="12-tidyr.html#cb560-5"></a><span class="co">#&gt; 1 Alain   Français     9</span></span>
+<span id="cb560-6"><a href="12-tidyr.html#cb560-6"></a><span class="co">#&gt; 2 Alain   Maths       16</span></span>
+<span id="cb560-7"><a href="12-tidyr.html#cb560-7"></a><span class="co">#&gt; 3 Barnabé Français     0</span></span>
+<span id="cb560-8"><a href="12-tidyr.html#cb560-8"></a><span class="co">#&gt; 4 Barnabé Maths       17</span></span>
+<span id="cb560-9"><a href="12-tidyr.html#cb560-9"></a><span class="co">#&gt; 5 Chantal Français    11</span></span>
+<span id="cb560-10"><a href="12-tidyr.html#cb560-10"></a><span class="co">#&gt; 6 Chantal Maths        0</span></span></code></pre></div>
 <p>Parfois on ne souhaite pas inclure toutes les colonnes dans le calcul des combinaisons de valeurs. Par exemple, supposons qu’on rajoute dans notre tableau une colonne avec les identifiants de chaque élève :</p>
 <table>
 <thead>
@@ -1642,39 +1642,39 @@ code span.wa { color: #bf0303; } /* Warning */
 </tbody>
 </table>
 <p>Si on applique <code>complete</code> comme précédemment, le résultat n’est pas bon car il contient toutes les combinaisons de <code>id</code>, <code>eleve</code> et <code>matiere</code>.</p>
-<div class="sourceCode" id="cb556"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb556-1"><a href="12-tidyr.html#cb556-1"></a>df <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">complete</span>(id, eleve, matiere)</span>
-<span id="cb556-2"><a href="12-tidyr.html#cb556-2"></a><span class="co">#&gt; # A tibble: 18 × 4</span></span>
-<span id="cb556-3"><a href="12-tidyr.html#cb556-3"></a><span class="co">#&gt;         id eleve   matiere   note</span></span>
-<span id="cb556-4"><a href="12-tidyr.html#cb556-4"></a><span class="co">#&gt;      &lt;dbl&gt; &lt;chr&gt;   &lt;chr&gt;    &lt;dbl&gt;</span></span>
-<span id="cb556-5"><a href="12-tidyr.html#cb556-5"></a><span class="co">#&gt;  1 1001001 Alain   Français     9</span></span>
-<span id="cb556-6"><a href="12-tidyr.html#cb556-6"></a><span class="co">#&gt;  2 1001001 Alain   Maths       16</span></span>
-<span id="cb556-7"><a href="12-tidyr.html#cb556-7"></a><span class="co">#&gt;  3 1001001 Barnabé Français    NA</span></span>
-<span id="cb556-8"><a href="12-tidyr.html#cb556-8"></a><span class="co">#&gt;  4 1001001 Barnabé Maths       NA</span></span>
-<span id="cb556-9"><a href="12-tidyr.html#cb556-9"></a><span class="co">#&gt;  5 1001001 Chantal Français    NA</span></span>
-<span id="cb556-10"><a href="12-tidyr.html#cb556-10"></a><span class="co">#&gt;  6 1001001 Chantal Maths       NA</span></span>
-<span id="cb556-11"><a href="12-tidyr.html#cb556-11"></a><span class="co">#&gt;  7 1001002 Alain   Français    NA</span></span>
-<span id="cb556-12"><a href="12-tidyr.html#cb556-12"></a><span class="co">#&gt;  8 1001002 Alain   Maths       NA</span></span>
-<span id="cb556-13"><a href="12-tidyr.html#cb556-13"></a><span class="co">#&gt;  9 1001002 Barnabé Français    NA</span></span>
-<span id="cb556-14"><a href="12-tidyr.html#cb556-14"></a><span class="co">#&gt; 10 1001002 Barnabé Maths       17</span></span>
-<span id="cb556-15"><a href="12-tidyr.html#cb556-15"></a><span class="co">#&gt; 11 1001002 Chantal Français    NA</span></span>
-<span id="cb556-16"><a href="12-tidyr.html#cb556-16"></a><span class="co">#&gt; 12 1001002 Chantal Maths       NA</span></span>
-<span id="cb556-17"><a href="12-tidyr.html#cb556-17"></a><span class="co">#&gt; 13 1001003 Alain   Français    NA</span></span>
-<span id="cb556-18"><a href="12-tidyr.html#cb556-18"></a><span class="co">#&gt; 14 1001003 Alain   Maths       NA</span></span>
-<span id="cb556-19"><a href="12-tidyr.html#cb556-19"></a><span class="co">#&gt; 15 1001003 Barnabé Français    NA</span></span>
-<span id="cb556-20"><a href="12-tidyr.html#cb556-20"></a><span class="co">#&gt; 16 1001003 Barnabé Maths       NA</span></span>
-<span id="cb556-21"><a href="12-tidyr.html#cb556-21"></a><span class="co">#&gt; 17 1001003 Chantal Français    11</span></span>
-<span id="cb556-22"><a href="12-tidyr.html#cb556-22"></a><span class="co">#&gt; 18 1001003 Chantal Maths       NA</span></span></code></pre></div>
+<div class="sourceCode" id="cb561"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb561-1"><a href="12-tidyr.html#cb561-1"></a>df <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">complete</span>(id, eleve, matiere)</span>
+<span id="cb561-2"><a href="12-tidyr.html#cb561-2"></a><span class="co">#&gt; # A tibble: 18 × 4</span></span>
+<span id="cb561-3"><a href="12-tidyr.html#cb561-3"></a><span class="co">#&gt;         id eleve   matiere   note</span></span>
+<span id="cb561-4"><a href="12-tidyr.html#cb561-4"></a><span class="co">#&gt;      &lt;dbl&gt; &lt;chr&gt;   &lt;chr&gt;    &lt;dbl&gt;</span></span>
+<span id="cb561-5"><a href="12-tidyr.html#cb561-5"></a><span class="co">#&gt;  1 1001001 Alain   Français     9</span></span>
+<span id="cb561-6"><a href="12-tidyr.html#cb561-6"></a><span class="co">#&gt;  2 1001001 Alain   Maths       16</span></span>
+<span id="cb561-7"><a href="12-tidyr.html#cb561-7"></a><span class="co">#&gt;  3 1001001 Barnabé Français    NA</span></span>
+<span id="cb561-8"><a href="12-tidyr.html#cb561-8"></a><span class="co">#&gt;  4 1001001 Barnabé Maths       NA</span></span>
+<span id="cb561-9"><a href="12-tidyr.html#cb561-9"></a><span class="co">#&gt;  5 1001001 Chantal Français    NA</span></span>
+<span id="cb561-10"><a href="12-tidyr.html#cb561-10"></a><span class="co">#&gt;  6 1001001 Chantal Maths       NA</span></span>
+<span id="cb561-11"><a href="12-tidyr.html#cb561-11"></a><span class="co">#&gt;  7 1001002 Alain   Français    NA</span></span>
+<span id="cb561-12"><a href="12-tidyr.html#cb561-12"></a><span class="co">#&gt;  8 1001002 Alain   Maths       NA</span></span>
+<span id="cb561-13"><a href="12-tidyr.html#cb561-13"></a><span class="co">#&gt;  9 1001002 Barnabé Français    NA</span></span>
+<span id="cb561-14"><a href="12-tidyr.html#cb561-14"></a><span class="co">#&gt; 10 1001002 Barnabé Maths       17</span></span>
+<span id="cb561-15"><a href="12-tidyr.html#cb561-15"></a><span class="co">#&gt; 11 1001002 Chantal Français    NA</span></span>
+<span id="cb561-16"><a href="12-tidyr.html#cb561-16"></a><span class="co">#&gt; 12 1001002 Chantal Maths       NA</span></span>
+<span id="cb561-17"><a href="12-tidyr.html#cb561-17"></a><span class="co">#&gt; 13 1001003 Alain   Français    NA</span></span>
+<span id="cb561-18"><a href="12-tidyr.html#cb561-18"></a><span class="co">#&gt; 14 1001003 Alain   Maths       NA</span></span>
+<span id="cb561-19"><a href="12-tidyr.html#cb561-19"></a><span class="co">#&gt; 15 1001003 Barnabé Français    NA</span></span>
+<span id="cb561-20"><a href="12-tidyr.html#cb561-20"></a><span class="co">#&gt; 16 1001003 Barnabé Maths       NA</span></span>
+<span id="cb561-21"><a href="12-tidyr.html#cb561-21"></a><span class="co">#&gt; 17 1001003 Chantal Français    11</span></span>
+<span id="cb561-22"><a href="12-tidyr.html#cb561-22"></a><span class="co">#&gt; 18 1001003 Chantal Maths       NA</span></span></code></pre></div>
 <p>Dans ce cas, pour signifier à <code>complete</code> que <code>id</code> et <code>eleve</code> sont deux attributs d’un même individu et ne doivent pas être combinés entre eux, on doit les placer dans une fonction <code>nesting</code> :</p>
-<div class="sourceCode" id="cb557"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb557-1"><a href="12-tidyr.html#cb557-1"></a>df <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">complete</span>(<span class="kw">nesting</span>(id, eleve), matiere)</span>
-<span id="cb557-2"><a href="12-tidyr.html#cb557-2"></a><span class="co">#&gt; # A tibble: 6 × 4</span></span>
-<span id="cb557-3"><a href="12-tidyr.html#cb557-3"></a><span class="co">#&gt;        id eleve   matiere   note</span></span>
-<span id="cb557-4"><a href="12-tidyr.html#cb557-4"></a><span class="co">#&gt;     &lt;dbl&gt; &lt;chr&gt;   &lt;chr&gt;    &lt;dbl&gt;</span></span>
-<span id="cb557-5"><a href="12-tidyr.html#cb557-5"></a><span class="co">#&gt; 1 1001001 Alain   Français     9</span></span>
-<span id="cb557-6"><a href="12-tidyr.html#cb557-6"></a><span class="co">#&gt; 2 1001001 Alain   Maths       16</span></span>
-<span id="cb557-7"><a href="12-tidyr.html#cb557-7"></a><span class="co">#&gt; 3 1001002 Barnabé Français    NA</span></span>
-<span id="cb557-8"><a href="12-tidyr.html#cb557-8"></a><span class="co">#&gt; 4 1001002 Barnabé Maths       17</span></span>
-<span id="cb557-9"><a href="12-tidyr.html#cb557-9"></a><span class="co">#&gt; 5 1001003 Chantal Français    11</span></span>
-<span id="cb557-10"><a href="12-tidyr.html#cb557-10"></a><span class="co">#&gt; 6 1001003 Chantal Maths       NA</span></span></code></pre></div>
+<div class="sourceCode" id="cb562"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb562-1"><a href="12-tidyr.html#cb562-1"></a>df <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">complete</span>(<span class="kw">nesting</span>(id, eleve), matiere)</span>
+<span id="cb562-2"><a href="12-tidyr.html#cb562-2"></a><span class="co">#&gt; # A tibble: 6 × 4</span></span>
+<span id="cb562-3"><a href="12-tidyr.html#cb562-3"></a><span class="co">#&gt;        id eleve   matiere   note</span></span>
+<span id="cb562-4"><a href="12-tidyr.html#cb562-4"></a><span class="co">#&gt;     &lt;dbl&gt; &lt;chr&gt;   &lt;chr&gt;    &lt;dbl&gt;</span></span>
+<span id="cb562-5"><a href="12-tidyr.html#cb562-5"></a><span class="co">#&gt; 1 1001001 Alain   Français     9</span></span>
+<span id="cb562-6"><a href="12-tidyr.html#cb562-6"></a><span class="co">#&gt; 2 1001001 Alain   Maths       16</span></span>
+<span id="cb562-7"><a href="12-tidyr.html#cb562-7"></a><span class="co">#&gt; 3 1001002 Barnabé Français    NA</span></span>
+<span id="cb562-8"><a href="12-tidyr.html#cb562-8"></a><span class="co">#&gt; 4 1001002 Barnabé Maths       17</span></span>
+<span id="cb562-9"><a href="12-tidyr.html#cb562-9"></a><span class="co">#&gt; 5 1001003 Chantal Français    11</span></span>
+<span id="cb562-10"><a href="12-tidyr.html#cb562-10"></a><span class="co">#&gt; 6 1001003 Chantal Maths       NA</span></span></code></pre></div>
 </div>
 </div>
 <div id="ressources-4" class="section level2">
