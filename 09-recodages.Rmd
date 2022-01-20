@@ -417,23 +417,23 @@ Le fonctionnement de l'interface est similaire à celui de [l'interface de recod
 
 ## Combiner plusieurs variables
 
-Parfois, on veut créer une nouvelle variable en partant des valeurs d'une ou plusieurs autres variables. Dans ce cas on peut utiliser les fonctions `if_else` pour les cas les plus simples, ou `case_when` pour les cas plus complexes. Ces deux fonctions sont incluses dans l'extension `dplyr`, qu'il faut donc avoir chargé précédemment.
+Parfois, on veut créer une nouvelle variable en partant des valeurs d'une ou plusieurs autres variables. Dans ce cas on peut utiliser les fonctions `ifelse` pour les cas les plus simples, ou `case_when` pour les cas plus complexes. Cette dernière fonction est incluse dans l'extension `dplyr`, qu'il faut donc avoir chargé précédemment.
 
-### `if_else` {#if-else}
+### `ifelse` {#if-else}
 
-`if_else` prend trois arguments : un test, une valeur à renvoyer si le test est vrai, et une valeur à renvoyer si le test est faux.
+`ifelse` prend trois arguments : un test, une valeur à renvoyer si le test est vrai, et une valeur à renvoyer si le test est faux.
 
 Voici un exemple simple :
 
 ```{r}
 v <- c(12, 14, 8, 16)
-if_else(v > 10, "Supérieur à 10", "Inférieur à 10")
+ifelse(v > 10, "Supérieur à 10", "Inférieur à 10")
 ```
 
 La fonction permet d'utiliser des tests combinant plusieurs variables. Par exemple, imaginons qu'on souhaite créer une nouvelle variable indiquant les hommes de plus de 60 ans :
 
 ```{r}
-hdv2003$statut <- if_else(
+hdv2003$statut <- ifelse(
     hdv2003$sexe == "Homme" & hdv2003$age > 60,
     "Homme de plus de 60 ans",
     "Autre"
@@ -445,7 +445,7 @@ freq(hdv2003$statut)
 
 ### `case_when`
 
-`case_when` est une généralisation du `if_else` qui permet d'indiquer plusieurs tests et leurs valeurs associées.
+`case_when` est une généralisation du `ifelse` qui permet d'indiquer plusieurs tests et leurs valeurs associées.
 
 Imaginons qu'on souhaite créer une nouvelle variable permettant d'identifier les hommes de plus de 60 ans, les femmes de plus de 60 ans, et les autres. On peut utiliser la syntaxe suivante :
 
@@ -755,7 +755,7 @@ ggplot(hdv2003) + geom_boxplot(aes(x = relig, y = age))
 
 **Exercice 3.1**
 
-À l'aide de la fonction `if_else`, créer une nouvelle variable `cinema_bd` permettant d'identifier les personnes qui vont au cinéma et déclarent lire des bandes dessinées.
+À l'aide de la fonction `ifelse`, créer une nouvelle variable `cinema_bd` permettant d'identifier les personnes qui vont au cinéma et déclarent lire des bandes dessinées.
 
 Vous devriez obtenir le tri à plat suivant pour cette nouvelle variable :
 
@@ -766,7 +766,7 @@ Vous devriez obtenir le tri à plat suivant pour cette nouvelle variable :
 <div class="solution-exo">
 
 ```{r rec31, eval=FALSE}
-hdv2003$cinema_bd <- if_else(
+hdv2003$cinema_bd <- ifelse(
   hdv2003$cinema == "Oui" & hdv2003$lecture.bd == "Oui",
   "Cinéma et BD",
   "Autre"
