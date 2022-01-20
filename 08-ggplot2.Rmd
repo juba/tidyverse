@@ -136,7 +136,17 @@ ggplot(rp) +
 ggplot(rp) + geom_violin(aes(x = departement, y = maison))
 ```
 
-Les graphes en violon peuvent donner une lecture plus fine des différences de distribution selon les classes.
+Les graphes en violon peuvent donner une lecture plus fine des différences de distribution selon les classes. Comme pour les graphiques de densité, on peut faire varier le niveau de "détail" de la représentation en utilisant l'argument `bw` (bande passante).
+
+```{r}
+ggplot(rp) +
+  geom_violin(
+    aes(x = departement, y = maison),
+    bw = 2
+  )
+```
+
+
 
 ### `geom_bar` et `geom_col`
 
@@ -148,9 +158,25 @@ Par exemple, si on veut afficher le nombre de communes de notre jeu de données 
 ggplot(rp) + geom_bar(aes(x = departement))
 ```
 
-Un cas assez fréquent survient quand on a déjà calculé le tri à plat de la variable à représenter. Dans ce cas on souhaite représenter les effectifs sans les calculer.
+Si on préfère avoir un graphique en barres horizontales, il suffit de passer la variable comme attribut `y` plutôt que `x`.
 
-Par exemple, si on a les données sous la forme suivante dans un tableau de données nommé `tab` :
+```{r}
+ggplot(rp) + geom_bar(aes(y = departement))
+```
+
+Une autre possibilité est d'utiliser `coord_flip()`, qui permet d'intervertir l'axe horizontal et l'axe vertical.
+
+```{r}
+ggplot(rp) +
+  geom_bar(aes(x = departement)) +
+  coord_flip()
+```
+
+À noter que `coord_flip()` peut s'appliquer à n'importe quel graphique `ggplot2`.
+
+Parfois, on a déjà calculé le tri à plat de la variable à représenter. Dans ce cas on souhaite représenter les effectifs directement, sans les calculer.
+
+C'est le cas par exemple si on a les données sous la forme suivante dans un tableau de données nommé `tab` :
 
 ```{r, include=FALSE}
 tab <- data.frame(table(rp$departement))
@@ -179,6 +205,7 @@ ggplot(rp) +
 
 
 
+
 ### `geom_text`
 
 `geom_text` permet d'afficher des étiquettes de texte. On doit lui fournir trois paramètres dans `aes` : `x` et `y` pour la position des étiquettes, et `label` pour leur texte.
@@ -186,7 +213,7 @@ ggplot(rp) +
 Par exemple, si on souhaite représenter le nuage croisant la part des diplômés du supérieur et la part de cadres, mais en affichant le nom de la commune (variable `commune`) plutôt qu'un simple point, on peut faire :
 
 ```{r}
-ggplot(rp) + 
+ggplot(rp) +
   geom_text(
     aes(x = dipl_sup, y = cadres, label = commune)
   )
@@ -272,7 +299,7 @@ Dans les deux cas, on peut faire varier le nombre de zones, et donc la finesse d
 ```{r}
 ggplot(rp2018) +
   geom_bin2d(
-    aes(x = cadres, y = dipl_sup), 
+    aes(x = cadres, y = dipl_sup),
     bins = 50
   )
 ```
@@ -280,7 +307,7 @@ ggplot(rp2018) +
 ```{r}
 ggplot(rp2018) +
   geom_hex(
-    aes(x = cadres, y = dipl_sup), 
+    aes(x = cadres, y = dipl_sup),
     bins = 70
   )
 ```
@@ -338,9 +365,9 @@ Chaque `geom` possède sa propre liste de mappages.
 Comme on l'a déjà vu, parfois on souhaite changer un attribut sans le relier à une variable : c'est le cas par exemple si on veut représenter tous les points en rouge. Dans ce cas on utilise toujours l'attribut `color`, mais comme il ne s'agit pas d'un mappage, on le définit **à l'extérieur** de la fonction `aes()`.
 
 ```{r}
-ggplot(rp) + 
+ggplot(rp) +
   geom_point(
-    aes(x = dipl_sup, y = cadres), 
+    aes(x = dipl_sup, y = cadres),
     color = "red"
   )
 ```
@@ -357,7 +384,7 @@ ggplot(rp) +
 On peut mélanger attributs liés à une variable (mappage, donc dans `aes()`) et attributs constants (donc à l'extérieur). Dans l'exemple suivant, la taille varie en fonction de la variable `pop_tot`, mais la couleur est constante pour tous les points.
 
 ```{r}
-ggplot(rp) + 
+ggplot(rp) +
   geom_point(
     aes(x = dipl_sup, y = cadres, size = pop_tot),
     color = "royalblue"
@@ -382,9 +409,9 @@ ggplot(rp) + geom_bar(aes(x = departement, fill = pop_cl))
 L'attribut `position` de `geom_bar` permet d'indiquer comment les différentes barres doivent être positionnées. Par défaut l'argument vaut `position = "stack"` et elles sont donc "empilées". Mais on peut préciser `position = "dodge"` pour les mettre côte à côte.
 
 ```{r}
-ggplot(rp) + 
+ggplot(rp) +
   geom_bar(
-    aes(x = departement, fill = pop_cl), 
+    aes(x = departement, fill = pop_cl),
     position = "dodge"
   )
 ```
@@ -399,6 +426,18 @@ ggplot(rp) +
   )
 ```
 
+Là encore, on peut utiliser `coord_flip()` si on souhaite une visualisation avec des barres horizontales.
+
+```{r}
+ggplot(rp) +
+  geom_bar(
+    aes(x = departement, fill = pop_cl),
+    position = "fill"
+  ) +
+  coord_flip()
+```
+
+
 ## Représentation de plusieurs `geom`
 
 On peut représenter plusieurs `geom` simultanément sur un même graphique, il suffit de les ajouter à tour de rôle avec l'opérateur `+`.
@@ -409,7 +448,7 @@ Par exemple, on peut superposer la position des points au-dessus d'un boxplot. O
 ggplot(rp) +
   geom_boxplot(aes(x = departement, y = maison)) +
   geom_point(
-    aes(x = departement, y = maison), 
+    aes(x = departement, y = maison),
     col = "red", alpha = 0.2
   )
 ```
