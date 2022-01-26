@@ -59,6 +59,27 @@ Si on veut sélectionner les 5 premières lignes :
 slice(airports, 1:5)
 ```
 
+`slice` propose plusieurs variantes utiles, dont `slice_head` et `slice_tail`, qui permettent de sélectionner les premières ou les dernières lignes du tableau (on peut spécifier le nombre de lignes souhaitées avec `n`, ou la proportion avec `prop`).
+
+```{r}
+slice_tail(airports, n = 3)
+```
+
+```{r}
+slice_head(airlines, prop = 0.2)
+```
+
+Autres variantes utiles, `slice_min` et `slice_max` permettent de sélectionner les lignes avec les valeurs les plus grandes ou les plus petite d'une variable donnée. Ainsi, la commande suivante sélectionne le vol ayant le retard au départ le plus faible.
+
+```{r}
+slice_min(flights, dep_delay)
+```
+
+On peut aussi spécifier le nombre de lignes souhaitées, par exemple la commande suivante retourne les 5 aéroports avec l'altitude la plus élevée (en cas de valeurs ex-aequo, il se peut que le nombre de lignes retournées soit plus élevé que celui demandé).
+
+```{r}
+slice_max(airports, alt, n = 5)
+```
 
 ### `filter` {#filter}
 
@@ -82,10 +103,10 @@ Si on passe plusieurs arguments à `filter`, celui-ci rajoute automatiquement un
 filter(flights, dep_delay >= 10, dep_delay <= 15)
 ```
 
-On peut également placer des fonctions dans les tests, qui nous permettent par exemple de sélectionner les vols avec la plus grande distance :
+On peut également placer des fonctions dans les tests, qui nous permettent par exemple de sélectionner les vols ayant une distance supérieure à la distance médiane :
 
 ```{r}
-filter(flights, distance == max(distance))
+filter(flights, distance == median(distance))
 ```
 
 
@@ -345,6 +366,12 @@ Par exemple, si on applique `slice` à un tableau préalablement groupé, il va 
 flights %>% group_by(month) %>% slice(1)
 ```
 
+Plus utile, en utilisant une variante comme `slice_min` ou `slice_max`, on peut sélectionner les lignes ayant les valeurs les plus grandes ou les plus petites *pour chaque groupe*. Par exemple la commande suivant sélectionne, pour chaque mois de l'année, le vol ayant eu le retard le plus important.
+
+```{r}
+flights %>% group_by(month) %>% slice_max(dep_delay)
+```
+
 Idem pour `mutate` : les opérations appliquées lors du calcul des valeurs des nouvelles colonnes sont appliquées groupe de lignes par groupe de lignes. Dans l'exemple suivant, on ajoute une nouvelle colonne qui contient le retard moyen *pour chaque compagnie aérienne*. Cette valeur est donc différente d'une compagnie à une autre, mais identique pour tous les vols d'une même compagnie :
 
 ```{r}
@@ -370,12 +397,12 @@ flights %>%
   select(dep_delay, median_delay, delay_carrier)
 ```
 
-`group_by` peut aussi être utile avec `filter`, par exemple pour sélectionner les vols avec le retard au départ le plus important *pour chaque mois* :
+`group_by` peut aussi être utile avec `filter`, par exemple pour sélectionner *pour chaque mois* les vols avec un retard au départ plus élevé que le retard moyen ce mois-ci.
 
 ```{r}
 flights %>%
   group_by(month) %>%
-  filter(dep_delay == max(dep_delay, na.rm = TRUE))
+  filter(dep_delay >= mean(dep_delay, na.rm = TRUE))
 ```
 
 
@@ -434,57 +461,24 @@ flights %>%
 
 `n()` peut aussi être utilisée avec `filter` et `mutate`.
 
-À noter que quand on veut compter le nombre de lignes par groupe, on peut utiliser directement la fonction `count`. Ainsi le code suivant est identique au précédent :
+À noter que quand on veut compter le nombre de lignes par groupe, il est plus simple d'utiliser directement la fonction `count`. Ainsi le code suivant est identique au précédent :
 
 ```{r}
 flights %>%
   count(dest)
 ```
 
-Lorsque la variable de groupage est un facteur et que certaines valeurs du facteur ne sont pas présentes dans le tableau, l'argument `.drop = FALSE` de `group_by` permet de conserver ces niveaux dans le résultat d'une opération groupée.
-
-Par exemple, si on transforme la variable `origin` en facteur pour conserver la liste de ses modalités, et qu'on ne garde que les vols à destination de San Francisco (code `SFO`) :
-
-```{r}
-ff <- flights %>%
-  mutate(origin = factor(origin)) %>%
-  filter(dest == "SFO")
-```
-
-Par défaut, si on compte le nombre de vols selon l'aéroport de départ, La Guardia n'apparaît pas car il ne compte aucun vol :
-
-```{r}
-ff %>%
-  group_by(origin) %>%
-  summarise(n = n())
-```
-
-Si on souhaite faire apparaître cette information dans la sortie du `summarise`, on peut ajouter l'argument `.drop = FALSE` au `group_by` :
-
-```{r}
-ff %>%
-  group_by(origin, .drop = FALSE) %>%
-  summarise(n = n())
-```
-
-Cet argument fonctionne aussi avec `count` :
-
-```{r}
-ff %>%
-  count(origin, .drop = FALSE)
-```
-
 
 
 ### Grouper selon plusieurs variables
 
-On peut grouper selon plusieurs variables à la fois, il suffit de les indiquer dans la clause du `group_by`. Le *pipeline* suivant le nombre de vols pour chaque mois et pour chaque destination, et trie le résultat par nombre de vols décroissant :
+On peut grouper selon plusieurs variables à la fois, il suffit de les indiquer dans la clause du `group_by`. Le *pipeline* suivant calcule le retard moyen au départ pour chaque mois et pour chaque destination, et trie le résultat par retard décroissant :
 
 ```{r}
 flights %>%
   group_by(month, dest) %>%
-  summarise(nb = n()) %>%
-  arrange(desc(nb))
+  summarise(retard_moyen = mean(dep_delay, na.rm = TRUE)) %>%
+  arrange(desc(retard_moyen))
 ```
 
 On peut également utiliser `count` sur plusieurs variables. Les commandes suivantes comptent le nombre de vols pour chaque couple aéroport de départ / aéroport d'arrivée, et trie le résultat par nombre de vols décroissant. Ici la colonne qui contient le nombre de vols, créée par `count`, s'appelle `n` par défaut :
@@ -495,48 +489,51 @@ flights %>%
   arrange(desc(n))
 ```
 
-On peut utiliser plusieurs opérations de groupage dans le même *pipeline*. Ainsi, si on souhaite déterminer le couple / aéroport de départ / aéroport d'arrivée ayant le plus grand nombre de vols selon le mois de l'année, on devra procéder en deux étapes :
+On peut utiliser plusieurs opérations de groupage dans le même *pipeline*. Ainsi, si on souhaite déterminer le couple aéroport de départ / aéroport d'arrivée ayant le retard moyen au départ le plus élevé pour chaque mois de l'année, on devra procéder en deux étapes :
 
-- d'abord grouper selon mois, aéroports d'origine et d'arrivée pour calculer le nombre de vols
-- puis grouper uniquement selon le mois pour sélectionner le mois avec la valeur maximale.
+- d'abord grouper selon mois, aéroports d'origine et d'arrivée pour calculer le retard moyen
+- puis grouper uniquement selon le mois pour sélectionner le mois avec le retard moyen maximal.
 
 Au final, on obtient le code suivant :
 
 ```{r}
 flights %>%
   group_by(month, origin, dest) %>%
-  summarise(nb = n()) %>%
+  summarise(retard_moyen = mean(dep_delay, na.rm = TRUE)) %>%
   group_by(month) %>%
-  filter(nb == max(nb))
+  slice_max(retard_moyen)
 ```
 
-Lorsqu'on effectue un `group_by` suivi d'un `summarise`, le tableau résultat est automatiquement dégroupé *de la dernière variable de regroupement*. Ainsi le tableau généré par le code suivant est groupé par `month` et `origin` :
+
+### Dégroupage
+
+Lorsqu'on effectue un `group_by` suivi d'un `summarise`, le tableau résultat est automatiquement dégroupé *de la dernière variable de regroupement*. Ainsi le tableau généré par le code suivant est seulement groupé par `month` et `origin` :
 
 ```{r}
 flights %>%
   group_by(month, origin, dest) %>%
-  summarise(nb = n())
+  summarise(retard_moyen = mean(dep_delay, na.rm = TRUE))
 ```
 
-R nous le signale d'ailleurs via un message d'avertissement : `summarise() has grouped output by 'month', 'origin'`.
+`dplyr` nous le signale d'ailleurs via un message d'avertissement : `summarise() has grouped output by 'month', 'origin'`.
 
-Ce dégroupage progressif peut permettre "d'enchaîner" les opérations groupées. Dans l'exemple suivant on calcule le pourcentage des trajets pour chaque destination par rapport à tous les trajets du mois :
+Ce dégroupage progressif peut permettre "d'enchaîner" les opérations groupées. Dans l'exemple suivant on calcule le retard moyen au départ par destination et on conserve les trois retards les plus importants *pour chaque mois*.
 
 ```{r}
 flights %>%
   group_by(month, dest) %>%
-  summarise(nb = n()) %>%
-  mutate(pourcentage = nb / sum(nb) * 100)
+  summarise(retard_moyen = mean(dep_delay, na.rm = TRUE)) %>%
+  slice_max(retard_moyen, n = 3)
 ```
 
-On peut à tout moment "dégrouper" un tableau à l'aide de `ungroup`. Ce serait par exemple nécessaire, dans l'exemple précédent, si on voulait calculer le pourcentage sur le nombre total de vols plutôt que sur le nombre de vols par mois :
+On peut à tout moment "dégrouper" un tableau à l'aide de `ungroup`. C'est nécessaire, dans l'exemple précédent, si on veut seulement récupérer les trois retards les plus importants pour l'ensemble des couples mois / destination.
 
 ```{r}
 flights %>%
   group_by(month, dest) %>%
-  summarise(nb = n()) %>%
+  summarise(retard_moyen = mean(dep_delay, na.rm = TRUE)) %>%
   ungroup() %>%
-  mutate(pourcentage = nb / sum(nb) * 100)
+  slice_max(retard_moyen, n = 3)
 ```
 
 On peut aussi spécifier précisément le comportement de dégroupage de `summarise` en lui fournissant un argument supplémentaire `.groups` qui peut prendre notamment les valeurs suivantes :
@@ -547,13 +544,12 @@ On peut aussi spécifier précisément le comportement de dégroupage de `summar
 
 Ce concept de dégroupage successif peut être un peu déroutant de prime abord. Il est donc utile de faire attention aux avertissements affichés par ces opérations, et il ne faut pas hésiter à ajouter un `ungroup` en fin de pipeline si on sait qu'on ne souhaite pas utiliser les groupes encore existants par la suite.
 
-À noter que la fonction `count`, de son côté, renvoie un tableau non groupé :
+À noter que la fonction `count`, de son côté, renvoie un tableau non groupé.
 
 ```{r}
 flights %>%
   count(month, dest)
 ```
-
 
 
 
@@ -578,38 +574,6 @@ flights %>% slice_sample(prop = 0.1)
 ```
 
 Ces fonctions sont utiles notamment pour faire de "l'échantillonnage" en tirant au hasard un certain nombre d'observations du tableau.
-
-### `slice_head`, `slice_tail`, `slice_min`, `slice_max`
-
-`slice_head` et `slice_tail` permettent de sélectionner les  premières ou dernière lignes d'un tableau. On peut indiquer le nombre (avec `n`) ou la proportion (avec `prop`) de lignes qu'on souhaite.
-
-Ainsi si on veut afficher les trois premières lignes d'`airport` :
-
-```{r}
-airports %>% slice_head(n = 3)
-```
-
-Si on veut afficher les dernières 20% des lignes de `airlines` :
-
-```{r}
-airlines %>% slice_tail(prop = 0.2)
-```
-
-`slice_min` et `slice_max` prennent en argument supplémentaire une variable du tableau et affichent `n` ou `prop` lignes du tableau ayant les valeurs les plus ou les moins élevées de cette variable.
-
-Ainsi si on veut les 1% de lignes de `flights` ayant les plus fortes valeurs de `dep_delay` :
-
-```{r}
-flights %>% slice_max(dep_delay, prop = 0.01)
-```
-
-Si on veut les 2 aéroports avec l'altitude la plus basse :
-
-```{r}
-airports %>% slice_min(alt, n = 2)
-```
-
-On notera que le tableau renvoyé par `slice_min` et `slice_max` est trié selon la variable d'intérêt.
 
 
 ### `lead` et `lag`
@@ -1011,7 +975,7 @@ data(airlines)
 
 **Exercice 1.1**
 
-Sélectionner les lignes 100 à 105 du tableau des vols (`flights`).
+Sélectionner la dixième ligne du tableau des aéroports (`airports`).
 
 ```{r echo=FALSE, ref.label='dp11'}
 ```
@@ -1019,7 +983,33 @@ Sélectionner les lignes 100 à 105 du tableau des vols (`flights`).
 \iffalse
 <div class="solution-exo">
 ```{r dp11, eval=FALSE}
-slice(flights, 100:105)
+slice(airports, 10)
+```
+</div>
+\fi
+
+Sélectionner les 5 premières lignes de la table `airlines`.
+
+```{r echo=FALSE, ref.label='dp11b'}
+```
+
+\iffalse
+<div class="solution-exo">
+```{r dp11b, eval=FALSE}
+slice_head(airlines, n = 5)
+```
+</div>
+\fi
+
+Sélectionner l'aéroport avec l'altitude la plus basse.
+
+```{r echo=FALSE, ref.label='dp11c'}
+```
+
+\iffalse
+<div class="solution-exo">
+```{r dp11c, eval=FALSE}
+slice_min(airports, alt)
 ```
 </div>
 \fi
@@ -1122,8 +1112,7 @@ select(airports, -tz, -tzone)
 \fi
 
 
-
-Toujours dans la table `airports`, renommez la colonne `lat` en `latitude` et `lon` en `longitude`.
+Sélectionnez toutes les colonnes de la table `flights` dont les noms se terminent par "delay".
 
 ```{r, echo = FALSE, ref.label='dp14c'}
 ```
@@ -1131,7 +1120,22 @@ Toujours dans la table `airports`, renommez la colonne `lat` en `latitude` et `l
 \iffalse
 <div class="solution-exo">
 ```{r dp14c, eval=FALSE}
-rename(airports, latitude = lat, longitude = lon)
+select(flights, ends_with("delay"))
+```
+</div>
+\fi
+
+
+
+Dans la table `airports`, renommez la colonne `alt` en `altitude` et la colonne `tzone` en `fuseau_horaire`.
+
+```{r, echo = FALSE, ref.label='dp14d'}
+```
+
+\iffalse
+<div class="solution-exo">
+```{r dp14d, eval=FALSE}
+rename(airports, altitude = alt, fuseau_horaire = tzone)
 ```
 </div>
 \fi
@@ -1197,7 +1201,7 @@ flights %>%
 
 **Exercice 2.3**
 
-Sélectionnez les vols des mois de septembre et octobre, conservez les colonnes `dest` et `dep_delay`, créez une nouvelle variable `retard_h` contenant le retard au départ en heures, triez selon `retard_h` par ordre décroissant et conservez uniquement les 5 premières lignes.
+Sélectionnez les vols des mois de septembre et octobre, conservez les colonnes `dest` et `dep_delay`, créez une nouvelle variable `retard_h` contenant le retard au départ en heures, et conservez uniquement les 5 lignes avec les plus grandes valeurs de `retard_h`.
 
 ```{r echo=FALSE, ref.label='dp23'}
 ```
@@ -1209,8 +1213,7 @@ flights %>%
   filter(month %in% c(9, 10)) %>%
   select(dest, dep_delay) %>%
   mutate(retard_h = dep_delay / 60) %>%
-  arrange(desc(retard_h)) %>%
-  slice(1:5)
+  slice_max(retard_h, n = 5)
 ```
 </div>
 \fi
@@ -1231,8 +1234,7 @@ Affichez le nombre de vols par mois.
 <div class="solution-exo">
 ```{r dp31, eval=FALSE}
 flights %>%
-  group_by(month) %>%
-  summarise(n = n())
+  count(month)
 ```
 </div>
 \fi
@@ -1248,8 +1250,7 @@ Triez la table résultat selon le nombre de vols croissant.
 <div class="solution-exo">
 ```{r dp31b, eval=FALSE}
 flights %>%
-  group_by(month) %>%
-  summarise(n = n()) %>%
+  count(month) %>%
   arrange(n)
 ```
 </div>
@@ -1322,7 +1323,7 @@ Ne conserver, pour chaque mois, que la destination avec le nombre maximal de vol
 flights %>%
   count(month, dest) %>%
   group_by(month) %>%
-  filter(n == max(n))
+  slice_max(n)
 ```
 </div>
 \fi
@@ -1341,7 +1342,7 @@ Calculer le nombre de vols selon le mois. Ajouter une colonne comportant le pour
 ```{r dp35, eval=FALSE}
 flights %>%
   count(month) %>%
-  mutate(pourcentage = n/sum(n) * 100)
+  mutate(pourcentage = n / sum(n) * 100)
 ```
 </div>
 \fi
@@ -1349,7 +1350,7 @@ flights %>%
 
 **Exercice 3.6**
 
-Calculer, pour chaque destination et chaque mois, le retard moyen à l'arrivée. Pour chaque mois, trier les destinations selon ce retard moyen décroissant, et (toujours pour chaque mois) ne conserver que les trois destinations avec le retard le plus important.
+Calculer, pour chaque aéroport de départ et de destination, la durée moyenne des vols (variable air_time). Pour chaque aéroport de départ, ne conserver que la destination avec la durée moyenne la plus longue.
 
 ```{r echo = FALSE, ref.label='dp36'}
 ```
@@ -1358,11 +1359,11 @@ Calculer, pour chaque destination et chaque mois, le retard moyen à l'arrivée.
 <div class="solution-exo">
 ```{r dp36, eval=FALSE}
 flights %>%
-  group_by(month, dest) %>%
-  summarise(retard_moyen = mean(arr_delay, na.rm = TRUE)) %>%
-  group_by(month) %>%
-  arrange(desc(retard_moyen), .by_group = TRUE) %>%
-  slice(1:3)
+  group_by(origin, dest) %>%
+  summarise(duree_moyenne = mean(air_time, na.rm = TRUE)) %>%
+  # Le group_by suivant n'est pas obligatoire
+  group_by(origin) %>%
+  slice_max(duree_moyenne)
 ```
 </div>
 \fi
@@ -1442,7 +1443,7 @@ flights %>%
   left_join(airports, by = c("dest" = "faa")) %>%
   count(month, name) %>%
   group_by(month) %>%
-  filter(n == min(n))
+  slice_min(n)
 ```
 </div>
 \fi
@@ -1451,7 +1452,7 @@ flights %>%
 
 **Exercice 4.4**
 
-Créer une table indiquant, pour chaque trajet, le nom de l'aéroport de départ et celui de l'aéroport d'arrivée.
+Créer une table indiquant, pour chaque vol, uniquement le nom de l'aéroport de départ et celui de l'aéroport d'arrivée.
 
 ```{r echo=FALSE, ref.label='dp44'}
 ```
