@@ -356,7 +356,7 @@ Idem pour `mutate` : les opérations appliquées lors du calcul des valeurs des
 flights %>%
   group_by(carrier) %>%
   mutate(mean_delay_carrier = mean(dep_delay, na.rm = TRUE)) %>%
-  select(dep_delay, month, mean_delay_carrier)
+  select(dep_delay, mean_delay_carrier)
 ```
 
 Ceci peut permettre, par exemple, de déterminer si un retard donné est supérieur ou inférieur au retard médian de la compagnie :
@@ -368,11 +368,11 @@ flights %>%
       median_delay = median(dep_delay, na.rm = TRUE),
       delay_carrier = ifelse(
           dep_delay > median_delay,
-          "Supérieur", 
+          "Supérieur",
           "Inférieur ou égal"
       )
   ) %>%
-  select(dep_delay, month, median_delay, delay_carrier)
+  select(dep_delay, median_delay, delay_carrier)
 ```
 
 `group_by` peut aussi être utile avec `filter`, par exemple pour sélectionner les vols avec le retard au départ le plus important *pour chaque mois* :
@@ -500,16 +500,16 @@ flights %>%
   arrange(desc(n))
 ```
 
-On peut utiliser plusieurs opérations de groupage dans le même *pipeline*. Ainsi, si on souhaite déterminer le triplet compagnie aérienne / aéroport de départ / aéroport d'arrivée ayant le plus grand nombre de vols selon le mois de l'année, on devra procéder en deux étapes :
+On peut utiliser plusieurs opérations de groupage dans le même *pipeline*. Ainsi, si on souhaite déterminer le couple / aéroport de départ / aéroport d'arrivée ayant le plus grand nombre de vols selon le mois de l'année, on devra procéder en deux étapes :
 
-- d'abord grouper selon mois, compagnie, aéroports d'origine et d'arrivée pour calculer le nombre de vols
-- puis grouper uniquement selon le mois pour sélectionner la ligne avec la valeur maximale.
+- d'abord grouper selon mois, aéroports d'origine et d'arrivée pour calculer le nombre de vols
+- puis grouper uniquement selon le mois pour sélectionner le mois avec la valeur maximale.
 
 Au final, on obtient le code suivant :
 
 ```{r}
 flights %>%
-  group_by(month, carrier, origin, dest) %>%
+  group_by(month, origin, dest) %>%
   summarise(nb = n()) %>%
   group_by(month) %>%
   filter(nb == max(nb))
@@ -1263,7 +1263,7 @@ flights %>%
 
 **Exercice 3.2**
 
-Calculer la distance moyenne des vols selon l'aéroport de départ.
+Calculer la distance moyenne des vols selon l'aéroport de départ (variable `origin`).
 
 ```{r echo=FALSE, ref.label='dp32'}
 ```
@@ -1398,7 +1398,7 @@ flights %>%
 
 **Exercice 4.2**
 
-À partir de la table résultat de l'exercice précédent, calculer le retard moyen au départ pour chaque compagnie, trier selon ce retard décroissant et ne conserver que le nom de la compagnie et le retard correspondant.
+À partir de la table résultat de l'exercice précédent, calculer le retard moyen au départ pour chaque compagnie, et trier selon ce retard décroissant.
 
 ```{r echo = FALSE, message=FALSE, ref.label='dp42'}
 ```
