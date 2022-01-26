@@ -313,13 +313,13 @@ code span.wa { color: #bf0303; } /* Warning */
 <li class="chapter" data-level="10.4.1" data-path="10-dplyr.html"><a href="10-dplyr.html#group_by"><i class="fa fa-check"></i><b>10.4.1</b> <code>group_by</code></a></li>
 <li class="chapter" data-level="10.4.2" data-path="10-dplyr.html"><a href="10-dplyr.html#summarise-et-count"><i class="fa fa-check"></i><b>10.4.2</b> <code>summarise</code> et <code>count</code></a></li>
 <li class="chapter" data-level="10.4.3" data-path="10-dplyr.html"><a href="10-dplyr.html#grouper-selon-plusieurs-variables"><i class="fa fa-check"></i><b>10.4.3</b> Grouper selon plusieurs variables</a></li>
+<li class="chapter" data-level="10.4.4" data-path="10-dplyr.html"><a href="10-dplyr.html#dégroupage"><i class="fa fa-check"></i><b>10.4.4</b> Dégroupage</a></li>
 </ul></li>
 <li class="chapter" data-level="10.5" data-path="10-dplyr.html"><a href="10-dplyr.html#autres-fonctions-utiles"><i class="fa fa-check"></i><b>10.5</b> Autres fonctions utiles</a><ul>
 <li class="chapter" data-level="10.5.1" data-path="10-dplyr.html"><a href="10-dplyr.html#slice_sample"><i class="fa fa-check"></i><b>10.5.1</b> <code>slice_sample</code></a></li>
-<li class="chapter" data-level="10.5.2" data-path="10-dplyr.html"><a href="10-dplyr.html#slice_head-slice_tail-slice_min-slice_max"><i class="fa fa-check"></i><b>10.5.2</b> <code>slice_head</code>, <code>slice_tail</code>, <code>slice_min</code>, <code>slice_max</code></a></li>
-<li class="chapter" data-level="10.5.3" data-path="10-dplyr.html"><a href="10-dplyr.html#lead-et-lag"><i class="fa fa-check"></i><b>10.5.3</b> <code>lead</code> et <code>lag</code></a></li>
-<li class="chapter" data-level="10.5.4" data-path="10-dplyr.html"><a href="10-dplyr.html#distinct-et-n_distinct"><i class="fa fa-check"></i><b>10.5.4</b> <code>distinct</code> et <code>n_distinct</code></a></li>
-<li class="chapter" data-level="10.5.5" data-path="10-dplyr.html"><a href="10-dplyr.html#relocate"><i class="fa fa-check"></i><b>10.5.5</b> <code>relocate</code></a></li>
+<li class="chapter" data-level="10.5.2" data-path="10-dplyr.html"><a href="10-dplyr.html#lead-et-lag"><i class="fa fa-check"></i><b>10.5.2</b> <code>lead</code> et <code>lag</code></a></li>
+<li class="chapter" data-level="10.5.3" data-path="10-dplyr.html"><a href="10-dplyr.html#distinct-et-n_distinct"><i class="fa fa-check"></i><b>10.5.3</b> <code>distinct</code> et <code>n_distinct</code></a></li>
+<li class="chapter" data-level="10.5.4" data-path="10-dplyr.html"><a href="10-dplyr.html#relocate"><i class="fa fa-check"></i><b>10.5.4</b> <code>relocate</code></a></li>
 </ul></li>
 <li class="chapter" data-level="10.6" data-path="10-dplyr.html"><a href="10-dplyr.html#tables-multiples"><i class="fa fa-check"></i><b>10.6</b> Tables multiples</a><ul>
 <li class="chapter" data-level="10.6.1" data-path="10-dplyr.html"><a href="10-dplyr.html#concaténation-bind_rows-et-bind_cols"><i class="fa fa-check"></i><b>10.6.1</b> Concaténation : <code>bind_rows</code> et <code>bind_cols</code></a></li>
@@ -872,9 +872,9 @@ x &lt;- 1:5
 x &lt;- 1:5
 ```</code></pre>
 <p>Une des options utiles est l’option <code>echo</code>. Par défaut <code>echo</code> vaut <code>TRUE</code>, et le bloc de code R est inséré dans le document généré, de cette manière :</p>
-<div class="sourceCode" id="cb575"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb575-1"><a href="13-rmarkdown.html#cb575-1"></a>x &lt;-<span class="st"> </span><span class="dv">1</span><span class="op">:</span><span class="dv">5</span></span>
-<span id="cb575-2"><a href="13-rmarkdown.html#cb575-2"></a><span class="kw">print</span>(x)</span>
-<span id="cb575-3"><a href="13-rmarkdown.html#cb575-3"></a><span class="co">#&gt; [1] 1 2 3 4 5</span></span></code></pre></div>
+<div class="sourceCode" id="cb578"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb578-1"><a href="13-rmarkdown.html#cb578-1"></a>x &lt;-<span class="st"> </span><span class="dv">1</span><span class="op">:</span><span class="dv">5</span></span>
+<span id="cb578-2"><a href="13-rmarkdown.html#cb578-2"></a><span class="kw">print</span>(x)</span>
+<span id="cb578-3"><a href="13-rmarkdown.html#cb578-3"></a><span class="co">#&gt; [1] 1 2 3 4 5</span></span></code></pre></div>
 <p>Mais si on positionne l’option <code>echo=FALSE</code>, alors le code R n’est plus inséré dans le document, et seul le résultat est visible :</p>
 <pre><code>#&gt; [1] 1 2 3 4 5</code></pre>
 <p>Voici une liste de quelques unes des options disponibles :</p>
@@ -972,23 +972,23 @@ On peut activer ou désactiver la mise en cache des résultats pour chaque bloc 
 <div id="tableaux-croisés-1" class="section level3">
 <h3><span class="header-section-number">13.5.1</span> Tableaux croisés</h3>
 <p>Par défaut, les tableaux issus de la fonction <code>table</code> sont affichés comme ils apparaissent dans la console de R, en texte brut :</p>
-<div class="sourceCode" id="cb578"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb578-1"><a href="13-rmarkdown.html#cb578-1"></a><span class="kw">library</span>(questionr)</span>
-<span id="cb578-2"><a href="13-rmarkdown.html#cb578-2"></a><span class="kw">data</span>(hdv2003)</span>
-<span id="cb578-3"><a href="13-rmarkdown.html#cb578-3"></a>tab &lt;-<span class="st"> </span><span class="kw">lprop</span>(<span class="kw">table</span>(hdv2003<span class="op">$</span>qualif, hdv2003<span class="op">$</span>sexe))</span>
-<span id="cb578-4"><a href="13-rmarkdown.html#cb578-4"></a>tab</span>
-<span id="cb578-5"><a href="13-rmarkdown.html#cb578-5"></a><span class="co">#&gt;                           </span></span>
-<span id="cb578-6"><a href="13-rmarkdown.html#cb578-6"></a><span class="co">#&gt;                            Homme Femme Total</span></span>
-<span id="cb578-7"><a href="13-rmarkdown.html#cb578-7"></a><span class="co">#&gt;   Ouvrier specialise        47.3  52.7 100.0</span></span>
-<span id="cb578-8"><a href="13-rmarkdown.html#cb578-8"></a><span class="co">#&gt;   Ouvrier qualifie          78.4  21.6 100.0</span></span>
-<span id="cb578-9"><a href="13-rmarkdown.html#cb578-9"></a><span class="co">#&gt;   Technicien                76.7  23.3 100.0</span></span>
-<span id="cb578-10"><a href="13-rmarkdown.html#cb578-10"></a><span class="co">#&gt;   Profession intermediaire  55.0  45.0 100.0</span></span>
-<span id="cb578-11"><a href="13-rmarkdown.html#cb578-11"></a><span class="co">#&gt;   Cadre                     55.8  44.2 100.0</span></span>
-<span id="cb578-12"><a href="13-rmarkdown.html#cb578-12"></a><span class="co">#&gt;   Employe                   16.2  83.8 100.0</span></span>
-<span id="cb578-13"><a href="13-rmarkdown.html#cb578-13"></a><span class="co">#&gt;   Autre                     36.2  63.8 100.0</span></span>
-<span id="cb578-14"><a href="13-rmarkdown.html#cb578-14"></a><span class="co">#&gt;   Ensemble                  44.8  55.2 100.0</span></span></code></pre></div>
+<div class="sourceCode" id="cb581"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb581-1"><a href="13-rmarkdown.html#cb581-1"></a><span class="kw">library</span>(questionr)</span>
+<span id="cb581-2"><a href="13-rmarkdown.html#cb581-2"></a><span class="kw">data</span>(hdv2003)</span>
+<span id="cb581-3"><a href="13-rmarkdown.html#cb581-3"></a>tab &lt;-<span class="st"> </span><span class="kw">lprop</span>(<span class="kw">table</span>(hdv2003<span class="op">$</span>qualif, hdv2003<span class="op">$</span>sexe))</span>
+<span id="cb581-4"><a href="13-rmarkdown.html#cb581-4"></a>tab</span>
+<span id="cb581-5"><a href="13-rmarkdown.html#cb581-5"></a><span class="co">#&gt;                           </span></span>
+<span id="cb581-6"><a href="13-rmarkdown.html#cb581-6"></a><span class="co">#&gt;                            Homme Femme Total</span></span>
+<span id="cb581-7"><a href="13-rmarkdown.html#cb581-7"></a><span class="co">#&gt;   Ouvrier specialise        47.3  52.7 100.0</span></span>
+<span id="cb581-8"><a href="13-rmarkdown.html#cb581-8"></a><span class="co">#&gt;   Ouvrier qualifie          78.4  21.6 100.0</span></span>
+<span id="cb581-9"><a href="13-rmarkdown.html#cb581-9"></a><span class="co">#&gt;   Technicien                76.7  23.3 100.0</span></span>
+<span id="cb581-10"><a href="13-rmarkdown.html#cb581-10"></a><span class="co">#&gt;   Profession intermediaire  55.0  45.0 100.0</span></span>
+<span id="cb581-11"><a href="13-rmarkdown.html#cb581-11"></a><span class="co">#&gt;   Cadre                     55.8  44.2 100.0</span></span>
+<span id="cb581-12"><a href="13-rmarkdown.html#cb581-12"></a><span class="co">#&gt;   Employe                   16.2  83.8 100.0</span></span>
+<span id="cb581-13"><a href="13-rmarkdown.html#cb581-13"></a><span class="co">#&gt;   Autre                     36.2  63.8 100.0</span></span>
+<span id="cb581-14"><a href="13-rmarkdown.html#cb581-14"></a><span class="co">#&gt;   Ensemble                  44.8  55.2 100.0</span></span></code></pre></div>
 <p>On peut améliorer leur présentation en utilisant la fonction <code>kable</code> de l’extension <code>knitr</code>. Celle-ci fournit un formatage adapté en fonction du format de sortie. On aura donc des tableaux “propres” que ce soit en HTML, PDF ou aux formats traitements de texte :</p>
-<div class="sourceCode" id="cb579"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb579-1"><a href="13-rmarkdown.html#cb579-1"></a><span class="kw">library</span>(knitr)</span>
-<span id="cb579-2"><a href="13-rmarkdown.html#cb579-2"></a><span class="kw">kable</span>(tab)</span></code></pre></div>
+<div class="sourceCode" id="cb582"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb582-1"><a href="13-rmarkdown.html#cb582-1"></a><span class="kw">library</span>(knitr)</span>
+<span id="cb582-2"><a href="13-rmarkdown.html#cb582-2"></a><span class="kw">kable</span>(tab)</span></code></pre></div>
 <table>
 <thead>
 <tr class="header">
@@ -1050,7 +1050,7 @@ On peut activer ou désactiver la mise en cache des résultats pour chaque bloc 
 </tbody>
 </table>
 <p>Différents arguments permettent de modifier la sortie de <code>kable</code>. <code>digits</code>, par exemple, permet de spécifier le nombre de chiffres significatifs à afficher dans les colonnes de nombres :</p>
-<div class="sourceCode" id="cb580"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb580-1"><a href="13-rmarkdown.html#cb580-1"></a><span class="kw">kable</span>(tab, <span class="dt">digits =</span> <span class="dv">1</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb583"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb583-1"><a href="13-rmarkdown.html#cb583-1"></a><span class="kw">kable</span>(tab, <span class="dt">digits =</span> <span class="dv">1</span>)</span></code></pre></div>
 <table>
 <thead>
 <tr class="header">
