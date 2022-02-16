@@ -24,7 +24,7 @@
 <meta name="author" content="Julien Barnier" />
 
 
-<meta name="date" content="2022-01-26" />
+<meta name="date" content="2022-02-16" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -773,9 +773,10 @@ La <em>tidy selection</em> est implémentée par le package <a href="https://tid
 <span id="cb1117-3"><a href="19-programmer-tidyverse.html#cb1117-3"></a>}</span></code></pre></div>
 <p>On voudrait pouvoir appeler cette fonction de la même manière qu’on utilise <code>summarise</code>, mais cela ne fonctionne pas :</p>
 <div class="sourceCode" id="cb1118"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1118-1"><a href="19-programmer-tidyverse.html#cb1118-1"></a><span class="kw">summarise_min</span>(restos, evaluation)</span>
-<span id="cb1118-2"><a href="19-programmer-tidyverse.html#cb1118-2"></a><span class="co">#&gt; Error: Problem with `summarise()` column `min`.</span></span>
-<span id="cb1118-3"><a href="19-programmer-tidyverse.html#cb1118-3"></a><span class="co">#&gt; ℹ `min = min(col)`.</span></span>
-<span id="cb1118-4"><a href="19-programmer-tidyverse.html#cb1118-4"></a><span class="co">#&gt; ✖ objet &#39;evaluation&#39; introuvable</span></span></code></pre></div>
+<span id="cb1118-2"><a href="19-programmer-tidyverse.html#cb1118-2"></a><span class="co">#&gt; Error in `summarise()`:</span></span>
+<span id="cb1118-3"><a href="19-programmer-tidyverse.html#cb1118-3"></a><span class="co">#&gt; ! Problem while computing `min = min(col)`.</span></span>
+<span id="cb1118-4"><a href="19-programmer-tidyverse.html#cb1118-4"></a><span class="co">#&gt; Caused by error:</span></span>
+<span id="cb1118-5"><a href="19-programmer-tidyverse.html#cb1118-5"></a><span class="co">#&gt; ! objet &#39;evaluation&#39; introuvable</span></span></code></pre></div>
 <p>Le message d’erreur nous dit que l’objet <code>evaluation</code> est introuvable. La raison n’est pas triviale, elle repose sur plusieurs mécanismes assez complexes liés à l’évaluation des expressions dans R, mais on pourrait résumer en disant que les fonctions du <em>tidyverse</em> utilisent leur propre mécanisme d’évaluation qui tient compte notamment du <em>data masking</em>. Or, quand on utilise l’argument <code>col</code> dans le <code>summarise</code> de notre fonction, c’est l’évaluation “normale” de R qui est utilisée : le <em>data masking</em> n’étant pas pris en compte, l’objet <code>evaluation</code> est recherché dans notre environnement plutôt que dans notre tableau, ce qui génère une erreur puisqu’aucun objet de ce nom n’existe en-dehors du tableau.</p>
 <p>Comme la <em>tidy selection</em> fait appel au <em>data masking</em>, elle génère le même type d’erreur :</p>
 <div class="sourceCode" id="cb1119"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1119-1"><a href="19-programmer-tidyverse.html#cb1119-1"></a>select_col &lt;-<span class="st"> </span><span class="cf">function</span>(df, col) {</span>
@@ -783,7 +784,8 @@ La <em>tidy selection</em> est implémentée par le package <a href="https://tid
 <span id="cb1119-3"><a href="19-programmer-tidyverse.html#cb1119-3"></a>}</span>
 <span id="cb1119-4"><a href="19-programmer-tidyverse.html#cb1119-4"></a></span>
 <span id="cb1119-5"><a href="19-programmer-tidyverse.html#cb1119-5"></a><span class="kw">select_col</span>(restos, evaluation)</span>
-<span id="cb1119-6"><a href="19-programmer-tidyverse.html#cb1119-6"></a><span class="co">#&gt; Error: objet &#39;evaluation&#39; introuvable</span></span></code></pre></div>
+<span id="cb1119-6"><a href="19-programmer-tidyverse.html#cb1119-6"></a><span class="co">#&gt; Error in `select()`:</span></span>
+<span id="cb1119-7"><a href="19-programmer-tidyverse.html#cb1119-7"></a><span class="co">#&gt; ! objet &#39;evaluation&#39; introuvable</span></span></code></pre></div>
 <p>C’est pourquoi les packages du <em>tidyverse</em> fournissent un opérateur permettant de “forcer” l’évaluation d’expressions selon la manière qu’elles attendent. Cet opérateur prend la forme de double accolades <code>{{ }}</code> et se nomme <em>curly curly</em>.</p>
 <p>Pour résoudre le problème de notre fonction <code>summarise_min()</code>, on peut donc simplement faire passer notre argument <code>col</code> dans l’opérateur <em>curly curly</em> :</p>
 <div class="sourceCode" id="cb1120"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1120-1"><a href="19-programmer-tidyverse.html#cb1120-1"></a>summarise_min &lt;-<span class="st"> </span><span class="cf">function</span>(df, col) {</span>
@@ -865,15 +867,16 @@ La <em>tidy selection</em> est implémentée par le package <a href="https://tid
 <span id="cb1125-12"><a href="19-programmer-tidyverse.html#cb1125-12"></a>}</span></code></pre></div>
 <p>On peut du coup utiliser tous les modes de sélection de colonnes permises par la <em>tidy selection</em>.</p>
 <div class="sourceCode" id="cb1126"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1126-1"><a href="19-programmer-tidyverse.html#cb1126-1"></a><span class="kw">resume_groupe</span>(restos, <span class="kw">c</span>(style, ville), <span class="kw">where</span>(is.numeric))</span>
-<span id="cb1126-2"><a href="19-programmer-tidyverse.html#cb1126-2"></a><span class="co">#&gt; `summarise()` has grouped output by &#39;style&#39;. You can override using the `.groups` argument.</span></span>
-<span id="cb1126-3"><a href="19-programmer-tidyverse.html#cb1126-3"></a><span class="co">#&gt; # A tibble: 4 × 4</span></span>
-<span id="cb1126-4"><a href="19-programmer-tidyverse.html#cb1126-4"></a><span class="co">#&gt; # Groups:   style [3]</span></span>
-<span id="cb1126-5"><a href="19-programmer-tidyverse.html#cb1126-5"></a><span class="co">#&gt;   style    ville  evaluation places</span></span>
-<span id="cb1126-6"><a href="19-programmer-tidyverse.html#cb1126-6"></a><span class="co">#&gt;   &lt;chr&gt;    &lt;chr&gt;       &lt;dbl&gt;  &lt;dbl&gt;</span></span>
-<span id="cb1126-7"><a href="19-programmer-tidyverse.html#cb1126-7"></a><span class="co">#&gt; 1 coiffure Ecully       1.2       8</span></span>
-<span id="cb1126-8"><a href="19-programmer-tidyverse.html#cb1126-8"></a><span class="co">#&gt; 2 gastro   Lyon         3.65     25</span></span>
-<span id="cb1126-9"><a href="19-programmer-tidyverse.html#cb1126-9"></a><span class="co">#&gt; 3 tradi    Ecully       4.6      28</span></span>
-<span id="cb1126-10"><a href="19-programmer-tidyverse.html#cb1126-10"></a><span class="co">#&gt; 4 tradi    Lyon         3.3      94</span></span></code></pre></div>
+<span id="cb1126-2"><a href="19-programmer-tidyverse.html#cb1126-2"></a><span class="co">#&gt; `summarise()` has grouped output by &#39;style&#39;. You can override using the</span></span>
+<span id="cb1126-3"><a href="19-programmer-tidyverse.html#cb1126-3"></a><span class="co">#&gt; `.groups` argument.</span></span>
+<span id="cb1126-4"><a href="19-programmer-tidyverse.html#cb1126-4"></a><span class="co">#&gt; # A tibble: 4 × 4</span></span>
+<span id="cb1126-5"><a href="19-programmer-tidyverse.html#cb1126-5"></a><span class="co">#&gt; # Groups:   style [3]</span></span>
+<span id="cb1126-6"><a href="19-programmer-tidyverse.html#cb1126-6"></a><span class="co">#&gt;   style    ville  evaluation places</span></span>
+<span id="cb1126-7"><a href="19-programmer-tidyverse.html#cb1126-7"></a><span class="co">#&gt;   &lt;chr&gt;    &lt;chr&gt;       &lt;dbl&gt;  &lt;dbl&gt;</span></span>
+<span id="cb1126-8"><a href="19-programmer-tidyverse.html#cb1126-8"></a><span class="co">#&gt; 1 coiffure Ecully       1.2       8</span></span>
+<span id="cb1126-9"><a href="19-programmer-tidyverse.html#cb1126-9"></a><span class="co">#&gt; 2 gastro   Lyon         3.65     25</span></span>
+<span id="cb1126-10"><a href="19-programmer-tidyverse.html#cb1126-10"></a><span class="co">#&gt; 3 tradi    Ecully       4.6      28</span></span>
+<span id="cb1126-11"><a href="19-programmer-tidyverse.html#cb1126-11"></a><span class="co">#&gt; 4 tradi    Lyon         3.3      94</span></span></code></pre></div>
 <p>De la même manière, si on utilise un argument de fonction pour sélectionner des variables avec <code>select()</code>, on doit l’entourer avec l’opérateur <em>curly curly</em>, et on peut dès lors utiliser toutes les possibilités de la <em>tidy selection</em>.</p>
 <div class="sourceCode" id="cb1127"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1127-1"><a href="19-programmer-tidyverse.html#cb1127-1"></a>select_cols &lt;-<span class="st"> </span><span class="cf">function</span>(df, cols) {</span>
 <span id="cb1127-2"><a href="19-programmer-tidyverse.html#cb1127-2"></a>    df <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>({{ cols }})</span>
@@ -1025,23 +1028,25 @@ La <em>tidy selection</em> est implémentée par le package <a href="https://tid
 <span id="cb1137-14"><a href="19-programmer-tidyverse.html#cb1137-14"></a><span class="co">#&gt; 2 Lyon         3.53</span></span>
 <span id="cb1137-15"><a href="19-programmer-tidyverse.html#cb1137-15"></a></span>
 <span id="cb1137-16"><a href="19-programmer-tidyverse.html#cb1137-16"></a><span class="kw">evaluation_par_groupe</span>(<span class="kw">c</span>(<span class="st">&quot;ville&quot;</span>, <span class="st">&quot;style&quot;</span>))</span>
-<span id="cb1137-17"><a href="19-programmer-tidyverse.html#cb1137-17"></a><span class="co">#&gt; `summarise()` has grouped output by &#39;ville&#39;. You can override using the `.groups` argument.</span></span>
-<span id="cb1137-18"><a href="19-programmer-tidyverse.html#cb1137-18"></a><span class="co">#&gt; # A tibble: 4 × 3</span></span>
-<span id="cb1137-19"><a href="19-programmer-tidyverse.html#cb1137-19"></a><span class="co">#&gt; # Groups:   ville [2]</span></span>
-<span id="cb1137-20"><a href="19-programmer-tidyverse.html#cb1137-20"></a><span class="co">#&gt;   ville  style    evaluation</span></span>
-<span id="cb1137-21"><a href="19-programmer-tidyverse.html#cb1137-21"></a><span class="co">#&gt;   &lt;chr&gt;  &lt;chr&gt;         &lt;dbl&gt;</span></span>
-<span id="cb1137-22"><a href="19-programmer-tidyverse.html#cb1137-22"></a><span class="co">#&gt; 1 Ecully coiffure       1.2 </span></span>
-<span id="cb1137-23"><a href="19-programmer-tidyverse.html#cb1137-23"></a><span class="co">#&gt; 2 Ecully tradi          4.6 </span></span>
-<span id="cb1137-24"><a href="19-programmer-tidyverse.html#cb1137-24"></a><span class="co">#&gt; 3 Lyon   gastro         3.65</span></span>
-<span id="cb1137-25"><a href="19-programmer-tidyverse.html#cb1137-25"></a><span class="co">#&gt; 4 Lyon   tradi          3.3</span></span></code></pre></div>
+<span id="cb1137-17"><a href="19-programmer-tidyverse.html#cb1137-17"></a><span class="co">#&gt; `summarise()` has grouped output by &#39;ville&#39;. You can override using the</span></span>
+<span id="cb1137-18"><a href="19-programmer-tidyverse.html#cb1137-18"></a><span class="co">#&gt; `.groups` argument.</span></span>
+<span id="cb1137-19"><a href="19-programmer-tidyverse.html#cb1137-19"></a><span class="co">#&gt; # A tibble: 4 × 3</span></span>
+<span id="cb1137-20"><a href="19-programmer-tidyverse.html#cb1137-20"></a><span class="co">#&gt; # Groups:   ville [2]</span></span>
+<span id="cb1137-21"><a href="19-programmer-tidyverse.html#cb1137-21"></a><span class="co">#&gt;   ville  style    evaluation</span></span>
+<span id="cb1137-22"><a href="19-programmer-tidyverse.html#cb1137-22"></a><span class="co">#&gt;   &lt;chr&gt;  &lt;chr&gt;         &lt;dbl&gt;</span></span>
+<span id="cb1137-23"><a href="19-programmer-tidyverse.html#cb1137-23"></a><span class="co">#&gt; 1 Ecully coiffure       1.2 </span></span>
+<span id="cb1137-24"><a href="19-programmer-tidyverse.html#cb1137-24"></a><span class="co">#&gt; 2 Ecully tradi          4.6 </span></span>
+<span id="cb1137-25"><a href="19-programmer-tidyverse.html#cb1137-25"></a><span class="co">#&gt; 3 Lyon   gastro         3.65</span></span>
+<span id="cb1137-26"><a href="19-programmer-tidyverse.html#cb1137-26"></a><span class="co">#&gt; 4 Lyon   tradi          3.3</span></span></code></pre></div>
 <p>La différence entre <code>all_of()</code> et <code>any_of()</code> est que <code>all_of()</code> produira une erreur si l’une des variables n’est pas trouvée.</p>
 <div class="sourceCode" id="cb1138"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1138-1"><a href="19-programmer-tidyverse.html#cb1138-1"></a>select_all_cols &lt;-<span class="st"> </span><span class="cf">function</span>(cols) {</span>
 <span id="cb1138-2"><a href="19-programmer-tidyverse.html#cb1138-2"></a>    restos <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(<span class="kw">all_of</span>(cols))</span>
 <span id="cb1138-3"><a href="19-programmer-tidyverse.html#cb1138-3"></a>}</span>
 <span id="cb1138-4"><a href="19-programmer-tidyverse.html#cb1138-4"></a></span>
 <span id="cb1138-5"><a href="19-programmer-tidyverse.html#cb1138-5"></a><span class="kw">select_all_cols</span>(<span class="kw">c</span>(<span class="st">&quot;ville&quot;</span>, <span class="st">&quot;evaluation&quot;</span>, <span class="st">&quot;igloo&quot;</span>))</span>
-<span id="cb1138-6"><a href="19-programmer-tidyverse.html#cb1138-6"></a><span class="co">#&gt; Error: Can&#39;t subset columns that don&#39;t exist.</span></span>
-<span id="cb1138-7"><a href="19-programmer-tidyverse.html#cb1138-7"></a><span class="co">#&gt; ✖ Column `igloo` doesn&#39;t exist.</span></span></code></pre></div>
+<span id="cb1138-6"><a href="19-programmer-tidyverse.html#cb1138-6"></a><span class="co">#&gt; Error in `select()`:</span></span>
+<span id="cb1138-7"><a href="19-programmer-tidyverse.html#cb1138-7"></a><span class="co">#&gt; ! Can&#39;t subset columns that don&#39;t exist.</span></span>
+<span id="cb1138-8"><a href="19-programmer-tidyverse.html#cb1138-8"></a><span class="co">#&gt; ✖ Column `igloo` doesn&#39;t exist.</span></span></code></pre></div>
 <p>Tandis qu’<code>any_off()</code> renverra uniquement les colonnes existantes, sans générer d’erreur.</p>
 <div class="sourceCode" id="cb1139"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1139-1"><a href="19-programmer-tidyverse.html#cb1139-1"></a>select_any_cols &lt;-<span class="st"> </span><span class="cf">function</span>(cols) {</span>
 <span id="cb1139-2"><a href="19-programmer-tidyverse.html#cb1139-2"></a>    restos <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(<span class="kw">any_of</span>(cols))</span>
@@ -1369,24 +1374,24 @@ Elles ne s’appliquent pas si on passe en arguments d’autres paramètres comm
 <p>Créer une fonction <code>filter_height()</code> qui accepte un argument nommé <code>height</code>, et qui retourne les lignes de <code>starwars</code> pour lesquelles les valeurs de la variable <code>height</code> sont supérieures à celles de l’argument <code>height</code>. Créer cette fonction sans utiliser <code>dplyr</code> mais avec l’opérateur <code>[,]</code>.</p>
 <div class="sourceCode" id="cb1168"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1168-1"><a href="19-programmer-tidyverse.html#cb1168-1"></a><span class="kw">filter_height</span>(<span class="dv">200</span>)</span>
 <span id="cb1168-2"><a href="19-programmer-tidyverse.html#cb1168-2"></a><span class="co">#&gt; # A tibble: 16 × 14</span></span>
-<span id="cb1168-3"><a href="19-programmer-tidyverse.html#cb1168-3"></a><span class="co">#&gt;    name    height  mass hair_color skin_color  eye_color birth_year sex   gender</span></span>
-<span id="cb1168-4"><a href="19-programmer-tidyverse.html#cb1168-4"></a><span class="co">#&gt;    &lt;chr&gt;    &lt;int&gt; &lt;dbl&gt; &lt;chr&gt;      &lt;chr&gt;       &lt;chr&gt;          &lt;dbl&gt; &lt;chr&gt; &lt;chr&gt; </span></span>
-<span id="cb1168-5"><a href="19-programmer-tidyverse.html#cb1168-5"></a><span class="co">#&gt;  1 Darth …    202   136 none       white       yellow          41.9 male  mascu…</span></span>
-<span id="cb1168-6"><a href="19-programmer-tidyverse.html#cb1168-6"></a><span class="co">#&gt;  2 Chewba…    228   112 brown      unknown     blue           200   male  mascu…</span></span>
-<span id="cb1168-7"><a href="19-programmer-tidyverse.html#cb1168-7"></a><span class="co">#&gt;  3 &lt;NA&gt;        NA    NA &lt;NA&gt;       &lt;NA&gt;        &lt;NA&gt;            NA   &lt;NA&gt;  &lt;NA&gt;  </span></span>
-<span id="cb1168-8"><a href="19-programmer-tidyverse.html#cb1168-8"></a><span class="co">#&gt;  4 Roos T…    224    82 none       grey        orange          NA   male  mascu…</span></span>
-<span id="cb1168-9"><a href="19-programmer-tidyverse.html#cb1168-9"></a><span class="co">#&gt;  5 Rugor …    206    NA none       green       orange          NA   male  mascu…</span></span>
-<span id="cb1168-10"><a href="19-programmer-tidyverse.html#cb1168-10"></a><span class="co">#&gt;  6 Yarael…    264    NA none       white       yellow          NA   male  mascu…</span></span>
-<span id="cb1168-11"><a href="19-programmer-tidyverse.html#cb1168-11"></a><span class="co">#&gt;  7 Lama Su    229    88 none       grey        black           NA   male  mascu…</span></span>
-<span id="cb1168-12"><a href="19-programmer-tidyverse.html#cb1168-12"></a><span class="co">#&gt;  8 Taun We    213    NA none       grey        black           NA   fema… femin…</span></span>
-<span id="cb1168-13"><a href="19-programmer-tidyverse.html#cb1168-13"></a><span class="co">#&gt;  9 Grievo…    216   159 none       brown, whi… green, y…       NA   male  mascu…</span></span>
-<span id="cb1168-14"><a href="19-programmer-tidyverse.html#cb1168-14"></a><span class="co">#&gt; 10 Tarfful    234   136 brown      brown       blue            NA   male  mascu…</span></span>
-<span id="cb1168-15"><a href="19-programmer-tidyverse.html#cb1168-15"></a><span class="co">#&gt; 11 Tion M…    206    80 none       grey        black           NA   male  mascu…</span></span>
-<span id="cb1168-16"><a href="19-programmer-tidyverse.html#cb1168-16"></a><span class="co">#&gt; 12 &lt;NA&gt;        NA    NA &lt;NA&gt;       &lt;NA&gt;        &lt;NA&gt;            NA   &lt;NA&gt;  &lt;NA&gt;  </span></span>
-<span id="cb1168-17"><a href="19-programmer-tidyverse.html#cb1168-17"></a><span class="co">#&gt; 13 &lt;NA&gt;        NA    NA &lt;NA&gt;       &lt;NA&gt;        &lt;NA&gt;            NA   &lt;NA&gt;  &lt;NA&gt;  </span></span>
-<span id="cb1168-18"><a href="19-programmer-tidyverse.html#cb1168-18"></a><span class="co">#&gt; 14 &lt;NA&gt;        NA    NA &lt;NA&gt;       &lt;NA&gt;        &lt;NA&gt;            NA   &lt;NA&gt;  &lt;NA&gt;  </span></span>
-<span id="cb1168-19"><a href="19-programmer-tidyverse.html#cb1168-19"></a><span class="co">#&gt; 15 &lt;NA&gt;        NA    NA &lt;NA&gt;       &lt;NA&gt;        &lt;NA&gt;            NA   &lt;NA&gt;  &lt;NA&gt;  </span></span>
-<span id="cb1168-20"><a href="19-programmer-tidyverse.html#cb1168-20"></a><span class="co">#&gt; 16 &lt;NA&gt;        NA    NA &lt;NA&gt;       &lt;NA&gt;        &lt;NA&gt;            NA   &lt;NA&gt;  &lt;NA&gt;  </span></span>
+<span id="cb1168-3"><a href="19-programmer-tidyverse.html#cb1168-3"></a><span class="co">#&gt;    name     height  mass hair_color skin_color eye_color birth_year sex   gender</span></span>
+<span id="cb1168-4"><a href="19-programmer-tidyverse.html#cb1168-4"></a><span class="co">#&gt;    &lt;chr&gt;     &lt;int&gt; &lt;dbl&gt; &lt;chr&gt;      &lt;chr&gt;      &lt;chr&gt;          &lt;dbl&gt; &lt;chr&gt; &lt;chr&gt; </span></span>
+<span id="cb1168-5"><a href="19-programmer-tidyverse.html#cb1168-5"></a><span class="co">#&gt;  1 Darth V…    202   136 none       white      yellow          41.9 male  mascu…</span></span>
+<span id="cb1168-6"><a href="19-programmer-tidyverse.html#cb1168-6"></a><span class="co">#&gt;  2 Chewbac…    228   112 brown      unknown    blue           200   male  mascu…</span></span>
+<span id="cb1168-7"><a href="19-programmer-tidyverse.html#cb1168-7"></a><span class="co">#&gt;  3 &lt;NA&gt;         NA    NA &lt;NA&gt;       &lt;NA&gt;       &lt;NA&gt;            NA   &lt;NA&gt;  &lt;NA&gt;  </span></span>
+<span id="cb1168-8"><a href="19-programmer-tidyverse.html#cb1168-8"></a><span class="co">#&gt;  4 Roos Ta…    224    82 none       grey       orange          NA   male  mascu…</span></span>
+<span id="cb1168-9"><a href="19-programmer-tidyverse.html#cb1168-9"></a><span class="co">#&gt;  5 Rugor N…    206    NA none       green      orange          NA   male  mascu…</span></span>
+<span id="cb1168-10"><a href="19-programmer-tidyverse.html#cb1168-10"></a><span class="co">#&gt;  6 Yarael …    264    NA none       white      yellow          NA   male  mascu…</span></span>
+<span id="cb1168-11"><a href="19-programmer-tidyverse.html#cb1168-11"></a><span class="co">#&gt;  7 Lama Su     229    88 none       grey       black           NA   male  mascu…</span></span>
+<span id="cb1168-12"><a href="19-programmer-tidyverse.html#cb1168-12"></a><span class="co">#&gt;  8 Taun We     213    NA none       grey       black           NA   fema… femin…</span></span>
+<span id="cb1168-13"><a href="19-programmer-tidyverse.html#cb1168-13"></a><span class="co">#&gt;  9 Grievous    216   159 none       brown, wh… green, y…       NA   male  mascu…</span></span>
+<span id="cb1168-14"><a href="19-programmer-tidyverse.html#cb1168-14"></a><span class="co">#&gt; 10 Tarfful     234   136 brown      brown      blue            NA   male  mascu…</span></span>
+<span id="cb1168-15"><a href="19-programmer-tidyverse.html#cb1168-15"></a><span class="co">#&gt; 11 Tion Me…    206    80 none       grey       black           NA   male  mascu…</span></span>
+<span id="cb1168-16"><a href="19-programmer-tidyverse.html#cb1168-16"></a><span class="co">#&gt; 12 &lt;NA&gt;         NA    NA &lt;NA&gt;       &lt;NA&gt;       &lt;NA&gt;            NA   &lt;NA&gt;  &lt;NA&gt;  </span></span>
+<span id="cb1168-17"><a href="19-programmer-tidyverse.html#cb1168-17"></a><span class="co">#&gt; 13 &lt;NA&gt;         NA    NA &lt;NA&gt;       &lt;NA&gt;       &lt;NA&gt;            NA   &lt;NA&gt;  &lt;NA&gt;  </span></span>
+<span id="cb1168-18"><a href="19-programmer-tidyverse.html#cb1168-18"></a><span class="co">#&gt; 14 &lt;NA&gt;         NA    NA &lt;NA&gt;       &lt;NA&gt;       &lt;NA&gt;            NA   &lt;NA&gt;  &lt;NA&gt;  </span></span>
+<span id="cb1168-19"><a href="19-programmer-tidyverse.html#cb1168-19"></a><span class="co">#&gt; 15 &lt;NA&gt;         NA    NA &lt;NA&gt;       &lt;NA&gt;       &lt;NA&gt;            NA   &lt;NA&gt;  &lt;NA&gt;  </span></span>
+<span id="cb1168-20"><a href="19-programmer-tidyverse.html#cb1168-20"></a><span class="co">#&gt; 16 &lt;NA&gt;         NA    NA &lt;NA&gt;       &lt;NA&gt;       &lt;NA&gt;            NA   &lt;NA&gt;  &lt;NA&gt;  </span></span>
 <span id="cb1168-21"><a href="19-programmer-tidyverse.html#cb1168-21"></a><span class="co">#&gt; # … with 5 more variables: homeworld &lt;chr&gt;, species &lt;chr&gt;, films &lt;list&gt;,</span></span>
 <span id="cb1168-22"><a href="19-programmer-tidyverse.html#cb1168-22"></a><span class="co">#&gt; #   vehicles &lt;list&gt;, starships &lt;list&gt;</span></span></code></pre></div>
 
@@ -1399,18 +1404,18 @@ Elles ne s’appliquent pas si on passe en arguments d’autres paramètres comm
 <p>Améliorer la fonction pour qu’elle ne retourne pas les lignes pour lesquelles la variable correspondant à <code>height_var</code> vaut <code>NA</code>.</p>
 <div class="sourceCode" id="cb1170"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1170-1"><a href="19-programmer-tidyverse.html#cb1170-1"></a><span class="kw">filter_height</span>(<span class="dv">200</span>)</span>
 <span id="cb1170-2"><a href="19-programmer-tidyverse.html#cb1170-2"></a><span class="co">#&gt; # A tibble: 10 × 14</span></span>
-<span id="cb1170-3"><a href="19-programmer-tidyverse.html#cb1170-3"></a><span class="co">#&gt;    name    height  mass hair_color skin_color  eye_color birth_year sex   gender</span></span>
-<span id="cb1170-4"><a href="19-programmer-tidyverse.html#cb1170-4"></a><span class="co">#&gt;    &lt;chr&gt;    &lt;int&gt; &lt;dbl&gt; &lt;chr&gt;      &lt;chr&gt;       &lt;chr&gt;          &lt;dbl&gt; &lt;chr&gt; &lt;chr&gt; </span></span>
-<span id="cb1170-5"><a href="19-programmer-tidyverse.html#cb1170-5"></a><span class="co">#&gt;  1 Darth …    202   136 none       white       yellow          41.9 male  mascu…</span></span>
-<span id="cb1170-6"><a href="19-programmer-tidyverse.html#cb1170-6"></a><span class="co">#&gt;  2 Chewba…    228   112 brown      unknown     blue           200   male  mascu…</span></span>
-<span id="cb1170-7"><a href="19-programmer-tidyverse.html#cb1170-7"></a><span class="co">#&gt;  3 Roos T…    224    82 none       grey        orange          NA   male  mascu…</span></span>
-<span id="cb1170-8"><a href="19-programmer-tidyverse.html#cb1170-8"></a><span class="co">#&gt;  4 Rugor …    206    NA none       green       orange          NA   male  mascu…</span></span>
-<span id="cb1170-9"><a href="19-programmer-tidyverse.html#cb1170-9"></a><span class="co">#&gt;  5 Yarael…    264    NA none       white       yellow          NA   male  mascu…</span></span>
-<span id="cb1170-10"><a href="19-programmer-tidyverse.html#cb1170-10"></a><span class="co">#&gt;  6 Lama Su    229    88 none       grey        black           NA   male  mascu…</span></span>
-<span id="cb1170-11"><a href="19-programmer-tidyverse.html#cb1170-11"></a><span class="co">#&gt;  7 Taun We    213    NA none       grey        black           NA   fema… femin…</span></span>
-<span id="cb1170-12"><a href="19-programmer-tidyverse.html#cb1170-12"></a><span class="co">#&gt;  8 Grievo…    216   159 none       brown, whi… green, y…       NA   male  mascu…</span></span>
-<span id="cb1170-13"><a href="19-programmer-tidyverse.html#cb1170-13"></a><span class="co">#&gt;  9 Tarfful    234   136 brown      brown       blue            NA   male  mascu…</span></span>
-<span id="cb1170-14"><a href="19-programmer-tidyverse.html#cb1170-14"></a><span class="co">#&gt; 10 Tion M…    206    80 none       grey        black           NA   male  mascu…</span></span>
+<span id="cb1170-3"><a href="19-programmer-tidyverse.html#cb1170-3"></a><span class="co">#&gt;    name     height  mass hair_color skin_color eye_color birth_year sex   gender</span></span>
+<span id="cb1170-4"><a href="19-programmer-tidyverse.html#cb1170-4"></a><span class="co">#&gt;    &lt;chr&gt;     &lt;int&gt; &lt;dbl&gt; &lt;chr&gt;      &lt;chr&gt;      &lt;chr&gt;          &lt;dbl&gt; &lt;chr&gt; &lt;chr&gt; </span></span>
+<span id="cb1170-5"><a href="19-programmer-tidyverse.html#cb1170-5"></a><span class="co">#&gt;  1 Darth V…    202   136 none       white      yellow          41.9 male  mascu…</span></span>
+<span id="cb1170-6"><a href="19-programmer-tidyverse.html#cb1170-6"></a><span class="co">#&gt;  2 Chewbac…    228   112 brown      unknown    blue           200   male  mascu…</span></span>
+<span id="cb1170-7"><a href="19-programmer-tidyverse.html#cb1170-7"></a><span class="co">#&gt;  3 Roos Ta…    224    82 none       grey       orange          NA   male  mascu…</span></span>
+<span id="cb1170-8"><a href="19-programmer-tidyverse.html#cb1170-8"></a><span class="co">#&gt;  4 Rugor N…    206    NA none       green      orange          NA   male  mascu…</span></span>
+<span id="cb1170-9"><a href="19-programmer-tidyverse.html#cb1170-9"></a><span class="co">#&gt;  5 Yarael …    264    NA none       white      yellow          NA   male  mascu…</span></span>
+<span id="cb1170-10"><a href="19-programmer-tidyverse.html#cb1170-10"></a><span class="co">#&gt;  6 Lama Su     229    88 none       grey       black           NA   male  mascu…</span></span>
+<span id="cb1170-11"><a href="19-programmer-tidyverse.html#cb1170-11"></a><span class="co">#&gt;  7 Taun We     213    NA none       grey       black           NA   fema… femin…</span></span>
+<span id="cb1170-12"><a href="19-programmer-tidyverse.html#cb1170-12"></a><span class="co">#&gt;  8 Grievous    216   159 none       brown, wh… green, y…       NA   male  mascu…</span></span>
+<span id="cb1170-13"><a href="19-programmer-tidyverse.html#cb1170-13"></a><span class="co">#&gt;  9 Tarfful     234   136 brown      brown      blue            NA   male  mascu…</span></span>
+<span id="cb1170-14"><a href="19-programmer-tidyverse.html#cb1170-14"></a><span class="co">#&gt; 10 Tion Me…    206    80 none       grey       black           NA   male  mascu…</span></span>
 <span id="cb1170-15"><a href="19-programmer-tidyverse.html#cb1170-15"></a><span class="co">#&gt; # … with 5 more variables: homeworld &lt;chr&gt;, species &lt;chr&gt;, films &lt;list&gt;,</span></span>
 <span id="cb1170-16"><a href="19-programmer-tidyverse.html#cb1170-16"></a><span class="co">#&gt; #   vehicles &lt;list&gt;, starships &lt;list&gt;</span></span></code></pre></div>
 

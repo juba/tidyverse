@@ -24,7 +24,7 @@
 <meta name="author" content="Julien Barnier" />
 
 
-<meta name="date" content="2022-01-26" />
+<meta name="date" content="2022-02-16" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -789,7 +789,8 @@ Petite astuce à noter, si on transmet à <code>map()</code> autre chose qu’un
 <span id="cb1002-12"><a href="18-purrr.html#cb1002-12"></a><span class="co">#&gt; character(0)</span></span></code></pre></div>
 <p>Dans ce cas on ne peut pas utiliser <code>map_chr()</code> : si on essaie on obtient un message d’erreur nous indiquant que certains résultats de <code>str_subset()</code> ne sont pas au bon format.</p>
 <div class="sourceCode" id="cb1003"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1003-1"><a href="18-purrr.html#cb1003-1"></a>mots <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">map_chr</span>(<span class="op">~</span><span class="st"> </span><span class="kw">str_subset</span>(.x, <span class="st">&quot;f&quot;</span>) )</span>
-<span id="cb1003-2"><a href="18-purrr.html#cb1003-2"></a><span class="co">#&gt; Error: Result 1 must be a single string, not a character vector of length 0</span></span></code></pre></div>
+<span id="cb1003-2"><a href="18-purrr.html#cb1003-2"></a><span class="co">#&gt; Error in `stop_bad_type()`:</span></span>
+<span id="cb1003-3"><a href="18-purrr.html#cb1003-3"></a><span class="co">#&gt; ! Result 1 must be a single string, not a character vector of length 0</span></span></code></pre></div>
 <p>Dans ce cas, on doit donc utiliser <code>map()</code> et conserver le résultat sous forme de liste, qui elle peut contenir des éléments de longueurs différentes.</p>
 <div class="sourceCode" id="cb1004"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1004-1"><a href="18-purrr.html#cb1004-1"></a>mots <span class="op">%&gt;%</span></span>
 <span id="cb1004-2"><a href="18-purrr.html#cb1004-2"></a><span class="st">    </span><span class="kw">map</span>(<span class="op">~</span><span class="st"> </span><span class="kw">str_subset</span>(.x, <span class="st">&quot;f&quot;</span>) )</span>
