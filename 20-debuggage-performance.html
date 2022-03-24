@@ -885,14 +885,14 @@ Pour plus d’informations on pourra se reporter aux ressources en fin de chapit
 <p>L’intruction la plus simple pour cela est sans doute <code>system.time()</code>. Celle-ci prend en argument une expression R, et affiche en retour le temps d’exécution en secondes.</p>
 <div class="sourceCode" id="cb1206"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1206-1"><a href="20-debuggage-performance.html#cb1206-1"></a><span class="kw">system.time</span>(<span class="kw">runif</span>(<span class="dv">1000000</span>))</span>
 <span id="cb1206-2"><a href="20-debuggage-performance.html#cb1206-2"></a><span class="co">#&gt; utilisateur     système      écoulé </span></span>
-<span id="cb1206-3"><a href="20-debuggage-performance.html#cb1206-3"></a><span class="co">#&gt;       0.035       0.000       0.035</span></span></code></pre></div>
+<span id="cb1206-3"><a href="20-debuggage-performance.html#cb1206-3"></a><span class="co">#&gt;       0.030       0.000       0.029</span></span></code></pre></div>
 <p>L’expression peut comporter plusieurs instructions, dans ce cas on les entoure d’accolades.</p>
 <div class="sourceCode" id="cb1207"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1207-1"><a href="20-debuggage-performance.html#cb1207-1"></a><span class="kw">system.time</span>({</span>
 <span id="cb1207-2"><a href="20-debuggage-performance.html#cb1207-2"></a>    v &lt;-<span class="st"> </span><span class="kw">runif</span>(<span class="dv">1000000</span>)</span>
 <span id="cb1207-3"><a href="20-debuggage-performance.html#cb1207-3"></a>    moy &lt;-<span class="st"> </span><span class="kw">mean</span>(v)</span>
 <span id="cb1207-4"><a href="20-debuggage-performance.html#cb1207-4"></a>})</span>
 <span id="cb1207-5"><a href="20-debuggage-performance.html#cb1207-5"></a><span class="co">#&gt; utilisateur     système      écoulé </span></span>
-<span id="cb1207-6"><a href="20-debuggage-performance.html#cb1207-6"></a><span class="co">#&gt;       0.036       0.000       0.037</span></span></code></pre></div>
+<span id="cb1207-6"><a href="20-debuggage-performance.html#cb1207-6"></a><span class="co">#&gt;       0.031       0.000       0.031</span></span></code></pre></div>
 <p><code>system.time()</code> est cependant très limitée : on ne peut exécuter qu’une expression à la fois, on ne peut donc pas en comparer plusieurs directement, et surtout le temps d’exécution peut varier assez sensiblement selon l’utilisation du processeur de la machine au moment où on lance la commande.</p>
 <p>Il existe donc en complément plusieurs extensions dédiées au <em>benchmarking</em>. On va utiliser ici l’extension <a href="https://bench.r-lib.org/">bench</a>, installable avec :</p>
 <div class="sourceCode" id="cb1208"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1208-1"><a href="20-debuggage-performance.html#cb1208-1"></a><span class="kw">install.packages</span>(<span class="st">&quot;bench&quot;</span>)</span></code></pre></div>
@@ -925,16 +925,16 @@ Pour plus d’informations on pourra se reporter aux ressources en fin de chapit
 <span id="cb1211-2"><a href="20-debuggage-performance.html#cb1211-2"></a><span class="co">#&gt; # A tibble: 2 × 6</span></span>
 <span id="cb1211-3"><a href="20-debuggage-performance.html#cb1211-3"></a><span class="co">#&gt;   expression         min   median `itr/sec` mem_alloc `gc/sec`</span></span>
 <span id="cb1211-4"><a href="20-debuggage-performance.html#cb1211-4"></a><span class="co">#&gt;   &lt;bch:expr&gt;    &lt;bch:tm&gt; &lt;bch:tm&gt;     &lt;dbl&gt; &lt;bch:byt&gt;    &lt;dbl&gt;</span></span>
-<span id="cb1211-5"><a href="20-debuggage-performance.html#cb1211-5"></a><span class="co">#&gt; 1 plus10_for(x)  750.8µs    819µs     1218.    97.6KB      0  </span></span>
-<span id="cb1211-6"><a href="20-debuggage-performance.html#cb1211-6"></a><span class="co">#&gt; 2 plus10_vec(x)   18.2µs   20.6µs    46258.   117.3KB     18.5</span></span></code></pre></div>
+<span id="cb1211-5"><a href="20-debuggage-performance.html#cb1211-5"></a><span class="co">#&gt; 1 plus10_for(x)  672.2µs  679.1µs     1467.    97.6KB      0  </span></span>
+<span id="cb1211-6"><a href="20-debuggage-performance.html#cb1211-6"></a><span class="co">#&gt; 2 plus10_vec(x)   17.4µs   32.5µs    26098.   117.3KB     10.4</span></span></code></pre></div>
 <p>La colonne la plus importante est sans doute la colonne <code>median</code>, qui affiche le temps médian d’exécution des deux expressions. Attention, l’unité de temps n’est pas forcément la même, ici l’exécution de <code>plus10_for</code> est affichée en millisecondes (“ms”), tandis que celle de <code>plus10_vec</code> l’est en microsecondes (“µs”) donc avec une unité mille fois plus petite.</p>
 <p>Si on préfère, on peut afficher les performances relatives des deux fonctions avec :</p>
 <div class="sourceCode" id="cb1212"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1212-1"><a href="20-debuggage-performance.html#cb1212-1"></a><span class="kw">summary</span>(bnch, <span class="dt">relative =</span> <span class="ot">TRUE</span>)</span>
 <span id="cb1212-2"><a href="20-debuggage-performance.html#cb1212-2"></a><span class="co">#&gt; # A tibble: 2 × 6</span></span>
 <span id="cb1212-3"><a href="20-debuggage-performance.html#cb1212-3"></a><span class="co">#&gt;   expression      min median `itr/sec` mem_alloc `gc/sec`</span></span>
 <span id="cb1212-4"><a href="20-debuggage-performance.html#cb1212-4"></a><span class="co">#&gt;   &lt;bch:expr&gt;    &lt;dbl&gt;  &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;</span></span>
-<span id="cb1212-5"><a href="20-debuggage-performance.html#cb1212-5"></a><span class="co">#&gt; 1 plus10_for(x)  41.3   39.8       1        1         NaN</span></span>
-<span id="cb1212-6"><a href="20-debuggage-performance.html#cb1212-6"></a><span class="co">#&gt; 2 plus10_vec(x)   1      1        38.0      1.20      Inf</span></span></code></pre></div>
+<span id="cb1212-5"><a href="20-debuggage-performance.html#cb1212-5"></a><span class="co">#&gt; 1 plus10_for(x)  38.6   20.9       1        1         NaN</span></span>
+<span id="cb1212-6"><a href="20-debuggage-performance.html#cb1212-6"></a><span class="co">#&gt; 2 plus10_vec(x)   1      1        17.8      1.20      Inf</span></span></code></pre></div>
 <p>Ces résultats nous permettent de voir que la version <code>vec</code> est très nettement plus rapide que la version <code>for</code> ! Ce qui confirme le fait qu’il faut toujours prioriser l’utilisation de fonctions vectorisées lorsqu’elles existent.</p>
 <p>On prend un second exemple : on souhaite mesurer si l’utilisation de <code>map</code> est plus rapide ou non qu’une boucle <code>for</code> pour une tâche équivalente.</p>
 <p>Pour cela on commence par créer artificiellement une liste de 200 tableaux de données en dupliquant 100 fois une liste composée des tableaux <code>rp2018</code> et <code>hdv2003</code>.</p>
@@ -954,8 +954,8 @@ Pour plus d’informations on pourra se reporter aux ressources en fin de chapit
 <span id="cb1214-11"><a href="20-debuggage-performance.html#cb1214-11"></a><span class="co">#&gt; # A tibble: 2 × 6</span></span>
 <span id="cb1214-12"><a href="20-debuggage-performance.html#cb1214-12"></a><span class="co">#&gt;   expression      min   median `itr/sec` mem_alloc `gc/sec`</span></span>
 <span id="cb1214-13"><a href="20-debuggage-performance.html#cb1214-13"></a><span class="co">#&gt;   &lt;bch:expr&gt; &lt;bch:tm&gt; &lt;bch:tm&gt;     &lt;dbl&gt; &lt;bch:byt&gt;    &lt;dbl&gt;</span></span>
-<span id="cb1214-14"><a href="20-debuggage-performance.html#cb1214-14"></a><span class="co">#&gt; 1 boucle_for   3.47ms   3.73ms      268.  177.42KB     2.08</span></span>
-<span id="cb1214-15"><a href="20-debuggage-performance.html#cb1214-15"></a><span class="co">#&gt; 2 map        899.51µs 984.66µs     1014.    6.81KB     6.39</span></span></code></pre></div>
+<span id="cb1214-14"><a href="20-debuggage-performance.html#cb1214-14"></a><span class="co">#&gt; 1 boucle_for   3.21ms   3.36ms      296.  177.42KB     4.26</span></span>
+<span id="cb1214-15"><a href="20-debuggage-performance.html#cb1214-15"></a><span class="co">#&gt; 2 map         857.3µs    920µs     1088.    6.81KB     4.16</span></span></code></pre></div>
 <p>La lecture du résultat indique que le <code>map</code> est environ 4 fois plus rapide que la boucle <code>for</code>.</p>
 <p>Attention cependant en lisant ces résultats : dans la comparaison précédente les temps d’exécution étant en millisecondes, même une différence du type “4 fois plus rapide” peut être quasiment imperceptible. Dans l’exemple suivant on compare de la même manière <code>for</code> et <code>map</code>, mais cette fois en effectuant une action plus coûteuse en temps de calcul (on génère des vecteurs de nombres aléatoires).</p>
 <div class="sourceCode" id="cb1215"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1215-1"><a href="20-debuggage-performance.html#cb1215-1"></a>bench<span class="op">::</span><span class="kw">mark</span>(</span>
@@ -972,8 +972,8 @@ Pour plus d’informations on pourra se reporter aux ressources en fin de chapit
 <span id="cb1215-12"><a href="20-debuggage-performance.html#cb1215-12"></a><span class="co">#&gt; # A tibble: 2 × 6</span></span>
 <span id="cb1215-13"><a href="20-debuggage-performance.html#cb1215-13"></a><span class="co">#&gt;   expression      min   median `itr/sec` mem_alloc `gc/sec`</span></span>
 <span id="cb1215-14"><a href="20-debuggage-performance.html#cb1215-14"></a><span class="co">#&gt;   &lt;bch:expr&gt; &lt;bch:tm&gt; &lt;bch:tm&gt;     &lt;dbl&gt; &lt;bch:byt&gt;    &lt;dbl&gt;</span></span>
-<span id="cb1215-15"><a href="20-debuggage-performance.html#cb1215-15"></a><span class="co">#&gt; 1 boucle_for    185ms    186ms      5.26    38.5MB        0</span></span>
-<span id="cb1215-16"><a href="20-debuggage-performance.html#cb1215-16"></a><span class="co">#&gt; 2 map           203ms    203ms      4.92    38.4MB        0</span></span></code></pre></div>
+<span id="cb1215-15"><a href="20-debuggage-performance.html#cb1215-15"></a><span class="co">#&gt; 1 boucle_for    155ms    170ms      5.95    38.5MB        0</span></span>
+<span id="cb1215-16"><a href="20-debuggage-performance.html#cb1215-16"></a><span class="co">#&gt; 2 map           173ms    173ms      5.79    38.4MB        0</span></span></code></pre></div>
 <p>Dans ce cas la différence entre <code>for</code> et <code>map</code> devient négligeable par rapport aux temps de calcul des opérations effectuées dans les boucles : au final les temps d’exécution sont presque identiques.</p>
 </div>
 <div id="quelques-conseils-doptimisation" class="section level2 hasAnchor">
@@ -991,8 +991,8 @@ Pour plus d’informations on pourra se reporter aux ressources en fin de chapit
 <span id="cb1216-8"><a href="20-debuggage-performance.html#cb1216-8"></a><span class="co">#&gt; # A tibble: 2 × 6</span></span>
 <span id="cb1216-9"><a href="20-debuggage-performance.html#cb1216-9"></a><span class="co">#&gt;   expression      min   median `itr/sec` mem_alloc `gc/sec`</span></span>
 <span id="cb1216-10"><a href="20-debuggage-performance.html#cb1216-10"></a><span class="co">#&gt;   &lt;bch:expr&gt; &lt;bch:tm&gt; &lt;bch:tm&gt;     &lt;dbl&gt; &lt;bch:byt&gt;    &lt;dbl&gt;</span></span>
-<span id="cb1216-11"><a href="20-debuggage-performance.html#cb1216-11"></a><span class="co">#&gt; 1 boucle       3.04ms   3.23ms      309.    1.22KB     4.26</span></span>
-<span id="cb1216-12"><a href="20-debuggage-performance.html#cb1216-12"></a><span class="co">#&gt; 2 vec          71.6µs   73.8µs    13156.    1.22KB     0</span></span></code></pre></div>
+<span id="cb1216-11"><a href="20-debuggage-performance.html#cb1216-11"></a><span class="co">#&gt; 1 boucle       2.73ms   2.84ms      353.    1.22KB     2.08</span></span>
+<span id="cb1216-12"><a href="20-debuggage-performance.html#cb1216-12"></a><span class="co">#&gt; 2 vec          64.7µs   66.4µs    15003.    1.22KB     2.05</span></span></code></pre></div>
 </div>
 <div id="mettre-le-minimum-dopérations-dans-les-boucles" class="section level3 hasAnchor">
 <h3><span class="header-section-number">20.3.2</span> Mettre le minimum d’opérations dans les boucles<a href="20-debuggage-performance.html#mettre-le-minimum-dopérations-dans-les-boucles" class="anchor-section" aria-label="Anchor link to header"></a></h3>
@@ -1041,8 +1041,8 @@ Pour plus d’informations on pourra se reporter aux ressources en fin de chapit
 <span id="cb1219-5"><a href="20-debuggage-performance.html#cb1219-5"></a><span class="co">#&gt; # A tibble: 2 × 6</span></span>
 <span id="cb1219-6"><a href="20-debuggage-performance.html#cb1219-6"></a><span class="co">#&gt;   expression                min   median `itr/sec` mem_alloc `gc/sec`</span></span>
 <span id="cb1219-7"><a href="20-debuggage-performance.html#cb1219-7"></a><span class="co">#&gt;   &lt;bch:expr&gt;           &lt;bch:tm&gt; &lt;bch:tm&gt;     &lt;dbl&gt; &lt;bch:byt&gt;    &lt;dbl&gt;</span></span>
-<span id="cb1219-8"><a href="20-debuggage-performance.html#cb1219-8"></a><span class="co">#&gt; 1 nb_chaine1(d, &quot;oui&quot;)   4.21ms   4.43ms      225.     345KB     0   </span></span>
-<span id="cb1219-9"><a href="20-debuggage-performance.html#cb1219-9"></a><span class="co">#&gt; 2 nb_chaine2(d, &quot;oui&quot;)   1.25ms   1.34ms      752.     157KB     2.05</span></span></code></pre></div>
+<span id="cb1219-8"><a href="20-debuggage-performance.html#cb1219-8"></a><span class="co">#&gt; 1 nb_chaine1(d, &quot;oui&quot;)   3.93ms   3.96ms      252.     345KB        0</span></span>
+<span id="cb1219-9"><a href="20-debuggage-performance.html#cb1219-9"></a><span class="co">#&gt; 2 nb_chaine2(d, &quot;oui&quot;)   1.14ms   1.16ms      847.     157KB        0</span></span></code></pre></div>
 <p>Ce qui permet de constater que la deuxième version est quatre fois plus rapide (et elle sera d’autant plus rapide que le nombre de colonnes du tableau sera grand).</p>
 </div>
 <div id="choisir-un-format-de-fichier-adapté" class="section level3 hasAnchor">
