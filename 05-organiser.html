@@ -672,38 +672,38 @@ Si vous ne retrouvez pas le nom du projet dans ce menu, vous pouvez l’ouvrir e
 <p>Un exemple courant concerne les recodages et la manipulation des données. Il est fréquent, au cours d’une analyse, de calculer de nouvelles variables, recoder des variables qualitatives existantes, etc. Il peut alors être intéressant de regrouper tous ces recodages dans un script à part (nommé, par exemple, <code>recodages.R</code>). Ce fichier contient alors l’ensemble des recodages “validés”, ceux qu’on a testé et qu’on sait vouloir conserver.</p>
 <p>Pour exécuter ces recodages, on peut évidemment ouvrir le script <code>recodages.R</code> dans RStudio et lancer l’ensemble du code qu’il contient. Mais une méthode plus pratique est d’utiliser la fonction <code>source</code> : celle-ci prend en paramètre un nom de fichier <code>.R</code>, et quand on l’exécute elle va exécuter l’ensemble du code contenu dans ce fichier.</p>
 <p>Ainsi, un début de script <code>analyse.R</code> pourra ressembler à ceci :</p>
-<div class="sourceCode" id="cb146"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb146-1"><a href="05-organiser.html#cb146-1"></a><span class="co"># Analyse des données Histoire de vie 2003</span></span>
-<span id="cb146-2"><a href="05-organiser.html#cb146-2"></a></span>
-<span id="cb146-3"><a href="05-organiser.html#cb146-3"></a><span class="co"># Chargement des extensions et des données --------------------------</span></span>
-<span id="cb146-4"><a href="05-organiser.html#cb146-4"></a></span>
-<span id="cb146-5"><a href="05-organiser.html#cb146-5"></a><span class="kw">library</span>(questionr)</span>
-<span id="cb146-6"><a href="05-organiser.html#cb146-6"></a></span>
-<span id="cb146-7"><a href="05-organiser.html#cb146-7"></a><span class="kw">data</span>(hdv2003)</span>
-<span id="cb146-8"><a href="05-organiser.html#cb146-8"></a><span class="kw">source</span>(<span class="st">&quot;recodages.R&quot;</span>)</span>
-<span id="cb146-9"><a href="05-organiser.html#cb146-9"></a></span>
-<span id="cb146-10"><a href="05-organiser.html#cb146-10"></a><span class="co"># Analyse de l&#39;âge --------------------------------------------------</span></span>
-<span id="cb146-11"><a href="05-organiser.html#cb146-11"></a></span>
-<span id="cb146-12"><a href="05-organiser.html#cb146-12"></a><span class="kw">hist</span>(hdv2003<span class="op">$</span>age)</span>
-<span id="cb146-13"><a href="05-organiser.html#cb146-13"></a></span>
-<span id="cb146-14"><a href="05-organiser.html#cb146-14"></a>(...)</span></code></pre></div>
+<div class="sourceCode" id="cb145"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb145-1"><a href="05-organiser.html#cb145-1"></a><span class="co"># Analyse des données Histoire de vie 2003</span></span>
+<span id="cb145-2"><a href="05-organiser.html#cb145-2"></a></span>
+<span id="cb145-3"><a href="05-organiser.html#cb145-3"></a><span class="co"># Chargement des extensions et des données --------------------------</span></span>
+<span id="cb145-4"><a href="05-organiser.html#cb145-4"></a></span>
+<span id="cb145-5"><a href="05-organiser.html#cb145-5"></a><span class="kw">library</span>(questionr)</span>
+<span id="cb145-6"><a href="05-organiser.html#cb145-6"></a></span>
+<span id="cb145-7"><a href="05-organiser.html#cb145-7"></a><span class="kw">data</span>(hdv2003)</span>
+<span id="cb145-8"><a href="05-organiser.html#cb145-8"></a><span class="kw">source</span>(<span class="st">&quot;recodages.R&quot;</span>)</span>
+<span id="cb145-9"><a href="05-organiser.html#cb145-9"></a></span>
+<span id="cb145-10"><a href="05-organiser.html#cb145-10"></a><span class="co"># Analyse de l&#39;âge --------------------------------------------------</span></span>
+<span id="cb145-11"><a href="05-organiser.html#cb145-11"></a></span>
+<span id="cb145-12"><a href="05-organiser.html#cb145-12"></a><span class="kw">hist</span>(hdv2003<span class="op">$</span>age)</span>
+<span id="cb145-13"><a href="05-organiser.html#cb145-13"></a></span>
+<span id="cb145-14"><a href="05-organiser.html#cb145-14"></a>(...)</span></code></pre></div>
 <p>L’avantage principal est qu’on peut à tout moment revenir à nos données d’origine et aux recodages “validés” simplement en exécutant les deux lignes :</p>
-<div class="sourceCode" id="cb147"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb147-1"><a href="05-organiser.html#cb147-1"></a><span class="kw">data</span>(hdv2003)</span>
-<span id="cb147-2"><a href="05-organiser.html#cb147-2"></a><span class="kw">source</span>(<span class="st">&quot;recodages.R&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb146"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb146-1"><a href="05-organiser.html#cb146-1"></a><span class="kw">data</span>(hdv2003)</span>
+<span id="cb146-2"><a href="05-organiser.html#cb146-2"></a><span class="kw">source</span>(<span class="st">&quot;recodages.R&quot;</span>)</span></code></pre></div>
 <p>L’autre avantage est qu’on peut répartir nos analyses entre différents scripts, et conserver ces deux lignes en haut de chaque script, ce qui permet de “mutualiser” les recodages validés. On pourrait ainsi créer un deuxième script <code>analyse_qualif.R</code> qui pourrait ressembler à ceci :</p>
-<div class="sourceCode" id="cb148"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb148-1"><a href="05-organiser.html#cb148-1"></a><span class="co"># Analyse des données Histoire de vie 2003 - Qualifications</span></span>
-<span id="cb148-2"><a href="05-organiser.html#cb148-2"></a></span>
-<span id="cb148-3"><a href="05-organiser.html#cb148-3"></a><span class="co"># Chargement des extensions et des données --------------------------</span></span>
-<span id="cb148-4"><a href="05-organiser.html#cb148-4"></a></span>
-<span id="cb148-5"><a href="05-organiser.html#cb148-5"></a><span class="kw">library</span>(questionr)</span>
-<span id="cb148-6"><a href="05-organiser.html#cb148-6"></a></span>
-<span id="cb148-7"><a href="05-organiser.html#cb148-7"></a><span class="kw">data</span>(hdv2003)</span>
-<span id="cb148-8"><a href="05-organiser.html#cb148-8"></a><span class="kw">source</span>(<span class="st">&quot;recodages.R&quot;</span>)</span>
-<span id="cb148-9"><a href="05-organiser.html#cb148-9"></a></span>
-<span id="cb148-10"><a href="05-organiser.html#cb148-10"></a><span class="co"># Analyse des qualifications --------------------------------------------------</span></span>
-<span id="cb148-11"><a href="05-organiser.html#cb148-11"></a></span>
-<span id="cb148-12"><a href="05-organiser.html#cb148-12"></a><span class="kw">freq</span>(hdv2003<span class="op">$</span>qualif)</span>
-<span id="cb148-13"><a href="05-organiser.html#cb148-13"></a></span>
-<span id="cb148-14"><a href="05-organiser.html#cb148-14"></a>(...)</span></code></pre></div>
+<div class="sourceCode" id="cb147"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb147-1"><a href="05-organiser.html#cb147-1"></a><span class="co"># Analyse des données Histoire de vie 2003 - Qualifications</span></span>
+<span id="cb147-2"><a href="05-organiser.html#cb147-2"></a></span>
+<span id="cb147-3"><a href="05-organiser.html#cb147-3"></a><span class="co"># Chargement des extensions et des données --------------------------</span></span>
+<span id="cb147-4"><a href="05-organiser.html#cb147-4"></a></span>
+<span id="cb147-5"><a href="05-organiser.html#cb147-5"></a><span class="kw">library</span>(questionr)</span>
+<span id="cb147-6"><a href="05-organiser.html#cb147-6"></a></span>
+<span id="cb147-7"><a href="05-organiser.html#cb147-7"></a><span class="kw">data</span>(hdv2003)</span>
+<span id="cb147-8"><a href="05-organiser.html#cb147-8"></a><span class="kw">source</span>(<span class="st">&quot;recodages.R&quot;</span>)</span>
+<span id="cb147-9"><a href="05-organiser.html#cb147-9"></a></span>
+<span id="cb147-10"><a href="05-organiser.html#cb147-10"></a><span class="co"># Analyse des qualifications --------------------------------------------------</span></span>
+<span id="cb147-11"><a href="05-organiser.html#cb147-11"></a></span>
+<span id="cb147-12"><a href="05-organiser.html#cb147-12"></a><span class="kw">freq</span>(hdv2003<span class="op">$</span>qualif)</span>
+<span id="cb147-13"><a href="05-organiser.html#cb147-13"></a></span>
+<span id="cb147-14"><a href="05-organiser.html#cb147-14"></a>(...)</span></code></pre></div>
 <p>On peut évidemment répartir les recodages entre plusieurs fichiers et faire appel à autant de <code>source</code> que l’on souhaite.</p>
 <div class="rmdnote">
 <p>

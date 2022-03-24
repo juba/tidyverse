@@ -625,46 +625,46 @@ code span.wa { color: #bf0303; } /* Warning */
 <div id="tableaux-croisés" class="section level3 hasAnchor">
 <h3><span class="header-section-number">4.1.1</span> Tableaux croisés<a href="04-bivarie.html#tableaux-croisés" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>On continue à travailler avec le jeu de données tiré de l’enquête <em>Histoire de vie</em> inclus dans l’extension <code>questionr</code>. On commence donc par charger l’extension, le jeu de données, et à le renommer en un nom plus court pour gagner un peu de temps de saisie au clavier.</p>
-<div class="sourceCode" id="cb109"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb109-1"><a href="04-bivarie.html#cb109-1"></a><span class="kw">library</span>(questionr)</span>
-<span id="cb109-2"><a href="04-bivarie.html#cb109-2"></a><span class="kw">data</span>(hdv2003)</span>
-<span id="cb109-3"><a href="04-bivarie.html#cb109-3"></a>d &lt;-<span class="st"> </span>hdv2003</span></code></pre></div>
+<div class="sourceCode" id="cb108"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb108-1"><a href="04-bivarie.html#cb108-1"></a><span class="kw">library</span>(questionr)</span>
+<span id="cb108-2"><a href="04-bivarie.html#cb108-2"></a><span class="kw">data</span>(hdv2003)</span>
+<span id="cb108-3"><a href="04-bivarie.html#cb108-3"></a>d &lt;-<span class="st"> </span>hdv2003</span></code></pre></div>
 <p>Quand on veut croiser deux variables qualitatives, on fait un <em>tableau croisé</em>. Comme pour un tri à plat ceci s’obtient avec la fonction <code>table</code> de R, mais à laquelle on passe cette fois deux variables en argument. Par exemple, si on veut croiser la catégorie socio-professionnelle et le sexe des enquêtés :</p>
-<div class="sourceCode" id="cb110"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb110-1"><a href="04-bivarie.html#cb110-1"></a><span class="kw">table</span>(d<span class="op">$</span>qualif, d<span class="op">$</span>sexe)</span>
-<span id="cb110-2"><a href="04-bivarie.html#cb110-2"></a><span class="co">#&gt;                           </span></span>
-<span id="cb110-3"><a href="04-bivarie.html#cb110-3"></a><span class="co">#&gt;                            Homme Femme</span></span>
-<span id="cb110-4"><a href="04-bivarie.html#cb110-4"></a><span class="co">#&gt;   Ouvrier specialise          96   107</span></span>
-<span id="cb110-5"><a href="04-bivarie.html#cb110-5"></a><span class="co">#&gt;   Ouvrier qualifie           229    63</span></span>
-<span id="cb110-6"><a href="04-bivarie.html#cb110-6"></a><span class="co">#&gt;   Technicien                  66    20</span></span>
-<span id="cb110-7"><a href="04-bivarie.html#cb110-7"></a><span class="co">#&gt;   Profession intermediaire    88    72</span></span>
-<span id="cb110-8"><a href="04-bivarie.html#cb110-8"></a><span class="co">#&gt;   Cadre                      145   115</span></span>
-<span id="cb110-9"><a href="04-bivarie.html#cb110-9"></a><span class="co">#&gt;   Employe                     96   498</span></span>
-<span id="cb110-10"><a href="04-bivarie.html#cb110-10"></a><span class="co">#&gt;   Autre                       21    37</span></span></code></pre></div>
+<div class="sourceCode" id="cb109"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb109-1"><a href="04-bivarie.html#cb109-1"></a><span class="kw">table</span>(d<span class="op">$</span>qualif, d<span class="op">$</span>sexe)</span>
+<span id="cb109-2"><a href="04-bivarie.html#cb109-2"></a><span class="co">#&gt;                           </span></span>
+<span id="cb109-3"><a href="04-bivarie.html#cb109-3"></a><span class="co">#&gt;                            Homme Femme</span></span>
+<span id="cb109-4"><a href="04-bivarie.html#cb109-4"></a><span class="co">#&gt;   Ouvrier specialise          96   107</span></span>
+<span id="cb109-5"><a href="04-bivarie.html#cb109-5"></a><span class="co">#&gt;   Ouvrier qualifie           229    63</span></span>
+<span id="cb109-6"><a href="04-bivarie.html#cb109-6"></a><span class="co">#&gt;   Technicien                  66    20</span></span>
+<span id="cb109-7"><a href="04-bivarie.html#cb109-7"></a><span class="co">#&gt;   Profession intermediaire    88    72</span></span>
+<span id="cb109-8"><a href="04-bivarie.html#cb109-8"></a><span class="co">#&gt;   Cadre                      145   115</span></span>
+<span id="cb109-9"><a href="04-bivarie.html#cb109-9"></a><span class="co">#&gt;   Employe                     96   498</span></span>
+<span id="cb109-10"><a href="04-bivarie.html#cb109-10"></a><span class="co">#&gt;   Autre                       21    37</span></span></code></pre></div>
 <p>Pour pouvoir interpréter ce tableau on doit passer du tableau en effectifs au tableau en pourcentages ligne ou colonne. Pour cela, on peut utiliser les fonctions <code>lprop</code> et <code>cprop</code> de l’extension <code>questionr</code>, qu’on applique au tableau croisé précédent.</p>
 <p>Pour calculer les pourcentages ligne :</p>
-<div class="sourceCode" id="cb111"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb111-1"><a href="04-bivarie.html#cb111-1"></a>tab &lt;-<span class="st"> </span><span class="kw">table</span>(d<span class="op">$</span>qualif, d<span class="op">$</span>sexe)</span>
-<span id="cb111-2"><a href="04-bivarie.html#cb111-2"></a><span class="kw">lprop</span>(tab)</span>
-<span id="cb111-3"><a href="04-bivarie.html#cb111-3"></a><span class="co">#&gt;                           </span></span>
-<span id="cb111-4"><a href="04-bivarie.html#cb111-4"></a><span class="co">#&gt;                            Homme Femme Total</span></span>
-<span id="cb111-5"><a href="04-bivarie.html#cb111-5"></a><span class="co">#&gt;   Ouvrier specialise        47.3  52.7 100.0</span></span>
-<span id="cb111-6"><a href="04-bivarie.html#cb111-6"></a><span class="co">#&gt;   Ouvrier qualifie          78.4  21.6 100.0</span></span>
-<span id="cb111-7"><a href="04-bivarie.html#cb111-7"></a><span class="co">#&gt;   Technicien                76.7  23.3 100.0</span></span>
-<span id="cb111-8"><a href="04-bivarie.html#cb111-8"></a><span class="co">#&gt;   Profession intermediaire  55.0  45.0 100.0</span></span>
-<span id="cb111-9"><a href="04-bivarie.html#cb111-9"></a><span class="co">#&gt;   Cadre                     55.8  44.2 100.0</span></span>
-<span id="cb111-10"><a href="04-bivarie.html#cb111-10"></a><span class="co">#&gt;   Employe                   16.2  83.8 100.0</span></span>
-<span id="cb111-11"><a href="04-bivarie.html#cb111-11"></a><span class="co">#&gt;   Autre                     36.2  63.8 100.0</span></span>
-<span id="cb111-12"><a href="04-bivarie.html#cb111-12"></a><span class="co">#&gt;   Ensemble                  44.8  55.2 100.0</span></span></code></pre></div>
+<div class="sourceCode" id="cb110"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb110-1"><a href="04-bivarie.html#cb110-1"></a>tab &lt;-<span class="st"> </span><span class="kw">table</span>(d<span class="op">$</span>qualif, d<span class="op">$</span>sexe)</span>
+<span id="cb110-2"><a href="04-bivarie.html#cb110-2"></a><span class="kw">lprop</span>(tab)</span>
+<span id="cb110-3"><a href="04-bivarie.html#cb110-3"></a><span class="co">#&gt;                           </span></span>
+<span id="cb110-4"><a href="04-bivarie.html#cb110-4"></a><span class="co">#&gt;                            Homme Femme Total</span></span>
+<span id="cb110-5"><a href="04-bivarie.html#cb110-5"></a><span class="co">#&gt;   Ouvrier specialise        47.3  52.7 100.0</span></span>
+<span id="cb110-6"><a href="04-bivarie.html#cb110-6"></a><span class="co">#&gt;   Ouvrier qualifie          78.4  21.6 100.0</span></span>
+<span id="cb110-7"><a href="04-bivarie.html#cb110-7"></a><span class="co">#&gt;   Technicien                76.7  23.3 100.0</span></span>
+<span id="cb110-8"><a href="04-bivarie.html#cb110-8"></a><span class="co">#&gt;   Profession intermediaire  55.0  45.0 100.0</span></span>
+<span id="cb110-9"><a href="04-bivarie.html#cb110-9"></a><span class="co">#&gt;   Cadre                     55.8  44.2 100.0</span></span>
+<span id="cb110-10"><a href="04-bivarie.html#cb110-10"></a><span class="co">#&gt;   Employe                   16.2  83.8 100.0</span></span>
+<span id="cb110-11"><a href="04-bivarie.html#cb110-11"></a><span class="co">#&gt;   Autre                     36.2  63.8 100.0</span></span>
+<span id="cb110-12"><a href="04-bivarie.html#cb110-12"></a><span class="co">#&gt;   Ensemble                  44.8  55.2 100.0</span></span></code></pre></div>
 <p>Et pour les pourcentages colonne :</p>
-<div class="sourceCode" id="cb112"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb112-1"><a href="04-bivarie.html#cb112-1"></a><span class="kw">cprop</span>(tab)</span>
-<span id="cb112-2"><a href="04-bivarie.html#cb112-2"></a><span class="co">#&gt;                           </span></span>
-<span id="cb112-3"><a href="04-bivarie.html#cb112-3"></a><span class="co">#&gt;                            Homme Femme Ensemble</span></span>
-<span id="cb112-4"><a href="04-bivarie.html#cb112-4"></a><span class="co">#&gt;   Ouvrier specialise        13.0  11.7  12.3   </span></span>
-<span id="cb112-5"><a href="04-bivarie.html#cb112-5"></a><span class="co">#&gt;   Ouvrier qualifie          30.9   6.9  17.7   </span></span>
-<span id="cb112-6"><a href="04-bivarie.html#cb112-6"></a><span class="co">#&gt;   Technicien                 8.9   2.2   5.2   </span></span>
-<span id="cb112-7"><a href="04-bivarie.html#cb112-7"></a><span class="co">#&gt;   Profession intermediaire  11.9   7.9   9.7   </span></span>
-<span id="cb112-8"><a href="04-bivarie.html#cb112-8"></a><span class="co">#&gt;   Cadre                     19.6  12.6  15.7   </span></span>
-<span id="cb112-9"><a href="04-bivarie.html#cb112-9"></a><span class="co">#&gt;   Employe                   13.0  54.6  35.9   </span></span>
-<span id="cb112-10"><a href="04-bivarie.html#cb112-10"></a><span class="co">#&gt;   Autre                      2.8   4.1   3.5   </span></span>
-<span id="cb112-11"><a href="04-bivarie.html#cb112-11"></a><span class="co">#&gt;   Total                    100.0 100.0 100.0</span></span></code></pre></div>
+<div class="sourceCode" id="cb111"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb111-1"><a href="04-bivarie.html#cb111-1"></a><span class="kw">cprop</span>(tab)</span>
+<span id="cb111-2"><a href="04-bivarie.html#cb111-2"></a><span class="co">#&gt;                           </span></span>
+<span id="cb111-3"><a href="04-bivarie.html#cb111-3"></a><span class="co">#&gt;                            Homme Femme Ensemble</span></span>
+<span id="cb111-4"><a href="04-bivarie.html#cb111-4"></a><span class="co">#&gt;   Ouvrier specialise        13.0  11.7  12.3   </span></span>
+<span id="cb111-5"><a href="04-bivarie.html#cb111-5"></a><span class="co">#&gt;   Ouvrier qualifie          30.9   6.9  17.7   </span></span>
+<span id="cb111-6"><a href="04-bivarie.html#cb111-6"></a><span class="co">#&gt;   Technicien                 8.9   2.2   5.2   </span></span>
+<span id="cb111-7"><a href="04-bivarie.html#cb111-7"></a><span class="co">#&gt;   Profession intermediaire  11.9   7.9   9.7   </span></span>
+<span id="cb111-8"><a href="04-bivarie.html#cb111-8"></a><span class="co">#&gt;   Cadre                     19.6  12.6  15.7   </span></span>
+<span id="cb111-9"><a href="04-bivarie.html#cb111-9"></a><span class="co">#&gt;   Employe                   13.0  54.6  35.9   </span></span>
+<span id="cb111-10"><a href="04-bivarie.html#cb111-10"></a><span class="co">#&gt;   Autre                      2.8   4.1   3.5   </span></span>
+<span id="cb111-11"><a href="04-bivarie.html#cb111-11"></a><span class="co">#&gt;   Total                    100.0 100.0 100.0</span></span></code></pre></div>
 <div class="rmdnote">
 <p>
 Pour savoir si on doit faire des pourcentages ligne ou colonne, on pourra se référer à l’article suivant :
@@ -684,12 +684,12 @@ Pour faciliter la lecture d’un tableau croisé, il est recommandé de <strong>
 <h3><span class="header-section-number">4.1.2</span> Test du χ²<a href="04-bivarie.html#test-du-χ²" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>Comme on travaille sur un échantillon et pas sur une population entière, on peut compléter ce tableau croisé par un test d’indépendance du χ². Celui-ci permet de tester, et éventuellement de rejeter, l’hypothèse d’indépendance des lignes et des colonnes du tableau, c’est à dire l’hypothèse que les écarts à l’indépendance observés seraient uniquement dus au biais d’échantillonnage (au fait qu’on n’a pas interrogé toute notre population).</p>
 <p>Pour effectuer un test de ce type, on applique la fonction <code>chisq.test</code> au tableau croisé calculé précédemment.</p>
-<div class="sourceCode" id="cb113"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb113-1"><a href="04-bivarie.html#cb113-1"></a><span class="kw">chisq.test</span>(tab)</span>
-<span id="cb113-2"><a href="04-bivarie.html#cb113-2"></a><span class="co">#&gt; </span></span>
-<span id="cb113-3"><a href="04-bivarie.html#cb113-3"></a><span class="co">#&gt;  Pearson&#39;s Chi-squared test</span></span>
-<span id="cb113-4"><a href="04-bivarie.html#cb113-4"></a><span class="co">#&gt; </span></span>
-<span id="cb113-5"><a href="04-bivarie.html#cb113-5"></a><span class="co">#&gt; data:  tab</span></span>
-<span id="cb113-6"><a href="04-bivarie.html#cb113-6"></a><span class="co">#&gt; X-squared = 387.56, df = 6, p-value &lt; 2.2e-16</span></span></code></pre></div>
+<div class="sourceCode" id="cb112"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb112-1"><a href="04-bivarie.html#cb112-1"></a><span class="kw">chisq.test</span>(tab)</span>
+<span id="cb112-2"><a href="04-bivarie.html#cb112-2"></a><span class="co">#&gt; </span></span>
+<span id="cb112-3"><a href="04-bivarie.html#cb112-3"></a><span class="co">#&gt;  Pearson&#39;s Chi-squared test</span></span>
+<span id="cb112-4"><a href="04-bivarie.html#cb112-4"></a><span class="co">#&gt; </span></span>
+<span id="cb112-5"><a href="04-bivarie.html#cb112-5"></a><span class="co">#&gt; data:  tab</span></span>
+<span id="cb112-6"><a href="04-bivarie.html#cb112-6"></a><span class="co">#&gt; X-squared = 387.56, df = 6, p-value &lt; 2.2e-16</span></span></code></pre></div>
 <p>Le résultat nous indique trois valeurs :</p>
 <ul>
 <li><code>X-squared</code>, la valeur de la statistique du χ² pour notre tableau, c’est-à-dire une “distance” entre notre tableau observé et celui attendu si les deux variables étaient indépendantes.</li>
@@ -698,16 +698,16 @@ Pour faciliter la lecture d’un tableau croisé, il est recommandé de <strong>
 </ul>
 <p>Ici, le <em>p</em> est extrêmement petit (la notation <code>&lt; 2.2e-16</code> indique qu’il est plus petit que la plus petite valeur proche de zéro calculable par R), donc certainement en-dessous du seuil de décision choisi préalablement au test (souvent 5%, soit 0.05). On peut donc rejeter l’hypothèse d’indépendance des lignes et des colonnes du tableau.</p>
 <p>En complément du test du χ², on peut aussi regarder les <em>résidus</em> de ce test pour affiner la lecture du tableau. Ceux-ci s’obtiennent avec la fonction <code>chisq.residuals</code> de <code>questionr</code> :</p>
-<div class="sourceCode" id="cb114"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb114-1"><a href="04-bivarie.html#cb114-1"></a><span class="kw">chisq.residuals</span>(tab)</span>
-<span id="cb114-2"><a href="04-bivarie.html#cb114-2"></a><span class="co">#&gt;                           </span></span>
-<span id="cb114-3"><a href="04-bivarie.html#cb114-3"></a><span class="co">#&gt;                             Homme  Femme</span></span>
-<span id="cb114-4"><a href="04-bivarie.html#cb114-4"></a><span class="co">#&gt;   Ouvrier specialise         0.52  -0.47</span></span>
-<span id="cb114-5"><a href="04-bivarie.html#cb114-5"></a><span class="co">#&gt;   Ouvrier qualifie           8.57  -7.73</span></span>
-<span id="cb114-6"><a href="04-bivarie.html#cb114-6"></a><span class="co">#&gt;   Technicien                 4.42  -3.98</span></span>
-<span id="cb114-7"><a href="04-bivarie.html#cb114-7"></a><span class="co">#&gt;   Profession intermediaire   1.92  -1.73</span></span>
-<span id="cb114-8"><a href="04-bivarie.html#cb114-8"></a><span class="co">#&gt;   Cadre                      2.64  -2.38</span></span>
-<span id="cb114-9"><a href="04-bivarie.html#cb114-9"></a><span class="co">#&gt;   Employe                  -10.43   9.41</span></span>
-<span id="cb114-10"><a href="04-bivarie.html#cb114-10"></a><span class="co">#&gt;   Autre                     -0.98   0.88</span></span></code></pre></div>
+<div class="sourceCode" id="cb113"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb113-1"><a href="04-bivarie.html#cb113-1"></a><span class="kw">chisq.residuals</span>(tab)</span>
+<span id="cb113-2"><a href="04-bivarie.html#cb113-2"></a><span class="co">#&gt;                           </span></span>
+<span id="cb113-3"><a href="04-bivarie.html#cb113-3"></a><span class="co">#&gt;                             Homme  Femme</span></span>
+<span id="cb113-4"><a href="04-bivarie.html#cb113-4"></a><span class="co">#&gt;   Ouvrier specialise         0.52  -0.47</span></span>
+<span id="cb113-5"><a href="04-bivarie.html#cb113-5"></a><span class="co">#&gt;   Ouvrier qualifie           8.57  -7.73</span></span>
+<span id="cb113-6"><a href="04-bivarie.html#cb113-6"></a><span class="co">#&gt;   Technicien                 4.42  -3.98</span></span>
+<span id="cb113-7"><a href="04-bivarie.html#cb113-7"></a><span class="co">#&gt;   Profession intermediaire   1.92  -1.73</span></span>
+<span id="cb113-8"><a href="04-bivarie.html#cb113-8"></a><span class="co">#&gt;   Cadre                      2.64  -2.38</span></span>
+<span id="cb113-9"><a href="04-bivarie.html#cb113-9"></a><span class="co">#&gt;   Employe                  -10.43   9.41</span></span>
+<span id="cb113-10"><a href="04-bivarie.html#cb113-10"></a><span class="co">#&gt;   Autre                     -0.98   0.88</span></span></code></pre></div>
 <p>L’interprétation des résidus est la suivante :</p>
 <ul>
 <li>si la valeur du résidu pour une case est inférieure à -2, alors il y a une sous-représentation de cette case dans le tableau : les effectifs sont significativement plus faibles que ceux attendus sous l’hypothèse d’indépendance</li>
@@ -719,10 +719,10 @@ Pour faciliter la lecture d’un tableau croisé, il est recommandé de <strong>
 <div id="représentation-graphique-1" class="section level3 hasAnchor">
 <h3><span class="header-section-number">4.1.3</span> Représentation graphique<a href="04-bivarie.html#représentation-graphique-1" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>Il est possible de faire une représentation graphique d’un tableau croisé, par exemple avec la fonction <code>mosaicplot</code> :</p>
-<div class="sourceCode" id="cb115"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb115-1"><a href="04-bivarie.html#cb115-1"></a><span class="kw">mosaicplot</span>(tab)</span></code></pre></div>
+<div class="sourceCode" id="cb114"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb114-1"><a href="04-bivarie.html#cb114-1"></a><span class="kw">mosaicplot</span>(tab)</span></code></pre></div>
 <p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-116-1.png" width="576" /></p>
 <p>On peut améliorer ce graphique en colorant les cases selon les résidus du test du χ² (argument <code>shade = TRUE</code>) et en orientant verticalement les labels de colonnes (argument <code>las = 3</code>) :</p>
-<div class="sourceCode" id="cb116"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb116-1"><a href="04-bivarie.html#cb116-1"></a><span class="kw">mosaicplot</span>(tab, <span class="dt">las =</span> <span class="dv">3</span>, <span class="dt">shade =</span> <span class="ot">TRUE</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb115"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb115-1"><a href="04-bivarie.html#cb115-1"></a><span class="kw">mosaicplot</span>(tab, <span class="dt">las =</span> <span class="dv">3</span>, <span class="dt">shade =</span> <span class="ot">TRUE</span>)</span></code></pre></div>
 <p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-117-1.png" width="576" /></p>
 <p>Chaque rectangle de ce graphique représente une case de tableau. Sa largeur correspond au pourcentage des modalités en colonnes (il y’a beaucoup d’employés et d’ouvriers et très peu d’“autres”). Sa hauteur correspond aux pourcentages colonnes : la proportion d’hommes chez les cadres est plus élevée que chez les employés. Enfin, la couleur de la case correspond au résidu du test du χ² correspondant : les cases en rouge sont sous-représentées, les cases en bleu sur-représentées, et les cases blanches sont proches des effectifs attendus sous l’hypothèse d’indépendance.</p>
 </div>
@@ -733,7 +733,7 @@ Pour faciliter la lecture d’un tableau croisé, il est recommandé de <strong>
 <h3><span class="header-section-number">4.2.1</span> Représentation graphique<a href="04-bivarie.html#représentation-graphique-2" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>Croiser une variable quantitative et une variable qualitative, c’est essayer de voir si les valeurs de la variable quantitative se répartissent différemment selon la catégorie d’appartenance de la variable qualitative.</p>
 <p>Pour cela, l’idéal est de commencer par une représentation graphique de type “boîte à moustache” à l’aide de la fonction <code>boxplot</code>. Par exemple, si on veut visualiser la répartition des âges selon la pratique ou non d’un sport, on va utiliser la syntaxe suivante :</p>
-<div class="sourceCode" id="cb117"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb117-1"><a href="04-bivarie.html#cb117-1"></a><span class="kw">boxplot</span>(d<span class="op">$</span>age <span class="op">~</span><span class="st"> </span>d<span class="op">$</span>sport)</span></code></pre></div>
+<div class="sourceCode" id="cb116"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb116-1"><a href="04-bivarie.html#cb116-1"></a><span class="kw">boxplot</span>(d<span class="op">$</span>age <span class="op">~</span><span class="st"> </span>d<span class="op">$</span>sport)</span></code></pre></div>
 <div class="rmdnote">
 <p>
 Cette syntaxe de <code>boxplot</code> utilise une nouvelle notation de type “formule”. Celle-ci est utilisée notamment pour la spécification des modèles de régression. Ici le <code>~</code> peut se lire comme “en fonction de” : on veut représenter le boxplot de l’âge en fonction du sport.
@@ -753,83 +753,83 @@ L’interprétation d’un boxplot est la suivante : Les bords inférieurs et s
 <p>On peut aussi vouloir comparer certains indicateurs (moyenne, médiane) d’une variable quantitative selon les modalités d’une variable qualitative. Si on reprend l’exemple précédent, on peut calculer la moyenne d’âge pour ceux qui pratiquent un sport et pour ceux qui n’en pratiquent pas.</p>
 <p>Une première méthode pour cela est d’extraire de notre population autant de sous-populations qu’il y a de modalités dans la variable qualitative. On peut le faire notamment avec la fonction <code>filter</code> du package <code>dplyr</code> <a href="#fn9" class="footnote-ref" id="fnref9"><sup>9</sup></a>.</p>
 <p>On commence par charger <code>dplyr</code> (en l’ayant préalablement installé) :</p>
-<div class="sourceCode" id="cb118"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb118-1"><a href="04-bivarie.html#cb118-1"></a><span class="kw">library</span>(dplyr)</span></code></pre></div>
+<div class="sourceCode" id="cb117"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb117-1"><a href="04-bivarie.html#cb117-1"></a><span class="kw">library</span>(dplyr)</span></code></pre></div>
 <p>Puis on applique <code>filter</code> pour créer deux sous-populations, stockées dans deux nouveaux tableaux de données :</p>
-<div class="sourceCode" id="cb119"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb119-1"><a href="04-bivarie.html#cb119-1"></a>d_sport &lt;-<span class="st"> </span><span class="kw">filter</span>(d, sport <span class="op">==</span><span class="st"> &quot;Oui&quot;</span>)</span>
-<span id="cb119-2"><a href="04-bivarie.html#cb119-2"></a>d_nonsport &lt;-<span class="st"> </span><span class="kw">filter</span>(d, sport <span class="op">==</span><span class="st"> &quot;Non&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb118"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb118-1"><a href="04-bivarie.html#cb118-1"></a>d_sport &lt;-<span class="st"> </span><span class="kw">filter</span>(d, sport <span class="op">==</span><span class="st"> &quot;Oui&quot;</span>)</span>
+<span id="cb118-2"><a href="04-bivarie.html#cb118-2"></a>d_nonsport &lt;-<span class="st"> </span><span class="kw">filter</span>(d, sport <span class="op">==</span><span class="st"> &quot;Non&quot;</span>)</span></code></pre></div>
 <p>On peut ensuite utiliser ces deux nouveaux tableaux de données comme on en a l’habitude, et calculer les deux moyennes d’âge :</p>
-<div class="sourceCode" id="cb120"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb120-1"><a href="04-bivarie.html#cb120-1"></a><span class="kw">mean</span>(d_sport<span class="op">$</span>age)</span>
-<span id="cb120-2"><a href="04-bivarie.html#cb120-2"></a><span class="co">#&gt; [1] 40.92531</span></span></code></pre></div>
-<div class="sourceCode" id="cb121"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb121-1"><a href="04-bivarie.html#cb121-1"></a><span class="kw">mean</span>(d_nonsport<span class="op">$</span>age)</span>
-<span id="cb121-2"><a href="04-bivarie.html#cb121-2"></a><span class="co">#&gt; [1] 52.25137</span></span></code></pre></div>
+<div class="sourceCode" id="cb119"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb119-1"><a href="04-bivarie.html#cb119-1"></a><span class="kw">mean</span>(d_sport<span class="op">$</span>age)</span>
+<span id="cb119-2"><a href="04-bivarie.html#cb119-2"></a><span class="co">#&gt; [1] 40.92531</span></span></code></pre></div>
+<div class="sourceCode" id="cb120"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb120-1"><a href="04-bivarie.html#cb120-1"></a><span class="kw">mean</span>(d_nonsport<span class="op">$</span>age)</span>
+<span id="cb120-2"><a href="04-bivarie.html#cb120-2"></a><span class="co">#&gt; [1] 52.25137</span></span></code></pre></div>
 <p>Une autre possibilité est d’utiliser la fonction <code>tapply</code>, qui prend en paramètre une variable quantitative, une variable qualitative et une fonction, puis applique automatiquement la fonction aux valeurs de la variables quantitative pour chaque niveau de la variable qualitative :</p>
-<div class="sourceCode" id="cb122"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb122-1"><a href="04-bivarie.html#cb122-1"></a><span class="kw">tapply</span>(d<span class="op">$</span>age, d<span class="op">$</span>sport, mean)</span>
-<span id="cb122-2"><a href="04-bivarie.html#cb122-2"></a><span class="co">#&gt;      Non      Oui </span></span>
-<span id="cb122-3"><a href="04-bivarie.html#cb122-3"></a><span class="co">#&gt; 52.25137 40.92531</span></span></code></pre></div>
+<div class="sourceCode" id="cb121"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb121-1"><a href="04-bivarie.html#cb121-1"></a><span class="kw">tapply</span>(d<span class="op">$</span>age, d<span class="op">$</span>sport, mean)</span>
+<span id="cb121-2"><a href="04-bivarie.html#cb121-2"></a><span class="co">#&gt;      Non      Oui </span></span>
+<span id="cb121-3"><a href="04-bivarie.html#cb121-3"></a><span class="co">#&gt; 52.25137 40.92531</span></span></code></pre></div>
 <p>On verra dans la partie <a href="10-dplyr.html#dplyr">10</a> d’autres méthodes basées sur <code>dplyr</code> pour effectuer ce genre d’opérations.</p>
 </div>
 <div id="tests-statistiques" class="section level3 hasAnchor">
 <h3><span class="header-section-number">4.2.3</span> Tests statistiques<a href="04-bivarie.html#tests-statistiques" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>Un des tests les plus connus est le test du <em>t</em> de Student, qui permet de tester si les moyennes de deux sous-populations peuvent être considérées comme différentes (compte tenu des fluctuations aléatoires provenant du biais d’échantillonnage).</p>
 <p>Un test <em>t</em> s’effectue à l’aide de la fonction <code>t.test</code>. Ainsi, on peut tester l’hypothèse d’égalité des âges moyens selon la pratique ou non d’un sport avec la commande suivante :</p>
-<div class="sourceCode" id="cb123"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb123-1"><a href="04-bivarie.html#cb123-1"></a><span class="kw">t.test</span>(d<span class="op">$</span>age <span class="op">~</span><span class="st"> </span>d<span class="op">$</span>sport)</span>
-<span id="cb123-2"><a href="04-bivarie.html#cb123-2"></a><span class="co">#&gt; </span></span>
-<span id="cb123-3"><a href="04-bivarie.html#cb123-3"></a><span class="co">#&gt;  Welch Two Sample t-test</span></span>
-<span id="cb123-4"><a href="04-bivarie.html#cb123-4"></a><span class="co">#&gt; </span></span>
-<span id="cb123-5"><a href="04-bivarie.html#cb123-5"></a><span class="co">#&gt; data:  d$age by d$sport</span></span>
-<span id="cb123-6"><a href="04-bivarie.html#cb123-6"></a><span class="co">#&gt; t = 15.503, df = 1600.4, p-value &lt; 2.2e-16</span></span>
-<span id="cb123-7"><a href="04-bivarie.html#cb123-7"></a><span class="co">#&gt; alternative hypothesis: true difference in means between group Non and group Oui is not equal to 0</span></span>
-<span id="cb123-8"><a href="04-bivarie.html#cb123-8"></a><span class="co">#&gt; 95 percent confidence interval:</span></span>
-<span id="cb123-9"><a href="04-bivarie.html#cb123-9"></a><span class="co">#&gt;   9.893117 12.759002</span></span>
-<span id="cb123-10"><a href="04-bivarie.html#cb123-10"></a><span class="co">#&gt; sample estimates:</span></span>
-<span id="cb123-11"><a href="04-bivarie.html#cb123-11"></a><span class="co">#&gt; mean in group Non mean in group Oui </span></span>
-<span id="cb123-12"><a href="04-bivarie.html#cb123-12"></a><span class="co">#&gt;          52.25137          40.92531</span></span></code></pre></div>
+<div class="sourceCode" id="cb122"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb122-1"><a href="04-bivarie.html#cb122-1"></a><span class="kw">t.test</span>(d<span class="op">$</span>age <span class="op">~</span><span class="st"> </span>d<span class="op">$</span>sport)</span>
+<span id="cb122-2"><a href="04-bivarie.html#cb122-2"></a><span class="co">#&gt; </span></span>
+<span id="cb122-3"><a href="04-bivarie.html#cb122-3"></a><span class="co">#&gt;  Welch Two Sample t-test</span></span>
+<span id="cb122-4"><a href="04-bivarie.html#cb122-4"></a><span class="co">#&gt; </span></span>
+<span id="cb122-5"><a href="04-bivarie.html#cb122-5"></a><span class="co">#&gt; data:  d$age by d$sport</span></span>
+<span id="cb122-6"><a href="04-bivarie.html#cb122-6"></a><span class="co">#&gt; t = 15.503, df = 1600.4, p-value &lt; 2.2e-16</span></span>
+<span id="cb122-7"><a href="04-bivarie.html#cb122-7"></a><span class="co">#&gt; alternative hypothesis: true difference in means between group Non and group Oui is not equal to 0</span></span>
+<span id="cb122-8"><a href="04-bivarie.html#cb122-8"></a><span class="co">#&gt; 95 percent confidence interval:</span></span>
+<span id="cb122-9"><a href="04-bivarie.html#cb122-9"></a><span class="co">#&gt;   9.893117 12.759002</span></span>
+<span id="cb122-10"><a href="04-bivarie.html#cb122-10"></a><span class="co">#&gt; sample estimates:</span></span>
+<span id="cb122-11"><a href="04-bivarie.html#cb122-11"></a><span class="co">#&gt; mean in group Non mean in group Oui </span></span>
+<span id="cb122-12"><a href="04-bivarie.html#cb122-12"></a><span class="co">#&gt;          52.25137          40.92531</span></span></code></pre></div>
 <p>Le résultat du test est significatif, avec un <em>p</em> extrêmement petit, et on peut rejeter l’hypothèse nulle d’égalité des moyennes des deux groupes. Le test nous donne même un intervalle de confiance à 95% pour la valeur de la différence entre les deux moyennes.</p>
 <p>Nous sommes cependant allés un peu vite, et avons négligé le fait que le test <em>t</em> s’applique normalement à des distributions normales. On peut se faire un premier aperçu visuel de cette normalité en traçant les histogrammes des deux répartitions :</p>
-<div class="sourceCode" id="cb124"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb124-1"><a href="04-bivarie.html#cb124-1"></a><span class="kw">hist</span>(d_sport<span class="op">$</span>age)</span></code></pre></div>
+<div class="sourceCode" id="cb123"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb123-1"><a href="04-bivarie.html#cb123-1"></a><span class="kw">hist</span>(d_sport<span class="op">$</span>age)</span></code></pre></div>
 <p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-128-1.png" width="672" /></p>
-<div class="sourceCode" id="cb125"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb125-1"><a href="04-bivarie.html#cb125-1"></a><span class="kw">hist</span>(d_nonsport<span class="op">$</span>age)</span></code></pre></div>
+<div class="sourceCode" id="cb124"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb124-1"><a href="04-bivarie.html#cb124-1"></a><span class="kw">hist</span>(d_nonsport<span class="op">$</span>age)</span></code></pre></div>
 <p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-129-1.png" width="672" /></p>
 <p>Si l’âge dans le groupe des non sportifs se rapproche d’une distribution normale, celui des sportifs en semble assez éloigné, notamment du fait de la limite d’âge à 18 ans imposée par construction de l’enquête.</p>
 <p>On peut tester cette normalité à l’aide du test de Shapiro-Wilk et de la fonction <code>shapiro.test</code> :</p>
-<div class="sourceCode" id="cb126"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb126-1"><a href="04-bivarie.html#cb126-1"></a><span class="kw">shapiro.test</span>(d_sport<span class="op">$</span>age)</span>
+<div class="sourceCode" id="cb125"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb125-1"><a href="04-bivarie.html#cb125-1"></a><span class="kw">shapiro.test</span>(d_sport<span class="op">$</span>age)</span>
+<span id="cb125-2"><a href="04-bivarie.html#cb125-2"></a><span class="co">#&gt; </span></span>
+<span id="cb125-3"><a href="04-bivarie.html#cb125-3"></a><span class="co">#&gt;  Shapiro-Wilk normality test</span></span>
+<span id="cb125-4"><a href="04-bivarie.html#cb125-4"></a><span class="co">#&gt; </span></span>
+<span id="cb125-5"><a href="04-bivarie.html#cb125-5"></a><span class="co">#&gt; data:  d_sport$age</span></span>
+<span id="cb125-6"><a href="04-bivarie.html#cb125-6"></a><span class="co">#&gt; W = 0.96203, p-value = 9.734e-13</span></span></code></pre></div>
+<div class="sourceCode" id="cb126"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb126-1"><a href="04-bivarie.html#cb126-1"></a><span class="kw">shapiro.test</span>(d_nonsport<span class="op">$</span>age)</span>
 <span id="cb126-2"><a href="04-bivarie.html#cb126-2"></a><span class="co">#&gt; </span></span>
 <span id="cb126-3"><a href="04-bivarie.html#cb126-3"></a><span class="co">#&gt;  Shapiro-Wilk normality test</span></span>
 <span id="cb126-4"><a href="04-bivarie.html#cb126-4"></a><span class="co">#&gt; </span></span>
-<span id="cb126-5"><a href="04-bivarie.html#cb126-5"></a><span class="co">#&gt; data:  d_sport$age</span></span>
-<span id="cb126-6"><a href="04-bivarie.html#cb126-6"></a><span class="co">#&gt; W = 0.96203, p-value = 9.734e-13</span></span></code></pre></div>
-<div class="sourceCode" id="cb127"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb127-1"><a href="04-bivarie.html#cb127-1"></a><span class="kw">shapiro.test</span>(d_nonsport<span class="op">$</span>age)</span>
-<span id="cb127-2"><a href="04-bivarie.html#cb127-2"></a><span class="co">#&gt; </span></span>
-<span id="cb127-3"><a href="04-bivarie.html#cb127-3"></a><span class="co">#&gt;  Shapiro-Wilk normality test</span></span>
-<span id="cb127-4"><a href="04-bivarie.html#cb127-4"></a><span class="co">#&gt; </span></span>
-<span id="cb127-5"><a href="04-bivarie.html#cb127-5"></a><span class="co">#&gt; data:  d_nonsport$age</span></span>
-<span id="cb127-6"><a href="04-bivarie.html#cb127-6"></a><span class="co">#&gt; W = 0.98844, p-value = 1.654e-08</span></span></code></pre></div>
+<span id="cb126-5"><a href="04-bivarie.html#cb126-5"></a><span class="co">#&gt; data:  d_nonsport$age</span></span>
+<span id="cb126-6"><a href="04-bivarie.html#cb126-6"></a><span class="co">#&gt; W = 0.98844, p-value = 1.654e-08</span></span></code></pre></div>
 <p>Le test est significatif dans les deux cas et rejette l’hypothèse d’une normalité des deux distributions.</p>
 <p>Dans ce cas on peut faire appel à un test non-paramétrique, qui ne fait donc pas d’hypothèses sur les lois de distribution des variables testées, en l’occurrence le test des rangs de Wilcoxon, à l’aide de la fonction <code>wilcox.test</code> :</p>
-<div class="sourceCode" id="cb128"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb128-1"><a href="04-bivarie.html#cb128-1"></a><span class="kw">wilcox.test</span>(d<span class="op">$</span>age <span class="op">~</span><span class="st"> </span>d<span class="op">$</span>sport)</span>
-<span id="cb128-2"><a href="04-bivarie.html#cb128-2"></a><span class="co">#&gt; </span></span>
-<span id="cb128-3"><a href="04-bivarie.html#cb128-3"></a><span class="co">#&gt;  Wilcoxon rank sum test with continuity correction</span></span>
-<span id="cb128-4"><a href="04-bivarie.html#cb128-4"></a><span class="co">#&gt; </span></span>
-<span id="cb128-5"><a href="04-bivarie.html#cb128-5"></a><span class="co">#&gt; data:  d$age by d$sport</span></span>
-<span id="cb128-6"><a href="04-bivarie.html#cb128-6"></a><span class="co">#&gt; W = 640577, p-value &lt; 2.2e-16</span></span>
-<span id="cb128-7"><a href="04-bivarie.html#cb128-7"></a><span class="co">#&gt; alternative hypothesis: true location shift is not equal to 0</span></span></code></pre></div>
+<div class="sourceCode" id="cb127"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb127-1"><a href="04-bivarie.html#cb127-1"></a><span class="kw">wilcox.test</span>(d<span class="op">$</span>age <span class="op">~</span><span class="st"> </span>d<span class="op">$</span>sport)</span>
+<span id="cb127-2"><a href="04-bivarie.html#cb127-2"></a><span class="co">#&gt; </span></span>
+<span id="cb127-3"><a href="04-bivarie.html#cb127-3"></a><span class="co">#&gt;  Wilcoxon rank sum test with continuity correction</span></span>
+<span id="cb127-4"><a href="04-bivarie.html#cb127-4"></a><span class="co">#&gt; </span></span>
+<span id="cb127-5"><a href="04-bivarie.html#cb127-5"></a><span class="co">#&gt; data:  d$age by d$sport</span></span>
+<span id="cb127-6"><a href="04-bivarie.html#cb127-6"></a><span class="co">#&gt; W = 640577, p-value &lt; 2.2e-16</span></span>
+<span id="cb127-7"><a href="04-bivarie.html#cb127-7"></a><span class="co">#&gt; alternative hypothesis: true location shift is not equal to 0</span></span></code></pre></div>
 <p>La valeur <em>p</em> étant à nouveau extrêmement petite, on peut rejeter l’hypothèse d’indépendance et considérer que les distributions des âges dans les deux sous-populations sont différentes.</p>
 </div>
 </div>
 <div id="croisement-de-deux-variables-quantitatives" class="section level2 hasAnchor">
 <h2><span class="header-section-number">4.3</span> Croisement de deux variables quantitatives<a href="04-bivarie.html#croisement-de-deux-variables-quantitatives" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>Le jeu de données <code>hdv2003</code> comportant assez peu de variables quantitatives, on va s’intéresser maintenant à un autre jeu de données comportant des informations du recensement de la population de 2018. On le charge avec :</p>
-<div class="sourceCode" id="cb129"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb129-1"><a href="04-bivarie.html#cb129-1"></a><span class="kw">data</span>(rp2018)</span></code></pre></div>
+<div class="sourceCode" id="cb128"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb128-1"><a href="04-bivarie.html#cb128-1"></a><span class="kw">data</span>(rp2018)</span></code></pre></div>
 <p>Un nouveau tableau de données <code>rp2018</code> devrait apparaître dans votre environnement. Celui-ci comprend les 5417 communes françaises de plus de 2000 habitants, et une soixantaine de variables telles que le département, la population, le taux de chômage, etc. Pour une description plus complète et une liste des variables, voir section <a href="22-ressources.html#rp2018">A.3.2.3</a>.</p>
 <div id="représentation-graphique-3" class="section level3 hasAnchor">
 <h3><span class="header-section-number">4.3.1</span> Représentation graphique<a href="04-bivarie.html#représentation-graphique-3" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>Quand on croise deux variables quantitatives, l’idéal est de faire une représentation graphique sous forme de nuage de points à l’aide de la fonction <code>plot</code>. On va représenter le croisement entre le pourcentage de cadres et le pourcentage de propriétaires dans la commune :</p>
-<div class="sourceCode" id="cb130"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb130-1"><a href="04-bivarie.html#cb130-1"></a><span class="kw">plot</span>(rp2018<span class="op">$</span>cadres, rp2018<span class="op">$</span>proprio)</span></code></pre></div>
+<div class="sourceCode" id="cb129"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb129-1"><a href="04-bivarie.html#cb129-1"></a><span class="kw">plot</span>(rp2018<span class="op">$</span>cadres, rp2018<span class="op">$</span>proprio)</span></code></pre></div>
 <p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-134-1.png" width="672" /></p>
 <p>Une représentation graphique est l’idéal pour visualiser l’existence d’un lien entre les deux variables. Voici quelques exemples d’interprétation :</p>
 <p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-135-1.png" width="576" /></p>
 <p>Dans ce premier graphique généré sur nos données, il semble difficile de mettre en évidence une relation de dépendance. Si par contre on croise le pourcentage de cadres et celui de diplômés de niveau Bac+5 ou plus, on obtient une belle relation de dépendance linéaire.</p>
-<div class="sourceCode" id="cb131"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb131-1"><a href="04-bivarie.html#cb131-1"></a><span class="kw">plot</span>(rp2018<span class="op">$</span>cadres, rp2018<span class="op">$</span>dipl_sup)</span></code></pre></div>
+<div class="sourceCode" id="cb130"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb130-1"><a href="04-bivarie.html#cb130-1"></a><span class="kw">plot</span>(rp2018<span class="op">$</span>cadres, rp2018<span class="op">$</span>dipl_sup)</span></code></pre></div>
 <p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-136-1.png" width="672" /></p>
 </div>
 <div id="calcul-dindicateurs" class="section level3 hasAnchor">
@@ -840,12 +840,12 @@ L’interprétation d’un boxplot est la suivante : Les bords inférieurs et s
 <p>La corrélation est une mesure du lien d’association <em>linéaire</em> entre deux variables quantitatives. Sa valeur varie entre -1 et 1. Si la corrélation vaut -1, il s’agit d’une association linéaire négative parfaite. Si elle vaut 1, il s’agit d’une association linéaire positive parfaite. Si elle vaut 0, il n’y a aucune association linéaire entre les variables.</p>
 <p>On la calcule dans R à l’aide de la fonction <code>cor</code>.</p>
 <p>Ainsi la corrélation entre le pourcentage de cadres et celui de diplômés du supérieur vaut :</p>
-<div class="sourceCode" id="cb132"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb132-1"><a href="04-bivarie.html#cb132-1"></a><span class="kw">cor</span>(rp2018<span class="op">$</span>cadres, rp2018<span class="op">$</span>dipl_sup)</span>
-<span id="cb132-2"><a href="04-bivarie.html#cb132-2"></a><span class="co">#&gt; [1] 0.9291504</span></span></code></pre></div>
+<div class="sourceCode" id="cb131"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb131-1"><a href="04-bivarie.html#cb131-1"></a><span class="kw">cor</span>(rp2018<span class="op">$</span>cadres, rp2018<span class="op">$</span>dipl_sup)</span>
+<span id="cb131-2"><a href="04-bivarie.html#cb131-2"></a><span class="co">#&gt; [1] 0.9291504</span></span></code></pre></div>
 <p>Ce qui est extrêmement fort. Il y a donc un lien linéaire et positif entre les deux variables (quand la valeur de l’une augmente, la valeur de l’autre augmente également).</p>
 <p>À l’inverse, la corrélation entre le pourcentage de cadres et le pourcentage de propriétaires vaut :</p>
-<div class="sourceCode" id="cb133"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb133-1"><a href="04-bivarie.html#cb133-1"></a><span class="kw">cor</span>(rp2018<span class="op">$</span>cadres, rp2018<span class="op">$</span>proprio)</span>
-<span id="cb133-2"><a href="04-bivarie.html#cb133-2"></a><span class="co">#&gt; [1] 0.06425958</span></span></code></pre></div>
+<div class="sourceCode" id="cb132"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb132-1"><a href="04-bivarie.html#cb132-1"></a><span class="kw">cor</span>(rp2018<span class="op">$</span>cadres, rp2018<span class="op">$</span>proprio)</span>
+<span id="cb132-2"><a href="04-bivarie.html#cb132-2"></a><span class="co">#&gt; [1] 0.06425958</span></span></code></pre></div>
 <p>Ce qui indique, pour nos données, une absence de liaison linéaire entre les deux variables.</p>
 </div>
 <div id="corrélation-des-rangs-spearman" class="section level4 hasAnchor">
@@ -856,22 +856,22 @@ L’interprétation d’un boxplot est la suivante : Les bords inférieurs et s
 <p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-139-1.png" width="576" /></p>
 <p>La corrélation des rangs a aussi pour avantage d’être moins sensibles aux valeurs extrêmes ou aux points isolés. On dit qu’elle est plus “robuste”.</p>
 <p>Pour calculer une corrélation de Spearman, on utilise la fonction <code>cor</code> mais avec l’argument <code>method = "spearman"</code>.</p>
-<div class="sourceCode" id="cb134"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb134-1"><a href="04-bivarie.html#cb134-1"></a><span class="kw">cor</span>(rp2018<span class="op">$</span>cadres, rp2018<span class="op">$</span>dipl_sup, <span class="dt">method =</span> <span class="st">&quot;spearman&quot;</span>)</span>
-<span id="cb134-2"><a href="04-bivarie.html#cb134-2"></a><span class="co">#&gt; [1] 0.8986656</span></span></code></pre></div>
+<div class="sourceCode" id="cb133"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb133-1"><a href="04-bivarie.html#cb133-1"></a><span class="kw">cor</span>(rp2018<span class="op">$</span>cadres, rp2018<span class="op">$</span>dipl_sup, <span class="dt">method =</span> <span class="st">&quot;spearman&quot;</span>)</span>
+<span id="cb133-2"><a href="04-bivarie.html#cb133-2"></a><span class="co">#&gt; [1] 0.8986656</span></span></code></pre></div>
 </div>
 </div>
 <div id="régression-linéaire" class="section level3 hasAnchor">
 <h3><span class="header-section-number">4.3.3</span> Régression linéaire<a href="04-bivarie.html#régression-linéaire" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>Quand on est en présence d’une association linéaire entre deux variables, on peut vouloir faire la régression linéaire d’une des variables sur l’autres.</p>
 <p>Une régression linéaire simple se fait à l’aide de la fonction <code>lm</code> :</p>
-<div class="sourceCode" id="cb135"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb135-1"><a href="04-bivarie.html#cb135-1"></a><span class="kw">lm</span>(rp2018<span class="op">$</span>cadres <span class="op">~</span><span class="st"> </span>rp2018<span class="op">$</span>dipl_sup)</span>
-<span id="cb135-2"><a href="04-bivarie.html#cb135-2"></a><span class="co">#&gt; </span></span>
-<span id="cb135-3"><a href="04-bivarie.html#cb135-3"></a><span class="co">#&gt; Call:</span></span>
-<span id="cb135-4"><a href="04-bivarie.html#cb135-4"></a><span class="co">#&gt; lm(formula = rp2018$cadres ~ rp2018$dipl_sup)</span></span>
-<span id="cb135-5"><a href="04-bivarie.html#cb135-5"></a><span class="co">#&gt; </span></span>
-<span id="cb135-6"><a href="04-bivarie.html#cb135-6"></a><span class="co">#&gt; Coefficients:</span></span>
-<span id="cb135-7"><a href="04-bivarie.html#cb135-7"></a><span class="co">#&gt;     (Intercept)  rp2018$dipl_sup  </span></span>
-<span id="cb135-8"><a href="04-bivarie.html#cb135-8"></a><span class="co">#&gt;           3.578            1.256</span></span></code></pre></div>
+<div class="sourceCode" id="cb134"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb134-1"><a href="04-bivarie.html#cb134-1"></a><span class="kw">lm</span>(rp2018<span class="op">$</span>cadres <span class="op">~</span><span class="st"> </span>rp2018<span class="op">$</span>dipl_sup)</span>
+<span id="cb134-2"><a href="04-bivarie.html#cb134-2"></a><span class="co">#&gt; </span></span>
+<span id="cb134-3"><a href="04-bivarie.html#cb134-3"></a><span class="co">#&gt; Call:</span></span>
+<span id="cb134-4"><a href="04-bivarie.html#cb134-4"></a><span class="co">#&gt; lm(formula = rp2018$cadres ~ rp2018$dipl_sup)</span></span>
+<span id="cb134-5"><a href="04-bivarie.html#cb134-5"></a><span class="co">#&gt; </span></span>
+<span id="cb134-6"><a href="04-bivarie.html#cb134-6"></a><span class="co">#&gt; Coefficients:</span></span>
+<span id="cb134-7"><a href="04-bivarie.html#cb134-7"></a><span class="co">#&gt;     (Intercept)  rp2018$dipl_sup  </span></span>
+<span id="cb134-8"><a href="04-bivarie.html#cb134-8"></a><span class="co">#&gt;           3.578            1.256</span></span></code></pre></div>
 <div class="rmdnote">
 <p>
 On retrouve avec <code>lm</code> la syntaxe “formule” déjà rencontrée avec <code>boxplot</code>. Elle permet ici de spécifier des modèles de régression : la variable dépendante se place à gauche du <code>~</code>, et la variable indépendante à droite. Si on souhaite faire une régression multiple avec plusieurs variables indépendantes, on aura une formule du type <code>dep ~ indep1 + indep2</code>. Il est également possible de spécifier des termes plus complexes, des interactions, etc.
@@ -883,31 +883,31 @@ On retrouve avec <code>lm</code> la syntaxe “formule” déjà rencontrée ave
 <li>le coefficient associé à <code>dipl_sup</code> vaut 1.256</li>
 </ul>
 <p>Pour des résultats plus détaillés, on peut stocker le résultat de la régression dans un objet et lui appliquer la fonction <code>summary</code>.</p>
-<div class="sourceCode" id="cb136"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb136-1"><a href="04-bivarie.html#cb136-1"></a>reg &lt;-<span class="st"> </span><span class="kw">lm</span>(rp2018<span class="op">$</span>cadres <span class="op">~</span><span class="st"> </span>rp2018<span class="op">$</span>dipl_sup)</span>
-<span id="cb136-2"><a href="04-bivarie.html#cb136-2"></a><span class="kw">summary</span>(reg)</span>
-<span id="cb136-3"><a href="04-bivarie.html#cb136-3"></a><span class="co">#&gt; </span></span>
-<span id="cb136-4"><a href="04-bivarie.html#cb136-4"></a><span class="co">#&gt; Call:</span></span>
-<span id="cb136-5"><a href="04-bivarie.html#cb136-5"></a><span class="co">#&gt; lm(formula = rp2018$cadres ~ rp2018$dipl_sup)</span></span>
-<span id="cb136-6"><a href="04-bivarie.html#cb136-6"></a><span class="co">#&gt; </span></span>
-<span id="cb136-7"><a href="04-bivarie.html#cb136-7"></a><span class="co">#&gt; Residuals:</span></span>
-<span id="cb136-8"><a href="04-bivarie.html#cb136-8"></a><span class="co">#&gt;      Min       1Q   Median       3Q      Max </span></span>
-<span id="cb136-9"><a href="04-bivarie.html#cb136-9"></a><span class="co">#&gt; -15.8329  -1.9320  -0.2953   1.7184  21.6096 </span></span>
-<span id="cb136-10"><a href="04-bivarie.html#cb136-10"></a><span class="co">#&gt; </span></span>
-<span id="cb136-11"><a href="04-bivarie.html#cb136-11"></a><span class="co">#&gt; Coefficients:</span></span>
-<span id="cb136-12"><a href="04-bivarie.html#cb136-12"></a><span class="co">#&gt;                 Estimate Std. Error t value Pr(&gt;|t|)    </span></span>
-<span id="cb136-13"><a href="04-bivarie.html#cb136-13"></a><span class="co">#&gt; (Intercept)      3.57796    0.06925   51.67   &lt;2e-16 ***</span></span>
-<span id="cb136-14"><a href="04-bivarie.html#cb136-14"></a><span class="co">#&gt; rp2018$dipl_sup  1.25580    0.00679  184.94   &lt;2e-16 ***</span></span>
-<span id="cb136-15"><a href="04-bivarie.html#cb136-15"></a><span class="co">#&gt; ---</span></span>
-<span id="cb136-16"><a href="04-bivarie.html#cb136-16"></a><span class="co">#&gt; Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</span></span>
-<span id="cb136-17"><a href="04-bivarie.html#cb136-17"></a><span class="co">#&gt; </span></span>
-<span id="cb136-18"><a href="04-bivarie.html#cb136-18"></a><span class="co">#&gt; Residual standard error: 3.116 on 5415 degrees of freedom</span></span>
-<span id="cb136-19"><a href="04-bivarie.html#cb136-19"></a><span class="co">#&gt; Multiple R-squared:  0.8633, Adjusted R-squared:  0.8633 </span></span>
-<span id="cb136-20"><a href="04-bivarie.html#cb136-20"></a><span class="co">#&gt; F-statistic: 3.42e+04 on 1 and 5415 DF,  p-value: &lt; 2.2e-16</span></span></code></pre></div>
+<div class="sourceCode" id="cb135"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb135-1"><a href="04-bivarie.html#cb135-1"></a>reg &lt;-<span class="st"> </span><span class="kw">lm</span>(rp2018<span class="op">$</span>cadres <span class="op">~</span><span class="st"> </span>rp2018<span class="op">$</span>dipl_sup)</span>
+<span id="cb135-2"><a href="04-bivarie.html#cb135-2"></a><span class="kw">summary</span>(reg)</span>
+<span id="cb135-3"><a href="04-bivarie.html#cb135-3"></a><span class="co">#&gt; </span></span>
+<span id="cb135-4"><a href="04-bivarie.html#cb135-4"></a><span class="co">#&gt; Call:</span></span>
+<span id="cb135-5"><a href="04-bivarie.html#cb135-5"></a><span class="co">#&gt; lm(formula = rp2018$cadres ~ rp2018$dipl_sup)</span></span>
+<span id="cb135-6"><a href="04-bivarie.html#cb135-6"></a><span class="co">#&gt; </span></span>
+<span id="cb135-7"><a href="04-bivarie.html#cb135-7"></a><span class="co">#&gt; Residuals:</span></span>
+<span id="cb135-8"><a href="04-bivarie.html#cb135-8"></a><span class="co">#&gt;      Min       1Q   Median       3Q      Max </span></span>
+<span id="cb135-9"><a href="04-bivarie.html#cb135-9"></a><span class="co">#&gt; -15.8329  -1.9320  -0.2953   1.7184  21.6096 </span></span>
+<span id="cb135-10"><a href="04-bivarie.html#cb135-10"></a><span class="co">#&gt; </span></span>
+<span id="cb135-11"><a href="04-bivarie.html#cb135-11"></a><span class="co">#&gt; Coefficients:</span></span>
+<span id="cb135-12"><a href="04-bivarie.html#cb135-12"></a><span class="co">#&gt;                 Estimate Std. Error t value Pr(&gt;|t|)    </span></span>
+<span id="cb135-13"><a href="04-bivarie.html#cb135-13"></a><span class="co">#&gt; (Intercept)      3.57796    0.06925   51.67   &lt;2e-16 ***</span></span>
+<span id="cb135-14"><a href="04-bivarie.html#cb135-14"></a><span class="co">#&gt; rp2018$dipl_sup  1.25580    0.00679  184.94   &lt;2e-16 ***</span></span>
+<span id="cb135-15"><a href="04-bivarie.html#cb135-15"></a><span class="co">#&gt; ---</span></span>
+<span id="cb135-16"><a href="04-bivarie.html#cb135-16"></a><span class="co">#&gt; Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</span></span>
+<span id="cb135-17"><a href="04-bivarie.html#cb135-17"></a><span class="co">#&gt; </span></span>
+<span id="cb135-18"><a href="04-bivarie.html#cb135-18"></a><span class="co">#&gt; Residual standard error: 3.116 on 5415 degrees of freedom</span></span>
+<span id="cb135-19"><a href="04-bivarie.html#cb135-19"></a><span class="co">#&gt; Multiple R-squared:  0.8633, Adjusted R-squared:  0.8633 </span></span>
+<span id="cb135-20"><a href="04-bivarie.html#cb135-20"></a><span class="co">#&gt; F-statistic: 3.42e+04 on 1 and 5415 DF,  p-value: &lt; 2.2e-16</span></span></code></pre></div>
 <p>Ces résultats montrent notamment que les coefficients sont significativement
 différents de 0. La part de cadres augmente donc bien avec celle de diplômés du supérieur.</p>
 <p>On peut enfin représenter la droite de régression sur notre nuage de points à l’aide de la fonction <code>abline</code>.</p>
-<div class="sourceCode" id="cb137"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb137-1"><a href="04-bivarie.html#cb137-1"></a><span class="kw">plot</span>(rp2018<span class="op">$</span>dipl_sup, rp2018<span class="op">$</span>cadres)</span>
-<span id="cb137-2"><a href="04-bivarie.html#cb137-2"></a><span class="kw">abline</span>(reg, <span class="dt">col =</span> <span class="st">&quot;red&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb136"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb136-1"><a href="04-bivarie.html#cb136-1"></a><span class="kw">plot</span>(rp2018<span class="op">$</span>dipl_sup, rp2018<span class="op">$</span>cadres)</span>
+<span id="cb136-2"><a href="04-bivarie.html#cb136-2"></a><span class="kw">abline</span>(reg, <span class="dt">col =</span> <span class="st">&quot;red&quot;</span>)</span></code></pre></div>
 <p><img src="introduction_au_tidyverse_files/figure-html/unnamed-chunk-144-1.png" width="672" /></p>
 </div>
 </div>
@@ -917,56 +917,56 @@ différents de 0. La part de cadres augmente donc bien avec celle de diplômés 
 <p>Dans le jeu de données <code>hdv2003</code>, faire le tableau croisé entre la catégorie socio-professionnelle (variable <code>qualif</code>) et le fait de croire ou non en l’existence des classes sociales (variable <code>clso</code>). Identifier la variable indépendante et la variable dépendante, et calculer les pourcentages ligne ou colonne. Interpréter le résultat.</p>
 
 <div class="solution-exo">
-<div class="sourceCode" id="cb138"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb138-1"><a href="04-bivarie.html#cb138-1"></a><span class="kw">library</span>(questionr)</span>
-<span id="cb138-2"><a href="04-bivarie.html#cb138-2"></a><span class="kw">data</span>(hdv2003)</span>
-<span id="cb138-3"><a href="04-bivarie.html#cb138-3"></a>tab &lt;-<span class="st"> </span><span class="kw">table</span>(hdv2003<span class="op">$</span>qualif, hdv2003<span class="op">$</span>clso)</span>
-<span id="cb138-4"><a href="04-bivarie.html#cb138-4"></a></span>
-<span id="cb138-5"><a href="04-bivarie.html#cb138-5"></a><span class="co">## Ici la variable indépendante est `qualif`, on calcule donc</span></span>
-<span id="cb138-6"><a href="04-bivarie.html#cb138-6"></a><span class="co">## les pourcentages lignes</span></span>
-<span id="cb138-7"><a href="04-bivarie.html#cb138-7"></a><span class="kw">lprop</span>(tab)</span></code></pre></div>
+<div class="sourceCode" id="cb137"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb137-1"><a href="04-bivarie.html#cb137-1"></a><span class="kw">library</span>(questionr)</span>
+<span id="cb137-2"><a href="04-bivarie.html#cb137-2"></a><span class="kw">data</span>(hdv2003)</span>
+<span id="cb137-3"><a href="04-bivarie.html#cb137-3"></a>tab &lt;-<span class="st"> </span><span class="kw">table</span>(hdv2003<span class="op">$</span>qualif, hdv2003<span class="op">$</span>clso)</span>
+<span id="cb137-4"><a href="04-bivarie.html#cb137-4"></a></span>
+<span id="cb137-5"><a href="04-bivarie.html#cb137-5"></a><span class="co">## Ici la variable indépendante est `qualif`, on calcule donc</span></span>
+<span id="cb137-6"><a href="04-bivarie.html#cb137-6"></a><span class="co">## les pourcentages lignes</span></span>
+<span id="cb137-7"><a href="04-bivarie.html#cb137-7"></a><span class="kw">lprop</span>(tab)</span></code></pre></div>
 </div>
 
 <p>Faire un test du χ². Peut-on rejeter l’hypothèse d’indépendance ?</p>
 
 <div class="solution-exo">
-<div class="sourceCode" id="cb139"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb139-1"><a href="04-bivarie.html#cb139-1"></a><span class="kw">chisq.test</span>(tab)</span>
-<span id="cb139-2"><a href="04-bivarie.html#cb139-2"></a></span>
-<span id="cb139-3"><a href="04-bivarie.html#cb139-3"></a><span class="co">## On peut rejeter l&#39;hypothèse d&#39;indépendance au seuil de 0.05,</span></span>
-<span id="cb139-4"><a href="04-bivarie.html#cb139-4"></a><span class="co">## et même au seuil de 0.001</span></span></code></pre></div>
+<div class="sourceCode" id="cb138"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb138-1"><a href="04-bivarie.html#cb138-1"></a><span class="kw">chisq.test</span>(tab)</span>
+<span id="cb138-2"><a href="04-bivarie.html#cb138-2"></a></span>
+<span id="cb138-3"><a href="04-bivarie.html#cb138-3"></a><span class="co">## On peut rejeter l&#39;hypothèse d&#39;indépendance au seuil de 0.05,</span></span>
+<span id="cb138-4"><a href="04-bivarie.html#cb138-4"></a><span class="co">## et même au seuil de 0.001</span></span></code></pre></div>
 </div>
 
 <p>Représenter ce tableau croisé sous la forme d’un <code>mosaicplot</code> en colorant les cases selon les résidus du test du χ².</p>
 
 <div class="solution-exo">
-<div class="sourceCode" id="cb140"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb140-1"><a href="04-bivarie.html#cb140-1"></a><span class="kw">mosaicplot</span>(tab, <span class="dt">shade =</span> <span class="ot">TRUE</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb139"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb139-1"><a href="04-bivarie.html#cb139-1"></a><span class="kw">mosaicplot</span>(tab, <span class="dt">shade =</span> <span class="ot">TRUE</span>)</span></code></pre></div>
 </div>
 
 <p><strong>Exercice 2</strong></p>
 <p>Toujours sur le jeu de données <code>hdv2003</code>, faire le boxplot qui croise le nombre d’heures passées devant la télévision (variable <code>heures.tv</code>) avec le statut d’occupation (variable <code>occup</code>).</p>
 
 <div class="solution-exo">
-<div class="sourceCode" id="cb141"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb141-1"><a href="04-bivarie.html#cb141-1"></a><span class="kw">boxplot</span>(hdv2003<span class="op">$</span>heures.tv <span class="op">~</span><span class="st"> </span>hdv2003<span class="op">$</span>occup)</span></code></pre></div>
+<div class="sourceCode" id="cb140"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb140-1"><a href="04-bivarie.html#cb140-1"></a><span class="kw">boxplot</span>(hdv2003<span class="op">$</span>heures.tv <span class="op">~</span><span class="st"> </span>hdv2003<span class="op">$</span>occup)</span></code></pre></div>
 </div>
 
 <p>Calculer la durée moyenne devant la télévision en fonction du statut d’occupation à l’aide de <code>tapply</code>.</p>
 
 <div class="solution-exo">
-<div class="sourceCode" id="cb142"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb142-1"><a href="04-bivarie.html#cb142-1"></a><span class="kw">tapply</span>(hdv2003<span class="op">$</span>heures.tv, hdv2003<span class="op">$</span>occup, mean, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb141"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb141-1"><a href="04-bivarie.html#cb141-1"></a><span class="kw">tapply</span>(hdv2003<span class="op">$</span>heures.tv, hdv2003<span class="op">$</span>occup, mean, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>)</span></code></pre></div>
 </div>
 
 <p><strong>Exercice 3</strong></p>
 <p>Sur le jeu de données <code>rp2018</code>, représenter le nuage de points croisant le pourcentage de personnes sans diplôme (variable <code>dipl_aucun</code>) et le pourcentage de propriétaires (variable <code>proprio</code>).</p>
 
 <div class="solution-exo">
-<div class="sourceCode" id="cb143"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb143-1"><a href="04-bivarie.html#cb143-1"></a><span class="kw">library</span>(questionr)</span>
-<span id="cb143-2"><a href="04-bivarie.html#cb143-2"></a><span class="kw">data</span>(rp2018)</span>
-<span id="cb143-3"><a href="04-bivarie.html#cb143-3"></a><span class="kw">plot</span>(rp2018<span class="op">$</span>dipl_aucun, rp2018<span class="op">$</span>proprio)</span></code></pre></div>
+<div class="sourceCode" id="cb142"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb142-1"><a href="04-bivarie.html#cb142-1"></a><span class="kw">library</span>(questionr)</span>
+<span id="cb142-2"><a href="04-bivarie.html#cb142-2"></a><span class="kw">data</span>(rp2018)</span>
+<span id="cb142-3"><a href="04-bivarie.html#cb142-3"></a><span class="kw">plot</span>(rp2018<span class="op">$</span>dipl_aucun, rp2018<span class="op">$</span>proprio)</span></code></pre></div>
 </div>
 
 <p>Calculer le coefficient de corrélation linéaire correspondant.</p>
 
 <div class="solution-exo">
-<div class="sourceCode" id="cb144"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb144-1"><a href="04-bivarie.html#cb144-1"></a><span class="kw">cor</span>(rp2018<span class="op">$</span>dipl_aucun, rp2018<span class="op">$</span>proprio)</span></code></pre></div>
+<div class="sourceCode" id="cb143"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb143-1"><a href="04-bivarie.html#cb143-1"></a><span class="kw">cor</span>(rp2018<span class="op">$</span>dipl_aucun, rp2018<span class="op">$</span>proprio)</span></code></pre></div>
 </div>
 
 
