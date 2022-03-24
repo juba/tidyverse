@@ -1,5 +1,9 @@
 # Introduction à R et au tidyverse
 
+[![DOI](https://zenodo.org/badge/106675637.svg)](https://zenodo.org/badge/latestdoi/106675637)
+[![bookdown](https://github.com/juba/tidyverse/actions/workflows/bookdown.yaml/badge.svg)](https://github.com/juba/tidyverse/actions/workflows/bookdown.yaml)
+
+
 Code source du document *Introduction à R et au tidyverse*, accessible en ligne à l'adresse suivante :
 
 - https://juba.github.io/tidyverse
