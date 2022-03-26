@@ -22,7 +22,7 @@ options(crayon.enabled = FALSE)
 
 ```{r cache=FALSE, echo=FALSE, include=FALSE}
 # On supprime le cache
-targets::tar_destroy("all")
+targets::tar_destroy("local")
 ```
 
 
@@ -67,12 +67,12 @@ Le fichier `data/nat2020.csv` contient les données brutes [téléchargées depu
 
 Le fichier `R/fonctions_recode.R` contient deux fonctions de traitement et de remise en forme des données.
 
-```{r eval=FALSE, code=readLines('resources/targets_sample_project/R/fonctions_recode.R')}
+```{r eval=FALSE, code=readLines('R/fonctions_recode.R')}
 ```
 
 Le fichier `R/fonctions_calculs.R` contient une seule fonction qui calcule les variables d'évolution 2019-2020.
 
-```{r eval=FALSE, cache=FALSE, code=readLines('resources/targets_sample_project/R/fonctions_calculs.R')}
+```{r eval=FALSE, cache=FALSE, code=readLines('R/fonctions_calculs.R')}
 ```
 
 
@@ -179,7 +179,7 @@ On notera que les cibles doivent toutes avoir des noms différents. Si on exécu
 
 Au final, notre fichier `_targets.R` est donc le suivant :
 
-```{r eval=FALSE, code=readLines('resources/targets_sample_project/_targets.R'), cache=FALSE}
+```{r eval=FALSE, code=readLines('_targets.R'), cache=FALSE}
 ```
 
 ```{block type='rmdnote'}
@@ -244,7 +244,7 @@ file.remove("R/fonctions_calculs.R")
 file.rename("R/fonctions_calculs.R.orig", "R/fonctions_calculs.R")
 ```
 
-```{r eval=FALSE, cache=FALSE, code=readLines('resources/targets_sample_project/R/fonctions_calculs.R')}
+```{r eval=FALSE, cache=FALSE, code=readLines('R/fonctions_calculs.R')}
 ```
 
 On visualise à nouveau l'état de notre pipeline :
@@ -315,7 +315,7 @@ cat(htmltools::includeText("reports/evolution.Rmd"))
 
 Pour ajouter ce rapport à notre pipeline, on crée une nouvelle cible dans le `tar_plan()` de  `_targets.R`. Comme il s'agit d'un document RMarkdown, on utilise la fonction `tar_render()`.
 
-```{r cache=FALSE, eval=FALSE, code=readLines("resources/targets_sample_project/_targets.R")}
+```{r cache=FALSE, eval=FALSE, code=readLines("_targets.R")}
 ```
 
 Visualisons notre pipeline modifié :
