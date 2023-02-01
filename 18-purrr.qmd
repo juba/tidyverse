@@ -1,5 +1,7 @@
 # Itérer avec `purrr` {#purrr}
 
+{{< include _setup.qmd >}}
+
 `purrr` est une extension du *tidyverse* qui fournit des outils pour travailler avec les vecteurs et les fonctions, et notamment pour itérer sur les éléments de vecteurs ou de listes en leur appliquant une fonction.
 
 Dans cette section on aura besoin des extensions du *tidyverse* (dont `purrr` fait partie), que nous chargeons donc immédiatement, de même que les jeux de données `rp2018` et `hdv2003` de `questionr`.
@@ -351,18 +353,18 @@ starwars %>%
 
 `modify()` est une variante de `map()` qui a pour particularité de renvoyer un résultat du même type que la liste ou le vecteur donné en entrée.
 
-Ainsi, si on l'applique à un vecteur de chaînes de caractères, le résultat sera aussi un vecteur de chaînes de caractères même si la fonction appliquée retourne un résultat numérique.
+Ainsi, si on l'applique à un vecteur de chaînes de caractères, le résultat sera aussi un vecteur de chaînes de caractères.
 
 ```{r}
 v <- c("brouette", "moto", "igloo")
-v %>% modify(length)
+v %>% modify(~ paste("incroyable", .x))
 ```
 
 Si on l'applique à une liste, le résultat sera aussi une liste.
 
 ```{r}
 v <- list("brouette", "moto", "igloo")
-v %>% modify(length)
+v %>% modify(~ paste("incroyable ", .x))
 ```
 
 L'objectif de `modify()` est de permettre de "modifier" une liste ou un vecteur en lui appliquant une fonction tout en étant sûr qu'on ne va pas modifier son type.
