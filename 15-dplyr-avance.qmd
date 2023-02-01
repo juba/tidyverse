@@ -2,7 +2,7 @@
 
 {{< include _setup.qmd >}}
 
-L'extension `dplyr` a déjà été présentée dans la partie \@ref(dplyr). On va voir ici comment aller un peu plus loin dans l'utilisation du *package*, notamment en utilisant nos propres fonctions et en appliquant des transformations à des ensembles de colonnes.
+L'extension `dplyr` a déjà été présentée @sec-dplyr. On va voir ici comment aller un peu plus loin dans l'utilisation du *package*, notamment en utilisant nos propres fonctions et en appliquant des transformations à des ensembles de colonnes.
 
 On commence par charger les extensions du *tidyverse* ainsi que les jeux de données `hdv2003` et `rp2018` de l'extension `questionr`.
 
@@ -40,7 +40,7 @@ df <- tribble(
 df
 ```
 
-Dans ce tableau les PCS sont indiquées sous forme de codes : il serait plus lisible de les avoir sous forme d'intitulés de catégorie socio-professionnelle. On a vu section \@ref(recode) qu'on peut effectuer ce recodage avec la fonction `fct_recode()` de l'extension `forcats`.
+Dans ce tableau les PCS sont indiquées sous forme de codes : il serait plus lisible de les avoir sous forme d'intitulés de catégorie socio-professionnelle. On a vu @sec-recode qu'on peut effectuer ce recodage avec la fonction `fct_recode()` de l'extension `forcats`.
 
 ```{r results="hide"}
 df %>%
@@ -96,7 +96,7 @@ Le code est plus court, plus lisible, on évite les erreurs de copier/coller, et
 
 Autre exemple, cette fois sur le jeu de données `rp2018`. Imaginons qu'on souhaite calculer, pour chaque région, le pourcentage de communes dont le nom se termine par une série de caractères donnée : par exemple, le pourcentage de communes dont le nom se termine par "ac".
 
-Comme il ne s'agit pas forcément d'une question triviale, on va décomposer le problème et rappeler (comme vu section \@ref(str-detect)) que la fonction `str_detect()` de l'extension `stringr` permet de détecter quels éléments d'un vecteur de chaînes de caractères correspondent à une expression régulière. Ainsi, si on veut détecter si un nom de commune (variable `rp2018$commune`) se termine par `"ac"`, on utilisera :
+Comme il ne s'agit pas forcément d'une question triviale, on va décomposer le problème et rappeler (comme vu @sec-str-detect) que la fonction `str_detect()` de l'extension `stringr` permet de détecter quels éléments d'un vecteur de chaînes de caractères correspondent à une expression régulière. Ainsi, si on veut détecter si un nom de commune (variable `rp2018$commune`) se termine par `"ac"`, on utilisera :
 
 ```{r results="hide"}
 str_detect(rp2018$commune, "ac$")
@@ -163,7 +163,7 @@ En créant une fonction plutôt qu'en mettant notre code directement dans le `su
 
 ### Exemple avec `rename_with`
 
-On a vu section \@ref(select-rename) que `dplyr` propose la fonction `rename()` pour renommer des colonnes d'un tableau de données. On peut l'utiliser par exemple pour remplacer un espace par un `_` dans le nom d'une variable de `df`.
+On a vu @sec-select-rename que `dplyr` propose la fonction `rename()` pour renommer des colonnes d'un tableau de données. On peut l'utiliser par exemple pour remplacer un espace par un `_` dans le nom d'une variable de `df`.
 
 ```{r results="hide"}
 df %>% rename("age_enf1" = "age enf1")
@@ -200,7 +200,7 @@ names(df) <- remplace_espaces(names(df))
 L'avantage de `rename_with()` c'est qu'elle peut s'intégrer dans un pipeline de dplyr, et, comme nous allons le voir un peu plus loin, permet si nécessaire de n'appliquer cette transformation qu'à certaines colonnes seulement.
 
 
-## `across()` : appliquer des fonctions à plusieurs colonnes {#across}
+## `across()` : appliquer des fonctions à plusieurs colonnes {#sec-across}
 
 ### Appliquer une fonction à plusieurs colonnes
 
@@ -494,7 +494,7 @@ df %>%
 ```
 
 
-## Fonctions anonymes et syntaxes abrégées {#syntaxes-abregees}
+## Fonctions anonymes et syntaxes abrégées {#sec-syntaxes-abregees}
 
 Dans les sections précédentes, nous avons rencontré plusieurs fonctions, comme `rename_with()` ou `across()`, qui prennent  une fonction en argument.
 
@@ -508,7 +508,7 @@ remplace_espaces <- function(v) {
 df %>% rename_with(remplace_espaces)
 ```
 
-Le fait de créer une fonction à part pour une opération d'une seule ligne ne se justifie pas forcément, surtout si on n'utilise pas cette fonction ailleurs dans notre code. Dans, ce cas, on peut définir notre fonction directement dans l'appel à `rename_with()` en utilisant une *fonction anonyme*, déjà introduites section \@ref(fonctions-anonymes).
+Le fait de créer une fonction à part pour une opération d'une seule ligne ne se justifie pas forcément, surtout si on n'utilise pas cette fonction ailleurs dans notre code. Dans, ce cas, on peut définir notre fonction directement dans l'appel à `rename_with()` en utilisant une *fonction anonyme*, déjà introduites @sec-fonctions-anonymes.
 
 ```{r results="hide"}
 df %>%

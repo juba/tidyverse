@@ -1,8 +1,8 @@
-# Recoder des variables {#vectorfactor}
+# Recoder des variables {#sec-vectorfactor}
 
 {{< include _setup.qmd >}}
 
-## Rappel sur les variables et les vecteurs {#vecteurs}
+## Rappel sur les variables et les vecteurs {#sec-vecteurs}
 
 Dans R, une variable, en général une colonne d'un tableau de données, est un objet de type *vecteur*. Un vecteur est un ensemble d'éléments, tous du même type.
 
@@ -89,7 +89,7 @@ vec
 
 
 
-## Tests et comparaison {#tests}
+## Tests et comparaison {#sec-tests}
 
 Un test est une opération logique de comparaison qui renvoie vrai (`TRUE`) ou faux (`FALSE`) pour chacun des éléments d'un vecteur.
 
@@ -153,7 +153,7 @@ Enfin, on peut inverser un test avec l'opérateur *non* (`!`) :
 !(vec %in% c("Jaune", "Vert"))
 ```
 
-Les tests sont notamment utilisés par le verbe `filter` de `dplyr` (voir section \@ref(filter)) qui permet de sélectionner certaines lignes d'un tableau de données. On peut ainsi sélectionner les individus ayant entre 20 et 40 ans en filtrant sur la variable `age` :
+Les tests sont notamment utilisés par le verbe `filter` de `dplyr` (voir @sec-filter) qui permet de sélectionner certaines lignes d'un tableau de données. On peut ainsi sélectionner les individus ayant entre 20 et 40 ans en filtrant sur la variable `age` :
 
 ```{r eval = FALSE}
 filter(hdv2003, age >= 20 & age <= 40)
@@ -195,16 +195,16 @@ vec
 
 Cette syntaxe est tout à fait valable et couramment utilisée. On va cependant voir dans la section suivante différentes fonctions qui facilitent ces opérations de recodage.
 
-Pour plus d'informations sur les vecteurs et les structures de données de R, vous pouvez vous reporter au chapitre \@ref(structures-donnees).
+Pour plus d'informations sur les vecteurs et les structures de données de R, voir @sec-structures-donnees.
 
 
 
 
-## Recoder une variable qualitative
+## Recoder une variable qualitative {#sec-recoder-une-variable-qualitative}
 
 Pour rappel, on appelle variable qualitative une variable pouvant prendre un nombre limité de modalités (de valeurs possibles). 
 
-### Facteurs et `forcats` {#facteurs}
+### Facteurs et `forcats` {#sec-facteurs}
 
 Dans R, les variables qualitatives peuvent être de deux types : ou bien des vecteurs de type `character` (des chaînes de caractères), ou bien des `factor` (facteurs). Si vous utilisez les fonctions des extensions du *tidyverse* comme `readr`, `readxl` ou `haven` pour importer vos données, vos variables qualitatives seront importées sous forme de `character`. Mais dans d'autres cas elles se retrouveront parfois sous forme de `factor`. C'est le cas de notre jeu de données d'exemple `hdv2003`.
 
@@ -231,7 +231,7 @@ library(tidyverse)
 ```
 
 
-### Modifier les modalités d'une variable qualitative {#recode}
+### Modifier les modalités d'une variable qualitative {#sec-recode}
 
 Une opération courante consiste à modifier les valeurs d'une variable qualitative, que ce soit pour avoir des intitulés plus courts ou plus clairs ou pour regrouper des modalités entre elles.
 
@@ -332,7 +332,7 @@ freq(hdv2003$qualif_rec)
 
 
 
-#### Interface graphique de recodage {#irec}
+#### Interface graphique de recodage {#sec-irec}
 
 L'extension `questionr` propose une interface graphique facilitant le recodage des modalités d'une variable qualitative. L'objectif est de permettre à la personne qui l'utilise de saisir les nouvelles valeurs dans un formulaire, et de générer ensuite le code R correspondant au recodage indiqué.
 
@@ -408,7 +408,7 @@ ggplot(hdv2003) +
 
 
 
-#### Interface graphique {#iorder}
+#### Interface graphique {#sec-iorder}
 
 `questionr` propose une interface graphique afin de faciliter les opérations de réordonnancement manuel. Pour la lancer, sélectionner le menu *Addins* puis *Levels ordering*, ou exécuter la fonction `iorder()` en lui passant comme paramètre le facteur à réordonner.
 
@@ -421,7 +421,7 @@ Le fonctionnement de l'interface est similaire à celui de [l'interface de recod
 
 Parfois, on veut créer une nouvelle variable en partant des valeurs d'une ou plusieurs autres variables. Dans ce cas on peut utiliser les fonctions `ifelse` pour les cas les plus simples, ou `case_when` pour les cas plus complexes. Cette dernière fonction est incluse dans l'extension `dplyr`, qu'il faut donc avoir chargé précédemment.
 
-### `ifelse` {#if-else}
+### `ifelse` {#sec-if-else}
 
 `ifelse` prend trois arguments : un test, une valeur à renvoyer si le test est vrai, et une valeur à renvoyer si le test est faux.
 

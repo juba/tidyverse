@@ -1,4 +1,4 @@
-# Itérer avec `purrr` {#purrr}
+# Itérer avec `purrr` {#sec-purrr}
 
 {{< include _setup.qmd >}}
 
@@ -45,7 +45,7 @@ length(mots)
 
 Ceci ne fonctionne pas, car `length()` nous retourne le nombre d'éléments de `mots`, pas celui de chacun de ses éléments : ce qu'on veut, ça n'est pas `length(mots)` mais `length(mots[[1]])`, `length(mots[[2]])`, etc.
 
-On a vu section \@ref(no-boucles) qu'on peut pour cela utiliser une boucle `for`, par exemple de la manière suivante.
+On a vu @sec-no-boucles qu'on peut pour cela utiliser une boucle `for`, par exemple de la manière suivante.
 
 ```{r}
 resultat <- list()
@@ -125,13 +125,13 @@ Comme notre résultat est une liste de chaînes de caractères simples, on peut 
 mots %>% map_chr(dernier_mot)
 ```
 
-Comme notre fonction est très courte, on peut aussi préférer utiliser une *fonction anonyme*, introduites section \@ref(fonctions-anonymes).
+Comme notre fonction est très courte, on peut aussi préférer utiliser une *fonction anonyme*, introduites @sec-fonctions-anonymes.
 
 ```{r}
 mots %>% map_chr(function(v) { tail(v, 1) })
 ```
 
-On peut aussi utiliser la notation abrégée sous forme de formule, propre aux fonctions du *tidyverse*, présentée section \@ref(syntaxes-abregees).
+On peut aussi utiliser la notation abrégée sous forme de formule, propre aux fonctions du *tidyverse*, présentée @sec-syntaxes-abregees.
 
 ```{r}
 mots %>% map_chr(~ tail(.x, 1) )
@@ -307,7 +307,7 @@ Il existe également une variante `map_dfc()` qui considère les résultats comm
 
 ## Itérer sur les colonnes d'un tableau de données
 
-On a vu section \@ref(data-frame-tibbles) que les tableaux de données (*data frame* ou *tibble*) sont en fait des listes dont les éléments sont les colonnes du tableau. Si on applique `map()` à un tableau, celle-ci itérera donc sur ses colonnes.
+On a vu @sec-data-frame-tibbles que les tableaux de données (*data frame* ou *tibble*) sont en fait des listes dont les éléments sont les colonnes du tableau. Si on applique `map()` à un tableau, celle-ci itérera donc sur ses colonnes.
 
 Par exemple, on peut appliquer `n_distinct` au jeu de données `starwars` et obtenir le nombre de valeurs distinctes de chacune de ses colonnes.
 
@@ -315,7 +315,7 @@ Par exemple, on peut appliquer `n_distinct` au jeu de données `starwars` et obt
 starwars %>% map_int(n_distinct)
 ```
 
-Le résultat est équivalent à celui qu'on obtient en faisant un `summarise()` sur l'ensemble des colonnes, comme vu section \@ref(across), sauf que `map_int()` retourne un vecteur numérique tandis que `summarise()` renvoie un *tibble* à une ligne.
+Le résultat est équivalent à celui qu'on obtient en faisant un `summarise()` sur l'ensemble des colonnes, comme vu @sec-across, sauf que `map_int()` retourne un vecteur numérique tandis que `summarise()` renvoie un *tibble* à une ligne.
 
 ```{r}
 starwars %>%

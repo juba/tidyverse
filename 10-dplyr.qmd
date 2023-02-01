@@ -1,10 +1,10 @@
-# Manipuler les données avec `dplyr` {#dplyr}
+# Manipuler les données avec `dplyr` {#sec-dplyr}
 
 {{< include _setup.qmd >}}
 
 `dplyr` est une extension facilitant le traitement et la manipulation de données contenues dans une ou plusieurs tables. Elle propose une syntaxe claire et cohérente, sous formes de verbes, pour la plupart des opérations de ce type.
 
-`dplyr` part du principe que les données sont organisées selon le modèle des *tidy data* (voir la section \@ref(tidydata)). Les fonctions de l'extension peuvent s'appliquer à des tableaux de type `data.frame` ou `tibble`, et elles retournent systématiquement un `tibble` (voir la section \@ref(tibbles)).
+`dplyr` part du principe que les données sont organisées selon le modèle des *tidy data* (voir @sec-tidydata). Les fonctions de l'extension peuvent s'appliquer à des tableaux de type `data.frame` ou `tibble`, et elles retournent systématiquement un `tibble` (voir @sec-tibbles).
 
 Le code présent dans ce document nécessite d'avoir installé la version 1.0 de `dplyr` (ou plus récente).
 
@@ -83,9 +83,9 @@ On peut aussi spécifier le nombre de lignes souhaitées, par exemple la command
 slice_max(airports, alt, n = 5)
 ```
 
-### `filter` {#filter}
+### `filter` {#sec-filter}
 
-`filter` sélectionne des lignes d'une table selon une condition. On lui passe en paramètre un test, et seules les lignes pour lesquelles ce test renvoie `TRUE` (vrai) sont conservées. Pour plus d'informations sur les tests et leur syntaxe, voir la section \@ref(tests).
+`filter` sélectionne des lignes d'une table selon une condition. On lui passe en paramètre un test, et seules les lignes pour lesquelles ce test renvoie `TRUE` (vrai) sont conservées. Pour plus d'informations sur les tests et leur syntaxe, voir @sec-tests.
 
 Par exemple, si on veut sélectionner les vols du mois de janvier, on peut filtrer sur la variable `month` de la manière suivante :
 
@@ -112,7 +112,7 @@ filter(flights, distance > median(distance))
 ```
 
 
-### `select` et `rename` {#select-rename}
+### `select` et `rename` {#sec-select-rename}
 
 `select` permet de sélectionner des colonnes d'un tableau de données. Ainsi, si on veut extraire les colonnes `lat` et `lon` du tableau airports :
 
@@ -213,7 +213,7 @@ flights <- mutate(
 select(flights, air_time, duree_h, distance, distance_km, vitesse)
 ```
 
-À noter que `mutate` est évidemment parfaitement compatible avec les fonctions vues dans le chapitre \@ref(vectorfactor) sur les recodages : `fct_recode`, `ifelse`, `case_when`...
+À noter que `mutate` est évidemment parfaitement compatible avec les fonctions vues @sec-vectorfactor sur les recodages : `fct_recode`, `ifelse`, `case_when`...
 
 L'avantage d'utiliser `mutate` est double. D'abord il permet d'éviter d'avoir à saisir le nom du tableau de données dans les conditions d'un `ifelse` ou d'un `case_when` :
 
@@ -232,7 +232,7 @@ flights <- mutate(
 Ensuite, il permet aussi d'intégrer ces recodages dans un *pipeline* de traitement de données, concept présenté dans la section suivante.
 
 
-## Enchaîner les opérations avec le *pipe* {#pipe}
+## Enchaîner les opérations avec le *pipe* {#sec-pipe}
 
 Quand on manipule un tableau de données, il est très fréquent d'enchaîner plusieurs opérations. On va par exemple extraire une sous-population avec `filter`, sélectionner des colonnes avec `select` puis trier selon une variable avec `arrange`, etc.
 

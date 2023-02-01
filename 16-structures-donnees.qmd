@@ -1,4 +1,4 @@
-# Structures de données {#structures-donnees}
+# Structures de données {#sec-structures-donnees}
 
 {{< include _setup.qmd >}}
 
@@ -7,7 +7,7 @@ R propose de nombreuses structures de données différentes, et les extensions p
 
 ## Vecteurs atomiques
 
-Les vecteurs atomiques sont des structures qui regroupent ensemble plusieurs éléments constitués d'une seule valeur, avec deux contraintes : ces valeurs doivent toutes être du même type. Les vecteurs atomiques ont déjà été introduits section \@ref(vecteurs).
+Les vecteurs atomiques sont des structures qui regroupent ensemble plusieurs éléments constitués d'une seule valeur, avec deux contraintes : ces valeurs doivent toutes être du même type. Les vecteurs atomiques ont déjà été introduits @sec-vecteurs.
 
 ### Création d'un vecteur
 
@@ -123,7 +123,7 @@ y <- c("foo", "bar", "baz")
 is.character(y)
 ```
 
-Petite spécificité, les facteurs (voir section \@ref(facteurs)) ne sont pas considérés par R comme des `character`, même s'ils comportent des chaînes de caractères. Pour tester si un vecteur est de type facteur, on utilise `is.factor()`. 
+Petite spécificité, les facteurs (voir @sec-facteurs) ne sont pas considérés par R comme des `character`, même s'ils comportent des chaînes de caractères. Pour tester si un vecteur est de type facteur, on utilise `is.factor()`. 
 
 ```{r}
 fac <- factor(c("rouge", "vert", "rouge"))
@@ -190,7 +190,7 @@ as.numeric(c("foo", "23"))
 
 ### Sélection d'éléments
 
-On a vu section \@ref(vecteurs) que l'opérateur `[]` peut être utilisé pour sélectionner des éléments d'un vecteur. Cet opérateur peut comporter :
+On a vu @sec-vecteurs que l'opérateur `[]` peut être utilisé pour sélectionner des éléments d'un vecteur. Cet opérateur peut comporter :
 
 - des nombres (qui sélectionnent par position)
 - des chaînes de caractères (qui sélectionnent par nom)
@@ -238,7 +238,7 @@ x[] <- 3
 x
 ```
 
-## Listes
+## Listes {#sec-listes}
 
 Les listes sont une généralisation des vecteurs : elles regroupent également plusieurs éléments ensemble, mais ceux-ci peuvent être de n'importe quel type, y compris des objets complexes. Une liste peut donc contenir des vecteurs, des listes, des tableaux de données, des fonctions, des graphiques `ggplot2` stockés dans un objet, etc.
 
@@ -422,7 +422,7 @@ res$moyenne
 res$variance
 ```
 
-On utilise également les listes pour stocker des objets complexes et leur appliquer des fonctions. Ce fonctionnement sera abordé en détail dans la section \@ref(purrr), mais en guise de petit aperçu, l'exemple fictif suivant récupère les noms de tous les fichiers CSV du répertoire courant et les importe tous dans une liste à l'aide de `purrr::map()` et de `read_csv()`. 
+On utilise également les listes pour stocker des objets complexes et leur appliquer des fonctions. Ce fonctionnement sera abordé en détail dans la @sec-purrr, mais en guise de petit aperçu, l'exemple fictif suivant récupère les noms de tous les fichiers CSV du répertoire courant et les importe tous dans une liste à l'aide de `purrr::map()` et de `read_csv()`. 
 
 ```{r eval=FALSE}
 files <- list.files(pattern = "*.csv")
@@ -432,9 +432,9 @@ dfs <- purrr::map(files, read_csv)
 On pourra ensuite utiliser cette liste de tableaux pour leur appliquer des transformations ou les fusionner.
 
 
-## Tableaux de données (*data frame* et *tibble*) {#data-frame-tibbles}
+## Tableaux de données (*data frame* et *tibble*) {#sec-data-frame-tibbles}
 
-On a déjà utilisé les tableaux de données à de nombreux reprises en manipulant des *data frames* ou des *tibbles*. Les seconds sont une variante des premiers, les différences entre les deux ayant été abordées section \@ref(tibbles). 
+On a déjà utilisé les tableaux de données à de nombreux reprises en manipulant des *data frames* ou des *tibbles*. Les seconds sont une variante des premiers, les différences entre les deux ayant été abordées @sec-tibbles. 
 
 Un tableau de données est en réalité une liste nommée de vecteurs atomiques avec une contrainte spécifique : ces vecteurs doivent tous être de même longueur, ce qui garantit le format "tabulaire" des données.
 
@@ -496,7 +496,7 @@ Si on souhaite conserver des noms de ligne en passant d'un *data frame* à un *t
 rownames_to_column(df, "name")
 ```
 
-### Sélection de lignes et de colonnes {#df-sel}
+### Sélection de lignes et de colonnes {#sec-df-sel}
 
 On a déjà vu dans les parties précédentes plusieurs manières de sélectionner des éléments dans un tableau de données. 
 
@@ -576,7 +576,7 @@ df
 ```
 
 
-Pour conclure, on peut noter que l'utilisation des opérateurs `[[]]` et `[,]` sur un tableau de données peut sembler redondante et moins pratique que l'utilisation des verbes de `dplyr` comme `select()` ou `filter()`. Ils peuvent cependant être utiles lorsqu'on souhaite éviter les complications liées à l'utilisation du *tidyverse* à l'intérieur de fonctions, comme indiqué section \@ref(programmer-tidyverse). Ils peuvent également être plus rapides, et il est important de les connaître car on les rencontrera très fréquemment dans du code R sur le Web ou dans des packages.
+Pour conclure, on peut noter que l'utilisation des opérateurs `[[]]` et `[,]` sur un tableau de données peut sembler redondante et moins pratique que l'utilisation des verbes de `dplyr` comme `select()` ou `filter()`. Ils peuvent cependant être utiles lorsqu'on souhaite éviter les complications liées à l'utilisation du *tidyverse* à l'intérieur de fonctions, comme indiqué @sec-programmer-tidyverse. Ils peuvent également être plus rapides, et il est important de les connaître car on les rencontrera très fréquemment dans du code R sur le Web ou dans des packages.
 
 
 ## Ressources
