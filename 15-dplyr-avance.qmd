@@ -769,32 +769,27 @@ Le jeu de données contient les caractéristiques de 87 personnages présents da
 
 Créer une fonction `imc` qui prend en argument un vecteur `taille` (en cm) et un vecteur `poids` (en kg) et retourne les valeurs correspondantes de l'indice de masse corporelle, qui se calcule en divisant le poids en kilos par la taille en mètres au carré.
 
-\iffalse
-<div class="solution-exo">
+::: {.solution-exo}
 ```{r eval=FALSE}
 imc <- function(tailles, poids) {
     tailles_m <- tailles / 100
     poids / tailles_m ^ 2
 }
 ```
-</div>
-\fi
+:::
 
 Utiliser cette fonction pour ajouter une nouvelle variable `imc` au tableau `starwars`.
 
-\iffalse
-<div class="solution-exo">
+::: {.solution-exo}
 ```{r eval=FALSE}
 starwars %>%
     mutate(imc = imc(height, mass))
 ```
-</div>
-\fi
+:::
 
 À l'aide de `group_by()` et `summarise()`, utiliser à nouveau cette fonction pour calculer l'IMC moyen selon les valeurs de la variable `species`.
 
-\iffalse
-<div class="solution-exo">
+::: {.solution-exo}
 ```{r eval=FALSE}
 starwars %>%
     group_by(species) %>%
@@ -802,15 +797,13 @@ starwars %>%
         imc = mean(imc(height, mass), na.rm = TRUE)
     )
 ```
-</div>
-\fi
+:::
 
 **Exercice 1.2**
 
 Toujours dans le jeu de données `starwars`, à l'aide d'un `group_by()` et d'un `summarise()`, calculer pour chaque valeur de la variable `sex` la valeur de l'étendue de la variable `height` du jeu de données `starwars`, c'est-à-dire la différence entre sa valeur maximale et sa valeur minimale.
 
-\iffalse
-<div class="solution-exo">
+::: {.solution-exo}
 ```{r eval=FALSE}
 starwars %>%
     group_by(sex) %>%
@@ -818,13 +811,11 @@ starwars %>%
         etendue_taille = max(height, na.rm = TRUE) - min(height, na.rm = TRUE)
     )
 ```
-</div>
-\fi
+:::
 
 En partant du code précédent, créer une fonction `etendue` qui prend en argument un vecteur et retourne la différence entre sa valeur maximale et sa valeur minimale. En utilisant cette fonction, calculer pour chaque valeur de `sex` la valeur de l'étendue des variables `height` et `mass`.
 
-\iffalse
-<div class="solution-exo">
+::: {.solution-exo}
 ```{r eval=FALSE}
 etendue <- function(v) {
     max(v, na.rm = TRUE) - min(v, na.rm = TRUE)
@@ -836,8 +827,7 @@ starwars %>%
         etendue_poids  = etendue(mass)
     )
 ```
-</div>
-\fi
+:::
 
 
 **Exercice 1.3**
@@ -857,8 +847,7 @@ prop_suffixe <- function(v, suffixe) {
 
 Modifier cette fonction en une fonction `prop_prefixe` qui retourne le pourcentage d'éléments commençant par un préfixe passé en argument. *Indication :* pour détecter si une chaîne commence par `"ker"`, on utilise l'expression régulière `"^ker"`.
 
-\iffalse
-<div class="solution-exo">
+::: {.solution-exo}
 ```{r eval=FALSE}
 prop_prefixe <- function(v, prefixe) {
     # On ajoute $ à la fin du prefixe pour capturer uniquement en début de chaîne
@@ -869,13 +858,11 @@ prop_prefixe <- function(v, prefixe) {
     nb_detect / length(v) * 100
 }
 ```
-</div>
-\fi
+:::
 
 Utiliser `prop_prefixe` dans un `summarise` appliqué à `rp2018` pour calculer le pourcentage de communes commençant par "Saint" selon le département. Ordonner les résultats par pourcentage décroissant.
 
-\iffalse
-<div class="solution-exo">
+::: {.solution-exo}
 ```{r eval=FALSE}
 rp2018 %>%
     group_by(departement) %>%
@@ -884,13 +871,11 @@ rp2018 %>%
     ) %>%
     arrange(desc(prop_saint))
 ```
-</div>
-\fi
+:::
 
 Créer une fonction `tab_prefixe` qui prend un seul argument `prefixe` et renvoie le tableau obtenu à la question précédente pour le préfixe passé en argument. Tester avec `tab_prefixe("Plou")` et `tab_prefixe("Sch")`
 
-\iffalse
-<div class="solution-exo">
+::: {.solution-exo}
 ```{r eval=FALSE}
 tab_prefixe <- function(prefixe) {
     rp2018 %>%
@@ -901,8 +886,7 @@ tab_prefixe <- function(prefixe) {
         arrange(desc(prop))
 }
 ```
-</div>
-\fi
+:::
 
 
 
@@ -937,8 +921,7 @@ Vérifier avec :
 age_film(starwars$birth_year, "IV")
 ```
 
-\iffalse
-<div class="solution-exo">
+::: {.solution-exo}
 ```{r dpl14, eval=FALSE}
 age_film <- function(annees, film) {
     annees_films <- c(
@@ -957,13 +940,11 @@ age_film <- function(annees, film) {
     annee_ref - annees_naissance
 }
 ```
-</div>
-\fi
+:::
 
 Utiliser la fonction pour ajouter deux nouvelles variables au tableau `starwars` : `age_iv` qui correspond à l'âge (potentiel) au moment du film IV, et `age_ix` qui correspond à l'âge au moment du film IX.
 
-\iffalse
-<div class="solution-exo">
+::: {.solution-exo}
 ```{r eval=FALSE}
 starwars %>%
     mutate(
@@ -971,8 +952,7 @@ starwars %>%
         age_ix = age_film(birth_year, "IX"),
     )
 ```
-</div>
-\fi
+:::
 
 
 ### `across()`
@@ -989,8 +969,7 @@ etendue <- function(v) {
 
 Dans le jeu de données `starwars`, calculer l'étendue des variables `height` et `mass` pour chaque valeur de `sex` à l'aide de `group_by()`, `summarise()` et `across()`.
 
-\iffalse
-<div class="solution-exo">
+::: {.solution-exo}
 ```{r eval=FALSE}
 starwars %>%
     group_by(sex) %>%
@@ -1001,13 +980,11 @@ starwars %>%
         )
     )
 ```
-</div>
-\fi
+:::
 
 Toujours à l'aide d'`across()`, appliquer `etendue` à toutes les variables numériques, toujours pour chaque valeur de `sex`.
 
-\iffalse
-<div class="solution-exo">
+::: {.solution-exo}
 ```{r eval=FALSE}
 starwars %>%
     group_by(sex) %>%
@@ -1018,13 +995,11 @@ starwars %>%
         )
     )
 ```
-</div>
-\fi
+:::
 
 En utilisant `&` et `!`, appliquer `etendue` à toutes les variables numériques sauf à celles qui finissent par "year".
 
-\iffalse
-<div class="solution-exo">
+::: {.solution-exo}
 ```{r eval=FALSE}
 starwars %>%
     group_by(sex) %>%
@@ -1035,16 +1010,14 @@ starwars %>%
         )
     )
 ```
-</div>
-\fi
+:::
 
 
 **Exercice 2.2**
 
 Dans le jeu de données `starwars`, appliquer en un seul `summarise` les fonctions `min` et `max` aux variables `height` et `mass`.
 
-\iffalse
-<div class="solution-exo">
+::: {.solution-exo}
 ```{r eval=FALSE}
 starwars %>%
     summarise(
@@ -1054,13 +1027,11 @@ starwars %>%
         )
     )
 ```
-</div>
-\fi
+:::
 
 Si vous ne l'avez pas déjà fait à la question précédente, modifier le code pour que le calcul des valeurs minimales et maximales ne prennent pas en compte les valeurs manquantes.
 
-\iffalse
-<div class="solution-exo">
+::: {.solution-exo}
 ```{r eval=FALSE}
 funs <- list(
     min = function(v) { min(v, na.rm = TRUE) },
@@ -1084,16 +1055,14 @@ starwars %>%
         )
     )
 ```
-</div>
-\fi
+:::
 
 
 **Exercice 2.3**
 
 Dans le jeu de données `hdv2003`, utiliser `across()` pour transformer les modalités "Oui" et "Non" en `TRUE` et `FALSE` pour toutes les variables de `hard.rock` à `sport`.
 
-\iffalse
-<div class="solution-exo">
+::: {.solution-exo}
 ```{r eval=FALSE}
 detecte_oui <- function(v) {
     v == "Oui"
@@ -1106,13 +1075,11 @@ hdv2003 %>%
         )
     )
 ```
-</div>
-\fi
+:::
 
 Ajouter un argument `.names` à `across()` pour que les variables recodées soient stockées dans de nouvelles colonnes nommées avec le suffixe `"_true"`.
 
-\iffalse
-<div class="solution-exo">
+::: {.solution-exo}
 ```{r eval=FALSE}
 detecte_oui <- function(v) {
     v == "Oui"
@@ -1126,8 +1093,7 @@ hdv2003 %>%
         )
     )
 ```
-</div>
-\fi
+:::
 
 
 ### Fonctions anonymes et notations abrégées
@@ -1153,8 +1119,7 @@ starwars %>%
 
 Modifier ce code en supprimant la définition de `etendue` et en utilisant à la place une fonction anonyme directement dans le `across()`.
 
-\iffalse
-<div class="solution-exo">
+::: {.solution-exo}
 
 ```{r eval=FALSE}
 starwars %>%
@@ -1168,14 +1133,12 @@ starwars %>%
         )
     )
 ```
-</div>
-\fi
+:::
 
 
 Modifier à nouveau ce code pour utiliser la syntaxe abrégée de type "formule" du *tidyverse*.
 
-\iffalse
-<div class="solution-exo">
+::: {.solution-exo}
 
 ```{r eval=FALSE}
 starwars %>%
@@ -1187,8 +1150,7 @@ starwars %>%
         )
     )
 ```
-</div>
-\fi
+:::
 
 
 
@@ -1211,8 +1173,7 @@ Réécrire ce code avec une fonction anonyme en utilisant les trois notations :
 - formule (du *tidyverse*)
 - compacte (à partir de R 4.1)
 
-\iffalse
-<div class="solution-exo">
+::: {.solution-exo}
 ```{r eval=FALSE}
 # Classique
 starwars %>%
@@ -1233,8 +1194,7 @@ starwars %>%
         .cols = where(is.list)
     )
 ```
-</div>
-\fi
+:::
 
 **Exercice 3.3**
 
@@ -1258,8 +1218,7 @@ rp2018 %>%
 
 Réécrire ce code en utilisant une fonction anonyme, avec la syntaxe de votre choix (classique, formule ou compacte).
 
-\iffalse
-<div class="solution-exo">
+::: {.solution-exo}
 ```{r eval=FALSE}
 # Classique
 rp2018 %>%
@@ -1292,13 +1251,11 @@ rp2018 %>%
         )
     )
 ```
-</div>
-\fi
+:::
 
 À l'aide d'une fonction anonyme supplémentaire, modifier le code pour qu'il retourne également, pour les mêmes variables, le nom des communes avec les valeurs minimales.
 
-\iffalse
-<div class="solution-exo">
+::: {.solution-exo}
 ```{r eval=FALSE}
 # Formule
 rp2018 %>%
@@ -1327,8 +1284,7 @@ rp2018 %>%
         )
     ) %>% View()
 ```
-</div>
-\fi
+:::
 
 
 ### `rowwise()` et `c_across()`
@@ -1353,44 +1309,37 @@ hdv2003 <- hdv2003 %>%
 
 Calculer le plus simplement possible une nouvelle variable `total` qui contient, pour chaque ligne, le nombre de valeurs `TRUE` des deux variables `cinema_true` et `sport_true` (si une ligne contient `TRUE` pour ces deux variables, `total` doit valoir 2, etc.)
 
-\iffalse
-<div class="solution-exo">
+::: {.solution-exo}
 ```{r eval=FALSE}
 hdv2003 %>%
     mutate(total = cuisine_true + sport_true)
 ```
-</div>
-\fi
+:::
 
 Recalculer la variable `total` pour qu'elle contienne le nombre de `TRUE` par ligne pour les variables `bricol_true`, `cinema_true` et `sport_true`.
 
-\iffalse
-<div class="solution-exo">
+::: {.solution-exo}
 ```{r eval=FALSE}
 hdv2003 %>%
     rowwise() %>%
     mutate(total = sum(cuisine_true, sport_true, bricol_true))
 ```
-</div>
-\fi
+:::
 
 Recalculer la variable `total` pour qu'elle contienne le nombre de `TRUE` par ligne pour toutes les variables se terminant par `"_true"`.
 
-\iffalse
-<div class="solution-exo">
+::: {.solution-exo}
 ```{r eval=FALSE}
 hdv2003 %>%
     rowwise() %>%
     mutate(total = sum(c_across(ends_with("_true"))))
 ```
-</div>
-\fi
+:::
 
 
 Reprendre le code précédent pour qu'il puisse s'appliquer directement sur les variables `hard.rock`...`sport`, sans passer par le recodage en `TRUE`/`FALSE`. 
 
-\iffalse
-<div class="solution-exo">
+::: {.solution-exo}
 
 ```{r eval=FALSE}
 count_oui <- function(v) {
@@ -1403,8 +1352,7 @@ hdv2003 %>%
         total = count_oui(c_across(hard.rock:sport))
     )
 ```
-</div>
-\fi
+:::
 
 
 **Exercice 4.2**
@@ -1424,12 +1372,10 @@ starwars %>%
 
 Trouver une manière d'obtenir le résultat attendu.
 
-\iffalse
-<div class="solution-exo">
+::: {.solution-exo}
 ```{r eval=FALSE}
 starwars %>%
     rowwise() %>%
     mutate(n_films = length(films))
 ```
-</div>
-\fi
+:::

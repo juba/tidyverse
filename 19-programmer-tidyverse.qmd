@@ -598,15 +598,13 @@ Vérifier avec :
 my_table(starwars, gender)
 ```
 
-\iffalse
-<div class="solution-exo">
+::: {.solution-exo}
 ```{r progtidy-1-1-1, eval=FALSE}
 my_table <- function(df, var) {
     df %>% count({{ var }})
 }
 ```
-</div>
-\fi
+:::
 
 Modifier `my_table` pour qu'elle accepte trois arguments `df`, `var1` et `var2`, et qu'elle retourne le résultat du count appliqué à `var1` et à `var2`.
 
@@ -617,15 +615,13 @@ Modifier `my_table` pour qu'elle accepte trois arguments `df`, `var1` et `var2`,
 my_table(starwars, gender, sex)
 ```
 
-\iffalse
-<div class="solution-exo">
+::: {.solution-exo}
 ```{r progtidy-1-1-2, eval=FALSE}
 my_table <- function(df, var1, var2) {
     df %>% count({{ var1 }}, {{ var2 }})
 }
 ```
-</div>
-\fi
+:::
 
 Modifier `my_table` pour qu'elle accepte deux arguments `df` et `vars`, et qu'elle applique le `count` à toutes les variables indiquées dans `vars` en utilisant la *tidy selection*.
 
@@ -636,16 +632,14 @@ Modifier `my_table` pour qu'elle accepte deux arguments `df` et `vars`, et qu'el
 my_table(starwars, c(gender, sex))
 ```
 
-\iffalse
-<div class="solution-exo">
+::: {.solution-exo}
 ```{r progtidy-1-1-3, eval=FALSE}
 my_table <- function(df, vars) {
     df %>%
         count(across({{ vars }}))
 }
 ```
-</div>
-\fi
+:::
 
 
 
@@ -662,8 +656,7 @@ starwars %>%
 
 En utilisant ce code, créer une fonction `diff_mean_height` qui accepte un seul argument `by` et qui ajoute à `starwars` une colonne `diff_height` calculée de la même manière, mais en appliquant le `group_by` au `by` passé en paramètre.
 
-\iffalse
-<div class="solution-exo">
+::: {.solution-exo}
 ```{r eval=FALSE}
 diff_mean_height <- function(by) {
     starwars %>%
@@ -671,13 +664,11 @@ diff_mean_height <- function(by) {
         mutate(diff_height = height - mean(height, na.rm = TRUE))
 }
 ```
-</div>
-\fi
+:::
 
 Modifier la fonction précédente en une nouvelle fonction `diff_mean`, qui prend deux arguments `by` et `var`, et qui applique la même transformation non pas à `height` mais à la variable passée dans `var`.
 
-\iffalse
-<div class="solution-exo">
+::: {.solution-exo}
 ```{r eval=FALSE}
 diff_mean <- function(by, var) {
     starwars %>%
@@ -685,13 +676,11 @@ diff_mean <- function(by, var) {
         mutate(diff_mean = {{ var }} - mean({{ var }}, na.rm = TRUE))
 }
 ```
-</div>
-\fi
+:::
 
 Modifier la fonction pour que le nom de la colonne ajoutée ne soit pas `diff_mean` mais le nom de la variable passée dans `var` suivi du suffixe "_diff_mean".
 
-\iffalse
-<div class="solution-exo">
+::: {.solution-exo}
 ```{r eval=FALSE}
 diff_mean <- function(by, var) {
     starwars %>%
@@ -699,13 +688,11 @@ diff_mean <- function(by, var) {
         mutate("{{var}}_diff_mean" := {{ var }} - mean({{ var }}, na.rm = TRUE))
 }
 ```
-</div>
-\fi
+:::
 
 Modifier à nouveau `diff_mean` pour pouvoir passer à `by` plusieurs variables en utilisant la *tidy selection*.
 
-\iffalse
-<div class="solution-exo">
+::: {.solution-exo}
 ```{r eval=FALSE}
 diff_mean <- function(by, var) {
     starwars %>%
@@ -713,8 +700,7 @@ diff_mean <- function(by, var) {
         mutate("{{var}}_diff_mean" := {{ var }} - mean({{ var }}, na.rm = TRUE))
 }
 ```
-</div>
-\fi
+:::
 
 
 **Exercice 1.3**
@@ -736,8 +722,7 @@ Créer une fonction `freq_liste()` qui prend en entrée un argument `var` et ret
 freq_liste(films)
 ```
 
-\iffalse
-<div class="solution-exo">
+::: {.solution-exo}
 ```{r progtidy-1-3, eval=FALSE}
 freq_liste <- function(var) {
     starwars %>%
@@ -745,8 +730,7 @@ freq_liste <- function(var) {
         count({{ var }})
 }
 ```
-</div>
-\fi
+:::
 
 
 ### Noms de colonnes en chaînes de caractères
@@ -761,22 +745,19 @@ v <- readline("Votre choix : ")
 
 Créer une fonction `affiche_planete` qui affiche le message "Nom de la planète", lit la réponse de l'utilisateur, et affiche à l'aide d'un `filter()` les lignes du tableau `starwars` pour lesquelles la variable `homeworld` correspond au nom saisi.
 
-\iffalse
-<div class="solution-exo">
+::: {.solution-exo}
 ```{r eval=FALSE}
 affiche_planete <- function() {
     var <- readline("Nom de la planète : ")
     starwars %>% filter(homeworld == var)
 }
 ```
-</div>
-\fi
+:::
 
 
 Créer une fonction `affiche_barplot` qui affiche le message "Nom de la variable", lit la réponse de l'utilisateur, et affiche avec `ggplot2` le diagramme en barres de la variable correspondante du tableau `starwars`.
 
-\iffalse
-<div class="solution-exo">
+::: {.solution-exo}
 ```{r eval=FALSE}
 affiche_barplot <- function() {
     var <- readline("Nom de la variable : ")
@@ -784,16 +765,14 @@ affiche_barplot <- function() {
         geom_bar(aes(x = .data[[var]]))
 }
 ```
-</div>
-\fi
+:::
 
 
 Créer une fonction `affiche_colonnes` qui affiche le message "Noms des variables séparés par des virgules", lit la réponse de l'utilisateur, et affiche uniquement les colonnes saisies du tableau `starwars`.
 
 *Conseil :* pour récupérer un vecteur de colonnes à partir de la saisie de l'utilisateur, on pourra utiliser les fonctions `str_split()` et `str_trim()` de `stringr`.
 
-\iffalse
-<div class="solution-exo">
+::: {.solution-exo}
 ```{r eval=FALSE}
 affiche_colonnes <- function() {
     vars <- readline("Noms des variables séparés par des virgules : ")
@@ -802,8 +781,7 @@ affiche_colonnes <- function() {
     starwars %>% select(all_of(vars))
 }
 ```
-</div>
-\fi
+:::
 
 
 ### Ambiguïté `data` / `env`
@@ -819,15 +797,13 @@ filter_height(200)
 ```
 
 
-\iffalse
-<div class="solution-exo">
+::: {.solution-exo}
 ```{r progtidy-4-1, eval=FALSE}
 filter_height <- function(height) {
     starwars[starwars$height > height, ]
 }
 ```
-</div>
-\fi
+:::
 
 Améliorer la fonction pour qu'elle ne retourne pas les lignes pour lesquelles la variable correspondant à `height_var` vaut `NA`.
 
@@ -839,38 +815,32 @@ filter_height(200)
 ```
 
 
-\iffalse
-<div class="solution-exo">
+::: {.solution-exo}
 ```{r progtidy-4-1b, eval=FALSE}
 filter_height <- function(height) {
     starwars[starwars$height > height & !is.na(starwars$height), ]
 }
 ```
-</div>
-\fi
+:::
 
 Écrire la même fonction, cette fois en utilisant `filter()` à la place de `[,]`.
 
-\iffalse
-<div class="solution-exo">
+::: {.solution-exo}
 ```{r eval=FALSE}
 filter_height <- function(height) {
     starwars %>%
         filter(.data$height > .env$height)
 }
 ```
-</div>
-\fi
+:::
 
 Quels sont les avantages et inconvénients des deux méthodes ?
 
-\iffalse
-<div class="solution-exo">
+::: {.solution-exo}
 La fonction utilisant `filter()` est plus compacte et plus lisible, et elle gère les `NA` de la manière attendue sans condition supplémentaire.
 
 La fonction utilisant `[,]` évite l'ambiguïté liée à la présence simultanée d'un argument `height` et d'une colonne `height`.
-</div>
-\fi
+:::
 
 
 
@@ -889,16 +859,14 @@ Créer une fonction `graph_bar` qui prend en argument un tableau de données `df
 graph_bar(starwars, gender)
 ```
 
-\iffalse
-<div class="solution-exo">
+::: {.solution-exo}
 ```{r progtidy-2-1, eval=FALSE}
 graph_bar <- function(df, var) {
     ggplot(df) +
         geom_bar(aes(x = {{ var }}))
 }
 ```
-</div>
-\fi
+:::
 
 Modifier la fonction `graph_bar` pour qu'elle accepte un troisième argument nommé `facet_var` et qu'elle retourne le diagramme en barre de `var` pour chaque valeur de `facet_var`.
 
@@ -910,8 +878,7 @@ graph_bar(starwars, sex, gender)
 ```
 
 
-\iffalse
-<div class="solution-exo">
+::: {.solution-exo}
 ```{r progtidy-2-1b, eval=FALSE}
 graph_bar <- function(df, var, facet_var) {
     ggplot(df) +
@@ -919,8 +886,7 @@ graph_bar <- function(df, var, facet_var) {
         facet_wrap(vars({{ facet_var }}))
 }
 ```
-</div>
-\fi
+:::
 
 
 **Exercice 4.2**
@@ -934,16 +900,14 @@ Créer une fonction `graph_points` qui prend en arguments un tableau de données
 graph_points(starwars, height, mass)
 ```
 
-\iffalse
-<div class="solution-exo">
+::: {.solution-exo}
 ```{r progtidy-2-2a, eval=FALSE}
 graph_points <- function(df, var_x, var_y) {
     ggplot(df) +
         geom_point(aes(x = {{var_x}}, y = {{var_y}}))
 }
 ```
-</div>
-\fi
+:::
 
 Ajouter un quatrième argument `color` à la fonction `graph_points()`, qui permet de spécifier la couleur des points (la même couleur pour tous).
 
@@ -954,16 +918,14 @@ Ajouter un quatrième argument `color` à la fonction `graph_points()`, qui perm
 graph_points(starwars, height, mass, color = "red")
 ```
 
-\iffalse
-<div class="solution-exo">
+::: {.solution-exo}
 ```{r progtidy-2-2b, eval=FALSE}
 graph_points <- function(df, var_x, var_y, color) {
     ggplot(df) +
         geom_point(aes(x = {{var_x}}, y = {{var_y}}), color = color)
 }
 ```
-</div>
-\fi
+:::
 
 Modifier `graph_points()` pour que l'argument `color` corresponde non pas à une couleur fixe mais à une variable dont les valeurs déterminent la couleur des points.
 
@@ -974,16 +936,14 @@ Modifier `graph_points()` pour que l'argument `color` corresponde non pas à une
 graph_points(starwars, height, mass, color = sex)
 ```
 
-\iffalse
-<div class="solution-exo">
+::: {.solution-exo}
 ```{r progtidy-2-2c, eval=FALSE}
 graph_points <- function(df, var_x, var_y, color) {
     ggplot(df) +
         geom_point(aes(x = {{var_x}}, y = {{var_y}}, color = {{color}}))
 }
 ```
-</div>
-\fi
+:::
 
 *Facultatif :* modifier `graph_points()` pour que l'argument `color` puisse accepter aussi bien une variable qu'une couleur fixe.
 
@@ -997,8 +957,7 @@ f(igloo)
 ```
 
 
-\iffalse
-<div class="solution-exo">
+::: {.solution-exo}
 ```{r progtidy-2-2d, eval=FALSE}
 graph_points <- function(df, var_x, var_y, color) {
     color_value <- deparse(substitute(color))
@@ -1013,8 +972,7 @@ graph_points <- function(df, var_x, var_y, color) {
     g
 }
 ```
-</div>
-\fi
+:::
 
 
 

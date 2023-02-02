@@ -796,23 +796,19 @@ notes <- list(
 
 En utilisant `map()`, calculer une liste indiquant la moyenne dans chaque matière.
 
-\iffalse
-<div class="solution-exo">
+::: {.solution-exo}
 ```{r eval=FALSE}
 notes %>% map(mean)
 ```
-</div>
-\fi
+:::
 
 En utilisant une variante de `map()`, simplifier le résultat pour obtenir un vecteur numérique.
 
-\iffalse
-<div class="solution-exo">
+::: {.solution-exo}
 ```{r eval=FALSE}
 notes %>% map_dbl(mean)
 ```
-</div>
-\fi
+:::
 
 On a rajouté à la liste les notes obtenues en technologie, parmi lesquelles une note est manquante.
 
@@ -828,20 +824,17 @@ notes <- list(
 
 Calculer à nouveau un vecteur numérique des moyennes par matière, mais sans tenir compte de la valeur manquante.
 
-\iffalse
-<div class="solution-exo">
+::: {.solution-exo}
 ```{r eval=FALSE}
 notes %>% map_dbl(~ mean(.x, na.rm = TRUE) )
 # Ou bien
 notes %>% map_dbl(mean, na.rm = TRUE)
 ```
-</div>
-\fi
+:::
 
 Calculer une liste qui contient pour chaque matière la moyenne, la note minimale et la note maximale.
 
-\iffalse
-<div class="solution-exo">
+::: {.solution-exo}
 ```{r eval=FALSE}
 # On peut aussi utiliser list() plutôt que c()
 notes %>%
@@ -852,8 +845,7 @@ notes %>%
         )
     )
 ```
-</div>
-\fi
+:::
 
 
 **Exercice 1.2**
@@ -872,45 +864,37 @@ parcours <- list(
 
 À l'aide de `map()`, calculer une nouvelle liste comportant le nombre de villes de résidence pour chaque parcours.
 
-\iffalse
-<div class="solution-exo">
+::: {.solution-exo}
 ```{r eval=FALSE}
 parcours %>% map(length)
 ```
-</div>
-\fi
+:::
 
 Utiliser une variante de `map()` pour simplifier le résultat et obtenir un vecteur numérique plutôt qu'une liste.
 
-\iffalse
-<div class="solution-exo">
+::: {.solution-exo}
 ```{r eval=FALSE}
 parcours %>% map_int(length)
 ```
-</div>
-\fi
+:::
 
 Déterminer pour chaque parcours le nombre de fois où la personne a résidé à Lyon.
 
-\iffalse
-<div class="solution-exo">
+::: {.solution-exo}
 ```{r eval=FALSE}
 parcours %>% map_int(~ sum(.x == "Lyon"))
 ```
-</div>
-\fi
+:::
 
 On vient de repérer un problème dans les données : des caractères "l" ont été remplacés par des "1". Utiliser `map()` pour corriger l'objet `parcours` en remplaçant tous les "1" par des "l".
 
-\iffalse
-<div class="solution-exo">
+::: {.solution-exo}
 
 ```{r eval=FALSE}
 parcours <- parcours %>%
     map(~ str_replace_all(.x, "1", "l"))
 ```
-</div>
-\fi
+:::
 
 
 **Exercice 1.3**
@@ -926,41 +910,34 @@ urls <- c(
 
 Utiliser `map()` pour charger ces deux tableaux de données dans une liste nommée `dfs`.
 
-\iffalse
-<div class="solution-exo">
+::: {.solution-exo}
 ```{r eval=FALSE}
 dfs <- urls %>% map(read_csv)
 ```
-</div>
-\fi
+:::
 
 
 Utiliser `map_dfr()` pour charger ces deux tableaux de données et les regrouper en une seule table `d`. Que constatez-vous ? 
 
-\iffalse
-<div class="solution-exo">
+::: {.solution-exo}
 ```{r eval=FALSE}
 # Génère une erreur !
 d <- urls %>% map_dfr(read_csv)
 ```
-</div>
-\fi
+:::
 
 À l'aide de `map()`, afficher la variable `code_insee` des deux tableaux de `dfs`. D'où vient le problème ?
 
-\iffalse
-<div class="solution-exo">
+::: {.solution-exo}
 ```{r eval=FALSE}
 # Une variable a été importée en character, l'autre en numérique
 dfs %>% map(~ .x$code_insee)
 ```
-</div>
-\fi
+:::
 
 Trouver une solution pour corriger le problème.
 
-\iffalse
-<div class="solution-exo">
+::: {.solution-exo}
 
 ```{r eval=FALSE}
 # En convertissant manuellement code_insee en character
@@ -975,8 +952,7 @@ d <- urls %>%
 d <- urls %>%
     map_dfr(read_csv, col_types = c("code_insee" = "character"))
 ```
-</div>
-\fi
+:::
 
 
 
@@ -997,47 +973,39 @@ d <- tribble(
 
 Utliser `typeof()` et `map()` pour afficher le type de toutes les colonnes de `d`.
 
-\iffalse
-<div class="solution-exo">
+::: {.solution-exo}
 ```{r eval=FALSE}
 d %>% map(typeof)
 ```
-</div>
-\fi
+:::
 
 En utilisant `keep()` et `map()`, calculer la moyenne de toutes les variables numériques de `d`.
 
-\iffalse
-<div class="solution-exo">
+::: {.solution-exo}
 ```{r eval=FALSE}
 d %>%
     keep(is.numeric) %>%
     map(mean, na.rm = TRUE)
 ```
-</div>
-\fi
+:::
 
 En utilisant `modify_if()`, appliquer `str_to_title()` à toutes les colonnes de type `character` pour corriger la capitalisation des noms et prénoms.
 
-\iffalse
-<div class="solution-exo">
+::: {.solution-exo}
 ```{r eval=FALSE}
 d <- d %>% modify_if(is.character, str_to_title)
 ```
-</div>
-\fi
+:::
 
 À l'aide de la fonction `discard()`, supprimer de `d` les colonnes qui comportent des `NA`.
 
-\iffalse
-<div class="solution-exo">
+::: {.solution-exo}
 ```{r eval=FALSE}
 d %>% discard(~ sum(is.na(.x)) > 0)
 # Ou bien
 d %>% discard(~ any(is.na(.x)))
 ```
-</div>
-\fi
+:::
 
 ### `imap` et `walk`
 
@@ -1061,13 +1029,11 @@ Sans utiliser de boucle `for`, afficher avec la fonction `message()` les valeurs
 ```{r echo=FALSE, ref.label='pur31b'}
 ```
 
-\iffalse
-<div class="solution-exo">
+::: {.solution-exo}
 ```{r pur31b, eval=FALSE}
 notes %>% walk(~ message(mean(.x, na.rm = TRUE)))
 ```
-</div>
-\fi
+:::
 
 De la même manière afficher pour chaque matière les messages suivants :
 
@@ -1075,23 +1041,20 @@ De la même manière afficher pour chaque matière les messages suivants :
 ```
 
 
-\iffalse
-<div class="solution-exo">
+::: {.solution-exo}
 ```{r pur32, eval=FALSE}
 notes %>% iwalk(function(notes, matiere) {
     message("Votre moyenne en ", matiere, " est ", mean(notes, na.rm = TRUE))
 })
 ```
-</div>
-\fi
+:::
 
 Construire un tableau de données avec une matière par ligne et deux colonnes contenant le nom de la matière et la valeur de la moyenne.
 
 ```{r echo=FALSE, ref.label='pur31c'}
 ```
 
-\iffalse
-<div class="solution-exo">
+::: {.solution-exo}
 ```{r pur31c, eval=FALSE}
 notes %>% 
     imap_dfr(function(notes, matiere) {
@@ -1101,8 +1064,7 @@ notes %>%
         )
     })
 ```
-</div>
-\fi
+:::
 
 
 **Exercice 3.2**
@@ -1128,8 +1090,7 @@ affiche_dimensions(l)
 
 Réécrire `affiche_dimensions()` en utilisant `iwalk()`.
 
-\iffalse
-<div class="solution-exo">
+::: {.solution-exo}
 ```{r eval=FALSE}
 affiche_dimensions <- function(dfs) {
     iwalk(dfs, function(df, name) {
@@ -1137,8 +1098,7 @@ affiche_dimensions <- function(dfs) {
     })
 }
 ```
-</div>
-\fi
+:::
 
 
 **Exercice 3.3**
@@ -1158,8 +1118,7 @@ summaries(hdv2003, c("sexe", "age"))
 
 Réécrire la fonction sans utiliser de boucle `for`.
 
-\iffalse
-<div class="solution-exo">
+::: {.solution-exo}
 ```{r eval=FALSE}
 summaries <- function(d, vars) {
     vars %>%
@@ -1169,8 +1128,7 @@ summaries <- function(d, vars) {
         })
 }
 ```
-</div>
-\fi
+:::
 
 
 Modifier cette nouvelle fonction en utilisant `keep()` ou `discard()`, pour qu'elle fonctionne sans erreur même si l'une des variables passées en arguments n'existe pas.
@@ -1182,8 +1140,7 @@ Modifier cette nouvelle fonction en utilisant `keep()` ou `discard()`, pour qu'e
 summaries(hdv2003, c("sexe", "igloo", "age"))
 ```
 
-\iffalse
-<div class="solution-exo">
+::: {.solution-exo}
 ```{r purrr33, eval=FALSE}
 summaries <- function(d, vars) {
     vars %>%
@@ -1194,8 +1151,7 @@ summaries <- function(d, vars) {
         })
 }
 ```
-</div>
-\fi
+:::
 
 
 ### `map2` et `pmap`
@@ -1218,23 +1174,20 @@ croisements
 
 À l'aide de `map2()`, calculer une liste qui contient les tableaux croisés des quatre couples de variables de `croisements`.
 
-\iffalse
-<div class="solution-exo">
+::: {.solution-exo}
 ```{r eval=FALSE}
 map2(croisements$v1, croisements$v2,
     ~table(hdv2003[[.x]], hdv2003[[.y]])
 )
 ```
-</div>
-\fi
+:::
 
 Modifier le code précédent pour obtenir une liste comportant, pour chaque couple de variables : 
 
 1. les noms des deux variables croisées 
 2. le résultat du test du $\chi^2$ appliqué aux deux variables
 
-\iffalse
-<div class="solution-exo">
+::: {.solution-exo}
 ```{r eval=FALSE}
 khi2 <- map2(croisements$v1, croisements$v2,
     ~list(
@@ -1243,13 +1196,11 @@ khi2 <- map2(croisements$v1, croisements$v2,
     )
 )
 ```
-</div>
-\fi
+:::
 
 *Facultatif :* filtrer la liste obtenue à l'étape précédente pour ne conserver que les éléments dont la p-value du test du $\chi^2$ est inférieure à 0.001.
 
-\iffalse
-<div class="solution-exo">
+::: {.solution-exo}
 ```{r eval=FALSE}
 khi2 <- map2(croisements$v1, croisements$v2,
     ~list(
@@ -1259,8 +1210,7 @@ khi2 <- map2(croisements$v1, croisements$v2,
 ) %>%
 keep(~ .x$chisq$p.value < 0.001)
 ```
-</div>
-\fi
+:::
 
 
 **Exercice 4.2**
@@ -1289,8 +1239,7 @@ tirages <- tribble(
 
 À l'aide de `pmap()` et de `sample()`, créer une liste contenant les résultats des simumations de ces trois séries de tirages.
 
-\iffalse
-<div class="solution-exo">
+::: {.solution-exo}
 ```{r eval=FALSE}
 resultats <- tirages %>%
     pmap(
@@ -1299,18 +1248,15 @@ resultats <- tirages %>%
         }
     )
 ```
-</div>
-\fi
+:::
 
 Représenter avec `barplot()` les résultats obtenus.
 
-\iffalse
-<div class="solution-exo">
+::: {.solution-exo}
 ```{r eval=FALSE}
 resultats %>% walk(~barplot(table(.x)))
 ```
-</div>
-\fi
+:::
 
 
 
@@ -1336,21 +1282,17 @@ map(1:10, lancer_des, 4)
 
 Est-ce que cela fonctionne ? Pourquoi ?
 
-\iffalse
-<div class="solution-exo">
+::: {.solution-exo}
 Ça ne fonctionne pas car `lancer_des()` est appelée à chaque itération avec deux arguments : la valeur courante de l'itérateur, et 4. Ainsi dans sa première itération, `map()` exécute `lancer_des(1, 4)`, ce qui génère un message d'erreur puisque `lancer_des()` n'accepte qu'un argument.
-</div>
-\fi
+:::
 
 Trouver une solution en corrigeant le code.
 
-\iffalse
-<div class="solution-exo">
+::: {.solution-exo}
 ```{r eval=FALSE}
 map(1:10, ~lancer_des(4))
 ```
-</div>
-\fi
+:::
 
 **Exercice 5.2**
 
@@ -1362,49 +1304,41 @@ sample(c("pile", "face"), size = 20, replace = TRUE)
 
 À l'aide de `map()` et de ce code, créer une liste nommée `sims` contenant le résultat de 100 simulations de 20 lancers.
 
-\iffalse
-<div class="solution-exo">
+::: {.solution-exo}
 ```{r eval=FALSE}
 sims <- map(
     1:100,
     ~ sample(c("pile", "face"), size = 20, replace = TRUE)
 )
 ```
-</div>
-\fi
+:::
 
 Toujours à l'aide de `map()`, calculer le nombre de "pile" obtenus pour chaque simulation de `sims`.
 
-\iffalse
-<div class="solution-exo">
+::: {.solution-exo}
 ```{r eval=FALSE}
 n_piles <- sims %>% map_int(~ sum(.x == "pile"))
 ```
-</div>
-\fi
+:::
 
 Déterminer le nombre minimal et le nombre maximal de "pile" obtenus parmi toutes les simulations de `sims`.
 
-\iffalse
-<div class="solution-exo">
+::: {.solution-exo}
 ```{r eval=FALSE}
 range(n_piles)
 ```
-</div>
-\fi
+:::
 
 
 *Facultatif :* à l'aide de la fonction [head_while()](https://purrr.tidyverse.org/reference/head_while.html), déterminer pour chaque simulation de `sims` le nombre de "pile" consécutifs obtenus avant le premier "face".
 
-\iffalse
-<div class="solution-exo">
+::: {.solution-exo}
 ```{r eval=FALSE}
 sims %>% map_int(
     ~ length(head_while(.x, ~ .x == "pile"))
 )
 ```
-</div>
-\fi
+:::
 
 
 *Facultatif :* la fonction `rle()` permet de calculer les *run length encoding* d'un vecteur.
@@ -1415,8 +1349,7 @@ rle(c("pile", "face", "face", "face", "pile", "pile"))
 
 À l'aide de cette fonction et de `map_int()`, calculer pour chaque simulation la longueur de la plus grande série consécutive de "pile".
 
-\iffalse
-<div class="solution-exo">
+::: {.solution-exo}
 ```{r eval=FALSE}
 sims %>% map_int(~{
     r <- rle(.x)
@@ -1424,6 +1357,5 @@ sims %>% map_int(~{
     max(longueurs_pile)
 })
 ```
-</div>
-\fi
+:::
 
