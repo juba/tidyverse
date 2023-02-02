@@ -6,9 +6,9 @@ R n'est pas prévu pour la saisie de données, mais il bénéficie de nombreuses
 
 Il est très vivement conseillé de travailler avec les projets de RStudio pour faciliter l'accès aux fichiers et pouvoir regrouper l'ensemble des éléments d'une analyse dans un dossier (voir @sec-projets).
 
-```{block type='rmdnote'}
+::: {.rmdnote}
 Les projets permettent notamment de ne pas avoir à spécifier un chemin complet vers un fichier (sous Windows, quelque chose du genre `C:\\Users\\toto\\Documents\\quanti\\projet\\data\\donnees.xls`) mais un chemin relatif au dossier du projet (juste `donnees.xls` si le fichier se trouve à la racine du projet, `data/donnees.xls` s'il se trouve dans un sous-dossier `data`, etc.)
-```
+:::
 
 
 ## Import de fichiers textes
@@ -57,9 +57,9 @@ d <- read_csv("fichier.csv", locale = locale(encoding = "UTF-8"))
 Pour plus d'informations sur ces fonctions, voir [le site de l'extension readr](http://readr.tidyverse.org/).
 
 
-```{block, type='rmdnote'}
+::: {.rmdnote}
 À noter que si vous souhaitez importer des fichiers textes très volumineux le plus rapidement possible, la fonction `fread` de l'extension `data.table` est plus rapide que `read_csv`.
-```
+:::
 
 ### Interface interactive d'import de fichiers
 
@@ -78,11 +78,11 @@ Il vous suffit d'indiquer le fichier à importer dans le champ *File/URL* tout e
 
 Vous pouvez modifier les options d'importation, changer le type des colonnes, etc. et l'aperçu se met à jour. De même, le code correspondant à l'importation du fichier avec les options sélectionnées est affiché dans la partie *Code Preview*.
 
-```{block, type='rmdimportant'}
+::: {.rmdimportant}
 **Important** : une fois que l'import semble correct, ne cliquez pas sur le bouton *Import*. À la place, sélectionnez le code généré et copiez-le (ou cliquez sur l'icône en forme de presse papier) et choisissez *Cancel*. Ensuite, collez le code dans votre script et exécutez-le (vous pouvez supprimer la ligne commençant par `View`).
 
 Cette manière de faire permet "d'automatiser" l'importation des données, puisqu'à la prochaine ouverture du script vous aurez juste à exécuter le code en question, sans repasser par l'interface d'import.
-```
+:::
 
 
 ## Import depuis un fichier Excel
@@ -226,9 +226,9 @@ La fonction `tbl` notamment permet de créer un nouvel objet qui représente une
 cars_tbl <- tbl(con, "mtcars")
 ```
 
-```{block type='rmdimportant'}
+::: {.rmdimportant}
 Ici l'objet `cars_tbl` n'est *pas* un tableau de données, c'est juste un objet permettant d'interroger la table de notre base de données.
-```
+:::
 
 On peut utiliser cet objet avec les verbes de `dplyr` :
 
@@ -241,14 +241,14 @@ cars_tbl %>%
 `dbplyr` s'occupe, de manière transparente, de transformer les instructions `dplyr` en requête SQL, d'interroger la base de données et de renvoyer le résultat. De plus, tout est fait pour qu'un minimum d'opérations sur la base, parfois coûteuses en temps de calcul, ne soient effectuées.
 
 
-```{block type='rmdimportant'}
+::: {.rmdimportant}
 Il est possible de modifier des objets de type `tbl`, par exemple avec `mutate` :
 
 `cars_tbl <- cars_tbl %>% mutate(type = "voiture")`
 
 Dans ce cas la nouvelle colonne `type` est bien créée et on peut y accéder par la suite. Mais **cette création se fait dans une table temporaire** : elle n'existe que le temps de la connexion à la base de données. À la prochaine connexion, cette nouvelle colonne n'apparaîtra pas dans la table.
 
-```
+:::
 
 Bien souvent on utilisera une base de données quand les données sont trop volumineuses pour être gérées par un ordinateur de bureau. Mais si les données ne sont pas trop importantes, il sera en général plus rapide de récupérer l'intégralité de la table dans notre session R pour pouvoir la manipuler comme les tableaux de données habituels. Ceci se fait grâce à la fonction `collect` de `dplyr` :
 
@@ -307,9 +307,9 @@ load("fichier.RData")
 
 Les objets `d`, `rp2018` et `tab` devraient alors apparaître dans votre environnement.
 
-```{block, type='rmdimportant'}
+::: {.rmdimportant}
 Attention, quand on utilise `load`, les objets chargés sont importés directement dans l'environnement en cours avec leur nom d'origine. Si d'autres objets du même nom existent déjà, ils sont écrasés sans avertissement.
-```
+:::
 
 Une alternative est d'utiliser les fonctions `saveRDS` et `readRDS`, qui permettent d'enregistrer un unique objet, et de le charger dans notre session avec le nom que l'on souhaite.
 

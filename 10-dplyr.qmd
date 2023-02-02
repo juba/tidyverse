@@ -295,9 +295,9 @@ flights %>%
   arrange(dep_delay)
 ```
 
-```{block type='rmdnote'}
+::: {.rmdnote}
 On appelle une suite d'instructions de ce type un *pipeline*.
-```
+:::
 
 Évidemment, il est naturel de vouloir récupérer le résultat final d'un *pipeline* pour le stocker dans un objet. On peut stocker le résultat du *pipeline* ci-dessus dans un nouveau tableau `delay_la` de la manière suivante :
 
@@ -326,12 +326,12 @@ est équivalente à :
 delay_la <- (flights %>% filter(dest == "LAX") %>% select(dep_delay, arr_delay))
 ```
 
-```{block type='rmdnote'}
+::: {.rmdnote}
 L'utilisation du *pipe* n'est pas obligatoire, mais elle rend les scripts plus lisibles et plus rapides à saisir. On l'utilisera donc dans ce qui suit.
-```
+:::
 
 
-```{block type='rmdimportant'}
+::: {.rmdimportant}
 Depuis la version 4.1, R propose un *pipe* "natif", qui fonctionne partout, même si on n'utilise pas les extensions du *tidyverse*. Celui-ci est noté `|>`.
 
 Il s'utilise de la même manière que `%>%` :
@@ -347,7 +347,7 @@ Ce n'est pas possible d'omettre les parenthèses avec `|>`, on doit obligatoirem
 `df |> View()`
 
 Dans la suite de ce document on privilégiera (pour l'instant) le *pipe* du *tidyverse* `%>%`, pour des raisons de compatibilité avec des versions de R moins récentes.
-```
+:::
 
 
 ## Opérations groupées
@@ -408,9 +408,9 @@ flights %>%
 ```
 
 
-```{block type='rmdimportant'}
+::: {.rmdimportant}
 **Attention :** la clause `group_by` marche pour les verbes déjà vus précédemment, *sauf* pour `arrange`, qui par défaut trie la table sans tenir compte des groupes. Pour obtenir un tri par groupe, il faut lui ajouter l'argument `.by_group = TRUE`.
-```
+:::
 
 On peut voir la différence en comparant les deux résultats suivants :
 
@@ -747,11 +747,11 @@ left_join(flights, airlines) %>%
 
 On voit que la table résultat est bien la fusion des deux tables d'origine selon les valeurs des deux colonnes clés `carrier`. On est parti de la table `flights`, et pour chaque ligne de celle-ci on a ajouté les colonnes de `airlines` pour lesquelles la valeur de `carrier` est la même. On a donc bien une nouvelle colonne `name` dans notre table résultat, avec le nom complet de la compagnie aérienne.
 
-```{block type='rmdnote'}
+::: {.rmdnote}
 À noter qu'on peut tout à fait utiliser le *pipe* avec les fonctions de jointure :
 
 `flights %>% left_join(airlines)`.
-```
+:::
 
 Nous sommes ici dans le cas le plus simple concernant les clés de jointure : les deux clés sont uniques et portent le même nom dans les deux tables. Par défaut, si on ne lui spécifie pas explicitement les clés, `dplyr` fusionne en utilisant l'ensemble des colonnes communes aux deux tables. On peut d'ailleurs voir dans cet exemple qu'un message a été affiché précisant que la jointure s'est bien faite sur la variable `carrier`.
 
