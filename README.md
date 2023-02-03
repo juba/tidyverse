@@ -8,6 +8,24 @@ Code source du document *Introduction à R et au tidyverse*, accessible en ligne
 
 - <https://juba.github.io/tidyverse>
 
-Le document est généré grâce à l'excellente extension [bookdown](https://bookdown.org/) de [Yihui Xie](https://yihui.name/). Il est mis à disposition selon les termes de la [Licence Creative Commons Attribution - Pas d’Utilisation Commerciale - Partage dans les Mêmes Conditions 4.0 International](http://creativecommons.org/licenses/by-nc-sa/4.0/).
+Le document est généré grâce à [quarto](https://quarto.org/). Il est mis à disposition selon les termes de la [Licence Creative Commons Attribution - Pas d’Utilisation Commerciale - Partage dans les Mêmes Conditions 4.0 International](http://creativecommons.org/licenses/by-nc-sa/4.0/).
 
 Toutes suggestions et corrections sont les bienvenues.
+
+## Compilation
+
+Pour compiler le document en HTML, PDF ou EPUB, [installer quarto](https://quarto.org/docs/get-started/) et utiliser l'une des commandes suivantes :
+
+```shell
+# Format HTML uniquement
+quarto render --to html
+# Format PDF uniquement (nécessite une installation de XeLaTeX)
+quarto render --to pdf
+# Format EPUB uniquement
+quarto render --to epub
+# Tous les formats
+quarto render
+```
+
+Les fichiers sont générés dans le dossier `_book`.
+
