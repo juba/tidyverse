@@ -1,18 +1,16 @@
-%\usepackage{booktabs}
 \usepackage{ctable}
 \usepackage{fancyhdr}
 \usepackage{float}
-\usepackage[a4paper,margin=2cm]{geometry}
+\usepackage{comment}
+\usepackage{hyperref}
 
 \floatplacement{figure}{H}
 
 %\usepackage[sf,bf]{titlesec}
 
-\hypersetup{colorlinks=true, urlcolor=blue}
-
-\renewcommand{\chaptername}{Chapitre}
-\renewcommand{\contentsname}{Table des Matières}
-\renewcommand{\partname}{Partie}
+%\renewcommand{\chaptername}{Chapitre}
+%\renewcommand{\contentsname}{Table des Matières}
+%\renewcommand{\partname}{Partie}
 
 \usepackage{framed,color}
 \definecolor{incolor}{RGB}{240,240,240}
@@ -22,69 +20,73 @@
 \renewcommand{\topfraction}{0.8}
 \renewcommand{\bottomfraction}{0.8}
 \renewcommand{\floatpagefraction}{0.75}
- 
+
 %\renewenvironment{quote}{\begin{VF}}{\end{VF}}
 
-\ifxetex
- \usepackage{letltxmacro}
- \setlength{\XeTeXLinkMargin}{1pt}
- \LetLtxMacro\SavedIncludeGraphics\includegraphics
- \def\includegraphics#1#{% #1 catches optional stuff (star/opt. arg.)
-   \IncludeGraphicsAux{#1}%
- }%
- \newcommand*{\IncludeGraphicsAux}[2]{%
-   \XeTeXLinkBox{%
-     \SavedIncludeGraphics#1{#2}%
-   }%
- }%
-\fi
- 
+% \ifxetex
+%   \usepackage{letltxmacro}
+%   \setlength{\XeTeXLinkMargin}{1pt}
+%   \LetLtxMacro\SavedIncludeGraphics\includegraphics
+%   \def\includegraphics#1#{% #1 catches optional stuff (star/opt. arg.)
+%   \IncludeGraphicsAux{#1}%
+%   }%
+%   \newcommand*{\IncludeGraphicsAux}[2]{%
+%     \XeTeXLinkBox{%
+%       \SavedIncludeGraphics#1{#2}%
+%     }%
+%   }%
+% \fi
+
 \makeatletter
 \newenvironment{kframe}{%
-\medskip{}
-\setlength{\fboxsep}{.8em}
-\def\at@end@of@kframe{}%
-\ifinner\ifhmode%
- \def\at@end@of@kframe{\end{minipage}}%
- \begin{minipage}{\columnwidth}%
-\fi\fi%
-\def\FrameCommand##1{\hskip\@totalleftmargin \hskip-\fboxsep
-\colorbox{incolor}{##1}\hskip-\fboxsep
+  \medskip{}
+  \setlength{\fboxsep}{.8em}
+  \def\at@end@of@kframe{}%
+  \ifinner\ifhmode%
+      \def\at@end@of@kframe{\end{minipage}}%
+      \begin{minipage}{\columnwidth}%
+    \fi\fi%
+  \def\FrameCommand##1{\hskip\@totalleftmargin \hskip-\fboxsep
+    \colorbox{incolor}{##1}\hskip-\fboxsep
     % There is no \\@totalrightmargin, so:
     \hskip-\linewidth \hskip-\@totalleftmargin \hskip\columnwidth}%
-\MakeFramed {\advance\hsize-\width
-  \@totalleftmargin\z@ \linewidth\hsize
-  \@setminipage}}%
+  \MakeFramed {\advance\hsize-\width
+    \@totalleftmargin\z@ \linewidth\hsize
+    \@setminipage}}%
 {\par\unskip\endMakeFramed%
-\at@end@of@kframe}
+  \at@end@of@kframe}
 \makeatother
 
 \let\oldverbatim\verbatim
 \renewenvironment{Shaded}{\vspace{0.2cm}\begin{kframe}}{\end{kframe}}
 \renewenvironment{verbatim}{\begin{shaded}\begin{oldverbatim}}{\end{oldverbatim}\end{shaded}}
 
+% Callout environments
 \newenvironment{rmdblock}[1]
- {
- \begin{itemize}
- \renewcommand{\labelitemi}{
-   \raisebox{-.7\height}[0pt][0pt]{
-     {\setkeys{Gin}{width=3em,keepaspectratio}\includegraphics{#1}}
-   }
- }
- \begin{kframe}
- \setlength{\fboxsep}{1em}
- \item
- }
- {
- \end{kframe}
- \end{itemize}
- }
+{
+  \begin{itemize}
+    \renewcommand{\labelitemi}{
+      \raisebox{-.7\height}[0pt][0pt]{
+        {\setkeys{Gin}{width=3em,keepaspectratio}\includegraphics{#1}}
+      }
+    }
+    \begin{kframe}
+      \setlength{\fboxsep}{1em}
+      \item
+      }
+      {
+    \end{kframe}
+  \end{itemize}
+}
 \newenvironment{rmdnote}
- {\begin{rmdblock}{resources/icons/help-about.png}}
- {\end{rmdblock}}
+{\begin{rmdblock}{resources/icons/help-about.png}}
+    {\end{rmdblock}}
 \newenvironment{rmdimportant}
- {\begin{rmdblock}{resources/icons/emblem-important.png}}
- {\end{rmdblock}}
+{\begin{rmdblock}{resources/icons/emblem-important.png}}
+    {\end{rmdblock}}
+
+% Hide solution-exo environments
+\excludecomment{solutionexo}
 
 
 \urlstyle{tt}
