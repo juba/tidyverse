@@ -61,7 +61,7 @@ R/
 _targets.R
 ```
 
-::: {.rmdnote}
+::: {.callout-note}
 À noter que `targets` n'impose aucune structure de projet particulière en-dehors de la présence du fichier `_targets.R`. On aurait donc pu avoir une organisation tout à fait différente.
 :::
 
@@ -82,7 +82,7 @@ Le fichier `R/fonctions_calculs.R` contient une seule fonction qui calcule les v
 
 C'est dans le fichier `_targets.R`, situé à la racine du dossier, qu'on va définir le pipeline constitué de toutes les étapes de notre traitement : chargement et manipulation des données, calculs, génération de rapports, etc. Ces étapes sont également appelées *cibles* (*targets*).
 
-::: {.rmdnote}
+::: {.callout-note}
 La syntaxe présentée ici est celle proposée par l'extension `tarchetypes`, qui est un peu plus facile à prendre en main et plus lisible que la syntaxe native de `targets`.
 :::
 
@@ -175,7 +175,7 @@ tar_plan(
 )
 ```
 
-::: {.rmdimportant}
+::: {.callout-warning}
 On notera que les cibles doivent toutes avoir des noms différents. Si on exécute plusieurs étapes de transformation ou de calcul sur un tableau de données, on devra donner un nom distinct à ces cibles et aux objets qui correspondent.
 :::
 
@@ -184,7 +184,7 @@ Au final, notre fichier `_targets.R` est donc le suivant :
 ```{r eval=FALSE, code=readLines('_targets.R'), cache=FALSE}
 ```
 
-::: {.rmdnote}
+::: {.callout-note}
 `targets` offre aussi la possibilité de définir notre pipeline directement dans un fichier RMarkdown, ce qui peut permettre notamment de mieux le documenter. Pour plus d'information on pourra se référer au chapitre [Target Markdown](https://books.ropensci.org/targets/markdown.html) du manuel en ligne.
 :::
 
@@ -275,7 +275,7 @@ On peut vérifier que notre pipeline est désormais entièrement à jour :
 tar_visnetwork()
 ```
 
-::: {.rmdnote}
+::: {.callout-note}
 À noter que `targets` gère aussi les modifications des fichiers externes. Ainsi, si on modifie le contenu de `nat2020.csv`, la cible `csv_file` passerait en *outdated*, tout comme l'ensemble des autres cibles puisqu'elles dépendent directement ou indirectement de celle-ci. Dans ce cas, un `tar_make()` aurait pour effet de recalculer l'intégralité du pipeline.
 :::
 
@@ -375,7 +375,7 @@ Ceci fonctionne, mais ne provoque pas l'affichage du graphique. Il faut faire un
 
 De la même manière, on ne peut pas utiliser d'interfaces interactives comme celles vues pour faciliter les recodages de variables (par exemple @sec-irec). Il est donc souvent pratique de commencer à développer des transformations, calculs ou analyses de façon "interactive", via un script classique dans lequel on importe les données nécessaires via `tar_read()`. Une fois qu'on obtient le résultat souhaité, on transforme ce code en une ou plusieurs fonctions et on les intègre au pipeline de `targets`.
 
-::: {.rmdnote}
+::: {.callout-note}
 On notera que les documents RMarkdown s'utilisent très bien avec `targets` : du moment qu'on charge les données avec `tar_read()` ou `tar_load()`, ils permettent à la fois une utilisation "interactive" pendant leur écriture, et une intégration directe dans un pipeline avec `tar_render()` sans avoir besoin de les modifier. 
 :::
 
