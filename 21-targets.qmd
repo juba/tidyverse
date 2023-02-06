@@ -193,9 +193,22 @@ Au final, notre fichier `_targets.R` est donc le suivant :
 
 Une fois notre pipeline défini, `targets` fournit des outils permettant de visualiser sa structure et son état, notamment la fonction `tar_visnetwork()`.
 
-```{r cache=FALSE}
+```{r}
+#| eval: false
+
 tar_visnetwork()
 ```
+
+```{r}
+#| cache: false
+#| eval: true
+#| echo: false
+
+if (knitr::is_html_output(excludes=c("epub", "epub2"))) {
+    tar_visnetwork()
+}
+```
+
 
 Les différentes cibles apparaissent sous forme de cercles, et les fonctions qui leur sont appliquées sous forme de triangles. Les flèches indiquent que `targets` a automatiquement créé un *réseau de dépendances* entre cibles et fonctions : ainsi la cible `donnees` dépend des fonctions `filter_data`, `pivot_2019_2020` et de la cible `donnees_brutes`, qui elle-même dépend de la cible `csv_file`.
 
@@ -211,8 +224,20 @@ Lorsqu'on utilise `tar_make()`, `targets` lance une nouvelle session R (pour év
 
 On visualise le nouvel état de notre pipeline, et on voit que toutes les cibles sont passées à l'état *up to date*.
 
-```{r cache=FALSE}
+```{r}
+#| eval: false
+
 tar_visnetwork()
+```
+
+```{r}
+#| cache: false
+#| eval: true
+#| echo: false
+
+if (knitr::is_html_output(excludes=c("epub", "epub2"))) {
+    tar_visnetwork()
+}
 ```
 
 À chaque étape, `targets` crée et stocke dans un cache chacun des objets correspondants aux différentes cibles (`donnees_brutes`, `donnees`, etc.). On peut charger à tout moment ces objets dans notre session avec la fonction `tar_load()`^[Ces données sont stockées dans le répertoire `_targets` à la racine du projet.].
@@ -251,8 +276,20 @@ file.rename("R/fonctions_calculs.R.orig", "R/fonctions_calculs.R")
 
 On visualise à nouveau l'état de notre pipeline :
 
-```{r cache=FALSE}
+```{r}
+#| eval: false
+
 tar_visnetwork()
+```
+
+```{r}
+#| cache: false
+#| eval: true
+#| echo: false
+
+if (knitr::is_html_output(excludes=c("epub", "epub2"))) {
+    tar_visnetwork()
+}
 ```
 
 Grâce à sa gestion interne des dépendances entre les cibles, `targets` a vu que la fonction `calcule_evo` a été modifiée (elle est passée en statut *outdated*), et comme la cible `donnees_evo` dépend de cette fonction, celle-ci a également été placée en *outdated*. On peut obtenir directement une liste des cibles qui ne sont plus à jour à l'aide de la fonction `tar_outdated()` :
@@ -271,8 +308,20 @@ On voit que les cibles `csv_file`, `donnees_brutes` et `donnees` ont été "skip
 
 On peut vérifier que notre pipeline est désormais entièrement à jour :
 
-```{r cache=FALSE}
+```{r}
+#| eval: false
+
 tar_visnetwork()
+```
+
+```{r}
+#| cache: false
+#| eval: true
+#| echo: false
+
+if (knitr::is_html_output(excludes=c("epub", "epub2"))) {
+    tar_visnetwork()
+}
 ```
 
 ::: {.callout-note}
@@ -322,8 +371,20 @@ Pour ajouter ce rapport à notre pipeline, on crée une nouvelle cible dans le `
 
 Visualisons notre pipeline modifié :
 
-```{r cache=FALSE}
+```{r}
+#| eval: false
+
 tar_visnetwork()
+```
+
+```{r}
+#| cache: false
+#| eval: true
+#| echo: false
+
+if (knitr::is_html_output(excludes=c("epub", "epub2"))) {
+    tar_visnetwork()
+}
 ```
 
 On voit que notre nouvelle cible `report_evo` a bien été prise en compte, qu'elle dépend bien de `donnees_evo` et qu'elle est à l'état *outdated*. 
