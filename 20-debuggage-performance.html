@@ -714,7 +714,7 @@ Note
 <div class="cell" data-hash="20-debuggage-performance_cache/html/unnamed-chunk-18_4f121c6206410b983f140262ef79927c">
 <div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">system.time</span>(<span class="fu">runif</span>(<span class="dv">1000000</span>))</span>
 <span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    user  system elapsed </span></span>
-<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   0.036   0.000   0.037</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   0.015   0.000   0.014</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>L’expression peut comporter plusieurs instructions, dans ce cas on les entoure d’accolades.</p>
 <div class="cell" data-hash="20-debuggage-performance_cache/html/unnamed-chunk-19_43ff4aaa93dae1ec9bbe745893bbd258">
@@ -723,7 +723,7 @@ Note
 <span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>    moy <span class="ot">&lt;-</span> <span class="fu">mean</span>(v)</span>
 <span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>})</span>
 <span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    user  system elapsed </span></span>
-<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   0.033   0.004   0.037</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   0.016   0.000   0.016</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p><code>system.time()</code> est cependant très limitée : on ne peut exécuter qu’une expression à la fois, on ne peut donc pas en comparer plusieurs directement, et surtout le temps d’exécution peut varier assez sensiblement selon l’utilisation du processeur de la machine au moment où on lance la commande.</p>
 <p>Il existe donc en complément plusieurs extensions dédiées au <em>benchmarking</em>. On va utiliser ici l’extension <a href="https://bench.r-lib.org/">bench</a>, installable avec :</p>
@@ -764,8 +764,8 @@ Note
 <span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # A tibble: 2 × 6</span></span>
 <span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   expression         min   median `itr/sec` mem_alloc `gc/sec`</span></span>
 <span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   &lt;bch:expr&gt;    &lt;bch:tm&gt; &lt;bch:tm&gt;     &lt;dbl&gt; &lt;bch:byt&gt;    &lt;dbl&gt;</span></span>
-<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1 plus10_for(x)  757.7µs  860.6µs     1134.    97.5KB     2.04</span></span>
-<span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2 plus10_vec(x)   19.8µs   21.8µs    42211.   117.3KB    88.8</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1 plus10_for(x)  640.5µs    684µs     1460.    97.5KB     4.08</span></span>
+<span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2 plus10_vec(x)   17.5µs     52µs    23596.   117.3KB    48.2</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>La colonne la plus importante est sans doute la colonne <code>median</code>, qui affiche le temps médian d’exécution des deux expressions. Attention, l’unité de temps n’est pas forcément la même, ici l’exécution de <code>plus10_for</code> est affichée en millisecondes (“ms”), tandis que celle de <code>plus10_vec</code> l’est en microsecondes (“µs”) donc avec une unité mille fois plus petite.</p>
 <p>Si on préfère, on peut afficher les performances relatives des deux fonctions avec :</p>
@@ -774,8 +774,8 @@ Note
 <span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # A tibble: 2 × 6</span></span>
 <span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   expression      min median `itr/sec` mem_alloc `gc/sec`</span></span>
 <span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   &lt;bch:expr&gt;    &lt;dbl&gt;  &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;</span></span>
-<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1 plus10_for(x)  38.3   39.5       1        1         1  </span></span>
-<span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2 plus10_vec(x)   1      1        37.2      1.20     43.6</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1 plus10_for(x)  36.6   13.2       1        1         1  </span></span>
+<span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2 plus10_vec(x)   1      1        16.2      1.20     11.8</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Ces résultats nous permettent de voir que la version <code>vec</code> est très nettement plus rapide que la version <code>for</code> ! Ce qui confirme le fait qu’il faut toujours prioriser l’utilisation de fonctions vectorisées lorsqu’elles existent.</p>
 <p>On prend un second exemple : on souhaite mesurer si l’utilisation de <code>map</code> est plus rapide ou non qu’une boucle <code>for</code> pour une tâche équivalente.</p>
@@ -799,8 +799,8 @@ Note
 <span id="cb29-11"><a href="#cb29-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # A tibble: 2 × 6</span></span>
 <span id="cb29-12"><a href="#cb29-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   expression      min   median `itr/sec` mem_alloc `gc/sec`</span></span>
 <span id="cb29-13"><a href="#cb29-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   &lt;bch:expr&gt; &lt;bch:tm&gt; &lt;bch:tm&gt;     &lt;dbl&gt; &lt;bch:byt&gt;    &lt;dbl&gt;</span></span>
-<span id="cb29-14"><a href="#cb29-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1 boucle_for   3.83ms   4.11ms      235.  199.32KB     6.47</span></span>
-<span id="cb29-15"><a href="#cb29-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2 map         977.4µs   1.18ms      831.    6.73KB    10.7</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb29-14"><a href="#cb29-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1 boucle_for   2.82ms   2.93ms      340.  199.32KB     11.0</span></span>
+<span id="cb29-15"><a href="#cb29-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2 map        921.21µs 971.86µs     1032.    6.73KB     12.7</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>La lecture du résultat indique que le <code>map</code> est environ 4 fois plus rapide que la boucle <code>for</code>.</p>
 <p>Attention cependant en lisant ces résultats : dans la comparaison précédente les temps d’exécution étant en millisecondes, même une différence du type “4 fois plus rapide” peut être quasiment imperceptible. Dans l’exemple suivant on compare de la même manière <code>for</code> et <code>map</code>, mais cette fois en effectuant une action plus coûteuse en temps de calcul (on génère des vecteurs de nombres aléatoires).</p>
@@ -819,8 +819,8 @@ Note
 <span id="cb30-12"><a href="#cb30-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # A tibble: 2 × 6</span></span>
 <span id="cb30-13"><a href="#cb30-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   expression      min   median `itr/sec` mem_alloc `gc/sec`</span></span>
 <span id="cb30-14"><a href="#cb30-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   &lt;bch:expr&gt; &lt;bch:tm&gt; &lt;bch:tm&gt;     &lt;dbl&gt; &lt;bch:byt&gt;    &lt;dbl&gt;</span></span>
-<span id="cb30-15"><a href="#cb30-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1 boucle_for    207ms    207ms      4.79    38.5MB        0</span></span>
-<span id="cb30-16"><a href="#cb30-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2 map           204ms    205ms      4.84    38.4MB        0</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb30-15"><a href="#cb30-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1 boucle_for   95.4ms   95.7ms      10.4    38.5MB     0   </span></span>
+<span id="cb30-16"><a href="#cb30-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2 map          93.1ms   93.2ms      10.7    38.4MB     2.14</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Dans ce cas la différence entre <code>for</code> et <code>map</code> devient négligeable par rapport aux temps de calcul des opérations effectuées dans les boucles : au final les temps d’exécution sont presque identiques.</p>
 </section>
@@ -840,8 +840,8 @@ Note
 <span id="cb31-8"><a href="#cb31-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # A tibble: 2 × 6</span></span>
 <span id="cb31-9"><a href="#cb31-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   expression      min   median `itr/sec` mem_alloc `gc/sec`</span></span>
 <span id="cb31-10"><a href="#cb31-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   &lt;bch:expr&gt; &lt;bch:tm&gt; &lt;bch:tm&gt;     &lt;dbl&gt; &lt;bch:byt&gt;    &lt;dbl&gt;</span></span>
-<span id="cb31-11"><a href="#cb31-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1 boucle       6.88ms   7.55ms      130.  112.41KB     6.49</span></span>
-<span id="cb31-12"><a href="#cb31-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2 vec          76.4µs   88.8µs    10798.    1.48KB     0</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb31-11"><a href="#cb31-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1 boucle       4.71ms   4.82ms      207.   112.4KB     8.63</span></span>
+<span id="cb31-12"><a href="#cb31-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2 vec          64.7µs   66.2µs    15011.    1.48KB     2.02</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="mettre-le-minimum-dopérations-dans-les-boucles" class="level3" data-number="20.3.2">
@@ -896,8 +896,8 @@ Note
 <span id="cb34-5"><a href="#cb34-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # A tibble: 2 × 6</span></span>
 <span id="cb34-6"><a href="#cb34-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   expression                min   median `itr/sec` mem_alloc `gc/sec`</span></span>
 <span id="cb34-7"><a href="#cb34-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   &lt;bch:expr&gt;           &lt;bch:tm&gt; &lt;bch:tm&gt;     &lt;dbl&gt; &lt;bch:byt&gt;    &lt;dbl&gt;</span></span>
-<span id="cb34-8"><a href="#cb34-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1 nb_chaine1(d, "oui")   4.78ms   5.26ms      186.     345KB     0   </span></span>
-<span id="cb34-9"><a href="#cb34-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2 nb_chaine2(d, "oui")   1.37ms   1.61ms      591.     157KB     2.02</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb34-8"><a href="#cb34-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1 nb_chaine1(d, "oui")   3.16ms    3.2ms      311.     345KB     0   </span></span>
+<span id="cb34-9"><a href="#cb34-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2 nb_chaine2(d, "oui") 927.21µs  946.9µs     1054.     157KB     2.02</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Ce qui permet de constater que la deuxième version est quatre fois plus rapide (et elle sera d’autant plus rapide que le nombre de colonnes du tableau sera grand).</p>
 </section>
