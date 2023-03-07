@@ -41,6 +41,7 @@ Cette commande va en fait installer plusieurs extensions qui constituent le "coe
 - `tibble` (tableaux de données)
 - `forcats` (variables qualitatives)
 - `stringr` (chaînes de caractères)
+- `lubridate` (manipulation de dates)
 
 ![Packages de l'extension tidyverse](resources/logos/core_packages.png)
 
@@ -58,20 +59,19 @@ Ce document est basé sur les versions d'extension suivantes :
 
 ```{r echo=FALSE, message=TRUE, warning=TRUE}
 core <- tidyverse:::core
-versions <- vapply(core, tidyverse:::package_version, character(1))
-  packages <- paste0(
+versions <- vapply(core, tidyverse:::package_version_h, character(1))
+packages <- paste0(
     crayon::blue(format(core)), " ",
     crayon::col_align(versions, max(crayon::col_nchar(versions)))
-  )
+)
 
-  if (length(packages) %% 2 == 1) {
+if (length(packages) %% 2 == 1) {
     packages <- append(packages, "")
-  }
-  col1 <- seq_len(length(packages) / 2)
-  info <- paste0(packages[col1], "     ", packages[-col1])
+}
+col1 <- seq_len(length(packages) / 2)
+info <- paste0(packages[col1], "     ", packages[-col1])
 
-tidyverse:::msg(paste(info, collapse = "\n"), startup = TRUE)
-
+cat(paste(info, collapse = "\n"))
 ```
 
 
