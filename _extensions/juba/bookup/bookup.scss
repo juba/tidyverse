@@ -39,7 +39,7 @@ $h4-font-size: 1.25em;
     --header-footer-border: #dee2e6;
 
     --table-tr-border: #dee2e6;
-    --table-out-borders: #aaa;
+    --table-out-borders: #999;
     --table-tr-hover: rgba(0, 0, 0, 0.07);
 
     --reader-toggle-bg: #fafafa;
@@ -57,6 +57,9 @@ $h4-font-size: 1.25em;
     --callout-tip-bg: #e8f3ee;
     --callout-tip-title: #050;
 
+    --listing-card-border: #a1a7ac;
+    --listing-card-shadow: rgba(0, 0, 0, 0.04);
+    --listing-card-shadow-hover: rgba(0, 0, 0, 0.1);
 }
 
 .table,
@@ -71,6 +74,13 @@ $h4-font-size: 1.25em;
     body.docked .page-columns {
         grid-template-columns: [screen-start] 1.5em [screen-start-inset page-start] minmax(50px, 170px) [page-start-inset] 50px [body-start-outset] 50px [body-start] minmax(3em, 5fr) [body-content-start] minmax(300px, 800px) [body-content-end] minmax(3em, 5fr) [body-end] 50px [body-end-outset] minmax(0px, 100px) [page-end-inset] 50px [page-end] 7fr [screen-end-inset] 1.5em [screen-end] !important
     }
+}
+
+
+/* Global styles */
+
+p {
+    margin-bottom: 0.85em;
 }
 
 
@@ -283,7 +293,7 @@ $h4-font-size: 1.25em;
         text-decoration: none;
     }
 
-    a:hover,
+    a:not(.nav-link):hover,
     .btn-link:hover {
         text-decoration: underline;
     }
@@ -295,11 +305,6 @@ $h4-font-size: 1.25em;
     strong {
         font-weight: bold;
     }
-
-    p {
-        margin-bottom: 0.85em;
-    }
-
 
     /* Headings */
 
@@ -336,15 +341,20 @@ $h4-font-size: 1.25em;
     p>img {
         margin: 0.5em auto 1.5em auto;
         display: block;
+        max-width: 100%;
+        height: auto;
     }
 
     figure {
         margin: 2em auto 2.5em auto;
         text-align: center;
+        max-width: 100%;
 
         img {
             border: var(--figure-img-border);
             box-shadow: var(--figure-img-shadow);
+            max-width: 100%;
+            height: auto;
         }
 
         figcaption {
@@ -372,17 +382,9 @@ $h4-font-size: 1.25em;
         margin-right: auto;
 
         thead {
-            border-top: 1px solid var(--table-out-borders);
-            background-color: var(--bs-body-bg);
-
             th {
                 box-shadow: none;
             }
-        }
-
-        thead,
-        tr:last-child {
-            border-bottom: 1px solid var(--table-out-borders);
         }
 
         th,
@@ -390,7 +392,24 @@ $h4-font-size: 1.25em;
             padding: .3em 1em;
         }
 
+        thead,
         tbody {
+            tr {
+                border-top: none;
+            }
+
+            tr:first-child {
+                border-top: 1px solid var(--table-out-borders);
+            }
+
+            tr:last-child {
+                border-bottom: 1px solid var(--table-out-borders);
+            }
+        }
+
+        tbody {
+            border-top: none;
+
             tr:hover {
                 background-color: var(--table-tr-hover) !important;
                 box-shadow: none !important;
@@ -546,18 +565,18 @@ $h4-font-size: 1.25em;
 
     /* Lists */
 
-    ul {
+    ul:not(.nav) {
         margin: 0 0 1.5em 0;
         padding: 0 0 0 2em;
         list-style-type: none;
     }
 
-    ul>li {
+    ul:not(.nav)>li {
         text-indent: -1.1em;
         margin-bottom: .5em;
     }
 
-    ul>li::before {
+    ul:not(.nav)>li::before {
         content: "— ";
     }
 
@@ -604,6 +623,9 @@ $h4-font-size: 1.25em;
 
     .callout-warning {
         background-color: var(--callout-warning-bg);
+        border-top-color: var(--callout-warning-bg);
+        border-right-color: var(--callout-warning-bg);
+        border-bottom-color: var(--callout-warning-bg);
 
         .callout-header {
             color: var(--callout-warning-title);
@@ -612,6 +634,10 @@ $h4-font-size: 1.25em;
 
     .callout-note {
         background-color: var(--callout-note-bg);
+        border-top-color: var(--callout-note-bg);
+        border-right-color: var(--callout-note-bg);
+        border-bottom-color: var(--callout-note-bg);
+
 
         .callout-header {
             color: var(--callout-note-title);
@@ -620,6 +646,9 @@ $h4-font-size: 1.25em;
 
     .callout-important {
         background-color: var(--callout-important-bg);
+        border-top-color: var(--callout-important-bg);
+        border-right-color: var(--callout-important-bg);
+        border-bottom-color: var(--callout-important-bg);
 
         .callout-header {
             color: var(--callout-important-title);
@@ -628,6 +657,9 @@ $h4-font-size: 1.25em;
 
     .callout-caution {
         background-color: var(--callout-caution-bg);
+        border-top-color: var(--callout-caution-bg);
+        border-right-color: var(--callout-caution-bg);
+        border-bottom-color: var(--callout-caution-bg);
 
         .callout-header {
             color: var(--callout-caution-title);
@@ -636,6 +668,9 @@ $h4-font-size: 1.25em;
 
     .callout-tip {
         background-color: var(--callout-tip-bg);
+        border-top-color: var(--callout-tip-bg);
+        border-right-color: var(--callout-tip-bg);
+        border-bottom-color: var(--callout-tip-bg);
 
         .callout-header {
             color: var(--callout-tip-title);
@@ -691,10 +726,47 @@ header {
     }
 }
 
+
+/* Footnotes */
+
+#footnotes {
+    .footnote-back {
+        font-family: var(--bs-font-monospace);
+    }
+}
+
 /* Footer */
 
 body:not(.floating) {
     .nav-footer {
         border-top: 1px solid var(--header-footer-border);
+    }
+}
+
+
+/* Listings */
+
+#quarto-document-content {
+    .quarto-listing {
+        a {
+            color: currentColor;
+
+            &:hover {
+                text-decoration: none;
+            }
+        }
+
+        .card {
+            box-shadow: 0 16px 16px var(--listing-card-shadow);
+            transition: all 0.3s ease-out;
+            background-color: var(--bs-body-bg);
+            color: var(--bs-body-color);
+            border-color: var(--listing-card-border);
+
+            &:hover {
+                transform: translateY(-5px) scale(1.005) translateZ(0);
+                box-shadow: 0 26px 26px var(--listing-card-shadow-hover);
+            }
+        }
     }
 }
