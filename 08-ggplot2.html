@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="fr" xml:lang="fr"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.3.302">
+<meta name="generator" content="quarto-1.3.340">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -111,7 +111,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Basculer la barre latérale" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./06-tidyverse.html">Introduction au tidyverse</a></li><li class="breadcrumb-item"><a href="./08-ggplot2.html"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Visualiser avec <code>ggplot2</code></span></a></li></ol></nav>
+      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./06-tidyverse.html">Introduction au tidyverse</a></li><li class="breadcrumb-item"><a href="./08-ggplot2.html"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Visualiser avec `ggplot2`</span></a></li></ol></nav>
       <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Basculer la barre latérale" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
       </a>
       <button type="button" class="btn quarto-search-button" aria-label="Recherche" onclick="window.quartoOpenSearch();">
@@ -435,13 +435,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Dans ce qui suit on utilisera le jeu de données issu du recensement de la population de 2018 inclus dans l’extension <code>questionr</code> (résultats partiels concernant les communes de plus de 2000 habitants de France métropolitaine). On charge ces données et on en extrait les données de 5 départements (l’utilisation de la fonction <code>filter</code> sera expliquée <a href="10-dplyr.html#sec-filter"><span>Section&nbsp;10.2.2</span></a>)&nbsp;:</p>
-<div class="cell" data-hash="08-ggplot2_cache/html/unnamed-chunk-4_30f84f325493382738e69c8089c2f962">
+<div class="cell" data-hash="08-ggplot2_cache/html/unnamed-chunk-4_616ac3303e7154c5ac84f83664db2049">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(questionr)</span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(rp2018)</span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>rp <span class="ot">&lt;-</span> <span class="fu">filter</span>(</span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>  rp2018,</span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>  departement <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"Oise"</span>, <span class="st">"Rhône"</span>, <span class="st">"Hauts-de-Seine"</span>, <span class="st">"Lozère"</span>, <span class="st">"Bouches-du-Rhône"</span>)</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>    rp2018,</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>    departement <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"Oise"</span>, <span class="st">"Rhône"</span>, <span class="st">"Hauts-de-Seine"</span>, <span class="st">"Lozère"</span>, <span class="st">"Bouches-du-Rhône"</span>)</span>
 <span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
@@ -455,19 +455,22 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <p>On a défini la source de données, il faut maintenant ajouter des éléments de représentation graphique. Ces éléments sont appelés des <code>geom</code>, et on les ajoute à l’objet graphique de base avec l’opérateur <code>+</code>.</p>
 <p>Un des <code>geom</code> les plus simples est <code>geom_histogram</code>. On peut l’ajouter de la manière suivante&nbsp;:</p>
-<div class="cell" data-hash="08-ggplot2_cache/html/unnamed-chunk-6_a233d3fcabf7c707b2124dbbe164bc43">
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(rp) <span class="sc">+</span> <span class="fu">geom_histogram</span>()</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell" data-hash="08-ggplot2_cache/html/unnamed-chunk-6_df24b5048f3c26d99964dfe3564fe30c">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(rp) <span class="sc">+</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_histogram</span>()</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Reste à indiquer quelle donnée nous voulons représenter sous forme d’histogramme. Cela se fait à l’aide d’arguments passés via la fonction <code>aes()</code>. Ici nous avons un paramètre à renseigner, <code>x</code>, qui indique la variable à représenter sur l’axe des x (l’axe horizontal). Ainsi, si on souhaite représenter la distribution des communes du jeu de données selon le pourcentage de cadres dans leur population active (variable <code>cadres</code>), on pourra faire&nbsp;:</p>
-<div class="cell" data-hash="08-ggplot2_cache/html/unnamed-chunk-7_6936205f05593f0d003fce2d4aad7f2b">
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(rp) <span class="sc">+</span> <span class="fu">geom_histogram</span>(<span class="fu">aes</span>(<span class="at">x =</span> cadres))</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell" data-hash="08-ggplot2_cache/html/unnamed-chunk-7_a41cb2a8fd176b9f98b6195f579adf14">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(rp) <span class="sc">+</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_histogram</span>(<span class="fu">aes</span>(<span class="at">x =</span> cadres))</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="08-ggplot2_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 <p>Si on veut représenter une autre variable, il suffit de changer la valeur de <code>x</code>&nbsp;:</p>
-<div class="cell" data-hash="08-ggplot2_cache/html/unnamed-chunk-8_203f37f283f7c942a81d87076b99670b">
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(rp) <span class="sc">+</span> <span class="fu">geom_histogram</span>(<span class="fu">aes</span>(<span class="at">x =</span> ouvr))</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell" data-hash="08-ggplot2_cache/html/unnamed-chunk-8_b5ccfa6138df2a72393ef810a782b657">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(rp) <span class="sc">+</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_histogram</span>(<span class="fu">aes</span>(<span class="at">x =</span> ouvr))</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="08-ggplot2_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid" width="672"></p>
 </div>
@@ -486,19 +489,20 @@ Note
 </div>
 </div>
 <p>Certains <code>geom</code> prennent plusieurs paramètres. Ainsi, si on veut représenter un nuage de points, on peut le faire en ajoutant un <code>geom_point</code>. On doit alors indiquer à la fois la position en <code>x</code> (la variable sur l’axe horizontal) et en <code>y</code> (la variable sur l’axe vertical) de ces points, il faut donc passer ces deux arguments à <code>aes()</code>&nbsp;:</p>
-<div class="cell" data-hash="08-ggplot2_cache/html/unnamed-chunk-9_43935f76b1cf762afc026220007511cc">
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(rp) <span class="sc">+</span> <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">x =</span> dipl_sup, <span class="at">y =</span> cadres))</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell" data-hash="08-ggplot2_cache/html/unnamed-chunk-9_5304e13d0a5460aee659a0b51e561a67">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(rp) <span class="sc">+</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">x =</span> dipl_sup, <span class="at">y =</span> cadres))</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="08-ggplot2_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 <p>On peut modifier certains attributs graphiques d’un <code>geom</code> en lui passant des arguments supplémentaires. Par exemple, pour un nuage de points, on peut modifier la couleur des points avec l’argument <code>color</code>, leur taille avec l’argument <code>size</code>, et leur transparence avec l’argument <code>alpha</code>&nbsp;:</p>
-<div class="cell" data-hash="08-ggplot2_cache/html/unnamed-chunk-10_e4a2aa28502b87386f084692af75c3be">
+<div class="cell" data-hash="08-ggplot2_cache/html/unnamed-chunk-10_0206bef825d8ecbc1ff632165fdf331a">
 <div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(rp) <span class="sc">+</span></span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(</span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">aes</span>(<span class="at">x =</span> dipl_sup, <span class="at">y =</span> cadres),</span>
-<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">color =</span> <span class="st">"darkgreen"</span>, <span class="at">size =</span> <span class="dv">3</span>, <span class="at">alpha =</span> <span class="fl">0.3</span></span>
-<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_point</span>(</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>        <span class="fu">aes</span>(<span class="at">x =</span> dipl_sup, <span class="at">y =</span> cadres),</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>        <span class="at">color =</span> <span class="st">"darkgreen"</span>, <span class="at">size =</span> <span class="dv">3</span>, <span class="at">alpha =</span> <span class="fl">0.3</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>    )</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="08-ggplot2_files/figure-html/unnamed-chunk-10-1.png" class="img-fluid" width="672"></p>
 </div>
@@ -511,27 +515,28 @@ Note
 <section id="geom_boxplot" class="level3" data-number="8.3.1">
 <h3 data-number="8.3.1" class="anchored" data-anchor-id="geom_boxplot"><span class="header-section-number">8.3.1</span> <code>geom_boxplot</code></h3>
 <p><code>geom_boxplot</code> permet de représenter des boîtes à moustaches. On lui passe en <code>y</code> la variable numérique dont on veut étudier la répartition, et en <code>x</code> la variable qualitative contenant les classes qu’on souhaite comparer. Ainsi, si on veut comparer la répartition du pourcentage de maisons en fonction du département de la commune, on pourra faire&nbsp;:</p>
-<div class="cell" data-hash="08-ggplot2_cache/html/unnamed-chunk-11_1041fc6d847a15d9e16f4d0da5c11245">
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(rp) <span class="sc">+</span> <span class="fu">geom_boxplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> departement, <span class="at">y =</span> maison))</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell" data-hash="08-ggplot2_cache/html/unnamed-chunk-11_d91d9c80d6353328dc22cb80c8c0f2c7">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(rp) <span class="sc">+</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_boxplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> departement, <span class="at">y =</span> maison))</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="08-ggplot2_files/figure-html/unnamed-chunk-11-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 <p>On peut personnaliser la présentation avec différents argument supplémentaires comme <code>fill</code> ou <code>color</code>&nbsp;:</p>
-<div class="cell" data-hash="08-ggplot2_cache/html/unnamed-chunk-12_a35c383ae0c95f243f6304851339270d">
+<div class="cell" data-hash="08-ggplot2_cache/html/unnamed-chunk-12_34e4b70891ca068183e7832eeb098257">
 <div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(rp) <span class="sc">+</span></span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>(</span>
-<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">aes</span>(<span class="at">x =</span> departement, <span class="at">y =</span> maison),</span>
-<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">fill =</span> <span class="st">"wheat"</span>, <span class="at">color =</span> <span class="st">"tomato4"</span></span>
-<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_boxplot</span>(</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>        <span class="fu">aes</span>(<span class="at">x =</span> departement, <span class="at">y =</span> maison),</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>        <span class="at">fill =</span> <span class="st">"wheat"</span>, <span class="at">color =</span> <span class="st">"tomato4"</span></span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>    )</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="08-ggplot2_files/figure-html/unnamed-chunk-12-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 <p>Un autre argument utile, <code>varwidth</code>, permet de faire varier la largeur des boîtes en fonction des effectifs de la classe (donc, ici, en fonction du nombre de communes de chaque département)&nbsp;:</p>
-<div class="cell" data-hash="08-ggplot2_cache/html/unnamed-chunk-13_cb5e127edb1ae3864015b9d84afa4a79">
+<div class="cell" data-hash="08-ggplot2_cache/html/unnamed-chunk-13_a8d2efefd0bec6be38731ad2a68dac3f">
 <div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(rp) <span class="sc">+</span></span>
-<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> departement, <span class="at">y =</span> maison), <span class="at">varwidth =</span> <span class="cn">TRUE</span>)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_boxplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> departement, <span class="at">y =</span> maison), <span class="at">varwidth =</span> <span class="cn">TRUE</span>)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="08-ggplot2_files/figure-html/unnamed-chunk-13-1.png" class="img-fluid" width="672"></p>
 </div>
@@ -540,19 +545,20 @@ Note
 <section id="geom_violin" class="level3" data-number="8.3.2">
 <h3 data-number="8.3.2" class="anchored" data-anchor-id="geom_violin"><span class="header-section-number">8.3.2</span> <code>geom_violin</code></h3>
 <p><code>geom_violin</code> est très semblable à <code>geom_boxplot</code>, mais utilise des graphes en violon à la place des boîtes à moustache.</p>
-<div class="cell" data-hash="08-ggplot2_cache/html/unnamed-chunk-14_ae4ffe2e328ddd1fb9a61bf037bd8be5">
-<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(rp) <span class="sc">+</span> <span class="fu">geom_violin</span>(<span class="fu">aes</span>(<span class="at">x =</span> departement, <span class="at">y =</span> maison))</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell" data-hash="08-ggplot2_cache/html/unnamed-chunk-14_2c794f833f9a19b686dc5114114122df">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(rp) <span class="sc">+</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_violin</span>(<span class="fu">aes</span>(<span class="at">x =</span> departement, <span class="at">y =</span> maison))</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="08-ggplot2_files/figure-html/unnamed-chunk-14-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 <p>Les graphes en violon peuvent donner une lecture plus fine des différences de distribution selon les classes. Comme pour les graphiques de densité, on peut faire varier le niveau de “détail” de la représentation en utilisant l’argument <code>bw</code> (bande passante).</p>
-<div class="cell" data-hash="08-ggplot2_cache/html/unnamed-chunk-15_f4929533f99ea090503a3341061096f4">
+<div class="cell" data-hash="08-ggplot2_cache/html/unnamed-chunk-15_eda1f7eb10c3e34b3ce9f9ea9cd192fe">
 <div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(rp) <span class="sc">+</span></span>
-<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_violin</span>(</span>
-<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">aes</span>(<span class="at">x =</span> departement, <span class="at">y =</span> maison),</span>
-<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">bw =</span> <span class="dv">2</span></span>
-<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_violin</span>(</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>        <span class="fu">aes</span>(<span class="at">x =</span> departement, <span class="at">y =</span> maison),</span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>        <span class="at">bw =</span> <span class="dv">2</span></span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>    )</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="08-ggplot2_files/figure-html/unnamed-chunk-15-1.png" class="img-fluid" width="672"></p>
 </div>
@@ -562,24 +568,26 @@ Note
 <h3 data-number="8.3.3" class="anchored" data-anchor-id="geom_bar-et-geom_col"><span class="header-section-number">8.3.3</span> <code>geom_bar</code> et <code>geom_col</code></h3>
 <p><code>geom_bar</code> permet de produire un graphique en bâtons (<em>barplot</em>). On lui passe en <code>x</code> la variable qualitative dont on souhaite représenter l’effectif de chaque modalité.</p>
 <p>Par exemple, si on veut afficher le nombre de communes de notre jeu de données pour chaque département&nbsp;:</p>
-<div class="cell" data-hash="08-ggplot2_cache/html/unnamed-chunk-16_77d4e4ce55e1efd9c1460987dcc2afc4">
-<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(rp) <span class="sc">+</span> <span class="fu">geom_bar</span>(<span class="fu">aes</span>(<span class="at">x =</span> departement))</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell" data-hash="08-ggplot2_cache/html/unnamed-chunk-16_96d248f73e7e227d9759301348d960ea">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(rp) <span class="sc">+</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_bar</span>(<span class="fu">aes</span>(<span class="at">x =</span> departement))</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="08-ggplot2_files/figure-html/unnamed-chunk-16-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 <p>Si on préfère avoir un graphique en barres horizontales, il suffit de passer la variable comme attribut <code>y</code> plutôt que <code>x</code>.</p>
-<div class="cell" data-hash="08-ggplot2_cache/html/unnamed-chunk-17_3f1566ce3e94d0902126e439737de05d">
-<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(rp) <span class="sc">+</span> <span class="fu">geom_bar</span>(<span class="fu">aes</span>(<span class="at">y =</span> departement))</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell" data-hash="08-ggplot2_cache/html/unnamed-chunk-17_158c976ba929fb20178e2ea18326c9e8">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(rp) <span class="sc">+</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_bar</span>(<span class="fu">aes</span>(<span class="at">y =</span> departement))</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="08-ggplot2_files/figure-html/unnamed-chunk-17-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 <p>Une autre possibilité est d’utiliser <code>coord_flip()</code>, qui permet d’intervertir l’axe horizontal et l’axe vertical.</p>
-<div class="cell" data-hash="08-ggplot2_cache/html/unnamed-chunk-18_f1c0e738d7a2563e0b58a9652aca5f6a">
+<div class="cell" data-hash="08-ggplot2_cache/html/unnamed-chunk-18_4b28af465024f642689a0180ff1b9f4e">
 <div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(rp) <span class="sc">+</span></span>
-<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>(<span class="fu">aes</span>(<span class="at">x =</span> departement)) <span class="sc">+</span></span>
-<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_flip</span>()</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_bar</span>(<span class="fu">aes</span>(<span class="at">x =</span> departement)) <span class="sc">+</span></span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">coord_flip</span>()</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="08-ggplot2_files/figure-html/unnamed-chunk-18-1.png" class="img-fluid" width="672"></p>
 </div>
@@ -597,19 +605,20 @@ Note
 <span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 5            Rhône 132</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Dans ce cas on peut utiliser <code>geom_col</code>. Il faut alors spécifier, en plus de l’argument <code>x</code>, un argument <code>y</code> indiquant la variable contenant la hauteur des barres. Dans notre exemple, il s’agit de la variable <code>n</code>.</p>
-<div class="cell" data-hash="08-ggplot2_cache/html/unnamed-chunk-21_ed7b895c95e3f7829e4dcfaeb4c6fd2e">
-<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(tab) <span class="sc">+</span> <span class="fu">geom_col</span>(<span class="fu">aes</span>(<span class="at">x =</span> departement, <span class="at">y =</span> n))</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell" data-hash="08-ggplot2_cache/html/unnamed-chunk-21_4b0565d39b789dd3a00c8edc5ebefb3d">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(tab) <span class="sc">+</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_col</span>(<span class="fu">aes</span>(<span class="at">x =</span> departement, <span class="at">y =</span> n))</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="08-ggplot2_files/figure-html/unnamed-chunk-21-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 <p>Que ce soit pour <code>geom_bar</code> ou <code>geom_col</code>, on peut modifier l’apparence du graphique en passant des arguments supplémentaires comme <code>fill</code> ou <code>width</code>.</p>
-<div class="cell" data-hash="08-ggplot2_cache/html/unnamed-chunk-22_0cad21eadc1b9fd4663e287233918857">
+<div class="cell" data-hash="08-ggplot2_cache/html/unnamed-chunk-22_46fb41b5c57052815cb96136989fca0c">
 <div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(rp) <span class="sc">+</span></span>
-<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>(</span>
-<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">aes</span>(<span class="at">x =</span> departement),</span>
-<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">fill =</span> <span class="st">"darkblue"</span>, <span class="at">width =</span> .<span class="dv">5</span></span>
-<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_bar</span>(</span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>        <span class="fu">aes</span>(<span class="at">x =</span> departement),</span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>        <span class="at">fill =</span> <span class="st">"darkblue"</span>, <span class="at">width =</span> .<span class="dv">5</span></span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>    )</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="08-ggplot2_files/figure-html/unnamed-chunk-22-1.png" class="img-fluid" width="672"></p>
 </div>
@@ -619,22 +628,22 @@ Note
 <h3 data-number="8.3.4" class="anchored" data-anchor-id="geom_text"><span class="header-section-number">8.3.4</span> <code>geom_text</code></h3>
 <p><code>geom_text</code> permet d’afficher des étiquettes de texte. On doit lui fournir trois paramètres dans <code>aes</code> : <code>x</code> et <code>y</code> pour la position des étiquettes, et <code>label</code> pour leur texte.</p>
 <p>Par exemple, si on souhaite représenter le nuage croisant la part des diplômés du supérieur et la part de cadres, mais en affichant le nom de la commune (variable <code>commune</code>) plutôt qu’un simple point, on peut faire&nbsp;:</p>
-<div class="cell" data-hash="08-ggplot2_cache/html/unnamed-chunk-23_6b19fb38fa37c3c025655956b64dfbe5">
+<div class="cell" data-hash="08-ggplot2_cache/html/unnamed-chunk-23_af2aa733d6c66c7a9ddf052225ff1492">
 <div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(rp) <span class="sc">+</span></span>
-<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_text</span>(</span>
-<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">aes</span>(<span class="at">x =</span> dipl_sup, <span class="at">y =</span> cadres, <span class="at">label =</span> commune)</span>
-<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_text</span>(</span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>        <span class="fu">aes</span>(<span class="at">x =</span> dipl_sup, <span class="at">y =</span> cadres, <span class="at">label =</span> commune)</span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>    )</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="08-ggplot2_files/figure-html/unnamed-chunk-23-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 <p>On peut personnaliser l’apparence et la position du texte avec des arguments comme <code>size</code>, <code>color</code>, etc.</p>
-<div class="cell" data-hash="08-ggplot2_cache/html/unnamed-chunk-24_5e442317e3f2a7b52a92e70a133cf20e">
+<div class="cell" data-hash="08-ggplot2_cache/html/unnamed-chunk-24_2f6897a0cc4b2dd983dc25b5b95789e3">
 <div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(rp) <span class="sc">+</span></span>
-<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_text</span>(</span>
-<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">aes</span>(<span class="at">x =</span> dipl_sup, <span class="at">y =</span> cadres, <span class="at">label =</span> commune),</span>
-<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">color =</span> <span class="st">"darkred"</span>, <span class="at">size =</span> <span class="dv">2</span></span>
-<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_text</span>(</span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>        <span class="fu">aes</span>(<span class="at">x =</span> dipl_sup, <span class="at">y =</span> cadres, <span class="at">label =</span> commune),</span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>        <span class="at">color =</span> <span class="st">"darkred"</span>, <span class="at">size =</span> <span class="dv">2</span></span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>    )</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="08-ggplot2_files/figure-html/unnamed-chunk-24-1.png" class="img-fluid" width="672"></p>
 </div>
@@ -643,8 +652,9 @@ Note
 <section id="geom_label" class="level3" data-number="8.3.5">
 <h3 data-number="8.3.5" class="anchored" data-anchor-id="geom_label"><span class="header-section-number">8.3.5</span> <code>geom_label</code></h3>
 <p><code>geom_label</code> est identique à <code>geom_text</code>, mais avec une présentation un peu différente.</p>
-<div class="cell" data-hash="08-ggplot2_cache/html/unnamed-chunk-25_9a1854ba30192e217477eb36d57d7cca">
-<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(rp) <span class="sc">+</span> <span class="fu">geom_label</span>(<span class="fu">aes</span>(<span class="at">x =</span> dipl_sup, <span class="at">y =</span> cadres, <span class="at">label =</span> commune))</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell" data-hash="08-ggplot2_cache/html/unnamed-chunk-25_09b9dbafcae04c627af0baf5875dacb3">
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(rp) <span class="sc">+</span></span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_label</span>(<span class="fu">aes</span>(<span class="at">x =</span> dipl_sup, <span class="at">y =</span> cadres, <span class="at">label =</span> commune))</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="08-ggplot2_files/figure-html/unnamed-chunk-25-1.png" class="img-fluid" width="672"></p>
 </div>
@@ -654,15 +664,17 @@ Note
 <h3 data-number="8.3.6" class="anchored" data-anchor-id="geom_density"><span class="header-section-number">8.3.6</span> <code>geom_density</code></h3>
 <p><code>geom_density</code> permet d’afficher l’estimation de densité d’une variable numérique. Son usage est similaire à celui de <code>geom_histogram</code>.</p>
 <p>Ainsi, si on veut afficher la densité de la répartition de la part des cadres dans les communes de notre jeu de données&nbsp;:</p>
-<div class="cell" data-hash="08-ggplot2_cache/html/unnamed-chunk-26_947bb238cb68a381d910f038a67f09a8">
-<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(rp) <span class="sc">+</span> <span class="fu">geom_density</span>(<span class="fu">aes</span>(<span class="at">x =</span> cadres))</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell" data-hash="08-ggplot2_cache/html/unnamed-chunk-26_50f7eb590de603dd235ce47d8f163d33">
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(rp) <span class="sc">+</span></span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_density</span>(<span class="fu">aes</span>(<span class="at">x =</span> cadres))</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="08-ggplot2_files/figure-html/unnamed-chunk-26-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 <p>On peut utiliser différents arguments pour ajuster le calcul de l’estimation de densité, parmi lesquels <code>kernel</code> et <code>bw</code> (voir la page d’aide de la fonction <code>density</code> pour plus de détails). <code>bw</code> (abbréviation de <em>bandwidth</em>, bande passante) permet de régler la “finesse” de l’estimation de densité, un peu comme le choix du nombre de classes dans un histogramme&nbsp;:</p>
-<div class="cell" data-hash="08-ggplot2_cache/html/unnamed-chunk-27_fac25bfec5cb58fc76dd1797b5d4f853">
-<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(rp) <span class="sc">+</span> <span class="fu">geom_density</span>(<span class="fu">aes</span>(<span class="at">x =</span> cadres), <span class="at">bw =</span> <span class="dv">1</span>)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell" data-hash="08-ggplot2_cache/html/unnamed-chunk-27_7fd115b01f4121469b8742e36e28128d">
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(rp) <span class="sc">+</span></span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_density</span>(<span class="fu">aes</span>(<span class="at">x =</span> cadres), <span class="at">bw =</span> <span class="dv">1</span>)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="08-ggplot2_files/figure-html/unnamed-chunk-27-1.png" class="img-fluid" width="672"></p>
 </div>
@@ -690,8 +702,9 @@ Note
 <span id="cb26-15"><a href="#cb26-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 10 1968-04-01  544  200208    12.3     4.6     2709</span></span>
 <span id="cb26-16"><a href="#cb26-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # ℹ 564 more rows</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div class="cell" data-hash="08-ggplot2_cache/html/unnamed-chunk-29_459a04a0e6fc2d7f344716ddad13c079">
-<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(economics) <span class="sc">+</span> <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">x =</span> date, <span class="at">y =</span> unemploy))</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell" data-hash="08-ggplot2_cache/html/unnamed-chunk-29_7712e962c9cf9034dd7b7f40953f4094">
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(economics) <span class="sc">+</span></span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">x =</span> date, <span class="at">y =</span> unemploy))</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="08-ggplot2_files/figure-html/unnamed-chunk-29-1.png" class="img-fluid" width="672"></p>
 </div>
@@ -700,45 +713,46 @@ Note
 <section id="geom_hex-et-geom_bin2d" class="level3" data-number="8.3.8">
 <h3 data-number="8.3.8" class="anchored" data-anchor-id="geom_hex-et-geom_bin2d"><span class="header-section-number">8.3.8</span> <code>geom_hex</code> et <code>geom_bin2d</code></h3>
 <p>Lorsque le nombre de points est important, la représentation sous forme de nuage peut vite devenir illisible : la superposition des données empêche de voir précisément leur répartition.</p>
-<div class="cell" data-hash="08-ggplot2_cache/html/unnamed-chunk-30_2aa41aea624cc88de81a5d4732435c5f">
-<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(rp2018) <span class="sc">+</span> <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">x =</span> cadres, <span class="at">y =</span> dipl_sup))</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell" data-hash="08-ggplot2_cache/html/unnamed-chunk-30_b3764bffdcc202c4bc7596324faf350c">
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(rp2018) <span class="sc">+</span></span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">x =</span> cadres, <span class="at">y =</span> dipl_sup))</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="08-ggplot2_files/figure-html/unnamed-chunk-30-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 <p>Dans ces cas-là, on peut utiliser <code>geom_bin2d</code>, qui va créer une grille sur toute la zone du graphique et colorier chaque carré selon le nombre de points qu’il contient (les carrés n’en contenant aucun restant transparents).</p>
-<div class="cell" data-hash="08-ggplot2_cache/html/unnamed-chunk-31_9dafc7ce3503186d6ecad8a5dfb95389">
+<div class="cell" data-hash="08-ggplot2_cache/html/unnamed-chunk-31_9a41c7f537f326999df2acbb5a9ee109">
 <div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(rp2018) <span class="sc">+</span></span>
-<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bin2d</span>(<span class="fu">aes</span>(<span class="at">x =</span> cadres, <span class="at">y =</span> dipl_sup))</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_bin2d</span>(<span class="fu">aes</span>(<span class="at">x =</span> cadres, <span class="at">y =</span> dipl_sup))</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="08-ggplot2_files/figure-html/unnamed-chunk-31-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 <p>Une variante fonctionnant de manière très semblable est <code>geom_hex</code>, qui elle crée une grille constituée d’hexagones.</p>
-<div class="cell" data-hash="08-ggplot2_cache/html/unnamed-chunk-32_4db48849f64807083abbb088d9b78343">
+<div class="cell" data-hash="08-ggplot2_cache/html/unnamed-chunk-32_0b8ed87e6b0a513b2ad7750989f6af96">
 <div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(rp2018) <span class="sc">+</span></span>
-<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hex</span>(<span class="fu">aes</span>(<span class="at">x =</span> cadres, <span class="at">y =</span> dipl_sup))</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_hex</span>(<span class="fu">aes</span>(<span class="at">x =</span> cadres, <span class="at">y =</span> dipl_sup))</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="08-ggplot2_files/figure-html/unnamed-chunk-32-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 <p>Dans les deux cas, on peut faire varier le nombre de zones, et donc la finesse du “quadrillage”, en utilisant l’argument <code>bins</code> (dont la valeur par défaut est 30).</p>
-<div class="cell" data-hash="08-ggplot2_cache/html/unnamed-chunk-33_316894c659ca2166d65922d781eb9259">
+<div class="cell" data-hash="08-ggplot2_cache/html/unnamed-chunk-33_689da5d6ec6d8b33b2ed592c8ef6e301">
 <div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(rp2018) <span class="sc">+</span></span>
-<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bin2d</span>(</span>
-<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">aes</span>(<span class="at">x =</span> cadres, <span class="at">y =</span> dipl_sup),</span>
-<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">bins =</span> <span class="dv">50</span></span>
-<span id="cb31-5"><a href="#cb31-5" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_bin2d</span>(</span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>        <span class="fu">aes</span>(<span class="at">x =</span> cadres, <span class="at">y =</span> dipl_sup),</span>
+<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a>        <span class="at">bins =</span> <span class="dv">50</span></span>
+<span id="cb31-5"><a href="#cb31-5" aria-hidden="true" tabindex="-1"></a>    )</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="08-ggplot2_files/figure-html/unnamed-chunk-33-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
-<div class="cell" data-hash="08-ggplot2_cache/html/unnamed-chunk-34_addcb2692a2adb6e6793baacda56f768">
+<div class="cell" data-hash="08-ggplot2_cache/html/unnamed-chunk-34_abf7015613869e77e19c5ea7e28bd69b">
 <div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(rp2018) <span class="sc">+</span></span>
-<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hex</span>(</span>
-<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">aes</span>(<span class="at">x =</span> cadres, <span class="at">y =</span> dipl_sup),</span>
-<span id="cb32-4"><a href="#cb32-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">bins =</span> <span class="dv">70</span></span>
-<span id="cb32-5"><a href="#cb32-5" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_hex</span>(</span>
+<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a>        <span class="fu">aes</span>(<span class="at">x =</span> cadres, <span class="at">y =</span> dipl_sup),</span>
+<span id="cb32-4"><a href="#cb32-4" aria-hidden="true" tabindex="-1"></a>        <span class="at">bins =</span> <span class="dv">70</span></span>
+<span id="cb32-5"><a href="#cb32-5" aria-hidden="true" tabindex="-1"></a>    )</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="08-ggplot2_files/figure-html/unnamed-chunk-34-1.png" class="img-fluid" width="672"></p>
 </div>
@@ -752,41 +766,41 @@ Note
 <section id="exemples-de-mappages" class="level3" data-number="8.4.1">
 <h3 data-number="8.4.1" class="anchored" data-anchor-id="exemples-de-mappages"><span class="header-section-number">8.4.1</span> Exemples de mappages</h3>
 <p>On a déjà vu les mappages <code>x</code> et <code>y</code> pour un nuage de points. Ceux-ci signifient que la position d’un point donné horizontalement (<code>x</code>) et verticalement (<code>y</code>) dépend de la valeur des variables passées comme arguments <code>x</code> et <code>y</code> dans <code>aes()</code>.</p>
-<div class="cell" data-hash="08-ggplot2_cache/html/unnamed-chunk-35_320b6720bdf6461c1db335d66fc7dbcc">
+<div class="cell" data-hash="08-ggplot2_cache/html/unnamed-chunk-35_14e0ef42f821c49a705dc79bcf0daf2d">
 <div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(rp) <span class="sc">+</span></span>
-<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(</span>
-<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">aes</span>(<span class="at">x =</span> dipl_sup, <span class="at">y =</span> cadres)</span>
-<span id="cb33-4"><a href="#cb33-4" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_point</span>(</span>
+<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a>        <span class="fu">aes</span>(<span class="at">x =</span> dipl_sup, <span class="at">y =</span> cadres)</span>
+<span id="cb33-4"><a href="#cb33-4" aria-hidden="true" tabindex="-1"></a>    )</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="08-ggplot2_files/figure-html/unnamed-chunk-35-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 <p>Mais on peut ajouter d’autres mappages. Par exemple, <code>color</code> permet de faire varier la couleur des points automatiquement en fonction des valeurs d’une troisième variable. Ainsi, on peut vouloir colorer les points selon le département de la commune correspondante.</p>
-<div class="cell" data-hash="08-ggplot2_cache/html/unnamed-chunk-36_557ab39c5d8fbc641fe7267aee90ec93">
+<div class="cell" data-hash="08-ggplot2_cache/html/unnamed-chunk-36_f6d0828650c7e17ed1758f87967b9f45">
 <div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(rp) <span class="sc">+</span></span>
-<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(</span>
-<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">aes</span>(<span class="at">x =</span> dipl_sup, <span class="at">y =</span> cadres, <span class="at">color =</span> departement)</span>
-<span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_point</span>(</span>
+<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a>        <span class="fu">aes</span>(<span class="at">x =</span> dipl_sup, <span class="at">y =</span> cadres, <span class="at">color =</span> departement)</span>
+<span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a>    )</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="08-ggplot2_files/figure-html/unnamed-chunk-36-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 <p>On peut aussi faire varier la taille des points avec <code>size</code>. Ici, la taille dépend de la population totale de la commune&nbsp;:</p>
-<div class="cell" data-hash="08-ggplot2_cache/html/unnamed-chunk-37_e0731455dc749f437445d1706bea82d0">
+<div class="cell" data-hash="08-ggplot2_cache/html/unnamed-chunk-37_d2f193a3c5dfb6ad8c09f63a57196c1f">
 <div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(rp) <span class="sc">+</span></span>
-<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(</span>
-<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">aes</span>(<span class="at">x =</span> dipl_sup, <span class="at">y =</span> cadres, <span class="at">color =</span> departement, <span class="at">size =</span> pop_tot)</span>
-<span id="cb35-4"><a href="#cb35-4" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_point</span>(</span>
+<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a>        <span class="fu">aes</span>(<span class="at">x =</span> dipl_sup, <span class="at">y =</span> cadres, <span class="at">color =</span> departement, <span class="at">size =</span> pop_tot)</span>
+<span id="cb35-4"><a href="#cb35-4" aria-hidden="true" tabindex="-1"></a>    )</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="08-ggplot2_files/figure-html/unnamed-chunk-37-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 <p>On peut même associer la transparence des points à une variable avec <code>alpha</code>&nbsp;:</p>
-<div class="cell" data-hash="08-ggplot2_cache/html/unnamed-chunk-38_9c5eded87f438a12efcc610449914ce9">
+<div class="cell" data-hash="08-ggplot2_cache/html/unnamed-chunk-38_5f2b419134da5f8ac3fcf0b59c25b1cf">
 <div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(rp) <span class="sc">+</span></span>
-<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(</span>
-<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">aes</span>(<span class="at">x =</span> dipl_sup, <span class="at">y =</span> cadres, <span class="at">color =</span> departement, <span class="at">size =</span> pop_tot, <span class="at">alpha =</span> maison)</span>
-<span id="cb36-4"><a href="#cb36-4" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_point</span>(</span>
+<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a>        <span class="fu">aes</span>(<span class="at">x =</span> dipl_sup, <span class="at">y =</span> cadres, <span class="at">color =</span> departement, <span class="at">size =</span> pop_tot, <span class="at">alpha =</span> maison)</span>
+<span id="cb36-4"><a href="#cb36-4" aria-hidden="true" tabindex="-1"></a>    )</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="08-ggplot2_files/figure-html/unnamed-chunk-38-1.png" class="img-fluid" width="672"></p>
 </div>
@@ -796,33 +810,33 @@ Note
 <section id="aes-or-not-aes" class="level3" data-number="8.4.2">
 <h3 data-number="8.4.2" class="anchored" data-anchor-id="aes-or-not-aes"><span class="header-section-number">8.4.2</span> <code>aes()</code> or not <code>aes()</code> ?</h3>
 <p>Comme on l’a déjà vu, parfois on souhaite changer un attribut sans le relier à une variable : c’est le cas par exemple si on veut représenter tous les points en rouge. Dans ce cas on utilise toujours l’attribut <code>color</code>, mais comme il ne s’agit pas d’un mappage, on le définit <strong>à l’extérieur</strong> de la fonction <code>aes()</code>.</p>
-<div class="cell" data-hash="08-ggplot2_cache/html/unnamed-chunk-39_41151e40c595b3f0134ade17f3227f9e">
+<div class="cell" data-hash="08-ggplot2_cache/html/unnamed-chunk-39_dafdcf4f1e134e153edda586c13681d6">
 <div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(rp) <span class="sc">+</span></span>
-<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(</span>
-<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">aes</span>(<span class="at">x =</span> dipl_sup, <span class="at">y =</span> cadres),</span>
-<span id="cb37-4"><a href="#cb37-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">color =</span> <span class="st">"red"</span></span>
-<span id="cb37-5"><a href="#cb37-5" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_point</span>(</span>
+<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a>        <span class="fu">aes</span>(<span class="at">x =</span> dipl_sup, <span class="at">y =</span> cadres),</span>
+<span id="cb37-4"><a href="#cb37-4" aria-hidden="true" tabindex="-1"></a>        <span class="at">color =</span> <span class="st">"red"</span></span>
+<span id="cb37-5"><a href="#cb37-5" aria-hidden="true" tabindex="-1"></a>    )</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="08-ggplot2_files/figure-html/unnamed-chunk-39-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 <p>Par contre, si on veut faire varier la couleur en fonction des valeurs prises par une variable, on réalise un mappage, et on doit donc placer l’attribut <code>color</code> <strong>à l’intérieur</strong> de <code>aes()</code>.</p>
-<div class="cell" data-hash="08-ggplot2_cache/html/unnamed-chunk-40_94bad352eb9954b2b7870f1f76cacd79">
+<div class="cell" data-hash="08-ggplot2_cache/html/unnamed-chunk-40_e8c689feb153b6edf2a6cf1abf1c6e77">
 <div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(rp) <span class="sc">+</span></span>
-<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(</span>
-<span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">aes</span>(<span class="at">x =</span> dipl_sup, <span class="at">y =</span> cadres, <span class="at">color =</span> departement)</span>
-<span id="cb38-4"><a href="#cb38-4" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_point</span>(</span>
+<span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a>        <span class="fu">aes</span>(<span class="at">x =</span> dipl_sup, <span class="at">y =</span> cadres, <span class="at">color =</span> departement)</span>
+<span id="cb38-4"><a href="#cb38-4" aria-hidden="true" tabindex="-1"></a>    )</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="08-ggplot2_files/figure-html/unnamed-chunk-40-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 <p>On peut mélanger attributs liés à une variable (mappage, donc dans <code>aes()</code>) et attributs constants (donc à l’extérieur). Dans l’exemple suivant, la taille varie en fonction de la variable <code>pop_tot</code>, mais la couleur est constante pour tous les points.</p>
-<div class="cell" data-hash="08-ggplot2_cache/html/unnamed-chunk-41_f102eab43cafb5a449ebe0c5b9f05055">
+<div class="cell" data-hash="08-ggplot2_cache/html/unnamed-chunk-41_a1a924f1541fcdc81e2014e02738a4b2">
 <div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(rp) <span class="sc">+</span></span>
-<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(</span>
-<span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">aes</span>(<span class="at">x =</span> dipl_sup, <span class="at">y =</span> cadres, <span class="at">size =</span> pop_tot),</span>
-<span id="cb39-4"><a href="#cb39-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">color =</span> <span class="st">"royalblue"</span></span>
-<span id="cb39-5"><a href="#cb39-5" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_point</span>(</span>
+<span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a>        <span class="fu">aes</span>(<span class="at">x =</span> dipl_sup, <span class="at">y =</span> cadres, <span class="at">size =</span> pop_tot),</span>
+<span id="cb39-4"><a href="#cb39-4" aria-hidden="true" tabindex="-1"></a>        <span class="at">color =</span> <span class="st">"royalblue"</span></span>
+<span id="cb39-5"><a href="#cb39-5" aria-hidden="true" tabindex="-1"></a>    )</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="08-ggplot2_files/figure-html/unnamed-chunk-41-1.png" class="img-fluid" width="672"></p>
 </div>
@@ -845,42 +859,43 @@ Avertissement
 <section id="geom_bar-et-position" class="level3" data-number="8.4.3">
 <h3 data-number="8.4.3" class="anchored" data-anchor-id="geom_bar-et-position"><span class="header-section-number">8.4.3</span> <code>geom_bar</code> et <code>position</code></h3>
 <p>Un des mappages possibles de <code>geom_bar</code> est l’attribut <code>fill</code>, qui permet de tracer des barres de couleur différentes selon les modalités d’une deuxième variable&nbsp;:</p>
-<div class="cell" data-hash="08-ggplot2_cache/html/unnamed-chunk-42_4bc62ee9e5012129e120c37e5ad39a4a">
-<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(rp) <span class="sc">+</span> <span class="fu">geom_bar</span>(<span class="fu">aes</span>(<span class="at">x =</span> departement, <span class="at">fill =</span> pop_cl))</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell" data-hash="08-ggplot2_cache/html/unnamed-chunk-42_e89af3243bde7e7f042bbf6d7c3c27fc">
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(rp) <span class="sc">+</span></span>
+<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_bar</span>(<span class="fu">aes</span>(<span class="at">x =</span> departement, <span class="at">fill =</span> pop_cl))</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="08-ggplot2_files/figure-html/unnamed-chunk-42-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 <p>L’attribut <code>position</code> de <code>geom_bar</code> permet d’indiquer comment les différentes barres doivent être positionnées. Par défaut l’argument vaut <code>position = "stack"</code> et elles sont donc “empilées”. Mais on peut préciser <code>position = "dodge"</code> pour les mettre côte à côte.</p>
-<div class="cell" data-hash="08-ggplot2_cache/html/unnamed-chunk-43_de6c18c419b393789be4ca24902d3a92">
+<div class="cell" data-hash="08-ggplot2_cache/html/unnamed-chunk-43_0080d84a4b572d306edfc1bc9a528106">
 <div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(rp) <span class="sc">+</span></span>
-<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>(</span>
-<span id="cb41-3"><a href="#cb41-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">aes</span>(<span class="at">x =</span> departement, <span class="at">fill =</span> pop_cl),</span>
-<span id="cb41-4"><a href="#cb41-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">position =</span> <span class="st">"dodge"</span></span>
-<span id="cb41-5"><a href="#cb41-5" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_bar</span>(</span>
+<span id="cb41-3"><a href="#cb41-3" aria-hidden="true" tabindex="-1"></a>        <span class="fu">aes</span>(<span class="at">x =</span> departement, <span class="at">fill =</span> pop_cl),</span>
+<span id="cb41-4"><a href="#cb41-4" aria-hidden="true" tabindex="-1"></a>        <span class="at">position =</span> <span class="st">"dodge"</span></span>
+<span id="cb41-5"><a href="#cb41-5" aria-hidden="true" tabindex="-1"></a>    )</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="08-ggplot2_files/figure-html/unnamed-chunk-43-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 <p>Ou encore <code>position = "fill"</code> pour représenter non plus des effectifs, mais des proportions.</p>
-<div class="cell" data-hash="08-ggplot2_cache/html/unnamed-chunk-44_4c1183a49125debbb6c80232d670dff7">
+<div class="cell" data-hash="08-ggplot2_cache/html/unnamed-chunk-44_ed231c37f4cabba81fbabb401f746774">
 <div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(rp) <span class="sc">+</span></span>
-<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>(</span>
-<span id="cb42-3"><a href="#cb42-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">aes</span>(<span class="at">x =</span> departement, <span class="at">fill =</span> pop_cl),</span>
-<span id="cb42-4"><a href="#cb42-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">position =</span> <span class="st">"fill"</span></span>
-<span id="cb42-5"><a href="#cb42-5" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_bar</span>(</span>
+<span id="cb42-3"><a href="#cb42-3" aria-hidden="true" tabindex="-1"></a>        <span class="fu">aes</span>(<span class="at">x =</span> departement, <span class="at">fill =</span> pop_cl),</span>
+<span id="cb42-4"><a href="#cb42-4" aria-hidden="true" tabindex="-1"></a>        <span class="at">position =</span> <span class="st">"fill"</span></span>
+<span id="cb42-5"><a href="#cb42-5" aria-hidden="true" tabindex="-1"></a>    )</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="08-ggplot2_files/figure-html/unnamed-chunk-44-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 <p>Là encore, on peut utiliser <code>coord_flip()</code> si on souhaite une visualisation avec des barres horizontales.</p>
-<div class="cell" data-hash="08-ggplot2_cache/html/unnamed-chunk-45_c23d45d4ead3959fccb0a84cd6466553">
+<div class="cell" data-hash="08-ggplot2_cache/html/unnamed-chunk-45_c0174600f8a431724a942b72faf2d45e">
 <div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(rp) <span class="sc">+</span></span>
-<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>(</span>
-<span id="cb43-3"><a href="#cb43-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">aes</span>(<span class="at">x =</span> departement, <span class="at">fill =</span> pop_cl),</span>
-<span id="cb43-4"><a href="#cb43-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">position =</span> <span class="st">"fill"</span></span>
-<span id="cb43-5"><a href="#cb43-5" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
-<span id="cb43-6"><a href="#cb43-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_flip</span>()</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_bar</span>(</span>
+<span id="cb43-3"><a href="#cb43-3" aria-hidden="true" tabindex="-1"></a>        <span class="fu">aes</span>(<span class="at">x =</span> departement, <span class="at">fill =</span> pop_cl),</span>
+<span id="cb43-4"><a href="#cb43-4" aria-hidden="true" tabindex="-1"></a>        <span class="at">position =</span> <span class="st">"fill"</span></span>
+<span id="cb43-5"><a href="#cb43-5" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">+</span></span>
+<span id="cb43-6"><a href="#cb43-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">coord_flip</span>()</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="08-ggplot2_files/figure-html/unnamed-chunk-45-1.png" class="img-fluid" width="672"></p>
 </div>
@@ -891,13 +906,13 @@ Avertissement
 <h2 data-number="8.5" class="anchored" data-anchor-id="représentation-de-plusieurs-geom"><span class="header-section-number">8.5</span> Représentation de plusieurs <code>geom</code></h2>
 <p>On peut représenter plusieurs <code>geom</code> simultanément sur un même graphique, il suffit de les ajouter à tour de rôle avec l’opérateur <code>+</code>.</p>
 <p>Par exemple, on peut superposer la position des points au-dessus d’un boxplot. On va pour cela ajouter un <code>geom_point</code> après avoir ajouté notre <code>geom_boxplot</code>.</p>
-<div class="cell" data-hash="08-ggplot2_cache/html/unnamed-chunk-46_aac551ca8f7ec200e6acc43b0dfa0532">
+<div class="cell" data-hash="08-ggplot2_cache/html/unnamed-chunk-46_4571eba82bf418d364f3ed9ecb6a3b8d">
 <div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(rp) <span class="sc">+</span></span>
-<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> departement, <span class="at">y =</span> maison)) <span class="sc">+</span></span>
-<span id="cb44-3"><a href="#cb44-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(</span>
-<span id="cb44-4"><a href="#cb44-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">aes</span>(<span class="at">x =</span> departement, <span class="at">y =</span> maison),</span>
-<span id="cb44-5"><a href="#cb44-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">col =</span> <span class="st">"red"</span>, <span class="at">alpha =</span> <span class="fl">0.2</span></span>
-<span id="cb44-6"><a href="#cb44-6" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_boxplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> departement, <span class="at">y =</span> maison)) <span class="sc">+</span></span>
+<span id="cb44-3"><a href="#cb44-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_point</span>(</span>
+<span id="cb44-4"><a href="#cb44-4" aria-hidden="true" tabindex="-1"></a>        <span class="fu">aes</span>(<span class="at">x =</span> departement, <span class="at">y =</span> maison),</span>
+<span id="cb44-5"><a href="#cb44-5" aria-hidden="true" tabindex="-1"></a>        <span class="at">col =</span> <span class="st">"red"</span>, <span class="at">alpha =</span> <span class="fl">0.2</span></span>
+<span id="cb44-6"><a href="#cb44-6" aria-hidden="true" tabindex="-1"></a>    )</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="08-ggplot2_files/figure-html/unnamed-chunk-46-1.png" class="img-fluid" width="672"></p>
 </div>
@@ -916,42 +931,42 @@ Note
 </div>
 </div>
 <p>Pour un résultat un peu plus lisible, on peut remplacer <code>geom_point</code> par <code>geom_jitter</code>, qui disperse les points horizontalement et facilite leur visualisation.</p>
-<div class="cell" data-hash="08-ggplot2_cache/html/unnamed-chunk-47_ab5424a888a2504c38cea1ecf2487692">
+<div class="cell" data-hash="08-ggplot2_cache/html/unnamed-chunk-47_1bec7fd9802ad97aa35c6c815de1c50e">
 <div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(rp) <span class="sc">+</span></span>
-<span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> departement, <span class="at">y =</span> maison)) <span class="sc">+</span></span>
-<span id="cb45-3"><a href="#cb45-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_jitter</span>(</span>
-<span id="cb45-4"><a href="#cb45-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">aes</span>(<span class="at">x =</span> departement, <span class="at">y =</span> maison),</span>
-<span id="cb45-5"><a href="#cb45-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">col =</span> <span class="st">"red"</span>, <span class="at">alpha =</span> <span class="fl">0.2</span></span>
-<span id="cb45-6"><a href="#cb45-6" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_boxplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> departement, <span class="at">y =</span> maison)) <span class="sc">+</span></span>
+<span id="cb45-3"><a href="#cb45-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_jitter</span>(</span>
+<span id="cb45-4"><a href="#cb45-4" aria-hidden="true" tabindex="-1"></a>        <span class="fu">aes</span>(<span class="at">x =</span> departement, <span class="at">y =</span> maison),</span>
+<span id="cb45-5"><a href="#cb45-5" aria-hidden="true" tabindex="-1"></a>        <span class="at">col =</span> <span class="st">"red"</span>, <span class="at">alpha =</span> <span class="fl">0.2</span></span>
+<span id="cb45-6"><a href="#cb45-6" aria-hidden="true" tabindex="-1"></a>    )</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="08-ggplot2_files/figure-html/unnamed-chunk-47-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 <p>Pour simplifier un peu le code, plutôt que de déclarer les mappages dans chaque <code>geom</code>, on peut les déclarer dans l’appel à <code>ggplot()</code>. Ils seront automatiquement “hérités” par les <code>geom</code> ajoutés (sauf s’ils redéfinissent les mêmes mappages).</p>
-<div class="cell" data-hash="08-ggplot2_cache/html/unnamed-chunk-48_f51bd77f5ee94082af9bf5c9f5332866">
+<div class="cell" data-hash="08-ggplot2_cache/html/unnamed-chunk-48_3a279f6f560e4798c19f20f63e3784d2">
 <div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(rp, <span class="fu">aes</span>(<span class="at">x =</span> departement, <span class="at">y =</span> maison)) <span class="sc">+</span></span>
-<span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>() <span class="sc">+</span></span>
-<span id="cb46-3"><a href="#cb46-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_jitter</span>(<span class="at">color =</span> <span class="st">"red"</span>, <span class="at">alpha =</span> <span class="fl">0.2</span>)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_boxplot</span>() <span class="sc">+</span></span>
+<span id="cb46-3"><a href="#cb46-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_jitter</span>(<span class="at">color =</span> <span class="st">"red"</span>, <span class="at">alpha =</span> <span class="fl">0.2</span>)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="08-ggplot2_files/figure-html/unnamed-chunk-48-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 <p>Autre exemple, on peut vouloir ajouter à un nuage de points une ligne de régression linéaire à l’aide de <code>geom_smooth</code>&nbsp;:</p>
-<div class="cell" data-hash="08-ggplot2_cache/html/unnamed-chunk-49_8f3ee9674bcc1ac176eae328f5191a2b">
+<div class="cell" data-hash="08-ggplot2_cache/html/unnamed-chunk-49_00ab6136f24b69458b6360b3936f3b2d">
 <div class="sourceCode cell-code" id="cb47"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(rp, <span class="fu">aes</span>(<span class="at">x =</span> dipl_sup, <span class="at">y =</span> cadres)) <span class="sc">+</span></span>
-<span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">alpha =</span> <span class="fl">0.2</span>) <span class="sc">+</span></span>
-<span id="cb47-3"><a href="#cb47-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">"lm"</span>)</span>
+<span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_point</span>(<span class="at">alpha =</span> <span class="fl">0.2</span>) <span class="sc">+</span></span>
+<span id="cb47-3"><a href="#cb47-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">"lm"</span>)</span>
 <span id="cb47-4"><a href="#cb47-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; `geom_smooth()` using formula = 'y ~ x'</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="08-ggplot2_files/figure-html/unnamed-chunk-49-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 <p>Et on peut même superposer une troisième visualisation de la répartition des points dans l’espace avec <code>geom_density2d</code>&nbsp;:</p>
-<div class="cell" data-hash="08-ggplot2_cache/html/unnamed-chunk-50_26adf2484c3d33f6e2bc365446b0e647">
+<div class="cell" data-hash="08-ggplot2_cache/html/unnamed-chunk-50_a4cec83072fe039b82412f97ab5766a4">
 <div class="sourceCode cell-code" id="cb48"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(rp, <span class="fu">aes</span>(<span class="at">x =</span> dipl_sup, <span class="at">y =</span> cadres)) <span class="sc">+</span></span>
-<span id="cb48-2"><a href="#cb48-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">alpha =</span> <span class="fl">0.2</span>) <span class="sc">+</span></span>
-<span id="cb48-3"><a href="#cb48-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_density2d</span>(<span class="at">color =</span> <span class="st">"red"</span>) <span class="sc">+</span></span>
-<span id="cb48-4"><a href="#cb48-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">"lm"</span>)</span>
+<span id="cb48-2"><a href="#cb48-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_point</span>(<span class="at">alpha =</span> <span class="fl">0.2</span>) <span class="sc">+</span></span>
+<span id="cb48-3"><a href="#cb48-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_density2d</span>(<span class="at">color =</span> <span class="st">"red"</span>) <span class="sc">+</span></span>
+<span id="cb48-4"><a href="#cb48-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">"lm"</span>)</span>
 <span id="cb48-5"><a href="#cb48-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; `geom_smooth()` using formula = 'y ~ x'</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="08-ggplot2_files/figure-html/unnamed-chunk-50-1.png" class="img-fluid" width="672"></p>
@@ -964,21 +979,21 @@ Note
 <div class="sourceCode cell-code" id="cb49"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a>com50 <span class="ot">&lt;-</span> <span class="fu">filter</span>(rp, pop_tot <span class="sc">&gt;=</span> <span class="dv">50000</span>)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>On fait ensuite le nuage de points comme précédemment&nbsp;:</p>
-<div class="cell" data-hash="08-ggplot2_cache/html/unnamed-chunk-52_07ed02494482699ebe7693c0b00668c7">
+<div class="cell" data-hash="08-ggplot2_cache/html/unnamed-chunk-52_4ac1e2b2dbc896f668df5d93be1cbb91">
 <div class="sourceCode cell-code" id="cb50"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> rp, <span class="fu">aes</span>(<span class="at">x =</span> dipl_sup, <span class="at">y =</span> cadres)) <span class="sc">+</span></span>
-<span id="cb50-2"><a href="#cb50-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">alpha =</span> <span class="fl">0.2</span>)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb50-2"><a href="#cb50-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_point</span>(<span class="at">alpha =</span> <span class="fl">0.2</span>)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="08-ggplot2_files/figure-html/unnamed-chunk-52-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 <p>Pour superposer les noms de communes de plus de 50 000 habitants, on peut ajouter un <code>geom_text</code>, mais en spécifiant que les données proviennent du nouveau tableau <code>com50</code> et non de notre tableau initial <code>rp</code>. On le fait en passant un argument <code>data</code> spécifique à <code>geom_text</code>&nbsp;:</p>
-<div class="cell" data-hash="08-ggplot2_cache/html/unnamed-chunk-53_dd4e1a850a21cd56732b0a80ceaa87ed">
+<div class="cell" data-hash="08-ggplot2_cache/html/unnamed-chunk-53_77053ce263e3af8e59e525c28e6538b0">
 <div class="sourceCode cell-code" id="cb51"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> rp, <span class="fu">aes</span>(<span class="at">x =</span> dipl_sup, <span class="at">y =</span> cadres)) <span class="sc">+</span></span>
-<span id="cb51-2"><a href="#cb51-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">alpha =</span> <span class="fl">0.2</span>) <span class="sc">+</span></span>
-<span id="cb51-3"><a href="#cb51-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_text</span>(</span>
-<span id="cb51-4"><a href="#cb51-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">data =</span> com50, <span class="fu">aes</span>(<span class="at">label =</span> commune),</span>
-<span id="cb51-5"><a href="#cb51-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">color =</span> <span class="st">"red"</span>, <span class="at">size =</span> <span class="dv">3</span></span>
-<span id="cb51-6"><a href="#cb51-6" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb51-2"><a href="#cb51-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_point</span>(<span class="at">alpha =</span> <span class="fl">0.2</span>) <span class="sc">+</span></span>
+<span id="cb51-3"><a href="#cb51-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_text</span>(</span>
+<span id="cb51-4"><a href="#cb51-4" aria-hidden="true" tabindex="-1"></a>        <span class="at">data =</span> com50, <span class="fu">aes</span>(<span class="at">label =</span> commune),</span>
+<span id="cb51-5"><a href="#cb51-5" aria-hidden="true" tabindex="-1"></a>        <span class="at">color =</span> <span class="st">"red"</span>, <span class="at">size =</span> <span class="dv">3</span></span>
+<span id="cb51-6"><a href="#cb51-6" aria-hidden="true" tabindex="-1"></a>    )</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="08-ggplot2_files/figure-html/unnamed-chunk-53-1.png" class="img-fluid" width="672"></p>
 </div>
@@ -990,40 +1005,40 @@ Note
 <h2 data-number="8.6" class="anchored" data-anchor-id="faceting"><span class="header-section-number">8.6</span> Faceting</h2>
 <p>Le <em>faceting</em> permet d’effectuer plusieurs fois le même graphique selon les valeurs d’une ou plusieurs variables qualitatives.</p>
 <p>Par exemple, on a vu qu’on peut représenter l’histogramme du pourcentage de cadres dans nos communes avec le code suivant&nbsp;:</p>
-<div class="cell" data-hash="08-ggplot2_cache/html/unnamed-chunk-54_712d5b45fc4560fe208cfa8f4560a6d4">
+<div class="cell" data-hash="08-ggplot2_cache/html/unnamed-chunk-54_0245f4b74903e2fb3effd30b1966e1ae">
 <div class="sourceCode cell-code" id="cb52"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> rp) <span class="sc">+</span></span>
-<span id="cb52-2"><a href="#cb52-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="fu">aes</span>(<span class="at">x =</span> cadres))</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb52-2"><a href="#cb52-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_histogram</span>(<span class="fu">aes</span>(<span class="at">x =</span> cadres))</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="08-ggplot2_files/figure-html/unnamed-chunk-54-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 <p>On souhaite comparer cette distribution de la part des cadres selon le département, et donc faire un histogramme pour chacun de ces départements. C’est ce que permettent les fonctions <code>facet_wrap</code> et <code>facet_grid</code>.</p>
 <p><code>facet_wrap</code> prend un paramètre de la forme <code>vars(variable)</code>, où <code>variable</code> est le nom de la variable en fonction de laquelle on souhaite faire les différents graphiques. Ceux-ci sont alors affichés les uns à côté des autres et répartis automatiquement dans la page.</p>
-<div class="cell" data-hash="08-ggplot2_cache/html/unnamed-chunk-55_3b07aed76b8c5f9e6fb01c268ddadd63">
+<div class="cell" data-hash="08-ggplot2_cache/html/unnamed-chunk-55_8816a86c2e3d984db0351e7a0cee0ff7">
 <div class="sourceCode cell-code" id="cb53"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> rp) <span class="sc">+</span></span>
-<span id="cb53-2"><a href="#cb53-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="fu">aes</span>(<span class="at">x =</span> cadres)) <span class="sc">+</span></span>
-<span id="cb53-3"><a href="#cb53-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="fu">vars</span>(departement))</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb53-2"><a href="#cb53-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_histogram</span>(<span class="fu">aes</span>(<span class="at">x =</span> cadres)) <span class="sc">+</span></span>
+<span id="cb53-3"><a href="#cb53-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">facet_wrap</span>(<span class="fu">vars</span>(departement))</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="08-ggplot2_files/figure-html/unnamed-chunk-55-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 <p>Pour <code>facet_grid</code>, les graphiques sont disposés selon une grille. La fonction prend alors deux arguments, <code>rows</code> et <code>cols</code>, auxquels on passe les variables à afficher en ligne ou en colonne via la fonction <code>vars()</code>.</p>
-<div class="cell" data-hash="08-ggplot2_cache/html/unnamed-chunk-56_71cacc2d4fa9cafb1a1b3c270e39565d">
+<div class="cell" data-hash="08-ggplot2_cache/html/unnamed-chunk-56_71218b33d5a0e2665ae669bf6cad9f08">
 <div class="sourceCode cell-code" id="cb54"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> rp) <span class="sc">+</span></span>
-<span id="cb54-2"><a href="#cb54-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="fu">aes</span>(<span class="at">x =</span> cadres)) <span class="sc">+</span></span>
-<span id="cb54-3"><a href="#cb54-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_grid</span>(<span class="at">rows =</span> <span class="fu">vars</span>(departement))</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb54-2"><a href="#cb54-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_histogram</span>(<span class="fu">aes</span>(<span class="at">x =</span> cadres)) <span class="sc">+</span></span>
+<span id="cb54-3"><a href="#cb54-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">facet_grid</span>(<span class="at">rows =</span> <span class="fu">vars</span>(departement))</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="08-ggplot2_files/figure-html/unnamed-chunk-56-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 <p>Un des intérêts du faceting dans <code>ggplot2</code> est que tous les graphiques générés ont les mêmes échelles, ce qui permet une comparaison directe.</p>
 <p>Enfin, notons qu’on peut même faire du faceting sur plusieurs variables à la fois. On peut par exemple faire des histogrammes de la répartition de la part des cadres pour chaque croisement des variables <code>departement</code> et <code>pop_cl</code>&nbsp;:</p>
-<div class="cell" data-hash="08-ggplot2_cache/html/unnamed-chunk-57_158a3d23db1c1d18b2fc2c7665877aa0">
+<div class="cell" data-hash="08-ggplot2_cache/html/unnamed-chunk-57_a07d3d186af1c699b050e5cc05a42f27">
 <div class="sourceCode cell-code" id="cb55"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> rp) <span class="sc">+</span></span>
-<span id="cb55-2"><a href="#cb55-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="fu">aes</span>(<span class="at">x =</span> cadres)) <span class="sc">+</span></span>
-<span id="cb55-3"><a href="#cb55-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_grid</span>(</span>
-<span id="cb55-4"><a href="#cb55-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">rows =</span> <span class="fu">vars</span>(departement), <span class="at">cols =</span> <span class="fu">vars</span>(pop_cl)</span>
-<span id="cb55-5"><a href="#cb55-5" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb55-2"><a href="#cb55-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_histogram</span>(<span class="fu">aes</span>(<span class="at">x =</span> cadres)) <span class="sc">+</span></span>
+<span id="cb55-3"><a href="#cb55-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">facet_grid</span>(</span>
+<span id="cb55-4"><a href="#cb55-4" aria-hidden="true" tabindex="-1"></a>        <span class="at">rows =</span> <span class="fu">vars</span>(departement), <span class="at">cols =</span> <span class="fu">vars</span>(pop_cl)</span>
+<span id="cb55-5"><a href="#cb55-5" aria-hidden="true" tabindex="-1"></a>    )</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="08-ggplot2_files/figure-html/unnamed-chunk-57-1.png" class="img-fluid" width="672"></p>
 </div>
@@ -1039,44 +1054,44 @@ Note
 <section id="scale_size" class="level3" data-number="8.7.1">
 <h3 data-number="8.7.1" class="anchored" data-anchor-id="scale_size"><span class="header-section-number">8.7.1</span> <code>scale_size</code></h3>
 <p>Si on souhaite modifier les tailles minimales et maximales des objets quand on a effectué un mappage de type <code>size</code>, on peut utiliser la fonction <code>scale_size</code> et son argument <code>range</code>.</p>
-<div class="cell" data-hash="08-ggplot2_cache/html/unnamed-chunk-58_0efaf45a2f2481bc60a7808b515afa79">
+<div class="cell" data-hash="08-ggplot2_cache/html/unnamed-chunk-58_1eb7cfb1b514ccf6cc90c8d47b8a993f">
 <div class="sourceCode cell-code" id="cb56"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(rp) <span class="sc">+</span></span>
-<span id="cb56-2"><a href="#cb56-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">x =</span> dipl_sup, <span class="at">y =</span> cadres, <span class="at">size =</span> pop_tot)) <span class="sc">+</span></span>
-<span id="cb56-3"><a href="#cb56-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_size</span>(<span class="at">range =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">20</span>))</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb56-2"><a href="#cb56-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">x =</span> dipl_sup, <span class="at">y =</span> cadres, <span class="at">size =</span> pop_tot)) <span class="sc">+</span></span>
+<span id="cb56-3"><a href="#cb56-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_size</span>(<span class="at">range =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">20</span>))</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="08-ggplot2_files/figure-html/unnamed-chunk-58-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 <p>À comparer par exemple à&nbsp;:</p>
-<div class="cell" data-hash="08-ggplot2_cache/html/unnamed-chunk-59_76fff6a3241673216200dfab414b9770">
+<div class="cell" data-hash="08-ggplot2_cache/html/unnamed-chunk-59_a552414abd5d377d3d0e648896f4f843">
 <div class="sourceCode cell-code" id="cb57"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(rp) <span class="sc">+</span></span>
-<span id="cb57-2"><a href="#cb57-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">x =</span> dipl_sup, <span class="at">y =</span> cadres, <span class="at">size =</span> pop_tot)) <span class="sc">+</span></span>
-<span id="cb57-3"><a href="#cb57-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_size</span>(<span class="at">range =</span> <span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">8</span>))</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb57-2"><a href="#cb57-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">x =</span> dipl_sup, <span class="at">y =</span> cadres, <span class="at">size =</span> pop_tot)) <span class="sc">+</span></span>
+<span id="cb57-3"><a href="#cb57-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_size</span>(<span class="at">range =</span> <span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">8</span>))</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="08-ggplot2_files/figure-html/unnamed-chunk-59-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 <p>On peut ajouter d’autres paramètres à <code>scale_size</code>. Le premier argument est toujours le titre donné à la légende.</p>
-<div class="cell" data-hash="08-ggplot2_cache/html/unnamed-chunk-60_89b54b19229ba7b67d2337e671c6e362">
+<div class="cell" data-hash="08-ggplot2_cache/html/unnamed-chunk-60_cac61e2b898249dda36a47d9cef98aec">
 <div class="sourceCode cell-code" id="cb58"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb58-1"><a href="#cb58-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(rp) <span class="sc">+</span></span>
-<span id="cb58-2"><a href="#cb58-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">x =</span> dipl_sup, <span class="at">y =</span> cadres, <span class="at">size =</span> pop_tot)) <span class="sc">+</span></span>
-<span id="cb58-3"><a href="#cb58-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_size</span>(</span>
-<span id="cb58-4"><a href="#cb58-4" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Population"</span>,</span>
-<span id="cb58-5"><a href="#cb58-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">range =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">15</span>)</span>
-<span id="cb58-6"><a href="#cb58-6" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb58-2"><a href="#cb58-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">x =</span> dipl_sup, <span class="at">y =</span> cadres, <span class="at">size =</span> pop_tot)) <span class="sc">+</span></span>
+<span id="cb58-3"><a href="#cb58-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_size</span>(</span>
+<span id="cb58-4"><a href="#cb58-4" aria-hidden="true" tabindex="-1"></a>        <span class="st">"Population"</span>,</span>
+<span id="cb58-5"><a href="#cb58-5" aria-hidden="true" tabindex="-1"></a>        <span class="at">range =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">15</span>)</span>
+<span id="cb58-6"><a href="#cb58-6" aria-hidden="true" tabindex="-1"></a>    )</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="08-ggplot2_files/figure-html/unnamed-chunk-60-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 <p>On peut aussi définir manuellement les éléments de légende représentés.</p>
-<div class="cell" data-hash="08-ggplot2_cache/html/unnamed-chunk-61_61b4c8dc798870d96cef7672f28306c7">
+<div class="cell" data-hash="08-ggplot2_cache/html/unnamed-chunk-61_ee63b3c0bcbdb6717492c366b2991383">
 <div class="sourceCode cell-code" id="cb59"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb59-1"><a href="#cb59-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(rp) <span class="sc">+</span></span>
-<span id="cb59-2"><a href="#cb59-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">x =</span> dipl_sup, <span class="at">y =</span> cadres, <span class="at">size =</span> pop_tot)) <span class="sc">+</span></span>
-<span id="cb59-3"><a href="#cb59-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_size</span>(</span>
-<span id="cb59-4"><a href="#cb59-4" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Population"</span>,</span>
-<span id="cb59-5"><a href="#cb59-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">range =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">15</span>),</span>
-<span id="cb59-6"><a href="#cb59-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">breaks =</span> <span class="fu">c</span>(<span class="dv">1000</span>, <span class="dv">5000</span>, <span class="dv">10000</span>, <span class="dv">50000</span>)</span>
-<span id="cb59-7"><a href="#cb59-7" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb59-2"><a href="#cb59-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">x =</span> dipl_sup, <span class="at">y =</span> cadres, <span class="at">size =</span> pop_tot)) <span class="sc">+</span></span>
+<span id="cb59-3"><a href="#cb59-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_size</span>(</span>
+<span id="cb59-4"><a href="#cb59-4" aria-hidden="true" tabindex="-1"></a>        <span class="st">"Population"</span>,</span>
+<span id="cb59-5"><a href="#cb59-5" aria-hidden="true" tabindex="-1"></a>        <span class="at">range =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">15</span>),</span>
+<span id="cb59-6"><a href="#cb59-6" aria-hidden="true" tabindex="-1"></a>        <span class="at">breaks =</span> <span class="fu">c</span>(<span class="dv">1000</span>, <span class="dv">5000</span>, <span class="dv">10000</span>, <span class="dv">50000</span>)</span>
+<span id="cb59-7"><a href="#cb59-7" aria-hidden="true" tabindex="-1"></a>    )</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="08-ggplot2_files/figure-html/unnamed-chunk-61-1.png" class="img-fluid" width="672"></p>
 </div>
@@ -1087,56 +1102,56 @@ Note
 <p>Les <em>scales</em> <code>scale_x_&lt;type&gt;</code> et <code>scale_y_&lt;type&gt;</code> modifient les axes <code>x</code> et <code>y</code> du graphique.</p>
 <p><code>scale_x_continuous</code> et <code>scale_y_continuous</code> s’appliquent lorsque la variable <code>x</code> ou <code>y</code> est numérique (quantitative).</p>
 <p>C’est le cas de notre nuage de points croisant part de cadres et part de diplômés du supérieur.</p>
-<div class="cell" data-hash="08-ggplot2_cache/html/unnamed-chunk-62_8a5c6f2e97acbfa7a15ead2d31570979">
+<div class="cell" data-hash="08-ggplot2_cache/html/unnamed-chunk-62_1d52fbb9a4a4b011c73c13c4b71d9d4d">
 <div class="sourceCode cell-code" id="cb60"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb60-1"><a href="#cb60-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(rp) <span class="sc">+</span></span>
-<span id="cb60-2"><a href="#cb60-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">x =</span> dipl_sup, <span class="at">y =</span> cadres))</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb60-2"><a href="#cb60-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">x =</span> dipl_sup, <span class="at">y =</span> cadres))</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="08-ggplot2_files/figure-html/unnamed-chunk-62-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 <p>Comme on représente des pourcentages, on peut vouloir forcer les axes <code>x</code> et <code>y</code> à s’étendre des valeurs 0 à 100. On peut le faire en ajoutant un élément <code>scale_x_continuous</code> et un élément <code>scale_y_continuous</code>, et en utilisant leur argument <code>limits</code>.</p>
-<div class="cell" data-hash="08-ggplot2_cache/html/unnamed-chunk-63_8bb6550460609c9d7fe035531ae428f7">
+<div class="cell" data-hash="08-ggplot2_cache/html/unnamed-chunk-63_9ca5185fd0404bc7caeb270628ee3a41">
 <div class="sourceCode cell-code" id="cb61"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb61-1"><a href="#cb61-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(rp) <span class="sc">+</span></span>
-<span id="cb61-2"><a href="#cb61-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">x =</span> dipl_sup, <span class="at">y =</span> cadres)) <span class="sc">+</span></span>
-<span id="cb61-3"><a href="#cb61-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_continuous</span>(<span class="at">limits =</span> <span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">100</span>)) <span class="sc">+</span></span>
-<span id="cb61-4"><a href="#cb61-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">limits =</span> <span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">100</span>))</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb61-2"><a href="#cb61-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">x =</span> dipl_sup, <span class="at">y =</span> cadres)) <span class="sc">+</span></span>
+<span id="cb61-3"><a href="#cb61-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_x_continuous</span>(<span class="at">limits =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">100</span>)) <span class="sc">+</span></span>
+<span id="cb61-4"><a href="#cb61-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_y_continuous</span>(<span class="at">limits =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">100</span>))</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="08-ggplot2_files/figure-html/unnamed-chunk-63-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 <p>Là aussi, on peut modifier les étiquettes des axes en indiquant une chaîne de caractères en premier argument.</p>
-<div class="cell" data-hash="08-ggplot2_cache/html/unnamed-chunk-64_7ee08e409fd19a3fa10c8d2603272c55">
+<div class="cell" data-hash="08-ggplot2_cache/html/unnamed-chunk-64_3df5f5491a0da58784d021536751e412">
 <div class="sourceCode cell-code" id="cb62"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb62-1"><a href="#cb62-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(rp) <span class="sc">+</span></span>
-<span id="cb62-2"><a href="#cb62-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">x =</span> dipl_sup, <span class="at">y =</span> cadres)) <span class="sc">+</span></span>
-<span id="cb62-3"><a href="#cb62-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_continuous</span>(<span class="st">"Part des diplômés du supérieur (%)"</span>, <span class="at">limits =</span> <span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">100</span>)) <span class="sc">+</span></span>
-<span id="cb62-4"><a href="#cb62-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="st">"Part des cadres (%)"</span>, <span class="at">limits =</span> <span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">100</span>))</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb62-2"><a href="#cb62-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">x =</span> dipl_sup, <span class="at">y =</span> cadres)) <span class="sc">+</span></span>
+<span id="cb62-3"><a href="#cb62-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_x_continuous</span>(<span class="st">"Part des diplômés du supérieur (%)"</span>, <span class="at">limits =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">100</span>)) <span class="sc">+</span></span>
+<span id="cb62-4"><a href="#cb62-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_y_continuous</span>(<span class="st">"Part des cadres (%)"</span>, <span class="at">limits =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">100</span>))</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="08-ggplot2_files/figure-html/unnamed-chunk-64-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 <p>On peut utiliser <code>scale_x_log10</code> et <code>scale_y_log10</code> pour passer un axe à une échelle logarithmique.</p>
-<div class="cell" data-hash="08-ggplot2_cache/html/unnamed-chunk-65_43201bef3cebd632a17586b0ba309d62">
+<div class="cell" data-hash="08-ggplot2_cache/html/unnamed-chunk-65_bdbcd5ad38cafb3ee14c087e453945a6">
 <div class="sourceCode cell-code" id="cb63"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb63-1"><a href="#cb63-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(rp) <span class="sc">+</span></span>
-<span id="cb63-2"><a href="#cb63-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">x =</span> dipl_sup, <span class="at">y =</span> cadres)) <span class="sc">+</span></span>
-<span id="cb63-3"><a href="#cb63-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_log10</span>(<span class="st">"Diplômés du supérieur"</span>)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb63-2"><a href="#cb63-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">x =</span> dipl_sup, <span class="at">y =</span> cadres)) <span class="sc">+</span></span>
+<span id="cb63-3"><a href="#cb63-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_x_log10</span>(<span class="st">"Diplômés du supérieur"</span>)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="08-ggplot2_files/figure-html/unnamed-chunk-65-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 <p><code>scale_x_discrete</code> et <code>scale_y_discrete</code> s’appliquent lorsque l’axe correspond à une variable discrète (qualitative). C’est le cas par exemple de l’axe des <code>x</code> dans un diagramme en barres.</p>
-<div class="cell" data-hash="08-ggplot2_cache/html/unnamed-chunk-66_8e35d552dd3f734248eca946a5348b4d">
+<div class="cell" data-hash="08-ggplot2_cache/html/unnamed-chunk-66_73678db7f9d43dc502835baa0080fe44">
 <div class="sourceCode cell-code" id="cb64"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb64-1"><a href="#cb64-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(rp) <span class="sc">+</span></span>
-<span id="cb64-2"><a href="#cb64-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>(<span class="fu">aes</span>(<span class="at">x =</span> departement)) <span class="sc">+</span></span>
-<span id="cb64-3"><a href="#cb64-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_discrete</span>(<span class="st">"Département"</span>)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb64-2"><a href="#cb64-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_bar</span>(<span class="fu">aes</span>(<span class="at">x =</span> departement)) <span class="sc">+</span></span>
+<span id="cb64-3"><a href="#cb64-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_x_discrete</span>(<span class="st">"Département"</span>)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="08-ggplot2_files/figure-html/unnamed-chunk-66-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 <p>L’argument <code>limits</code> de <code>scale_x_discrete</code> permet d’indiquer quelles valeurs sont affichées et dans quel ordre.</p>
-<div class="cell" data-hash="08-ggplot2_cache/html/unnamed-chunk-67_4c74457c37688d6d646f80a6736b8e31">
+<div class="cell" data-hash="08-ggplot2_cache/html/unnamed-chunk-67_d8cc8da6cfbeba6637d8101c2a4fde2c">
 <div class="sourceCode cell-code" id="cb65"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb65-1"><a href="#cb65-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(rp) <span class="sc">+</span></span>
-<span id="cb65-2"><a href="#cb65-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>(<span class="fu">aes</span>(<span class="at">x =</span> departement)) <span class="sc">+</span></span>
-<span id="cb65-3"><a href="#cb65-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_discrete</span>(<span class="st">"Département"</span>, <span class="at">limits =</span> <span class="fu">c</span>(<span class="st">"Oise"</span>, <span class="st">"Lozère"</span>, <span class="st">"Rhône"</span>))</span>
+<span id="cb65-2"><a href="#cb65-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_bar</span>(<span class="fu">aes</span>(<span class="at">x =</span> departement)) <span class="sc">+</span></span>
+<span id="cb65-3"><a href="#cb65-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_x_discrete</span>(<span class="st">"Département"</span>, <span class="at">limits =</span> <span class="fu">c</span>(<span class="st">"Oise"</span>, <span class="st">"Lozère"</span>, <span class="st">"Rhône"</span>))</span>
 <span id="cb65-4"><a href="#cb65-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Warning: Removed 150 rows containing non-finite values (`stat_count()`).</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="08-ggplot2_files/figure-html/unnamed-chunk-67-1.png" class="img-fluid" width="672"></p>
@@ -1149,45 +1164,45 @@ Note
 <section id="variables-quantitatives" class="level4" data-number="8.7.3.1">
 <h4 data-number="8.7.3.1" class="anchored" data-anchor-id="variables-quantitatives"><span class="header-section-number">8.7.3.1</span> Variables quantitatives</h4>
 <p>Le graphique suivant colore les points selon la valeur d’une variable numérique quantitative (ici la part de chômeurs)&nbsp;:</p>
-<div class="cell" data-hash="08-ggplot2_cache/html/unnamed-chunk-68_ae980dff64ad3a045879f70892f4d315">
+<div class="cell" data-hash="08-ggplot2_cache/html/unnamed-chunk-68_96e46ee334ce2b6d0ac7557ee31d1009">
 <div class="sourceCode cell-code" id="cb66"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb66-1"><a href="#cb66-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(rp) <span class="sc">+</span></span>
-<span id="cb66-2"><a href="#cb66-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">x =</span> dipl_sup, <span class="at">y =</span> cadres, <span class="at">color =</span> chom))</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb66-2"><a href="#cb66-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">x =</span> dipl_sup, <span class="at">y =</span> cadres, <span class="at">color =</span> chom))</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="08-ggplot2_files/figure-html/unnamed-chunk-68-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 <p>On peut modifier les couleurs utilisées avec les arguments <code>low</code> et <code>high</code> de la fonction <code>scale_color_gradient</code>. Ici on souhaite que la valeur la plus faible soit blanche, et la plus élevée rouge&nbsp;:</p>
-<div class="cell" data-hash="08-ggplot2_cache/html/unnamed-chunk-69_b0ed3fcc19e1986ab8884ff793bb8537">
+<div class="cell" data-hash="08-ggplot2_cache/html/unnamed-chunk-69_757f7bce72c1c6349ce4ef8d9c8814e2">
 <div class="sourceCode cell-code" id="cb67"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb67-1"><a href="#cb67-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(rp) <span class="sc">+</span></span>
-<span id="cb67-2"><a href="#cb67-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">x =</span> dipl_sup, <span class="at">y =</span> cadres, <span class="at">color =</span> chom)) <span class="sc">+</span></span>
-<span id="cb67-3"><a href="#cb67-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_gradient</span>(<span class="st">"Taux de chômage"</span>, <span class="at">low =</span> <span class="st">"white"</span>, <span class="at">high =</span> <span class="st">"red"</span>)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb67-2"><a href="#cb67-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">x =</span> dipl_sup, <span class="at">y =</span> cadres, <span class="at">color =</span> chom)) <span class="sc">+</span></span>
+<span id="cb67-3"><a href="#cb67-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_color_gradient</span>(<span class="st">"Taux de chômage"</span>, <span class="at">low =</span> <span class="st">"white"</span>, <span class="at">high =</span> <span class="st">"red"</span>)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="08-ggplot2_files/figure-html/unnamed-chunk-69-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 <p>On peut aussi utiliser des palettes prédéfinies. L’une des plus populaires est la palette <em>viridis</em>, accessible en utilisant <code>scale_color_viridis_c</code>&nbsp;:</p>
-<div class="cell" data-hash="08-ggplot2_cache/html/unnamed-chunk-70_b334c7da6126a9ff833b512a049f97e2">
+<div class="cell" data-hash="08-ggplot2_cache/html/unnamed-chunk-70_d6eb73ca2d7407013edaa21fe0dd431d">
 <div class="sourceCode cell-code" id="cb68"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb68-1"><a href="#cb68-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(rp) <span class="sc">+</span></span>
-<span id="cb68-2"><a href="#cb68-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">x =</span> dipl_sup, <span class="at">y =</span> cadres, <span class="at">color =</span> chom)) <span class="sc">+</span></span>
-<span id="cb68-3"><a href="#cb68-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_viridis_c</span>(<span class="st">"Taux de chômage"</span>)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb68-2"><a href="#cb68-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">x =</span> dipl_sup, <span class="at">y =</span> cadres, <span class="at">color =</span> chom)) <span class="sc">+</span></span>
+<span id="cb68-3"><a href="#cb68-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_color_viridis_c</span>(<span class="st">"Taux de chômage"</span>)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="08-ggplot2_files/figure-html/unnamed-chunk-70-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 <p><em>viridis</em> propose également trois autres palettes, <em>magma</em>, <em>inferno</em> et <em>plasma</em>, accessibles via l’argument <code>option</code>&nbsp;:</p>
-<div class="cell" data-hash="08-ggplot2_cache/html/unnamed-chunk-71_3d6713dbe1735456715a5e4197435c77">
+<div class="cell" data-hash="08-ggplot2_cache/html/unnamed-chunk-71_abd8db4a926da2e58ba7fa514c1c5744">
 <div class="sourceCode cell-code" id="cb69"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb69-1"><a href="#cb69-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(rp) <span class="sc">+</span></span>
-<span id="cb69-2"><a href="#cb69-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">x =</span> dipl_sup, <span class="at">y =</span> cadres, <span class="at">color =</span> chom)) <span class="sc">+</span></span>
-<span id="cb69-3"><a href="#cb69-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_viridis_c</span>(<span class="st">"Taux de chômage"</span>, <span class="at">option =</span> <span class="st">"plasma"</span>)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb69-2"><a href="#cb69-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">x =</span> dipl_sup, <span class="at">y =</span> cadres, <span class="at">color =</span> chom)) <span class="sc">+</span></span>
+<span id="cb69-3"><a href="#cb69-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_color_viridis_c</span>(<span class="st">"Taux de chômage"</span>, <span class="at">option =</span> <span class="st">"plasma"</span>)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="08-ggplot2_files/figure-html/unnamed-chunk-71-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 <p>On peut aussi utiliser <code>scale_color_distiller</code>, qui transforme une des palettes pour variable qualitative de <code>scale_color_brewer</code> en palette continue pour variable numérique&nbsp;:</p>
-<div class="cell" data-hash="08-ggplot2_cache/html/unnamed-chunk-72_2e3f691b4b346ff72ef57f80388ec021">
+<div class="cell" data-hash="08-ggplot2_cache/html/unnamed-chunk-72_5fa1d26bf7d15c4c244af832eb0a660b">
 <div class="sourceCode cell-code" id="cb70"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb70-1"><a href="#cb70-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(rp) <span class="sc">+</span></span>
-<span id="cb70-2"><a href="#cb70-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">x =</span> dipl_sup, <span class="at">y =</span> cadres, <span class="at">color =</span> chom)) <span class="sc">+</span></span>
-<span id="cb70-3"><a href="#cb70-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_distiller</span>(<span class="st">"Taux de chômage"</span>, <span class="at">palette =</span> <span class="st">"Spectral"</span>)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb70-2"><a href="#cb70-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">x =</span> dipl_sup, <span class="at">y =</span> cadres, <span class="at">color =</span> chom)) <span class="sc">+</span></span>
+<span id="cb70-3"><a href="#cb70-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_color_distiller</span>(<span class="st">"Taux de chômage"</span>, <span class="at">palette =</span> <span class="st">"Spectral"</span>)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="08-ggplot2_files/figure-html/unnamed-chunk-72-1.png" class="img-fluid" width="672"></p>
 </div>
@@ -1197,21 +1212,21 @@ Note
 <section id="variables-qualitatives" class="level4" data-number="8.7.3.2">
 <h4 data-number="8.7.3.2" class="anchored" data-anchor-id="variables-qualitatives"><span class="header-section-number">8.7.3.2</span> Variables qualitatives</h4>
 <p>Si on a fait un mappage avec une variable discrète (qualitative), comme ici avec le département&nbsp;:</p>
-<div class="cell" data-hash="08-ggplot2_cache/html/unnamed-chunk-73_1fe08afa876b6a882954569a62e0e3d3">
+<div class="cell" data-hash="08-ggplot2_cache/html/unnamed-chunk-73_d4c7dc1bba313313fa6f0d4cb918376d">
 <div class="sourceCode cell-code" id="cb71"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb71-1"><a href="#cb71-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(rp) <span class="sc">+</span></span>
-<span id="cb71-2"><a href="#cb71-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">x =</span> dipl_sup, <span class="at">y =</span> cadres, <span class="at">color =</span> departement))</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb71-2"><a href="#cb71-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">x =</span> dipl_sup, <span class="at">y =</span> cadres, <span class="at">color =</span> departement))</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="08-ggplot2_files/figure-html/unnamed-chunk-73-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 <p>Une première possibilité est de modifier la palette manuellement avec <code>scale_color_manual</code> et son argument <code>values</code>&nbsp;:</p>
-<div class="cell" data-hash="08-ggplot2_cache/html/unnamed-chunk-74_1dffb13057dd8d505e9998df29ea961c">
+<div class="cell" data-hash="08-ggplot2_cache/html/unnamed-chunk-74_7738e28b2723c7705cf6a3f20d2e8318">
 <div class="sourceCode cell-code" id="cb72"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb72-1"><a href="#cb72-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(rp) <span class="sc">+</span></span>
-<span id="cb72-2"><a href="#cb72-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">x =</span> dipl_sup, <span class="at">y =</span> cadres, <span class="at">color =</span> departement)) <span class="sc">+</span></span>
-<span id="cb72-3"><a href="#cb72-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_manual</span>(</span>
-<span id="cb72-4"><a href="#cb72-4" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Département"</span>,</span>
-<span id="cb72-5"><a href="#cb72-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">values =</span> <span class="fu">c</span>(<span class="st">"red"</span>, <span class="st">"#FFDD45"</span>, <span class="fu">rgb</span>(<span class="fl">0.1</span>,<span class="fl">0.2</span>,<span class="fl">0.6</span>), <span class="st">"darkgreen"</span>, <span class="st">"grey80"</span>)</span>
-<span id="cb72-6"><a href="#cb72-6" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb72-2"><a href="#cb72-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">x =</span> dipl_sup, <span class="at">y =</span> cadres, <span class="at">color =</span> departement)) <span class="sc">+</span></span>
+<span id="cb72-3"><a href="#cb72-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_color_manual</span>(</span>
+<span id="cb72-4"><a href="#cb72-4" aria-hidden="true" tabindex="-1"></a>        <span class="st">"Département"</span>,</span>
+<span id="cb72-5"><a href="#cb72-5" aria-hidden="true" tabindex="-1"></a>        <span class="at">values =</span> <span class="fu">c</span>(<span class="st">"red"</span>, <span class="st">"#FFDD45"</span>, <span class="fu">rgb</span>(<span class="fl">0.1</span>, <span class="fl">0.2</span>, <span class="fl">0.6</span>), <span class="st">"darkgreen"</span>, <span class="st">"grey80"</span>)</span>
+<span id="cb72-6"><a href="#cb72-6" aria-hidden="true" tabindex="-1"></a>    )</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="08-ggplot2_files/figure-html/unnamed-chunk-74-1.png" class="img-fluid" width="672"></p>
 </div>
@@ -1237,10 +1252,10 @@ Note
 </div>
 <p>Il est cependant souvent plus pertinent d’utiliser des palettes prédéfinies. Celles du site <a href="http://colorbrewer2.org/">Colorbrewer</a>, initialement prévues pour la cartographie, permettent une bonne lisibilité, et peuvent être adaptées pour certains types de daltonisme.</p>
 <p>Ces palettes s’utilisent via la fonction <code>scale_color_brewer</code>, en passant le nom de la palette via l’argument <code>palette</code>. Par exemple, si on veut utiliser la palette <code>Set1</code>&nbsp;:</p>
-<div class="cell" data-hash="08-ggplot2_cache/html/unnamed-chunk-75_23d625df6f3e218e0cc9678f49dcbbf1">
+<div class="cell" data-hash="08-ggplot2_cache/html/unnamed-chunk-75_3befe5c29ce1dbcb88e4c3150a314a9d">
 <div class="sourceCode cell-code" id="cb73"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb73-1"><a href="#cb73-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(rp) <span class="sc">+</span></span>
-<span id="cb73-2"><a href="#cb73-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">x =</span> dipl_sup, <span class="at">y =</span> cadres, <span class="at">color =</span> departement)) <span class="sc">+</span></span>
-<span id="cb73-3"><a href="#cb73-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_brewer</span>(<span class="st">"Département"</span>, <span class="at">palette =</span> <span class="st">"Set1"</span>)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb73-2"><a href="#cb73-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">x =</span> dipl_sup, <span class="at">y =</span> cadres, <span class="at">color =</span> departement)) <span class="sc">+</span></span>
+<span id="cb73-3"><a href="#cb73-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_color_brewer</span>(<span class="st">"Département"</span>, <span class="at">palette =</span> <span class="st">"Set1"</span>)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="08-ggplot2_files/figure-html/unnamed-chunk-75-1.png" class="img-fluid" width="672"></p>
 </div>
@@ -1262,48 +1277,57 @@ Note
 <h2 data-number="8.8" class="anchored" data-anchor-id="thèmes"><span class="header-section-number">8.8</span> Thèmes</h2>
 <p>Les thèmes permettent de contrôler l’affichage de tous les éléments du graphique qui ne sont pas reliés aux données&nbsp;: titres, grilles, fonds, etc.</p>
 <p>Il existe un certain nombre de thèmes préexistants, par exemple le thème <code>theme_bw</code>&nbsp;:</p>
-<div class="cell" data-hash="08-ggplot2_cache/html/unnamed-chunk-78_98f415fdd41674da20c6213161a5e4c3">
+<div class="cell" data-hash="08-ggplot2_cache/html/unnamed-chunk-78_35df96dbed2413df883365ca4cc57f2d">
 <div class="sourceCode cell-code" id="cb75"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb75-1"><a href="#cb75-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> rp) <span class="sc">+</span></span>
-<span id="cb75-2"><a href="#cb75-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="fu">aes</span>(<span class="at">x =</span> cadres)) <span class="sc">+</span></span>
-<span id="cb75-3"><a href="#cb75-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>()</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb75-2"><a href="#cb75-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_histogram</span>(<span class="fu">aes</span>(<span class="at">x =</span> cadres)) <span class="sc">+</span></span>
+<span id="cb75-3"><a href="#cb75-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_bw</span>()</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="08-ggplot2_files/figure-html/unnamed-chunk-78-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 <p>Ou le thème <code>theme_minimal</code>&nbsp;:</p>
-<div class="cell" data-hash="08-ggplot2_cache/html/unnamed-chunk-79_d3adde3cb1741dbaeaa4a9478ce886b0">
+<div class="cell" data-hash="08-ggplot2_cache/html/unnamed-chunk-79_b2ab5af35dbcafdc9852d2682e5e8f0b">
 <div class="sourceCode cell-code" id="cb76"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb76-1"><a href="#cb76-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> rp) <span class="sc">+</span></span>
-<span id="cb76-2"><a href="#cb76-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="fu">aes</span>(<span class="at">x =</span> cadres)) <span class="sc">+</span></span>
-<span id="cb76-3"><a href="#cb76-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb76-2"><a href="#cb76-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_histogram</span>(<span class="fu">aes</span>(<span class="at">x =</span> cadres)) <span class="sc">+</span></span>
+<span id="cb76-3"><a href="#cb76-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_minimal</span>()</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="08-ggplot2_files/figure-html/unnamed-chunk-79-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 <p>On peut cependant modifier manuellement les différents éléments. Par exemple, les fonctions <code>ggtitle</code>, <code>xlab</code> et <code>ylab</code> permettent d’ajouter ou de modifier le titre du graphique, ainsi que les étiquettes des axes <code>x</code> et <code>y</code>&nbsp;:</p>
-<div class="cell" data-hash="08-ggplot2_cache/html/unnamed-chunk-80_ef5d619ae0d08d8891680a6802b23fc2">
+<div class="cell" data-hash="08-ggplot2_cache/html/unnamed-chunk-80_cb958e25b23ae200969cac2efa7ba11a">
 <div class="sourceCode cell-code" id="cb77"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb77-1"><a href="#cb77-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> rp) <span class="sc">+</span></span>
-<span id="cb77-2"><a href="#cb77-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="fu">aes</span>(<span class="at">x =</span> cadres)) <span class="sc">+</span></span>
-<span id="cb77-3"><a href="#cb77-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">"Un bien bel histogramme"</span>) <span class="sc">+</span></span>
-<span id="cb77-4"><a href="#cb77-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlab</span>(<span class="st">"Pourcentage de cadres"</span>) <span class="sc">+</span></span>
-<span id="cb77-5"><a href="#cb77-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ylab</span>(<span class="st">"Effectif"</span>)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb77-2"><a href="#cb77-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_histogram</span>(<span class="fu">aes</span>(<span class="at">x =</span> cadres)) <span class="sc">+</span></span>
+<span id="cb77-3"><a href="#cb77-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ggtitle</span>(<span class="st">"Un bien bel histogramme"</span>) <span class="sc">+</span></span>
+<span id="cb77-4"><a href="#cb77-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">xlab</span>(<span class="st">"Pourcentage de cadres"</span>) <span class="sc">+</span></span>
+<span id="cb77-5"><a href="#cb77-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ylab</span>(<span class="st">"Effectif"</span>)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="08-ggplot2_files/figure-html/unnamed-chunk-80-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 <p>Les éléments personnalisables étant nombreux, un bon moyen de se familiariser avec tous les arguments est sans doute l’addin RStudio <code>ggThemeAssist</code>. Pour l’utiliser il suffit d’installer le package du même nom, de sélectionner dans son script RStudio le code correspondant à un graphique <code>ggplot2</code>, puis d’aller dans le menu <em>Addins</em> et choisir <em>ggplot Theme Assistant</em>. Une interface graphique s’affiche alors permettant de modifier les différents éléments. Si on clique sur <em>Done</em>, le code sélectionné dans le script est alors automatiquement mis à jour pour correspondre aux modifications effectuées.</p>
 <p>Ce qui permet d’obtenir très facilement des résultats extrêmement moches&nbsp;:</p>
-<div class="cell" data-hash="08-ggplot2_cache/html/unnamed-chunk-81_587dc51e658fae6fd2e04b401b2303d4">
-<div class="sourceCode cell-code" id="cb78"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb78-1"><a href="#cb78-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> rp) <span class="sc">+</span> <span class="fu">geom_histogram</span>(<span class="fu">aes</span>(<span class="at">x =</span> cadres)) <span class="sc">+</span></span>
-<span id="cb78-2"><a href="#cb78-2" aria-hidden="true" tabindex="-1"></a> <span class="fu">theme</span>(<span class="at">panel.grid.major =</span> <span class="fu">element_line</span>(<span class="at">colour =</span> <span class="st">"dodgerblue"</span>,</span>
-<span id="cb78-3"><a href="#cb78-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">size =</span> <span class="fl">0.5</span>, <span class="at">linetype =</span> <span class="st">"dotdash"</span>), <span class="at">axis.title =</span> <span class="fu">element_text</span>(<span class="at">family =</span> <span class="st">"serif"</span>,</span>
-<span id="cb78-4"><a href="#cb78-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">size =</span> <span class="dv">18</span>, <span class="at">face =</span> <span class="st">"italic"</span>, <span class="at">colour =</span> <span class="st">"white"</span>),</span>
-<span id="cb78-5"><a href="#cb78-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">axis.text =</span> <span class="fu">element_text</span>(<span class="at">family =</span> <span class="st">"serif"</span>,</span>
-<span id="cb78-6"><a href="#cb78-6" aria-hidden="true" tabindex="-1"></a>        <span class="at">size =</span> <span class="dv">15</span>, <span class="at">face =</span> <span class="st">"bold"</span>), <span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">family =</span> <span class="st">"mono"</span>),</span>
-<span id="cb78-7"><a href="#cb78-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">family =</span> <span class="st">"serif"</span>),</span>
-<span id="cb78-8"><a href="#cb78-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend.text =</span> <span class="fu">element_text</span>(<span class="at">family =</span> <span class="st">"serif"</span>),</span>
-<span id="cb78-9"><a href="#cb78-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend.title =</span> <span class="fu">element_text</span>(<span class="at">family =</span> <span class="st">"serif"</span>),</span>
-<span id="cb78-10"><a href="#cb78-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">panel.background =</span> <span class="fu">element_rect</span>(<span class="at">fill =</span> <span class="st">"coral"</span>),</span>
-<span id="cb78-11"><a href="#cb78-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">plot.background =</span> <span class="fu">element_rect</span>(<span class="at">fill =</span> <span class="st">"blueviolet"</span>))</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell" data-hash="08-ggplot2_cache/html/unnamed-chunk-81_b29e617a9cd4ab17a97af77a116fa6bc">
+<div class="sourceCode cell-code" id="cb78"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb78-1"><a href="#cb78-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> rp) <span class="sc">+</span></span>
+<span id="cb78-2"><a href="#cb78-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_histogram</span>(<span class="fu">aes</span>(<span class="at">x =</span> cadres)) <span class="sc">+</span></span>
+<span id="cb78-3"><a href="#cb78-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme</span>(</span>
+<span id="cb78-4"><a href="#cb78-4" aria-hidden="true" tabindex="-1"></a>        <span class="at">panel.grid.major =</span> <span class="fu">element_line</span>(</span>
+<span id="cb78-5"><a href="#cb78-5" aria-hidden="true" tabindex="-1"></a>            <span class="at">colour =</span> <span class="st">"dodgerblue"</span>,</span>
+<span id="cb78-6"><a href="#cb78-6" aria-hidden="true" tabindex="-1"></a>            <span class="at">size =</span> <span class="fl">0.5</span>, <span class="at">linetype =</span> <span class="st">"dotdash"</span></span>
+<span id="cb78-7"><a href="#cb78-7" aria-hidden="true" tabindex="-1"></a>        ), <span class="at">axis.title =</span> <span class="fu">element_text</span>(</span>
+<span id="cb78-8"><a href="#cb78-8" aria-hidden="true" tabindex="-1"></a>            <span class="at">family =</span> <span class="st">"serif"</span>,</span>
+<span id="cb78-9"><a href="#cb78-9" aria-hidden="true" tabindex="-1"></a>            <span class="at">size =</span> <span class="dv">18</span>, <span class="at">face =</span> <span class="st">"italic"</span>, <span class="at">colour =</span> <span class="st">"white"</span></span>
+<span id="cb78-10"><a href="#cb78-10" aria-hidden="true" tabindex="-1"></a>        ),</span>
+<span id="cb78-11"><a href="#cb78-11" aria-hidden="true" tabindex="-1"></a>        <span class="at">axis.text =</span> <span class="fu">element_text</span>(</span>
+<span id="cb78-12"><a href="#cb78-12" aria-hidden="true" tabindex="-1"></a>            <span class="at">family =</span> <span class="st">"serif"</span>,</span>
+<span id="cb78-13"><a href="#cb78-13" aria-hidden="true" tabindex="-1"></a>            <span class="at">size =</span> <span class="dv">15</span>, <span class="at">face =</span> <span class="st">"bold"</span></span>
+<span id="cb78-14"><a href="#cb78-14" aria-hidden="true" tabindex="-1"></a>        ), <span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">family =</span> <span class="st">"mono"</span>),</span>
+<span id="cb78-15"><a href="#cb78-15" aria-hidden="true" tabindex="-1"></a>        <span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">family =</span> <span class="st">"serif"</span>),</span>
+<span id="cb78-16"><a href="#cb78-16" aria-hidden="true" tabindex="-1"></a>        <span class="at">legend.text =</span> <span class="fu">element_text</span>(<span class="at">family =</span> <span class="st">"serif"</span>),</span>
+<span id="cb78-17"><a href="#cb78-17" aria-hidden="true" tabindex="-1"></a>        <span class="at">legend.title =</span> <span class="fu">element_text</span>(<span class="at">family =</span> <span class="st">"serif"</span>),</span>
+<span id="cb78-18"><a href="#cb78-18" aria-hidden="true" tabindex="-1"></a>        <span class="at">panel.background =</span> <span class="fu">element_rect</span>(<span class="at">fill =</span> <span class="st">"coral"</span>),</span>
+<span id="cb78-19"><a href="#cb78-19" aria-hidden="true" tabindex="-1"></a>        <span class="at">plot.background =</span> <span class="fu">element_rect</span>(<span class="at">fill =</span> <span class="st">"blueviolet"</span>)</span>
+<span id="cb78-20"><a href="#cb78-20" aria-hidden="true" tabindex="-1"></a>    )</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="08-ggplot2_files/figure-html/unnamed-chunk-81-1.png" class="img-fluid" width="672"></p>
 </div>
@@ -1352,195 +1376,201 @@ Note
 </div>
 <p><strong>Exercice 1</strong></p>
 <p>Faire un nuage de points croisant le pourcentage de sans diplôme (<code>dipl_aucun</code>) et le pourcentage d’ouvriers (<code>ouvr</code>).</p>
-<div class="cell" data-hash="08-ggplot2_cache/html/unnamed-chunk-84_6cf717b0319710013f4d44d70bfcff23">
+<div class="cell" data-hash="08-ggplot2_cache/html/unnamed-chunk-84_073fd37fd0a5c973eb4bbdc251ab06ae">
 <div class="cell-output-display">
 <p><img src="08-ggplot2_files/figure-html/unnamed-chunk-84-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 <div class="solution-exo">
-<div class="cell" data-hash="08-ggplot2_cache/html/gg1_fa4bad5a34d30f7ddc9177fd9ab048da">
-<div class="sourceCode cell-code" id="cb81"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb81-1"><a href="#cb81-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(rp69) <span class="sc">+</span> <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">x =</span> dipl_aucun, <span class="at">y =</span> ouvr))</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell" data-hash="08-ggplot2_cache/html/gg1_45024c86ca93484a97369f319bd31827">
+<div class="sourceCode cell-code" id="cb81"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb81-1"><a href="#cb81-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(rp69) <span class="sc">+</span></span>
+<span id="cb81-2"><a href="#cb81-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">x =</span> dipl_aucun, <span class="at">y =</span> ouvr))</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div>
 <p><strong>Exercice 2</strong></p>
 <p>Faire un nuage de points croisant le pourcentage de sans diplôme et le pourcentage d’ouvriers, avec les points en rouge et de transparence 0.2.</p>
-<div class="cell" data-hash="08-ggplot2_cache/html/unnamed-chunk-85_d37a35698d2bc9a5434fccca1ea83989">
+<div class="cell" data-hash="08-ggplot2_cache/html/unnamed-chunk-85_667c19cb52ff3d97a980b9deef1b3459">
 <div class="cell-output-display">
 <p><img src="08-ggplot2_files/figure-html/unnamed-chunk-85-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 <div class="solution-exo">
-<div class="cell" data-hash="08-ggplot2_cache/html/gg2_31f14d1b1cb20da5b446f546d8dc9816">
+<div class="cell" data-hash="08-ggplot2_cache/html/gg2_84ce7bc6f2ce1ab618f975630ce48182">
 <div class="sourceCode cell-code" id="cb82"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb82-1"><a href="#cb82-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(rp69) <span class="sc">+</span></span>
-<span id="cb82-2"><a href="#cb82-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">x =</span> dipl_aucun, <span class="at">y =</span> ouvr), <span class="at">color =</span> <span class="st">"red"</span>, <span class="at">alpha =</span> <span class="fl">0.2</span>)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb82-2"><a href="#cb82-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">x =</span> dipl_aucun, <span class="at">y =</span> ouvr), <span class="at">color =</span> <span class="st">"red"</span>, <span class="at">alpha =</span> <span class="fl">0.2</span>)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div>
 <p><strong>Exercice 3</strong></p>
 <p>Représenter la répartition du pourcentage de propriétaires (variable <code>proprio</code>) selon la taille de la commune en classes (variable <code>pop_cl</code>) sous forme de boîtes à moustaches.</p>
-<div class="cell" data-hash="08-ggplot2_cache/html/unnamed-chunk-86_1f1e822e624d699a09cd0e9a823018d1">
+<div class="cell" data-hash="08-ggplot2_cache/html/unnamed-chunk-86_651db86c826340a87475256ebd52e7d5">
 <div class="cell-output-display">
 <p><img src="08-ggplot2_files/figure-html/unnamed-chunk-86-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 <div class="solution-exo">
-<div class="cell" data-hash="08-ggplot2_cache/html/gg3_a0015dd9cd0fee0eba691ac44287191f">
-<div class="sourceCode cell-code" id="cb83"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb83-1"><a href="#cb83-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(rp69) <span class="sc">+</span> <span class="fu">geom_boxplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> pop_cl, <span class="at">y =</span> proprio))</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell" data-hash="08-ggplot2_cache/html/gg3_34523a256f014995b10aa5332728af6c">
+<div class="sourceCode cell-code" id="cb83"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb83-1"><a href="#cb83-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(rp69) <span class="sc">+</span></span>
+<span id="cb83-2"><a href="#cb83-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_boxplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> pop_cl, <span class="at">y =</span> proprio))</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div>
 <p><strong>Exercice 4</strong></p>
 <p>Représenter la répartition du nombre de communes selon la taille de la commune en classes sous la forme d’un diagramme en bâtons.</p>
-<div class="cell" data-hash="08-ggplot2_cache/html/unnamed-chunk-87_5e4c0f971495ebedfce416c28cfb33c5">
+<div class="cell" data-hash="08-ggplot2_cache/html/unnamed-chunk-87_3bfc443df86361c902dded4ba44b84bd">
 <div class="cell-output-display">
 <p><img src="08-ggplot2_files/figure-html/unnamed-chunk-87-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 <div class="solution-exo">
-<div class="cell" data-hash="08-ggplot2_cache/html/gg4_c8239a3cadd6fcbb38d8858e20c0b099">
-<div class="sourceCode cell-code" id="cb84"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb84-1"><a href="#cb84-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(rp69) <span class="sc">+</span> <span class="fu">geom_bar</span>(<span class="fu">aes</span>(<span class="at">x =</span> pop_cl))</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell" data-hash="08-ggplot2_cache/html/gg4_b3bc2582d72d71964dfd4c8b5924c8f5">
+<div class="sourceCode cell-code" id="cb84"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb84-1"><a href="#cb84-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(rp69) <span class="sc">+</span></span>
+<span id="cb84-2"><a href="#cb84-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_bar</span>(<span class="fu">aes</span>(<span class="at">x =</span> pop_cl))</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div>
 <p><strong>Exercice 5</strong></p>
 <p>Faire un nuage de points croisant le pourcentage de sans diplôme et le pourcentage d’ouvriers. Faire varier la couleur selon le département (<code>departement</code>).</p>
-<div class="cell" data-hash="08-ggplot2_cache/html/unnamed-chunk-88_3e622c7f0f2da4d903a974592f38c91d">
+<div class="cell" data-hash="08-ggplot2_cache/html/unnamed-chunk-88_a1fcc90683e0c0c44242b4582fff3317">
 <div class="cell-output-display">
 <p><img src="08-ggplot2_files/figure-html/unnamed-chunk-88-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 <div class="solution-exo">
-<div class="cell" data-hash="08-ggplot2_cache/html/gg5_b7f5081d15a5bf5b0a6d68b5a04a6a90">
+<div class="cell" data-hash="08-ggplot2_cache/html/gg5_db8fc4edb9bd7482966144f650a9cba3">
 <div class="sourceCode cell-code" id="cb85"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb85-1"><a href="#cb85-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(rp69) <span class="sc">+</span></span>
-<span id="cb85-2"><a href="#cb85-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">x =</span> dipl_aucun, <span class="at">y =</span> ouvr, <span class="at">color =</span> departement))</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb85-2"><a href="#cb85-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">x =</span> dipl_aucun, <span class="at">y =</span> ouvr, <span class="at">color =</span> departement))</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div>
 <p>Sur le même graphique, faire varier la taille des points selon la population totale de la commune (<code>pop_tot</code>).</p>
-<div class="cell" data-hash="08-ggplot2_cache/html/unnamed-chunk-89_eecefcf7479e9f37685ce2300e0a4056">
+<div class="cell" data-hash="08-ggplot2_cache/html/unnamed-chunk-89_d96b383f34ef7ece9168f18e16af349e">
 <div class="cell-output-display">
 <p><img src="08-ggplot2_files/figure-html/unnamed-chunk-89-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 <div class="solution-exo">
-<div class="cell" data-hash="08-ggplot2_cache/html/gg5b_b5d776f99f8c0864a6b0d69837d5ddff">
+<div class="cell" data-hash="08-ggplot2_cache/html/gg5b_8d2d0c75f0aa7a87f4d52775ad55bf44">
 <div class="sourceCode cell-code" id="cb86"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb86-1"><a href="#cb86-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(rp69) <span class="sc">+</span></span>
-<span id="cb86-2"><a href="#cb86-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">x =</span> dipl_aucun, <span class="at">y =</span> ouvr, <span class="at">color =</span> departement, <span class="at">size =</span> pop_tot))</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb86-2"><a href="#cb86-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">x =</span> dipl_aucun, <span class="at">y =</span> ouvr, <span class="at">color =</span> departement, <span class="at">size =</span> pop_tot))</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div>
 <p>Enfin, toujours sur le même graphique, rendre les points transparents en plaçant leur opacité à 0.5.</p>
-<div class="cell" data-hash="08-ggplot2_cache/html/unnamed-chunk-90_1fe7d798047a7974c360e172ce7be0ef">
+<div class="cell" data-hash="08-ggplot2_cache/html/unnamed-chunk-90_eb647d036f9058eed694efd72137ff0a">
 <div class="cell-output-display">
 <p><img src="08-ggplot2_files/figure-html/unnamed-chunk-90-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 <div class="solution-exo">
-<div class="cell" data-hash="08-ggplot2_cache/html/gg5c_da8a9e58d421b242de59974eeeea76e6">
+<div class="cell" data-hash="08-ggplot2_cache/html/gg5c_78cc1d54d00dbcc7f4c30af2ea4db9a5">
 <div class="sourceCode cell-code" id="cb87"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb87-1"><a href="#cb87-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(rp69) <span class="sc">+</span></span>
-<span id="cb87-2"><a href="#cb87-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">x =</span> dipl_aucun, <span class="at">y =</span> ouvr, <span class="at">color =</span> departement, <span class="at">size =</span> pop_tot), <span class="at">alpha =</span> <span class="fl">0.5</span>)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb87-2"><a href="#cb87-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">x =</span> dipl_aucun, <span class="at">y =</span> ouvr, <span class="at">color =</span> departement, <span class="at">size =</span> pop_tot), <span class="at">alpha =</span> <span class="fl">0.5</span>)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div>
 <p><strong>Exercice 6</strong></p>
 <p>Représenter la répartition du pourcentage de propriétaires (variable <code>proprio</code>) selon la taille de la commune en classes (variable <code>pop_cl</code>) sous forme de boîtes à moustaches. Faire varier la couleur de remplissage (attribut <code>fill</code>) selon le département.</p>
-<div class="cell" data-hash="08-ggplot2_cache/html/unnamed-chunk-91_bc5c189c626c368310d6ec4e7d55b721">
+<div class="cell" data-hash="08-ggplot2_cache/html/unnamed-chunk-91_80fdf78a8a6846f268fc2f8c01c3e8d9">
 <div class="cell-output-display">
 <p><img src="08-ggplot2_files/figure-html/unnamed-chunk-91-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 <div class="solution-exo">
-<div class="cell" data-hash="08-ggplot2_cache/html/gg6_f1d738e507c10122e9b73886fa7b7e73">
+<div class="cell" data-hash="08-ggplot2_cache/html/gg6_9a27d169466b1d9e7bb2c328851de6e1">
 <div class="sourceCode cell-code" id="cb88"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb88-1"><a href="#cb88-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(rp69) <span class="sc">+</span></span>
-<span id="cb88-2"><a href="#cb88-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> pop_cl, <span class="at">y =</span> proprio, <span class="at">fill =</span> departement))</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb88-2"><a href="#cb88-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_boxplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> pop_cl, <span class="at">y =</span> proprio, <span class="at">fill =</span> departement))</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div>
 <p><strong>Exercice 7</strong></p>
 <p>Représenter la répartition du nombre de communes selon la taille de la commune en classes (variable <code>pop_cl</code>) sous forme de diagramme en bâtons empilés, avec une couleur différente selon le département.</p>
-<div class="cell" data-hash="08-ggplot2_cache/html/unnamed-chunk-92_9cf37a29f5c951f8ad7993478cf018f1">
+<div class="cell" data-hash="08-ggplot2_cache/html/unnamed-chunk-92_a54fdde9aeb5e0e63720678c5cc7b716">
 <div class="cell-output-display">
 <p><img src="08-ggplot2_files/figure-html/unnamed-chunk-92-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 <div class="solution-exo">
-<div class="cell" data-hash="08-ggplot2_cache/html/gg7_bc8c295e65da377e0ebf8f0e97c08935">
-<div class="sourceCode cell-code" id="cb89"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb89-1"><a href="#cb89-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(rp69) <span class="sc">+</span> <span class="fu">geom_bar</span>(<span class="fu">aes</span>(<span class="at">x =</span> pop_cl, <span class="at">fill =</span> departement))</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell" data-hash="08-ggplot2_cache/html/gg7_5088cdbfc4b98389d9e278adde7a740e">
+<div class="sourceCode cell-code" id="cb89"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb89-1"><a href="#cb89-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(rp69) <span class="sc">+</span></span>
+<span id="cb89-2"><a href="#cb89-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_bar</span>(<span class="fu">aes</span>(<span class="at">x =</span> pop_cl, <span class="at">fill =</span> departement))</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div>
 <p>Faire varier la valeur du paramètre <code>position</code> pour afficher les barres les unes à côté des autres.</p>
-<div class="cell" data-hash="08-ggplot2_cache/html/unnamed-chunk-93_072b6ef2c9cb3b359a3e06b220b25112">
+<div class="cell" data-hash="08-ggplot2_cache/html/unnamed-chunk-93_40c5db224d74e6330b91aa0b4d553476">
 <div class="cell-output-display">
 <p><img src="08-ggplot2_files/figure-html/unnamed-chunk-93-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 <div class="solution-exo">
-<div class="cell" data-hash="08-ggplot2_cache/html/gg7b_86cafd98f6612821db103acb7f1e3c0f">
+<div class="cell" data-hash="08-ggplot2_cache/html/gg7b_73803e689c233978b9141ebe20f226fb">
 <div class="sourceCode cell-code" id="cb90"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb90-1"><a href="#cb90-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(rp69) <span class="sc">+</span></span>
-<span id="cb90-2"><a href="#cb90-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>(<span class="fu">aes</span>(<span class="at">x =</span> pop_cl, <span class="at">fill =</span> departement),</span>
-<span id="cb90-3"><a href="#cb90-3" aria-hidden="true" tabindex="-1"></a>           <span class="at">position =</span> <span class="st">"dodge"</span>)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb90-2"><a href="#cb90-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_bar</span>(<span class="fu">aes</span>(<span class="at">x =</span> pop_cl, <span class="at">fill =</span> departement),</span>
+<span id="cb90-3"><a href="#cb90-3" aria-hidden="true" tabindex="-1"></a>        <span class="at">position =</span> <span class="st">"dodge"</span></span>
+<span id="cb90-4"><a href="#cb90-4" aria-hidden="true" tabindex="-1"></a>    )</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div>
 <p>Changer à nouveau la valeur du paramètre <code>position</code> pour représenter les proportions de communes de chaque département pour chaque catégorie de taille.</p>
-<div class="cell" data-hash="08-ggplot2_cache/html/unnamed-chunk-94_1c7da199d5af2d170a91a38fdbd821e8">
+<div class="cell" data-hash="08-ggplot2_cache/html/unnamed-chunk-94_d4ef3a5f03d5881530dd3e8b849e83a8">
 <div class="cell-output-display">
 <p><img src="08-ggplot2_files/figure-html/unnamed-chunk-94-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 <div class="solution-exo">
-<div class="cell" data-hash="08-ggplot2_cache/html/gg7c_0a0952777e589b9d1b3f37c661dbdc43">
+<div class="cell" data-hash="08-ggplot2_cache/html/gg7c_cdb89a9de9ed69a77e6d1fa96c018cef">
 <div class="sourceCode cell-code" id="cb91"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb91-1"><a href="#cb91-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(rp69) <span class="sc">+</span></span>
-<span id="cb91-2"><a href="#cb91-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>(<span class="fu">aes</span>(<span class="at">x =</span> pop_cl, <span class="at">fill =</span> departement),</span>
-<span id="cb91-3"><a href="#cb91-3" aria-hidden="true" tabindex="-1"></a>           <span class="at">position =</span> <span class="st">"fill"</span>)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb91-2"><a href="#cb91-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_bar</span>(<span class="fu">aes</span>(<span class="at">x =</span> pop_cl, <span class="at">fill =</span> departement),</span>
+<span id="cb91-3"><a href="#cb91-3" aria-hidden="true" tabindex="-1"></a>        <span class="at">position =</span> <span class="st">"fill"</span></span>
+<span id="cb91-4"><a href="#cb91-4" aria-hidden="true" tabindex="-1"></a>    )</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div>
 <p><strong>Exercice 8</strong></p>
 <p>Faire un nuage de points représentant en abscisse le pourcentage de cadres (<code>cadres</code>) et en ordonnée le pourcentage de diplômés du supérieur (<code>dipl_sup</code>). Représenter ce nuage par deux graphiques différents selon le département en utilisant <code>facet_grid</code>.</p>
-<div class="cell" data-hash="08-ggplot2_cache/html/unnamed-chunk-95_734c8f7aa91c89b7308e7530f6e774d0">
+<div class="cell" data-hash="08-ggplot2_cache/html/unnamed-chunk-95_b2c291f2018458efde485162dc59aaaa">
 <div class="cell-output-display">
 <p><img src="08-ggplot2_files/figure-html/unnamed-chunk-95-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 <div class="solution-exo">
-<div class="cell" data-hash="08-ggplot2_cache/html/gg8_c8a31032fca44bd6ad7af94f2eeef981">
+<div class="cell" data-hash="08-ggplot2_cache/html/gg8_3fed1de81f4f54c5600fecae2c420c0d">
 <div class="sourceCode cell-code" id="cb92"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb92-1"><a href="#cb92-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(rp69) <span class="sc">+</span></span>
-<span id="cb92-2"><a href="#cb92-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">x =</span> cadres, <span class="at">y =</span> dipl_sup)) <span class="sc">+</span></span>
-<span id="cb92-3"><a href="#cb92-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_grid</span>(<span class="at">cols =</span> <span class="fu">vars</span>(departement))</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb92-2"><a href="#cb92-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">x =</span> cadres, <span class="at">y =</span> dipl_sup)) <span class="sc">+</span></span>
+<span id="cb92-3"><a href="#cb92-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">facet_grid</span>(<span class="at">cols =</span> <span class="fu">vars</span>(departement))</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div>
 <p>Sur le même graphique, faire varier la taille des points selon la population totale de la communes (variable <code>pop_tot</code>) et rendre les points transparents.</p>
-<div class="cell" data-hash="08-ggplot2_cache/html/unnamed-chunk-96_4e48e402720791a530b54534f77b770e">
+<div class="cell" data-hash="08-ggplot2_cache/html/unnamed-chunk-96_c53f30458d5762fe6cd3f052d66bfbf5">
 <div class="cell-output-display">
 <p><img src="08-ggplot2_files/figure-html/unnamed-chunk-96-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 <div class="solution-exo">
-<div class="cell" data-hash="08-ggplot2_cache/html/gg8b_9483ad36b8592d12fba043410f7f5fd6">
+<div class="cell" data-hash="08-ggplot2_cache/html/gg8b_a1d3930580d5cb96d1a7e893a71c2e7c">
 <div class="sourceCode cell-code" id="cb93"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb93-1"><a href="#cb93-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(rp69) <span class="sc">+</span></span>
-<span id="cb93-2"><a href="#cb93-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">x =</span> cadres, <span class="at">y =</span> dipl_sup, <span class="at">size =</span> pop_tot), <span class="at">alpha =</span> <span class="fl">0.5</span>) <span class="sc">+</span></span>
-<span id="cb93-3"><a href="#cb93-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_grid</span>(<span class="at">cols =</span> <span class="fu">vars</span>(departement))</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb93-2"><a href="#cb93-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">x =</span> cadres, <span class="at">y =</span> dipl_sup, <span class="at">size =</span> pop_tot), <span class="at">alpha =</span> <span class="fl">0.5</span>) <span class="sc">+</span></span>
+<span id="cb93-3"><a href="#cb93-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">facet_grid</span>(<span class="at">cols =</span> <span class="fu">vars</span>(departement))</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div>
 <p><strong>Exercice 9</strong></p>
 <p>Faire le nuage de points croisant pourcentage de chômeurs (<code>chom</code>) et pourcentage de sans diplôme. Y ajouter les noms des communes correspondant (variable <code>commune</code>), en rouge et en taille 2.5&nbsp;:</p>
-<div class="cell" data-hash="08-ggplot2_cache/html/unnamed-chunk-97_194f55231aab86856b05e193d8b8fe37">
+<div class="cell" data-hash="08-ggplot2_cache/html/unnamed-chunk-97_cf3ae3e247d07f2af515f13672e5df92">
 <div class="cell-output-display">
 <p><img src="08-ggplot2_files/figure-html/unnamed-chunk-97-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 <div class="solution-exo">
-<div class="cell" data-hash="08-ggplot2_cache/html/gg9_aa5e34e8eb615790a2e71d0444b91137">
+<div class="cell" data-hash="08-ggplot2_cache/html/gg9_d650e7c5efa8670751ef42112e47a9b2">
 <div class="sourceCode cell-code" id="cb94"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb94-1"><a href="#cb94-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(rp69, <span class="fu">aes</span>(<span class="at">x =</span> chom, <span class="at">y =</span> dipl_aucun)) <span class="sc">+</span></span>
-<span id="cb94-2"><a href="#cb94-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
-<span id="cb94-3"><a href="#cb94-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_text</span>(<span class="fu">aes</span>(<span class="at">label =</span> commune), <span class="at">color =</span> <span class="st">"red"</span>, <span class="at">size =</span> <span class="fl">2.5</span>)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb94-2"><a href="#cb94-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb94-3"><a href="#cb94-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_text</span>(<span class="fu">aes</span>(<span class="at">label =</span> commune), <span class="at">color =</span> <span class="st">"red"</span>, <span class="at">size =</span> <span class="fl">2.5</span>)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div>
 <p><strong>Exercice 10</strong></p>
 <p>Dans le graphique précédent, n’afficher que le nom des communes ayant plus de 15% de chômage.</p>
-<div class="cell" data-hash="08-ggplot2_cache/html/unnamed-chunk-98_1820ffadc9956f9cf0d2f41d65c95887">
+<div class="cell" data-hash="08-ggplot2_cache/html/unnamed-chunk-98_0b2fe9701bbfe5684ad3eb12b931efa4">
 <div class="cell-output-display">
 <p><img src="08-ggplot2_files/figure-html/unnamed-chunk-98-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 <div class="solution-exo">
-<div class="cell" data-hash="08-ggplot2_cache/html/gg10_8615fcb009ba11b164c3e8d3e758e7c0">
+<div class="cell" data-hash="08-ggplot2_cache/html/gg10_0468ade38f8f0765dba8d47d89c84ac7">
 <div class="sourceCode cell-code" id="cb95"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb95-1"><a href="#cb95-1" aria-hidden="true" tabindex="-1"></a>chom15 <span class="ot">&lt;-</span> <span class="fu">filter</span>(rp69, chom <span class="sc">&gt;</span> <span class="dv">15</span>)</span>
 <span id="cb95-2"><a href="#cb95-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(rp69, <span class="fu">aes</span>(<span class="at">x =</span> chom, <span class="at">y =</span> dipl_aucun)) <span class="sc">+</span></span>
-<span id="cb95-3"><a href="#cb95-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">alpha =</span> <span class="fl">0.15</span>) <span class="sc">+</span></span>
-<span id="cb95-4"><a href="#cb95-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_text</span>(<span class="at">data =</span> chom15, <span class="fu">aes</span>(<span class="at">label =</span> commune), <span class="at">color=</span><span class="st">"red"</span>, <span class="at">size=</span><span class="dv">3</span>)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb95-3"><a href="#cb95-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_point</span>(<span class="at">alpha =</span> <span class="fl">0.15</span>) <span class="sc">+</span></span>
+<span id="cb95-4"><a href="#cb95-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_text</span>(<span class="at">data =</span> chom15, <span class="fu">aes</span>(<span class="at">label =</span> commune), <span class="at">color =</span> <span class="st">"red"</span>, <span class="at">size =</span> <span class="dv">3</span>)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div>
 
