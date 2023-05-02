@@ -128,13 +128,15 @@ mots %>% map_chr(dernier_mot)
 Comme notre fonction est très courte, on peut aussi préférer utiliser une *fonction anonyme*, introduites @sec-fonctions-anonymes.
 
 ```{r}
-mots %>% map_chr(function(v) { tail(v, 1) })
+mots %>% map_chr(function(v) {
+    tail(v, 1)
+})
 ```
 
 On peut aussi utiliser la notation abrégée sous forme de formule, propre aux fonctions du *tidyverse*, présentée @sec-syntaxes-abregees.
 
 ```{r}
-mots %>% map_chr(~ tail(.x, 1) )
+mots %>% map_chr(~ tail(.x, 1))
 ```
 
 On peut également utiliser la notation compacte pour les fonctions anonymes disponible sous R à partir de la version 4.1.
@@ -174,40 +176,40 @@ mots %>% map_dbl(tail, 1)
 Pour pouvoir utiliser ces variantes et obtenir un vecteur atomique, chaque résultat retourné par la fonction appliquée doit être de longueur 1. Ainsi, si on souhaitait extraire plutôt la liste des mots contenant un "f", certains résultats ne contiennent aucun élément, et d'autres en contiennent deux :
 
 ```{r}
-mots %>% map(~ str_subset(.x, "f") )
+mots %>% map(~ str_subset(.x, "f"))
 ```
 
 Dans ce cas on ne peut pas utiliser `map_chr()` : si on essaie on obtient un message d'erreur nous indiquant que certains résultats de `str_subset()` ne sont pas au bon format.
 
 ```{r error=TRUE}
-mots %>% map_chr(~ str_subset(.x, "f") )
+mots %>% map_chr(~ str_subset(.x, "f"))
 ```
 
 Dans ce cas, on doit donc utiliser `map()` et conserver le résultat sous forme de liste, qui elle peut contenir des éléments de longueurs différentes.
 
 ```{r}
 mots %>%
-    map(~ str_subset(.x, "f") )
+    map(~ str_subset(.x, "f"))
 ```
 
 On notera qu'on peut tout à fait enchaîner les `map()` si on veut effectuer des opérations supplémentaires.
 
 ```{r}
 mots %>%
-    map(~ str_subset(.x, "f") ) %>%
+    map(~ str_subset(.x, "f")) %>%
     map_int(length)
 ```
 
 
-### `map_dfr()` et `map_dfc()`
+### `map` et tableaux de données
 
 La page suivante contient les données du jeu de données `rp2018` sous la forme de fichiers CSV, avec un fichier par département :
 
-https://github.com/juba/tidyverse/tree/main/resources/data/rp2018
+<https://github.com/juba/tidyverse/tree/main/resources/data/rp2018>
 
 À partir de cette page, on peut télécharger les fichiers CSV en utilisant des adresses de la forme :
 
-https://raw.githubusercontent.com/juba/tidyverse/main/resources/data/rp2018/rp2018_01.csv
+<https://raw.githubusercontent.com/juba/tidyverse/main/resources/data/rp2018/rp2018_01.csv>
 
 En remplaçant "01" par le code du département souhaité.
 
@@ -274,32 +276,32 @@ urls <- genere_url(departements)
 df <- urls %>%
     map(read_csv) %>%
     bind_rows()
-```
-
-Mais on peut aussi utiliser une autre variante de `map()`, nommée `map_dfr()`, qui considère les résultats obtenus par l'application de la fonction comme les lignes d'un tableau de données qu'elle va automatiquement rassembler en un seul tableau, de la même manière qu'avec un `bind_rows()`.
-
-```{r message=FALSE}
-df <- urls %>% map_dfr(read_csv)
 
 df
 ```
 
-Les deux lignes de code ci-dessus partent donc d'une liste d'identifiants de départements, génèrent les URL des fichiers CSV correspondant, les importent dans R et assemblent le résultat en un seul tableau. Plutôt efficace !
+Les quelques lignes de code ci-dessus partent donc d'une liste d'identifiants de départements, génèrent les URL des fichiers CSV correspondant, les importent dans R et assemblent le résultat en un seul tableau. Plutôt efficace !
 
-Une fonction utile en complément de `map_dfr()` est la fonction `list.files()`, qui peut lister les fichiers ayant une certaine extension dans un dossier spécifique. Par exemple, l'instruction suivante liste tous les fichiers se terminant par `.csv` du sous-dossier `data`.
+::: {.callout-note}
+`bind_rows()` est une fonction de `dplyr`. Si on souhaite utiliser uniquement des fonctions de `purrr`, on peut utiliser `list_rbind()`, qui donne le même résultat.
+:::
+
+Une fonction utile en complément de `map` est la fonction `list.files()`, qui peut lister les fichiers ayant une certaine extension dans un dossier spécifique. Par exemple, l'instruction suivante liste tous les fichiers se terminant par `.csv` du sous-dossier `data`.
 
 ```{r eval=FALSE}
 fichiers <- list.files("data", "*.csv", full.names = TRUE)
 ```
 
-On peut dès lors utiliser `map_dfr()` et `read_csv()` pour lire tous ces fichiers en une seule fois et les concaténer en un seul tableau de données.
+On peut dès lors utiliser `map()`, `read_csv()` et `bind_rows()`, pour lire tous ces fichiers en une seule fois et les concaténer en un seul tableau de données.
 
 ```{r eval=FALSE}
-d <- fichiers %>% map_dfr(read_csv)
+d <- fichiers %>%
+    map(read_csv) %>%
+    bind_rows()
 ```
 
 ::: {.callout-note}
-Il existe également une variante `map_dfc()` qui considère les résultats comme des colonnes d'un tableau de données et les rassemble en un seul tableau comme le ferait la fonction `bind_cols()` de `dplyr`.
+On peut aussi utiliser `bind_cols()` ou `list_cbind()` quand les résultats d'un `map` sont des colonnes d'un tableau de données qu'on souhaite rassembler en les concaténant.
 :::
 
 
@@ -327,7 +329,7 @@ starwars %>%
 De la même manière, si on veut connaître le nombre de valeurs manquantes pour chaque variable :
 
 ```{r}
-starwars %>% map_int(~ sum(is.na(.x)) )
+starwars %>% map_int(~ sum(is.na(.x)))
 ```
 
 Contrairement à `across()`, on ne peut pas spécifier directement une sélection de colonnes à `map()`. On peut par contre utiliser des fonctions comme `keep()` ou `discard()` qui "filtrent" les éléments d'une liste via une fonction qui renvoie `TRUE` ou `FALSE`.
@@ -336,8 +338,8 @@ On peut par exemple utiliser `discard()` après `map()` pour ne conserver que le
 
 ```{r}
 starwars %>%
-    map_int(~ sum(is.na(.x)) ) %>%
-    discard(~ .x == 0 )
+    map_int(~ sum(is.na(.x))) %>%
+    discard(~ .x == 0)
 ```
 
 Ou bien utiliser `keep()` pour n'appliquer `mean()` qu'aux variables numériques.
@@ -433,13 +435,15 @@ restos <- list(
 )
 ```
 
-À partir de cette liste, on souhaite créer un tableau de données comportant la moyenne et l'écart-type des notes de chaque restaurant. Comme on l'a vu précédemment, cela peut se faire avec l'aide de `map_dfr()`.
+À partir de cette liste, on souhaite créer un tableau de données comportant la moyenne et l'écart-type des notes de chaque restaurant. Comme on l'a vu précédemment, cela peut se faire avec l'aide de `map()` et `bind_rows()`.
 
 ```{r}
-restos %>% map_dfr(~ tibble(moyenne = mean(.x), ecart_type = sd(.x)) )
+restos %>%
+    map(~ tibble(moyenne = mean(.x), ecart_type = sd(.x))) %>%
+    bind_rows()
 ```
 
-On obtient le tableau souhaité, mais il manque une information : le nom du restaurant correspondant à chaque ligne. Cette information est incluse dans les noms des éléments de la liste `restos`, or la fonction passée à `map_dfr` n'y a pas accès, elle n'a accès qu'à leurs valeurs.
+On obtient le tableau souhaité, mais il manque une information : le nom du restaurant correspondant à chaque ligne. Cette information est incluse dans les noms des éléments de la liste `restos`, or la fonction passée à `map` n'y a pas accès, elle n'a accès qu'à leurs valeurs.
 
 C'est pour ce type de cas de figure que `purrr` propose la famille de fonctions `imap()`. Celle-ci fonctionne de la même manière que `map()`, sauf que la fonction appliquée prend deux arguments : d'abord la valeur de l'élément courant, puis son nom.
 
@@ -449,7 +453,7 @@ Dans l'exemple suivant, on applique `imap()` à une liste simple et on affiche u
 l <- list(nom1 = 1, nom2 = 3)
 
 l2 <- l %>% imap(function(valeur, nom) {
-   message("La valeur de ", nom, " est ", valeur)
+    message("La valeur de ", nom, " est ", valeur)
 })
 ```
 
@@ -457,28 +461,32 @@ On peut évidemment utiliser la notation "formule" de `purrr`, il faut juste se 
 
 ```{r}
 l2 <- l %>% imap(~ {
-   message("La valeur de ", .y, " est ", .x)
+    message("La valeur de ", .y, " est ", .x)
 })
 ```
 
-Tout comme `map()` proposait les variantes `map_int()`, `map_chr()` ou `map_dfr()`, on peut également utiliser `imap_dbl()`, `imap_chr()` et autres `imap_dfc()` pour forcer le type de résultat retourné.
+Tout comme `map()` proposait les variantes `map_int()`, `map_chr()` ou `map_lgl()`, on peut également utiliser `imap_dbl()` ou `imap_chr()` pour forcer le type de résultat retourné.
 
 Pour reprendre notre exemple de départ, on peut donc, en utilisant `imap`, récupérer le nom de l'élément courant de la liste `restos` et l'utiliser pour rajouter le nom du restaurant dans notre *tibble* de résultats.
 
 On peut le faire avec une fonction anonyme "classique" :
 
 ```{r}
-restos %>% imap_dfr(function(notes, nom) {
-    tibble(resto = nom, moyenne = mean(notes), ecart_type = sd(notes))
-})
+restos %>%
+    imap(function(notes, nom) {
+        tibble(resto = nom, moyenne = mean(notes), ecart_type = sd(notes))
+    }) %>%
+    bind_rows()
 ```
 
 On peut aussi utiliser la notation compacte de type formule, en se souvenant à nouveau que `.x` correspond à la valeur de l'élément courant, et `.y` à son nom.
 
 ```{r}
-restos %>% imap_dfr(~ {
-    tibble(resto = .y, moyenne = mean(.x), ecart_type = sd(.x))
-})
+restos %>%
+    imap(~ {
+        tibble(resto = .y, moyenne = mean(.x), ecart_type = sd(.x))
+    }) %>%
+    bind_rows()
 ```
 
 ::: {.callout-note}
@@ -492,24 +500,24 @@ Si on utilise `imap()` sur une liste ou un vecteur qui n'a pas de noms, le deuxi
 Par exemple, le code suivant génère quatre diagrammes en barre indiquant la répartition des notes des différents restaurants vus dans la section précédente.
 
 ```{r eval=FALSE}
-walk(restos, ~ barplot(table(.x)) )
+walk(restos, ~ barplot(table(.x)))
 ```
 
 ```{r echo=FALSE}
 par(mfrow = c(2, 2))
-walk(restos, ~ barplot(table(.x)) )
+walk(restos, ~ barplot(table(.x)))
 ```
 
 
 Comme pour `map()`, la variante `iwalk()` permet d'itérer à la fois sur les valeurs et sur les noms des éléments du vecteur ou de la liste. Ceci permet par exemple d'afficher le nom du restaurant comme titre de chaque graphique.
 
 ```{r eval=FALSE}
-iwalk(restos, ~ barplot(table(.x), main = .y) )
+iwalk(restos, ~ barplot(table(.x), main = .y))
 ```
 
 ```{r echo=FALSE}
 par(mfrow = c(2, 2))
-iwalk(restos, ~ barplot(table(.x), main = .y) )
+iwalk(restos, ~ barplot(table(.x), main = .y))
 ```
 
 Au final, on notera que l'utilisation de `walk()`, comme elle ne retourne pas de résultats, est très proche de celle d'une boucle `for`.
@@ -523,12 +531,12 @@ Après importation dans R on obtient le tableau de données suivant.
 
 ```{r}
 correlations <- tribble(
-    ~var1,       ~var2,
+    ~var1, ~var2,
     "dipl_sup", "dipl_aucun",
     "dipl_sup", "cadres",
-    "hlm",      "cadres",
-    "hlm",      "ouvr",
-    "proprio",  "hlm"
+    "hlm", "cadres",
+    "hlm", "ouvr",
+    "proprio", "hlm"
 )
 
 correlations
@@ -546,7 +554,7 @@ On peut donc utiliser `map2` pour itérer parallèlement sur les deux colonnes `
 ```{r}
 map2(
     correlations$var1,
-    correlations$var2, 
+    correlations$var2,
     ~ cor(rp2018[[.x]], rp2018[[.y]])
 )
 ```
@@ -569,11 +577,11 @@ Supposons maintenant que notre collègue nous a envoyé, toujours sous la même 
 
 ```{r}
 nuages <- tribble(
-    ~var1,       ~var2,       ~titre,
+    ~var1, ~var2, ~titre,
     "dipl_sup", "dipl_aucun", "Diplômés du supérieur x sans diplôme",
-    "dipl_sup", "cadres",     "Pourcentage de cadres x diplômés du supérieur",
-    "hlm",      "cadres",     "Pas facile de trouver un titre",
-    "proprio",  "cadres",     "Oui non vraiment c'est pas simple"
+    "dipl_sup", "cadres", "Pourcentage de cadres x diplômés du supérieur",
+    "hlm", "cadres", "Pas facile de trouver un titre",
+    "proprio", "cadres", "Oui non vraiment c'est pas simple"
 )
 
 nuages
@@ -826,7 +834,7 @@ Calculer à nouveau un vecteur numérique des moyennes par matière, mais sans t
 
 ::: {.solution-exo}
 ```{r eval=FALSE}
-notes %>% map_dbl(~ mean(.x, na.rm = TRUE) )
+notes %>% map_dbl(~ mean(.x, na.rm = TRUE))
 # Ou bien
 notes %>% map_dbl(mean, na.rm = TRUE)
 ```
@@ -839,11 +847,10 @@ Calculer une liste qui contient pour chaque matière la moyenne, la note minimal
 # On peut aussi utiliser list() plutôt que c()
 notes %>%
     map(~ c(
-            moyenne = mean(.x, na.rm = TRUE),
-            min = min(.x, na.rm = TRUE),
-            max = max(.x, na.rm = TRUE)
-        )
-    )
+        moyenne = mean(.x, na.rm = TRUE),
+        min = min(.x, na.rm = TRUE),
+        max = max(.x, na.rm = TRUE)
+    ))
 ```
 :::
 
@@ -917,12 +924,14 @@ dfs <- urls %>% map(read_csv)
 :::
 
 
-Utiliser `map_dfr()` pour charger ces deux tableaux de données et les regrouper en une seule table `d`. Que constatez-vous ? 
+Utiliser `map()` et `bind_rows()` pour charger ces deux tableaux de données et les regrouper en une seule table `d`. Que constatez-vous ? 
 
 ::: {.solution-exo}
 ```{r eval=FALSE}
 # Génère une erreur !
-d <- urls %>% map_dfr(read_csv)
+d <- urls %>%
+    map(read_csv) %>%
+    bind_rows()
 ```
 :::
 
@@ -942,15 +951,17 @@ Trouver une solution pour corriger le problème.
 ```{r eval=FALSE}
 # En convertissant manuellement code_insee en character
 d <- urls %>%
-    map_dfr(~{
+    map(~ {
         tab <- read_csv(.x)
         tab$code_insee <- as.character(tab$code_insee)
         tab
-    })
+    }) %>%
+    bind_rows()
 
 # Ou bien en utilisant l'option col_types de read_csv
 d <- urls %>%
-    map_dfr(read_csv, col_types = c("code_insee" = "character"))
+    map(read_csv, col_types = c("code_insee" = "character")) %>%
+    bind_rows()
 ```
 :::
 
@@ -1056,13 +1067,14 @@ Construire un tableau de données avec une matière par ligne et deux colonnes c
 
 ::: {.solution-exo}
 ```{r pur31c, eval=FALSE}
-notes %>% 
-    imap_dfr(function(notes, matiere) {
+notes %>%
+    imap(function(notes, matiere) {
         tibble(
             matiere = matiere,
             moyenne = mean(notes, na.rm = TRUE)
         )
-    })
+    }) %>%
+    bind_rows()
 ```
 :::
 
@@ -1122,7 +1134,7 @@ Réécrire la fonction sans utiliser de boucle `for`.
 ```{r eval=FALSE}
 summaries <- function(d, vars) {
     vars %>%
-        walk(~{
+        walk(~ {
             message("--- ", .x, " ---")
             print(summary(d[, .x]))
         })
@@ -1144,8 +1156,8 @@ summaries(hdv2003, c("sexe", "igloo", "age"))
 ```{r purrr33, eval=FALSE}
 summaries <- function(d, vars) {
     vars %>%
-        keep(~ .x %in% names(d) ) %>%
-        walk(~{
+        keep(~ .x %in% names(d)) %>%
+        walk(~ {
             message("--- ", .x, " ---")
             print(summary(d[, .x]))
         })
@@ -1176,8 +1188,9 @@ croisements
 
 ::: {.solution-exo}
 ```{r eval=FALSE}
-map2(croisements$v1, croisements$v2,
-    ~table(hdv2003[[.x]], hdv2003[[.y]])
+map2(
+    croisements$v1, croisements$v2,
+    ~ table(hdv2003[[.x]], hdv2003[[.y]])
 )
 ```
 :::
@@ -1189,8 +1202,9 @@ Modifier le code précédent pour obtenir une liste comportant, pour chaque coup
 
 ::: {.solution-exo}
 ```{r eval=FALSE}
-khi2 <- map2(croisements$v1, croisements$v2,
-    ~list(
+khi2 <- map2(
+    croisements$v1, croisements$v2,
+    ~ list(
         variables = paste(.x, .y),
         chisq = chisq.test(hdv2003[[.x]], hdv2003[[.y]])
     )
@@ -1202,13 +1216,14 @@ khi2 <- map2(croisements$v1, croisements$v2,
 
 ::: {.solution-exo}
 ```{r eval=FALSE}
-khi2 <- map2(croisements$v1, croisements$v2,
-    ~list(
+khi2 <- map2(
+    croisements$v1, croisements$v2,
+    ~ list(
         variables = paste(.x, .y),
         chisq = chisq.test(hdv2003[[.x]], hdv2003[[.y]])
     )
 ) %>%
-keep(~ .x$chisq$p.value < 0.001)
+    keep(~ .x$chisq$p.value < 0.001)
 ```
 :::
 
@@ -1233,7 +1248,7 @@ tirages <- tribble(
     ~elements,           ~probas,     ~n,
     c("pile", "face"),   c(0.5, 0.5), 1000,
     c("rouge", "noire"), c(0.1, 0.9), 500,
-    1:6,                 rep(1/6, 6), 800
+    1:6,                 rep(1 / 6, 6), 800
 )
 ```
 
@@ -1254,7 +1269,7 @@ Représenter avec `barplot()` les résultats obtenus.
 
 ::: {.solution-exo}
 ```{r eval=FALSE}
-resultats %>% walk(~barplot(table(.x)))
+resultats %>% walk(~ barplot(table(.x)))
 ```
 :::
 
@@ -1290,7 +1305,7 @@ Trouver une solution en corrigeant le code.
 
 ::: {.solution-exo}
 ```{r eval=FALSE}
-map(1:10, ~lancer_des(4))
+map(1:10, ~ lancer_des(4))
 ```
 :::
 
@@ -1351,7 +1366,7 @@ rle(c("pile", "face", "face", "face", "pile", "pile"))
 
 ::: {.solution-exo}
 ```{r eval=FALSE}
-sims %>% map_int(~{
+sims %>% map_int(~ {
     r <- rle(.x)
     longueurs_pile <- r$lengths[r$values == "pile"]
     max(longueurs_pile)
