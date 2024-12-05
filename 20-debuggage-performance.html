@@ -2,12 +2,12 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="fr" xml:lang="fr"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.3.340">
+<meta name="generator" content="quarto-1.6.39">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Introduction à R et au tidyverse - 20&nbsp; Débuggage et performance</title>
+<title>20&nbsp; Débuggage et performance – Introduction à R et au tidyverse</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -22,7 +22,7 @@ ul.task-list li input[type="checkbox"] {
 }
 /* CSS for syntax highlighting */
 pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span { line-height: 1.25; }
 pre > code.sourceCode > span:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
 code.sourceCode > span { color: inherit; text-decoration: inherit; }
@@ -33,7 +33,7 @@ div.sourceCode { overflow: auto; }
 }
 @media print {
 pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
 }
 pre.numberSource code
   { counter-reset: source-line 0; }
@@ -71,12 +71,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="site_libs/quarto-html/anchor.min.js"></script>
 <link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-dark.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-f2ed4b6a00c7d3487a84fd5a50ba4e45.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-dark-ab6496a1a679dc9f3d6952c9737550a4.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
-<link href="site_libs/bootstrap/bootstrap-dark.min.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="site_libs/bootstrap/bootstrap-7841758b2c4697f1bb7dfd28c94c955d.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-dark-122eaf72ed6913f6dbaefd46cb265906.min.css" rel="prefetch" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
 <link href="site_libs/quarto-contrib/bookup_fonts_embed-0.0/fonts-download.css" rel="stylesheet">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
@@ -84,7 +84,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   "collapse-after": 3,
   "panel-placement": "start",
   "type": "textbox",
-  "limit": 20,
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
   "language": {
     "search-no-results-text": "Pas de résultats",
     "search-matching-documents-text": "documents trouvés",
@@ -93,8 +99,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     "search-more-match-text": "correspondance de plus dans ce document",
     "search-more-matches-text": "correspondances de plus dans ce document",
     "search-clear-button-title": "Effacer",
+    "search-text-placeholder": "",
     "search-detached-cancel-button-title": "Annuler",
-    "search-submit-button-title": "Envoyer"
+    "search-submit-button-title": "Envoyer",
+    "search-label": "Recherche"
   }
 }</script>
 
@@ -108,12 +116,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <header id="quarto-header" class="headroom fixed-top">
   <nav class="quarto-secondary-nav">
     <div class="container-fluid d-flex">
-      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Basculer la barre latérale" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Basculer la barre latérale" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./14-fonctions.html">Aller plus loin</a></li><li class="breadcrumb-item"><a href="./20-debuggage-performance.html"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Débuggage et performance</span></a></li></ol></nav>
-      <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Basculer la barre latérale" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
-      </a>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./14-fonctions.html">Aller plus loin</a></li><li class="breadcrumb-item"><a href="./20-debuggage-performance.html"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Débuggage et performance</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Basculer la barre latérale" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
       <button type="button" class="btn quarto-search-button" aria-label="Recherche" onclick="window.quartoOpenSearch();">
         <i class="bi bi-search"></i>
       </button>
@@ -123,24 +131,24 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <!-- content -->
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
 <!-- sidebar -->
-  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal sidebar-navigation docked overflow-auto">
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation docked overflow-auto">
     <div class="pt-lg-2 mt-2 text-left sidebar-header">
     <div class="sidebar-title mb-0 py-0">
       <a href="./">Introduction à R et au tidyverse</a> 
         <div class="sidebar-tools-main tools-wide">
-    <a href="https://github.com/juba/tidyverse/" title="Source Code" class="quarto-navigation-tool px-1" aria-label="Source Code"><i class="bi bi-github"></i></a>
+    <a href="https://github.com/juba/tidyverse/" title="Code source" class="quarto-navigation-tool px-1" aria-label="Code source"><i class="bi bi-github"></i></a>
     <div class="dropdown">
-      <a href="" title="Download" id="quarto-navigation-tool-dropdown-0" class="quarto-navigation-tool dropdown-toggle px-1" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download"><i class="bi bi-download"></i></a>
+      <a href="" title="Download" id="quarto-navigation-tool-dropdown-0" class="quarto-navigation-tool dropdown-toggle px-1" data-bs-toggle="dropdown" aria-expanded="false" role="link" aria-label="Download"><i class="bi bi-download"></i></a>
       <ul class="dropdown-menu" aria-labelledby="quarto-navigation-tool-dropdown-0">
           <li>
             <a class="dropdown-item sidebar-tools-main-item" href="./introduction_au_tidyverse.epub">
-              <i class="bi bi-bi-journal pe-1"></i>
+              <i class="bi bi-journal pe-1"></i>
             Download ePub
             </a>
           </li>
           <li>
             <a class="dropdown-item sidebar-tools-main-item" href="./introduction_au_tidyverse.pdf">
-              <i class="bi bi-bi-file-pdf pe-1"></i>
+              <i class="bi bi-file-pdf pe-1"></i>
             Download PDF
             </a>
           </li>
@@ -164,9 +172,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <ul class="list-unstyled mt-1">
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true">
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
  <span class="menu-text">Introduction</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true" aria-label="Basculer la section">
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Basculer la section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
@@ -187,9 +195,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true">
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true">
  <span class="menu-text">Introduction à R</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true" aria-label="Basculer la section">
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Basculer la section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
@@ -222,9 +230,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true">
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true">
  <span class="menu-text">Introduction au tidyverse</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true" aria-label="Basculer la section">
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true" aria-label="Basculer la section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
@@ -281,9 +289,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="true">
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true">
  <span class="menu-text">Aller plus loin</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="true" aria-label="Basculer la section">
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true" aria-label="Basculer la section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
@@ -340,9 +348,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" aria-expanded="true">
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="true">
  <span class="menu-text">Annexes</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" aria-expanded="true" aria-label="Basculer la section">
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="true" aria-label="Basculer la section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
@@ -358,7 +366,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     </ul>
     </div>
 </nav>
-<div id="quarto-sidebar-glass" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass"></div>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
         <nav id="TOC" role="doc-toc" class="toc-active">
@@ -383,12 +391,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </ul></li>
   <li><a href="#ressources" id="toc-ressources" class="nav-link" data-scroll-target="#ressources"><span class="header-section-number">20.4</span> Ressources</a></li>
   </ul>
-<div class="toc-actions"><div><i class="bi bi-github"></i></div><div class="action-links"><p><a href="https://github.com/juba/tidyverse/edit/main/20-debuggage-performance.qmd" class="toc-action">Modifier cette page</a></p></div></div></nav>
+<div class="toc-actions"><ul><li><a href="https://github.com/juba/tidyverse/edit/main/20-debuggage-performance.qmd" class="toc-action"><i class="bi bi-github"></i>Modifier cette page</a></li></ul></div></nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
-<header id="title-block-header" class="quarto-title-block default">
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./14-fonctions.html">Aller plus loin</a></li><li class="breadcrumb-item"><a href="./20-debuggage-performance.html"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Débuggage et performance</span></a></li></ol></nav>
 <div class="quarto-title">
 <h1 class="title"><span id="sec-debug-perf" class="quarto-section-identifier"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Débuggage et performance</span></span></h1>
 </div>
@@ -403,14 +411,16 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </div>
   
 
+
 </header>
+
 
 <section id="débugguer-une-fonction" class="level2" data-number="20.1">
 <h2 data-number="20.1" class="anchored" data-anchor-id="débugguer-une-fonction"><span class="header-section-number">20.1</span> Débugguer une fonction</h2>
 <p>Lorsqu’on commence à écrire des fonctions un peu complexes, avec des <code>if</code>, des <code>for</code>, et autres joyeusetés, arrive forcément un moment où ça ne fonctionne pas comme on le souhaiterait et où on ne comprend pas pourquoi. Bref, <em>il y a un bug</em>.</p>
 <p>Trouver la cause d’un bug n’est pas toujours évident, mais il existe plusieurs méthodes et outils permettant de faciliter un peu les choses.</p>
 <p>On commence par charger les extensions et les jeux de données dont on aura besoin par la suite.</p>
-<div class="cell" data-hash="20-debuggage-performance_cache/html/unnamed-chunk-2_b9a5b19c508e05bd1906446f0644f3a0">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(questionr)</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(hdv2003)</span>
@@ -421,7 +431,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h3 data-number="20.1.1" class="anchored" data-anchor-id="print"><span class="header-section-number">20.1.1</span> print()</h3>
 <p>L’outil le plus simple, rudimentaire et parfois décrié mais qui reste efficace, est de rajouter un <code>print()</code> dans le code de notre fonction pour examiner le contenu d’un objet à un moment donné.</p>
 <p>Prenons un exemple. La fonction suivante prend en argument un tableau de données <code>df</code> et un nom de variable <code>var</code>, et retourne la moyenne et l’écart-type de cette variable.</p>
-<div class="cell" data-hash="20-debuggage-performance_cache/html/unnamed-chunk-3_5d1b877a397a8947780bdd914bb5b24b">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>indicateurs <span class="ot">&lt;-</span> <span class="cf">function</span>(df, var) {</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>    valeurs <span class="ot">&lt;-</span> df[, var]</span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (<span class="sc">!</span><span class="fu">is.numeric</span>(valeurs)) <span class="fu">return</span>(<span class="cn">NA</span>)</span>
@@ -432,7 +442,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>On teste notre fonction sur une variable du jeu de données <code>hdv2003</code>. Tout semble fonctionner.</p>
-<div class="cell" data-hash="20-debuggage-performance_cache/html/unnamed-chunk-4_57231623d6f095c3d3721177ed8bcb9e">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">indicateurs</span>(hdv2003, <span class="st">"age"</span>)</span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $moyenne</span></span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 48.157</span></span>
@@ -441,13 +451,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 16.94181</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>On teste à nouveau, cette fois sur une variable du jeu de données <code>starwars</code> de <code>dplyr</code>.</p>
-<div class="cell" data-hash="20-debuggage-performance_cache/html/unnamed-chunk-5_8f5b6e8a343f9592aa4febdacb56a5d3">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">indicateurs</span>(starwars, <span class="st">"height"</span>)</span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] NA</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Sapristi, on obtient <code>NA</code> en résultat alors que notre variable <code>height</code> est bien numérique : on devrait donc obtenir la moyenne et l’écart-type. Comment expliquer ce résultat ?</p>
 <p>Comme on n’a pas d’explication immédiate juste en relisant le code de notre fonction, on va ajouter temporairement une instruction <code>print()</code> qui va afficher le contenu de <code>valeurs</code> juste après qu’elle soit calculée.</p>
-<div class="cell" data-hash="20-debuggage-performance_cache/html/unnamed-chunk-6_85a6e93e11c67e3759ad8c5832236834">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>indicateurs <span class="ot">&lt;-</span> <span class="cf">function</span>(df, var) {</span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>    valeurs <span class="ot">&lt;-</span> df[, var]</span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">print</span>(valeurs)</span>
@@ -459,7 +469,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>On lance cette fonction modifiée sur <code>starwars</code> :</p>
-<div class="cell" data-hash="20-debuggage-performance_cache/html/unnamed-chunk-7_72e062c50d4e2d6fe9b9a58348346558">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">indicateurs</span>(starwars, <span class="st">"height"</span>)</span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # A tibble: 87 × 1</span></span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    height</span></span>
@@ -478,13 +488,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] NA</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Le <code>print()</code> nous indique que <code>valeurs</code> n’est pas un vecteur mais un tableau de données à une seule colonne. Or dans ce cas, le test <code>is.numeric</code>, qui est sensé s’appliquer à un vecteur atomique, renvoie <code>FALSE</code>.</p>
-<div class="cell" data-hash="20-debuggage-performance_cache/html/unnamed-chunk-8_e41a339c52e6b73f210a96478d8496f9">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">is.numeric</span>(starwars[, <span class="st">"height"</span>])</span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] FALSE</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>C’est donc la raison pour laquelle on obtient <code>NA</code> comme résultat.</p>
 <p>Certes, mais alors pourquoi cela fonctionne-t-il dans notre exemple avec <code>hdv2003</code> ?</p>
-<div class="cell" data-hash="20-debuggage-performance_cache/html/unnamed-chunk-9_4bdb440357fd9f68d659b504b394eba5">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">indicateurs</span>(hdv2003, <span class="st">"age"</span>)</span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   [1] 28 23 59 34 71 35 60 47 20 28 65 47 63 67 76 49 62 20 70 39 30 30 37 79 20</span></span>
 <span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [26] 74 31 35 35 30 54 29 49 59 41 41 53 19 77 56 54 35 40 62 68 77 39 57 43 34</span></span>
@@ -501,9 +511,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $sd</span></span>
 <span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 16.94181</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>Ah ! Dans ce cas là <code>valeurs</code> est bien un vecteur, et on obtient donc le résultat attendu. Pourquoi cette différence ? On est en fait tombé sur une différence de comportement entre les <em>data frames</em> et les <em>tibbles</em>, mentionnée <a href="16-structures-donnees.html#sec-df-sel"><span>Section&nbsp;16.3.3</span></a> : lorsqu’on sélectionne une seule colonne avec l’opérateur <code>[,]</code>, un <em>data frame</em> retourne un vecteur tandis qu’un <em>tibble</em> retourne un tableau à une colonne. Or, ici, <code>hdv2003</code> est un <em>data frame</em>, et <code>starwars</code> un <em>tibble</em>.</p>
+<p>Ah ! Dans ce cas là <code>valeurs</code> est bien un vecteur, et on obtient donc le résultat attendu. Pourquoi cette différence ? On est en fait tombé sur une différence de comportement entre les <em>data frames</em> et les <em>tibbles</em>, mentionnée <a href="16-structures-donnees.html#sec-df-sel" class="quarto-xref"><span>Section 16.3.3</span></a> : lorsqu’on sélectionne une seule colonne avec l’opérateur <code>[,]</code>, un <em>data frame</em> retourne un vecteur tandis qu’un <em>tibble</em> retourne un tableau à une colonne. Or, ici, <code>hdv2003</code> est un <em>data frame</em>, et <code>starwars</code> un <em>tibble</em>.</p>
 <p>Comment résoudre ce problème ? Il y a différentes manières, mais la plus simple est sans doute de remplacer <code>[,]</code> par <code>[[]]</code>, qui lui a le même comportement dans les deux cas. On peut donc modifier notre fonction (en n’oubliant pas d’enlever le <code>print()</code>) et vérifier que ça fonctionne désormais.</p>
-<div class="cell" data-hash="20-debuggage-performance_cache/html/unnamed-chunk-10_6c7b8228df120daf094e15f1b055b7d0">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>indicateurs <span class="ot">&lt;-</span> <span class="cf">function</span>(df, var) {</span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>    valeurs <span class="ot">&lt;-</span> df[[var]]</span>
 <span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (<span class="sc">!</span><span class="fu">is.numeric</span>(valeurs)) <span class="fu">return</span>(<span class="cn">NA</span>)</span>
@@ -521,10 +531,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb9-15"><a href="#cb9-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 16.94181</span></span>
 <span id="cb9-16"><a href="#cb9-16" aria-hidden="true" tabindex="-1"></a><span class="fu">indicateurs</span>(starwars, <span class="st">"height"</span>)</span>
 <span id="cb9-17"><a href="#cb9-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $moyenne</span></span>
-<span id="cb9-18"><a href="#cb9-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 174.358</span></span>
+<span id="cb9-18"><a href="#cb9-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 174.6049</span></span>
 <span id="cb9-19"><a href="#cb9-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
 <span id="cb9-20"><a href="#cb9-20" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $sd</span></span>
-<span id="cb9-21"><a href="#cb9-21" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 34.77043</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb9-21"><a href="#cb9-21" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 34.77416</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="callout callout-style-default callout-warning callout-titled">
 <div class="callout-header d-flex align-content-center">
@@ -544,7 +554,7 @@ Avertissement
 <h3 data-number="20.1.2" class="anchored" data-anchor-id="localiser-une-erreur"><span class="header-section-number">20.1.2</span> Localiser une erreur</h3>
 <p><code>print()</code> peut aussi être utile pour savoir à quel moment une erreur se produit, notamment lorsqu’on utilise une boucle.</p>
 <p>Dans l’exemple suivant, on crée une fonction <code>min_freq_values()</code> qui prend en argument un tableau de données <code>df</code> et un effectif <code>n_min</code> et retourne une liste des modalités de variables qui apparaissent dans au moins <code>n_min</code> lignes de <code>df</code> (on utilise ici une boucle <code>for</code>, mais on aurait aussi pu utiliser <code>map()</code>).</p>
-<div class="cell" data-hash="20-debuggage-performance_cache/html/unnamed-chunk-11_19892c6faa07338f0c8ad730d7a349e3">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>min_freq_values <span class="ot">&lt;-</span> <span class="cf">function</span>(df, n_min) {</span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>    res <span class="ot">&lt;-</span> <span class="fu">list</span>()</span>
 <span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> (col <span class="cf">in</span> <span class="fu">names</span>(df)) {</span>
@@ -559,7 +569,7 @@ Avertissement
 <span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Si on applique <code>min_freq_values()</code> à <code>hdv2003</code> avec une valeur de <code>n</code> à 1500, on obtient toutes les modalités correspondant à au moins 1500 observations.</p>
-<div class="cell" data-hash="20-debuggage-performance_cache/html/unnamed-chunk-12_c77727b44086c36f3fdf7a3ae3e57590">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">min_freq_values</span>(hdv2003, <span class="dv">1500</span>)</span>
 <span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $hard.rock</span></span>
 <span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Non </span></span>
@@ -574,13 +584,13 @@ Avertissement
 <span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1776</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Essayons maintenant d’appliquer <code>min_freq_values()</code> au jeu de données <code>starwars</code> de <code>dplyr</code>.</p>
-<div class="cell" data-hash="20-debuggage-performance_cache/html/unnamed-chunk-13_de1bd99c7335815491953d5a5a0b4dbf">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">min_freq_values</span>(starwars, <span class="dv">50</span>)</span>
 <span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Error in table(df[[col]]): all arguments must have the same length</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>On obtient un message quelque peu sybillin : apparemment une erreur se produit au moment de faire le tri à plat des valeurs avec <code>table()</code>. Mais comme ce tri à plat s’effectue dans une boucle, on ne sait pas quelle variable de <code>starwars</code> est à l’origine du problème.</p>
 <p>On va donc rajouter un <code>print(col)</code> comme première instruction de la boucle <code>for</code>.</p>
-<div class="cell" data-hash="20-debuggage-performance_cache/html/unnamed-chunk-14_6faea919437e50e17e56a2134bf54c3d">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>min_freq_values <span class="ot">&lt;-</span> <span class="cf">function</span>(df, n_min) {</span>
 <span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>    res <span class="ot">&lt;-</span> <span class="fu">list</span>()</span>
 <span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> (col <span class="cf">in</span> <span class="fu">names</span>(df)) {</span>
@@ -611,27 +621,27 @@ Avertissement
 <span id="cb13-28"><a href="#cb13-28" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Error in table(df[[col]]): all arguments must have the same length</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Ce <code>print(col)</code> nous permet de voir que tout se passe bien pour les premières variables du tableau, et que l’erreur survient au moment de traiter la variable <code>films</code>. On regarde donc à quoi ressemble cette variable.</p>
-<div class="cell" data-hash="20-debuggage-performance_cache/html/unnamed-chunk-15_492a23929177f3b131ec7a2443f082c2">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(starwars<span class="sc">$</span>films, <span class="dv">3</span>)</span>
 <span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [[1]]</span></span>
-<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] "The Empire Strikes Back" "Revenge of the Sith"    </span></span>
-<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [3] "Return of the Jedi"      "A New Hope"             </span></span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] "A New Hope"              "The Empire Strikes Back"</span></span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [3] "Return of the Jedi"      "Revenge of the Sith"    </span></span>
 <span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [5] "The Force Awakens"      </span></span>
 <span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
 <span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [[2]]</span></span>
-<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] "The Empire Strikes Back" "Attack of the Clones"   </span></span>
-<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [3] "The Phantom Menace"      "Revenge of the Sith"    </span></span>
-<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [5] "Return of the Jedi"      "A New Hope"             </span></span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] "A New Hope"              "The Empire Strikes Back"</span></span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [3] "Return of the Jedi"      "The Phantom Menace"     </span></span>
+<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [5] "Attack of the Clones"    "Revenge of the Sith"    </span></span>
 <span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
 <span id="cb14-12"><a href="#cb14-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [[3]]</span></span>
-<span id="cb14-13"><a href="#cb14-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] "The Empire Strikes Back" "Attack of the Clones"   </span></span>
-<span id="cb14-14"><a href="#cb14-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [3] "The Phantom Menace"      "Revenge of the Sith"    </span></span>
-<span id="cb14-15"><a href="#cb14-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [5] "Return of the Jedi"      "A New Hope"             </span></span>
+<span id="cb14-13"><a href="#cb14-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] "A New Hope"              "The Empire Strikes Back"</span></span>
+<span id="cb14-14"><a href="#cb14-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [3] "Return of the Jedi"      "The Phantom Menace"     </span></span>
+<span id="cb14-15"><a href="#cb14-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [5] "Attack of the Clones"    "Revenge of the Sith"    </span></span>
 <span id="cb14-16"><a href="#cb14-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [7] "The Force Awakens"</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p><em>Damn</em>, cette variable n’est pas un vecteur atomique mais une liste ! Un tableau de données peut en effet contenir ce que l’on appelle des <em>colonnes-listes</em>. Comme ça n’est pas courant, on ne l’avait clairement pas prévu au moment de la création de la fonction.</p>
 <p>On a désormais identifié le problème, on peut donc le corriger par exemple en ignorant les colonnes de type liste. Pour cela on utilise <code>is.list()</code> et l’instruction <code>next</code>.</p>
-<div class="cell" data-hash="20-debuggage-performance_cache/html/unnamed-chunk-16_884ccf139a2907e6a62c60b817ac54c2">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>min_freq_values <span class="ot">&lt;-</span> <span class="cf">function</span>(df, n_min) {</span>
 <span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>    res <span class="ot">&lt;-</span> <span class="fu">list</span>()</span>
 <span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> (col <span class="cf">in</span> <span class="fu">names</span>(df)) {</span>
@@ -662,7 +672,7 @@ Avertissement
 <h3 data-number="20.1.3" class="anchored" data-anchor-id="browser"><span class="header-section-number">20.1.3</span> browser()</h3>
 <p>Il existe des alternatives à <code>print()</code> plus efficaces pour identifier et résoudre des bugs. La plus utilisée est la fonction <code>browser()</code> : celle-ci peut s’insérer à n’importe quel endroit du code, et lorsqu’elle est rencontrée par R celui-ci s’interrompt et affiche une invite de commande permettant notamment d’inspecter des objets.</p>
 <p>On reprend l’exemple précédent en remplaçant le <code>print(col)</code> que nous avions inséré pour débugguer la fonction <code>min_freq_values</code> par un appel à <code>browser()</code>.</p>
-<div class="cell" data-hash="20-debuggage-performance_cache/html/unnamed-chunk-17_4c6881737e3d6dfc09eb0505f6f818f7">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>min_freq_values <span class="ot">&lt;-</span> <span class="cf">function</span>(df, n_min) {</span>
 <span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>    res <span class="ot">&lt;-</span> <span class="fu">list</span>()</span>
 <span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> (col <span class="cf">in</span> <span class="fu">names</span>(df)) {</span>
@@ -718,23 +728,23 @@ Note
 <p>Lorsqu’on commence à créer ses propres fonctions et de manière générale à écrire du code de plus en plus complexe ou à travailler sur des données de plus en plus volumineuses, on peut arriver sur des problèmes de performance : les temps d’exécution deviennent longs et on aimerait essayer de les optimiser.</p>
 <p>Il est alors parfois utile de faire du <em>benchmarking</em>, c’est-à-dire comparer plusieurs manières différentes de faire la même chose en mesurant leurs différences de vitesse d’exécution.</p>
 <p>L’intruction la plus simple pour cela est sans doute <code>system.time()</code>. Celle-ci prend en argument une expression R, et affiche en retour le temps d’exécution en secondes.</p>
-<div class="cell" data-hash="20-debuggage-performance_cache/html/unnamed-chunk-18_4f121c6206410b983f140262ef79927c">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">system.time</span>(<span class="fu">runif</span>(<span class="dv">1000000</span>))</span>
 <span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    user  system elapsed </span></span>
-<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   0.015   0.001   0.015</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   0.007   0.004   0.010</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>L’expression peut comporter plusieurs instructions, dans ce cas on les entoure d’accolades.</p>
-<div class="cell" data-hash="20-debuggage-performance_cache/html/unnamed-chunk-19_43ff4aaa93dae1ec9bbe745893bbd258">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">system.time</span>({</span>
 <span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>    v <span class="ot">&lt;-</span> <span class="fu">runif</span>(<span class="dv">1000000</span>)</span>
 <span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>    moy <span class="ot">&lt;-</span> <span class="fu">mean</span>(v)</span>
 <span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>})</span>
 <span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    user  system elapsed </span></span>
-<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   0.017   0.000   0.017</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   0.013   0.000   0.014</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p><code>system.time()</code> est cependant très limitée : on ne peut exécuter qu’une expression à la fois, on ne peut donc pas en comparer plusieurs directement, et surtout le temps d’exécution peut varier assez sensiblement selon l’utilisation du processeur de la machine au moment où on lance la commande.</p>
 <p>Il existe donc en complément plusieurs extensions dédiées au <em>benchmarking</em>. On va utiliser ici l’extension <a href="https://bench.r-lib.org/">bench</a>, installable avec :</p>
-<div class="cell" data-hash="20-debuggage-performance_cache/html/unnamed-chunk-20_81847c3316528abc846ba0a6febdfda9">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">"bench"</span>)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p><code>bench</code> propose une fonction principale, nommée <code>mark()</code>, qu’on peut donc appeler directement avec <code>bench::mark()</code><a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a>. On passe à cette fonction plusieurs expressions, et <code>bench::mark()</code> va effectuer les actions suivante :</p>
@@ -745,7 +755,7 @@ Note
 </ul>
 <p>Exécuter chaque expression plusieurs fois permet de prendre en compte les fluctuations liées à l’activité du processeur de la machine. Par défaut, <code>bench::mark()</code> exécute chaque instruction au minimum une fois et au moins suffisamment de fois pour atteindre 0,5s d’exécution (ces valeurs peuvent être modifiées via les paramètres <code>min_iterations</code> et <code>min_time</code>).</p>
 <p>Dans l’exemple suivant, on crée deux fonctions qui font la même chose : ajouter 10 à tous les éléments d’un vecteur passé en argument. Dans la première fonction <code>plus10_for</code> on utilise une boucle <code>for</code> qui ajoute 10 à tous les éléments l’un après l’autre (ce qu’il ne faut évidemment pas faire !), tandis que la deuxième fonction <code>plus10_vec</code> utilise la forme vectorisée <code>x + 10</code>.</p>
-<div class="cell" data-hash="20-debuggage-performance_cache/html/unnamed-chunk-21_4c4e879a71e95282ac3a751a7dbc9490">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>plus10_for <span class="ot">&lt;-</span> <span class="cf">function</span>(x) {</span>
 <span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> (i <span class="cf">in</span> <span class="fu">seq_along</span>(x)) {</span>
 <span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>        x[i] <span class="ot">&lt;-</span> x[i] <span class="sc">+</span> <span class="dv">10</span></span>
@@ -758,7 +768,7 @@ Note
 <span id="cb24-10"><a href="#cb24-10" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>On lance un benchmark avec <code>bench::mark()</code> et on stocke le résultat dans un objet.</p>
-<div class="cell" data-hash="20-debuggage-performance_cache/html/unnamed-chunk-22_e1cefebf6f843b5ede9547a2352d290f">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">10000</span></span>
 <span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>bnch <span class="ot">&lt;-</span> bench<span class="sc">::</span><span class="fu">mark</span>(</span>
 <span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">plus10_for</span>(x),</span>
@@ -766,33 +776,33 @@ Note
 <span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>On affiche les résultats obtenus :</p>
-<div class="cell" data-hash="20-debuggage-performance_cache/html/unnamed-chunk-23_9d7bc798d46ab0840be311c63bbb7cfe">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>bnch</span>
 <span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # A tibble: 2 × 6</span></span>
 <span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   expression         min   median `itr/sec` mem_alloc `gc/sec`</span></span>
 <span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   &lt;bch:expr&gt;    &lt;bch:tm&gt; &lt;bch:tm&gt;     &lt;dbl&gt; &lt;bch:byt&gt;    &lt;dbl&gt;</span></span>
-<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1 plus10_for(x)  646.7µs    685µs     1440.    97.5KB     4.07</span></span>
-<span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2 plus10_vec(x)   18.1µs   19.4µs    29139.   117.3KB    58.4</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1 plus10_for(x)  476.3µs  489.9µs     2017.    96.7KB     4.07</span></span>
+<span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2 plus10_vec(x)   10.2µs   11.9µs    82838.   117.3KB   174.</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>La colonne la plus importante est sans doute la colonne <code>median</code>, qui affiche le temps médian d’exécution des deux expressions. Attention, l’unité de temps n’est pas forcément la même, ici l’exécution de <code>plus10_for</code> est affichée en millisecondes (“ms”), tandis que celle de <code>plus10_vec</code> l’est en microsecondes (“µs”) donc avec une unité mille fois plus petite.</p>
 <p>Si on préfère, on peut afficher les performances relatives des deux fonctions avec :</p>
-<div class="cell" data-hash="20-debuggage-performance_cache/html/unnamed-chunk-24_59e2e83071ea1ab5caa43644333deac9">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(bnch, <span class="at">relative =</span> <span class="cn">TRUE</span>)</span>
 <span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # A tibble: 2 × 6</span></span>
 <span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   expression      min median `itr/sec` mem_alloc `gc/sec`</span></span>
 <span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   &lt;bch:expr&gt;    &lt;dbl&gt;  &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;</span></span>
-<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1 plus10_for(x)  35.7   35.3       1        1         1  </span></span>
-<span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2 plus10_vec(x)   1      1        20.2      1.20     14.3</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1 plus10_for(x)  46.8   41.3       1        1         1  </span></span>
+<span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2 plus10_vec(x)   1      1        41.1      1.21     42.8</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Ces résultats nous permettent de voir que la version <code>vec</code> est très nettement plus rapide que la version <code>for</code> ! Ce qui confirme le fait qu’il faut toujours prioriser l’utilisation de fonctions vectorisées lorsqu’elles existent.</p>
 <p>On prend un second exemple : on souhaite mesurer si l’utilisation de <code>map</code> est plus rapide ou non qu’une boucle <code>for</code> pour une tâche équivalente.</p>
 <p>Pour cela on commence par créer artificiellement une liste de 200 tableaux de données en dupliquant 100 fois une liste composée des tableaux <code>rp2018</code> et <code>hdv2003</code>.</p>
-<div class="cell" data-hash="20-debuggage-performance_cache/html/unnamed-chunk-25_ee8643ebff6722fdebdab436a8ca7541">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>dfs <span class="ot">&lt;-</span> <span class="fu">list</span>(rp2018, hdv2003)</span>
 <span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>dfs <span class="ot">&lt;-</span> <span class="fu">rep</span>(dfs, <span class="dv">100</span>)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Puis on lance un benchmark sur une boucle <code>for</code> et un <code>map</code> qui retournent chacun les nombres de ligne des 200 tableaux. Cette-fois on ne crée pas de fonctions : on passe le code directement à <code>bench::mark()</code>, avec des noms permettant de les identifier plus facilement dans les résultats.</p>
-<div class="cell" data-hash="20-debuggage-performance_cache/html/unnamed-chunk-26_1e95e2d69169734fca1abef1d8da56a5">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>bench<span class="sc">::</span><span class="fu">mark</span>(</span>
 <span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>    <span class="at">boucle_for =</span> {</span>
 <span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>        res <span class="ot">&lt;-</span> <span class="fu">list</span>()</span>
@@ -806,12 +816,12 @@ Note
 <span id="cb29-11"><a href="#cb29-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # A tibble: 2 × 6</span></span>
 <span id="cb29-12"><a href="#cb29-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   expression      min   median `itr/sec` mem_alloc `gc/sec`</span></span>
 <span id="cb29-13"><a href="#cb29-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   &lt;bch:expr&gt; &lt;bch:tm&gt; &lt;bch:tm&gt;     &lt;dbl&gt; &lt;bch:byt&gt;    &lt;dbl&gt;</span></span>
-<span id="cb29-14"><a href="#cb29-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1 boucle_for   2.89ms   3.02ms      330.     199KB     8.57</span></span>
-<span id="cb29-15"><a href="#cb29-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2 map         957.9µs   1.01ms      993.    6.72KB    10.4</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb29-14"><a href="#cb29-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1 boucle_for   2.28ms   2.36ms      417.  198.94KB     10.7</span></span>
+<span id="cb29-15"><a href="#cb29-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2 map        742.85µs  778.8µs     1282.    6.71KB     12.6</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>La lecture du résultat indique que le <code>map</code> est environ 4 fois plus rapide que la boucle <code>for</code>.</p>
 <p>Attention cependant en lisant ces résultats : dans la comparaison précédente les temps d’exécution étant en millisecondes, même une différence du type “4 fois plus rapide” peut être quasiment imperceptible. Dans l’exemple suivant on compare de la même manière <code>for</code> et <code>map</code>, mais cette fois en effectuant une action plus coûteuse en temps de calcul (on génère des vecteurs de nombres aléatoires).</p>
-<div class="cell" data-hash="20-debuggage-performance_cache/html/unnamed-chunk-27_7103f917002202cb88ab70f9d557d8a5">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>bench<span class="sc">::</span><span class="fu">mark</span>(</span>
 <span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>    <span class="at">boucle_for =</span> {</span>
 <span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a>        res <span class="ot">&lt;-</span> <span class="fu">numeric</span>()</span>
@@ -826,8 +836,8 @@ Note
 <span id="cb30-12"><a href="#cb30-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # A tibble: 2 × 6</span></span>
 <span id="cb30-13"><a href="#cb30-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   expression      min   median `itr/sec` mem_alloc `gc/sec`</span></span>
 <span id="cb30-14"><a href="#cb30-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   &lt;bch:expr&gt; &lt;bch:tm&gt; &lt;bch:tm&gt;     &lt;dbl&gt; &lt;bch:byt&gt;    &lt;dbl&gt;</span></span>
-<span id="cb30-15"><a href="#cb30-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1 boucle_for   95.2ms   95.5ms      10.5    38.5MB     0   </span></span>
-<span id="cb30-16"><a href="#cb30-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2 map          93.1ms   93.3ms      10.7    38.4MB     2.14</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb30-15"><a href="#cb30-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1 boucle_for     80ms   80.3ms      12.4    38.2MB     0   </span></span>
+<span id="cb30-16"><a href="#cb30-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2 map          78.2ms   79.1ms      12.5    38.2MB     2.09</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Dans ce cas la différence entre <code>for</code> et <code>map</code> devient négligeable par rapport aux temps de calcul des opérations effectuées dans les boucles : au final les temps d’exécution sont presque identiques.</p>
 </section>
@@ -836,7 +846,7 @@ Note
 <section id="privilégier-les-fonctions-vectorisées" class="level3" data-number="20.3.1">
 <h3 data-number="20.3.1" class="anchored" data-anchor-id="privilégier-les-fonctions-vectorisées"><span class="header-section-number">20.3.1</span> Privilégier les fonctions vectorisées</h3>
 <p>On l’a déjà dit, redit et reredit, une des forces de R est de proposer un grand nombre de fonctions vectorisées, c’est-à-dire prévues et optimisées pour s’appliquer à tous les éléments d’un vecteur. Quand une fonction vectorisée existe, il est donc toujours préférable de l’utiliser plutôt qu’une boucle ou un <code>map</code>.</p>
-<div class="cell" data-hash="20-debuggage-performance_cache/html/unnamed-chunk-28_e3a14159d94a1393424975d0d8fb3dac">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>v <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="fu">c</span>(<span class="st">"Pomme"</span>, <span class="st">"Poire"</span>, <span class="st">"Fraise"</span>), <span class="dv">100</span>)</span>
 <span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>bench<span class="sc">::</span><span class="fu">mark</span>(</span>
 <span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">boucle =</span> {</span>
@@ -847,15 +857,15 @@ Note
 <span id="cb31-8"><a href="#cb31-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # A tibble: 2 × 6</span></span>
 <span id="cb31-9"><a href="#cb31-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   expression      min   median `itr/sec` mem_alloc `gc/sec`</span></span>
 <span id="cb31-10"><a href="#cb31-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   &lt;bch:expr&gt; &lt;bch:tm&gt; &lt;bch:tm&gt;     &lt;dbl&gt; &lt;bch:byt&gt;    &lt;dbl&gt;</span></span>
-<span id="cb31-11"><a href="#cb31-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1 boucle       4.83ms   4.93ms      202.   112.4KB     8.60</span></span>
-<span id="cb31-12"><a href="#cb31-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2 vec          64.8µs   66.5µs    14948.    1.48KB     2.02</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb31-11"><a href="#cb31-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1 boucle       3.69ms    3.8ms      260.  112.38KB     8.66</span></span>
+<span id="cb31-12"><a href="#cb31-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2 vec         44.13µs   45.7µs    21467.    1.48KB     2.15</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="mettre-le-minimum-dopérations-dans-les-boucles" class="level3" data-number="20.3.2">
 <h3 data-number="20.3.2" class="anchored" data-anchor-id="mettre-le-minimum-dopérations-dans-les-boucles"><span class="header-section-number">20.3.2</span> Mettre le minimum d’opérations dans les boucles</h3>
 <p>Si vous utilisez une boucle, toute opération qu’elle contient, comme elle va être répétée, peut devenir rapidement très coûteuse. Il ne faut donc y mettre que les opérations réellement nécessaires.</p>
 <p>La fonction suivante prend en entrée un tableau de données <code>d</code> et une chaîne de caractères <code>chr</code>, et retourne un vecteur nommé indiquant le nombre de fois ou cette valeur apparaît dans chaque colonne du tableau. On a décidé de convertir en minuscules à la fois la valeur de <code>chr</code> et l’ensemble des colonnes du tableau pour que le comptage ne prenne pas en compte les différences de majuscules/minuscules.</p>
-<div class="cell" data-hash="20-debuggage-performance_cache/html/unnamed-chunk-29_edc3764a726773487bc74e40683ddbd7">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>nb_chaine1 <span class="ot">&lt;-</span> <span class="cf">function</span>(d, chr) {</span>
 <span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>    res <span class="ot">&lt;-</span> <span class="fu">numeric</span>()</span>
 <span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> (var <span class="cf">in</span> <span class="fu">names</span>(d)) {</span>
@@ -875,7 +885,7 @@ Note
 </div>
 <p>Ça fonctionne, mais si on regarde un peu plus attentivement le code de la fonction on peut vite se rendre compte d’un problème : les conversions en minuscules sont faites à l’intérieur de la boucle, et sont donc répétées pour chaque colonne de <code>d</code>. Or ceci n’est absolument pas nécessaire puisque cette conversion ne dépend pas des colonnes et qu’elle peut être faite une seule et unique fois en début de fonction.</p>
 <p>On décide donc de sortir les conversions en minuscules de la boucle.</p>
-<div class="cell" data-hash="20-debuggage-performance_cache/html/unnamed-chunk-30_ab1195558e7b133a0ed526f113bda88d">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>nb_chaine2 <span class="ot">&lt;-</span> <span class="cf">function</span>(d, chr) {</span>
 <span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>    res <span class="ot">&lt;-</span> <span class="fu">numeric</span>()</span>
 <span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -895,16 +905,16 @@ Note
 <span id="cb33-17"><a href="#cb33-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;        14         0       936       853</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Le résultat des deux fonctions est identique. On compare leur temps d’exécution à l’aide de <code>bench::mark()</code>.</p>
-<div class="cell" data-hash="20-debuggage-performance_cache/html/unnamed-chunk-31_f388c34937478af21cefc072bb4c6263">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>bench<span class="sc">::</span><span class="fu">mark</span>(</span>
 <span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">nb_chaine1</span>(d, <span class="st">"oui"</span>),</span>
 <span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">nb_chaine2</span>(d, <span class="st">"oui"</span>),</span>
 <span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a>)</span>
 <span id="cb34-5"><a href="#cb34-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # A tibble: 2 × 6</span></span>
-<span id="cb34-6"><a href="#cb34-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   expression                min   median `itr/sec` mem_alloc `gc/sec`</span></span>
-<span id="cb34-7"><a href="#cb34-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   &lt;bch:expr&gt;           &lt;bch:tm&gt; &lt;bch:tm&gt;     &lt;dbl&gt; &lt;bch:byt&gt;    &lt;dbl&gt;</span></span>
-<span id="cb34-8"><a href="#cb34-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1 nb_chaine1(d, "oui")   3.18ms   3.24ms      308.     345KB     2.06</span></span>
-<span id="cb34-9"><a href="#cb34-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2 nb_chaine2(d, "oui")  952.3µs  975.3µs     1024.     157KB     0</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb34-6"><a href="#cb34-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   expression                    min   median `itr/sec` mem_alloc `gc/sec`</span></span>
+<span id="cb34-7"><a href="#cb34-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   &lt;bch:expr&gt;               &lt;bch:tm&gt; &lt;bch:tm&gt;     &lt;dbl&gt; &lt;bch:byt&gt;    &lt;dbl&gt;</span></span>
+<span id="cb34-8"><a href="#cb34-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1 "nb_chaine1(d, \"oui\")"   2.54ms   2.58ms      386.     345KB     0   </span></span>
+<span id="cb34-9"><a href="#cb34-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2 "nb_chaine2(d, \"oui\")" 761.55µs 775.11µs     1284.     157KB     2.02</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Ce qui permet de constater que la deuxième version est quatre fois plus rapide (et elle sera d’autant plus rapide que le nombre de colonnes du tableau sera grand).</p>
 </section>
@@ -930,7 +940,7 @@ Note
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="resources/screenshots/profvis.png" class="img-fluid figure-img"></p>
-<figcaption class="figure-caption">Exemple de visualisation générée par profvis()</figcaption>
+<figcaption>Exemple de visualisation générée par profvis()</figcaption>
 </figure>
 </div>
 <p>L’utilisation de <code>profvis()</code> dépasse le cadre de ce document, mais on pourra trouver des explications (en anglais) dans la partie <a href="https://adv-r.hadley.nz/perf-measure.html#profiling">profiling</a> d’Advanced R.</p>
@@ -939,7 +949,7 @@ Note
 <h3 data-number="20.3.5" class="anchored" data-anchor-id="mettre-en-cache-des-résultats-intermédiaires"><span class="header-section-number">20.3.5</span> Mettre en cache des résultats intermédiaires</h3>
 <p>Selon la taille des données et le type d’opérations réalisées, les temps de calculs même optimisés peuvent demeurer longs. Dans ce cas il peut être intéressant de “mettre en cache” des résultats intermédiaires dans des fichiers pour pouvoir les charger directement sans avoir à tout recalculer.</p>
 <p>Par exemple, si on travaille sur un corpus de données textuelles, on peut enregistrer dans un fichier <code>RDS</code> ou <code>Rdata</code> le résultat de toutes les opérations de prétraitement du corpus : si on souhaite faire des analyses par la suite on aura juste à charger les données depuis ce fichier sans avoir à relancer le calcul de tous les prétraitements.</p>
-<p>L’extension <code>targets</code>, présentée <a href="21-targets.html"><span>Chapitre&nbsp;21</span></a>, est particulièrement adaptée pour les projets de ce type car elle gère automatiquement les dépendances entre les étapes d’un projet et la mise en cache des résultats, et permet ainsi d’optimiser les temps de traitement.</p>
+<p>L’extension <code>targets</code>, présentée <a href="21-targets.html" class="quarto-xref"><span>Chapitre 21</span></a>, est particulièrement adaptée pour les projets de ce type car elle gère automatiquement les dépendances entre les étapes d’un projet et la mise en cache des résultats, et permet ainsi d’optimiser les temps de traitement.</p>
 </section>
 <section id="utiliser-dautres-extensions" class="level3" data-number="20.3.6">
 <h3 data-number="20.3.6" class="anchored" data-anchor-id="utiliser-dautres-extensions"><span class="header-section-number">20.3.6</span> Utiliser d’autres extensions</h3>
@@ -1004,6 +1014,33 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       } else {
         el.classList.add('notransition');
       }
+    }
+  }
+  const toggleGiscusIfUsed = (isAlternate, darkModeDefault) => {
+    const baseTheme = document.querySelector('#giscus-base-theme')?.value ?? 'light';
+    const alternateTheme = document.querySelector('#giscus-alt-theme')?.value ?? 'dark';
+    let newTheme = '';
+    if(darkModeDefault) {
+      newTheme = isAlternate ? baseTheme : alternateTheme;
+    } else {
+      newTheme = isAlternate ? alternateTheme : baseTheme;
+    }
+    const changeGiscusTheme = () => {
+      // From: https://github.com/giscus/giscus/issues/336
+      const sendMessage = (message) => {
+        const iframe = document.querySelector('iframe.giscus-frame');
+        if (!iframe) return;
+        iframe.contentWindow.postMessage({ giscus: message }, 'https://giscus.app');
+      }
+      sendMessage({
+        setConfig: {
+          theme: newTheme
+        }
+      });
+    }
+    const isGiscussLoaded = window.document.querySelector('iframe.giscus-frame') !== null;
+    if (isGiscussLoaded) {
+      changeGiscusTheme();
     }
   }
   const toggleColorMode = (alternate) => {
@@ -1072,13 +1109,15 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       return localAlternateSentinel;
     }
   }
-  let localAlternateSentinel = 'default';
+  const darkModeDefault = false;
+  let localAlternateSentinel = darkModeDefault ? 'alternate' : 'default';
   // Dark / light mode switch
   window.quartoToggleColorScheme = () => {
     // Read the current dark / light value 
     let toAlternate = !hasAlternateSentinel();
     toggleColorMode(toAlternate);
     setStyleSentinel(toAlternate);
+    toggleGiscusIfUsed(toAlternate, darkModeDefault);
   };
   // Ensure there is a toggle, if there isn't float one in the top right
   if (window.document.querySelector('.quarto-color-scheme-toggle') === null) {
@@ -1113,18 +1152,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     }
     return false;
   }
-  const clipboard = new window.ClipboardJS('.code-copy-button', {
-    text: function(trigger) {
-      const codeEl = trigger.previousElementSibling.cloneNode(true);
-      for (const childEl of codeEl.children) {
-        if (isCodeAnnotation(childEl)) {
-          childEl.remove();
-        }
-      }
-      return codeEl.innerText;
-    }
-  });
-  clipboard.on('success', function(e) {
+  const onCopySuccess = function(e) {
     // button target
     const button = e.trigger;
     // don't keep focus
@@ -1156,11 +1184,48 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     }, 1000);
     // clear code selection
     e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
   });
-  function tippyHover(el, contentFn) {
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
     const config = {
       allowHTML: true,
-      content: contentFn,
       maxWidth: 500,
       delay: 100,
       arrow: false,
@@ -1170,8 +1235,17 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       interactive: true,
       interactiveBorder: 10,
       theme: 'quarto',
-      placement: 'bottom-start'
+      placement: 'bottom-start',
     };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
     window.tippy(el, config); 
   }
   const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
@@ -1183,7 +1257,129 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       try { href = new URL(href).hash; } catch {}
       const id = href.replace(/^#\/?/, "");
       const note = window.document.getElementById(id);
-      return note.innerHTML;
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
     });
   }
       let selectedAnnoteEl;
@@ -1227,6 +1423,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
             }
             div.style.top = top - 2 + "px";
             div.style.height = height + 4 + "px";
+            div.style.left = 0;
             let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
             if (gutterDiv === null) {
               gutterDiv = window.document.createElement("div");
@@ -1252,6 +1449,32 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
         });
         selectedAnnoteEl = undefined;
       };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
       // Attach click handler to the DT
       const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
       for (const annoteDlNode of annoteDls) {
@@ -1313,18 +1536,19 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="./19-programmer-tidyverse.html" class="pagination-link">
+      <a href="./19-programmer-tidyverse.html" class="pagination-link" aria-label="Programmer avec le *tidyverse*">
         <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Programmer avec le <em>tidyverse</em></span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="./21-targets.html" class="pagination-link">
+      <a href="./21-targets.html" class="pagination-link" aria-label="Organiser un projet avec `targets`">
         <span class="nav-page-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Organiser un projet avec <code>targets</code></span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>
 </div> <!-- /content -->
-<script src="js/tidyverse.js"></script>
+<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/juba/tidyverse/edit/main/20-debuggage-performance.qmd" class="toc-action"><i class="bi bi-github"></i>Modifier cette page</a></li></ul></div></div></div></footer><script src="js/tidyverse.js"></script>
+
 
 
 

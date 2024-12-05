@@ -2,12 +2,12 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="fr" xml:lang="fr"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.3.340">
+<meta name="generator" content="quarto-1.6.39">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Introduction à R et au tidyverse - 14&nbsp; Écrire ses propres fonctions</title>
+<title>14&nbsp; Écrire ses propres fonctions – Introduction à R et au tidyverse</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -22,7 +22,7 @@ ul.task-list li input[type="checkbox"] {
 }
 /* CSS for syntax highlighting */
 pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span { line-height: 1.25; }
 pre > code.sourceCode > span:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
 code.sourceCode > span { color: inherit; text-decoration: inherit; }
@@ -33,7 +33,7 @@ div.sourceCode { overflow: auto; }
 }
 @media print {
 pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
 }
 pre.numberSource code
   { counter-reset: source-line 0; }
@@ -71,12 +71,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="site_libs/quarto-html/anchor.min.js"></script>
 <link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-dark.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-f2ed4b6a00c7d3487a84fd5a50ba4e45.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-dark-ab6496a1a679dc9f3d6952c9737550a4.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
-<link href="site_libs/bootstrap/bootstrap-dark.min.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="site_libs/bootstrap/bootstrap-7841758b2c4697f1bb7dfd28c94c955d.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-dark-122eaf72ed6913f6dbaefd46cb265906.min.css" rel="prefetch" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
 <link href="site_libs/quarto-contrib/bookup_fonts_embed-0.0/fonts-download.css" rel="stylesheet">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
@@ -84,7 +84,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   "collapse-after": 3,
   "panel-placement": "start",
   "type": "textbox",
-  "limit": 20,
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
   "language": {
     "search-no-results-text": "Pas de résultats",
     "search-matching-documents-text": "documents trouvés",
@@ -93,13 +99,42 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     "search-more-match-text": "correspondance de plus dans ce document",
     "search-more-matches-text": "correspondances de plus dans ce document",
     "search-clear-button-title": "Effacer",
+    "search-text-placeholder": "",
     "search-detached-cancel-button-title": "Annuler",
-    "search-submit-button-title": "Envoyer"
+    "search-submit-button-title": "Envoyer",
+    "search-label": "Recherche"
   }
 }</script>
 
-  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
   <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
 
 <link rel="stylesheet" href="css/tidyverse.css">
 </head>
@@ -110,12 +145,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <header id="quarto-header" class="headroom fixed-top">
   <nav class="quarto-secondary-nav">
     <div class="container-fluid d-flex">
-      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Basculer la barre latérale" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Basculer la barre latérale" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./14-fonctions.html">Aller plus loin</a></li><li class="breadcrumb-item"><a href="./14-fonctions.html"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Écrire ses propres fonctions</span></a></li></ol></nav>
-      <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Basculer la barre latérale" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
-      </a>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./14-fonctions.html">Aller plus loin</a></li><li class="breadcrumb-item"><a href="./14-fonctions.html"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Écrire ses propres fonctions</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Basculer la barre latérale" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
       <button type="button" class="btn quarto-search-button" aria-label="Recherche" onclick="window.quartoOpenSearch();">
         <i class="bi bi-search"></i>
       </button>
@@ -125,24 +160,24 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <!-- content -->
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
 <!-- sidebar -->
-  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal sidebar-navigation docked overflow-auto">
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation docked overflow-auto">
     <div class="pt-lg-2 mt-2 text-left sidebar-header">
     <div class="sidebar-title mb-0 py-0">
       <a href="./">Introduction à R et au tidyverse</a> 
         <div class="sidebar-tools-main tools-wide">
-    <a href="https://github.com/juba/tidyverse/" title="Source Code" class="quarto-navigation-tool px-1" aria-label="Source Code"><i class="bi bi-github"></i></a>
+    <a href="https://github.com/juba/tidyverse/" title="Code source" class="quarto-navigation-tool px-1" aria-label="Code source"><i class="bi bi-github"></i></a>
     <div class="dropdown">
-      <a href="" title="Download" id="quarto-navigation-tool-dropdown-0" class="quarto-navigation-tool dropdown-toggle px-1" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download"><i class="bi bi-download"></i></a>
+      <a href="" title="Download" id="quarto-navigation-tool-dropdown-0" class="quarto-navigation-tool dropdown-toggle px-1" data-bs-toggle="dropdown" aria-expanded="false" role="link" aria-label="Download"><i class="bi bi-download"></i></a>
       <ul class="dropdown-menu" aria-labelledby="quarto-navigation-tool-dropdown-0">
           <li>
             <a class="dropdown-item sidebar-tools-main-item" href="./introduction_au_tidyverse.epub">
-              <i class="bi bi-bi-journal pe-1"></i>
+              <i class="bi bi-journal pe-1"></i>
             Download ePub
             </a>
           </li>
           <li>
             <a class="dropdown-item sidebar-tools-main-item" href="./introduction_au_tidyverse.pdf">
-              <i class="bi bi-bi-file-pdf pe-1"></i>
+              <i class="bi bi-file-pdf pe-1"></i>
             Download PDF
             </a>
           </li>
@@ -166,9 +201,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <ul class="list-unstyled mt-1">
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true">
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
  <span class="menu-text">Introduction</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true" aria-label="Basculer la section">
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Basculer la section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
@@ -189,9 +224,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true">
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true">
  <span class="menu-text">Introduction à R</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true" aria-label="Basculer la section">
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Basculer la section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
@@ -224,9 +259,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true">
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true">
  <span class="menu-text">Introduction au tidyverse</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true" aria-label="Basculer la section">
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true" aria-label="Basculer la section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
@@ -283,9 +318,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="true">
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true">
  <span class="menu-text">Aller plus loin</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="true" aria-label="Basculer la section">
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true" aria-label="Basculer la section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
@@ -342,9 +377,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" aria-expanded="true">
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="true">
  <span class="menu-text">Annexes</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" aria-expanded="true" aria-label="Basculer la section">
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="true" aria-label="Basculer la section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
@@ -360,7 +395,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     </ul>
     </div>
 </nav>
-<div id="quarto-sidebar-glass" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass"></div>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
         <nav id="TOC" role="doc-toc" class="toc-active">
@@ -403,12 +438,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#les-fonctions-comme-objets-1" id="toc-les-fonctions-comme-objets-1" class="nav-link" data-scroll-target="#les-fonctions-comme-objets-1"><span class="header-section-number">14.6.4</span> Les fonctions comme objets</a></li>
   </ul></li>
   </ul>
-<div class="toc-actions"><div><i class="bi bi-github"></i></div><div class="action-links"><p><a href="https://github.com/juba/tidyverse/edit/main/14-fonctions.qmd" class="toc-action">Modifier cette page</a></p></div></div></nav>
+<div class="toc-actions"><ul><li><a href="https://github.com/juba/tidyverse/edit/main/14-fonctions.qmd" class="toc-action"><i class="bi bi-github"></i>Modifier cette page</a></li></ul></div></nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
-<header id="title-block-header" class="quarto-title-block default">
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./14-fonctions.html">Aller plus loin</a></li><li class="breadcrumb-item"><a href="./14-fonctions.html"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Écrire ses propres fonctions</span></a></li></ol></nav>
 <div class="quarto-title">
 <h1 class="title"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Écrire ses propres fonctions</span></h1>
 </div>
@@ -423,7 +458,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </div>
   
 
+
 </header>
+
 
 <section id="introduction-et-exemples" class="level2" data-number="14.1">
 <h2 data-number="14.1" class="anchored" data-anchor-id="introduction-et-exemples"><span class="header-section-number">14.1</span> Introduction et exemples</h2>
@@ -434,45 +471,45 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p><img src="resources/figures/schema_fonction.svg" class="img-fluid"></p>
 <p>Nous avons déjà rencontré et utilisé un grand nombre de fonctions, certaines assez simples (<code>mean</code>, <code>max</code>…) et d’autres beaucoup plus complexes (<code>summary</code>, <code>mutate</code>…). R, comme tout langage de programmation, offre la possibilité de créer et d’utiliser ses propres fonctions.</p>
 <p>Voici un exemple de fonction très simple, quoi que d’une utilité douteuse, puisqu’elle se contente d’ajouter 2 à un nombre&nbsp;:</p>
-<div class="cell" data-hash="14-fonctions_cache/html/unnamed-chunk-2_890a9f33910f0c39a6524daf771d4a62">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>ajoute2 <span class="ot">&lt;-</span> <span class="cf">function</span>(x) {</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>  res <span class="ot">&lt;-</span> x <span class="sc">+</span> <span class="dv">2</span></span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(res)</span>
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>En exécutant ce code, on crée une nouvelle fonction nommée <code>ajoute2</code>, que l’on peut directement utiliser dans un script ou dans la console&nbsp;:</p>
-<div class="cell" data-hash="14-fonctions_cache/html/unnamed-chunk-3_cc161057bd0d5615004452e070adfc2b">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ajoute2</span>(<span class="dv">3</span>)</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 5</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>On va décomposer pas à pas la structure de cette première fonction.</p>
 <p>D’abord, une fonction est créée en utilisant l’instruction <code>function</code>. Celle-ci est suivie d’une paire de parenthèses et d’une paire d’accolades.</p>
-<div class="cell" data-hash="14-fonctions_cache/html/unnamed-chunk-4_787046a1e2960981dd994010ebeeb13b">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="cf">function</span>() {</span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Dans les parenthèses, on indique les <em>arguments</em> de la fonction, ceux qui devront lui être passés quand nous l’appellerons. Ici notre fonction ne prend qu’un seul argument, que nous avons décidé arbitrairement de nommer <code>x</code>.</p>
-<div class="cell" data-hash="14-fonctions_cache/html/unnamed-chunk-5_6a151f718702be737cf24cd170d73846">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="cf">function</span>(x) {</span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Les accolades comprennent une série d’instructions R qui constituent le <em>corps</em> de notre fonction. C’est ce code qui sera exécuté quand notre fonction est appelée. On peut utiliser dans le corps de la fonction les arguments qui lui sont passés. Ici, la première ligne utilise la valeur de l’argument <code>x</code>, lui ajoute 2 et stocke le résultat dans un nouvel objet <code>res</code>.</p>
-<div class="cell" data-hash="14-fonctions_cache/html/unnamed-chunk-6_ea45d4a3d5c528956a7d3ecc00c6f037">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="cf">function</span>(x) {</span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  res <span class="ot">&lt;-</span> x <span class="sc">+</span> <span class="dv">2</span></span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Pour qu’elle soit utile, notre fonction doit renvoyer le résultat qu’elle a calculé précédemment. Ceci se fait via l’instruction <code>return</code> à qui on passe la valeur à retourner.</p>
-<div class="cell" data-hash="14-fonctions_cache/html/unnamed-chunk-7_edc625b8f5ce2256d6af705d82e9bbb4">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="cf">function</span>(x) {</span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  res <span class="ot">&lt;-</span> x <span class="sc">+</span> <span class="dv">2</span></span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(res)</span>
 <span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Enfin, pour que notre fonction puisse être appelée et utilisée, nous devons lui donner un nom, ou plus précisément la stocker dans un objet. Ici on la stocke dans un objet nommé <code>ajoute2</code>.</p>
-<div class="cell" data-hash="14-fonctions_cache/html/unnamed-chunk-8_66e15f22c296038fd258f57c38ec299a">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>ajoute2 <span class="ot">&lt;-</span> <span class="cf">function</span>(x) {</span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  res <span class="ot">&lt;-</span> x <span class="sc">+</span> <span class="dv">2</span></span>
 <span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(res)</span>
@@ -493,19 +530,19 @@ Note
 </div>
 </div>
 <p>Avec le code précédent, on a donc créé un nouvel objet <code>ajoute2</code> de type <code>function</code>. Cette nouvelle fonction prend un seul argument <code>x</code>, calcule la valeur <code>x + 2</code> et retourne ce résultat. On l’utilise en tapant son nom suivi de la valeur de son argument entre parenthèses, par exemple&nbsp;:</p>
-<div class="cell" data-hash="14-fonctions_cache/html/unnamed-chunk-9_050d219de1deabf327152c0e3910638c">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ajoute2</span>(<span class="dv">41</span>)</span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 43</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Ou encore&nbsp;:</p>
-<div class="cell" data-hash="14-fonctions_cache/html/unnamed-chunk-10_0ffa3a5650178427a852bd6e58d6641b">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>y <span class="ot">&lt;-</span> <span class="dv">5</span></span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>z <span class="ot">&lt;-</span> <span class="fu">ajoute2</span>(y)</span>
 <span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>z</span>
 <span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 7</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>À noter que comme <code>x + 2</code> fonctionne si <code>x</code> est un vecteur, on peut aussi appeler notre fonction en lui passant un vecteur en argument.</p>
-<div class="cell" data-hash="14-fonctions_cache/html/unnamed-chunk-11_0e4ff0e900850d82bd20251c0c3085bb">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>vec <span class="ot">&lt;-</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">5</span></span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ajoute2</span>(vec)</span>
 <span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 3 4 5 6 7</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -513,17 +550,17 @@ Note
 <p>Si on récapitule, une fonction se définit donc de la manière suivante&nbsp;:</p>
 <p><img src="resources/figures/structure_fonction.svg" class="img-fluid"></p>
 <p>Une fonction peut évidemment prendre plusieurs arguments. Dans ce cas on liste les arguments dans les parenthèses en les séparant par des virgules :</p>
-<div class="cell" data-hash="14-fonctions_cache/html/unnamed-chunk-12_5345a6eaa5c7aabbf006494783ae2ad3">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>somme <span class="ot">&lt;-</span> <span class="cf">function</span>(x, y) {</span>
 <span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(x <span class="sc">+</span> y)</span>
 <span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div class="cell" data-hash="14-fonctions_cache/html/unnamed-chunk-13_720c41369e0bd04c5fca1c53cb38b21f">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">somme</span>(<span class="dv">3</span>, <span class="dv">5</span>)</span>
 <span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 8</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Une fonction peut aussi n’accepter aucun argument, dans ce cas on laisse les parenthèses vides.</p>
-<div class="cell" data-hash="14-fonctions_cache/html/unnamed-chunk-14_8a33370cf8426fb2b0849665eb5e945a">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>miaule <span class="ot">&lt;-</span> <span class="cf">function</span>() {</span>
 <span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(<span class="st">"Miaou"</span>)</span>
 <span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>}</span>
@@ -532,11 +569,11 @@ Note
 <span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] "Miaou"</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>À noter que si on appelle une fonction avec un nombre d’arguments incorrect, cela génère une erreur.</p>
-<div class="cell" data-hash="14-fonctions_cache/html/unnamed-chunk-15_ca6a0e0a07a2f5ca051b59bda4d0f7f9">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">somme</span>(<span class="dv">1</span>)</span>
 <span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Error in somme(1): argument "y" is missing, with no default</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div class="cell" data-hash="14-fonctions_cache/html/unnamed-chunk-16_71c1aa1a04b136da2bd2af56ee17d48f">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">miaule</span>(<span class="st">"ouaf"</span>)</span>
 <span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Error in miaule("ouaf"): unused argument ("ouaf")</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
@@ -544,7 +581,7 @@ Note
 <section id="exemple-de-fonction" class="level3" data-number="14.1.2">
 <h3 data-number="14.1.2" class="anchored" data-anchor-id="exemple-de-fonction"><span class="header-section-number">14.1.2</span> Exemple de fonction</h3>
 <p>Prenons un exemple&nbsp;un peu plus élaboré : la fonction <code>table()</code> retourne le tri à plat en effectifs d’une variable qualitative. On souhaite créer une fonction qui calcule plutôt le tri à plat en pourcentages. Voici une manière de le faire&nbsp;:</p>
-<div class="cell" data-hash="14-fonctions_cache/html/unnamed-chunk-17_0e8106fe8ce62d353fb3e88cfe65395e">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>prop_tab <span class="ot">&lt;-</span> <span class="cf">function</span>(v) {</span>
 <span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>  tri <span class="ot">&lt;-</span> <span class="fu">table</span>(v)</span>
 <span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>  effectif_total <span class="ot">&lt;-</span> <span class="fu">length</span>(v)</span>
@@ -554,7 +591,7 @@ Note
 </div>
 <p>Notre fonction prend en entrée un argument nommé <code>v</code>, en l’occurrence un vecteur représentant une variable qualitative. On commence par faire le tri à plat de ce vecteur avec <code>table</code>, puis on calcule la répartition en pourcentages en divisant ce tri à plat par l’effectif total et en multipliant par 100.</p>
 <p>Testons avec un vecteur d’exemple :</p>
-<div class="cell" data-hash="14-fonctions_cache/html/unnamed-chunk-18_eb461aa4f6cf5dbf6e0de2e69163de28">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>vec <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"rouge"</span>, <span class="st">"vert"</span>, <span class="st">"vert"</span>, <span class="st">"bleu"</span>, <span class="st">"rouge"</span>)</span>
 <span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="fu">prop_tab</span>(vec)</span>
 <span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; v</span></span>
@@ -562,7 +599,7 @@ Note
 <span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    20    40    40</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Testons sur une variable du jeu de données <code>hdv2003</code><a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a>&nbsp;:</p>
-<div class="cell" data-hash="14-fonctions_cache/html/unnamed-chunk-19_3d205199c487a83f8c24d202d9ae2ec7">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(questionr)</span>
 <span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(hdv2003)</span>
 <span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a><span class="fu">prop_tab</span>(hdv2003<span class="sc">$</span>qualif)</span>
@@ -575,7 +612,7 @@ Note
 <span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;                     2.90</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Ça fonctionne, mais avec une petite limite : par défaut <code>table()</code> ignore les <code>NA</code>. On peut modifier ce comportement en lui ajoutant un argument <code>useNA = "ifany"</code>.</p>
-<div class="cell" data-hash="14-fonctions_cache/html/unnamed-chunk-20_a192336f0c62b6bab305212b90dad890">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>prop_tab <span class="ot">&lt;-</span> <span class="cf">function</span>(v) {</span>
 <span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>  tri <span class="ot">&lt;-</span> <span class="fu">table</span>(v, <span class="at">useNA =</span> <span class="st">"ifany"</span>)</span>
 <span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>  effectif_total <span class="ot">&lt;-</span> <span class="fu">length</span>(v)</span>
@@ -607,7 +644,7 @@ Avertissement
 </div>
 </div>
 <p>Autre amélioration possible : on pourrait vouloir modifier le nombre de décimales affichées pour les pourcentages, par exemple en les limitant à 1. Pour cela on ajoute une instruction <code>round()</code>.</p>
-<div class="cell" data-hash="14-fonctions_cache/html/unnamed-chunk-21_b04b1b9ec68f2209c0b247d980113aec">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>prop_tab <span class="ot">&lt;-</span> <span class="cf">function</span>(v) {</span>
 <span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>  tri <span class="ot">&lt;-</span> <span class="fu">table</span>(v, <span class="at">useNA =</span> <span class="st">"ifany"</span>)</span>
 <span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>  effectif_total <span class="ot">&lt;-</span> <span class="fu">length</span>(v)</span>
@@ -626,7 +663,7 @@ Avertissement
 <span id="cb20-16"><a href="#cb20-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;                      2.9                     17.3</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Ça fonctionne ! Cela dit, limiter à un chiffre après la virgule ne convient pas forcément dans tous les cas. L’idéal serait d’offrir la possibilité à la personne qui appelle la fonction de choisir elle-même la précision de l’affichage. Comment ? Tout simplement en ajoutant un deuxième argument à notre fonction, que nous nommerons <code>decimales</code>, et en utilisant cet argument à la place du 1 dans l’appel à <code>round()</code>.</p>
-<div class="cell" data-hash="14-fonctions_cache/html/unnamed-chunk-22_72ceca17a408cf64aec089f8cc603d5a">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>prop_tab <span class="ot">&lt;-</span> <span class="cf">function</span>(v, decimales) {</span>
 <span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>  tri <span class="ot">&lt;-</span> <span class="fu">table</span>(v, <span class="at">useNA =</span> <span class="st">"ifany"</span>)</span>
 <span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>  effectif_total <span class="ot">&lt;-</span> <span class="fu">length</span>(v)</span>
@@ -636,7 +673,7 @@ Avertissement
 <span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Désormais, notre fonction s’utilise en lui indiquant deux arguments&nbsp;:</p>
-<div class="cell" data-hash="14-fonctions_cache/html/unnamed-chunk-23_c0b791963b104994136199b8b19c2f71">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">prop_tab</span>(hdv2003<span class="sc">$</span>qualif, <span class="dv">1</span>)</span>
 <span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; v</span></span>
 <span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;       Ouvrier specialise         Ouvrier qualifie               Technicien </span></span>
@@ -647,7 +684,7 @@ Avertissement
 <span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;                      2.9                     17.3</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>De la même manière, on pourrait vouloir laisser le choix à l’utilisateur d’afficher ou non les <code>NA</code> dans le tri à plat. C’est possible en ajoutant un troisième argument à notre fonction et en utilisant sa valeur dans le paramètre <code>useNA</code> de <code>table()</code>.</p>
-<div class="cell" data-hash="14-fonctions_cache/html/unnamed-chunk-24_a5f48769bd2572ba75b214850b39b82c">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>prop_tab <span class="ot">&lt;-</span> <span class="cf">function</span>(v, decimales, useNA) {</span>
 <span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>  tri <span class="ot">&lt;-</span> <span class="fu">table</span>(v, <span class="at">useNA =</span> useNA)</span>
 <span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>  effectif_total <span class="ot">&lt;-</span> <span class="fu">length</span>(v)</span>
@@ -683,7 +720,7 @@ Note
 </div>
 </div>
 <p>Par exemple la fonction suivante prend en argument un vecteur et génère un diagramme en barres du tri à plat de cette variable (en modifiant un peu la présentation au passage).</p>
-<div class="cell" data-hash="14-fonctions_cache/html/unnamed-chunk-25_63904754b2a9ac19dad1863b85762ef9">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>my_barplot <span class="ot">&lt;-</span> <span class="cf">function</span>(var) {</span>
 <span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>  tri <span class="ot">&lt;-</span> <span class="fu">table</span>(var)</span>
 <span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">barplot</span>(tri, <span class="at">col =</span> <span class="st">"skyblue"</span>, <span class="at">border =</span> <span class="cn">NA</span>)</span>
@@ -691,11 +728,15 @@ Note
 <span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a><span class="fu">my_barplot</span>(hdv2003<span class="sc">$</span>clso)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="14-fonctions_files/figure-html/unnamed-chunk-25-1.png" class="img-fluid" width="672"></p>
+<div>
+<figure class="figure">
+<p><img src="14-fonctions_files/figure-html/unnamed-chunk-25-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
 </div>
 </div>
 <p>Un autre effet de bord très courant consiste à afficher des informations dans la console. Pour cela on peut utiliser <code>print</code>, qui affiche de manière aussi lisible que possible l’objet qu’on lui passe en argument :</p>
-<div class="cell" data-hash="14-fonctions_cache/html/unnamed-chunk-26_c8a652c2fc81dc838b496833b92f3ad5">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>indicateurs <span class="ot">&lt;-</span> <span class="cf">function</span>(v) {</span>
 <span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>(<span class="fu">mean</span>(v))</span>
 <span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>(<span class="fu">sd</span>(v))</span>
@@ -706,7 +747,7 @@ Note
 <span id="cb25-8"><a href="#cb25-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 16.94181</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Quand on souhaite seulement afficher une chaîne de caractère, on peut utiliser <code>cat()</code> qui fournit une sortie plus lisible que <code>print</code> :</p>
-<div class="cell" data-hash="14-fonctions_cache/html/unnamed-chunk-27_abf7eedfc0e8a06d1504126f2b642f21">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>hello <span class="ot">&lt;-</span> <span class="cf">function</span>(nom) {</span>
 <span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cat</span>(<span class="st">"Bonjour,"</span>, nom, <span class="st">"!"</span>)</span>
 <span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>}</span>
@@ -716,7 +757,7 @@ Note
 </div>
 <p>Enfin, on peut aussi utiliser <code>message()</code> qui, comme son nom l’indique, affiche un message dans la console, avec une mise en forme spécifique. En général on l’utilise plutôt pour afficher des informations relatives au déroulement de la fonction.</p>
 <p>Dans l’exemple suivant, on utilise la fonction <code>runif()</code> pour générer aléatoirement <code>n</code> nombres entre 0 et 1 et on affiche avec <code>cat()</code> la valeur du plus petit nombre généré. Comme l’exécution du <code>runif()</code> peut prendre du temps si <code>n</code> est grand, on affiche un message avec <code>message()</code> pour prévenir l’utilisateur.</p>
-<div class="cell" data-hash="14-fonctions_cache/html/unnamed-chunk-28_14068e43f0bd4fc423958d0bc2169852">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>min_alea <span class="ot">&lt;-</span> <span class="cf">function</span>(n) {</span>
 <span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">message</span>(<span class="st">"Génération de "</span>, n, <span class="st">" nombres aléatoires..."</span>)</span>
 <span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>  v <span class="ot">&lt;-</span> <span class="fu">runif</span>(n)</span>
@@ -725,7 +766,7 @@ Note
 <span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb27-7"><a href="#cb27-7" aria-hidden="true" tabindex="-1"></a><span class="fu">min_alea</span>(<span class="dv">50000</span>)</span>
 <span id="cb27-8"><a href="#cb27-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Génération de 50000 nombres aléatoires...</span></span>
-<span id="cb27-9"><a href="#cb27-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Le plus petit nombre généré vaut 0.000000834465</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb27-9"><a href="#cb27-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Le plus petit nombre généré vaut 0.00009683124</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="utilité-des-fonctions" class="level3" data-number="14.1.4">
@@ -733,7 +774,7 @@ Note
 <p>On peut se demander dans quels cas il est utile de créer une fonction.</p>
 <p>Une règle courante considère que dès qu’on a répété le même code plus de deux fois, il est préférable d’en faire une fonction. Celles-ci ont en effet comme avantage d’éviter la duplication du code.</p>
 <p>Imaginons que nous avons récupéré un jeu de données avec toute une série de variables ayant les modalités <code>"1"</code> et <code>"2"</code> qui correspondent aux réponses <code>"Oui"</code> et <code>"Non"</code> à des questions. On crée un <em>data frame</em> fictif comportant quatre variables de ce type&nbsp;:</p>
-<div class="cell" data-hash="14-fonctions_cache/html/unnamed-chunk-29_4f9fd7b817922af279f935ffcd0c0c97">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
 <span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">q1 =</span> <span class="fu">c</span>(<span class="st">"1"</span>, <span class="st">"1"</span>, <span class="st">"2"</span>, <span class="st">"1"</span>),</span>
 <span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">q2 =</span> <span class="fu">c</span>(<span class="st">"1"</span>, <span class="st">"2"</span>, <span class="st">"2"</span>, <span class="st">"2"</span>),</span>
@@ -748,15 +789,15 @@ Note
 <span id="cb28-12"><a href="#cb28-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3  2  2  1  1</span></span>
 <span id="cb28-13"><a href="#cb28-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 4  1  2  1  1</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>On a vu <a href="09-recodages.html#sec-recoder-une-variable-qualitative"><span>Section&nbsp;9.3</span></a> qu’on peut recoder l’une de ces variables à l’aide de la fonction <code>fct_recode()</code> de l’extension <code>forcats</code>&nbsp;:</p>
-<div class="cell" data-hash="14-fonctions_cache/html/unnamed-chunk-30_8126b4c7c5587d192d797a7d4cf254da">
+<p>On a vu <a href="09-recodages.html#sec-recoder-une-variable-qualitative" class="quarto-xref"><span>Section 9.3</span></a> qu’on peut recoder l’une de ces variables à l’aide de la fonction <code>fct_recode()</code> de l’extension <code>forcats</code>&nbsp;:</p>
+<div class="cell">
 <div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>df<span class="sc">$</span>q1 <span class="ot">&lt;-</span> <span class="fu">fct_recode</span>(df<span class="sc">$</span>q1,</span>
 <span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>  <span class="st">"Oui"</span> <span class="ot">=</span> <span class="st">"1"</span>,</span>
 <span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>  <span class="st">"Non"</span> <span class="ot">=</span> <span class="st">"2"</span></span>
 <span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>On peut donc être tenté de dupliquer ce code autant de fois qu’on a de questions à recoder&nbsp;:</p>
-<div class="cell" data-hash="14-fonctions_cache/html/unnamed-chunk-31_7c0d07ac17337bf1b6fdc576f7d1bfac">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>df<span class="sc">$</span>q1 <span class="ot">&lt;-</span> <span class="fu">fct_recode</span>(df<span class="sc">$</span>q1,</span>
 <span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>  <span class="st">"Oui"</span> <span class="ot">=</span> <span class="st">"1"</span>,</span>
 <span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a>  <span class="st">"Non"</span> <span class="ot">=</span> <span class="st">"2"</span></span>
@@ -775,7 +816,7 @@ Note
 <span id="cb30-16"><a href="#cb30-16" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Mais il est plus judicieux dans ce cas de créer une fonction pour ce recodage&nbsp;:</p>
-<div class="cell" data-hash="14-fonctions_cache/html/unnamed-chunk-32_92da3b98fa2139d7c8c96bfa922b7f90">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>recode_oui_non <span class="ot">&lt;-</span> <span class="cf">function</span>(var) {</span>
 <span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>  var_recodee <span class="ot">&lt;-</span> <span class="fu">fct_recode</span>(var,</span>
 <span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Oui"</span> <span class="ot">=</span> <span class="st">"1"</span>,</span>
@@ -785,7 +826,7 @@ Note
 <span id="cb31-7"><a href="#cb31-7" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>En effet, il est alors très simple d’appliquer ce recodage à plusieurs variables&nbsp;:</p>
-<div class="cell" data-hash="14-fonctions_cache/html/unnamed-chunk-33_af1b84407b8582b601c058835e976ba6">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>df<span class="sc">$</span>q1 <span class="ot">&lt;-</span> <span class="fu">recode_oui_non</span>(df<span class="sc">$</span>q1)</span>
 <span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>df<span class="sc">$</span>q2 <span class="ot">&lt;-</span> <span class="fu">recode_oui_non</span>(df<span class="sc">$</span>q2)</span>
 <span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a>df<span class="sc">$</span>q3 <span class="ot">&lt;-</span> <span class="fu">recode_oui_non</span>(df<span class="sc">$</span>q3)</span>
@@ -806,7 +847,7 @@ Note
 <section id="définition-des-arguments" class="level3" data-number="14.2.1">
 <h3 data-number="14.2.1" class="anchored" data-anchor-id="définition-des-arguments"><span class="header-section-number">14.2.1</span> Définition des arguments</h3>
 <p>Les arguments (ou paramètres) d’une fonction sont ce qu’on lui donne “en entrée”, et qui vont soit lui fournir des données, soit modifier son comportement. La liste des arguments acceptés par une fonction est indiquée entre les parenthèses de l’appel de <code>function()</code>&nbsp;:</p>
-<div class="cell" data-hash="14-fonctions_cache/html/unnamed-chunk-34_5959139a1f2ad213615f07b0c0a90aff">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>ma_fonction <span class="ot">&lt;-</span> <span class="cf">function</span>(arg1, arg2, arg3) {</span>
 <span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>(arg1)</span>
 <span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>(arg2)</span>
@@ -827,20 +868,20 @@ Note
 </div>
 </div>
 <p>Lors de l’appel de la fonction, on peut lui passer les arguments <em>par position</em>&nbsp;:</p>
-<div class="cell" data-hash="14-fonctions_cache/html/unnamed-chunk-35_8ee32545578ad85aa9c6214452b92ea1">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ma_fonction</span>(x, <span class="dv">12</span>, <span class="cn">TRUE</span>)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Dans ce cas, <code>arg1</code> vaudra <code>x</code>, <code>arg2</code> vaudra <code>12</code> et <code>arg3</code> vaudra <code>TRUE</code>.</p>
 <p>On peut aussi passer les arguments <em>par nom</em>&nbsp;:</p>
-<div class="cell" data-hash="14-fonctions_cache/html/unnamed-chunk-36_a96b97af95e50ad19e22f1e2ac368756">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ma_fonction</span>(<span class="at">arg1 =</span> x, <span class="at">arg2 =</span> <span class="dv">12</span>, <span class="at">arg3 =</span> <span class="cn">TRUE</span>)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Quand on passe les arguments par nom, on peut les indiquer dans l’ordre que l’on souhaite&nbsp;:</p>
-<div class="cell" data-hash="14-fonctions_cache/html/unnamed-chunk-37_042c73c72672c5b901cf36801b79a3b6">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ma_fonction</span>(<span class="at">arg1 =</span> x, <span class="at">arg3 =</span> <span class="cn">TRUE</span>, <span class="at">arg2 =</span> <span class="dv">12</span>)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Et on peut évidemment mélanger passage par position et passage par nom&nbsp;:</p>
-<div class="cell" data-hash="14-fonctions_cache/html/unnamed-chunk-38_862661f13de36d56015d371447dd9726">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ma_fonction</span>(x, <span class="dv">12</span>, <span class="at">arg3 =</span> <span class="cn">TRUE</span>)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Le plus souvent, les premiers arguments acceptés par une fonction sont les données sur lesquelles elle va travailler, tandis que les arguments suivants sont des paramètres qui vont modifier son comportement. Par exemple, <code>median</code> accepte comme premier argument <code>x</code>, un vecteur, puis un argument <code>na.rm</code> qui va changer sa manière de calculer la médiane des valeurs de <code>x</code>.</p>
@@ -863,7 +904,7 @@ Note
 <h3 data-number="14.2.2" class="anchored" data-anchor-id="valeurs-par-défaut"><span class="header-section-number">14.2.2</span> Valeurs par défaut</h3>
 <p>Au moment de la définition de la fonction, on peut indiquer une valeur par défaut qui sera prise par l’argument si la personne qui utilise la fonction n’en fournit pas.</p>
 <p>Si on reprend la fonction <code>prop_tab</code> déjà définie plus haut&nbsp;:</p>
-<div class="cell" data-hash="14-fonctions_cache/html/unnamed-chunk-39_2cf922e38dbabdcb4d1f1553c3eb19a2">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a>prop_tab <span class="ot">&lt;-</span> <span class="cf">function</span>(v, decimales, useNA) {</span>
 <span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a>  tri <span class="ot">&lt;-</span> <span class="fu">table</span>(v, <span class="at">useNA =</span> useNA)</span>
 <span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a>  tri <span class="ot">&lt;-</span> tri <span class="sc">/</span> <span class="fu">length</span>(v) <span class="sc">*</span> <span class="dv">100</span></span>
@@ -872,7 +913,7 @@ Note
 <span id="cb38-6"><a href="#cb38-6" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>On peut indiquer une valeur par défaut aux arguments <code>decimales</code> et <code>useNA</code> de la manière suivante&nbsp;:</p>
-<div class="cell" data-hash="14-fonctions_cache/html/unnamed-chunk-40_4216fd3eac99ed747ac048a831055993">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a>prop_tab <span class="ot">&lt;-</span> <span class="cf">function</span>(v, <span class="at">decimales =</span> <span class="dv">1</span>, <span class="at">useNA =</span> <span class="st">"ifany"</span>) {</span>
 <span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a>  tri <span class="ot">&lt;-</span> <span class="fu">table</span>(v, <span class="at">useNA =</span> useNA)</span>
 <span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a>  tri <span class="ot">&lt;-</span> tri <span class="sc">/</span> <span class="fu">length</span>(v) <span class="sc">*</span> <span class="dv">100</span></span>
@@ -881,7 +922,7 @@ Note
 <span id="cb39-6"><a href="#cb39-6" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Si on appelle <code>prop_tab</code> en lui passant uniquement le vecteur <code>v</code>, on voit que <code>decimales</code> vaut bien 1&nbsp;et <code>useNA</code> vaut bien `“ifany”:</p>
-<div class="cell" data-hash="14-fonctions_cache/html/unnamed-chunk-41_8055b854d511b0e95c82c8d73564c75b">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="fu">prop_tab</span>(hdv2003<span class="sc">$</span>qualif)</span>
 <span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; v</span></span>
 <span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;       Ouvrier specialise         Ouvrier qualifie               Technicien </span></span>
@@ -895,7 +936,7 @@ Note
 <section id="sec-arg-oblig" class="level3" data-number="14.2.3">
 <h3 data-number="14.2.3" class="anchored" data-anchor-id="sec-arg-oblig"><span class="header-section-number">14.2.3</span> Arguments obligatoires et arguments facultatifs</h3>
 <p>Si un argument n’a pas de valeur par défaut, il est <em>obligatoire</em> : si l’utilisateur essaye d’appeler la fonction sans définir cet argument, cela génère une erreur.</p>
-<div class="cell" data-hash="14-fonctions_cache/html/unnamed-chunk-42_e975116806d54443d1a7ed0f19cb0da6">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a>prop_tab <span class="ot">&lt;-</span> <span class="cf">function</span>(v, decimales, useNA) {</span>
 <span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a>  tri <span class="ot">&lt;-</span> <span class="fu">table</span>(v, <span class="at">useNA =</span> useNA)</span>
 <span id="cb41-3"><a href="#cb41-3" aria-hidden="true" tabindex="-1"></a>  tri <span class="ot">&lt;-</span> tri <span class="sc">/</span> <span class="fu">length</span>(v) <span class="sc">*</span> <span class="dv">100</span></span>
@@ -920,7 +961,7 @@ Note
 </div>
 </div>
 <p>Si à l’inverse un argument a une valeur par défaut, il devient <em>facultatif</em> : on peut appeler la fonction sans le définir.</p>
-<div class="cell" data-hash="14-fonctions_cache/html/unnamed-chunk-43_8216a41fd675d9401da1f89d5b5d3bcb">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a>prop_tab <span class="ot">&lt;-</span> <span class="cf">function</span>(v, <span class="at">decimales =</span> <span class="dv">1</span>, <span class="at">useNA =</span> <span class="st">"ifany"</span>) {</span>
 <span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a>  tri <span class="ot">&lt;-</span> <span class="fu">table</span>(v, <span class="at">useNA =</span> useNA)</span>
 <span id="cb42-3"><a href="#cb42-3" aria-hidden="true" tabindex="-1"></a>  tri <span class="ot">&lt;-</span> tri <span class="sc">/</span> <span class="fu">length</span>(v) <span class="sc">*</span> <span class="dv">100</span></span>
@@ -933,18 +974,18 @@ Note
 <span id="cb42-10"><a href="#cb42-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Homme Femme </span></span>
 <span id="cb42-11"><a href="#cb42-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    45    55</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>Parfois un argument est facultatif mais on n’a pas forcément de valeur par défaut à lui attribuer. Dans ce cas on lui attribue en général par défaut la valeur <code>NULL</code>, et on utilise l’instruction <code>if()</code> dans la fonction pour tester s’il a été défini ou pas. Ce cas de figure est détaillé <a href="17-if-boucles.html#sec-test-arg"><span>Section&nbsp;17.2.4</span></a>.</p>
+<p>Parfois un argument est facultatif mais on n’a pas forcément de valeur par défaut à lui attribuer. Dans ce cas on lui attribue en général par défaut la valeur <code>NULL</code>, et on utilise l’instruction <code>if()</code> dans la fonction pour tester s’il a été défini ou pas. Ce cas de figure est détaillé <a href="17-if-boucles.html#sec-test-arg" class="quarto-xref"><span>Section 17.2.4</span></a>.</p>
 </section>
 <section id="largument-..." class="level3" data-number="14.2.4">
 <h3 data-number="14.2.4" class="anchored" data-anchor-id="largument-..."><span class="header-section-number">14.2.4</span> L’argument <code>...</code></h3>
 <p>Une fonction peut prendre un argument spécial nommé <code>...</code>&nbsp;:</p>
-<div class="cell" data-hash="14-fonctions_cache/html/unnamed-chunk-44_a5231c53ac37b030aa13ce0b1cf872a5">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a>ma_fonction <span class="ot">&lt;-</span> <span class="cf">function</span>(x, <span class="at">correct =</span> <span class="cn">TRUE</span>, ...) {</span>
 <span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a>  </span>
 <span id="cb43-3"><a href="#cb43-3" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Cet argument spécial “capture” tous les arguments présents et qui n’ont pas été définis avec la fonction. Par exemple, si on appelle la fonction précédente avec&nbsp;:</p>
-<div class="cell" data-hash="14-fonctions_cache/html/unnamed-chunk-45_bd0c414ee746c3fef0c94715bc8c196e">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ma_fonction</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>, <span class="at">correct =</span> <span class="cn">FALSE</span>, <span class="at">title =</span> <span class="st">"Titre"</span>, <span class="at">size =</span> <span class="dv">12</span>)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Alors <code>...</code> contiendra les arguments <code>title</code> et <code>size</code> et leurs valeurs.</p>
@@ -962,21 +1003,21 @@ Note
 </div>
 </div>
 <p>En général <code>...</code> est utilisé pour passer ces arguments à d’autres fonctions. Reprenons notre fonction <code>my_barplot</code> définie précédemment&nbsp;:</p>
-<div class="cell" data-hash="14-fonctions_cache/html/unnamed-chunk-46_9e99ff171d8654d26375b2a81f4bd3be">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a>my_barplot <span class="ot">&lt;-</span> <span class="cf">function</span>(var) {</span>
 <span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a>  tri <span class="ot">&lt;-</span> <span class="fu">table</span>(var)</span>
 <span id="cb45-3"><a href="#cb45-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">barplot</span>(tri, <span class="at">col =</span> <span class="st">"skyblue"</span>, <span class="at">border =</span> <span class="cn">NA</span>)</span>
 <span id="cb45-4"><a href="#cb45-4" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>On pourrait permettre de personnaliser les couleurs des barres et de leurs bordures en ajoutant des arguments supplémentaires&nbsp;:</p>
-<div class="cell" data-hash="14-fonctions_cache/html/unnamed-chunk-47_2ee2f1d555d3671a633262e6c1811f87">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a>my_barplot <span class="ot">&lt;-</span> <span class="cf">function</span>(var, <span class="at">col =</span> <span class="st">"skyblue"</span>, <span class="at">border =</span> <span class="cn">NA</span>) {</span>
 <span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a>  tri <span class="ot">&lt;-</span> <span class="fu">table</span>(var)</span>
 <span id="cb46-3"><a href="#cb46-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">barplot</span>(tri, <span class="at">col =</span> col, <span class="at">border =</span> border)</span>
 <span id="cb46-4"><a href="#cb46-4" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Mais si on veut aussi permettre de personnaliser d’autres arguments de <code>barplot</code> comme <code>main</code>, <code>xlab</code>, <code>xlim</code>… il faudrait rajouter autant d’arguments supplémentaires à notre fonction, ce qui deviendrait vite ingérable. Une solution est de “capturer” tous les arguments supplémentaires avec <code>...</code> et de les passer directement à <code>barplot</code>, de cette manière&nbsp;:</p>
-<div class="cell" data-hash="14-fonctions_cache/html/unnamed-chunk-48_e2effda4ff4350e0cc2d3453995453eb">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb47"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a>my_barplot <span class="ot">&lt;-</span> <span class="cf">function</span>(var, ...) {</span>
 <span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a>  tri <span class="ot">&lt;-</span> <span class="fu">table</span>(var)</span>
 <span id="cb47-3"><a href="#cb47-3" aria-hidden="true" tabindex="-1"></a>  tri <span class="ot">&lt;-</span> <span class="fu">sort</span>(tri)</span>
@@ -984,35 +1025,39 @@ Note
 <span id="cb47-5"><a href="#cb47-5" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Ce qui permet d’appeler notre fonction avec tous les arguments possibles de <code>barplot</code>, par exemple&nbsp;:</p>
-<div class="cell" data-hash="14-fonctions_cache/html/unnamed-chunk-49_2eed7ed10df131294411e0a22a9e0fcf">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb48"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a><span class="fu">my_barplot</span>(</span>
 <span id="cb48-2"><a href="#cb48-2" aria-hidden="true" tabindex="-1"></a>  hdv2003<span class="sc">$</span>clso,</span>
 <span id="cb48-3"><a href="#cb48-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">col =</span> <span class="st">"yellowgreen"</span>,</span>
 <span id="cb48-4"><a href="#cb48-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">main =</span> <span class="st">"Croyez-vous en l'existence des classes sociales ?"</span></span>
 <span id="cb48-5"><a href="#cb48-5" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="14-fonctions_files/figure-html/unnamed-chunk-49-1.png" class="img-fluid" width="672"></p>
+<div>
+<figure class="figure">
+<p><img src="14-fonctions_files/figure-html/unnamed-chunk-49-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
 </div>
 </div>
 </section>
 <section id="sec-resfunc" class="level3" data-number="14.2.5">
 <h3 data-number="14.2.5" class="anchored" data-anchor-id="sec-resfunc"><span class="header-section-number">14.2.5</span> Résultat d’une fonction</h3>
 <p>On l’a vu, l’objectif d’une fonction est en général de renvoyer un résultat. Lors de la définition d’une fonction, le résultat peut être retourné en utilisant la fonction <code>return()</code>&nbsp;:</p>
-<div class="cell" data-hash="14-fonctions_cache/html/unnamed-chunk-50_697375bc8e80b3341036865dc0aab91a">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb49"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a>ajoute2 <span class="ot">&lt;-</span> <span class="cf">function</span>(x) {</span>
 <span id="cb49-2"><a href="#cb49-2" aria-hidden="true" tabindex="-1"></a>  res <span class="ot">&lt;-</span> x <span class="sc">+</span> <span class="dv">2</span></span>
 <span id="cb49-3"><a href="#cb49-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(res)</span>
 <span id="cb49-4"><a href="#cb49-4" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>En réalité, l’utilisation de <code>return()</code> n’est pas obligatoire&nbsp;: une fonction retourne automatiquement le résultat de la dernière instruction qu’elle exécute. On aurait donc pu écrire&nbsp;:</p>
-<div class="cell" data-hash="14-fonctions_cache/html/unnamed-chunk-51_cf2e7ffc6a59b5cc3832fc46a3aac8cf">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb50"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a>ajoute2 <span class="ot">&lt;-</span> <span class="cf">function</span>(x) {</span>
 <span id="cb50-2"><a href="#cb50-2" aria-hidden="true" tabindex="-1"></a>  res <span class="ot">&lt;-</span> x <span class="sc">+</span> <span class="dv">2</span></span>
 <span id="cb50-3"><a href="#cb50-3" aria-hidden="true" tabindex="-1"></a>  res</span>
 <span id="cb50-4"><a href="#cb50-4" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Ou même, encore mieux et plus lisible&nbsp;:</p>
-<div class="cell" data-hash="14-fonctions_cache/html/unnamed-chunk-52_7d39b20b67373b1408bda21a997d9ba7">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb51"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a>ajoute2 <span class="ot">&lt;-</span> <span class="cf">function</span>(x) {</span>
 <span id="cb51-2"><a href="#cb51-2" aria-hidden="true" tabindex="-1"></a>  x <span class="sc">+</span> <span class="dv">2</span></span>
 <span id="cb51-3"><a href="#cb51-3" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -1032,7 +1077,7 @@ Avertissement
 </div>
 <p>Un point important à noter : lorsque R rencontre une instruction <code>return()</code> dans une fonction, il interrompt immédiatement son exécution et “sort” de la fonction en renvoyant le résultat.</p>
 <p>Ainsi, dans la fonction suivante&nbsp;:</p>
-<div class="cell" data-hash="14-fonctions_cache/html/unnamed-chunk-53_64b285c97189bf843440389fe78bdbb3">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb52"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a>ajoute2 <span class="ot">&lt;-</span> <span class="cf">function</span>(x) {</span>
 <span id="cb52-2"><a href="#cb52-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(x <span class="sc">+</span> <span class="dv">2</span>)</span>
 <span id="cb52-3"><a href="#cb52-3" aria-hidden="true" tabindex="-1"></a>  x <span class="sc">*</span> <span class="dv">5</span></span>
@@ -1041,33 +1086,33 @@ Avertissement
 <p>L’instruction <code>x * 5</code> ne sera jamais exécutée car R “sort” de la fonction dès qu’il évalue le <code>return()</code> de la ligne précédente.</p>
 <p>Conséquence de ce comportement, on ne peut pas utiliser plusieurs <code>return()</code> pour renvoyer plusieurs résultats depuis une seule fonction. Est-ce à dire qu’une fonction R ne pourrait renvoyer qu’une seule valeur&nbsp;? Non, car si elle ne peut retourner qu’un seul objet, celui-ci peut être complexe et comporter plusieurs valeurs.</p>
 <p>Par exemple, on a vu précédemment une fonction rudimentaire nommée <code>indicateurs()</code> qui affiche la moyenne et l’écart-type d’un vecteur numérique.</p>
-<div class="cell" data-hash="14-fonctions_cache/html/unnamed-chunk-54_c3e05c70b8410704cc794f2912da9143">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb53"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a>indicateurs <span class="ot">&lt;-</span> <span class="cf">function</span>(v) {</span>
 <span id="cb53-2"><a href="#cb53-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>(<span class="fu">mean</span>(v))</span>
 <span id="cb53-3"><a href="#cb53-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>(<span class="fu">sd</span>(v))</span>
 <span id="cb53-4"><a href="#cb53-4" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Plutôt que de se contenter de les afficher dans la console, on pourrait vouloir retourner ces deux valeurs pour pouvoir les réutiliser par la suite. Pour cela, une première solution pourrait être de renvoyer un vecteur comportant ces deux valeurs.</p>
-<div class="cell" data-hash="14-fonctions_cache/html/unnamed-chunk-55_6ba0c85defcb857de3ecd628870e7ec1">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb54"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a>indicateurs <span class="ot">&lt;-</span> <span class="cf">function</span>(v) {</span>
 <span id="cb54-2"><a href="#cb54-2" aria-hidden="true" tabindex="-1"></a>  moyenne <span class="ot">&lt;-</span> <span class="fu">mean</span>(v)</span>
 <span id="cb54-3"><a href="#cb54-3" aria-hidden="true" tabindex="-1"></a>  ecart_type <span class="ot">&lt;-</span> <span class="fu">sd</span>(v)</span>
 <span id="cb54-4"><a href="#cb54-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">c</span>(moyenne, ecart_type)</span>
 <span id="cb54-5"><a href="#cb54-5" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div class="cell" data-hash="14-fonctions_cache/html/unnamed-chunk-56_adf4d61d57c268383ac5cdc47bf99139">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb55"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a><span class="fu">indicateurs</span>(hdv2003<span class="sc">$</span>age)</span>
 <span id="cb55-2"><a href="#cb55-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 48.15700 16.94181</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Mais dans ce cas de figure il est recommandé de retourner plutôt une liste nommée<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a>, de cette manière&nbsp;:</p>
-<div class="cell" data-hash="14-fonctions_cache/html/unnamed-chunk-57_1d17b91a0159e85be76337b2ee199c23">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb56"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true" tabindex="-1"></a>indicateurs <span class="ot">&lt;-</span> <span class="cf">function</span>(v) {</span>
 <span id="cb56-2"><a href="#cb56-2" aria-hidden="true" tabindex="-1"></a>  moyenne <span class="ot">&lt;-</span> <span class="fu">mean</span>(v)</span>
 <span id="cb56-3"><a href="#cb56-3" aria-hidden="true" tabindex="-1"></a>  ecart_type <span class="ot">&lt;-</span> <span class="fu">sd</span>(v)</span>
 <span id="cb56-4"><a href="#cb56-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">list</span>(<span class="at">moyenne =</span> moyenne, <span class="at">ecart_type =</span> ecart_type)</span>
 <span id="cb56-5"><a href="#cb56-5" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div class="cell" data-hash="14-fonctions_cache/html/unnamed-chunk-58_ce18de7ce4069c1e31ec1db3baff7fe8">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb57"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true" tabindex="-1"></a><span class="fu">indicateurs</span>(hdv2003<span class="sc">$</span>age)</span>
 <span id="cb57-2"><a href="#cb57-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $moyenne</span></span>
 <span id="cb57-3"><a href="#cb57-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 48.157</span></span>
@@ -1076,7 +1121,7 @@ Avertissement
 <span id="cb57-6"><a href="#cb57-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 16.94181</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>On a du coup un affichage un peu plus lisible, et on peut accéder aux éléments du résultat via leur nom&nbsp;:</p>
-<div class="cell" data-hash="14-fonctions_cache/html/unnamed-chunk-59_1d95a35decc71c312a93891d1d8c2aa6">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb58"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb58-1"><a href="#cb58-1" aria-hidden="true" tabindex="-1"></a>res <span class="ot">&lt;-</span> <span class="fu">indicateurs</span>(hdv2003<span class="sc">$</span>age)</span>
 <span id="cb58-2"><a href="#cb58-2" aria-hidden="true" tabindex="-1"></a>res<span class="sc">$</span>moyenne</span>
 <span id="cb58-3"><a href="#cb58-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 48.157</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -1098,7 +1143,7 @@ Avertissement
 <span id="cb59-6"><a href="#cb59-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Error in f(): object 'obj' not found</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Si on crée cet objet dans notre fonction avant de l’utiliser, on supprime évidemment l’erreur.</p>
-<div class="cell" data-hash="14-fonctions_cache/html/unnamed-chunk-62_576e77163d2865354b1d2740bf445e2c">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb60"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb60-1"><a href="#cb60-1" aria-hidden="true" tabindex="-1"></a>f <span class="ot">&lt;-</span> <span class="cf">function</span>() {</span>
 <span id="cb60-2"><a href="#cb60-2" aria-hidden="true" tabindex="-1"></a>  obj <span class="ot">&lt;-</span> <span class="dv">2</span></span>
 <span id="cb60-3"><a href="#cb60-3" aria-hidden="true" tabindex="-1"></a>  obj</span>
@@ -1108,7 +1153,7 @@ Avertissement
 <span id="cb60-7"><a href="#cb60-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 2</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Mais on peut aussi accéder depuis une fonction à un objet qui existe dans notre environnement au moment où la fonction a été appelée.</p>
-<div class="cell" data-hash="14-fonctions_cache/html/unnamed-chunk-63_2ba8f09cc32db4182c0c4499cb9101d5">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb61"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb61-1"><a href="#cb61-1" aria-hidden="true" tabindex="-1"></a>f <span class="ot">&lt;-</span> <span class="cf">function</span>() {</span>
 <span id="cb61-2"><a href="#cb61-2" aria-hidden="true" tabindex="-1"></a>  obj</span>
 <span id="cb61-3"><a href="#cb61-3" aria-hidden="true" tabindex="-1"></a>}</span>
@@ -1122,7 +1167,7 @@ Avertissement
 <section id="les-arguments-et-les-objets-créés-dans-la-fonction-sont-prioritaires" class="level3" data-number="14.3.2">
 <h3 data-number="14.3.2" class="anchored" data-anchor-id="les-arguments-et-les-objets-créés-dans-la-fonction-sont-prioritaires"><span class="header-section-number">14.3.2</span> Les arguments et les objets créés dans la fonction sont prioritaires</h3>
 <p>Que se passe-t-il si un objet avec le même nom existe à la fois dans la fonction et dans notre environnement global ? Dans ce cas <em>R privilégie l’objet créé dans la fonction</em>.</p>
-<div class="cell" data-hash="14-fonctions_cache/html/unnamed-chunk-64_4f021819e87c35fc5805af820d40592d">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb62"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb62-1"><a href="#cb62-1" aria-hidden="true" tabindex="-1"></a>f <span class="ot">&lt;-</span> <span class="cf">function</span>() {</span>
 <span id="cb62-2"><a href="#cb62-2" aria-hidden="true" tabindex="-1"></a>  obj <span class="ot">&lt;-</span> <span class="dv">10</span></span>
 <span id="cb62-3"><a href="#cb62-3" aria-hidden="true" tabindex="-1"></a>  obj</span>
@@ -1133,7 +1178,7 @@ Avertissement
 <span id="cb62-8"><a href="#cb62-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 10</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Cette règle s’applique également pour les arguments passés à la fonction.</p>
-<div class="cell" data-hash="14-fonctions_cache/html/unnamed-chunk-65_27b6f990ede904fb4e4c216e42db7c1e">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb63"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb63-1"><a href="#cb63-1" aria-hidden="true" tabindex="-1"></a>f <span class="ot">&lt;-</span> <span class="cf">function</span>(obj) {</span>
 <span id="cb63-2"><a href="#cb63-2" aria-hidden="true" tabindex="-1"></a>  obj</span>
 <span id="cb63-3"><a href="#cb63-3" aria-hidden="true" tabindex="-1"></a>}</span>
@@ -1146,7 +1191,7 @@ Avertissement
 <section id="un-objet-créé-dans-une-fonction-nexiste-que-dans-cette-fonction" class="level3" data-number="14.3.3">
 <h3 data-number="14.3.3" class="anchored" data-anchor-id="un-objet-créé-dans-une-fonction-nexiste-que-dans-cette-fonction"><span class="header-section-number">14.3.3</span> Un objet créé dans une fonction n’existe que dans cette fonction</h3>
 <p>Autre règle importante : un objet créé à l’intérieur d’une fonction n’est pas accessible à l’extérieur de celle-ci.</p>
-<div class="cell" data-hash="14-fonctions_cache/html/unnamed-chunk-66_fda4a09902390c1cc4f4961123d41721">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb64"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb64-1"><a href="#cb64-1" aria-hidden="true" tabindex="-1"></a>f <span class="ot">&lt;-</span> <span class="cf">function</span>() {</span>
 <span id="cb64-2"><a href="#cb64-2" aria-hidden="true" tabindex="-1"></a>  nouvel_objet <span class="ot">&lt;-</span> <span class="dv">15</span></span>
 <span id="cb64-3"><a href="#cb64-3" aria-hidden="true" tabindex="-1"></a>  nouvel_objet</span>
@@ -1155,7 +1200,7 @@ Avertissement
 <span id="cb64-6"><a href="#cb64-6" aria-hidden="true" tabindex="-1"></a><span class="fu">f</span>()</span>
 <span id="cb64-7"><a href="#cb64-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 15</span></span>
 <span id="cb64-8"><a href="#cb64-8" aria-hidden="true" tabindex="-1"></a>nouvel_objet</span>
-<span id="cb64-9"><a href="#cb64-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Error in eval(expr, envir, enclos): object 'nouvel_objet' not found</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb64-9"><a href="#cb64-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Error: object 'nouvel_objet' not found</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Ici, <code>nouvel_objet</code> existe tant qu’on est dans la fonction, mais il est détruit dès qu’on en sort et donc inaccessible dans notre environnement global.</p>
 <div class="callout callout-style-default callout-warning callout-titled">
@@ -1175,7 +1220,7 @@ Avertissement
 <section id="on-ne-peut-pas-modifier-un-objet-global-dans-une-fonction" class="level3" data-number="14.3.4">
 <h3 data-number="14.3.4" class="anchored" data-anchor-id="on-ne-peut-pas-modifier-un-objet-global-dans-une-fonction"><span class="header-section-number">14.3.4</span> On ne peut pas modifier un objet global dans une fonction</h3>
 <p>Une conséquence importante de la troisième règle est qu’il n’est pas possible de modifier un objet de notre environnement global depuis une fonction<a href="#fn3" class="footnote-ref" id="fnref3" role="doc-noteref"><sup>3</sup></a>&nbsp;:</p>
-<div class="cell" data-hash="14-fonctions_cache/html/unnamed-chunk-67_81b5b300f96911be22b97132b80f584d">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb65"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb65-1"><a href="#cb65-1" aria-hidden="true" tabindex="-1"></a>f <span class="ot">&lt;-</span> <span class="cf">function</span>() {</span>
 <span id="cb65-2"><a href="#cb65-2" aria-hidden="true" tabindex="-1"></a>  obj <span class="ot">&lt;-</span> <span class="dv">10</span></span>
 <span id="cb65-3"><a href="#cb65-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">message</span>(<span class="st">"Valeur dans la fonction : "</span>, obj)</span>
@@ -1194,7 +1239,7 @@ Avertissement
 <li>Lorsqu’on sort de <code>f()</code>, l’objet local contenant la valeur 10 est détruit. Il ne reste plus que l’objet global avec la valeur 3. C’est donc lui qui est affiché lors du dernier appel à <code>obj</code>.</li>
 </ol>
 <p>Pour les mêmes raisons, dans l’exemple suivant, le recodage appliqué à la variable <code>taille</code> du tableau <code>df</code> passé en argument à la fonction <code>recode_taille()</code> n’est pas conservé en-dehors de la fonction. Ce recodage n’existe que dans un tableau <code>d</code> local à la fonction, et détruit dès qu’on en est sorti.</p>
-<div class="cell" data-hash="14-fonctions_cache/html/unnamed-chunk-68_9bf1c9e72ec372afc086783f3b165059">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb66"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb66-1"><a href="#cb66-1" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">taille =</span> <span class="fu">c</span>(<span class="dv">155</span>, <span class="dv">182</span>), <span class="at">poids =</span> <span class="fu">c</span>(<span class="dv">65</span>, <span class="dv">71</span>))</span>
 <span id="cb66-2"><a href="#cb66-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb66-3"><a href="#cb66-3" aria-hidden="true" tabindex="-1"></a>recode_taille <span class="ot">&lt;-</span> <span class="cf">function</span>(d) {</span>
@@ -1210,7 +1255,7 @@ Avertissement
 <span id="cb66-13"><a href="#cb66-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2    182    71</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Si on souhaite modifier un objet global, on doit le passer comme argument en entrée de notre fonction, et le renvoyer comme résultat en sortie. Pour que le recodage précédent soit bien répercuté dans notre tableau <code>df</code>, on doit faire :</p>
-<div class="cell" data-hash="14-fonctions_cache/html/unnamed-chunk-69_3941adf76e8e4c41cde6a71bc33c0e20">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb67"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb67-1"><a href="#cb67-1" aria-hidden="true" tabindex="-1"></a>recode_taille <span class="ot">&lt;-</span> <span class="cf">function</span>(d) {</span>
 <span id="cb67-2"><a href="#cb67-2" aria-hidden="true" tabindex="-1"></a>  d<span class="sc">$</span>taille <span class="ot">&lt;-</span> d<span class="sc">$</span>taille <span class="sc">/</span> <span class="dv">100</span></span>
 <span id="cb67-3"><a href="#cb67-3" aria-hidden="true" tabindex="-1"></a>  d</span>
@@ -1229,7 +1274,7 @@ Avertissement
 <section id="les-fonctions-comme-objets" class="level2" data-number="14.4">
 <h2 data-number="14.4" class="anchored" data-anchor-id="les-fonctions-comme-objets"><span class="header-section-number">14.4</span> Les fonctions comme objets</h2>
 <p>Quand on crée une fonction, on la “nomme” en la stockant dans un objet. Cet objet peut être utilisé comme n’importe quel autre objet dans R. On peut ainsi copier une fonction en l’attribuant à un nouvel objet :</p>
-<div class="cell" data-hash="14-fonctions_cache/html/unnamed-chunk-70_d365eb32fe0d54793a7433a8f2a4bde9">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb68"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb68-1"><a href="#cb68-1" aria-hidden="true" tabindex="-1"></a>f <span class="ot">&lt;-</span> <span class="cf">function</span>(x) {</span>
 <span id="cb68-2"><a href="#cb68-2" aria-hidden="true" tabindex="-1"></a>  x <span class="sc">+</span> <span class="dv">2</span></span>
 <span id="cb68-3"><a href="#cb68-3" aria-hidden="true" tabindex="-1"></a>}</span>
@@ -1239,28 +1284,29 @@ Avertissement
 <span id="cb68-7"><a href="#cb68-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 12</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>On a déjà vu à de nombreuses reprises que quand on fournit juste un nom d’objet à R, celui-ci affiche son contenu dans la console. C’est aussi le cas pour les fonctions : dans ce cas c’est le code source de la fonction qui est affiché.</p>
-<div class="cell" data-hash="14-fonctions_cache/html/unnamed-chunk-71_97bdd7e7b691e3dee52bff40a52dd98f">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb69"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb69-1"><a href="#cb69-1" aria-hidden="true" tabindex="-1"></a>f</span>
-<span id="cb69-2"><a href="#cb69-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; function(x) {</span></span>
-<span id="cb69-3"><a href="#cb69-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   x + 2</span></span>
-<span id="cb69-4"><a href="#cb69-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; }</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb69-2"><a href="#cb69-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; function (x) </span></span>
+<span id="cb69-3"><a href="#cb69-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; {</span></span>
+<span id="cb69-4"><a href="#cb69-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;     x + 2</span></span>
+<span id="cb69-5"><a href="#cb69-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; }</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <section id="passer-des-fonctions-comme-argument" class="level3" data-number="14.4.1">
 <h3 data-number="14.4.1" class="anchored" data-anchor-id="passer-des-fonctions-comme-argument"><span class="header-section-number">14.4.1</span> Passer des fonctions comme argument</h3>
 <p>Certaines fonctions sont prévues pour s’appliquer elles-mêmes à des fonctions. Par exemple, <code>formals</code> et <code>body</code> permettent d’afficher respectivement les arguments et le corps d’une fonction passée en argument.</p>
-<div class="cell" data-hash="14-fonctions_cache/html/unnamed-chunk-72_34b897b0e0b0775973589e807a5b2d34">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb70"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb70-1"><a href="#cb70-1" aria-hidden="true" tabindex="-1"></a><span class="fu">formals</span>(f)</span>
 <span id="cb70-2"><a href="#cb70-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $x</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div class="cell" data-hash="14-fonctions_cache/html/unnamed-chunk-73_a2a59a650ff676bbdc262b21b34ff7f5">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb71"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb71-1"><a href="#cb71-1" aria-hidden="true" tabindex="-1"></a><span class="fu">body</span>(f)</span>
 <span id="cb71-2"><a href="#cb71-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; {</span></span>
 <span id="cb71-3"><a href="#cb71-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;     x + 2</span></span>
 <span id="cb71-4"><a href="#cb71-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; }</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>Il est donc possible de passer une fonction comme argument d’une autre fonction, comme dans <code>body(f)</code>. On a déjà vu un exemple de ce type de fonctionnement avec la fonction <code>tapply</code> <a href="04-bivarie.html#sec-tapply"><span>Section&nbsp;4.2.2</span></a>. Celle-ci prend trois arguments : un vecteur de valeurs, un facteur, et une fonction. Elle applique ensuite la fonction aux valeurs pour chaque niveau du facteur.</p>
+<p>Il est donc possible de passer une fonction comme argument d’une autre fonction, comme dans <code>body(f)</code>. On a déjà vu un exemple de ce type de fonctionnement avec la fonction <code>tapply</code> <a href="04-bivarie.html#sec-tapply" class="quarto-xref"><span>Section 4.2.2</span></a>. Celle-ci prend trois arguments : un vecteur de valeurs, un facteur, et une fonction. Elle applique ensuite la fonction aux valeurs pour chaque niveau du facteur.</p>
 <p>Par exemple, si on a un data frame avec une liste de fruits et leur poids :</p>
-<div class="cell" data-hash="14-fonctions_cache/html/unnamed-chunk-74_86b38cc5eb5836be8a4eb9f88292f704">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb72"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb72-1"><a href="#cb72-1" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
 <span id="cb72-2"><a href="#cb72-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">fruit =</span> <span class="fu">c</span>(<span class="st">"Pomme"</span>, <span class="st">"Pomme"</span>, <span class="st">"Citron"</span>, <span class="st">"Citron"</span>),</span>
 <span id="cb72-3"><a href="#cb72-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">poids =</span> <span class="fu">c</span>(<span class="dv">147</span>, <span class="dv">189</span>, <span class="dv">76</span>, <span class="dv">91</span>)</span>
@@ -1274,13 +1320,13 @@ Avertissement
 <span id="cb72-11"><a href="#cb72-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 4 Citron    91</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>On peut utiliser <code>tapply</code> pour calculer le poids moyen par type de fruit.</p>
-<div class="cell" data-hash="14-fonctions_cache/html/unnamed-chunk-75_54f65510a86449e0961c6d40546335f5">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb73"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb73-1"><a href="#cb73-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tapply</span>(df<span class="sc">$</span>poids, df<span class="sc">$</span>fruit, mean)</span>
 <span id="cb73-2"><a href="#cb73-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Citron  Pomme </span></span>
 <span id="cb73-3"><a href="#cb73-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   83.5  168.0</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Si on souhaite plutôt calculer le poids maximal, il suffit de passer à <code>tapply</code> la fonction <code>max</code> plutôt que la fonction <code>mean</code>.</p>
-<div class="cell" data-hash="14-fonctions_cache/html/unnamed-chunk-76_4b749c8614b548de2069bd4646c559f6">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb74"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb74-1"><a href="#cb74-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tapply</span>(df<span class="sc">$</span>poids, df<span class="sc">$</span>fruit, max)</span>
 <span id="cb74-2"><a href="#cb74-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Citron  Pomme </span></span>
 <span id="cb74-3"><a href="#cb74-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;     91    189</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -1308,19 +1354,19 @@ Avertissement
 <section id="sec-fonctions-anonymes" class="level3" data-number="14.4.2">
 <h3 data-number="14.4.2" class="anchored" data-anchor-id="sec-fonctions-anonymes"><span class="header-section-number">14.4.2</span> Fonctions anonymes</h3>
 <p>Dans le cas où on souhaite calculer quelque chose pour lequel une fonction n’existe pas déjà, on peut créer une nouvelle fonction :</p>
-<div class="cell" data-hash="14-fonctions_cache/html/unnamed-chunk-77_da43539b844f1e86ced91babf715b51f">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb75"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb75-1"><a href="#cb75-1" aria-hidden="true" tabindex="-1"></a>poids_moyen_kg <span class="ot">&lt;-</span> <span class="cf">function</span>(poids) {</span>
 <span id="cb75-2"><a href="#cb75-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mean</span>(poids <span class="sc">/</span> <span class="dv">1000</span>)</span>
 <span id="cb75-3"><a href="#cb75-3" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Et la passer en argument à <code>tapply()</code> :</p>
-<div class="cell" data-hash="14-fonctions_cache/html/unnamed-chunk-78_50d4d4e5183835911bf46c43c7953e71">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb76"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb76-1"><a href="#cb76-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tapply</span>(df<span class="sc">$</span>poids, df<span class="sc">$</span>fruit, poids_moyen_kg)</span>
 <span id="cb76-2"><a href="#cb76-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Citron  Pomme </span></span>
 <span id="cb76-3"><a href="#cb76-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 0.0835 0.1680</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Si on ne souhaite pas réutiliser cette fonction par la suite, on peut aussi définir cette fonction directement comme argument de <code>tapply</code> :</p>
-<div class="cell" data-hash="14-fonctions_cache/html/unnamed-chunk-79_cd2eeee77ec3a0bf93d71a706e2d180a">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb77"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb77-1"><a href="#cb77-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tapply</span>(df<span class="sc">$</span>poids, df<span class="sc">$</span>fruit, <span class="cf">function</span>(poids) {</span>
 <span id="cb77-2"><a href="#cb77-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mean</span>(poids<span class="sc">/</span><span class="dv">1000</span>)</span>
 <span id="cb77-3"><a href="#cb77-3" aria-hidden="true" tabindex="-1"></a>})</span>
@@ -1343,12 +1389,12 @@ Avertissement
 <p><strong>Exercice 1.1</strong></p>
 <p>Écrire une fonction nommée <code>perimetre</code> qui prend en entrée un argument nommé <code>r</code> et retourne le périmètre d’un cercle de rayon <code>r</code>, c’est-à-dire <code>2 * pi * r</code> (<code>pi</code> est un objet R qui contient la valeur de <span class="math inline">\(\pi\)</span>).</p>
 <p>Vérifier avec l’appel suivant&nbsp;:</p>
-<div class="cell" data-hash="14-fonctions_cache/html/unnamed-chunk-81_d2167f9606b0a7353807a4313f3659c6">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb78"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb78-1"><a href="#cb78-1" aria-hidden="true" tabindex="-1"></a><span class="fu">perimetre</span>(<span class="dv">4</span>)</span>
 <span id="cb78-2"><a href="#cb78-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 25.13274</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="solution-exo">
-<div class="cell" data-hash="14-fonctions_cache/html/fct11_f5251eb764b271ef6e5797a758fbc683">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb79"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb79-1"><a href="#cb79-1" aria-hidden="true" tabindex="-1"></a>perimetre <span class="ot">&lt;-</span> <span class="cf">function</span>(r) {</span>
 <span id="cb79-2"><a href="#cb79-2" aria-hidden="true" tabindex="-1"></a>  resultat <span class="ot">&lt;-</span> <span class="dv">2</span> <span class="sc">*</span> pi <span class="sc">*</span> r</span>
 <span id="cb79-3"><a href="#cb79-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(resultat)</span>
@@ -1358,12 +1404,12 @@ Avertissement
 <p><strong>Exercice 1.2</strong></p>
 <p>Écrire une fonction <code>etendue</code> qui prend en entrée un vecteur numérique et retourne la différence entre la valeur maximale et la valeur minimale de ce vecteur.</p>
 <p>Vérifier avec l’appel suivant&nbsp;:</p>
-<div class="cell" data-hash="14-fonctions_cache/html/unnamed-chunk-83_3ab4ae0e387a74d8f6752016ea192140">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb80"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb80-1"><a href="#cb80-1" aria-hidden="true" tabindex="-1"></a><span class="fu">etendue</span>(<span class="fu">c</span>(<span class="dv">18</span>, <span class="dv">35</span>, <span class="dv">21</span>, <span class="dv">40</span>))</span>
 <span id="cb80-2"><a href="#cb80-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 22</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="solution-exo">
-<div class="cell" data-hash="14-fonctions_cache/html/fct12_63872141b559a2f4d45bf61b83aa5886">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb81"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb81-1"><a href="#cb81-1" aria-hidden="true" tabindex="-1"></a>etendue <span class="ot">&lt;-</span> <span class="cf">function</span>(v) {</span>
 <span id="cb81-2"><a href="#cb81-2" aria-hidden="true" tabindex="-1"></a>  vmax <span class="ot">&lt;-</span> <span class="fu">max</span>(v)</span>
 <span id="cb81-3"><a href="#cb81-3" aria-hidden="true" tabindex="-1"></a>  vmin <span class="ot">&lt;-</span> <span class="fu">min</span>(v)</span>
@@ -1374,7 +1420,7 @@ Avertissement
 <p><strong>Exercice 1.3</strong></p>
 <p>Écrire une fonction nommée <code>alea</code> qui accepte un argument <code>n</code>, génère un vecteur de <code>n</code> valeurs aléatoires entre 0 et 1 avec la fonction <code>runif(n)</code> et retourne ce vecteur comme résultat.</p>
 <div class="solution-exo">
-<div class="cell" data-hash="14-fonctions_cache/html/unnamed-chunk-84_6e5697d683e8967a7389eee784898a32">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb82"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb82-1"><a href="#cb82-1" aria-hidden="true" tabindex="-1"></a>alea <span class="ot">&lt;-</span> <span class="cf">function</span>(n) {</span>
 <span id="cb82-2"><a href="#cb82-2" aria-hidden="true" tabindex="-1"></a>  v <span class="ot">&lt;-</span> <span class="fu">runif</span>(n)</span>
 <span id="cb82-3"><a href="#cb82-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(v)</span>
@@ -1383,7 +1429,7 @@ Avertissement
 </div>
 <p>Modifier la fonction pour qu’elle accepte deux arguments supplémentaires <code>min</code> et <code>max</code> et qu’elle retourne un vecteur de <code>n</code> valeurs aléatoires comprises entre <code>min</code> et <code>max</code> avec la fonction <code>runif(n, min, max)</code>.</p>
 <div class="solution-exo">
-<div class="cell" data-hash="14-fonctions_cache/html/unnamed-chunk-85_3deb5904d15b0182417045f04d10d88f">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb83"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb83-1"><a href="#cb83-1" aria-hidden="true" tabindex="-1"></a>alea <span class="ot">&lt;-</span> <span class="cf">function</span>(n, min, max) {</span>
 <span id="cb83-2"><a href="#cb83-2" aria-hidden="true" tabindex="-1"></a>  v <span class="ot">&lt;-</span> <span class="fu">runif</span>(n, min, max)</span>
 <span id="cb83-3"><a href="#cb83-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(v)</span>
@@ -1392,15 +1438,15 @@ Avertissement
 </div>
 <p>Modifier à nouveau la fonction pour qu’elle retourne un vecteur de <code>n</code> nombres <em>entiers</em> aléatoires compris entre <code>min</code> et <code>max</code> en appliquant la fonction <code>trunc()</code> au vecteur généré par <code>runif()</code>.</p>
 <p>Vérifier le résultat avec :</p>
-<div class="cell" data-hash="14-fonctions_cache/html/unnamed-chunk-87_a8b4f204f25ba39511d24b2e6636d8ab">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb84"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb84-1"><a href="#cb84-1" aria-hidden="true" tabindex="-1"></a>v <span class="ot">&lt;-</span> <span class="fu">alea</span>(<span class="dv">10000</span>, <span class="dv">1</span>, <span class="dv">6</span>)</span>
 <span id="cb84-2"><a href="#cb84-2" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(v)</span>
 <span id="cb84-3"><a href="#cb84-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; v</span></span>
 <span id="cb84-4"><a href="#cb84-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    1    2    3    4    5    6 </span></span>
-<span id="cb84-5"><a href="#cb84-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1684 1579 1682 1715 1677 1663</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb84-5"><a href="#cb84-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1594 1648 1753 1622 1633 1750</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="solution-exo">
-<div class="cell" data-hash="14-fonctions_cache/html/fct13_28b645a12b922ad76b7c5784fd2977ed">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb85"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb85-1"><a href="#cb85-1" aria-hidden="true" tabindex="-1"></a>alea <span class="ot">&lt;-</span> <span class="cf">function</span>(n, min, max) {</span>
 <span id="cb85-2"><a href="#cb85-2" aria-hidden="true" tabindex="-1"></a>  v <span class="ot">&lt;-</span> <span class="fu">runif</span>(n, min, max <span class="sc">+</span> <span class="dv">1</span>)</span>
 <span id="cb85-3"><a href="#cb85-3" aria-hidden="true" tabindex="-1"></a>  v <span class="ot">&lt;-</span> <span class="fu">trunc</span>(v)</span>
@@ -1410,13 +1456,13 @@ Avertissement
 </div>
 <p><strong>Exercice 1.4</strong></p>
 <p>Écrire une fonction nommée <code>meteo</code> qui prend un argument nommé <code>ville</code> avec le corps suivant :</p>
-<div class="cell" data-hash="14-fonctions_cache/html/unnamed-chunk-88_4515fa57977b1db2a7ebc924243ba7e1">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb86"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb86-1"><a href="#cb86-1" aria-hidden="true" tabindex="-1"></a>out <span class="ot">&lt;-</span> <span class="fu">readLines</span>(<span class="fu">paste0</span>(<span class="st">"https://v2.wttr.in/"</span>, ville, <span class="st">"?A"</span>))</span>
 <span id="cb86-2"><a href="#cb86-2" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(out, <span class="at">sep =</span> <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Tester la fonction avec par exemple <code>meteo("Lyon")</code> (il est possible que l’affichage dans la console ne soit pas lisible si vous travaillez sous Windows).</p>
 <div class="solution-exo">
-<div class="cell" data-hash="14-fonctions_cache/html/unnamed-chunk-89_c65dca8780254e5fc37ffc892dbf6b4c">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb87"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb87-1"><a href="#cb87-1" aria-hidden="true" tabindex="-1"></a>meteo <span class="ot">&lt;-</span> <span class="cf">function</span>(ville) {</span>
 <span id="cb87-2"><a href="#cb87-2" aria-hidden="true" tabindex="-1"></a>  out <span class="ot">&lt;-</span> <span class="fu">readLines</span>(<span class="fu">paste0</span>(<span class="st">"https://v2.wttr.in/"</span>, ville, <span class="st">"?A"</span>))</span>
 <span id="cb87-3"><a href="#cb87-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cat</span>(out, <span class="at">sep =</span> <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)</span>
@@ -1425,7 +1471,7 @@ Avertissement
 </div>
 <p><strong>Exercice 1.5</strong></p>
 <p>Soit le code suivant, qui recode une variable du jeu de données <code>hdv2003</code> en utilisant <code>str_to_lower()</code> puis <code>fct_recode()</code> :</p>
-<div class="cell" data-hash="14-fonctions_cache/html/unnamed-chunk-90_ed7d1b5c5b16c08fb41d592f6446bd0d">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb88"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb88-1"><a href="#cb88-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(questionr)</span>
 <span id="cb88-2"><a href="#cb88-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
 <span id="cb88-3"><a href="#cb88-3" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(hdv2003)</span>
@@ -1435,7 +1481,7 @@ Avertissement
 </div>
 <p>Transformer ce code en une fonction nommée <code>recode_oui_non</code>, et appliquer cette fonction à <code>hard.rock</code>, <code>lecture.bd</code> et <code>cuisine</code>.</p>
 <div class="solution-exo">
-<div class="cell" data-hash="14-fonctions_cache/html/unnamed-chunk-91_25dc8ab768e643438a2d8dfaedb0cc0c">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb89"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb89-1"><a href="#cb89-1" aria-hidden="true" tabindex="-1"></a>recode_oui_non <span class="ot">&lt;-</span> <span class="cf">function</span>(var) {</span>
 <span id="cb89-2"><a href="#cb89-2" aria-hidden="true" tabindex="-1"></a>  var_rec <span class="ot">&lt;-</span> <span class="fu">str_to_lower</span>(var)</span>
 <span id="cb89-3"><a href="#cb89-3" aria-hidden="true" tabindex="-1"></a>  var_rec <span class="ot">&lt;-</span> <span class="fu">fct_recode</span>(var_rec, <span class="st">"o"</span> <span class="ot">=</span> <span class="st">"oui"</span>, <span class="st">"n"</span> <span class="ot">=</span> <span class="st">"non"</span>)</span>
@@ -1452,7 +1498,7 @@ Avertissement
 <h3 data-number="14.6.2" class="anchored" data-anchor-id="arguments-et-résultat"><span class="header-section-number">14.6.2</span> Arguments et résultat</h3>
 <p><strong>Exercice 2.1</strong></p>
 <p>Observer le code de la fonction suivante pour comprendre à quoi correspondent chacun de ses trois arguments, puis réordonner et renommer ces arguments de manière plus pertinente :</p>
-<div class="cell" data-hash="14-fonctions_cache/html/unnamed-chunk-92_9574308e8521105be7e2910beb0557a7">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb90"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb90-1"><a href="#cb90-1" aria-hidden="true" tabindex="-1"></a>moyenne_arrondie <span class="ot">&lt;-</span> <span class="cf">function</span>(d, vecteur_contenant_les_donnees, supprimer_les_na) {</span>
 <span id="cb90-2"><a href="#cb90-2" aria-hidden="true" tabindex="-1"></a>  res <span class="ot">&lt;-</span> <span class="fu">mean</span>(vecteur_contenant_les_donnees, <span class="at">na.rm =</span> supprimer_les_na)</span>
 <span id="cb90-3"><a href="#cb90-3" aria-hidden="true" tabindex="-1"></a>  res <span class="ot">&lt;-</span> <span class="fu">round</span>(res, d)</span>
@@ -1460,7 +1506,7 @@ Avertissement
 <span id="cb90-5"><a href="#cb90-5" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="solution-exo">
-<div class="cell" data-hash="14-fonctions_cache/html/unnamed-chunk-93_b7f929eedfbb1468efd866c9fb49b759">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb91"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb91-1"><a href="#cb91-1" aria-hidden="true" tabindex="-1"></a>moyenne_arrondie <span class="ot">&lt;-</span> <span class="cf">function</span>(v, decimales, na.rm) {</span>
 <span id="cb91-2"><a href="#cb91-2" aria-hidden="true" tabindex="-1"></a>  res <span class="ot">&lt;-</span> <span class="fu">mean</span>(v, <span class="at">na.rm =</span> na.rm)</span>
 <span id="cb91-3"><a href="#cb91-3" aria-hidden="true" tabindex="-1"></a>  res <span class="ot">&lt;-</span> <span class="fu">round</span>(res, decimales)</span>
@@ -1470,7 +1516,7 @@ Avertissement
 </div>
 <p>Donner aux arguments de la fonction une valeur par défaut.</p>
 <div class="solution-exo">
-<div class="cell" data-hash="14-fonctions_cache/html/unnamed-chunk-94_bb99d4a4f042b270ad6353ddbd00e699">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb92"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb92-1"><a href="#cb92-1" aria-hidden="true" tabindex="-1"></a>moyenne_arrondie <span class="ot">&lt;-</span> <span class="cf">function</span>(v, <span class="at">decimales =</span> <span class="dv">2</span>, <span class="at">na.rm =</span> <span class="cn">TRUE</span>) {</span>
 <span id="cb92-2"><a href="#cb92-2" aria-hidden="true" tabindex="-1"></a>  res <span class="ot">&lt;-</span> <span class="fu">mean</span>(v, <span class="at">na.rm =</span> na.rm)</span>
 <span id="cb92-3"><a href="#cb92-3" aria-hidden="true" tabindex="-1"></a>  res <span class="ot">&lt;-</span> <span class="fu">round</span>(res, decimales)</span>
@@ -1480,7 +1526,7 @@ Avertissement
 </div>
 <p>Simplifier la fonction en utilisant la syntaxe plus compacte qui ne fait pas appel à <code>return()</code>.</p>
 <div class="solution-exo">
-<div class="cell" data-hash="14-fonctions_cache/html/unnamed-chunk-95_9bd01896b134ccbb96c76ab4c7e642fd">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb93"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb93-1"><a href="#cb93-1" aria-hidden="true" tabindex="-1"></a>moyenne_arrondie <span class="ot">&lt;-</span> <span class="cf">function</span>(v, <span class="at">decimales =</span> <span class="dv">2</span>, <span class="at">na.rm =</span> <span class="cn">TRUE</span>) {</span>
 <span id="cb93-2"><a href="#cb93-2" aria-hidden="true" tabindex="-1"></a>  res <span class="ot">&lt;-</span> <span class="fu">mean</span>(v, <span class="at">na.rm =</span> na.rm)</span>
 <span id="cb93-3"><a href="#cb93-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">round</span>(res, decimales)</span>
@@ -1489,7 +1535,7 @@ Avertissement
 </div>
 <p><strong>Exercice 2.2</strong></p>
 <p>Simplifier la fonction suivante pour que son corps ne fasse plus qu’une seule ligne :</p>
-<div class="cell" data-hash="14-fonctions_cache/html/unnamed-chunk-96_3ecd9f3a8e46af51929288948bbdf7f0">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb94"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb94-1"><a href="#cb94-1" aria-hidden="true" tabindex="-1"></a>centrer_reduire <span class="ot">&lt;-</span> <span class="cf">function</span>(x) {</span>
 <span id="cb94-2"><a href="#cb94-2" aria-hidden="true" tabindex="-1"></a>  res <span class="ot">&lt;-</span> x <span class="sc">-</span> <span class="fu">mean</span>(x)</span>
 <span id="cb94-3"><a href="#cb94-3" aria-hidden="true" tabindex="-1"></a>  res <span class="ot">&lt;-</span> res <span class="sc">/</span> <span class="fu">sd</span>(x)</span>
@@ -1497,7 +1543,7 @@ Avertissement
 <span id="cb94-5"><a href="#cb94-5" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="solution-exo">
-<div class="cell" data-hash="14-fonctions_cache/html/unnamed-chunk-97_a9ca6c6ab9d4fa303fbcfd53eeaca0fd">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb95"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb95-1"><a href="#cb95-1" aria-hidden="true" tabindex="-1"></a>centrer_reduire <span class="ot">&lt;-</span> <span class="cf">function</span>(x) {</span>
 <span id="cb95-2"><a href="#cb95-2" aria-hidden="true" tabindex="-1"></a>  (x <span class="sc">-</span> <span class="fu">mean</span>(x)) <span class="sc">/</span> <span class="fu">sd</span>(x)</span>
 <span id="cb95-3"><a href="#cb95-3" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -1505,12 +1551,12 @@ Avertissement
 </div>
 <p><strong>Exercice 2.3</strong></p>
 <p>Le code suivant permet de déterminer la lettre initiale et la longueur d’un mot.</p>
-<div class="cell" data-hash="14-fonctions_cache/html/unnamed-chunk-98_28f394138ae098d26d64446cb1cb6652">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb96"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb96-1"><a href="#cb96-1" aria-hidden="true" tabindex="-1"></a>initiale <span class="ot">&lt;-</span> <span class="fu">str_sub</span>(mot, <span class="dv">1</span>, <span class="dv">1</span>)</span>
 <span id="cb96-2"><a href="#cb96-2" aria-hidden="true" tabindex="-1"></a>longueur <span class="ot">&lt;-</span> <span class="fu">nchar</span>(mot)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Utiliser ce code pour créer une fonction <code>caracteristiques_mot()</code> qui prend un argument <code>mot</code> et retourne à la fois son initiale et sa longueur.</p>
-<div class="cell" data-hash="14-fonctions_cache/html/unnamed-chunk-100_06494250af3bce2aca7ec88b571b7da1">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb97"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb97-1"><a href="#cb97-1" aria-hidden="true" tabindex="-1"></a><span class="fu">caracteristiques_mot</span>(<span class="st">"Bidonnage"</span>)</span>
 <span id="cb97-2"><a href="#cb97-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $initiale</span></span>
 <span id="cb97-3"><a href="#cb97-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] "B"</span></span>
@@ -1519,7 +1565,7 @@ Avertissement
 <span id="cb97-6"><a href="#cb97-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 9</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="solution-exo">
-<div class="cell" data-hash="14-fonctions_cache/html/fct23_bc669a4b597378615270ae952ba8dafd">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb98"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb98-1"><a href="#cb98-1" aria-hidden="true" tabindex="-1"></a>caracteristiques_mot <span class="ot">&lt;-</span> <span class="cf">function</span>(mot) {</span>
 <span id="cb98-2"><a href="#cb98-2" aria-hidden="true" tabindex="-1"></a>  initiale <span class="ot">&lt;-</span> <span class="fu">str_sub</span>(mot, <span class="dv">1</span>, <span class="dv">1</span>)</span>
 <span id="cb98-3"><a href="#cb98-3" aria-hidden="true" tabindex="-1"></a>  longueur <span class="ot">&lt;-</span> <span class="fu">nchar</span>(mot)</span>
@@ -1536,7 +1582,7 @@ Avertissement
 <h3 data-number="14.6.3" class="anchored" data-anchor-id="portée-des-variables-1"><span class="header-section-number">14.6.3</span> Portée des variables</h3>
 <p><strong>Exercice 3.1</strong></p>
 <p>En lisant les codes suivants, essayer de prévoir quelle va être la valeur affichée par la dernière ligne. Vérifier en exécutant le code :</p>
-<div class="cell" data-hash="14-fonctions_cache/html/unnamed-chunk-101_bcb1228156ce660a0597b13d575e35de">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb99"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb99-1"><a href="#cb99-1" aria-hidden="true" tabindex="-1"></a>f <span class="ot">&lt;-</span> <span class="cf">function</span>() {</span>
 <span id="cb99-2"><a href="#cb99-2" aria-hidden="true" tabindex="-1"></a>  x <span class="ot">&lt;-</span> <span class="dv">3</span></span>
 <span id="cb99-3"><a href="#cb99-3" aria-hidden="true" tabindex="-1"></a>  x</span>
@@ -1544,7 +1590,7 @@ Avertissement
 <span id="cb99-5"><a href="#cb99-5" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb99-6"><a href="#cb99-6" aria-hidden="true" tabindex="-1"></a><span class="fu">f</span>()</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div class="cell" data-hash="14-fonctions_cache/html/unnamed-chunk-102_d126c8f3026f5adbb2952e7058f15710">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb100"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb100-1"><a href="#cb100-1" aria-hidden="true" tabindex="-1"></a>f <span class="ot">&lt;-</span> <span class="cf">function</span>() {</span>
 <span id="cb100-2"><a href="#cb100-2" aria-hidden="true" tabindex="-1"></a>  x</span>
 <span id="cb100-3"><a href="#cb100-3" aria-hidden="true" tabindex="-1"></a>}</span>
@@ -1552,7 +1598,7 @@ Avertissement
 <span id="cb100-5"><a href="#cb100-5" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="dv">5</span></span>
 <span id="cb100-6"><a href="#cb100-6" aria-hidden="true" tabindex="-1"></a><span class="fu">f</span>()</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div class="cell" data-hash="14-fonctions_cache/html/unnamed-chunk-103_96bec488b2f379684e6a5bf78e899b81">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb101"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb101-1"><a href="#cb101-1" aria-hidden="true" tabindex="-1"></a>f <span class="ot">&lt;-</span> <span class="cf">function</span>(x) {</span>
 <span id="cb101-2"><a href="#cb101-2" aria-hidden="true" tabindex="-1"></a>  x</span>
 <span id="cb101-3"><a href="#cb101-3" aria-hidden="true" tabindex="-1"></a>}</span>
@@ -1560,7 +1606,7 @@ Avertissement
 <span id="cb101-5"><a href="#cb101-5" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="dv">5</span></span>
 <span id="cb101-6"><a href="#cb101-6" aria-hidden="true" tabindex="-1"></a><span class="fu">f</span>(<span class="dv">30</span>)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div class="cell" data-hash="14-fonctions_cache/html/unnamed-chunk-104_158690b7fa362520dd1d254429418f7a">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb102"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb102-1"><a href="#cb102-1" aria-hidden="true" tabindex="-1"></a>f <span class="ot">&lt;-</span> <span class="cf">function</span>(<span class="at">x =</span> <span class="dv">100</span>) {</span>
 <span id="cb102-2"><a href="#cb102-2" aria-hidden="true" tabindex="-1"></a>  x</span>
 <span id="cb102-3"><a href="#cb102-3" aria-hidden="true" tabindex="-1"></a>}</span>
@@ -1568,7 +1614,7 @@ Avertissement
 <span id="cb102-5"><a href="#cb102-5" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="dv">5</span></span>
 <span id="cb102-6"><a href="#cb102-6" aria-hidden="true" tabindex="-1"></a><span class="fu">f</span>()</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div class="cell" data-hash="14-fonctions_cache/html/unnamed-chunk-105_569f846beafaa29ac549179fa351fb5f">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb103"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb103-1"><a href="#cb103-1" aria-hidden="true" tabindex="-1"></a>f <span class="ot">&lt;-</span> <span class="cf">function</span>(<span class="at">x =</span> <span class="dv">100</span>) {</span>
 <span id="cb103-2"><a href="#cb103-2" aria-hidden="true" tabindex="-1"></a>  x <span class="ot">&lt;-</span> <span class="dv">150</span></span>
 <span id="cb103-3"><a href="#cb103-3" aria-hidden="true" tabindex="-1"></a>  x</span>
@@ -1577,7 +1623,7 @@ Avertissement
 <span id="cb103-6"><a href="#cb103-6" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="dv">5</span></span>
 <span id="cb103-7"><a href="#cb103-7" aria-hidden="true" tabindex="-1"></a><span class="fu">f</span>(<span class="dv">30</span>)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div class="cell" data-hash="14-fonctions_cache/html/unnamed-chunk-106_a54931e7aa51cdbc7710e515fd9394e2">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb104"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb104-1"><a href="#cb104-1" aria-hidden="true" tabindex="-1"></a>f <span class="ot">&lt;-</span> <span class="cf">function</span>() {</span>
 <span id="cb104-2"><a href="#cb104-2" aria-hidden="true" tabindex="-1"></a>  x <span class="ot">&lt;-</span> <span class="dv">5</span></span>
 <span id="cb104-3"><a href="#cb104-3" aria-hidden="true" tabindex="-1"></a>}</span>
@@ -1588,7 +1634,7 @@ Avertissement
 </div>
 <p><strong>Exercice 3.2</strong></p>
 <p>Dans le code suivant, on a essayé de créer une fonction qui modifie un tableau de données passé en argument pour ne conserver que les lignes correspondant aux pommes. Est-ce que ça fonctionne ?</p>
-<div class="cell" data-hash="14-fonctions_cache/html/unnamed-chunk-107_e5037525b1bcc6c4105e5ef46a063b80">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb105"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb105-1"><a href="#cb105-1" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
 <span id="cb105-2"><a href="#cb105-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">fruit =</span> <span class="fu">c</span>(<span class="st">"Pomme"</span>, <span class="st">"Pomme"</span>, <span class="st">"Citron"</span>, <span class="st">"Citron"</span>),</span>
 <span id="cb105-3"><a href="#cb105-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">poids =</span> <span class="fu">c</span>(<span class="dv">147</span>, <span class="dv">189</span>, <span class="dv">76</span>, <span class="dv">91</span>)</span>
@@ -1603,7 +1649,7 @@ Avertissement
 </div>
 <p>Modifier le code pour obtenir le résultat souhaité.</p>
 <div class="solution-exo">
-<div class="cell" data-hash="14-fonctions_cache/html/unnamed-chunk-108_834d46b36408c54ad2c808618c5cb98a">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb106"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb106-1"><a href="#cb106-1" aria-hidden="true" tabindex="-1"></a>filtre_pommes <span class="ot">&lt;-</span> <span class="cf">function</span>(d) {</span>
 <span id="cb106-2"><a href="#cb106-2" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">filter</span>(d, fruit <span class="sc">==</span> <span class="st">"Pomme"</span>)</span>
 <span id="cb106-3"><a href="#cb106-3" aria-hidden="true" tabindex="-1"></a>}</span>
@@ -1618,7 +1664,7 @@ Avertissement
 <p><strong>Exercice 4.1</strong></p>
 <p>Écrire une fonction nommée <code>bonjour</code> qui ne prend aucun argument et affiche juste le texte “Bonjour !” dans la console.</p>
 <div class="solution-exo">
-<div class="cell" data-hash="14-fonctions_cache/html/unnamed-chunk-109_5dcb071ea0d326edb74c961990616b65">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb107"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb107-1"><a href="#cb107-1" aria-hidden="true" tabindex="-1"></a>bonjour <span class="ot">&lt;-</span> <span class="cf">function</span>() {</span>
 <span id="cb107-2"><a href="#cb107-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cat</span>(<span class="st">"Bonjour !"</span>)</span>
 <span id="cb107-3"><a href="#cb107-3" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -1632,7 +1678,7 @@ Avertissement
 <p>Comprenez-vous la différence entre les deux ?</p>
 <p>Copier la fonction dans un nouvel objet nommé <code>salut</code>. Exécuter la nouvelle fonction ainsi créée.</p>
 <div class="solution-exo">
-<div class="cell" data-hash="14-fonctions_cache/html/unnamed-chunk-110_cde3ffe3c6d7516d99181210dfde6549">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb108"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb108-1"><a href="#cb108-1" aria-hidden="true" tabindex="-1"></a>salut <span class="ot">&lt;-</span> bonjour</span>
 <span id="cb108-2"><a href="#cb108-2" aria-hidden="true" tabindex="-1"></a><span class="fu">salut</span>()</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
@@ -1640,14 +1686,14 @@ Avertissement
 <p><strong>Exercice 4.2</strong></p>
 <p>Construire une fonction <code>etendue()</code> qui prend en entrée un vecteur numérique et retourne la différence entre la valeur maximale et la valeur minimale de ce vecteur (vous pouvez récupérer le code de l’exercice 1.2).</p>
 <div class="solution-exo">
-<div class="cell" data-hash="14-fonctions_cache/html/unnamed-chunk-111_a64e68404e0206c8e79c714744128158">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb109"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb109-1"><a href="#cb109-1" aria-hidden="true" tabindex="-1"></a>etendue <span class="ot">&lt;-</span> <span class="cf">function</span>(v) {</span>
 <span id="cb109-2"><a href="#cb109-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">max</span>(v) <span class="sc">-</span> <span class="fu">min</span>(v)</span>
 <span id="cb109-3"><a href="#cb109-3" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div>
 <p>À l’aide de <code>tapply()</code>, appliquez la fonction <code>etendue()</code> à la variable <code>age</code> pour chaque valeur de <code>qualif</code> dans le jeu de données <code>hdv2003</code>.</p>
-<div class="cell" data-hash="14-fonctions_cache/html/unnamed-chunk-112_b14e66cc24454e41fdd9d803a2e91bd7">
+<div class="cell">
 <pre><code>#&gt;       Ouvrier specialise         Ouvrier qualifie               Technicien 
 #&gt;                       74                       68                       62 
 #&gt; Profession intermediaire                    Cadre                  Employe 
@@ -1656,7 +1702,7 @@ Avertissement
 #&gt;                       78</code></pre>
 </div>
 <div class="solution-exo">
-<div class="cell" data-hash="14-fonctions_cache/html/fct42_99c81e2d140835137fdf4cccdfabb07a">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb111"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb111-1"><a href="#cb111-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(questionr)</span>
 <span id="cb111-2"><a href="#cb111-2" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(hdv2003)</span>
 <span id="cb111-3"><a href="#cb111-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -1665,7 +1711,7 @@ Avertissement
 </div>
 <p>Réécrire le code précédent en utilisant une fonction anonyme (<em>ie</em> en définissant la fonction directement dans le <code>tapply</code>).</p>
 <div class="solution-exo">
-<div class="cell" data-hash="14-fonctions_cache/html/unnamed-chunk-113_0d432bb7054f0e3793cbce5c0511b7f3">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb112"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb112-1"><a href="#cb112-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tapply</span>(hdv2003<span class="sc">$</span>age, hdv2003<span class="sc">$</span>qualif, <span class="cf">function</span>(v) {</span>
 <span id="cb112-2"><a href="#cb112-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">max</span>(v) <span class="sc">-</span> <span class="fu">min</span>(v)</span>
 <span id="cb112-3"><a href="#cb112-3" aria-hidden="true" tabindex="-1"></a>})</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -1673,7 +1719,7 @@ Avertissement
 </div>
 <p><strong>Exercice 4.3</strong></p>
 <p>Exécutez le code suivant. Comprenez-vous les résultats obtenus ?</p>
-<div class="cell" data-hash="14-fonctions_cache/html/unnamed-chunk-114_ba717cff07538e0ba7afa14a8c06363a">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb113"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb113-1"><a href="#cb113-1" aria-hidden="true" tabindex="-1"></a>f <span class="ot">&lt;-</span> <span class="cf">function</span>(y) {</span>
 <span id="cb113-2"><a href="#cb113-2" aria-hidden="true" tabindex="-1"></a>  y <span class="sc">*</span> <span class="dv">4</span></span>
 <span id="cb113-3"><a href="#cb113-3" aria-hidden="true" tabindex="-1"></a>}</span>
@@ -1693,8 +1739,8 @@ Avertissement
 <section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes">
 <hr>
 <ol>
-<li id="fn1"><p>Le jeu de données <code>hdv2003</code> fait partie de l’extension <code>questionr</code>, il est décrit <a href="22-ressources.html#sec-hdv2003"><span>Section&nbsp;A.3.2.2</span></a>.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-<li id="fn2"><p>Les listes seront abordées un peu plus en détail <a href="16-structures-donnees.html#sec-listes"><span>Section&nbsp;16.2</span></a>.<a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn1"><p>Le jeu de données <code>hdv2003</code> fait partie de l’extension <code>questionr</code>, il est décrit <a href="22-ressources.html#sec-hdv2003" class="quarto-xref"><span>Section A.3.2.2</span></a>.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn2"><p>Les listes seront abordées un peu plus en détail <a href="16-structures-donnees.html#sec-listes" class="quarto-xref"><span>Section 16.2</span></a>.<a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 <li id="fn3"><p>En réalité c’est possible avec l’opérateur <code>&lt;&lt;-</code>, mais c’est fortement déconseillé dans la très grande majorité des cas.<a href="#fnref3" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 </ol>
 </section>
@@ -1741,6 +1787,33 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       } else {
         el.classList.add('notransition');
       }
+    }
+  }
+  const toggleGiscusIfUsed = (isAlternate, darkModeDefault) => {
+    const baseTheme = document.querySelector('#giscus-base-theme')?.value ?? 'light';
+    const alternateTheme = document.querySelector('#giscus-alt-theme')?.value ?? 'dark';
+    let newTheme = '';
+    if(darkModeDefault) {
+      newTheme = isAlternate ? baseTheme : alternateTheme;
+    } else {
+      newTheme = isAlternate ? alternateTheme : baseTheme;
+    }
+    const changeGiscusTheme = () => {
+      // From: https://github.com/giscus/giscus/issues/336
+      const sendMessage = (message) => {
+        const iframe = document.querySelector('iframe.giscus-frame');
+        if (!iframe) return;
+        iframe.contentWindow.postMessage({ giscus: message }, 'https://giscus.app');
+      }
+      sendMessage({
+        setConfig: {
+          theme: newTheme
+        }
+      });
+    }
+    const isGiscussLoaded = window.document.querySelector('iframe.giscus-frame') !== null;
+    if (isGiscussLoaded) {
+      changeGiscusTheme();
     }
   }
   const toggleColorMode = (alternate) => {
@@ -1809,13 +1882,15 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       return localAlternateSentinel;
     }
   }
-  let localAlternateSentinel = 'default';
+  const darkModeDefault = false;
+  let localAlternateSentinel = darkModeDefault ? 'alternate' : 'default';
   // Dark / light mode switch
   window.quartoToggleColorScheme = () => {
     // Read the current dark / light value 
     let toAlternate = !hasAlternateSentinel();
     toggleColorMode(toAlternate);
     setStyleSentinel(toAlternate);
+    toggleGiscusIfUsed(toAlternate, darkModeDefault);
   };
   // Ensure there is a toggle, if there isn't float one in the top right
   if (window.document.querySelector('.quarto-color-scheme-toggle') === null) {
@@ -1850,18 +1925,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     }
     return false;
   }
-  const clipboard = new window.ClipboardJS('.code-copy-button', {
-    text: function(trigger) {
-      const codeEl = trigger.previousElementSibling.cloneNode(true);
-      for (const childEl of codeEl.children) {
-        if (isCodeAnnotation(childEl)) {
-          childEl.remove();
-        }
-      }
-      return codeEl.innerText;
-    }
-  });
-  clipboard.on('success', function(e) {
+  const onCopySuccess = function(e) {
     // button target
     const button = e.trigger;
     // don't keep focus
@@ -1893,11 +1957,48 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     }, 1000);
     // clear code selection
     e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
   });
-  function tippyHover(el, contentFn) {
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
     const config = {
       allowHTML: true,
-      content: contentFn,
       maxWidth: 500,
       delay: 100,
       arrow: false,
@@ -1907,8 +2008,17 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       interactive: true,
       interactiveBorder: 10,
       theme: 'quarto',
-      placement: 'bottom-start'
+      placement: 'bottom-start',
     };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
     window.tippy(el, config); 
   }
   const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
@@ -1920,7 +2030,129 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       try { href = new URL(href).hash; } catch {}
       const id = href.replace(/^#\/?/, "");
       const note = window.document.getElementById(id);
-      return note.innerHTML;
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
     });
   }
       let selectedAnnoteEl;
@@ -1964,6 +2196,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
             }
             div.style.top = top - 2 + "px";
             div.style.height = height + 4 + "px";
+            div.style.left = 0;
             let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
             if (gutterDiv === null) {
               gutterDiv = window.document.createElement("div");
@@ -1989,6 +2222,32 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
         });
         selectedAnnoteEl = undefined;
       };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
       // Attach click handler to the DT
       const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
       for (const annoteDlNode of annoteDls) {
@@ -2050,18 +2309,19 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="./13-rmarkdown.html" class="pagination-link">
+      <a href="./13-rmarkdown.html" class="pagination-link" aria-label="Diffuser et publier avec `rmarkdown`">
         <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Diffuser et publier avec <code>rmarkdown</code></span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="./15-dplyr-avance.html" class="pagination-link">
+      <a href="./15-dplyr-avance.html" class="pagination-link" aria-label="`dplyr` avancé">
         <span class="nav-page-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title"><code>dplyr</code> avancé</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>
 </div> <!-- /content -->
-<script src="js/tidyverse.js"></script>
+<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/juba/tidyverse/edit/main/14-fonctions.qmd" class="toc-action"><i class="bi bi-github"></i>Modifier cette page</a></li></ul></div></div></div></footer><script src="js/tidyverse.js"></script>
+
 
 
 

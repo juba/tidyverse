@@ -2,12 +2,12 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="fr" xml:lang="fr"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.3.340">
+<meta name="generator" content="quarto-1.6.39">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Introduction à R et au tidyverse - 18&nbsp; Itérer avec purrr</title>
+<title>18&nbsp; Itérer avec purrr – Introduction à R et au tidyverse</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -22,7 +22,7 @@ ul.task-list li input[type="checkbox"] {
 }
 /* CSS for syntax highlighting */
 pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span { line-height: 1.25; }
 pre > code.sourceCode > span:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
 code.sourceCode > span { color: inherit; text-decoration: inherit; }
@@ -33,7 +33,7 @@ div.sourceCode { overflow: auto; }
 }
 @media print {
 pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
 }
 pre.numberSource code
   { counter-reset: source-line 0; }
@@ -71,12 +71,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="site_libs/quarto-html/anchor.min.js"></script>
 <link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-dark.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-f2ed4b6a00c7d3487a84fd5a50ba4e45.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-dark-ab6496a1a679dc9f3d6952c9737550a4.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
-<link href="site_libs/bootstrap/bootstrap-dark.min.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="site_libs/bootstrap/bootstrap-7841758b2c4697f1bb7dfd28c94c955d.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-dark-122eaf72ed6913f6dbaefd46cb265906.min.css" rel="prefetch" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
 <link href="site_libs/quarto-contrib/bookup_fonts_embed-0.0/fonts-download.css" rel="stylesheet">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
@@ -84,7 +84,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   "collapse-after": 3,
   "panel-placement": "start",
   "type": "textbox",
-  "limit": 20,
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
   "language": {
     "search-no-results-text": "Pas de résultats",
     "search-matching-documents-text": "documents trouvés",
@@ -93,13 +99,42 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     "search-more-match-text": "correspondance de plus dans ce document",
     "search-more-matches-text": "correspondances de plus dans ce document",
     "search-clear-button-title": "Effacer",
+    "search-text-placeholder": "",
     "search-detached-cancel-button-title": "Annuler",
-    "search-submit-button-title": "Envoyer"
+    "search-submit-button-title": "Envoyer",
+    "search-label": "Recherche"
   }
 }</script>
 
-  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
   <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
 
 <link rel="stylesheet" href="css/tidyverse.css">
 </head>
@@ -110,12 +145,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <header id="quarto-header" class="headroom fixed-top">
   <nav class="quarto-secondary-nav">
     <div class="container-fluid d-flex">
-      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Basculer la barre latérale" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Basculer la barre latérale" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./14-fonctions.html">Aller plus loin</a></li><li class="breadcrumb-item"><a href="./18-purrr.html"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Itérer avec `purrr`</span></a></li></ol></nav>
-      <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Basculer la barre latérale" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
-      </a>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./14-fonctions.html">Aller plus loin</a></li><li class="breadcrumb-item"><a href="./18-purrr.html"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Itérer avec <code>purrr</code></span></a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Basculer la barre latérale" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
       <button type="button" class="btn quarto-search-button" aria-label="Recherche" onclick="window.quartoOpenSearch();">
         <i class="bi bi-search"></i>
       </button>
@@ -125,24 +160,24 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <!-- content -->
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
 <!-- sidebar -->
-  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal sidebar-navigation docked overflow-auto">
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation docked overflow-auto">
     <div class="pt-lg-2 mt-2 text-left sidebar-header">
     <div class="sidebar-title mb-0 py-0">
       <a href="./">Introduction à R et au tidyverse</a> 
         <div class="sidebar-tools-main tools-wide">
-    <a href="https://github.com/juba/tidyverse/" title="Source Code" class="quarto-navigation-tool px-1" aria-label="Source Code"><i class="bi bi-github"></i></a>
+    <a href="https://github.com/juba/tidyverse/" title="Code source" class="quarto-navigation-tool px-1" aria-label="Code source"><i class="bi bi-github"></i></a>
     <div class="dropdown">
-      <a href="" title="Download" id="quarto-navigation-tool-dropdown-0" class="quarto-navigation-tool dropdown-toggle px-1" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download"><i class="bi bi-download"></i></a>
+      <a href="" title="Download" id="quarto-navigation-tool-dropdown-0" class="quarto-navigation-tool dropdown-toggle px-1" data-bs-toggle="dropdown" aria-expanded="false" role="link" aria-label="Download"><i class="bi bi-download"></i></a>
       <ul class="dropdown-menu" aria-labelledby="quarto-navigation-tool-dropdown-0">
           <li>
             <a class="dropdown-item sidebar-tools-main-item" href="./introduction_au_tidyverse.epub">
-              <i class="bi bi-bi-journal pe-1"></i>
+              <i class="bi bi-journal pe-1"></i>
             Download ePub
             </a>
           </li>
           <li>
             <a class="dropdown-item sidebar-tools-main-item" href="./introduction_au_tidyverse.pdf">
-              <i class="bi bi-bi-file-pdf pe-1"></i>
+              <i class="bi bi-file-pdf pe-1"></i>
             Download PDF
             </a>
           </li>
@@ -166,9 +201,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <ul class="list-unstyled mt-1">
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true">
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
  <span class="menu-text">Introduction</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true" aria-label="Basculer la section">
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Basculer la section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
@@ -189,9 +224,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true">
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true">
  <span class="menu-text">Introduction à R</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true" aria-label="Basculer la section">
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Basculer la section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
@@ -224,9 +259,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true">
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true">
  <span class="menu-text">Introduction au tidyverse</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true" aria-label="Basculer la section">
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true" aria-label="Basculer la section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
@@ -283,9 +318,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="true">
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true">
  <span class="menu-text">Aller plus loin</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="true" aria-label="Basculer la section">
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true" aria-label="Basculer la section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
@@ -342,9 +377,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" aria-expanded="true">
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="true">
  <span class="menu-text">Annexes</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" aria-expanded="true" aria-label="Basculer la section">
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="true" aria-label="Basculer la section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
@@ -360,7 +395,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     </ul>
     </div>
 </nav>
-<div id="quarto-sidebar-glass" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass"></div>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
         <nav id="TOC" role="doc-toc" class="toc-active">
@@ -392,12 +427,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#répéter-une-opération-1" id="toc-répéter-une-opération-1" class="nav-link" data-scroll-target="#répéter-une-opération-1"><span class="header-section-number">18.12.5</span> Répéter une opération</a></li>
   </ul></li>
   </ul>
-<div class="toc-actions"><div><i class="bi bi-github"></i></div><div class="action-links"><p><a href="https://github.com/juba/tidyverse/edit/main/18-purrr.qmd" class="toc-action">Modifier cette page</a></p></div></div></nav>
+<div class="toc-actions"><ul><li><a href="https://github.com/juba/tidyverse/edit/main/18-purrr.qmd" class="toc-action"><i class="bi bi-github"></i>Modifier cette page</a></li></ul></div></nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
-<header id="title-block-header" class="quarto-title-block default">
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./14-fonctions.html">Aller plus loin</a></li><li class="breadcrumb-item"><a href="./18-purrr.html"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Itérer avec <code>purrr</code></span></a></li></ol></nav>
 <div class="quarto-title">
 <h1 class="title"><span id="sec-purrr" class="quarto-section-identifier"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Itérer avec <code>purrr</code></span></span></h1>
 </div>
@@ -412,11 +447,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </div>
   
 
+
 </header>
+
 
 <p><code>purrr</code> est une extension du <em>tidyverse</em> qui fournit des outils pour travailler avec les vecteurs et les fonctions, et notamment pour itérer sur les éléments de vecteurs ou de listes en leur appliquant une fonction.</p>
 <p>Dans cette section on aura besoin des extensions du <em>tidyverse</em> (dont <code>purrr</code> fait partie), que nous chargeons donc immédiatement, de même que les jeux de données <code>rp2018</code> et <code>hdv2003</code> de <code>questionr</code>.</p>
-<div class="cell" data-hash="18-purrr_cache/html/unnamed-chunk-2_a977184d7718fe9339d153c3de3d4e79">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(questionr)</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(hdv2003)</span>
@@ -425,7 +462,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="exemple-dapplication" class="level2" data-number="18.1">
 <h2 data-number="18.1" class="anchored" data-anchor-id="exemple-dapplication"><span class="header-section-number">18.1</span> Exemple d’application</h2>
 <p>Pour mieux appréhender de quoi il s’agit, on part du vecteur suivant, qui contient des extraits (fictifs ?) de discours politiques.</p>
-<div class="cell" data-hash="18-purrr_cache/html/unnamed-chunk-3_6cc024c93aa91d8796c52280d99de039">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>discours <span class="ot">&lt;-</span> <span class="fu">c</span>(</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>    <span class="st">"nous privilégierons une intergouvernementalisation sans agir anticonstitutionnellement"</span>,</span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">"le souffle de la nation est le vent qui agite les drapeaux de nos libertés"</span>,</span>
@@ -435,7 +472,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <p>On souhaite calculer la longueur de chaque extrait, en nombre de mots.</p>
 <p>On commence par découper grossièrement chaque extrait en mots en utilisant la fonction <code>str_split()</code> de <code>stringr</code><a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a>.</p>
-<div class="cell" data-hash="18-purrr_cache/html/unnamed-chunk-4_3d5edcb651a184a292e9d4f8b0fdb02a">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>mots <span class="ot">&lt;-</span> <span class="fu">str_split</span>(discours, <span class="st">" "</span>)</span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(mots)</span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; List of 4</span></span>
@@ -446,13 +483,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <p>L’objet <code>mots</code> est une liste de vecteurs de chaînes de caractères qui contiennent les mots des différents extraits.</p>
 <p>Calculer le nombre de mots de chaque extrait revient à calculer la longueur de chaque élément de <code>mots</code>. Pour cela on pourrait vouloir utiliser la fonction <code>length()</code> directement :</p>
-<div class="cell" data-hash="18-purrr_cache/html/unnamed-chunk-5_be2f4a76399732cd9e18bfe7d58ac8e2">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">length</span>(mots)</span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 4</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Ceci ne fonctionne pas, car <code>length()</code> nous retourne le nombre d’éléments de <code>mots</code>, pas celui de chacun de ses éléments : ce qu’on veut, ça n’est pas <code>length(mots)</code> mais <code>length(mots[[1]])</code>, <code>length(mots[[2]])</code>, etc.</p>
-<p>On a vu <a href="17-if-boucles.html#sec-no-boucles"><span>Section&nbsp;17.3.4</span></a> qu’on peut pour cela utiliser une boucle <code>for</code>, par exemple de la manière suivante.</p>
-<div class="cell" data-hash="18-purrr_cache/html/unnamed-chunk-6_41f299cdca2900335e46d20174a71314">
+<p>On a vu <a href="17-if-boucles.html#sec-no-boucles" class="quarto-xref"><span>Section 17.3.4</span></a> qu’on peut pour cela utiliser une boucle <code>for</code>, par exemple de la manière suivante.</p>
+<div class="cell">
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>resultat <span class="ot">&lt;-</span> <span class="fu">list</span>()</span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (item <span class="cf">in</span> mots) {</span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>    resultat <span class="ot">&lt;-</span> <span class="fu">c</span>(resultat, <span class="fu">length</span>(item))</span>
@@ -478,7 +515,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </ol>
 <p>et elle retourne une liste contenant le résultat de la fonction appliquée à chaque élément du vecteur ou de la liste.</p>
 <p>En utilisant <code>map()</code> on peut remplacer notre boucle <code>for</code> par un simple :</p>
-<div class="cell" data-hash="18-purrr_cache/html/unnamed-chunk-7_8567cea855fe8a75fde5b5ecf87d7556">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">map</span>(mots, length)</span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [[1]]</span></span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 7</span></span>
@@ -494,7 +531,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <p><code>map</code> va itérer sur les éléments de <code>mots</code>, leur appliquer tour à tour la fonction <code>length</code> passée en argument, et regrouper les résultats dans une liste.</p>
 <p>À noter qu’on peut évidemment utiliser le <em>pipe</em>.</p>
-<div class="cell" data-hash="18-purrr_cache/html/unnamed-chunk-8_1f46b71b44c503b4d4418e507739f5d5">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>mots <span class="sc">%&gt;%</span> <span class="fu">map</span>(length)</span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [[1]]</span></span>
 <span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 7</span></span>
@@ -510,7 +547,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <p>Ici notre résultat est une liste. Or il pourrait être simplifié sous forme de vecteur atomique, puisque tous ses éléments sont des nombres.</p>
 <p>Si on souhaitait obtenir un vecteur numérique avec une boucle <code>for</code>, il faut soit convertir le résultat de la boucle précédente en vecteur atomique (avec <code>unlist()</code> ou <code>purrr::flatten_int()</code>), soit modifier cette boucle pour qu’elle génère plutôt un vecteur numérique :</p>
-<div class="cell" data-hash="18-purrr_cache/html/unnamed-chunk-9_a7d6ae66bde7b99b16a776d7e75dbc48">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>resultat <span class="ot">&lt;-</span> <span class="fu">numeric</span>(<span class="fu">length</span>(discours))</span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="fu">seq_along</span>(mots)) {</span>
 <span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>    resultat[i] <span class="ot">&lt;-</span> <span class="fu">length</span>(mots[[i]])</span>
@@ -519,7 +556,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1]  7 15 11  6</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Mais <code>purrr</code> propose des variantes de la fonction <code>map</code> qui permettent justement de s’assurer du type de résultat obtenu. Ainsi, <code>map_dbl()</code> renverra toujours un vecteur de nombres flottants, et <code>map_int()</code> un vecteur de nombres entiers. En remplacement de la boucle <code>for</code> ci-dessus, on peut donc utiliser :</p>
-<div class="cell" data-hash="18-purrr_cache/html/unnamed-chunk-10_ff2f0dbdd032754f6c0e18971f49e3ea">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>mots <span class="sc">%&gt;%</span> <span class="fu">map_int</span>(length)</span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1]  7 15 11  6</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
@@ -530,12 +567,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h3 data-number="18.2.1" class="anchored" data-anchor-id="modes-dappel-de-map"><span class="header-section-number">18.2.1</span> Modes d’appel de <code>map</code></h3>
 <p>L’objectif de <code>map</code> est donc d’appliquer une fonction à l’ensemble des éléments d’un vecteur ou d’une liste.</p>
 <p>On a vu qu’on pouvait l’utiliser pour appliquer la fonction <code>length</code> à chacun des vecteurs contenus par la liste <code>mots</code>. En utilisant <code>map_int</code> on s’assure de récupérer un simple vecteur numérique, plus facile à utiliser par la suite si on souhaite par exemple calculer une moyenne.</p>
-<div class="cell" data-hash="18-purrr_cache/html/unnamed-chunk-11_2c9ae47e6258793645f607d9f5320013">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>mots <span class="sc">%&gt;%</span> <span class="fu">map_int</span>(length)</span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1]  7 15 11  6</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Si on souhaitait plutôt extraire le dernier mot de chaque vecteur, on pourrait créer une fonction spécifique et l’appliquer avec <code>map()</code>.</p>
-<div class="cell" data-hash="18-purrr_cache/html/unnamed-chunk-12_b535caf2505c0dd8d6ab8b5e048234bc">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>dernier_mot <span class="ot">&lt;-</span> <span class="cf">function</span>(v) {</span>
 <span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">tail</span>(v, <span class="dv">1</span>)</span>
 <span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>}</span>
@@ -554,33 +591,33 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb11-16"><a href="#cb11-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] "piraté"</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Comme notre résultat est une liste de chaînes de caractères simples, on peut forcer le résultat à être plutôt un vecteur de type <em>character</em> en utilisant <code>map_chr()</code> :</p>
-<div class="cell" data-hash="18-purrr_cache/html/unnamed-chunk-13_9b2594bf4c4d535afd2ca1cc255ff74f">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>mots <span class="sc">%&gt;%</span> <span class="fu">map_chr</span>(dernier_mot)</span>
 <span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] "anticonstitutionnellement" "libertés"                 </span></span>
 <span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [3] "réforme"                   "piraté"</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>Comme notre fonction est très courte, on peut aussi préférer utiliser une <em>fonction anonyme</em>, introduites <a href="14-fonctions.html#sec-fonctions-anonymes"><span>Section&nbsp;14.4.2</span></a>.</p>
-<div class="cell" data-hash="18-purrr_cache/html/unnamed-chunk-14_0f506f30df087025860c69787c0b9661">
+<p>Comme notre fonction est très courte, on peut aussi préférer utiliser une <em>fonction anonyme</em>, introduites <a href="14-fonctions.html#sec-fonctions-anonymes" class="quarto-xref"><span>Section 14.4.2</span></a>.</p>
+<div class="cell">
 <div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>mots <span class="sc">%&gt;%</span> <span class="fu">map_chr</span>(<span class="cf">function</span>(v) {</span>
 <span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">tail</span>(v, <span class="dv">1</span>)</span>
 <span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>})</span>
 <span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] "anticonstitutionnellement" "libertés"                 </span></span>
 <span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [3] "réforme"                   "piraté"</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>On peut aussi utiliser la notation abrégée sous forme de formule, propre aux fonctions du <em>tidyverse</em>, présentée <a href="15-dplyr-avance.html#sec-syntaxes-abregees"><span>Section&nbsp;15.3</span></a>.</p>
-<div class="cell" data-hash="18-purrr_cache/html/unnamed-chunk-15_37ef2fcff81640e126ba105bad47be62">
+<p>On peut aussi utiliser la notation abrégée sous forme de formule, propre aux fonctions du <em>tidyverse</em>, présentée <a href="15-dplyr-avance.html#sec-syntaxes-abregees" class="quarto-xref"><span>Section 15.3</span></a>.</p>
+<div class="cell">
 <div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>mots <span class="sc">%&gt;%</span> <span class="fu">map_chr</span>(<span class="sc">~</span> <span class="fu">tail</span>(.x, <span class="dv">1</span>))</span>
 <span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] "anticonstitutionnellement" "libertés"                 </span></span>
 <span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [3] "réforme"                   "piraté"</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>On peut également utiliser la notation compacte pour les fonctions anonymes disponible sous R à partir de la version 4.1.</p>
-<div class="cell" data-hash="18-purrr_cache/html/unnamed-chunk-16_5b53e7d8e0ffb8f2b80177310d5694a1">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>mots <span class="sc">%&gt;%</span> <span class="fu">map_chr</span>(\(v) <span class="fu">tail</span>(v, <span class="dv">1</span>))</span>
 <span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] "anticonstitutionnellement" "libertés"                 </span></span>
 <span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [3] "réforme"                   "piraté"</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Enfin, si on fournit des arguments supplémentaires à <code>map</code>, ils sont passés comme argument à la fonction qu’il applique, on peut donc également utiliser la notation suivante :</p>
-<div class="cell" data-hash="18-purrr_cache/html/unnamed-chunk-17_abeefa5a0740c8e93bf832b74fdf54d1">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>mots <span class="sc">%&gt;%</span> <span class="fu">map_chr</span>(tail, <span class="dv">1</span>)</span>
 <span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] "anticonstitutionnellement" "libertés"                 </span></span>
 <span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [3] "réforme"                   "piraté"</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -611,15 +648,15 @@ Note
 <li><code>map_lgl()</code> retourne un vecteur atomique de <code>TRUE</code> / <code>FALSE</code></li>
 </ul>
 <p>Attention, ces variantes sont très strictes : si la fonction appelée retourne un résultat qui n’est pas compatible avec le résultat attendu, elle génère une erreur. C’est le cas si dans le code précédent on essaie de récupérer chaque dernier mot sous forme d’un vecteur de nombres :</p>
-<div class="cell" data-hash="18-purrr_cache/html/unnamed-chunk-18_69c597ab20c9128b28307ae08be444a1">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>mots <span class="sc">%&gt;%</span> <span class="fu">map_dbl</span>(tail, <span class="dv">1</span>)</span>
 <span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Error in `map_dbl()`:</span></span>
 <span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; ℹ In index: 1.</span></span>
 <span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Caused by error:</span></span>
-<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; ! Can't coerce from a string to a double vector.</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; ! Can't coerce from a string to a double.</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Pour pouvoir utiliser ces variantes et obtenir un vecteur atomique, chaque résultat retourné par la fonction appliquée doit être de longueur 1. Ainsi, si on souhaitait extraire plutôt la liste des mots contenant un “f”, certains résultats ne contiennent aucun élément, et d’autres en contiennent deux :</p>
-<div class="cell" data-hash="18-purrr_cache/html/unnamed-chunk-19_f244230ca261a5b19305bc6582614bdf">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>mots <span class="sc">%&gt;%</span> <span class="fu">map</span>(<span class="sc">~</span> <span class="fu">str_subset</span>(.x, <span class="st">"f"</span>))</span>
 <span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [[1]]</span></span>
 <span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; character(0)</span></span>
@@ -634,7 +671,7 @@ Note
 <span id="cb18-12"><a href="#cb18-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; character(0)</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Dans ce cas on ne peut pas utiliser <code>map_chr()</code> : si on essaie on obtient un message d’erreur nous indiquant que certains résultats de <code>str_subset()</code> ne sont pas au bon format.</p>
-<div class="cell" data-hash="18-purrr_cache/html/unnamed-chunk-20_ff45218bb81da9f2d4b51f584161efed">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>mots <span class="sc">%&gt;%</span> <span class="fu">map_chr</span>(<span class="sc">~</span> <span class="fu">str_subset</span>(.x, <span class="st">"f"</span>))</span>
 <span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Error in `map_chr()`:</span></span>
 <span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; ℹ In index: 1.</span></span>
@@ -642,7 +679,7 @@ Note
 <span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; ! Result must be length 1, not 0.</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Dans ce cas, on doit donc utiliser <code>map()</code> et conserver le résultat sous forme de liste, qui elle peut contenir des éléments de longueurs différentes.</p>
-<div class="cell" data-hash="18-purrr_cache/html/unnamed-chunk-21_0db9a140850ae9a388ca4055e5bbddf9">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>mots <span class="sc">%&gt;%</span></span>
 <span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">map</span>(<span class="sc">~</span> <span class="fu">str_subset</span>(.x, <span class="st">"f"</span>))</span>
 <span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [[1]]</span></span>
@@ -658,7 +695,7 @@ Note
 <span id="cb20-13"><a href="#cb20-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; character(0)</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>On notera qu’on peut tout à fait enchaîner les <code>map()</code> si on veut effectuer des opérations supplémentaires.</p>
-<div class="cell" data-hash="18-purrr_cache/html/unnamed-chunk-22_b63e523529c973bdd757f1f59f5bf1b1">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>mots <span class="sc">%&gt;%</span></span>
 <span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">map</span>(<span class="sc">~</span> <span class="fu">str_subset</span>(.x, <span class="st">"f"</span>)) <span class="sc">%&gt;%</span></span>
 <span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">map_int</span>(length)</span>
@@ -673,7 +710,7 @@ Note
 <p><a href="https://raw.githubusercontent.com/juba/tidyverse/main/resources/data/rp2018/rp2018_01.csv" class="uri">https://raw.githubusercontent.com/juba/tidyverse/main/resources/data/rp2018/rp2018_01.csv</a></p>
 <p>En remplaçant “01” par le code du département souhaité.</p>
 <p>On peut créer une fonction <code>genere_url()</code> qui, à partir d’une liste de codes de départements, retourne les adresses des fichiers correspondant.</p>
-<div class="cell" data-hash="18-purrr_cache/html/unnamed-chunk-23_ad7a6e4b7913768f62b3532f26dc6c20">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>genere_url <span class="ot">&lt;-</span> <span class="cf">function</span>(codes) {</span>
 <span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">paste0</span>(</span>
 <span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>        <span class="st">"https://raw.githubusercontent.com/juba/tidyverse/main/resources/data/rp2018/rp2018_"</span>,</span>
@@ -687,12 +724,12 @@ Note
 <span id="cb22-11"><a href="#cb22-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [2] "https://raw.githubusercontent.com/juba/tidyverse/main/resources/data/rp2018/rp2018_69.csv"</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Grâce à la fonction <code>read_csv()</code>, on peut charger directement dans notre session R un fichier en indiquant son URL.</p>
-<div class="cell" data-hash="18-purrr_cache/html/unnamed-chunk-24_1054aa7970b1bfb16a4b22a8f24091d5">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>data69 <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="fu">genere_url</span>(<span class="st">"69"</span>))</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Comment faire si l’on souhaite charger les fichiers de plusieurs départements ? La fonction <code>read_csv()</code> n’accepte qu’une seule URL à la fois, elle n’est pas vectorisée.</p>
 <p>Dans ce cas on peut utiliser <code>map()</code> pour l’appliquer tour à tour à plusieurs URL.</p>
-<div class="cell" data-hash="18-purrr_cache/html/unnamed-chunk-25_eda4551f6015bd92042fb0342b2b7b3a">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>departements <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"38"</span>, <span class="st">"42"</span>, <span class="st">"69"</span>)</span>
 <span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>urls <span class="ot">&lt;-</span> <span class="fu">genere_url</span>(departements)</span>
 <span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -700,7 +737,7 @@ Note
 </div>
 <p>Le résultat <code>dfs</code> est une liste de trois tableaux de données. Chacun de ces éléments est un <em>tibble</em> : d’abord celui du fichier CSV des données de l’Isère, puis celui de la Loire, et enfin celui du Rhône.</p>
 <p>On peut itérer sur cette liste <code>dfs</code> pour appliquer une fonction à chacun de ces tableaux.</p>
-<div class="cell" data-hash="18-purrr_cache/html/unnamed-chunk-26_b612167aefd4fe978e8f961ec28acd0b">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Affichage des dimensions de chaque tableau</span></span>
 <span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>dfs <span class="sc">%&gt;%</span> <span class="fu">map</span>(dim)</span>
 <span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [[1]]</span></span>
@@ -712,12 +749,12 @@ Note
 <span id="cb25-9"><a href="#cb25-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [[3]]</span></span>
 <span id="cb25-10"><a href="#cb25-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 132  37</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div class="cell" data-hash="18-purrr_cache/html/unnamed-chunk-27_4cba61446cbd502b6bdd72819a01b5e8">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Calcul de la moyenne de la variable dipl_aucun</span></span>
 <span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>dfs <span class="sc">%&gt;%</span> <span class="fu">map_dbl</span>(<span class="sc">~</span> <span class="fu">mean</span>(.x<span class="sc">$</span>dipl_aucun))</span>
 <span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 19.24298 23.57400 17.74882</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div class="cell" data-hash="18-purrr_cache/html/unnamed-chunk-28_a19f6fa0eea3cfe9d93d14a38458d1e2">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Calcul du coefficient associé à la variable dipl_sup dans</span></span>
 <span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a><span class="co"># la régression linéaire de cadres en fonction de dipl_sup</span></span>
 <span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>dfs <span class="sc">%&gt;%</span> <span class="fu">map_dbl</span>(<span class="sc">~</span> {</span>
@@ -727,7 +764,7 @@ Note
 <span id="cb27-7"><a href="#cb27-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 1.132317 1.264469 1.027263</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Si on souhaite réunir ces trois <em>tibbles</em> en un seul, on peut utiliser la fonction <code>bind_rows()</code> de <code>dplyr</code>.</p>
-<div class="cell" data-hash="18-purrr_cache/html/unnamed-chunk-29_204065cfaf8a320f5e8ebfa90269d82b">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>departements <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"38"</span>, <span class="st">"42"</span>, <span class="st">"69"</span>)</span>
 <span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>urls <span class="ot">&lt;-</span> <span class="fu">genere_url</span>(departements)</span>
 <span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -752,11 +789,11 @@ Note
 </div>
 </div>
 <p>Une fonction utile en complément de <code>map</code> est la fonction <code>list.files()</code>, qui peut lister les fichiers ayant une certaine extension dans un dossier spécifique. Par exemple, l’instruction suivante liste tous les fichiers se terminant par <code>.csv</code> du sous-dossier <code>data</code>.</p>
-<div class="cell" data-hash="18-purrr_cache/html/unnamed-chunk-30_f42750b13535ff4cf960eea2af080082">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>fichiers <span class="ot">&lt;-</span> <span class="fu">list.files</span>(<span class="st">"data"</span>, <span class="st">"*.csv"</span>, <span class="at">full.names =</span> <span class="cn">TRUE</span>)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>On peut dès lors utiliser <code>map()</code>, <code>read_csv()</code> et <code>bind_rows()</code>, pour lire tous ces fichiers en une seule fois et les concaténer en un seul tableau de données.</p>
-<div class="cell" data-hash="18-purrr_cache/html/unnamed-chunk-31_9267dcb81f27127a6aaf1e930d588158">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>d <span class="ot">&lt;-</span> fichiers <span class="sc">%&gt;%</span></span>
 <span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">map</span>(read_csv) <span class="sc">%&gt;%</span></span>
 <span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">bind_rows</span>()</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -778,17 +815,17 @@ Note
 </section>
 <section id="itérer-sur-les-colonnes-dun-tableau-de-données" class="level2" data-number="18.3">
 <h2 data-number="18.3" class="anchored" data-anchor-id="itérer-sur-les-colonnes-dun-tableau-de-données"><span class="header-section-number">18.3</span> Itérer sur les colonnes d’un tableau de données</h2>
-<p>On a vu <a href="16-structures-donnees.html#sec-data-frame-tibbles"><span>Section&nbsp;16.3</span></a> que les tableaux de données (<em>data frame</em> ou <em>tibble</em>) sont en fait des listes dont les éléments sont les colonnes du tableau. Si on applique <code>map()</code> à un tableau, celle-ci itérera donc sur ses colonnes.</p>
+<p>On a vu <a href="16-structures-donnees.html#sec-data-frame-tibbles" class="quarto-xref"><span>Section 16.3</span></a> que les tableaux de données (<em>data frame</em> ou <em>tibble</em>) sont en fait des listes dont les éléments sont les colonnes du tableau. Si on applique <code>map()</code> à un tableau, celle-ci itérera donc sur ses colonnes.</p>
 <p>Par exemple, on peut appliquer <code>n_distinct</code> au jeu de données <code>starwars</code> et obtenir le nombre de valeurs distinctes de chacune de ses colonnes.</p>
-<div class="cell" data-hash="18-purrr_cache/html/unnamed-chunk-32_25d42826fd72717bd1e0dec3aa64c281">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>starwars <span class="sc">%&gt;%</span> <span class="fu">map_int</span>(n_distinct)</span>
 <span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;       name     height       mass hair_color skin_color  eye_color birth_year </span></span>
-<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;         87         46         39         13         31         15         37 </span></span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;         87         46         39         12         31         15         37 </span></span>
 <span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;        sex     gender  homeworld    species      films   vehicles  starships </span></span>
-<span id="cb31-5"><a href="#cb31-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;          5          3         49         38         24         11         17</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb31-5"><a href="#cb31-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;          5          3         49         38         24         11         16</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>Le résultat est équivalent à celui qu’on obtient en faisant un <code>summarise()</code> sur l’ensemble des colonnes, comme vu <a href="15-dplyr-avance.html#sec-across"><span>Section&nbsp;15.2</span></a>, sauf que <code>map_int()</code> retourne un vecteur numérique tandis que <code>summarise()</code> renvoie un <em>tibble</em> à une ligne.</p>
-<div class="cell" data-hash="18-purrr_cache/html/unnamed-chunk-33_cae2398830e00e1f6554cc47aa5f2582">
+<p>Le résultat est équivalent à celui qu’on obtient en faisant un <code>summarise()</code> sur l’ensemble des colonnes, comme vu <a href="15-dplyr-avance.html#sec-across" class="quarto-xref"><span>Section 15.2</span></a>, sauf que <code>map_int()</code> retourne un vecteur numérique tandis que <code>summarise()</code> renvoie un <em>tibble</em> à une ligne.</p>
+<div class="cell">
 <div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>starwars <span class="sc">%&gt;%</span></span>
 <span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">summarise</span>(</span>
 <span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a>        <span class="fu">across</span>(<span class="fu">everything</span>(), n_distinct)</span>
@@ -796,12 +833,12 @@ Note
 <span id="cb32-5"><a href="#cb32-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # A tibble: 1 × 14</span></span>
 <span id="cb32-6"><a href="#cb32-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    name height  mass hair_color skin_color eye_color birth_year   sex gender</span></span>
 <span id="cb32-7"><a href="#cb32-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   &lt;int&gt;  &lt;int&gt; &lt;int&gt;      &lt;int&gt;      &lt;int&gt;     &lt;int&gt;      &lt;int&gt; &lt;int&gt;  &lt;int&gt;</span></span>
-<span id="cb32-8"><a href="#cb32-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1    87     46    39         13         31        15         37     5      3</span></span>
+<span id="cb32-8"><a href="#cb32-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1    87     46    39         12         31        15         37     5      3</span></span>
 <span id="cb32-9"><a href="#cb32-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # ℹ 5 more variables: homeworld &lt;int&gt;, species &lt;int&gt;, films &lt;int&gt;,</span></span>
 <span id="cb32-10"><a href="#cb32-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; #   vehicles &lt;int&gt;, starships &lt;int&gt;</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>De la même manière, si on veut connaître le nombre de valeurs manquantes pour chaque variable :</p>
-<div class="cell" data-hash="18-purrr_cache/html/unnamed-chunk-34_e5d4012ad4cd5a325c16a8cb546549c1">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>starwars <span class="sc">%&gt;%</span> <span class="fu">map_int</span>(<span class="sc">~</span> <span class="fu">sum</span>(<span class="fu">is.na</span>(.x)))</span>
 <span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;       name     height       mass hair_color skin_color  eye_color birth_year </span></span>
 <span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;          0          6         28          5          0          0         44 </span></span>
@@ -810,7 +847,7 @@ Note
 </div>
 <p>Contrairement à <code>across()</code>, on ne peut pas spécifier directement une sélection de colonnes à <code>map()</code>. On peut par contre utiliser des fonctions comme <code>keep()</code> ou <code>discard()</code> qui “filtrent” les éléments d’une liste via une fonction qui renvoie <code>TRUE</code> ou <code>FALSE</code>.</p>
 <p>On peut par exemple utiliser <code>discard()</code> après <code>map()</code> pour ne conserver que les colonnes ayant au moins une valeur <code>NA</code>.</p>
-<div class="cell" data-hash="18-purrr_cache/html/unnamed-chunk-35_8a5c0278c17a4e2a05a4a1ef7353b26d">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>starwars <span class="sc">%&gt;%</span></span>
 <span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">map_int</span>(<span class="sc">~</span> <span class="fu">sum</span>(<span class="fu">is.na</span>(.x))) <span class="sc">%&gt;%</span></span>
 <span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">discard</span>(<span class="sc">~</span> .x <span class="sc">==</span> <span class="dv">0</span>)</span>
@@ -820,25 +857,25 @@ Note
 <span id="cb34-7"><a href="#cb34-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;          4</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Ou bien utiliser <code>keep()</code> pour n’appliquer <code>mean()</code> qu’aux variables numériques.</p>
-<div class="cell" data-hash="18-purrr_cache/html/unnamed-chunk-36_34decb6dd90df07cd05a96e358deff48">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a>starwars <span class="sc">%&gt;%</span></span>
 <span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">keep</span>(is.numeric) <span class="sc">%&gt;%</span></span>
 <span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">map_dbl</span>(mean, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
 <span id="cb35-4"><a href="#cb35-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;     height       mass birth_year </span></span>
-<span id="cb35-5"><a href="#cb35-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  174.35802   97.31186   87.56512</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb35-5"><a href="#cb35-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  174.60494   97.31186   87.56512</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="modify" class="level2" data-number="18.4">
 <h2 data-number="18.4" class="anchored" data-anchor-id="modify"><span class="header-section-number">18.4</span> <code>modify</code></h2>
 <p><code>modify()</code> est une variante de <code>map()</code> qui a pour particularité de renvoyer un résultat du même type que la liste ou le vecteur donné en entrée.</p>
 <p>Ainsi, si on l’applique à un vecteur de chaînes de caractères, le résultat sera aussi un vecteur de chaînes de caractères.</p>
-<div class="cell" data-hash="18-purrr_cache/html/unnamed-chunk-37_a78538004956fca17ec994b005632d06">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a>v <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"brouette"</span>, <span class="st">"moto"</span>, <span class="st">"igloo"</span>)</span>
 <span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a>v <span class="sc">%&gt;%</span> <span class="fu">modify</span>(<span class="sc">~</span> <span class="fu">paste</span>(<span class="st">"incroyable"</span>, .x))</span>
 <span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] "incroyable brouette" "incroyable moto"     "incroyable igloo"</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Si on l’applique à une liste, le résultat sera aussi une liste.</p>
-<div class="cell" data-hash="18-purrr_cache/html/unnamed-chunk-38_60c80dc9b7fcbf06d413686e39a16798">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>v <span class="ot">&lt;-</span> <span class="fu">list</span>(<span class="st">"brouette"</span>, <span class="st">"moto"</span>, <span class="st">"igloo"</span>)</span>
 <span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a>v <span class="sc">%&gt;%</span> <span class="fu">modify</span>(<span class="sc">~</span> <span class="fu">paste</span>(<span class="st">"incroyable "</span>, .x))</span>
 <span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [[1]]</span></span>
@@ -853,11 +890,11 @@ Note
 <p>L’objectif de <code>modify()</code> est de permettre de “modifier” une liste ou un vecteur en lui appliquant une fonction tout en étant sûr qu’on ne va pas modifier son type.</p>
 <p>L’intérêt principal de <code>modify()</code> est qu’elle propose deux variantes, <code>modify_if()</code> et <code>modify_at()</code>, qui sélectionnent les éléments respectivement via une fonction et via leur nom ou leur position, et qui n’appliquent la fonction de transformation qu’aux éléments sélectionnés.</p>
 <p>Cela peut être particulièrement utile quand on l’applique à un tableau de données. Par exemple le code suivant utilise <code>modify_if()</code> pour transformer uniquement les colonnes de type <code>factor</code> de <code>hdv2003</code> en <code>character</code>, et laisser les autres inchangées.</p>
-<div class="cell" data-hash="18-purrr_cache/html/unnamed-chunk-40_95959608af803677402b362aa96c316a">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a>hdv2003 <span class="sc">%&gt;%</span> <span class="fu">modify_if</span>(is.factor, as.character)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>On notera qu’on obtient le même résultat avec le code suivant qui utilise <code>across()</code> de <code>dplyr</code>.</p>
-<div class="cell" data-hash="18-purrr_cache/html/unnamed-chunk-41_61cd3fd2489a213e6f2c5d33086ec7c1">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a>hdv2003 <span class="sc">%&gt;%</span></span>
 <span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(</span>
 <span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a>        <span class="fu">across</span>(</span>
@@ -867,18 +904,18 @@ Note
 <span id="cb39-7"><a href="#cb39-7" aria-hidden="true" tabindex="-1"></a>    )</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p><code>modify_at</code> permet d’appliquer une fonction à certaines variables à partir de leurs noms.</p>
-<div class="cell" data-hash="18-purrr_cache/html/unnamed-chunk-42_c98e81934e203edcd724bbc499ec5879">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a>hdv2003 <span class="sc">%&gt;%</span></span>
 <span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">modify_at</span>(<span class="fu">c</span>(<span class="st">"sexe"</span>, <span class="st">"qualif"</span>), as.character)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>En utilisant <code>vars()</code>, on peut sélectionner les variables avec toutes les possibilités offertes par la <em>tidy selection</em>.</p>
-<div class="cell" data-hash="18-purrr_cache/html/unnamed-chunk-43_6e5897881c997c3057ecefd3fea71077">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a>hdv2003 <span class="sc">%&gt;%</span></span>
 <span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">modify_at</span>(<span class="fu">vars</span>(hard.rock<span class="sc">:</span>sport), as.character)</span>
 <span id="cb41-3"><a href="#cb41-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Warning: Using `vars()` in .at was deprecated in purrr 1.0.0.</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Là aussi, on peut obtenir le même résultat en utilisant <code>across()</code>.</p>
-<div class="cell" data-hash="18-purrr_cache/html/unnamed-chunk-44_c2464c8ef65adda89bca1f497d7840c5">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a>hdv2003 <span class="sc">%&gt;%</span></span>
 <span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(</span>
 <span id="cb42-3"><a href="#cb42-3" aria-hidden="true" tabindex="-1"></a>        <span class="fu">across</span>(</span>
@@ -891,7 +928,7 @@ Note
 <section id="imap" class="level2" data-number="18.5">
 <h2 data-number="18.5" class="anchored" data-anchor-id="imap"><span class="header-section-number">18.5</span> <code>imap</code></h2>
 <p>Imaginons que nous avons récupéré les données suivantes, qui représentent des évaluations obtenues par quatre restaurants, sous la forme d’une liste.</p>
-<div class="cell" data-hash="18-purrr_cache/html/unnamed-chunk-45_07509baa7a4040b394508da4c47f2826">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a>restos <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
 <span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a>    <span class="st">"La bonne fourchette"</span>     <span class="ot">=</span> <span class="fu">c</span>(<span class="dv">3</span>, <span class="dv">3</span>, <span class="dv">2</span>, <span class="dv">5</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">2</span>, <span class="dv">4</span>, <span class="dv">1</span>, <span class="dv">3</span>),</span>
 <span id="cb43-3"><a href="#cb43-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">"La choucroute de l'amer"</span> <span class="ot">=</span> <span class="fu">c</span>(<span class="dv">4</span>, <span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">4</span>, <span class="dv">2</span>, <span class="dv">5</span>, <span class="dv">2</span>),</span>
@@ -900,7 +937,7 @@ Note
 <span id="cb43-6"><a href="#cb43-6" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>À partir de cette liste, on souhaite créer un tableau de données comportant la moyenne et l’écart-type des notes de chaque restaurant. Comme on l’a vu précédemment, cela peut se faire avec l’aide de <code>map()</code> et <code>bind_rows()</code>.</p>
-<div class="cell" data-hash="18-purrr_cache/html/unnamed-chunk-46_632468f71afe1336d9687e025aef3714">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a>restos <span class="sc">%&gt;%</span></span>
 <span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">map</span>(<span class="sc">~</span> <span class="fu">tibble</span>(<span class="at">moyenne =</span> <span class="fu">mean</span>(.x), <span class="at">ecart_type =</span> <span class="fu">sd</span>(.x))) <span class="sc">%&gt;%</span></span>
 <span id="cb44-3"><a href="#cb44-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">bind_rows</span>()</span>
@@ -915,7 +952,7 @@ Note
 <p>On obtient le tableau souhaité, mais il manque une information : le nom du restaurant correspondant à chaque ligne. Cette information est incluse dans les noms des éléments de la liste <code>restos</code>, or la fonction passée à <code>map</code> n’y a pas accès, elle n’a accès qu’à leurs valeurs.</p>
 <p>C’est pour ce type de cas de figure que <code>purrr</code> propose la famille de fonctions <code>imap()</code>. Celle-ci fonctionne de la même manière que <code>map()</code>, sauf que la fonction appliquée prend deux arguments : d’abord la valeur de l’élément courant, puis son nom.</p>
 <p>Dans l’exemple suivant, on applique <code>imap()</code> à une liste simple et on affiche un message avec le nom et la valeur de chaque élément.</p>
-<div class="cell" data-hash="18-purrr_cache/html/unnamed-chunk-47_8269e0884e41262693910099cb2caf48">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a>l <span class="ot">&lt;-</span> <span class="fu">list</span>(<span class="at">nom1 =</span> <span class="dv">1</span>, <span class="at">nom2 =</span> <span class="dv">3</span>)</span>
 <span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb45-3"><a href="#cb45-3" aria-hidden="true" tabindex="-1"></a>l2 <span class="ot">&lt;-</span> l <span class="sc">%&gt;%</span> <span class="fu">imap</span>(<span class="cf">function</span>(valeur, nom) {</span>
@@ -925,7 +962,7 @@ Note
 <span id="cb45-7"><a href="#cb45-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; La valeur de nom2 est 3</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>On peut évidemment utiliser la notation “formule” de <code>purrr</code>, il faut juste se souvenir que dans ce cas <code>.x</code> correspond à la valeur, et <code>.y</code> au nom.</p>
-<div class="cell" data-hash="18-purrr_cache/html/unnamed-chunk-48_4757d7fbf88e220a9afb6ff1c7a9fba4">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a>l2 <span class="ot">&lt;-</span> l <span class="sc">%&gt;%</span> <span class="fu">imap</span>(<span class="sc">~</span> {</span>
 <span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">message</span>(<span class="st">"La valeur de "</span>, .y, <span class="st">" est "</span>, .x)</span>
 <span id="cb46-3"><a href="#cb46-3" aria-hidden="true" tabindex="-1"></a>})</span>
@@ -935,7 +972,7 @@ Note
 <p>Tout comme <code>map()</code> proposait les variantes <code>map_int()</code>, <code>map_chr()</code> ou <code>map_lgl()</code>, on peut également utiliser <code>imap_dbl()</code> ou <code>imap_chr()</code> pour forcer le type de résultat retourné.</p>
 <p>Pour reprendre notre exemple de départ, on peut donc, en utilisant <code>imap</code>, récupérer le nom de l’élément courant de la liste <code>restos</code> et l’utiliser pour rajouter le nom du restaurant dans notre <em>tibble</em> de résultats.</p>
 <p>On peut le faire avec une fonction anonyme “classique” :</p>
-<div class="cell" data-hash="18-purrr_cache/html/unnamed-chunk-49_243332e777d2fbbf803f7c978c03efe5">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb47"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a>restos <span class="sc">%&gt;%</span></span>
 <span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">imap</span>(<span class="cf">function</span>(notes, nom) {</span>
 <span id="cb47-3"><a href="#cb47-3" aria-hidden="true" tabindex="-1"></a>        <span class="fu">tibble</span>(<span class="at">resto =</span> nom, <span class="at">moyenne =</span> <span class="fu">mean</span>(notes), <span class="at">ecart_type =</span> <span class="fu">sd</span>(notes))</span>
@@ -950,7 +987,7 @@ Note
 <span id="cb47-12"><a href="#cb47-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 4 La blanquette de Vaulx     2.7        1.42</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>On peut aussi utiliser la notation compacte de type formule, en se souvenant à nouveau que <code>.x</code> correspond à la valeur de l’élément courant, et <code>.y</code> à son nom.</p>
-<div class="cell" data-hash="18-purrr_cache/html/unnamed-chunk-50_0c7bcdf4d9a153383f43371b7ccd4d6f">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb48"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a>restos <span class="sc">%&gt;%</span></span>
 <span id="cb48-2"><a href="#cb48-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">imap</span>(<span class="sc">~</span> {</span>
 <span id="cb48-3"><a href="#cb48-3" aria-hidden="true" tabindex="-1"></a>        <span class="fu">tibble</span>(<span class="at">resto =</span> .y, <span class="at">moyenne =</span> <span class="fu">mean</span>(.x), <span class="at">ecart_type =</span> <span class="fu">sd</span>(.x))</span>
@@ -982,21 +1019,29 @@ Note
 <h2 data-number="18.6" class="anchored" data-anchor-id="walk"><span class="header-section-number">18.6</span> <code>walk</code></h2>
 <p><code>walk()</code> est une variante de <code>map()</code> qui a pour particularité de ne pas retourner de résultat. On l’utilise lorsqu’on souhaite parcourir un vecteur ou une liste et appliquer à ses éléments une fonction dont on ne souhaite conserver que les “effets de bord” : afficher un message, générer un graphique, enregistrer un fichier…</p>
 <p>Par exemple, le code suivant génère quatre diagrammes en barre indiquant la répartition des notes des différents restaurants vus dans la section précédente.</p>
-<div class="cell" data-hash="18-purrr_cache/html/unnamed-chunk-51_da743af3f0f6b35d7afbbfca2e0b7c56">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb49"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a><span class="fu">walk</span>(restos, <span class="sc">~</span> <span class="fu">barplot</span>(<span class="fu">table</span>(.x)))</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div class="cell" data-hash="18-purrr_cache/html/unnamed-chunk-52_e89d73ecf612f09bdc34cdb2726c0f8e">
+<div class="cell">
 <div class="cell-output-display">
-<p><img src="18-purrr_files/figure-html/unnamed-chunk-52-1.png" class="img-fluid" width="672"></p>
+<div>
+<figure class="figure">
+<p><img src="18-purrr_files/figure-html/unnamed-chunk-52-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
 </div>
 </div>
 <p>Comme pour <code>map()</code>, la variante <code>iwalk()</code> permet d’itérer à la fois sur les valeurs et sur les noms des éléments du vecteur ou de la liste. Ceci permet par exemple d’afficher le nom du restaurant comme titre de chaque graphique.</p>
-<div class="cell" data-hash="18-purrr_cache/html/unnamed-chunk-53_d36f6ffd0c7debae5552cc309e4cbb48">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb50"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a><span class="fu">iwalk</span>(restos, <span class="sc">~</span> <span class="fu">barplot</span>(<span class="fu">table</span>(.x), <span class="at">main =</span> .y))</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div class="cell" data-hash="18-purrr_cache/html/unnamed-chunk-54_ce7cd32f3eea9d872c77b107c54b80bb">
+<div class="cell">
 <div class="cell-output-display">
-<p><img src="18-purrr_files/figure-html/unnamed-chunk-54-1.png" class="img-fluid" width="672"></p>
+<div>
+<figure class="figure">
+<p><img src="18-purrr_files/figure-html/unnamed-chunk-54-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
 </div>
 </div>
 <p>Au final, on notera que l’utilisation de <code>walk()</code>, comme elle ne retourne pas de résultats, est très proche de celle d’une boucle <code>for</code>.</p>
@@ -1005,7 +1050,7 @@ Note
 <h2 data-number="18.7" class="anchored" data-anchor-id="map2-et-pmap-itérer-sur-plusieurs-vecteurs-en-parallèle"><span class="header-section-number">18.7</span> <code>map2</code> et <code>pmap</code> : itérer sur plusieurs vecteurs en parallèle</h2>
 <p>Supposons qu’un.e collègue, qui travaille avec nous sur le jeu de données <code>rp2018</code>, nous a envoyé une liste de variables dont elle voudrait connaître les corrélations. Cette liste a été saisie dans un tableur sur deux colonnes, chaque ligne indiquant deux variables pour lesquelles elle souhaite qu’on effectue ce calcul.</p>
 <p>Après importation dans R on obtient le tableau de données suivant.</p>
-<div class="cell" data-hash="18-purrr_cache/html/unnamed-chunk-55_88fca28bc4e883f431a62cacc06ca946">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb51"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a>correlations <span class="ot">&lt;-</span> <span class="fu">tribble</span>(</span>
 <span id="cb51-2"><a href="#cb51-2" aria-hidden="true" tabindex="-1"></a>    <span class="sc">~</span>var1, <span class="sc">~</span>var2,</span>
 <span id="cb51-3"><a href="#cb51-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">"dipl_sup"</span>, <span class="st">"dipl_aucun"</span>,</span>
@@ -1032,7 +1077,7 @@ Note
 <li>une fonction qui accepte deux arguments : ceux-ci prendront tour à tour les deux valeurs courantes des deux listes ou vecteurs itérés</li>
 </ol>
 <p>On peut donc utiliser <code>map2</code> pour itérer parallèlement sur les deux colonnes <code>var1</code> et <code>var2</code> de notre tableau <code>correlations</code>, et calculer la corrélation des deux colonnes correspondantes de <code>rp2018</code>.</p>
-<div class="cell" data-hash="18-purrr_cache/html/unnamed-chunk-56_1291ecdd8a798a3c15870506a728fbd3">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb52"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a><span class="fu">map2</span>(</span>
 <span id="cb52-2"><a href="#cb52-2" aria-hidden="true" tabindex="-1"></a>    correlations<span class="sc">$</span>var1,</span>
 <span id="cb52-3"><a href="#cb52-3" aria-hidden="true" tabindex="-1"></a>    correlations<span class="sc">$</span>var2,</span>
@@ -1054,7 +1099,7 @@ Note
 <span id="cb52-19"><a href="#cb52-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] -0.7786399</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p><code>map2()</code> propose les mêmes variantes <code>map2_int()</code>, <code>mapr2_chr()</code>, etc. que <code>map()</code>. On peut donc utiliser <code>map2_dbl()</code> pour récupérer un vecteur numérique plutôt qu’une liste, et l’utiliser par exemple pour rajouter une colonne à notre tableau de départ.</p>
-<div class="cell" data-hash="18-purrr_cache/html/unnamed-chunk-57_abd5e81246c8098df71030c386d9c65d">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb53"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a>correlations<span class="sc">$</span>corr <span class="ot">&lt;-</span> <span class="fu">map2_dbl</span>(</span>
 <span id="cb53-2"><a href="#cb53-2" aria-hidden="true" tabindex="-1"></a>    correlations<span class="sc">$</span>var1,</span>
 <span id="cb53-3"><a href="#cb53-3" aria-hidden="true" tabindex="-1"></a>    correlations<span class="sc">$</span>var2,</span>
@@ -1073,7 +1118,7 @@ Note
 </div>
 <p>Si on souhaite uniquement capturer les effets de bord sans récupérer les résultats de la fonctions appliquée, on peut aussi utiliser la variante <code>walk2()</code>.</p>
 <p>Supposons maintenant que notre collègue nous a envoyé, toujours sous la même forme, une liste de variables dont elle souhaite obtenir un nuage de points, mais en fournissant également un titre à ajouter au graphique. On obtient le tableau suivant :</p>
-<div class="cell" data-hash="18-purrr_cache/html/unnamed-chunk-58_cbf86ec365f53d68007f9a346dd640c0">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb54"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a>nuages <span class="ot">&lt;-</span> <span class="fu">tribble</span>(</span>
 <span id="cb54-2"><a href="#cb54-2" aria-hidden="true" tabindex="-1"></a>    <span class="sc">~</span>var1, <span class="sc">~</span>var2, <span class="sc">~</span>titre,</span>
 <span id="cb54-3"><a href="#cb54-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">"dipl_sup"</span>, <span class="st">"dipl_aucun"</span>, <span class="st">"Diplômés du supérieur x sans diplôme"</span>,</span>
@@ -1098,7 +1143,7 @@ Note
 <li>une fonction acceptant autant d’arguments que de vecteur ou listes sur lesquels on itère</li>
 </ul>
 <p>Dans notre exemple on aurait donc un appel de la forme suivante.</p>
-<div class="cell" data-hash="18-purrr_cache/html/unnamed-chunk-60_4eb8a9eb27d9dfa629e394d39ff2dff5">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb55"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a><span class="fu">pwalk</span>(</span>
 <span id="cb55-2"><a href="#cb55-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">list</span>(nuages<span class="sc">$</span>var1, nuages<span class="sc">$</span>var2, nuages<span class="sc">$</span>titre),</span>
 <span id="cb55-3"><a href="#cb55-3" aria-hidden="true" tabindex="-1"></a>    <span class="cf">function</span>(var1, var2, titre) {</span>
@@ -1109,13 +1154,17 @@ Note
 <span id="cb55-8"><a href="#cb55-8" aria-hidden="true" tabindex="-1"></a>    }</span>
 <span id="cb55-9"><a href="#cb55-9" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div class="cell" data-hash="18-purrr_cache/html/unnamed-chunk-61_a5b9c271257b5452ffbc9169d2c15efe">
+<div class="cell">
 <div class="cell-output-display">
-<p><img src="18-purrr_files/figure-html/unnamed-chunk-61-1.png" class="img-fluid" width="672"></p>
+<div>
+<figure class="figure">
+<p><img src="18-purrr_files/figure-html/unnamed-chunk-61-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
 </div>
 </div>
 <p>Petite précision, si la liste est nommée, il faut que les noms des arguments de la fonction correspondent aux noms de la liste.</p>
-<div class="cell" data-hash="18-purrr_cache/html/unnamed-chunk-62_22d80698a5f4d64fbd8c5742bdbdab96">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb56"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true" tabindex="-1"></a><span class="fu">pwalk</span>(</span>
 <span id="cb56-2"><a href="#cb56-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">list</span>(<span class="at">v1 =</span> nuages<span class="sc">$</span>var1, <span class="at">v2 =</span> nuages<span class="sc">$</span>var2, <span class="at">titre =</span> nuages<span class="sc">$</span>titre),</span>
 <span id="cb56-3"><a href="#cb56-3" aria-hidden="true" tabindex="-1"></a>    <span class="cf">function</span>(v1, v2, titre) {</span>
@@ -1127,7 +1176,7 @@ Note
 <span id="cb56-9"><a href="#cb56-9" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>À noter que comme <code>nuages</code> est un tableau de données, donc une liste dont les éléments sont ses colonnes, on obtient le même résultat avec :</p>
-<div class="cell" data-hash="18-purrr_cache/html/unnamed-chunk-63_a0f09a7e05c07c42f97718f61211d73d">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb57"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true" tabindex="-1"></a><span class="fu">pwalk</span>(</span>
 <span id="cb57-2"><a href="#cb57-2" aria-hidden="true" tabindex="-1"></a>    nuages,</span>
 <span id="cb57-3"><a href="#cb57-3" aria-hidden="true" tabindex="-1"></a>    <span class="cf">function</span>(var1, var2, titre) {</span>
@@ -1139,7 +1188,7 @@ Note
 <span id="cb57-9"><a href="#cb57-9" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>On peut utiliser la syntaxe “formule” pour la fonction anonyme, dans ce cas les arguments sont accessibles avec la notation <code>..1</code>, <code>..2</code>, etc. On notera que dans ce cas la syntaxe “formule” est sans doute moins lisible que la syntaxe classique avec <code>function()</code> qui permet de nommer les paramètres.</p>
-<div class="cell" data-hash="18-purrr_cache/html/unnamed-chunk-64_2d58cc981ee77c246b2f1360914cd93c">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb58"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb58-1"><a href="#cb58-1" aria-hidden="true" tabindex="-1"></a><span class="fu">pwalk</span>(</span>
 <span id="cb58-2"><a href="#cb58-2" aria-hidden="true" tabindex="-1"></a>    nuages,</span>
 <span id="cb58-3"><a href="#cb58-3" aria-hidden="true" tabindex="-1"></a>    <span class="sc">~</span> {</span>
@@ -1156,14 +1205,14 @@ Note
 <h2 data-number="18.8" class="anchored" data-anchor-id="répéter-une-opération"><span class="header-section-number">18.8</span> Répéter une opération</h2>
 <p>Les fonctions de <code>purrr</code> peuvent être utilisées quand on souhaite juste répéter une opération un certain nombre de fois, à la place d’une boucle <code>for</code>.</p>
 <p>Par exemple si on souhaite générer 10 vecteurs de 100 nombre aléatoires, on pourra remplacer la boucle suivante :</p>
-<div class="cell" data-hash="18-purrr_cache/html/unnamed-chunk-66_4b9bdd01aea1eff4c85db0ff9b405485">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb59"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb59-1"><a href="#cb59-1" aria-hidden="true" tabindex="-1"></a>res <span class="ot">&lt;-</span> <span class="fu">list</span>()</span>
 <span id="cb59-2"><a href="#cb59-2" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>) {</span>
 <span id="cb59-3"><a href="#cb59-3" aria-hidden="true" tabindex="-1"></a>    res <span class="ot">&lt;-</span> <span class="fu">c</span>(res, <span class="fu">rnorm</span>(<span class="dv">100</span>))</span>
 <span id="cb59-4"><a href="#cb59-4" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Par un appel à <code>map()</code> :</p>
-<div class="cell" data-hash="18-purrr_cache/html/unnamed-chunk-67_cbe9ee1a9e337e424a8969cb2474726b">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb60"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb60-1"><a href="#cb60-1" aria-hidden="true" tabindex="-1"></a>res <span class="ot">&lt;-</span> <span class="fu">map</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>, <span class="sc">~</span> <span class="fu">rnorm</span>(<span class="dv">100</span>))</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Ce qui donne un code un peu plus compact et plus lisible.</p>
@@ -1185,34 +1234,34 @@ Note
 <h2 data-number="18.9" class="anchored" data-anchor-id="quand-ne-pas-utiliser-map"><span class="header-section-number">18.9</span> Quand (ne pas) utiliser <code>map</code></h2>
 <p>Une fois qu’on a compris la logique de <code>map()</code> et de ses variantes, on peut être tenté.es de l’appliquer un peu systématiquement. Il faut cependant garder en tête que son usage n’est pas toujours conseillé notamment dans les cas où il existe déjà une fonction vectorisée qui permet d’obtenir le même résultat.</p>
 <p>Ainsi cela n’aurait pas de sens de faire :</p>
-<div class="cell" data-hash="18-purrr_cache/html/unnamed-chunk-68_fd15176d7460a3129041e8a7af85e6a7">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb61"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb61-1"><a href="#cb61-1" aria-hidden="true" tabindex="-1"></a>v <span class="ot">&lt;-</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">5</span></span>
 <span id="cb61-2"><a href="#cb61-2" aria-hidden="true" tabindex="-1"></a><span class="fu">map_dbl</span>(v, <span class="sc">~</span> .x <span class="sc">+</span> <span class="dv">10</span>)</span>
 <span id="cb61-3"><a href="#cb61-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 11 12 13 14 15</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Quand on peut simplement faire :</p>
-<div class="cell" data-hash="18-purrr_cache/html/unnamed-chunk-69_0c7c8d03ec36cd6abc1f7e20bf12e5c7">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb62"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb62-1"><a href="#cb62-1" aria-hidden="true" tabindex="-1"></a>v <span class="sc">+</span> <span class="dv">10</span></span>
 <span id="cb62-2"><a href="#cb62-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 11 12 13 14 15</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Pour prendre un exemple un peu moins caricatural, de nombreuses fonctions de <code>stringr</code> sont vectorisées, il n’est donc pas utile de faire :</p>
-<div class="cell" data-hash="18-purrr_cache/html/unnamed-chunk-70_1eb0336f6373fc55a07d4de49f6f93c0">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb63"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb63-1"><a href="#cb63-1" aria-hidden="true" tabindex="-1"></a>textes <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"fantastique"</span>, <span class="st">"effectivement"</span>, <span class="st">"igloo"</span>)</span>
 <span id="cb63-2"><a href="#cb63-2" aria-hidden="true" tabindex="-1"></a><span class="fu">map_int</span>(textes, <span class="sc">~</span> <span class="fu">str_count</span>(.x, <span class="st">"f"</span>))</span>
 <span id="cb63-3"><a href="#cb63-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 1 2 0</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Quand on peut faire simplement :</p>
-<div class="cell" data-hash="18-purrr_cache/html/unnamed-chunk-71_4142642e7dfe2df1319c75e9a343956c">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb64"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb64-1"><a href="#cb64-1" aria-hidden="true" tabindex="-1"></a><span class="fu">str_count</span>(textes, <span class="st">"f"</span>)</span>
 <span id="cb64-2"><a href="#cb64-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 1 2 0</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Par contre <code>map()</code> est utile quand on souhaite appliquer une fonction qui n’est pas vectorisée à plusieurs valeurs, comme c’est le cas par exemple avec <code>read_csv()</code>, qui ne permet pas de charger plusieurs fichiers d’un coup :</p>
-<div class="cell" data-hash="18-purrr_cache/html/unnamed-chunk-72_f13439bc3860cedc53ee2f0c7ec93ad7">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb65"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb65-1"><a href="#cb65-1" aria-hidden="true" tabindex="-1"></a>fichiers <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"fichier1.csv"</span>, <span class="st">"fichier2.csv"</span>)</span>
 <span id="cb65-2"><a href="#cb65-2" aria-hidden="true" tabindex="-1"></a>l <span class="ot">&lt;-</span> fichiers <span class="sc">%&gt;%</span> <span class="fu">map</span>(read_csv)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Ou quand on veut itérer sur un argument non vectorisé, par exemple ici sur l’argument <code>pattern</code> de <code>str_count()</code> :</p>
-<div class="cell" data-hash="18-purrr_cache/html/unnamed-chunk-73_3c772a698b09f4eaa05f2c5abc46c5c3">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb66"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb66-1"><a href="#cb66-1" aria-hidden="true" tabindex="-1"></a>voyelle <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="at">a =</span> <span class="st">"a"</span>, <span class="at">e =</span> <span class="st">"e"</span>, <span class="at">i =</span> <span class="st">"i"</span>)</span>
 <span id="cb66-2"><a href="#cb66-2" aria-hidden="true" tabindex="-1"></a>textes <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"brouette"</span>, <span class="st">"moto"</span>, <span class="st">"igloo"</span>)</span>
 <span id="cb66-3"><a href="#cb66-3" aria-hidden="true" tabindex="-1"></a>voyelle <span class="sc">%&gt;%</span> <span class="fu">map</span>(<span class="sc">~</span> <span class="fu">str_count</span>(textes, <span class="at">pattern =</span> .x))</span>
@@ -1226,7 +1275,7 @@ Note
 <span id="cb66-11"><a href="#cb66-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 0 0 1</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>On l’utilise également quand on veut appliquer une fonction non pas à une liste, mais aux éléments qu’elle contient :</p>
-<div class="cell" data-hash="18-purrr_cache/html/unnamed-chunk-74_c78325e0518192efd74129a181f106fb">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb67"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb67-1"><a href="#cb67-1" aria-hidden="true" tabindex="-1"></a>l <span class="ot">&lt;-</span> <span class="fu">list</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>, <span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">5</span>))</span>
 <span id="cb67-2"><a href="#cb67-2" aria-hidden="true" tabindex="-1"></a>l <span class="sc">%&gt;%</span> <span class="fu">map_int</span>(length)</span>
 <span id="cb67-3"><a href="#cb67-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 3 2</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -1254,7 +1303,7 @@ Note
 <h3 data-number="18.12.1" class="anchored" data-anchor-id="map-et-ses-variantes-1"><span class="header-section-number">18.12.1</span> <code>map</code> et ses variantes</h3>
 <p><strong>Exercice 1.1</strong></p>
 <p>La liste suivante rassemble les notes obtenues par un élève dans différentes matières.</p>
-<div class="cell" data-hash="18-purrr_cache/html/unnamed-chunk-75_92094981a30eac95e91f148471da5f96">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb68"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb68-1"><a href="#cb68-1" aria-hidden="true" tabindex="-1"></a>notes <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
 <span id="cb68-2"><a href="#cb68-2" aria-hidden="true" tabindex="-1"></a>    <span class="at">maths =</span> <span class="fu">c</span>(<span class="dv">12</span>, <span class="dv">15</span>, <span class="dv">8</span>, <span class="dv">10</span>),</span>
 <span id="cb68-3"><a href="#cb68-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">anglais =</span> <span class="fu">c</span>(<span class="dv">18</span>, <span class="dv">11</span>, <span class="dv">9</span>),</span>
@@ -1264,18 +1313,18 @@ Note
 </div>
 <p>En utilisant <code>map()</code>, calculer une liste indiquant la moyenne dans chaque matière.</p>
 <div class="solution-exo">
-<div class="cell" data-hash="18-purrr_cache/html/unnamed-chunk-76_cc822ce902bb5a0e759660b5bb9a95f0">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb69"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb69-1"><a href="#cb69-1" aria-hidden="true" tabindex="-1"></a>notes <span class="sc">%&gt;%</span> <span class="fu">map</span>(mean)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div>
 <p>En utilisant une variante de <code>map()</code>, simplifier le résultat pour obtenir un vecteur numérique.</p>
 <div class="solution-exo">
-<div class="cell" data-hash="18-purrr_cache/html/unnamed-chunk-77_68140b8f81e6e6eb7f3d264c9f55b72a">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb70"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb70-1"><a href="#cb70-1" aria-hidden="true" tabindex="-1"></a>notes <span class="sc">%&gt;%</span> <span class="fu">map_dbl</span>(mean)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div>
 <p>On a rajouté à la liste les notes obtenues en technologie, parmi lesquelles une note est manquante.</p>
-<div class="cell" data-hash="18-purrr_cache/html/unnamed-chunk-78_fc5c7eae746b8ecc19878bbd2ad936fc">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb71"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb71-1"><a href="#cb71-1" aria-hidden="true" tabindex="-1"></a>notes <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
 <span id="cb71-2"><a href="#cb71-2" aria-hidden="true" tabindex="-1"></a>    <span class="at">maths =</span> <span class="fu">c</span>(<span class="dv">12</span>, <span class="dv">15</span>, <span class="dv">8</span>, <span class="dv">10</span>),</span>
 <span id="cb71-3"><a href="#cb71-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">anglais =</span> <span class="fu">c</span>(<span class="dv">18</span>, <span class="dv">11</span>, <span class="dv">9</span>),</span>
@@ -1286,7 +1335,7 @@ Note
 </div>
 <p>Calculer à nouveau un vecteur numérique des moyennes par matière, mais sans tenir compte de la valeur manquante.</p>
 <div class="solution-exo">
-<div class="cell" data-hash="18-purrr_cache/html/unnamed-chunk-79_d1c4e93594b913fb05221ec031749700">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb72"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb72-1"><a href="#cb72-1" aria-hidden="true" tabindex="-1"></a>notes <span class="sc">%&gt;%</span> <span class="fu">map_dbl</span>(<span class="sc">~</span> <span class="fu">mean</span>(.x, <span class="at">na.rm =</span> <span class="cn">TRUE</span>))</span>
 <span id="cb72-2"><a href="#cb72-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Ou bien</span></span>
 <span id="cb72-3"><a href="#cb72-3" aria-hidden="true" tabindex="-1"></a>notes <span class="sc">%&gt;%</span> <span class="fu">map_dbl</span>(mean, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -1294,7 +1343,7 @@ Note
 </div>
 <p>Calculer une liste qui contient pour chaque matière la moyenne, la note minimale et la note maximale.</p>
 <div class="solution-exo">
-<div class="cell" data-hash="18-purrr_cache/html/unnamed-chunk-80_347157a0f89a6a457e0346562b06841e">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb73"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb73-1"><a href="#cb73-1" aria-hidden="true" tabindex="-1"></a><span class="co"># On peut aussi utiliser list() plutôt que c()</span></span>
 <span id="cb73-2"><a href="#cb73-2" aria-hidden="true" tabindex="-1"></a>notes <span class="sc">%&gt;%</span></span>
 <span id="cb73-3"><a href="#cb73-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">map</span>(<span class="sc">~</span> <span class="fu">c</span>(</span>
@@ -1306,7 +1355,7 @@ Note
 </div>
 <p><strong>Exercice 1.2</strong></p>
 <p>La liste suivante comporte les parcours biographiques de 5 personnes sous la forme de vecteurs indiquant leurs communes de résidence successives.</p>
-<div class="cell" data-hash="18-purrr_cache/html/unnamed-chunk-81_daac27dc6a047f36de1c58f9c5f251e8">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb74"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb74-1"><a href="#cb74-1" aria-hidden="true" tabindex="-1"></a>parcours <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
 <span id="cb74-2"><a href="#cb74-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">c</span>(<span class="st">"Lyon"</span>, <span class="st">"F1ixevi11e"</span>, <span class="st">"Saint-Dié-en-Poui11y"</span>),</span>
 <span id="cb74-3"><a href="#cb74-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">c</span>(<span class="st">"Sainte-Gabelle-sur-Sarthe"</span>),</span>
@@ -1317,32 +1366,32 @@ Note
 </div>
 <p>À l’aide de <code>map()</code>, calculer une nouvelle liste comportant le nombre de villes de résidence pour chaque parcours.</p>
 <div class="solution-exo">
-<div class="cell" data-hash="18-purrr_cache/html/unnamed-chunk-82_8fd553bcdd77854cfb404f1bdfdde552">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb75"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb75-1"><a href="#cb75-1" aria-hidden="true" tabindex="-1"></a>parcours <span class="sc">%&gt;%</span> <span class="fu">map</span>(length)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div>
 <p>Utiliser une variante de <code>map()</code> pour simplifier le résultat et obtenir un vecteur numérique plutôt qu’une liste.</p>
 <div class="solution-exo">
-<div class="cell" data-hash="18-purrr_cache/html/unnamed-chunk-83_7c29eca7fa0fcfa9db3ce48e1d77e0b8">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb76"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb76-1"><a href="#cb76-1" aria-hidden="true" tabindex="-1"></a>parcours <span class="sc">%&gt;%</span> <span class="fu">map_int</span>(length)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div>
 <p>Déterminer pour chaque parcours le nombre de fois où la personne a résidé à Lyon.</p>
 <div class="solution-exo">
-<div class="cell" data-hash="18-purrr_cache/html/unnamed-chunk-84_759811227c0fae0d30ec8896c1f139e9">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb77"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb77-1"><a href="#cb77-1" aria-hidden="true" tabindex="-1"></a>parcours <span class="sc">%&gt;%</span> <span class="fu">map_int</span>(<span class="sc">~</span> <span class="fu">sum</span>(.x <span class="sc">==</span> <span class="st">"Lyon"</span>))</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div>
 <p>On vient de repérer un problème dans les données : des caractères “l” ont été remplacés par des “1”. Utiliser <code>map()</code> pour corriger l’objet <code>parcours</code> en remplaçant tous les “1” par des “l”.</p>
 <div class="solution-exo">
-<div class="cell" data-hash="18-purrr_cache/html/unnamed-chunk-85_b90e4da738b41cb56afc0de94dfc0fab">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb78"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb78-1"><a href="#cb78-1" aria-hidden="true" tabindex="-1"></a>parcours <span class="ot">&lt;-</span> parcours <span class="sc">%&gt;%</span></span>
 <span id="cb78-2"><a href="#cb78-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">map</span>(<span class="sc">~</span> <span class="fu">str_replace_all</span>(.x, <span class="st">"1"</span>, <span class="st">"l"</span>))</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div>
 <p><strong>Exercice 1.3</strong></p>
 <p>Le vecteur suivant contient les adresses de deux fichiers CSV contenant les données de <code>rp2018</code> pour les départements de l’Ain et du Rhône :</p>
-<div class="cell" data-hash="18-purrr_cache/html/unnamed-chunk-86_195b4197b511930efbac2057745c9bcc">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb79"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb79-1"><a href="#cb79-1" aria-hidden="true" tabindex="-1"></a>urls <span class="ot">&lt;-</span> <span class="fu">c</span>(</span>
 <span id="cb79-2"><a href="#cb79-2" aria-hidden="true" tabindex="-1"></a>    <span class="st">"https://raw.githubusercontent.com/juba/tidyverse/main/resources/data/rp2018/rp2018_01.csv"</span>,</span>
 <span id="cb79-3"><a href="#cb79-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">"https://raw.githubusercontent.com/juba/tidyverse/main/resources/data/rp2018/rp2018_69.csv"</span></span>
@@ -1350,13 +1399,13 @@ Note
 </div>
 <p>Utiliser <code>map()</code> pour charger ces deux tableaux de données dans une liste nommée <code>dfs</code>.</p>
 <div class="solution-exo">
-<div class="cell" data-hash="18-purrr_cache/html/unnamed-chunk-87_ea7a1b5c9abd0ee02fd04a579e63bdac">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb80"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb80-1"><a href="#cb80-1" aria-hidden="true" tabindex="-1"></a>dfs <span class="ot">&lt;-</span> urls <span class="sc">%&gt;%</span> <span class="fu">map</span>(read_csv)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div>
 <p>Utiliser <code>map()</code> et <code>bind_rows()</code> pour charger ces deux tableaux de données et les regrouper en une seule table <code>d</code>. Que constatez-vous ?</p>
 <div class="solution-exo">
-<div class="cell" data-hash="18-purrr_cache/html/unnamed-chunk-88_04123d4a12343f4e10b1a626c155221d">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb81"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb81-1"><a href="#cb81-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Génère une erreur !</span></span>
 <span id="cb81-2"><a href="#cb81-2" aria-hidden="true" tabindex="-1"></a>d <span class="ot">&lt;-</span> urls <span class="sc">%&gt;%</span></span>
 <span id="cb81-3"><a href="#cb81-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">map</span>(read_csv) <span class="sc">%&gt;%</span></span>
@@ -1365,14 +1414,14 @@ Note
 </div>
 <p>À l’aide de <code>map()</code>, afficher la variable <code>code_insee</code> des deux tableaux de <code>dfs</code>. D’où vient le problème ?</p>
 <div class="solution-exo">
-<div class="cell" data-hash="18-purrr_cache/html/unnamed-chunk-89_c8e921b558bb4b51daad19faca8273e0">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb82"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb82-1"><a href="#cb82-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Une variable a été importée en character, l'autre en numérique</span></span>
 <span id="cb82-2"><a href="#cb82-2" aria-hidden="true" tabindex="-1"></a>dfs <span class="sc">%&gt;%</span> <span class="fu">map</span>(<span class="sc">~</span> .x<span class="sc">$</span>code_insee)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div>
 <p>Trouver une solution pour corriger le problème.</p>
 <div class="solution-exo">
-<div class="cell" data-hash="18-purrr_cache/html/unnamed-chunk-90_5b6c43542240fa8a88e33a672297f215">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb83"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb83-1"><a href="#cb83-1" aria-hidden="true" tabindex="-1"></a><span class="co"># En convertissant manuellement code_insee en character</span></span>
 <span id="cb83-2"><a href="#cb83-2" aria-hidden="true" tabindex="-1"></a>d <span class="ot">&lt;-</span> urls <span class="sc">%&gt;%</span></span>
 <span id="cb83-3"><a href="#cb83-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">map</span>(<span class="sc">~</span> {</span>
@@ -1393,7 +1442,7 @@ Note
 <h3 data-number="18.12.2" class="anchored" data-anchor-id="modify-et-itération-sur-les-colonnes-dun-tableau"><span class="header-section-number">18.12.2</span> <code>modify</code> et itération sur les colonnes d’un tableau</h3>
 <p><strong>Exercice 2.1</strong></p>
 <p>Soit le tableau de données <code>d</code> suivant :</p>
-<div class="cell" data-hash="18-purrr_cache/html/unnamed-chunk-91_f3b7e659dc89199cdf8561e88d5e29a2">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb84"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb84-1"><a href="#cb84-1" aria-hidden="true" tabindex="-1"></a>d <span class="ot">&lt;-</span> <span class="fu">tribble</span>(</span>
 <span id="cb84-2"><a href="#cb84-2" aria-hidden="true" tabindex="-1"></a>    <span class="sc">~</span>prenom,              <span class="sc">~</span>nom,               <span class="sc">~</span>age, <span class="sc">~</span>taille,</span>
 <span id="cb84-3"><a href="#cb84-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">"pierre-edmond"</span>,      <span class="st">"multinivo"</span>,        <span class="dv">19</span>,   <span class="dv">151</span>,</span>
@@ -1403,13 +1452,13 @@ Note
 </div>
 <p>Utliser <code>typeof()</code> et <code>map()</code> pour afficher le type de toutes les colonnes de <code>d</code>.</p>
 <div class="solution-exo">
-<div class="cell" data-hash="18-purrr_cache/html/unnamed-chunk-92_e3d4803e39db5df89e92a3c517816bef">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb85"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb85-1"><a href="#cb85-1" aria-hidden="true" tabindex="-1"></a>d <span class="sc">%&gt;%</span> <span class="fu">map</span>(typeof)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div>
 <p>En utilisant <code>keep()</code> et <code>map()</code>, calculer la moyenne de toutes les variables numériques de <code>d</code>.</p>
 <div class="solution-exo">
-<div class="cell" data-hash="18-purrr_cache/html/unnamed-chunk-93_9dc4f93725e5d7be7a1c348a9618c672">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb86"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb86-1"><a href="#cb86-1" aria-hidden="true" tabindex="-1"></a>d <span class="sc">%&gt;%</span></span>
 <span id="cb86-2"><a href="#cb86-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">keep</span>(is.numeric) <span class="sc">%&gt;%</span></span>
 <span id="cb86-3"><a href="#cb86-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">map</span>(mean, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -1417,13 +1466,13 @@ Note
 </div>
 <p>En utilisant <code>modify_if()</code>, appliquer <code>str_to_title()</code> à toutes les colonnes de type <code>character</code> pour corriger la capitalisation des noms et prénoms.</p>
 <div class="solution-exo">
-<div class="cell" data-hash="18-purrr_cache/html/unnamed-chunk-94_0a74e0ef05e60093b372bd22c5de391b">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb87"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb87-1"><a href="#cb87-1" aria-hidden="true" tabindex="-1"></a>d <span class="ot">&lt;-</span> d <span class="sc">%&gt;%</span> <span class="fu">modify_if</span>(is.character, str_to_title)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div>
 <p>À l’aide de la fonction <code>discard()</code>, supprimer de <code>d</code> les colonnes qui comportent des <code>NA</code>.</p>
 <div class="solution-exo">
-<div class="cell" data-hash="18-purrr_cache/html/unnamed-chunk-95_b53b7470d6b3c170a36726662514108b">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb88"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb88-1"><a href="#cb88-1" aria-hidden="true" tabindex="-1"></a>d <span class="sc">%&gt;%</span> <span class="fu">discard</span>(<span class="sc">~</span> <span class="fu">sum</span>(<span class="fu">is.na</span>(.x)) <span class="sc">&gt;</span> <span class="dv">0</span>)</span>
 <span id="cb88-2"><a href="#cb88-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Ou bien</span></span>
 <span id="cb88-3"><a href="#cb88-3" aria-hidden="true" tabindex="-1"></a>d <span class="sc">%&gt;%</span> <span class="fu">discard</span>(<span class="sc">~</span> <span class="fu">any</span>(<span class="fu">is.na</span>(.x)))</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -1434,7 +1483,7 @@ Note
 <h3 data-number="18.12.3" class="anchored" data-anchor-id="imap-et-walk"><span class="header-section-number">18.12.3</span> <code>imap</code> et <code>walk</code></h3>
 <p><strong>Exercice 3.1</strong></p>
 <p>On reprend la liste de notes vue dans un exercice précédent.</p>
-<div class="cell" data-hash="18-purrr_cache/html/unnamed-chunk-96_a35907f39fb9975a003a3d75640d6f8b">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb89"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb89-1"><a href="#cb89-1" aria-hidden="true" tabindex="-1"></a>notes <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
 <span id="cb89-2"><a href="#cb89-2" aria-hidden="true" tabindex="-1"></a>    <span class="at">maths =</span> <span class="fu">c</span>(<span class="dv">12</span>, <span class="dv">15</span>, <span class="dv">8</span>, <span class="dv">10</span>),</span>
 <span id="cb89-3"><a href="#cb89-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">anglais =</span> <span class="fu">c</span>(<span class="dv">18</span>, <span class="dv">11</span>, <span class="dv">9</span>),</span>
@@ -1444,7 +1493,7 @@ Note
 <span id="cb89-7"><a href="#cb89-7" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Sans utiliser de boucle <code>for</code>, afficher avec la fonction <code>message()</code> les valeurs de chaque moyenne tour à tour de manière à obtenir le résultat suivant :</p>
-<div class="cell" data-hash="18-purrr_cache/html/unnamed-chunk-97_c87130dddb2c775b2c3298187b765731">
+<div class="cell">
 <pre><code>#&gt; 11.25
 #&gt; 12.6666666666667
 #&gt; 9
@@ -1452,12 +1501,12 @@ Note
 #&gt; 12</code></pre>
 </div>
 <div class="solution-exo">
-<div class="cell" data-hash="18-purrr_cache/html/pur31b_85032424c578bb89f170fc465e039a32">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb91"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb91-1"><a href="#cb91-1" aria-hidden="true" tabindex="-1"></a>notes <span class="sc">%&gt;%</span> <span class="fu">walk</span>(<span class="sc">~</span> <span class="fu">message</span>(<span class="fu">mean</span>(.x, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)))</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div>
 <p>De la même manière afficher pour chaque matière les messages suivants :</p>
-<div class="cell" data-hash="18-purrr_cache/html/unnamed-chunk-98_7f47359765389ed55ed5ec3bda49a8da">
+<div class="cell">
 <pre><code>#&gt; Votre moyenne en maths est 11.25
 #&gt; Votre moyenne en anglais est 12.6666666666667
 #&gt; Votre moyenne en sport est 9
@@ -1465,14 +1514,14 @@ Note
 #&gt; Votre moyenne en techno est 12</code></pre>
 </div>
 <div class="solution-exo">
-<div class="cell" data-hash="18-purrr_cache/html/pur32_778a6e31240006a636b7798a60031284">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb93"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb93-1"><a href="#cb93-1" aria-hidden="true" tabindex="-1"></a>notes <span class="sc">%&gt;%</span> <span class="fu">iwalk</span>(<span class="cf">function</span>(notes, matiere) {</span>
 <span id="cb93-2"><a href="#cb93-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">message</span>(<span class="st">"Votre moyenne en "</span>, matiere, <span class="st">" est "</span>, <span class="fu">mean</span>(notes, <span class="at">na.rm =</span> <span class="cn">TRUE</span>))</span>
 <span id="cb93-3"><a href="#cb93-3" aria-hidden="true" tabindex="-1"></a>})</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div>
 <p>Construire un tableau de données avec une matière par ligne et deux colonnes contenant le nom de la matière et la valeur de la moyenne.</p>
-<div class="cell" data-hash="18-purrr_cache/html/unnamed-chunk-99_c90d85eb6af8c66bc73f55e96c1a0a4f">
+<div class="cell">
 <pre><code>#&gt; # A tibble: 5 × 2
 #&gt;   matiere moyenne
 #&gt;   &lt;chr&gt;     &lt;dbl&gt;
@@ -1483,7 +1532,7 @@ Note
 #&gt; 5 techno     12</code></pre>
 </div>
 <div class="solution-exo">
-<div class="cell" data-hash="18-purrr_cache/html/pur31c_26189c23ea17c5fa88d792754ce3b5c6">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb95"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb95-1"><a href="#cb95-1" aria-hidden="true" tabindex="-1"></a>notes <span class="sc">%&gt;%</span></span>
 <span id="cb95-2"><a href="#cb95-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">imap</span>(<span class="cf">function</span>(notes, matiere) {</span>
 <span id="cb95-3"><a href="#cb95-3" aria-hidden="true" tabindex="-1"></a>        <span class="fu">tibble</span>(</span>
@@ -1496,7 +1545,7 @@ Note
 </div>
 <p><strong>Exercice 3.2</strong></p>
 <p>Lors de la présentation des boucles <code>for</code>, on a vu la fonction suivante qui affiche les dimensions de chaque tableau de données contenu dans une liste.</p>
-<div class="cell" data-hash="18-purrr_cache/html/unnamed-chunk-100_2ab14b135b4df96c5c686bbd25f6ded4">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb96"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb96-1"><a href="#cb96-1" aria-hidden="true" tabindex="-1"></a>affiche_dimensions <span class="ot">&lt;-</span> <span class="cf">function</span>(dfs) {</span>
 <span id="cb96-2"><a href="#cb96-2" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> (i <span class="cf">in</span> <span class="fu">seq_along</span>(dfs)) {</span>
 <span id="cb96-3"><a href="#cb96-3" aria-hidden="true" tabindex="-1"></a>        name <span class="ot">&lt;-</span> <span class="fu">names</span>(dfs)[[i]]</span>
@@ -1516,7 +1565,7 @@ Note
 </div>
 <p>Réécrire <code>affiche_dimensions()</code> en utilisant <code>iwalk()</code>.</p>
 <div class="solution-exo">
-<div class="cell" data-hash="18-purrr_cache/html/unnamed-chunk-101_76afaecc493e276e2b2560376f680c09">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb97"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb97-1"><a href="#cb97-1" aria-hidden="true" tabindex="-1"></a>affiche_dimensions <span class="ot">&lt;-</span> <span class="cf">function</span>(dfs) {</span>
 <span id="cb97-2"><a href="#cb97-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">iwalk</span>(dfs, <span class="cf">function</span>(df, name) {</span>
 <span id="cb97-3"><a href="#cb97-3" aria-hidden="true" tabindex="-1"></a>        <span class="fu">message</span>(<span class="st">"Dimensions de "</span>, name, <span class="st">" : "</span>, <span class="fu">nrow</span>(df), <span class="st">"x"</span>, <span class="fu">ncol</span>(df))</span>
@@ -1526,7 +1575,7 @@ Note
 </div>
 <p><strong>Exercice 3.3</strong></p>
 <p>Lors de la présentation des boucles, on a vu la fonction <code>summaries</code> suivante, qui prend en paramètre un tableau de données et une liste de noms de colonnes, et applique la fonction <code>summary()</code> à ces colonnes.</p>
-<div class="cell" data-hash="18-purrr_cache/html/unnamed-chunk-102_93a67f142e570604da974786efc60c88">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb98"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb98-1"><a href="#cb98-1" aria-hidden="true" tabindex="-1"></a>summaries <span class="ot">&lt;-</span> <span class="cf">function</span>(d, vars) {</span>
 <span id="cb98-2"><a href="#cb98-2" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> (var <span class="cf">in</span> vars) {</span>
 <span id="cb98-3"><a href="#cb98-3" aria-hidden="true" tabindex="-1"></a>        <span class="fu">message</span>(<span class="st">"--- "</span>, var, <span class="st">" ---"</span>)</span>
@@ -1538,7 +1587,7 @@ Note
 </div>
 <p>Réécrire la fonction sans utiliser de boucle <code>for</code>.</p>
 <div class="solution-exo">
-<div class="cell" data-hash="18-purrr_cache/html/unnamed-chunk-103_960e9a70e55afc35fa4f042fe44a2bda">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb99"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb99-1"><a href="#cb99-1" aria-hidden="true" tabindex="-1"></a>summaries <span class="ot">&lt;-</span> <span class="cf">function</span>(d, vars) {</span>
 <span id="cb99-2"><a href="#cb99-2" aria-hidden="true" tabindex="-1"></a>    vars <span class="sc">%&gt;%</span></span>
 <span id="cb99-3"><a href="#cb99-3" aria-hidden="true" tabindex="-1"></a>        <span class="fu">walk</span>(<span class="sc">~</span> {</span>
@@ -1549,7 +1598,7 @@ Note
 </div>
 </div>
 <p>Modifier cette nouvelle fonction en utilisant <code>keep()</code> ou <code>discard()</code>, pour qu’elle fonctionne sans erreur même si l’une des variables passées en arguments n’existe pas.</p>
-<div class="cell" data-hash="18-purrr_cache/html/unnamed-chunk-105_97bd9ad57b6dc13f04c4b6a618f7ba19">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb100"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb100-1"><a href="#cb100-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summaries</span>(hdv2003, <span class="fu">c</span>(<span class="st">"sexe"</span>, <span class="st">"igloo"</span>, <span class="st">"age"</span>))</span>
 <span id="cb100-2"><a href="#cb100-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; --- sexe ---</span></span>
 <span id="cb100-3"><a href="#cb100-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;     sexe     </span></span>
@@ -1565,7 +1614,7 @@ Note
 <span id="cb100-13"><a href="#cb100-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Max.   :97.00</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="solution-exo">
-<div class="cell" data-hash="18-purrr_cache/html/purrr33_67114cec44ffac64b64d9bd54ef06b15">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb101"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb101-1"><a href="#cb101-1" aria-hidden="true" tabindex="-1"></a>summaries <span class="ot">&lt;-</span> <span class="cf">function</span>(d, vars) {</span>
 <span id="cb101-2"><a href="#cb101-2" aria-hidden="true" tabindex="-1"></a>    vars <span class="sc">%&gt;%</span></span>
 <span id="cb101-3"><a href="#cb101-3" aria-hidden="true" tabindex="-1"></a>        <span class="fu">keep</span>(<span class="sc">~</span> .x <span class="sc">%in%</span> <span class="fu">names</span>(d)) <span class="sc">%&gt;%</span></span>
@@ -1581,7 +1630,7 @@ Note
 <h3 data-number="18.12.4" class="anchored" data-anchor-id="map2-et-pmap"><span class="header-section-number">18.12.4</span> <code>map2</code> et <code>pmap</code></h3>
 <p><strong>Exercice 4.1</strong></p>
 <p>Soit le tableau de données suivant, qui indique des couples de variables du jeu de données <code>hdv2003</code>.</p>
-<div class="cell" data-hash="18-purrr_cache/html/unnamed-chunk-106_c8103513fead1039b7c0823d66916ac6">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb102"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb102-1"><a href="#cb102-1" aria-hidden="true" tabindex="-1"></a>croisements <span class="ot">&lt;-</span> <span class="fu">tribble</span>(</span>
 <span id="cb102-2"><a href="#cb102-2" aria-hidden="true" tabindex="-1"></a>    <span class="sc">~</span>v1,      <span class="sc">~</span>v2,</span>
 <span id="cb102-3"><a href="#cb102-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">"qualif"</span>, <span class="st">"clso"</span>,</span>
@@ -1601,7 +1650,7 @@ Note
 </div>
 <p>À l’aide de <code>map2()</code>, calculer une liste qui contient les tableaux croisés des quatre couples de variables de <code>croisements</code>.</p>
 <div class="solution-exo">
-<div class="cell" data-hash="18-purrr_cache/html/unnamed-chunk-107_d16529eec8fa74053f36b75a627299aa">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb103"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb103-1"><a href="#cb103-1" aria-hidden="true" tabindex="-1"></a><span class="fu">map2</span>(</span>
 <span id="cb103-2"><a href="#cb103-2" aria-hidden="true" tabindex="-1"></a>    croisements<span class="sc">$</span>v1, croisements<span class="sc">$</span>v2,</span>
 <span id="cb103-3"><a href="#cb103-3" aria-hidden="true" tabindex="-1"></a>    <span class="sc">~</span> <span class="fu">table</span>(hdv2003[[.x]], hdv2003[[.y]])</span>
@@ -1614,7 +1663,7 @@ Note
 <li>le résultat du test du <span class="math inline">\(\chi^2\)</span> appliqué aux deux variables</li>
 </ol>
 <div class="solution-exo">
-<div class="cell" data-hash="18-purrr_cache/html/unnamed-chunk-108_abf97ae402fc274550941d82055709d2">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb104"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb104-1"><a href="#cb104-1" aria-hidden="true" tabindex="-1"></a>khi2 <span class="ot">&lt;-</span> <span class="fu">map2</span>(</span>
 <span id="cb104-2"><a href="#cb104-2" aria-hidden="true" tabindex="-1"></a>    croisements<span class="sc">$</span>v1, croisements<span class="sc">$</span>v2,</span>
 <span id="cb104-3"><a href="#cb104-3" aria-hidden="true" tabindex="-1"></a>    <span class="sc">~</span> <span class="fu">list</span>(</span>
@@ -1626,7 +1675,7 @@ Note
 </div>
 <p><em>Facultatif :</em> filtrer la liste obtenue à l’étape précédente pour ne conserver que les éléments dont la p-value du test du <span class="math inline">\(\chi^2\)</span> est inférieure à 0.001.</p>
 <div class="solution-exo">
-<div class="cell" data-hash="18-purrr_cache/html/unnamed-chunk-109_f856eadb5f6c705e73c58af82cc75f27">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb105"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb105-1"><a href="#cb105-1" aria-hidden="true" tabindex="-1"></a>khi2 <span class="ot">&lt;-</span> <span class="fu">map2</span>(</span>
 <span id="cb105-2"><a href="#cb105-2" aria-hidden="true" tabindex="-1"></a>    croisements<span class="sc">$</span>v1, croisements<span class="sc">$</span>v2,</span>
 <span id="cb105-3"><a href="#cb105-3" aria-hidden="true" tabindex="-1"></a>    <span class="sc">~</span> <span class="fu">list</span>(</span>
@@ -1639,17 +1688,17 @@ Note
 </div>
 <p><strong>Exercice 4.2</strong></p>
 <p>Pour rappel, on peut simuler un tirage au sort de type “pile ou face” avec la fonction <code>sample()</code> de la manière suivante :</p>
-<div class="cell" data-hash="18-purrr_cache/html/unnamed-chunk-110_419bdd4b3af28424a23c3fa9f7cde6f2">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb106"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb106-1"><a href="#cb106-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sample</span>(</span>
 <span id="cb106-2"><a href="#cb106-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">c</span>(<span class="st">"pile"</span>, <span class="st">"face"</span>),</span>
 <span id="cb106-3"><a href="#cb106-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">size =</span> <span class="dv">10</span>,</span>
 <span id="cb106-4"><a href="#cb106-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">replace =</span> <span class="cn">TRUE</span>,</span>
 <span id="cb106-5"><a href="#cb106-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">prob =</span> <span class="fu">c</span>(<span class="fl">0.5</span>, <span class="fl">0.5</span>)</span>
 <span id="cb106-6"><a href="#cb106-6" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb106-7"><a href="#cb106-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [1] "face" "pile" "face" "pile" "face" "pile" "face" "pile" "pile" "face"</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb106-7"><a href="#cb106-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [1] "pile" "face" "pile" "face" "face" "face" "face" "face" "pile" "face"</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Le tableau de données suivant définit trois types de tirages aléatoires différents. <code>elements</code> contient les éléments parmi lesquels on tire, <code>probas</code> les probabilités de chaque élément d’être tiré, et <code>n</code> le nombre de tirages.</p>
-<div class="cell" data-hash="18-purrr_cache/html/unnamed-chunk-111_de87581bade97a0843cded5c086c8041">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb107"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb107-1"><a href="#cb107-1" aria-hidden="true" tabindex="-1"></a>tirages <span class="ot">&lt;-</span> <span class="fu">tribble</span>(</span>
 <span id="cb107-2"><a href="#cb107-2" aria-hidden="true" tabindex="-1"></a>    <span class="sc">~</span>elements,           <span class="sc">~</span>probas,     <span class="sc">~</span>n,</span>
 <span id="cb107-3"><a href="#cb107-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">c</span>(<span class="st">"pile"</span>, <span class="st">"face"</span>),   <span class="fu">c</span>(<span class="fl">0.5</span>, <span class="fl">0.5</span>), <span class="dv">1000</span>,</span>
@@ -1659,7 +1708,7 @@ Note
 </div>
 <p>À l’aide de <code>pmap()</code> et de <code>sample()</code>, créer une liste contenant les résultats des simumations de ces trois séries de tirages.</p>
 <div class="solution-exo">
-<div class="cell" data-hash="18-purrr_cache/html/unnamed-chunk-112_4150599673600c3936aacbf142c1c15e">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb108"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb108-1"><a href="#cb108-1" aria-hidden="true" tabindex="-1"></a>resultats <span class="ot">&lt;-</span> tirages <span class="sc">%&gt;%</span></span>
 <span id="cb108-2"><a href="#cb108-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">pmap</span>(</span>
 <span id="cb108-3"><a href="#cb108-3" aria-hidden="true" tabindex="-1"></a>        <span class="cf">function</span>(elements, probas, n) {</span>
@@ -1670,7 +1719,7 @@ Note
 </div>
 <p>Représenter avec <code>barplot()</code> les résultats obtenus.</p>
 <div class="solution-exo">
-<div class="cell" data-hash="18-purrr_cache/html/unnamed-chunk-113_cba02ea5f9f26224c29b65b0c0d9a070">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb109"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb109-1"><a href="#cb109-1" aria-hidden="true" tabindex="-1"></a>resultats <span class="sc">%&gt;%</span> <span class="fu">walk</span>(<span class="sc">~</span> <span class="fu">barplot</span>(<span class="fu">table</span>(.x)))</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div>
@@ -1679,16 +1728,16 @@ Note
 <h3 data-number="18.12.5" class="anchored" data-anchor-id="répéter-une-opération-1"><span class="header-section-number">18.12.5</span> Répéter une opération</h3>
 <p><strong>Exercice 5.1</strong></p>
 <p>La fonction suivante simule le lancer de <code>n</code> dés à 6 faces.</p>
-<div class="cell" data-hash="18-purrr_cache/html/unnamed-chunk-114_09b4fd202d566ec5ff8db4b2a8eada67">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb110"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb110-1"><a href="#cb110-1" aria-hidden="true" tabindex="-1"></a>lancer_des <span class="ot">&lt;-</span> <span class="cf">function</span>(n) {</span>
 <span id="cb110-2"><a href="#cb110-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">sample</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">6</span>, <span class="at">size =</span> n, <span class="at">replace =</span> <span class="cn">TRUE</span>)</span>
 <span id="cb110-3"><a href="#cb110-3" aria-hidden="true" tabindex="-1"></a>}</span>
 <span id="cb110-4"><a href="#cb110-4" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb110-5"><a href="#cb110-5" aria-hidden="true" tabindex="-1"></a><span class="fu">lancer_des</span>(<span class="dv">3</span>)</span>
-<span id="cb110-6"><a href="#cb110-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 6 1 2</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb110-6"><a href="#cb110-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 6 1 3</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>On souhaite utiliser cette fonction pour générer 10 lancers de 4 dés. On essaie avec le code suivant :</p>
-<div class="cell" data-hash="18-purrr_cache/html/unnamed-chunk-115_d995ddd8b1e9e305f7ab5a455fd2cb17">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb111"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb111-1"><a href="#cb111-1" aria-hidden="true" tabindex="-1"></a><span class="fu">map</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>, lancer_des, <span class="dv">4</span>)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Est-ce que cela fonctionne ? Pourquoi ?</p>
@@ -1697,20 +1746,20 @@ Note
 </div>
 <p>Trouver une solution en corrigeant le code.</p>
 <div class="solution-exo">
-<div class="cell" data-hash="18-purrr_cache/html/unnamed-chunk-116_8ba6af59e3ec7112419ff7ce601a4946">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb112"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb112-1"><a href="#cb112-1" aria-hidden="true" tabindex="-1"></a><span class="fu">map</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>, <span class="sc">~</span> <span class="fu">lancer_des</span>(<span class="dv">4</span>))</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div>
 <p><strong>Exercice 5.2</strong></p>
 <p>Comme vu précédemment, la fonction suivante permet de simuler 20 lancers de pièces et de stocker le résultat dans un vecteur de chaînes de caractères.</p>
-<div class="cell" data-hash="18-purrr_cache/html/unnamed-chunk-117_23c742877fc9332aa3f2361e07970bb2">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb113"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb113-1"><a href="#cb113-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sample</span>(<span class="fu">c</span>(<span class="st">"pile"</span>, <span class="st">"face"</span>), <span class="at">size =</span> <span class="dv">20</span>, <span class="at">replace =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb113-2"><a href="#cb113-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [1] "pile" "pile" "face" "face" "face" "pile" "pile" "face" "face" "face"</span></span>
-<span id="cb113-3"><a href="#cb113-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [11] "pile" "pile" "pile" "pile" "face" "face" "pile" "pile" "face" "pile"</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb113-2"><a href="#cb113-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [1] "pile" "face" "face" "face" "pile" "face" "pile" "face" "face" "face"</span></span>
+<span id="cb113-3"><a href="#cb113-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [11] "pile" "face" "face" "pile" "face" "pile" "pile" "pile" "face" "pile"</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>À l’aide de <code>map()</code> et de ce code, créer une liste nommée <code>sims</code> contenant le résultat de 100 simulations de 20 lancers.</p>
 <div class="solution-exo">
-<div class="cell" data-hash="18-purrr_cache/html/unnamed-chunk-118_ca00563a454a0c00ba01c69f1f85ca05">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb114"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb114-1"><a href="#cb114-1" aria-hidden="true" tabindex="-1"></a>sims <span class="ot">&lt;-</span> <span class="fu">map</span>(</span>
 <span id="cb114-2"><a href="#cb114-2" aria-hidden="true" tabindex="-1"></a>    <span class="dv">1</span><span class="sc">:</span><span class="dv">100</span>,</span>
 <span id="cb114-3"><a href="#cb114-3" aria-hidden="true" tabindex="-1"></a>    <span class="sc">~</span> <span class="fu">sample</span>(<span class="fu">c</span>(<span class="st">"pile"</span>, <span class="st">"face"</span>), <span class="at">size =</span> <span class="dv">20</span>, <span class="at">replace =</span> <span class="cn">TRUE</span>)</span>
@@ -1719,26 +1768,26 @@ Note
 </div>
 <p>Toujours à l’aide de <code>map()</code>, calculer le nombre de “pile” obtenus pour chaque simulation de <code>sims</code>.</p>
 <div class="solution-exo">
-<div class="cell" data-hash="18-purrr_cache/html/unnamed-chunk-119_0d1f1678163052dcedf6349f1de7ea68">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb115"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb115-1"><a href="#cb115-1" aria-hidden="true" tabindex="-1"></a>n_piles <span class="ot">&lt;-</span> sims <span class="sc">%&gt;%</span> <span class="fu">map_int</span>(<span class="sc">~</span> <span class="fu">sum</span>(.x <span class="sc">==</span> <span class="st">"pile"</span>))</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div>
 <p>Déterminer le nombre minimal et le nombre maximal de “pile” obtenus parmi toutes les simulations de <code>sims</code>.</p>
 <div class="solution-exo">
-<div class="cell" data-hash="18-purrr_cache/html/unnamed-chunk-120_255b2bb1b0174b84ed7250d72f257624">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb116"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb116-1"><a href="#cb116-1" aria-hidden="true" tabindex="-1"></a><span class="fu">range</span>(n_piles)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div>
 <p><em>Facultatif :</em> à l’aide de la fonction <a href="https://purrr.tidyverse.org/reference/head_while.html">head_while()</a>, déterminer pour chaque simulation de <code>sims</code> le nombre de “pile” consécutifs obtenus avant le premier “face”.</p>
 <div class="solution-exo">
-<div class="cell" data-hash="18-purrr_cache/html/unnamed-chunk-121_a2b5a043509c9f530fd0b76478769fd5">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb117"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb117-1"><a href="#cb117-1" aria-hidden="true" tabindex="-1"></a>sims <span class="sc">%&gt;%</span> <span class="fu">map_int</span>(</span>
 <span id="cb117-2"><a href="#cb117-2" aria-hidden="true" tabindex="-1"></a>    <span class="sc">~</span> <span class="fu">length</span>(<span class="fu">head_while</span>(.x, <span class="sc">~</span> .x <span class="sc">==</span> <span class="st">"pile"</span>))</span>
 <span id="cb117-3"><a href="#cb117-3" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div>
 <p><em>Facultatif :</em> la fonction <code>rle()</code> permet de calculer les <em>run length encoding</em> d’un vecteur.</p>
-<div class="cell" data-hash="18-purrr_cache/html/unnamed-chunk-122_14fc7be7d7a3539d0b9e075b3ba94f85">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb118"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb118-1"><a href="#cb118-1" aria-hidden="true" tabindex="-1"></a><span class="fu">rle</span>(<span class="fu">c</span>(<span class="st">"pile"</span>, <span class="st">"face"</span>, <span class="st">"face"</span>, <span class="st">"face"</span>, <span class="st">"pile"</span>, <span class="st">"pile"</span>))</span>
 <span id="cb118-2"><a href="#cb118-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Run Length Encoding</span></span>
 <span id="cb118-3"><a href="#cb118-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   lengths: int [1:3] 1 3 2</span></span>
@@ -1746,7 +1795,7 @@ Note
 </div>
 <p>À l’aide de cette fonction et de <code>map_int()</code>, calculer pour chaque simulation la longueur de la plus grande série consécutive de “pile”.</p>
 <div class="solution-exo">
-<div class="cell" data-hash="18-purrr_cache/html/unnamed-chunk-123_3c287d2a8fbc7bf5533ad35848d00a4b">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb119"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb119-1"><a href="#cb119-1" aria-hidden="true" tabindex="-1"></a>sims <span class="sc">%&gt;%</span> <span class="fu">map_int</span>(<span class="sc">~</span> {</span>
 <span id="cb119-2"><a href="#cb119-2" aria-hidden="true" tabindex="-1"></a>    r <span class="ot">&lt;-</span> <span class="fu">rle</span>(.x)</span>
 <span id="cb119-3"><a href="#cb119-3" aria-hidden="true" tabindex="-1"></a>    longueurs_pile <span class="ot">&lt;-</span> r<span class="sc">$</span>lengths[r<span class="sc">$</span>values <span class="sc">==</span> <span class="st">"pile"</span>]</span>
@@ -1807,6 +1856,33 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       } else {
         el.classList.add('notransition');
       }
+    }
+  }
+  const toggleGiscusIfUsed = (isAlternate, darkModeDefault) => {
+    const baseTheme = document.querySelector('#giscus-base-theme')?.value ?? 'light';
+    const alternateTheme = document.querySelector('#giscus-alt-theme')?.value ?? 'dark';
+    let newTheme = '';
+    if(darkModeDefault) {
+      newTheme = isAlternate ? baseTheme : alternateTheme;
+    } else {
+      newTheme = isAlternate ? alternateTheme : baseTheme;
+    }
+    const changeGiscusTheme = () => {
+      // From: https://github.com/giscus/giscus/issues/336
+      const sendMessage = (message) => {
+        const iframe = document.querySelector('iframe.giscus-frame');
+        if (!iframe) return;
+        iframe.contentWindow.postMessage({ giscus: message }, 'https://giscus.app');
+      }
+      sendMessage({
+        setConfig: {
+          theme: newTheme
+        }
+      });
+    }
+    const isGiscussLoaded = window.document.querySelector('iframe.giscus-frame') !== null;
+    if (isGiscussLoaded) {
+      changeGiscusTheme();
     }
   }
   const toggleColorMode = (alternate) => {
@@ -1875,13 +1951,15 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       return localAlternateSentinel;
     }
   }
-  let localAlternateSentinel = 'default';
+  const darkModeDefault = false;
+  let localAlternateSentinel = darkModeDefault ? 'alternate' : 'default';
   // Dark / light mode switch
   window.quartoToggleColorScheme = () => {
     // Read the current dark / light value 
     let toAlternate = !hasAlternateSentinel();
     toggleColorMode(toAlternate);
     setStyleSentinel(toAlternate);
+    toggleGiscusIfUsed(toAlternate, darkModeDefault);
   };
   // Ensure there is a toggle, if there isn't float one in the top right
   if (window.document.querySelector('.quarto-color-scheme-toggle') === null) {
@@ -1916,18 +1994,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     }
     return false;
   }
-  const clipboard = new window.ClipboardJS('.code-copy-button', {
-    text: function(trigger) {
-      const codeEl = trigger.previousElementSibling.cloneNode(true);
-      for (const childEl of codeEl.children) {
-        if (isCodeAnnotation(childEl)) {
-          childEl.remove();
-        }
-      }
-      return codeEl.innerText;
-    }
-  });
-  clipboard.on('success', function(e) {
+  const onCopySuccess = function(e) {
     // button target
     const button = e.trigger;
     // don't keep focus
@@ -1959,11 +2026,48 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     }, 1000);
     // clear code selection
     e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
   });
-  function tippyHover(el, contentFn) {
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
     const config = {
       allowHTML: true,
-      content: contentFn,
       maxWidth: 500,
       delay: 100,
       arrow: false,
@@ -1973,8 +2077,17 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       interactive: true,
       interactiveBorder: 10,
       theme: 'quarto',
-      placement: 'bottom-start'
+      placement: 'bottom-start',
     };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
     window.tippy(el, config); 
   }
   const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
@@ -1986,7 +2099,129 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       try { href = new URL(href).hash; } catch {}
       const id = href.replace(/^#\/?/, "");
       const note = window.document.getElementById(id);
-      return note.innerHTML;
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
     });
   }
       let selectedAnnoteEl;
@@ -2030,6 +2265,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
             }
             div.style.top = top - 2 + "px";
             div.style.height = height + 4 + "px";
+            div.style.left = 0;
             let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
             if (gutterDiv === null) {
               gutterDiv = window.document.createElement("div");
@@ -2055,6 +2291,32 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
         });
         selectedAnnoteEl = undefined;
       };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
       // Attach click handler to the DT
       const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
       for (const annoteDlNode of annoteDls) {
@@ -2116,18 +2378,19 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="./17-if-boucles.html" class="pagination-link">
+      <a href="./17-if-boucles.html" class="pagination-link" aria-label="Exécution conditionnelle et boucles">
         <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Exécution conditionnelle et boucles</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="./19-programmer-tidyverse.html" class="pagination-link">
+      <a href="./19-programmer-tidyverse.html" class="pagination-link" aria-label="Programmer avec le *tidyverse*">
         <span class="nav-page-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Programmer avec le <em>tidyverse</em></span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>
 </div> <!-- /content -->
-<script src="js/tidyverse.js"></script>
+<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/juba/tidyverse/edit/main/18-purrr.qmd" class="toc-action"><i class="bi bi-github"></i>Modifier cette page</a></li></ul></div></div></div></footer><script src="js/tidyverse.js"></script>
+
 
 
 

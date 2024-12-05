@@ -2,12 +2,12 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="fr" xml:lang="fr"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.3.340">
+<meta name="generator" content="quarto-1.6.39">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Introduction à R et au tidyverse - 9&nbsp; Recoder des variables</title>
+<title>9&nbsp; Recoder des variables – Introduction à R et au tidyverse</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -22,7 +22,7 @@ ul.task-list li input[type="checkbox"] {
 }
 /* CSS for syntax highlighting */
 pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span { line-height: 1.25; }
 pre > code.sourceCode > span:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
 code.sourceCode > span { color: inherit; text-decoration: inherit; }
@@ -33,7 +33,7 @@ div.sourceCode { overflow: auto; }
 }
 @media print {
 pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
 }
 pre.numberSource code
   { counter-reset: source-line 0; }
@@ -71,12 +71,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="site_libs/quarto-html/anchor.min.js"></script>
 <link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-dark.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-f2ed4b6a00c7d3487a84fd5a50ba4e45.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-dark-ab6496a1a679dc9f3d6952c9737550a4.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
-<link href="site_libs/bootstrap/bootstrap-dark.min.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="site_libs/bootstrap/bootstrap-7841758b2c4697f1bb7dfd28c94c955d.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-dark-122eaf72ed6913f6dbaefd46cb265906.min.css" rel="prefetch" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
 <link href="site_libs/quarto-contrib/bookup_fonts_embed-0.0/fonts-download.css" rel="stylesheet">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
@@ -84,7 +84,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   "collapse-after": 3,
   "panel-placement": "start",
   "type": "textbox",
-  "limit": 20,
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
   "language": {
     "search-no-results-text": "Pas de résultats",
     "search-matching-documents-text": "documents trouvés",
@@ -93,8 +99,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     "search-more-match-text": "correspondance de plus dans ce document",
     "search-more-matches-text": "correspondances de plus dans ce document",
     "search-clear-button-title": "Effacer",
+    "search-text-placeholder": "",
     "search-detached-cancel-button-title": "Annuler",
-    "search-submit-button-title": "Envoyer"
+    "search-submit-button-title": "Envoyer",
+    "search-label": "Recherche"
   }
 }</script>
 
@@ -108,12 +116,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <header id="quarto-header" class="headroom fixed-top">
   <nav class="quarto-secondary-nav">
     <div class="container-fluid d-flex">
-      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Basculer la barre latérale" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Basculer la barre latérale" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./06-tidyverse.html">Introduction au tidyverse</a></li><li class="breadcrumb-item"><a href="./09-recodages.html"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Recoder des variables</span></a></li></ol></nav>
-      <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Basculer la barre latérale" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
-      </a>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./06-tidyverse.html">Introduction au tidyverse</a></li><li class="breadcrumb-item"><a href="./09-recodages.html"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Recoder des variables</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Basculer la barre latérale" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
       <button type="button" class="btn quarto-search-button" aria-label="Recherche" onclick="window.quartoOpenSearch();">
         <i class="bi bi-search"></i>
       </button>
@@ -123,24 +131,24 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <!-- content -->
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
 <!-- sidebar -->
-  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal sidebar-navigation docked overflow-auto">
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation docked overflow-auto">
     <div class="pt-lg-2 mt-2 text-left sidebar-header">
     <div class="sidebar-title mb-0 py-0">
       <a href="./">Introduction à R et au tidyverse</a> 
         <div class="sidebar-tools-main tools-wide">
-    <a href="https://github.com/juba/tidyverse/" title="Source Code" class="quarto-navigation-tool px-1" aria-label="Source Code"><i class="bi bi-github"></i></a>
+    <a href="https://github.com/juba/tidyverse/" title="Code source" class="quarto-navigation-tool px-1" aria-label="Code source"><i class="bi bi-github"></i></a>
     <div class="dropdown">
-      <a href="" title="Download" id="quarto-navigation-tool-dropdown-0" class="quarto-navigation-tool dropdown-toggle px-1" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download"><i class="bi bi-download"></i></a>
+      <a href="" title="Download" id="quarto-navigation-tool-dropdown-0" class="quarto-navigation-tool dropdown-toggle px-1" data-bs-toggle="dropdown" aria-expanded="false" role="link" aria-label="Download"><i class="bi bi-download"></i></a>
       <ul class="dropdown-menu" aria-labelledby="quarto-navigation-tool-dropdown-0">
           <li>
             <a class="dropdown-item sidebar-tools-main-item" href="./introduction_au_tidyverse.epub">
-              <i class="bi bi-bi-journal pe-1"></i>
+              <i class="bi bi-journal pe-1"></i>
             Download ePub
             </a>
           </li>
           <li>
             <a class="dropdown-item sidebar-tools-main-item" href="./introduction_au_tidyverse.pdf">
-              <i class="bi bi-bi-file-pdf pe-1"></i>
+              <i class="bi bi-file-pdf pe-1"></i>
             Download PDF
             </a>
           </li>
@@ -164,9 +172,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <ul class="list-unstyled mt-1">
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true">
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
  <span class="menu-text">Introduction</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true" aria-label="Basculer la section">
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Basculer la section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
@@ -187,9 +195,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true">
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true">
  <span class="menu-text">Introduction à R</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true" aria-label="Basculer la section">
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Basculer la section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
@@ -222,9 +230,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true">
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true">
  <span class="menu-text">Introduction au tidyverse</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true" aria-label="Basculer la section">
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true" aria-label="Basculer la section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
@@ -281,9 +289,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="true">
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true">
  <span class="menu-text">Aller plus loin</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="true" aria-label="Basculer la section">
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true" aria-label="Basculer la section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
@@ -340,9 +348,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" aria-expanded="true">
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="true">
  <span class="menu-text">Annexes</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" aria-expanded="true" aria-label="Basculer la section">
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="true" aria-label="Basculer la section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
@@ -358,7 +366,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     </ul>
     </div>
 </nav>
-<div id="quarto-sidebar-glass" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass"></div>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
         <nav id="TOC" role="doc-toc" class="toc-active">
@@ -391,12 +399,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#découper-une-variable-numérique" id="toc-découper-une-variable-numérique" class="nav-link" data-scroll-target="#découper-une-variable-numérique"><span class="header-section-number">9.6.5</span> Découper une variable numérique</a></li>
   </ul></li>
   </ul>
-<div class="toc-actions"><div><i class="bi bi-github"></i></div><div class="action-links"><p><a href="https://github.com/juba/tidyverse/edit/main/09-recodages.qmd" class="toc-action">Modifier cette page</a></p></div></div></nav>
+<div class="toc-actions"><ul><li><a href="https://github.com/juba/tidyverse/edit/main/09-recodages.qmd" class="toc-action"><i class="bi bi-github"></i>Modifier cette page</a></li></ul></div></nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
-<header id="title-block-header" class="quarto-title-block default">
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./06-tidyverse.html">Introduction au tidyverse</a></li><li class="breadcrumb-item"><a href="./09-recodages.html"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Recoder des variables</span></a></li></ol></nav>
 <div class="quarto-title">
 <h1 class="title"><span id="sec-vectorfactor" class="quarto-section-identifier"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Recoder des variables</span></span></h1>
 </div>
@@ -411,53 +419,55 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </div>
   
 
+
 </header>
+
 
 <section id="sec-vecteurs" class="level2" data-number="9.1">
 <h2 data-number="9.1" class="anchored" data-anchor-id="sec-vecteurs"><span class="header-section-number">9.1</span> Rappel sur les variables et les vecteurs</h2>
 <p>Dans R, une variable, en général une colonne d’un tableau de données, est un objet de type <em>vecteur</em>. Un vecteur est un ensemble d’éléments, tous du même type.</p>
 <p>On a vu qu’on peut construire un vecteur manuellement de différentes manières&nbsp;:</p>
-<div class="cell" data-hash="09-recodages_cache/html/unnamed-chunk-2_d7fd90d64a73537ccb8aad258643f95d">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>couleur <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"Jaune"</span>, <span class="st">"Jaune"</span>, <span class="st">"Rouge"</span>, <span class="st">"Vert"</span>)</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>nombres <span class="ot">&lt;-</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">10</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Mais le plus souvent on manipule des vecteurs faisant partie d’une table importée dans R. Dans ce qui suit on va utiliser le jeu de données d’exemple <code>hdv2003</code> de l’extension <code>questionr</code>.</p>
-<div class="cell" data-hash="09-recodages_cache/html/unnamed-chunk-3_61e1d4a1b9efc0427559781534705230">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(questionr)</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(hdv2003)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Quand on veut accéder à un vecteur d’un tableau de données, on peut utiliser l’opérateur <code>$</code>&nbsp;:</p>
-<div class="cell" data-hash="09-recodages_cache/html/unnamed-chunk-4_f02bf58157ce5e1ed99ab4218db2dc12">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>hdv2003<span class="sc">$</span>qualif</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>On peut facilement créer de nouvelles variables (ou colonnes) dans un tableau de données en utilisant le <code>$</code> dans une assignation&nbsp;:</p>
-<div class="cell" data-hash="09-recodages_cache/html/unnamed-chunk-5_51e2f092c30e813dc70e16feb9ac0aab">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>hdv2003<span class="sc">$</span>minutes.tv <span class="ot">&lt;-</span> hdv2003<span class="sc">$</span>heures.tv <span class="sc">*</span> <span class="dv">60</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Les vecteurs peuvent être de classes différentes, selon le type de données qu’ils contiennent.</p>
 <p>On a ainsi des vecteurs de type <code>integer</code> ou <code>double</code>, qui contiennent respectivement des nombres entiers ou décimaux&nbsp;:</p>
-<div class="cell" data-hash="09-recodages_cache/html/unnamed-chunk-6_780727e2d6907c8c661003e58838f9c9">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">typeof</span>(hdv2003<span class="sc">$</span>age)</span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] "integer"</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div class="cell" data-hash="09-recodages_cache/html/unnamed-chunk-7_20614e1ac5cdb2657376268b47291c4c">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">typeof</span>(hdv2003<span class="sc">$</span>heures.tv)</span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] "double"</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Des vecteurs de type <code>character</code>, qui contiennent des chaînes de caractères&nbsp;:</p>
-<div class="cell" data-hash="09-recodages_cache/html/unnamed-chunk-8_a10728c2d26a86f6f4111efb9d287a18">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>vec <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"Jaune"</span>, <span class="st">"Jaune"</span>, <span class="st">"Rouge"</span>, <span class="st">"Vert"</span>)</span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="fu">typeof</span>(vec)</span>
 <span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] "character"</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Et des vecteurs de type <code>logical</code>, qui ne peuvent contenir que les valeurs vraie (<code>TRUE</code>) ou fausse (<code>FALSE</code>).</p>
-<div class="cell" data-hash="09-recodages_cache/html/unnamed-chunk-9_61974e8b777de522bda41c312e05dd26">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>vec <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="cn">TRUE</span>, <span class="cn">FALSE</span>, <span class="cn">FALSE</span>, <span class="cn">TRUE</span>)</span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="fu">typeof</span>(vec)</span>
 <span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] "logical"</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>On peut convertir un vecteur d’un type en un autre en utilisant les fonctions <code>as.numeric</code>, <code>as.character</code> ou <code>as.logical</code>. Les valeurs qui n’ont pas pu être converties sont automatiquement transformées en <code>NA</code>.</p>
-<div class="cell" data-hash="09-recodages_cache/html/unnamed-chunk-10_cd06f5d5c8fdb5f333215973083957fb">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"1"</span>, <span class="st">"2.35"</span>, <span class="st">"8.2e+03"</span>, <span class="st">"foo"</span>)</span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="fu">as.numeric</span>(x)</span>
 <span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Warning: NAs introduced by coercion</span></span>
@@ -468,13 +478,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] "2" "3" "4" "5" "6"</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>On peut sélectionner certains éléments d’un vecteur à l’aide de l’opérateur <code>[]</code>. La manière la plus simple est d’indiquer la position des éléments qu’on veut sélectionner&nbsp;:</p>
-<div class="cell" data-hash="09-recodages_cache/html/unnamed-chunk-11_c5ba2a0681340bd100099da1cc2b12e5">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>vec <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"Jaune"</span>, <span class="st">"Jaune"</span>, <span class="st">"Rouge"</span>, <span class="st">"Vert"</span>)</span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>vec[<span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">3</span>)]</span>
 <span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] "Jaune" "Rouge"</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>La sélection peut aussi être utilisée pour modifier certains éléments d’un vecteur, par exemple&nbsp;:</p>
-<div class="cell" data-hash="09-recodages_cache/html/unnamed-chunk-12_a9e6661a86347bc6912a0181f9016a5c">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>vec <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"Jaune"</span>, <span class="st">"Jaune"</span>, <span class="st">"Rouge"</span>, <span class="st">"Vert"</span>)</span>
 <span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>vec[<span class="dv">2</span>] <span class="ot">&lt;-</span> <span class="st">"Violet"</span></span>
 <span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>vec</span>
@@ -492,33 +502,33 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li><code>%in%</code> qui teste l’appartenance à un ensemble de valeurs</li>
 </ul>
 <p>Exemple le plus simple&nbsp;:</p>
-<div class="cell" data-hash="09-recodages_cache/html/unnamed-chunk-13_26cacf1d015bb26d201553372fef50f7">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="dv">2</span> <span class="sc">==</span> <span class="dv">3</span></span>
 <span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] FALSE</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div class="cell" data-hash="09-recodages_cache/html/unnamed-chunk-14_e8f24fdb9bdb186f1e6a15d73704f7a4">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="dv">2</span> <span class="sc">!=</span> <span class="dv">3</span></span>
 <span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] TRUE</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Exemple appliqué à un vecteur&nbsp;:</p>
-<div class="cell" data-hash="09-recodages_cache/html/unnamed-chunk-15_da609ae5482de65dcbac987bd8cc5c52">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">10</span></span>
 <span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>x <span class="sc">&lt;</span> <span class="dv">5</span></span>
 <span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [1]  TRUE  TRUE  TRUE  TRUE FALSE FALSE FALSE FALSE FALSE FALSE</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>On peut combiner plusieurs tests avec les opérateurs logiques <em>et</em> (<code>&amp;</code>) et <em>ou</em> (<code>|</code>). Ainsi, si on veut tester qu’une valeur est comprise entre 3 et 6 inclus, on peut faire&nbsp;:</p>
-<div class="cell" data-hash="09-recodages_cache/html/unnamed-chunk-16_a5f81fa4d7422f373839a084d7af53d6">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>x <span class="sc">&gt;=</span> <span class="dv">3</span> <span class="sc">&amp;</span> x <span class="sc">&lt;=</span> <span class="dv">6</span></span>
 <span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [1] FALSE FALSE  TRUE  TRUE  TRUE  TRUE FALSE FALSE FALSE FALSE</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Si on veut tester qu’une valeur est égale à “Bleu” ou à “Vert”, on peut faire&nbsp;:</p>
-<div class="cell" data-hash="09-recodages_cache/html/unnamed-chunk-17_a65d76250e40bae3d362f5a5714c07e6">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>vec <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"Jaune"</span>, <span class="st">"Jaune"</span>, <span class="st">"Rouge"</span>, <span class="st">"Vert"</span>)</span>
 <span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>vec <span class="sc">==</span> <span class="st">"Jaune"</span> <span class="sc">|</span> vec <span class="sc">==</span> <span class="st">"Vert"</span></span>
 <span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1]  TRUE  TRUE FALSE  TRUE</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>À noter que dans ce cas, on peut utiliser l’opérateur <code>%in%</code><a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a>, qui teste si une valeur fait partie des éléments d’un vecteur&nbsp;:</p>
-<div class="cell" data-hash="09-recodages_cache/html/unnamed-chunk-18_1f5f44bd24a5346b823ba265fdbe2404">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>vec <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"Jaune"</span>, <span class="st">"Vert"</span>)</span>
 <span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1]  TRUE  TRUE FALSE  TRUE</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
@@ -538,43 +548,43 @@ Avertissement
 </div>
 </div>
 <p>Enfin, on peut inverser un test avec l’opérateur <em>non</em> (<code>!</code>)&nbsp;:</p>
-<div class="cell" data-hash="09-recodages_cache/html/unnamed-chunk-19_bd60b88f66d00826d281f2597b303c11">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="sc">!</span>(vec <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"Jaune"</span>, <span class="st">"Vert"</span>))</span>
 <span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] FALSE FALSE  TRUE FALSE</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>Les tests sont notamment utilisés par le verbe <code>filter</code> de <code>dplyr</code> (voir <a href="10-dplyr.html#sec-filter"><span>Section&nbsp;10.2.2</span></a>) qui permet de sélectionner certaines lignes d’un tableau de données. On peut ainsi sélectionner les individus ayant entre 20 et 40 ans en filtrant sur la variable <code>age</code>&nbsp;:</p>
-<div class="cell" data-hash="09-recodages_cache/html/unnamed-chunk-20_64a89344c05d2909816a017275c15b46">
+<p>Les tests sont notamment utilisés par le verbe <code>filter</code> de <code>dplyr</code> (voir <a href="10-dplyr.html#sec-filter" class="quarto-xref"><span>Section 10.2.2</span></a>) qui permet de sélectionner certaines lignes d’un tableau de données. On peut ainsi sélectionner les individus ayant entre 20 et 40 ans en filtrant sur la variable <code>age</code>&nbsp;:</p>
+<div class="cell">
 <div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">filter</span>(hdv2003, age <span class="sc">&gt;=</span> <span class="dv">20</span> <span class="sc">&amp;</span> age <span class="sc">&lt;=</span> <span class="dv">40</span>)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Ou sélectionner les personnes ayant comme catégorie socio-professionnelle <code>Ouvrier specialise</code> ou <code>Ouvrier qualifie</code> en filtrant sur la variable <code>qualif</code>&nbsp;:</p>
-<div class="cell" data-hash="09-recodages_cache/html/unnamed-chunk-21_3c4c8958e975c176e40b25d7bcf8fec0">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">filter</span>(hdv2003, qualif <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"Ouvrier specialise"</span>, <span class="st">"Ouvrier qualifie"</span>))</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>On peut utiliser les tests pour sélectionner certains éléments d’un vecteur. Si on passe un test à l’opérateur de sélection <code>[]</code>, seuls les éléments pour lesquels ce test est vrai seront conservés&nbsp;:</p>
-<div class="cell" data-hash="09-recodages_cache/html/unnamed-chunk-22_8eecdc9c83c200ff6c3499ce742aceba">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">12</span>, <span class="dv">8</span>, <span class="dv">14</span>, <span class="dv">7</span>, <span class="dv">6</span>, <span class="dv">18</span>)</span>
 <span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>x[x <span class="sc">&gt;</span> <span class="dv">10</span>]</span>
 <span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 12 14 18</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Enfin, on peut aussi utiliser les tests et la sélection pour modifier les valeurs d’un vecteur. Ainsi, si on assigne une valeur à une sélection, les éléments pour lesquels le test est vrai sont remplacés par cette valeur&nbsp;:</p>
-<div class="cell" data-hash="09-recodages_cache/html/unnamed-chunk-23_1525f7ad40ebc542f6601779778c8eec">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">12</span>, <span class="dv">8</span>, <span class="dv">14</span>, <span class="dv">7</span>, <span class="dv">6</span>, <span class="dv">18</span>)</span>
 <span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>x[x <span class="sc">&gt;</span> <span class="dv">10</span>] <span class="ot">&lt;-</span> <span class="dv">100</span></span>
 <span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>x</span>
 <span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 100   8 100   7   6 100</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>En utilisant cette assignation via un test, on peut effectuer des recodages de variables. Soit le vecteur suivant&nbsp;:</p>
-<div class="cell" data-hash="09-recodages_cache/html/unnamed-chunk-24_e2bf577c9bb086338e1cd20f8ac4895d">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>vec <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"Femme"</span>, <span class="st">"Homme"</span>, <span class="st">"Femme"</span>, <span class="st">"Garçon"</span>)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Si on souhaite recoder la modalité “Garçon” en “Homme”, on peut utiliser la syntaxe suivante&nbsp;:</p>
-<div class="cell" data-hash="09-recodages_cache/html/unnamed-chunk-25_ce9f84eb15a044a24ea5198124aa351a">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>vec[vec <span class="sc">==</span> <span class="st">"Garçon"</span>] <span class="ot">&lt;-</span> <span class="st">"Homme"</span></span>
 <span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>vec</span>
 <span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] "Femme" "Homme" "Femme" "Homme"</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Cette syntaxe est tout à fait valable et couramment utilisée. On va cependant voir dans la section suivante différentes fonctions qui facilitent ces opérations de recodage.</p>
-<p>Pour plus d’informations sur les vecteurs et les structures de données de R, voir <a href="16-structures-donnees.html"><span>Chapitre&nbsp;16</span></a>.</p>
+<p>Pour plus d’informations sur les vecteurs et les structures de données de R, voir <a href="16-structures-donnees.html" class="quarto-xref"><span>Chapitre 16</span></a>.</p>
 </section>
 <section id="sec-recoder-une-variable-qualitative" class="level2" data-number="9.3">
 <h2 data-number="9.3" class="anchored" data-anchor-id="sec-recoder-une-variable-qualitative"><span class="header-section-number">9.3</span> Recoder une variable qualitative</h2>
@@ -582,12 +592,12 @@ Avertissement
 <section id="sec-facteurs" class="level3" data-number="9.3.1">
 <h3 data-number="9.3.1" class="anchored" data-anchor-id="sec-facteurs"><span class="header-section-number">9.3.1</span> Facteurs et <code>forcats</code></h3>
 <p>Dans R, les variables qualitatives peuvent être de deux types&nbsp;: ou bien des vecteurs de type <code>character</code> (des chaînes de caractères), ou bien des <code>factor</code> (facteurs). Si vous utilisez les fonctions des extensions du <em>tidyverse</em> comme <code>readr</code>, <code>readxl</code> ou <code>haven</code> pour importer vos données, vos variables qualitatives seront importées sous forme de <code>character</code>. Mais dans d’autres cas elles se retrouveront parfois sous forme de <code>factor</code>. C’est le cas de notre jeu de données d’exemple <code>hdv2003</code>.</p>
-<div class="cell" data-hash="09-recodages_cache/html/unnamed-chunk-26_e7351d7deb58c213036a89cd9f072200">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">class</span>(hdv2003<span class="sc">$</span>qualif)</span>
 <span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] "factor"</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Les facteurs sont un type de variable ne pouvant prendre qu’un nombre défini de modalités nommés <em>levels</em>.</p>
-<div class="cell" data-hash="09-recodages_cache/html/unnamed-chunk-27_145ab42c08100b9a1210616dc77be35f">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="fu">levels</span>(hdv2003<span class="sc">$</span>qualif)</span>
 <span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] "Ouvrier specialise"       "Ouvrier qualifie"        </span></span>
 <span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [3] "Technicien"               "Profession intermediaire"</span></span>
@@ -595,13 +605,13 @@ Avertissement
 <span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [7] "Autre"</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Ceci complique les opérations de recodage car du coup l’opération suivante, qui tente de modifier une modalité de la variable, aboutit à un avertissement, et l’opération n’est pas effectuée.</p>
-<div class="cell" data-hash="09-recodages_cache/html/unnamed-chunk-28_578687c8a9f0ced147b1dd04127b0299">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>hdv2003<span class="sc">$</span>qualif[hdv2003<span class="sc">$</span>qualif <span class="sc">==</span> <span class="st">"Ouvrier specialise"</span>] <span class="ot">&lt;-</span> <span class="st">"Ouvrier"</span></span>
 <span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Warning in `[&lt;-.factor`(`*tmp*`, hdv2003$qualif == "Ouvrier specialise", :</span></span>
 <span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; invalid factor level, NA generated</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p><code>forcats</code> est une extension facilitant la manipulation des variables qualitatives, qu’elles soient sous forme de vecteurs <code>character</code> ou de facteurs. Elle fait partie du <em>tidyverse</em>, et est donc automatiquement chargée par&nbsp;:</p>
-<div class="cell" data-hash="09-recodages_cache/html/unnamed-chunk-29_88d8d0c3f3afad9ed70d008cd382a231">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
@@ -610,7 +620,7 @@ Avertissement
 <p>Une opération courante consiste à modifier les valeurs d’une variable qualitative, que ce soit pour avoir des intitulés plus courts ou plus clairs ou pour regrouper des modalités entre elles.</p>
 <p>Il existe plusieurs possibilités pour effectuer ce type de recodage, mais ici on va utiliser la fonction <code>fct_recode</code> de l’extension <code>forcats</code>. Celle-ci prend en argument une liste de recodages sous la forme <code>"Nouvelle valeur" = "Ancienne valeur"</code>.</p>
 <p>Un exemple&nbsp;:</p>
-<div class="cell" data-hash="09-recodages_cache/html/unnamed-chunk-30_862527eca10064f67f74f9671dc9ed34">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>f <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"Pomme"</span>, <span class="st">"Poire"</span>, <span class="st">"Pomme"</span>, <span class="st">"Cerise"</span>)</span>
 <span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>f <span class="ot">&lt;-</span> <span class="fu">fct_recode</span>(</span>
 <span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>    f,</span>
@@ -622,7 +632,7 @@ Avertissement
 <span id="cb29-9"><a href="#cb29-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Levels: Cerise Ananas Fraise</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Autre exemple sur une “vraie” variable&nbsp;:</p>
-<div class="cell" data-hash="09-recodages_cache/html/unnamed-chunk-31_797e84e01a3294aeee425b9f9dae7382">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="fu">freq</span>(hdv2003<span class="sc">$</span>qualif)</span>
 <span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;                            n    % val%</span></span>
 <span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Ouvrier specialise         0  0.0  0.0</span></span>
@@ -634,7 +644,7 @@ Avertissement
 <span id="cb30-9"><a href="#cb30-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Autre                     58  2.9  4.0</span></span>
 <span id="cb30-10"><a href="#cb30-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; NA                       550 27.5   NA</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div class="cell" data-hash="09-recodages_cache/html/unnamed-chunk-32_50f70c7723d02f9fc76b8f4c5f343749">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>hdv2003<span class="sc">$</span>qualif5 <span class="ot">&lt;-</span> <span class="fu">fct_recode</span>(</span>
 <span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>    hdv2003<span class="sc">$</span>qualif,</span>
 <span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Ouvrier"</span> <span class="ot">=</span> <span class="st">"Ouvrier specialise"</span>,</span>
@@ -653,7 +663,7 @@ Avertissement
 <span id="cb31-16"><a href="#cb31-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; NA      550 27.5   NA</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Attention, les anciennes valeurs saisies doivent être exactement égales aux valeurs des modalités de la variable recodée&nbsp;: toute différence d’accent ou d’espace fera que ce recodage ne sera pas pris en compte. Dans ce cas, <code>forcats</code> affiche un avertissement nous indiquant qu’une valeur saisie n’a pas été trouvée dans les modalités de la variable.</p>
-<div class="cell" data-hash="09-recodages_cache/html/unnamed-chunk-33_0c362184e6c64005080346a490f399da">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>hdv2003<span class="sc">$</span>qualif_test <span class="ot">&lt;-</span> <span class="fu">fct_recode</span>(</span>
 <span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>    hdv2003<span class="sc">$</span>qualif,</span>
 <span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Ouvrier"</span> <span class="ot">=</span> <span class="st">"Ouvrier spécialisé"</span>,</span>
@@ -662,7 +672,7 @@ Avertissement
 <span id="cb32-6"><a href="#cb32-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Warning: Unknown levels in `f`: Ouvrier spécialisé, Ouvrier qualifié</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Si on souhaite recoder une modalité de la variable en <code>NA</code>, il faut (contre intuitivement) lui assigner la valeur <code>NULL</code>.</p>
-<div class="cell" data-hash="09-recodages_cache/html/unnamed-chunk-34_5000495574ddd08393e52d109737a50e">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>hdv2003<span class="sc">$</span>qualif_rec <span class="ot">&lt;-</span> <span class="fu">fct_recode</span>(</span>
 <span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>    hdv2003<span class="sc">$</span>qualif, </span>
 <span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">NULL =</span> <span class="st">"Autre"</span></span>
@@ -679,7 +689,7 @@ Avertissement
 <span id="cb33-14"><a href="#cb33-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; NA                       608 30.4   NA</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>À l’inverse, si on souhaite recoder les <code>NA</code> d’une variable, on utilisera la fonction <code>fct_explicit_na</code>, qui convertit toutes les valeurs manquantes (<code>NA</code>) d’un facteur en une modalité spécifique.</p>
-<div class="cell" data-hash="09-recodages_cache/html/unnamed-chunk-35_881c92b0a9d7f9ecf6fc7cbc152f1934">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>hdv2003<span class="sc">$</span>qualif_rec <span class="ot">&lt;-</span> <span class="fu">fct_explicit_na</span>(hdv2003<span class="sc">$</span>qualif, <span class="at">na_level =</span> <span class="st">"(Manquant)"</span>)</span>
 <span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Warning: `fct_explicit_na()` was deprecated in forcats 1.0.0.</span></span>
 <span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; ℹ Please use `fct_na_value_to_level()` instead.</span></span>
@@ -696,7 +706,7 @@ Avertissement
 <span id="cb34-14"><a href="#cb34-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; (Manquant)               550 27.5 27.5</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>D’autres fonctions sont proposées par <code>forcats</code> pour faciliter certains recodage, comme <code>fct_collapse</code>, qui propose une autre syntaxe pratique quand on doit regrouper ensemble des modalités.</p>
-<div class="cell" data-hash="09-recodages_cache/html/unnamed-chunk-36_127a97747fce159be27eac1ba5b4ffb7">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a>hdv2003<span class="sc">$</span>qualif_rec <span class="ot">&lt;-</span> <span class="fu">fct_collapse</span>(</span>
 <span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a>    hdv2003<span class="sc">$</span>qualif,</span>
 <span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Ouvrier"</span> <span class="ot">=</span> <span class="fu">c</span>(<span class="st">"Ouvrier specialise"</span>, <span class="st">"Ouvrier qualifie"</span>),</span>
@@ -713,7 +723,7 @@ Avertissement
 <span id="cb35-14"><a href="#cb35-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; NA      550 27.5   NA</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p><code>fct_other</code>, qui regroupe une liste de modalités en une seule modalité “Other”.</p>
-<div class="cell" data-hash="09-recodages_cache/html/unnamed-chunk-37_5da3220f96d84287c9cabe928e7314bf">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a>hdv2003<span class="sc">$</span>qualif_rec <span class="ot">&lt;-</span> <span class="fu">fct_other</span>(</span>
 <span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a>    hdv2003<span class="sc">$</span>qualif,</span>
 <span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">drop =</span> <span class="fu">c</span>(<span class="st">"Ouvrier specialise"</span>, <span class="st">"Ouvrier qualifie"</span>, <span class="st">"Cadre"</span>, <span class="st">"Autre"</span>)</span>
@@ -728,7 +738,7 @@ Avertissement
 <span id="cb36-12"><a href="#cb36-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; NA                       550 27.5   NA</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p><code>fct_lump</code>, qui regroupe automatiquement les modalités les moins fréquentes en une seule modalité “Other” (avec possibilité d’indiquer des seuils de regroupement).</p>
-<div class="cell" data-hash="09-recodages_cache/html/unnamed-chunk-38_51a2de1c89c62dc3e8567d879e1796a6">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>hdv2003<span class="sc">$</span>qualif_rec <span class="ot">&lt;-</span> <span class="fu">fct_lump</span>(hdv2003<span class="sc">$</span>qualif)</span>
 <span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a><span class="fu">freq</span>(hdv2003<span class="sc">$</span>qualif_rec)</span>
@@ -747,7 +757,7 @@ Avertissement
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="resources/screenshots/irec.png" class="img-fluid figure-img"></p>
-<figcaption class="figure-caption">Interface graphique de <code>irec</code></figcaption>
+<figcaption>Interface graphique de <code>irec</code></figcaption>
 </figure>
 </div>
 <p>L’interface se compose de trois onglets&nbsp;: l’onglet <em>Variable et paramètres</em> vous permet de sélectionner la variable à recoder, le nom de la nouvelle variable et d’autres paramètres, l’onglet <em>Recodages</em> vous permet de saisir les nouvelles valeurs des modalités, et l’onglet <em>Code et résultat</em> affiche le code R correspondant ainsi qu’un tableau permettant de vérifier les résultats.</p>
@@ -771,7 +781,7 @@ Avertissement
 <h3 data-number="9.3.3" class="anchored" data-anchor-id="ordonner-les-modalités-dune-variable-qualitative"><span class="header-section-number">9.3.3</span> Ordonner les modalités d’une variable qualitative</h3>
 <p>L’avantage des facteurs (par rapport aux vecteurs de type <code>character</code>) est que leurs modalités peuvent être ordonnées, ce qui peut faciliter la lecture de tableaux ou graphiques.</p>
 <p>On peut ordonner les modalités d’un facteur manuellement, par exemple avec la fonction <code>fct_relevel()</code> de l’extension <code>forcats</code>.</p>
-<div class="cell" data-hash="09-recodages_cache/html/unnamed-chunk-39_10668f891ef33d40d7171cd15dd130c3">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a>hdv2003<span class="sc">$</span>qualif_rec <span class="ot">&lt;-</span> <span class="fu">fct_relevel</span>(</span>
 <span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a>    hdv2003<span class="sc">$</span>qualif,</span>
 <span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Cadre"</span>, <span class="st">"Profession intermediaire"</span>, <span class="st">"Technicien"</span>,</span>
@@ -791,26 +801,34 @@ Avertissement
 <span id="cb38-17"><a href="#cb38-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; NA                       550 27.5   NA</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Une autre possibilité est d’ordonner les modalités d’un facteur selon les valeurs d’une autre variable. Par exemple, si on représente le boxplot de la répartition de l’âge selon le statut d’occupation&nbsp;:</p>
-<div class="cell" data-hash="09-recodages_cache/html/unnamed-chunk-40_b6d2a1f8000e5302aa74e83b95e57578">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
 <span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(hdv2003) <span class="sc">+</span></span>
 <span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> occup, <span class="at">y =</span> age))</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="09-recodages_files/figure-html/unnamed-chunk-40-1.png" class="img-fluid" width="672"></p>
+<div>
+<figure class="figure">
+<p><img src="09-recodages_files/figure-html/unnamed-chunk-40-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
 </div>
 </div>
 <p>Le graphique pourrait être plus lisible si les modalités étaient triées par âge median croissant. On peut dans ce cas utiliser la fonction <code>fct_reorder</code>. Celle-ci prend 3 arguments&nbsp;: le facteur à réordonner, la variable dont les valeurs doivent être utilisées pour ce réordonnancement, et enfin une fonction à appliquer à cette deuxième variable.</p>
-<div class="cell" data-hash="09-recodages_cache/html/unnamed-chunk-41_1e725655800cabc239505101f383ec09">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a>hdv2003<span class="sc">$</span>occup_age <span class="ot">&lt;-</span> <span class="fu">fct_reorder</span>(hdv2003<span class="sc">$</span>occup, hdv2003<span class="sc">$</span>age, median)</span>
 <span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(hdv2003) <span class="sc">+</span></span>
 <span id="cb40-4"><a href="#cb40-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> occup_age, <span class="at">y =</span> age))</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="09-recodages_files/figure-html/unnamed-chunk-41-1.png" class="img-fluid" width="672"></p>
+<div>
+<figure class="figure">
+<p><img src="09-recodages_files/figure-html/unnamed-chunk-41-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
 </div>
 </div>
 <p>On peut aussi effectuer le réordonnancement directement dans l’appel à <code>ggplot2</code>, sans créer de nouvelle variable.</p>
-<div class="cell" data-hash="09-recodages_cache/html/unnamed-chunk-42_68412596227afcbb2a02c4f2dd1cd8cf">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(hdv2003) <span class="sc">+</span></span>
 <span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>(</span>
 <span id="cb41-3"><a href="#cb41-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">aes</span>(</span>
@@ -820,11 +838,15 @@ Avertissement
 <span id="cb41-7"><a href="#cb41-7" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Lorsqu’on effectue un diagramme en barres avec <code>geom_bar</code>, on peut aussi réordonner les modalités selon leurs effectifs à l’aide de <code>fct_infreq</code>.</p>
-<div class="cell" data-hash="09-recodages_cache/html/unnamed-chunk-43_bda3ad09b94a24891bcbed0cdd21c4cb">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(hdv2003) <span class="sc">+</span></span>
 <span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>(<span class="fu">aes</span>(<span class="at">x =</span> <span class="fu">fct_infreq</span>(occup)))</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="09-recodages_files/figure-html/unnamed-chunk-43-1.png" class="img-fluid" width="672"></p>
+<div>
+<figure class="figure">
+<p><img src="09-recodages_files/figure-html/unnamed-chunk-43-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
 </div>
 </div>
 <section id="sec-iorder" class="level4" data-number="9.3.3.1">
@@ -833,7 +855,7 @@ Avertissement
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="resources/screenshots/iorder.png" class="img-fluid figure-img"></p>
-<figcaption class="figure-caption">Interface graphique de <code>iorder</code></figcaption>
+<figcaption>Interface graphique de <code>iorder</code></figcaption>
 </figure>
 </div>
 <p>Le fonctionnement de l’interface est similaire à celui de <a href="#irec">l’interface de recodage</a>. Vous pouvez réordonner les modalités en les faisant glisser avec la souris, puis récupérer et exécuter le code R généré.</p>
@@ -847,13 +869,13 @@ Avertissement
 <h3 data-number="9.4.1" class="anchored" data-anchor-id="sec-if-else"><span class="header-section-number">9.4.1</span> <code>ifelse</code></h3>
 <p><code>ifelse</code> prend trois arguments&nbsp;: un test, une valeur à renvoyer si le test est vrai, et une valeur à renvoyer si le test est faux.</p>
 <p>Voici un exemple simple&nbsp;:</p>
-<div class="cell" data-hash="09-recodages_cache/html/unnamed-chunk-44_1c79c1bc4751c4d315922db3eb8b7076">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a>v <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">12</span>, <span class="dv">14</span>, <span class="dv">8</span>, <span class="dv">16</span>)</span>
 <span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ifelse</span>(v <span class="sc">&gt;</span> <span class="dv">10</span>, <span class="st">"Supérieur à 10"</span>, <span class="st">"Inférieur à 10"</span>)</span>
 <span id="cb43-3"><a href="#cb43-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] "Supérieur à 10" "Supérieur à 10" "Inférieur à 10" "Supérieur à 10"</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>La fonction permet d’utiliser des tests combinant plusieurs variables. Par exemple, imaginons qu’on souhaite créer une nouvelle variable indiquant les hommes de plus de 60 ans&nbsp;:</p>
-<div class="cell" data-hash="09-recodages_cache/html/unnamed-chunk-45_04c2fdff50e59760a87c65353dd4313a">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a>hdv2003<span class="sc">$</span>statut <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(</span>
 <span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a>    hdv2003<span class="sc">$</span>sexe <span class="sc">==</span> <span class="st">"Homme"</span> <span class="sc">&amp;</span> hdv2003<span class="sc">$</span>age <span class="sc">&gt;</span> <span class="dv">60</span>,</span>
 <span id="cb44-3"><a href="#cb44-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Homme de plus de 60 ans"</span>,</span>
@@ -870,7 +892,7 @@ Avertissement
 <h3 data-number="9.4.2" class="anchored" data-anchor-id="case_when"><span class="header-section-number">9.4.2</span> <code>case_when</code></h3>
 <p><code>case_when</code> est une généralisation du <code>ifelse</code> qui permet d’indiquer plusieurs tests et leurs valeurs associées.</p>
 <p>Imaginons qu’on souhaite créer une nouvelle variable permettant d’identifier les hommes de plus de 60 ans, les femmes de plus de 60 ans, et les autres. On peut utiliser la syntaxe suivante&nbsp;:</p>
-<div class="cell" data-hash="09-recodages_cache/html/unnamed-chunk-46_55d2515d32995740b3b950fea15a5fe7">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a>hdv2003<span class="sc">$</span>statut <span class="ot">&lt;-</span> <span class="fu">case_when</span>(</span>
 <span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a>    hdv2003<span class="sc">$</span>age <span class="sc">&gt;</span> <span class="dv">60</span> <span class="sc">&amp;</span> hdv2003<span class="sc">$</span>sexe <span class="sc">==</span> <span class="st">"Homme"</span> <span class="sc">~</span> <span class="st">"Homme de plus de 60 ans"</span>,</span>
 <span id="cb45-3"><a href="#cb45-3" aria-hidden="true" tabindex="-1"></a>    hdv2003<span class="sc">$</span>age <span class="sc">&gt;</span> <span class="dv">60</span> <span class="sc">&amp;</span> hdv2003<span class="sc">$</span>sexe <span class="sc">==</span> <span class="st">"Femme"</span> <span class="sc">~</span> <span class="st">"Femme de plus de 60 ans"</span>,</span>
@@ -899,7 +921,7 @@ Avertissement
 </div>
 </div>
 <p>Pour illustrer cet avertissement, on pourra noter que le recodage suivant ne fonctionne pas&nbsp;:</p>
-<div class="cell" data-hash="09-recodages_cache/html/unnamed-chunk-47_c0fa8cee95f010a18ba2f957aec43978">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a>hdv2003<span class="sc">$</span>statut <span class="ot">&lt;-</span> <span class="fu">case_when</span>(</span>
 <span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a>    hdv2003<span class="sc">$</span>sexe <span class="sc">==</span> <span class="st">"Homme"</span> <span class="sc">~</span> <span class="st">"Homme"</span>,</span>
 <span id="cb46-3"><a href="#cb46-3" aria-hidden="true" tabindex="-1"></a>    hdv2003<span class="sc">$</span>sexe <span class="sc">==</span> <span class="st">"Homme"</span> <span class="sc">&amp;</span> hdv2003<span class="sc">$</span>age <span class="sc">&gt;</span> <span class="dv">60</span> <span class="sc">~</span> <span class="st">"Homme de plus de 60 ans"</span>,</span>
@@ -913,7 +935,7 @@ Avertissement
 </div>
 <p>Comme la condition <code>sexe == "Homme"</code> est plus générale que <code>sexe == "Homme" &amp; age &gt; 60</code>, cette deuxième condition n’est jamais testée, et on n’obtiendra donc jamais la valeur correspondante.</p>
 <p>Pour que ce recodage fonctionne il faut donc changer l’ordre des conditions pour aller du plus spécifique au plus général.</p>
-<div class="cell" data-hash="09-recodages_cache/html/unnamed-chunk-48_fb97ce506d3907454f9b34155d259ef8">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb47"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a>hdv2003<span class="sc">$</span>statut <span class="ot">&lt;-</span> <span class="fu">case_when</span>(</span>
 <span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a>    hdv2003<span class="sc">$</span>sexe <span class="sc">==</span> <span class="st">"Homme"</span> <span class="sc">&amp;</span> hdv2003<span class="sc">$</span>age <span class="sc">&gt;</span> <span class="dv">60</span> <span class="sc">~</span> <span class="st">"Homme de plus de 60 ans"</span>,</span>
 <span id="cb47-3"><a href="#cb47-3" aria-hidden="true" tabindex="-1"></a>    hdv2003<span class="sc">$</span>sexe <span class="sc">==</span> <span class="st">"Homme"</span> <span class="sc">~</span> <span class="st">"Homme"</span>,</span>
@@ -932,7 +954,7 @@ Avertissement
 <h2 data-number="9.5" class="anchored" data-anchor-id="découper-une-variable-numérique-en-classes"><span class="header-section-number">9.5</span> Découper une variable numérique en classes</h2>
 <p>Une autre opération courante consiste à découper une variable numérique en classes. Par exemple, on voudra transformer une variable <em>revenu</em> contenant le revenu mensuel en une variable qualitative avec des catégories <em>Moins de 500 euros</em>, <em>501-1000 euros</em>, etc.</p>
 <p>On utilise pour cela la fonction <code>cut()</code>&nbsp;:</p>
-<div class="cell" data-hash="09-recodages_cache/html/unnamed-chunk-49_08741226b7a0b4ccee27021f0bbd2c00">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb48"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a>hdv2003<span class="sc">$</span>agecl <span class="ot">&lt;-</span> <span class="fu">cut</span>(hdv2003<span class="sc">$</span>age, <span class="at">breaks =</span> <span class="dv">5</span>)</span>
 <span id="cb48-2"><a href="#cb48-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb48-3"><a href="#cb48-3" aria-hidden="true" tabindex="-1"></a><span class="fu">freq</span>(hdv2003<span class="sc">$</span>agecl)</span>
@@ -944,7 +966,7 @@ Avertissement
 <span id="cb48-9"><a href="#cb48-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; (81.2,97.1]  43  2.1  2.1</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Si on donne un nombre entier à l’argument <code>breaks</code>, un nombre correspondant de classes d’amplitudes égales sont automatiquement calculées. Comme il est souvent préférable d’avoir des limites “arrondies”, on peut aussi spécifier ces dernières manuellement en passant un vecteur à <code>breaks</code>.</p>
-<div class="cell" data-hash="09-recodages_cache/html/unnamed-chunk-50_01c12390dbb266a48f9c4ce7809c85f5">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb49"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a>hdv2003<span class="sc">$</span>agecl <span class="ot">&lt;-</span> <span class="fu">cut</span>(</span>
 <span id="cb49-2"><a href="#cb49-2" aria-hidden="true" tabindex="-1"></a>    hdv2003<span class="sc">$</span>age,</span>
 <span id="cb49-3"><a href="#cb49-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">breaks =</span> <span class="fu">c</span>(<span class="dv">18</span>, <span class="dv">25</span>, <span class="dv">35</span>, <span class="dv">45</span>, <span class="dv">55</span>, <span class="dv">65</span>, <span class="dv">97</span>),</span>
@@ -968,7 +990,7 @@ Avertissement
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="resources/screenshots/icut.png" class="img-fluid figure-img"></p>
-<figcaption class="figure-caption">Interface graphique de <code>icut</code></figcaption>
+<figcaption>Interface graphique de <code>icut</code></figcaption>
 </figure>
 </div>
 <p>Vous pouvez alors choisir la variable à découper dans l’onglet <em>Variable et paramètres</em>, indiquer les limites de vos classes ainsi que quelques options complémentaires dans l’onglet <em>Découpage en classes</em>, et vérifier le résultat dans l’onglet <em>Code et résultat</em>. Une fois le résultat satisfaisant, cliquez sur <em>Done</em>&nbsp;: si vous êtes sous RStudio le code généré sera directement inséré dans votre script actuel à l’emplacement du curseur. Sinon, ce code sera affiché dans la console et vous pourrez le copier/coller pour l’inclure dans votre script.</p>
@@ -992,7 +1014,7 @@ Avertissement
 <section id="préparation" class="level3" data-number="9.6.1">
 <h3 data-number="9.6.1" class="anchored" data-anchor-id="préparation"><span class="header-section-number">9.6.1</span> Préparation</h3>
 <p>Pour la plupart de ces exercices, on a besoin des extensions <code>forcats</code> et <code>questionr</code>, et du jeu de données d’exemple <code>hdv2003</code>.</p>
-<div class="cell" data-hash="09-recodages_cache/html/unnamed-chunk-51_b259ae28815c8025f19601fbfeb962a8">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb50"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(forcats)</span>
 <span id="cb50-2"><a href="#cb50-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(questionr)</span>
 <span id="cb50-3"><a href="#cb50-3" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(hdv2003)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -1002,12 +1024,12 @@ Avertissement
 <h3 data-number="9.6.2" class="anchored" data-anchor-id="vecteurs-et-tests"><span class="header-section-number">9.6.2</span> Vecteurs et tests</h3>
 <p><strong>Exercice 1.1</strong></p>
 <p>Construire le vecteur suivant&nbsp;:</p>
-<div class="cell" data-hash="09-recodages_cache/html/unnamed-chunk-52_6c8c47668c8d009fdfb7e54722b6735d">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb51"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"12"</span>, <span class="st">"3.5"</span>, <span class="st">"421"</span>, <span class="st">"2,4"</span>)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Et le convertir en vecteur numérique. Que remarquez-vous ?</p>
 <div class="solution-exo">
-<div class="cell" data-hash="09-recodages_cache/html/unnamed-chunk-53_2a1adcb34273e3e41c11481c92c935a5">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb52"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a><span class="fu">as.numeric</span>(x)</span>
 <span id="cb52-2"><a href="#cb52-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb52-3"><a href="#cb52-3" aria-hidden="true" tabindex="-1"></a><span class="do">## Un nombre avec une virgule comme séparateur décimal</span></span>
@@ -1016,7 +1038,7 @@ Avertissement
 </div>
 <p><strong>Exercice 1.2</strong></p>
 <p>Construire le vecteur suivant&nbsp;:</p>
-<div class="cell" data-hash="09-recodages_cache/html/unnamed-chunk-54_b1e1248a3525d3eb26c914a155155e94">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb53"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">20</span>, <span class="dv">21</span>, <span class="fl">15.5</span>, <span class="dv">14</span>, <span class="dv">12</span>, <span class="dv">8</span>)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <ul>
@@ -1024,19 +1046,19 @@ Avertissement
 <li>Utiliser ce test pour extraire du vecteur les éléments correspondants.</li>
 </ul>
 <div class="solution-exo">
-<div class="cell" data-hash="09-recodages_cache/html/unnamed-chunk-55_14dc8d5ea03e8f804425b6b38d6118cc">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb54"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a>x <span class="sc">&gt;</span> <span class="dv">15</span></span>
 <span id="cb54-2"><a href="#cb54-2" aria-hidden="true" tabindex="-1"></a>x[x <span class="sc">&gt;</span> <span class="dv">15</span>]</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div>
 <p><strong>Exercice 1.3</strong></p>
 <p>Le code suivant génère un vecteur de 1000 nombres aléatoires compris entre 0 et 10&nbsp;:</p>
-<div class="cell" data-hash="09-recodages_cache/html/unnamed-chunk-56_fe19784e1c48ef4baab2944abd4ec0db">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb55"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">runif</span>(<span class="dv">1000</span>, <span class="dv">0</span>, <span class="dv">10</span>)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Combien d’éléments de ce vecteur sont compris entre 2 et 4 ?</p>
 <div class="solution-exo">
-<div class="cell" data-hash="09-recodages_cache/html/unnamed-chunk-57_83a8f158be8562a42fc188df6fddb7a7">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb56"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Possibilité 1</span></span>
 <span id="cb56-2"><a href="#cb56-2" aria-hidden="true" tabindex="-1"></a><span class="fu">length</span>(x[x <span class="sc">&gt;=</span> <span class="dv">2</span> <span class="sc">&amp;</span> x <span class="sc">&lt;=</span> <span class="dv">4</span>])</span>
 <span id="cb56-3"><a href="#cb56-3" aria-hidden="true" tabindex="-1"></a><span class="do">## Possibilité 2</span></span>
@@ -1048,16 +1070,16 @@ Avertissement
 <h3 data-number="9.6.3" class="anchored" data-anchor-id="recodages-de-variable-qualitative"><span class="header-section-number">9.6.3</span> Recodages de variable qualitative</h3>
 <p><strong>Exercice 2.1</strong></p>
 <p>Construire un vecteur <code>f</code> à l’aide du code suivant&nbsp;:</p>
-<div class="cell" data-hash="09-recodages_cache/html/unnamed-chunk-58_2b6fd67dca34392344c0dd5f6fa57f9f">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb57"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true" tabindex="-1"></a>f <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"Jan"</span>, <span class="st">"Jan"</span>, <span class="st">"Fev"</span>, <span class="st">"Juil"</span>)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Recoder le vecteur à l’aide de la fonction <code>fct_recode</code> pour obtenir le résultat suivant&nbsp;:</p>
-<div class="cell" data-hash="09-recodages_cache/html/unnamed-chunk-59_b5cf08a503083cecb1e2c8cda8c00085">
+<div class="cell">
 <pre><code>#&gt; [1] Janvier Janvier Février Juillet
 #&gt; Levels: Février Janvier Juillet</code></pre>
 </div>
 <div class="solution-exo">
-<div class="cell" data-hash="09-recodages_cache/html/rec21_3cb8325d88e31035f077c92ab4374952">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb59"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb59-1"><a href="#cb59-1" aria-hidden="true" tabindex="-1"></a>f <span class="ot">&lt;-</span> <span class="fu">fct_recode</span>(f,</span>
 <span id="cb59-2"><a href="#cb59-2" aria-hidden="true" tabindex="-1"></a>          <span class="st">"Janvier"</span> <span class="ot">=</span> <span class="st">"Jan"</span>,</span>
 <span id="cb59-3"><a href="#cb59-3" aria-hidden="true" tabindex="-1"></a>          <span class="st">"Février"</span> <span class="ot">=</span> <span class="st">"Fev"</span>,</span>
@@ -1068,7 +1090,7 @@ Avertissement
 </div>
 <p><strong>Exercice 2.2</strong></p>
 <p>À l’aide de l’interface graphique de <code>questionr</code>, recoder la variable <code>relig</code> du jeu de données <code>hdv2003</code> pour obtenir le tri à plat suivant (il se peut que l’ordre des modalités dans le tri à plat soit différent)&nbsp;:</p>
-<div class="cell" data-hash="09-recodages_cache/html/unnamed-chunk-60_56f5882708880744cc6a103224c971dd">
+<div class="cell">
 <pre><code>#&gt;                               n    % val%
 #&gt; Pratiquant                  708 35.4 35.4
 #&gt; Appartenance                760 38.0 38.0
@@ -1077,7 +1099,7 @@ Avertissement
 #&gt; NSP                          40  2.0  2.0</code></pre>
 </div>
 <div class="solution-exo">
-<div class="cell" data-hash="09-recodages_cache/html/rec22_091752215a813d06be1517d0997e7075">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb61"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb61-1"><a href="#cb61-1" aria-hidden="true" tabindex="-1"></a>hdv2003<span class="sc">$</span>relig_rec <span class="ot">&lt;-</span> <span class="fu">fct_recode</span>(</span>
 <span id="cb61-2"><a href="#cb61-2" aria-hidden="true" tabindex="-1"></a>    hdv2003<span class="sc">$</span>relig,</span>
 <span id="cb61-3"><a href="#cb61-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Pratiquant"</span> <span class="ot">=</span> <span class="st">"Pratiquant regulier"</span>,</span>
@@ -1091,7 +1113,7 @@ Avertissement
 </div>
 <p><strong>Exercice 2.3</strong></p>
 <p>À l’aide de l’interface graphique de <code>questionr</code>, recoder la variable <code>nivetud</code> pour obtenir le tri à plat suivant (il se peut que l’ordre des modalités dans le tri à plat soit différent)&nbsp;:</p>
-<div class="cell" data-hash="09-recodages_cache/html/unnamed-chunk-61_4912c03631cf9fd154d3bab965568f55">
+<div class="cell">
 <pre><code>#&gt;                                           n    % val%
 #&gt; N'a jamais fait d'etudes                 39  2.0  2.1
 #&gt; Études primaires                        427 21.3 22.6
@@ -1102,7 +1124,7 @@ Avertissement
 #&gt; NA                                      112  5.6   NA</code></pre>
 </div>
 <div class="solution-exo">
-<div class="cell" data-hash="09-recodages_cache/html/rec23_7c4f4395f3d9d1dea9042aff1247476e">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb63"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb63-1"><a href="#cb63-1" aria-hidden="true" tabindex="-1"></a>hdv2003<span class="sc">$</span>nivetud_rec <span class="ot">&lt;-</span> <span class="fu">fct_recode</span>(</span>
 <span id="cb63-2"><a href="#cb63-2" aria-hidden="true" tabindex="-1"></a>    hdv2003<span class="sc">$</span>nivetud,</span>
 <span id="cb63-3"><a href="#cb63-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Études primaires"</span> <span class="ot">=</span> <span class="st">"A arrete ses etudes, avant la derniere annee d'etudes primaires"</span>,</span>
@@ -1116,7 +1138,7 @@ Avertissement
 </div>
 </div>
 <p>Toujours à l’aide de l’interface graphique, réordonner les modalités de cette variable recodée pour obtenir le tri à plat suivant&nbsp;:</p>
-<div class="cell" data-hash="09-recodages_cache/html/unnamed-chunk-62_2733d48f4bc4a1945c77268abdcf9196">
+<div class="cell">
 <pre><code>#&gt;                                           n    % val%
 #&gt; Enseignement superieur                  441 22.0 23.4
 #&gt; Enseignement technique ou professionnel 594 29.7 31.5
@@ -1127,7 +1149,7 @@ Avertissement
 #&gt; NA                                      112  5.6   NA</code></pre>
 </div>
 <div class="solution-exo">
-<div class="cell" data-hash="09-recodages_cache/html/rec23b_16e79243910f6ec19b790d6fd35cdce7">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb65"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb65-1"><a href="#cb65-1" aria-hidden="true" tabindex="-1"></a>hdv2003<span class="sc">$</span>nivetud_rec <span class="ot">&lt;-</span> <span class="fu">factor</span>(</span>
 <span id="cb65-2"><a href="#cb65-2" aria-hidden="true" tabindex="-1"></a>  hdv2003<span class="sc">$</span>nivetud_rec, </span>
 <span id="cb65-3"><a href="#cb65-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">levels =</span> <span class="fu">c</span>(</span>
@@ -1142,13 +1164,17 @@ Avertissement
 <p><strong>Exercice 2.4</strong></p>
 <p>À l’aide de la fonction <code>fct_reorder</code>, trier les modalités de la variable <code>relig</code> du jeu de données <code>hdv2003</code> selon leur âge médian.</p>
 <p>Vérifier en générant le boxplot suivant&nbsp;:</p>
-<div class="cell" data-hash="09-recodages_cache/html/unnamed-chunk-63_619f812030b7b5a06206e17aefd080e8">
+<div class="cell">
 <div class="cell-output-display">
-<p><img src="09-recodages_files/figure-html/unnamed-chunk-63-1.png" class="img-fluid" width="672"></p>
+<div>
+<figure class="figure">
+<p><img src="09-recodages_files/figure-html/unnamed-chunk-63-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
 </div>
 </div>
 <div class="solution-exo">
-<div class="cell" data-hash="09-recodages_cache/html/rec24_81d003301080e358cc4d2d0dc8c14e8d">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb66"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb66-1"><a href="#cb66-1" aria-hidden="true" tabindex="-1"></a>hdv2003<span class="sc">$</span>relig <span class="ot">&lt;-</span> <span class="fu">fct_reorder</span>(hdv2003<span class="sc">$</span>relig, hdv2003<span class="sc">$</span>age, median)</span>
 <span id="cb66-2"><a href="#cb66-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(hdv2003) <span class="sc">+</span> <span class="fu">geom_boxplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> relig, <span class="at">y =</span> age))</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
@@ -1159,13 +1185,13 @@ Avertissement
 <p><strong>Exercice 3.1</strong></p>
 <p>À l’aide de la fonction <code>ifelse</code>, créer une nouvelle variable <code>cinema_bd</code> permettant d’identifier les personnes qui vont au cinéma et déclarent lire des bandes dessinées.</p>
 <p>Vous devriez obtenir le tri à plat suivant pour cette nouvelle variable&nbsp;:</p>
-<div class="cell" data-hash="09-recodages_cache/html/unnamed-chunk-64_9037933ae2346ca929d09e15a9154a9b">
+<div class="cell">
 <pre><code>#&gt;                 n    % val%
 #&gt; Autre        1971 98.6 98.6
 #&gt; Cinéma et BD   29  1.5  1.5</code></pre>
 </div>
 <div class="solution-exo">
-<div class="cell" data-hash="09-recodages_cache/html/rec31_01e08a2dd3ab54c5b9f35c0347ba75ab">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb68"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb68-1"><a href="#cb68-1" aria-hidden="true" tabindex="-1"></a>hdv2003<span class="sc">$</span>cinema_bd <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(</span>
 <span id="cb68-2"><a href="#cb68-2" aria-hidden="true" tabindex="-1"></a>  hdv2003<span class="sc">$</span>cinema <span class="sc">==</span> <span class="st">"Oui"</span> <span class="sc">&amp;</span> hdv2003<span class="sc">$</span>lecture.bd <span class="sc">==</span> <span class="st">"Oui"</span>,</span>
 <span id="cb68-3"><a href="#cb68-3" aria-hidden="true" tabindex="-1"></a>  <span class="st">"Cinéma et BD"</span>,</span>
@@ -1183,14 +1209,14 @@ Avertissement
 <li>Autre</li>
 </ul>
 <p>Vous devriez obtenir le tri à plat suivant&nbsp;:</p>
-<div class="cell" data-hash="09-recodages_cache/html/unnamed-chunk-65_73f9b0cc0df308b557605400c1026346">
+<div class="cell">
 <pre><code>#&gt;                                           n    % val%
 #&gt; Autre                                  1001 50.0 50.0
 #&gt; Femme ayant plus de 2 frères et soeurs  546 27.3 27.3
 #&gt; Homme ayant plus de 2 frères et soeurs  453 22.7 22.7</code></pre>
 </div>
 <div class="solution-exo">
-<div class="cell" data-hash="09-recodages_cache/html/rec32_415c0295cc25259e38f1570297c75d8d">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb70"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb70-1"><a href="#cb70-1" aria-hidden="true" tabindex="-1"></a>hdv2003<span class="sc">$</span>groupe <span class="ot">&lt;-</span> <span class="fu">case_when</span>(</span>
 <span id="cb70-2"><a href="#cb70-2" aria-hidden="true" tabindex="-1"></a>    hdv2003<span class="sc">$</span>sexe <span class="sc">==</span> <span class="st">"Homme"</span> <span class="sc">&amp;</span> hdv2003<span class="sc">$</span>freres.soeurs <span class="sc">&gt;</span> <span class="dv">2</span> <span class="sc">~</span> <span class="st">"Homme ayant plus de 2 frères et soeurs"</span>,</span>
 <span id="cb70-3"><a href="#cb70-3" aria-hidden="true" tabindex="-1"></a>    hdv2003<span class="sc">$</span>sexe <span class="sc">==</span> <span class="st">"Femme"</span> <span class="sc">&amp;</span> hdv2003<span class="sc">$</span>freres.soeurs <span class="sc">&gt;</span> <span class="dv">2</span> <span class="sc">~</span> <span class="st">"Femme ayant plus de 2 frères et soeurs"</span>,</span>
@@ -1209,7 +1235,7 @@ Avertissement
 <li>Autre</li>
 </ul>
 <p>Vous devriez obtenir le tri à plat suivant&nbsp;:</p>
-<div class="cell" data-hash="09-recodages_cache/html/unnamed-chunk-66_25112704515d5c08cc29604dd47732fd">
+<div class="cell">
 <pre><code>#&gt;                                                     n    % val%
 #&gt; Autre                                             714 35.7 35.7
 #&gt; Femme pratiquant le sport ou le bricolage         549 27.5 27.5
@@ -1217,7 +1243,7 @@ Avertissement
 #&gt; Homme de plus de 40 ans satisfait par son travail 127  6.3  6.3</code></pre>
 </div>
 <div class="solution-exo">
-<div class="cell" data-hash="09-recodages_cache/html/rec33_e12c3cfed67d48726804879de152f443">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb72"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb72-1"><a href="#cb72-1" aria-hidden="true" tabindex="-1"></a>hdv2003<span class="sc">$</span>groupe <span class="ot">&lt;-</span> <span class="fu">case_when</span>(</span>
 <span id="cb72-2"><a href="#cb72-2" aria-hidden="true" tabindex="-1"></a>    hdv2003<span class="sc">$</span>sexe <span class="sc">==</span> <span class="st">"Homme"</span> <span class="sc">&amp;</span> hdv2003<span class="sc">$</span>age <span class="sc">&gt;</span> <span class="dv">40</span> <span class="sc">&amp;</span> hdv2003<span class="sc">$</span>trav.satisf <span class="sc">==</span> <span class="st">"Satisfaction"</span> <span class="sc">~</span> <span class="st">"Homme de plus de 40 ans satisfait par son travail"</span>,</span>
 <span id="cb72-3"><a href="#cb72-3" aria-hidden="true" tabindex="-1"></a>    hdv2003<span class="sc">$</span>sexe <span class="sc">==</span> <span class="st">"Homme"</span> <span class="sc">&amp;</span> hdv2003<span class="sc">$</span>age <span class="sc">&gt;</span> <span class="dv">30</span> <span class="sc">~</span> <span class="st">"Homme de plus de 30 ans"</span>,</span>
@@ -1233,7 +1259,7 @@ Avertissement
 <h3 data-number="9.6.5" class="anchored" data-anchor-id="découper-une-variable-numérique"><span class="header-section-number">9.6.5</span> Découper une variable numérique</h3>
 <p><strong>Exercice 4.1</strong></p>
 <p>Dans le jeu de données <code>hdv2003</code>, découper la variable <code>heures.tv</code> en classes de manière à obtenir au final le tri à plat suivant&nbsp;:</p>
-<div class="cell" data-hash="09-recodages_cache/html/unnamed-chunk-67_6634be0848d5fc66c3e213d71eacdbfc">
+<div class="cell">
 <pre><code>#&gt;          n    % val%
 #&gt; [0,1]  684 34.2 34.3
 #&gt; (1,2]  535 26.8 26.8
@@ -1243,7 +1269,7 @@ Avertissement
 #&gt; NA       5  0.2   NA</code></pre>
 </div>
 <div class="solution-exo">
-<div class="cell" data-hash="09-recodages_cache/html/rec41_e547749f4eac3b3bed00663a1b5e4e75">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb74"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb74-1"><a href="#cb74-1" aria-hidden="true" tabindex="-1"></a>hdv2003<span class="sc">$</span>tv_cl <span class="ot">&lt;-</span> <span class="fu">cut</span>(</span>
 <span id="cb74-2"><a href="#cb74-2" aria-hidden="true" tabindex="-1"></a>    hdv2003<span class="sc">$</span>heures.tv,</span>
 <span id="cb74-3"><a href="#cb74-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">include.lowest =</span> <span class="cn">TRUE</span>,</span>
@@ -1307,6 +1333,33 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       } else {
         el.classList.add('notransition');
       }
+    }
+  }
+  const toggleGiscusIfUsed = (isAlternate, darkModeDefault) => {
+    const baseTheme = document.querySelector('#giscus-base-theme')?.value ?? 'light';
+    const alternateTheme = document.querySelector('#giscus-alt-theme')?.value ?? 'dark';
+    let newTheme = '';
+    if(darkModeDefault) {
+      newTheme = isAlternate ? baseTheme : alternateTheme;
+    } else {
+      newTheme = isAlternate ? alternateTheme : baseTheme;
+    }
+    const changeGiscusTheme = () => {
+      // From: https://github.com/giscus/giscus/issues/336
+      const sendMessage = (message) => {
+        const iframe = document.querySelector('iframe.giscus-frame');
+        if (!iframe) return;
+        iframe.contentWindow.postMessage({ giscus: message }, 'https://giscus.app');
+      }
+      sendMessage({
+        setConfig: {
+          theme: newTheme
+        }
+      });
+    }
+    const isGiscussLoaded = window.document.querySelector('iframe.giscus-frame') !== null;
+    if (isGiscussLoaded) {
+      changeGiscusTheme();
     }
   }
   const toggleColorMode = (alternate) => {
@@ -1375,13 +1428,15 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       return localAlternateSentinel;
     }
   }
-  let localAlternateSentinel = 'default';
+  const darkModeDefault = false;
+  let localAlternateSentinel = darkModeDefault ? 'alternate' : 'default';
   // Dark / light mode switch
   window.quartoToggleColorScheme = () => {
     // Read the current dark / light value 
     let toAlternate = !hasAlternateSentinel();
     toggleColorMode(toAlternate);
     setStyleSentinel(toAlternate);
+    toggleGiscusIfUsed(toAlternate, darkModeDefault);
   };
   // Ensure there is a toggle, if there isn't float one in the top right
   if (window.document.querySelector('.quarto-color-scheme-toggle') === null) {
@@ -1416,18 +1471,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     }
     return false;
   }
-  const clipboard = new window.ClipboardJS('.code-copy-button', {
-    text: function(trigger) {
-      const codeEl = trigger.previousElementSibling.cloneNode(true);
-      for (const childEl of codeEl.children) {
-        if (isCodeAnnotation(childEl)) {
-          childEl.remove();
-        }
-      }
-      return codeEl.innerText;
-    }
-  });
-  clipboard.on('success', function(e) {
+  const onCopySuccess = function(e) {
     // button target
     const button = e.trigger;
     // don't keep focus
@@ -1459,11 +1503,48 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     }, 1000);
     // clear code selection
     e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
   });
-  function tippyHover(el, contentFn) {
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
     const config = {
       allowHTML: true,
-      content: contentFn,
       maxWidth: 500,
       delay: 100,
       arrow: false,
@@ -1473,8 +1554,17 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       interactive: true,
       interactiveBorder: 10,
       theme: 'quarto',
-      placement: 'bottom-start'
+      placement: 'bottom-start',
     };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
     window.tippy(el, config); 
   }
   const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
@@ -1486,7 +1576,129 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       try { href = new URL(href).hash; } catch {}
       const id = href.replace(/^#\/?/, "");
       const note = window.document.getElementById(id);
-      return note.innerHTML;
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
     });
   }
       let selectedAnnoteEl;
@@ -1530,6 +1742,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
             }
             div.style.top = top - 2 + "px";
             div.style.height = height + 4 + "px";
+            div.style.left = 0;
             let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
             if (gutterDiv === null) {
               gutterDiv = window.document.createElement("div");
@@ -1555,6 +1768,32 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
         });
         selectedAnnoteEl = undefined;
       };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
       // Attach click handler to the DT
       const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
       for (const annoteDlNode of annoteDls) {
@@ -1616,18 +1855,19 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="./08-ggplot2.html" class="pagination-link">
+      <a href="./08-ggplot2.html" class="pagination-link" aria-label="Visualiser avec `ggplot2`">
         <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Visualiser avec <code>ggplot2</code></span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="./10-dplyr.html" class="pagination-link">
+      <a href="./10-dplyr.html" class="pagination-link" aria-label="Manipuler les données avec `dplyr`">
         <span class="nav-page-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Manipuler les données avec <code>dplyr</code></span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>
 </div> <!-- /content -->
-<script src="js/tidyverse.js"></script>
+<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/juba/tidyverse/edit/main/09-recodages.qmd" class="toc-action"><i class="bi bi-github"></i>Modifier cette page</a></li></ul></div></div></div></footer><script src="js/tidyverse.js"></script>
+
 
 
 

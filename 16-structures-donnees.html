@@ -2,12 +2,12 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="fr" xml:lang="fr"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.3.340">
+<meta name="generator" content="quarto-1.6.39">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Introduction à R et au tidyverse - 16&nbsp; Structures de données</title>
+<title>16&nbsp; Structures de données – Introduction à R et au tidyverse</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -22,7 +22,7 @@ ul.task-list li input[type="checkbox"] {
 }
 /* CSS for syntax highlighting */
 pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span { line-height: 1.25; }
 pre > code.sourceCode > span:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
 code.sourceCode > span { color: inherit; text-decoration: inherit; }
@@ -33,7 +33,7 @@ div.sourceCode { overflow: auto; }
 }
 @media print {
 pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
 }
 pre.numberSource code
   { counter-reset: source-line 0; }
@@ -71,12 +71,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="site_libs/quarto-html/anchor.min.js"></script>
 <link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-dark.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-f2ed4b6a00c7d3487a84fd5a50ba4e45.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-dark-ab6496a1a679dc9f3d6952c9737550a4.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
-<link href="site_libs/bootstrap/bootstrap-dark.min.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="site_libs/bootstrap/bootstrap-7841758b2c4697f1bb7dfd28c94c955d.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-dark-122eaf72ed6913f6dbaefd46cb265906.min.css" rel="prefetch" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
 <link href="site_libs/quarto-contrib/bookup_fonts_embed-0.0/fonts-download.css" rel="stylesheet">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
@@ -84,7 +84,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   "collapse-after": 3,
   "panel-placement": "start",
   "type": "textbox",
-  "limit": 20,
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
   "language": {
     "search-no-results-text": "Pas de résultats",
     "search-matching-documents-text": "documents trouvés",
@@ -93,8 +99,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     "search-more-match-text": "correspondance de plus dans ce document",
     "search-more-matches-text": "correspondances de plus dans ce document",
     "search-clear-button-title": "Effacer",
+    "search-text-placeholder": "",
     "search-detached-cancel-button-title": "Annuler",
-    "search-submit-button-title": "Envoyer"
+    "search-submit-button-title": "Envoyer",
+    "search-label": "Recherche"
   }
 }</script>
 
@@ -108,12 +116,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <header id="quarto-header" class="headroom fixed-top">
   <nav class="quarto-secondary-nav">
     <div class="container-fluid d-flex">
-      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Basculer la barre latérale" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Basculer la barre latérale" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./14-fonctions.html">Aller plus loin</a></li><li class="breadcrumb-item"><a href="./16-structures-donnees.html"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Structures de données</span></a></li></ol></nav>
-      <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Basculer la barre latérale" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
-      </a>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./14-fonctions.html">Aller plus loin</a></li><li class="breadcrumb-item"><a href="./16-structures-donnees.html"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Structures de données</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Basculer la barre latérale" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
       <button type="button" class="btn quarto-search-button" aria-label="Recherche" onclick="window.quartoOpenSearch();">
         <i class="bi bi-search"></i>
       </button>
@@ -123,24 +131,24 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <!-- content -->
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
 <!-- sidebar -->
-  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal sidebar-navigation docked overflow-auto">
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation docked overflow-auto">
     <div class="pt-lg-2 mt-2 text-left sidebar-header">
     <div class="sidebar-title mb-0 py-0">
       <a href="./">Introduction à R et au tidyverse</a> 
         <div class="sidebar-tools-main tools-wide">
-    <a href="https://github.com/juba/tidyverse/" title="Source Code" class="quarto-navigation-tool px-1" aria-label="Source Code"><i class="bi bi-github"></i></a>
+    <a href="https://github.com/juba/tidyverse/" title="Code source" class="quarto-navigation-tool px-1" aria-label="Code source"><i class="bi bi-github"></i></a>
     <div class="dropdown">
-      <a href="" title="Download" id="quarto-navigation-tool-dropdown-0" class="quarto-navigation-tool dropdown-toggle px-1" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download"><i class="bi bi-download"></i></a>
+      <a href="" title="Download" id="quarto-navigation-tool-dropdown-0" class="quarto-navigation-tool dropdown-toggle px-1" data-bs-toggle="dropdown" aria-expanded="false" role="link" aria-label="Download"><i class="bi bi-download"></i></a>
       <ul class="dropdown-menu" aria-labelledby="quarto-navigation-tool-dropdown-0">
           <li>
             <a class="dropdown-item sidebar-tools-main-item" href="./introduction_au_tidyverse.epub">
-              <i class="bi bi-bi-journal pe-1"></i>
+              <i class="bi bi-journal pe-1"></i>
             Download ePub
             </a>
           </li>
           <li>
             <a class="dropdown-item sidebar-tools-main-item" href="./introduction_au_tidyverse.pdf">
-              <i class="bi bi-bi-file-pdf pe-1"></i>
+              <i class="bi bi-file-pdf pe-1"></i>
             Download PDF
             </a>
           </li>
@@ -164,9 +172,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <ul class="list-unstyled mt-1">
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true">
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
  <span class="menu-text">Introduction</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true" aria-label="Basculer la section">
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Basculer la section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
@@ -187,9 +195,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true">
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true">
  <span class="menu-text">Introduction à R</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true" aria-label="Basculer la section">
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Basculer la section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
@@ -222,9 +230,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true">
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true">
  <span class="menu-text">Introduction au tidyverse</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true" aria-label="Basculer la section">
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true" aria-label="Basculer la section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
@@ -281,9 +289,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="true">
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true">
  <span class="menu-text">Aller plus loin</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="true" aria-label="Basculer la section">
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true" aria-label="Basculer la section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
@@ -340,9 +348,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" aria-expanded="true">
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="true">
  <span class="menu-text">Annexes</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" aria-expanded="true" aria-label="Basculer la section">
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="true" aria-label="Basculer la section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
@@ -358,7 +366,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     </ul>
     </div>
 </nav>
-<div id="quarto-sidebar-glass" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass"></div>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
         <nav id="TOC" role="doc-toc" class="toc-active">
@@ -396,12 +404,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#tableaux-de-données" id="toc-tableaux-de-données" class="nav-link" data-scroll-target="#tableaux-de-données"><span class="header-section-number">16.5.3</span> Tableaux de données</a></li>
   </ul></li>
   </ul>
-<div class="toc-actions"><div><i class="bi bi-github"></i></div><div class="action-links"><p><a href="https://github.com/juba/tidyverse/edit/main/16-structures-donnees.qmd" class="toc-action">Modifier cette page</a></p></div></div></nav>
+<div class="toc-actions"><ul><li><a href="https://github.com/juba/tidyverse/edit/main/16-structures-donnees.qmd" class="toc-action"><i class="bi bi-github"></i>Modifier cette page</a></li></ul></div></nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
-<header id="title-block-header" class="quarto-title-block default">
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./14-fonctions.html">Aller plus loin</a></li><li class="breadcrumb-item"><a href="./16-structures-donnees.html"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Structures de données</span></a></li></ol></nav>
 <div class="quarto-title">
 <h1 class="title"><span id="sec-structures-donnees" class="quarto-section-identifier"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Structures de données</span></span></h1>
 </div>
@@ -416,34 +424,36 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </div>
   
 
+
 </header>
+
 
 <p>R propose de nombreuses structures de données différentes, et les extensions peuvent en implémenter de nouvelles. Cette section introduit trois structures parmi les plus utilisées : les <strong>vecteurs atomiques</strong>, les <strong>listes</strong> et les <strong>tableaux de données</strong>. Certaines ont déjà été abordées et utilisées précédemment, mais connaître leurs spécificités et savoir les manipuler est utile voire indispensable, notamment lorsqu’on veut créer ses propres fonctions.</p>
 <section id="vecteurs-atomiques" class="level2" data-number="16.1">
 <h2 data-number="16.1" class="anchored" data-anchor-id="vecteurs-atomiques"><span class="header-section-number">16.1</span> Vecteurs atomiques</h2>
-<p>Les vecteurs atomiques sont des structures qui regroupent ensemble plusieurs éléments constitués d’une seule valeur, avec deux contraintes : ces valeurs doivent toutes être du même type. Les vecteurs atomiques ont déjà été introduits <a href="09-recodages.html#sec-vecteurs"><span>Section&nbsp;9.1</span></a>.</p>
+<p>Les vecteurs atomiques sont des structures qui regroupent ensemble plusieurs éléments constitués d’une seule valeur, avec deux contraintes : ces valeurs doivent toutes être du même type. Les vecteurs atomiques ont déjà été introduits <a href="09-recodages.html#sec-vecteurs" class="quarto-xref"><span>Section 9.1</span></a>.</p>
 <section id="création-dun-vecteur" class="level3" data-number="16.1.1">
 <h3 data-number="16.1.1" class="anchored" data-anchor-id="création-dun-vecteur"><span class="header-section-number">16.1.1</span> Création d’un vecteur</h3>
 <p>On peut construire un vecteur manuellement avec la fonction <code>c()</code>.</p>
-<div class="cell" data-hash="16-structures-donnees_cache/html/unnamed-chunk-2_8d4240b3c1074c36f9b3b0c420213d13">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">3</span>, <span class="dv">8</span>)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Si on souhaite générer un vecteur de valeurs entières successives, on peut utiliser l’opérateur <code>:</code> ou la fonction <code>seq_len()</code>.</p>
-<div class="cell" data-hash="16-structures-donnees_cache/html/unnamed-chunk-3_6c3230afc8cb62c4d57871f4e6aaa61e">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="dv">2</span><span class="sc">:</span><span class="dv">8</span></span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 2 3 4 5 6 7 8</span></span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="fu">seq_len</span>(<span class="dv">5</span>)</span>
 <span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 1 2 3 4 5</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>La fonction <code>seq()</code> permet de générer des séquences régulière plus complexes.</p>
-<div class="cell" data-hash="16-structures-donnees_cache/html/unnamed-chunk-4_8b7a8aec99cfc5ff741f769750f91fa4">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">seq</span>(<span class="fl">0.5</span>, <span class="fl">2.5</span>, <span class="at">by =</span> <span class="fl">0.5</span>)</span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 0.5 1.0 1.5 2.0 2.5</span></span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="fu">seq</span>(<span class="dv">0</span>, <span class="dv">4</span>, <span class="at">length.out =</span> <span class="dv">6</span>)</span>
 <span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 0.0 0.8 1.6 2.4 3.2 4.0</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Une autre variante de <code>seq()</code>, nommée <code>seq_along()</code>, permet de générer un vecteur d’entiers correspondant à la longueur d’un objet passé en argument :</p>
-<div class="cell" data-hash="16-structures-donnees_cache/html/unnamed-chunk-5_eefbef7aac4a597cc5070315af93c9cb">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"Pomme"</span>, <span class="st">"Poire"</span>)</span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="fu">seq_along</span>(x)</span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 1 2</span></span>
@@ -452,20 +462,20 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [1]  1  2  3  4  5  6  7  8  9 10</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Enfin, la fonction <code>rep()</code> permet de répéter un élément ou un vecteur.</p>
-<div class="cell" data-hash="16-structures-donnees_cache/html/unnamed-chunk-6_23e8c1e98d7ead6dc15e73c53a5f16fe">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">rep</span>(<span class="st">"Pomme"</span>, <span class="dv">6</span>)</span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] "Pomme" "Pomme" "Pomme" "Pomme" "Pomme" "Pomme"</span></span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="fu">rep</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">4</span>, <span class="dv">2</span>)</span>
 <span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 1 2 3 4 1 2 3 4</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Si on souhaite connaître le nombre d’éléments d’un vecteur, on peut utiliser la fonction <code>length()</code>.</p>
-<div class="cell" data-hash="16-structures-donnees_cache/html/unnamed-chunk-7_a1910dbbc14d0ae848ffc31f35bbc93c">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>v <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">4</span>, <span class="dv">2</span>)</span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="fu">length</span>(v)</span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 8</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Il peut parfois être utile de créer des vecteurs “vides”. Dans ce cas on peut les initialiser avec les fonctions <code>vector()</code>, <code>character()</code> ou <code>numeric()</code>. Par défaut ces fonctions renvoient un vecteur sans élément, mais on peut aussi leur indiquer en argument le nombre d’éléments souhaités (qui seront alors initialisés avec une valeur par défaut).</p>
-<div class="cell" data-hash="16-structures-donnees_cache/html/unnamed-chunk-8_ecb5f6c18e2bb72c61eb27d48b5cb681">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">numeric</span>()</span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; numeric(0)</span></span>
 <span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="fu">character</span>(<span class="dv">2</span>)</span>
@@ -475,19 +485,19 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="vecteurs-nommés" class="level3" data-number="16.1.2">
 <h3 data-number="16.1.2" class="anchored" data-anchor-id="vecteurs-nommés"><span class="header-section-number">16.1.2</span> Vecteurs nommés</h3>
 <p>Les éléments d’un vecteur peuvent être nommés. Ces noms peuvent êtré définis au moment de la création du vecteur.</p>
-<div class="cell" data-hash="16-structures-donnees_cache/html/unnamed-chunk-9_f11abb05b710efa1e0f4fd01b74ec23b">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="at">e1 =</span> <span class="dv">1</span>, <span class="at">e2 =</span> <span class="dv">3</span>, <span class="at">e3 =</span> <span class="dv">8</span>)</span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>x</span>
 <span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; e1 e2 e3 </span></span>
 <span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  1  3  8</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>On peut utiliser <code>names()</code> pour récupérer les noms des éléments d’un vecteur.</p>
-<div class="cell" data-hash="16-structures-donnees_cache/html/unnamed-chunk-10_6cd057ba3b0641025eae87250b618e6e">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(x)</span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] "e1" "e2" "e3"</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>On peut aussi utiliser <code>names()</code> pour créer ou modifier les noms d’un vecteur existant.</p>
-<div class="cell" data-hash="16-structures-donnees_cache/html/unnamed-chunk-11_23d2ffe9e9d852f7057ab03dc4d1b565">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(x) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"brouette"</span>, <span class="st">"moto"</span>, <span class="st">"igloo"</span>)</span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>x</span>
 <span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; brouette     moto    igloo </span></span>
@@ -497,7 +507,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="types-de-vecteurs" class="level3" data-number="16.1.3">
 <h3 data-number="16.1.3" class="anchored" data-anchor-id="types-de-vecteurs"><span class="header-section-number">16.1.3</span> Types de vecteurs</h3>
 <p>On peut déterminer le type d’un vecteur avec l’instruction <code>typeof</code>.</p>
-<div class="cell" data-hash="16-structures-donnees_cache/html/unnamed-chunk-12_beeb21d65a82caf33b4366bd647664de">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">3</span>, <span class="dv">8</span>)</span>
 <span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="fu">typeof</span>(x)</span>
 <span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] "double"</span></span>
@@ -516,13 +526,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li>les valeurs logiques (<code>logical</code>)</li>
 </ul>
 <p>À noter que par défaut les nombres sont considérés comme des nombres flottants (des nombres décimaux avec une virgule) : pour les définir explicitement comme nombres entiers on peut leur ajouter le suffixe <code>L</code>.</p>
-<div class="cell" data-hash="16-structures-donnees_cache/html/unnamed-chunk-13_94d0175b41bdc18d02082d0ba1191f63">
-<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">c</span>(1L, 3L, 8L)</span>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">1</span>L, <span class="dv">3</span>L, <span class="dv">8</span>L)</span>
 <span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="fu">typeof</span>(x)</span>
 <span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] "integer"</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>On peut tester le type d’un vecteur avec les fonctions <code>is.character</code>, <code>is.double</code>, <code>is.logical</code>… Autre fonction utile, <code>is.numeric</code> teste si un vecteur est de type <code>double</code> ou <code>integer</code>.</p>
-<div class="cell" data-hash="16-structures-donnees_cache/html/unnamed-chunk-14_445c4fd0b2134ce6e6c8197073ba84eb">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">3</span>, <span class="dv">8</span>)</span>
 <span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="fu">is.numeric</span>(x)</span>
 <span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] TRUE</span></span>
@@ -534,8 +544,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a><span class="fu">is.character</span>(y)</span>
 <span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] TRUE</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>Petite spécificité, les facteurs (voir <a href="09-recodages.html#sec-facteurs"><span>Section&nbsp;9.3.1</span></a>) ne sont pas considérés par R comme des <code>character</code>, même s’ils comportent des chaînes de caractères. Pour tester si un vecteur est de type facteur, on utilise <code>is.factor()</code>.</p>
-<div class="cell" data-hash="16-structures-donnees_cache/html/unnamed-chunk-15_205f8a9dc1792c3e99bb7b8732bfea21">
+<p>Petite spécificité, les facteurs (voir <a href="09-recodages.html#sec-facteurs" class="quarto-xref"><span>Section 9.3.1</span></a>) ne sont pas considérés par R comme des <code>character</code>, même s’ils comportent des chaînes de caractères. Pour tester si un vecteur est de type facteur, on utilise <code>is.factor()</code>.</p>
+<div class="cell">
 <div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>fac <span class="ot">&lt;-</span> <span class="fu">factor</span>(<span class="fu">c</span>(<span class="st">"rouge"</span>, <span class="st">"vert"</span>, <span class="st">"rouge"</span>))</span>
 <span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="fu">is.character</span>(fac)</span>
 <span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] FALSE</span></span>
@@ -544,12 +554,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <p>Tous les éléments d’un vecteur doivent être du même type. Si ça n’est pas le cas, les éléments seront convertis au type le plus “général” présent dans le vecteur, sachant que les <code>character</code> sont plus généraux que les <code>numeric</code>, qui sont eux-mêmes plus généraux que les <code>logical</code>.</p>
 <p>Dans l’exemple suivant, le nombre <code>1</code> est transformé en chaîne de caractère <code>"1"</code>.</p>
-<div class="cell" data-hash="16-structures-donnees_cache/html/unnamed-chunk-16_4300b11f276c749111b9d1c45ffef0a4">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">c</span>(<span class="dv">1</span>, <span class="st">"foo"</span>)</span>
 <span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] "1"   "foo"</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Si on mélange nombres et valeurs logiques, les <code>TRUE</code> sont convertis en <code>1</code> et les <code>FALSE</code> en <code>0</code>.</p>
-<div class="cell" data-hash="16-structures-donnees_cache/html/unnamed-chunk-17_b4a13c9395c7131de3a6a05cd46aa790">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">c</span>(<span class="cn">TRUE</span>, <span class="dv">2</span>, <span class="cn">FALSE</span>)</span>
 <span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 1 2 0</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
@@ -567,33 +577,33 @@ Note
 </div>
 </div>
 <p>La conversion automatique d’un type en un autre est à l’origine d’un idiome courant en R. Quand on applique une fonction qui attend un vecteur de nombres à un vecteur de valeurs logiques, celles-ci sont automatiquement converties, les <code>TRUE</code> devenant 1 et les <code>FALSE</code> devenant 0. Du coup, si on applique <code>sum()</code> à un vecteur de valeurs logiques, le résultat est égal au nombre de valeurs <code>TRUE</code>.</p>
-<div class="cell" data-hash="16-structures-donnees_cache/html/unnamed-chunk-18_d2d55d7806aa4f7dcca88d638f1b166b">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(<span class="fu">c</span>(<span class="cn">TRUE</span>, <span class="cn">FALSE</span>, <span class="cn">TRUE</span>))</span>
 <span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 2</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>On peut donc appliquer <code>sum()</code> à un test, et on obtiendra le nombre de valeurs pour lesquelles le test est vrai.</p>
-<div class="cell" data-hash="16-structures-donnees_cache/html/unnamed-chunk-19_57aa7535930fb5193ac212f94f9a4473">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">5</span>, <span class="dv">8</span>, <span class="dv">12</span>, <span class="dv">14</span>)</span>
 <span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(x <span class="sc">&gt;</span> <span class="dv">10</span>)</span>
 <span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 2</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Ceci fournit un raccourci très pratique. Dans l’exemple suivant, on tire 1000 nombres au hasard entre 0 et 1 et on calcule le nombre de valeurs obtenues qui sont inférieures à 0.5.</p>
-<div class="cell" data-hash="16-structures-donnees_cache/html/unnamed-chunk-20_2eae109672d9222bce3e22a819fdb2ef">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">runif</span>(<span class="dv">1000</span>)</span>
 <span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(x <span class="sc">&lt;</span> <span class="fl">0.5</span>)</span>
-<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 511</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 517</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Autre raccourci moins utilisé, appliquer <code>mean()</code> au résultat d’un test donne la proportion de valeurs pour lesquelles le test est vrai.</p>
-<div class="cell" data-hash="16-structures-donnees_cache/html/unnamed-chunk-21_ff22b99a9ba97ea5dfa9e0298fddab1d">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">5</span>, <span class="dv">8</span>, <span class="dv">12</span>, <span class="dv">14</span>)</span>
 <span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(x <span class="sc">&gt;</span> <span class="dv">10</span>)</span>
 <span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 0.4</span></span>
 <span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">runif</span>(<span class="dv">1000</span>)</span>
 <span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(x <span class="sc">&lt;</span> <span class="fl">0.5</span>)</span>
-<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 0.507</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 0.503</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>On peut convertir un vecteur d’un type à un autre avec les fonctions <code>as.character()</code>, <code>as.numeric()</code> et <code>as.logical()</code>. Si une valeur ne peut pas être convertie, elle est remplacée par un <code>NA</code>, et R affiche un avertissement.</p>
-<div class="cell" data-hash="16-structures-donnees_cache/html/unnamed-chunk-22_11023aee4fb0c9469d2da20c8e9f8706">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">as.character</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>)</span>
 <span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] "1" "2" "3"</span></span>
 <span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a><span class="fu">as.logical</span>(<span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">2</span>, <span class="dv">4</span>))</span>
@@ -605,13 +615,13 @@ Note
 </section>
 <section id="sélection-déléments" class="level3" data-number="16.1.4">
 <h3 data-number="16.1.4" class="anchored" data-anchor-id="sélection-déléments"><span class="header-section-number">16.1.4</span> Sélection d’éléments</h3>
-<p>On a vu <a href="09-recodages.html#sec-vecteurs"><span>Section&nbsp;9.1</span></a> que l’opérateur <code>[]</code> peut être utilisé pour sélectionner des éléments d’un vecteur. Cet opérateur peut comporter :</p>
+<p>On a vu <a href="09-recodages.html#sec-vecteurs" class="quarto-xref"><span>Section 9.1</span></a> que l’opérateur <code>[]</code> peut être utilisé pour sélectionner des éléments d’un vecteur. Cet opérateur peut comporter :</p>
 <ul>
 <li>des nombres (qui sélectionnent par position)</li>
 <li>des chaînes de caractères (qui sélectionnent par nom)</li>
 <li>un test ou des valeurs logiques (qui sélectionnent les éléments correspondant à <code>TRUE</code>)</li>
 </ul>
-<div class="cell" data-hash="16-structures-donnees_cache/html/unnamed-chunk-23_610ef061a2950864ad0e6c15c1fc87f7">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="at">e1 =</span> <span class="dv">1</span>, <span class="at">e2 =</span> <span class="dv">2</span>, <span class="at">e3 =</span> <span class="dv">8</span>, <span class="at">e4 =</span> <span class="dv">12</span>)</span>
 <span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>x[<span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">4</span>)]</span>
 <span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; e1 e4 </span></span>
@@ -624,7 +634,7 @@ Note
 <span id="cb22-10"><a href="#cb22-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  1  2  8</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Si on fournit à <code>[]</code> un ou plusieurs nombres négatifs, les valeurs correspondantes seront supprimées plutôt que sélectionnées.</p>
-<div class="cell" data-hash="16-structures-donnees_cache/html/unnamed-chunk-24_76a85ece74372810cbd4d4276b9f84ec">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>x[<span class="sc">-</span><span class="dv">1</span>]</span>
 <span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; e2 e3 e4 </span></span>
 <span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  2  8 12</span></span>
@@ -633,7 +643,7 @@ Note
 <span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  1  8</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Si on souhaite afficher les premières ou dernières valeurs d’un vecteur, les fonctions <code>head()</code> et <code>tail()</code> peuvent être utiles.</p>
-<div class="cell" data-hash="16-structures-donnees_cache/html/unnamed-chunk-25_68201bf6d13c028173ea15334eb06b29">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(x, <span class="dv">2</span>)</span>
 <span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; e1 e2 </span></span>
 <span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  1  2</span></span>
@@ -645,7 +655,7 @@ Note
 <section id="modification" class="level3" data-number="16.1.5">
 <h3 data-number="16.1.5" class="anchored" data-anchor-id="modification"><span class="header-section-number">16.1.5</span> Modification</h3>
 <p>Utilisé conjointement avec l’opérateur d’assignation <code>&lt;-</code>, l’opérateur <code>[]</code> permet de remplacer des éléments.</p>
-<div class="cell" data-hash="16-structures-donnees_cache/html/unnamed-chunk-26_ea26a6eb508d7589d312c75bd1c0b0db">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="at">e1 =</span> <span class="dv">1</span>, <span class="at">e2 =</span> <span class="dv">2</span>, <span class="at">e3 =</span> <span class="dv">8</span>, <span class="at">e4 =</span> <span class="dv">12</span>)</span>
 <span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>x[<span class="dv">1</span>] <span class="ot">&lt;-</span> <span class="sc">-</span><span class="dv">1000</span></span>
 <span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>x</span>
@@ -661,7 +671,7 @@ Note
 <span id="cb25-13"><a href="#cb25-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; -1000     0     8    NA</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Utilisé sans arguments, <code>[]</code> se contente de renvoyer le vecteur entier. Mais couplé à une assignation, il remplace chacun des éléments du vecteur plutôt que le vecteur lui-même.</p>
-<div class="cell" data-hash="16-structures-donnees_cache/html/unnamed-chunk-27_bcb982ed34739428795e26dc62fa0aec">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>x[] <span class="ot">&lt;-</span> <span class="dv">3</span></span>
 <span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>x</span>
 <span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; e1 e2 e3 e4 </span></span>
@@ -675,7 +685,7 @@ Note
 <section id="création" class="level3" data-number="16.2.1">
 <h3 data-number="16.2.1" class="anchored" data-anchor-id="création"><span class="header-section-number">16.2.1</span> Création</h3>
 <p>On construit une liste avec la fonction <code>list</code>.</p>
-<div class="cell" data-hash="16-structures-donnees_cache/html/unnamed-chunk-28_ab2df07955ec1adc5cca68f765787bad">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="fu">list</span>(<span class="dv">1</span>, <span class="st">"foo"</span>, <span class="fu">c</span>(<span class="st">"Pomme"</span>, <span class="st">"Citron"</span>))</span>
 <span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [[1]]</span></span>
 <span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 1</span></span>
@@ -688,7 +698,7 @@ Note
 </div>
 <p>L’affichage du contenu d’une liste dans la console diffère de celui d’un vecteur. Dans le cas d’une liste les éléments sont affichés les uns en dessous des autres, et séparés par leur indice numérique entre une paire de crochets. Dans l’affichage ci-dessus, il faut bien distinguer les <code>[[1]]</code>, <code>[[2]]</code> et <code>[[3]]</code>, qui correspondent au numéro de l’élément de la liste, et les <code>[1]</code> qui font partie de l’affichage du contenu de ces éléments.</p>
 <p>Comme pour les vecteurs, on peut nommer les éléments à la création de la liste.</p>
-<div class="cell" data-hash="16-structures-donnees_cache/html/unnamed-chunk-29_5a333abc998ea7e111dc8edb5c02398b">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>liste <span class="ot">&lt;-</span> <span class="fu">list</span>(<span class="at">nombre =</span> <span class="dv">1</span>, <span class="at">char =</span> <span class="st">"foo"</span>, <span class="at">vecteur =</span> <span class="fu">c</span>(<span class="st">"Pomme"</span>, <span class="st">"Citron"</span>))</span>
 <span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>liste</span>
 <span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $nombre</span></span>
@@ -702,12 +712,12 @@ Note
 </div>
 <p>Dans ce cas l’affichage de la liste dans la console montre ces noms plutôt que les indices numériques des éléments.</p>
 <p>Comme pour les vecteurs atomiques, on peut utiliser <code>names()</code> pour afficher ou modifier les noms des éléments.</p>
-<div class="cell" data-hash="16-structures-donnees_cache/html/unnamed-chunk-30_0277bd438eb14762a23ba65c3b6f3b6d">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(liste)</span>
 <span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] "nombre"  "char"    "vecteur"</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Quand la liste est plus complexe, l’affichage peut vite devenir illisible.</p>
-<div class="cell" data-hash="16-structures-donnees_cache/html/unnamed-chunk-31_298dfac393128ff0dace3915ac087dc7">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>liste <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
 <span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>    <span class="at">l2 =</span> <span class="fu">list</span>(<span class="at">x =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>, <span class="at">y =</span> <span class="fu">c</span>(<span class="st">"Pomme"</span>, <span class="st">"Citron"</span>)),</span>
 <span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">df =</span> <span class="fu">data.frame</span>(<span class="at">v1 =</span> <span class="dv">2</span><span class="sc">:</span><span class="dv">5</span>, <span class="at">v2 =</span> LETTERS[<span class="dv">2</span><span class="sc">:</span><span class="dv">5</span>]),</span>
@@ -730,11 +740,11 @@ Note
 <span id="cb30-20"><a href="#cb30-20" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 4  5  E</span></span>
 <span id="cb30-21"><a href="#cb30-21" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
 <span id="cb30-22"><a href="#cb30-22" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $y</span></span>
-<span id="cb30-23"><a href="#cb30-23" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [1] 0.724597102 0.188168686 0.055785595 0.355001688 0.600353963 0.378297869</span></span>
-<span id="cb30-24"><a href="#cb30-24" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [7] 0.625124599 0.621432831 0.007753398 0.348671340</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb30-23"><a href="#cb30-23" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [1] 0.07285915 0.12662518 0.18366123 0.87413540 0.92978797 0.25705447</span></span>
+<span id="cb30-24"><a href="#cb30-24" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [7] 0.21742214 0.16482424 0.28061147 0.09254137</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Dans ce cas la fonction <code>str</code> peut être utile pour afficher de manière plus compacte la structure de la liste. Dans cet exemple elle permet de voir un peu plus clairement que <code>x</code> et <code>y</code> sont des éléments d’une sous-liste <code>l2</code>.</p>
-<div class="cell" data-hash="16-structures-donnees_cache/html/unnamed-chunk-32_654b8fc1b9c9c547000f725d9d93cc44">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(liste)</span>
 <span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; List of 3</span></span>
 <span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  $ l2:List of 2</span></span>
@@ -743,13 +753,13 @@ Note
 <span id="cb31-6"><a href="#cb31-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  $ df:'data.frame':  4 obs. of  2 variables:</span></span>
 <span id="cb31-7"><a href="#cb31-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   ..$ v1: int [1:4] 2 3 4 5</span></span>
 <span id="cb31-8"><a href="#cb31-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   ..$ v2: chr [1:4] "B" "C" "D" "E"</span></span>
-<span id="cb31-9"><a href="#cb31-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  $ y : num [1:10] 0.7246 0.1882 0.0558 0.355 0.6004 ...</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb31-9"><a href="#cb31-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  $ y : num [1:10] 0.0729 0.1266 0.1837 0.8741 0.9298 ...</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="ajout-déléments" class="level3" data-number="16.2.2">
 <h3 data-number="16.2.2" class="anchored" data-anchor-id="ajout-déléments"><span class="header-section-number">16.2.2</span> Ajout d’éléments</h3>
 <p>Attention, si on souhaite ajouter un nouvel élément à une liste, il ne faut pas utiliser à nouveau <code>list()</code>, car dans ce cas notre liste de départ est insérée comme une “sous-liste”.</p>
-<div class="cell" data-hash="16-structures-donnees_cache/html/unnamed-chunk-33_54edd4b234b35f82433fb7f72061cfcb">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>liste <span class="ot">&lt;-</span> <span class="fu">list</span>(<span class="at">e1 =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>, <span class="at">e2 =</span> <span class="st">"Chihuhua"</span>)</span>
 <span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>liste2 <span class="ot">&lt;-</span> <span class="fu">list</span>(liste, <span class="at">nouveau =</span> <span class="dv">100</span>)</span>
 <span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(liste2)</span>
@@ -760,7 +770,7 @@ Note
 <span id="cb32-8"><a href="#cb32-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  $ nouveau: num 100</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Il faut à la place utiliser <code>c()</code>, comme pour les vecteurs.</p>
-<div class="cell" data-hash="16-structures-donnees_cache/html/unnamed-chunk-34_6a009be23526c52ec7feaf7acebaf3f5">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>liste3 <span class="ot">&lt;-</span> <span class="fu">c</span>(liste, <span class="at">nouveau =</span> <span class="dv">100</span>)</span>
 <span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(liste3)</span>
 <span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; List of 3</span></span>
@@ -769,7 +779,7 @@ Note
 <span id="cb33-6"><a href="#cb33-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  $ nouveau: num 100</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p><code>c()</code> permet aussi de “concaténer” deux listes existantes en une seule.</p>
-<div class="cell" data-hash="16-structures-donnees_cache/html/unnamed-chunk-35_296509bb5025326121d23ff96f112e86">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>liste1 <span class="ot">&lt;-</span> <span class="fu">list</span>(<span class="at">a =</span> <span class="dv">1</span>, <span class="at">b =</span> <span class="dv">2</span>)</span>
 <span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>liste2 <span class="ot">&lt;-</span> <span class="fu">list</span>(<span class="at">x =</span> <span class="dv">3</span>, <span class="at">y =</span> <span class="dv">4</span>)</span>
 <span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a><span class="fu">c</span>(liste1, liste2)</span>
@@ -790,7 +800,7 @@ Note
 <h3 data-number="16.2.3" class="anchored" data-anchor-id="sélection-déléments-1"><span class="header-section-number">16.2.3</span> Sélection d’éléments</h3>
 <p>Il y a deux opérateurs différents qui permettent de sélectionner les éléments d’une liste : les crochets simples <code>[]</code> et les crochets doubles <code>[[]]</code>. La différence entre ces deux opérateurs est souvent source de confusion.</p>
 <p>Partons de la liste suivante :</p>
-<div class="cell" data-hash="16-structures-donnees_cache/html/unnamed-chunk-36_372a87d7546cc09123b3cb3fc48bb4e5">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a>liste <span class="ot">&lt;-</span> <span class="fu">list</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>, <span class="st">"foo"</span>, <span class="fu">c</span>(<span class="st">"Pomme"</span>, <span class="st">"Citron"</span>))</span>
 <span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a>liste</span>
 <span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [[1]]</span></span>
@@ -803,14 +813,14 @@ Note
 <span id="cb35-10"><a href="#cb35-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] "Pomme"  "Citron"</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Si on utilise les crochets simples pour sélectionner le premier élément de cette liste, on obtient le résultat suivant :</p>
-<div class="cell" data-hash="16-structures-donnees_cache/html/unnamed-chunk-37_55cb6e972a2005bac07f275961d6e921">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a>liste[<span class="dv">1</span>]</span>
 <span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [[1]]</span></span>
 <span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 1 2 3 4 5</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>On notera que le résultat est une liste à un seul élément.</p>
 <p>Si on utilise les crochets doubles :</p>
-<div class="cell" data-hash="16-structures-donnees_cache/html/unnamed-chunk-38_06fef9978acf552926fa3edefed83cdc">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>liste[[<span class="dv">1</span>]]</span>
 <span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 1 2 3 4 5</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
@@ -833,7 +843,7 @@ Avertissement
 </div>
 </div>
 <p>Un autre point important est que si on passe plusieurs éléments à <code>[[]]</code>, la sélection se fait d’une manière récursive peu intuitive et source d’erreurs. Il est donc conseillé de <strong>toujours utiliser</strong> <code>[[]]</code> <strong>avec un seul argument</strong>, et d’utiliser <code>[]</code> si on souhaite sélectionner plusieurs éléments d’une liste.</p>
-<div class="cell" data-hash="16-structures-donnees_cache/html/unnamed-chunk-39_3765c8ce24acb0d200049d0827ea617e">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a>liste[<span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>)]</span>
 <span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [[1]]</span></span>
 <span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 1 2 3 4 5</span></span>
@@ -872,7 +882,7 @@ Note
 </div>
 </div>
 <p>Si la liste est nommée, on peut sélectionner des éléments par noms avec les deux opérateurs.</p>
-<div class="cell" data-hash="16-structures-donnees_cache/html/unnamed-chunk-40_b6d1e7b13d0fa76846dbf9ed7612a7f4">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a>liste <span class="ot">&lt;-</span> <span class="fu">list</span>(<span class="at">nombre =</span> <span class="dv">1</span>, <span class="at">char =</span> <span class="st">"foo"</span>, <span class="at">vecteur =</span> <span class="fu">c</span>(<span class="st">"Pomme"</span>, <span class="st">"Citron"</span>))</span>
 <span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a>liste[<span class="fu">c</span>(<span class="st">"nombre"</span>, <span class="st">"char"</span>)]</span>
 <span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $nombre</span></span>
@@ -884,7 +894,7 @@ Note
 <span id="cb39-9"><a href="#cb39-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] "Pomme"  "Citron"</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>On peut aussi utiliser l’opérateur <code>$</code>, qui équivaut à <code>[[]]</code> :</p>
-<div class="cell" data-hash="16-structures-donnees_cache/html/unnamed-chunk-41_00d02cb76efaf173ba6ceab661f1b610">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a>liste<span class="sc">$</span>vecteur</span>
 <span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] "Pomme"  "Citron"</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
@@ -892,7 +902,7 @@ Note
 <section id="modification-1" class="level3" data-number="16.2.4">
 <h3 data-number="16.2.4" class="anchored" data-anchor-id="modification-1"><span class="header-section-number">16.2.4</span> Modification</h3>
 <p>Comme pour les vecteurs, on peut utiliser l’opérateur <code>[]</code> et l’opérateur d’assignation <code>&lt;-</code> pour modifier des éléments d’une liste.</p>
-<div class="cell" data-hash="16-structures-donnees_cache/html/unnamed-chunk-42_a4772310e87ca2e94e4a31780bf7a48f">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a>liste <span class="ot">&lt;-</span> <span class="fu">list</span>(<span class="at">nombre =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>, <span class="at">char =</span> <span class="st">"foo"</span>, <span class="at">vecteur =</span> <span class="fu">c</span>(<span class="st">"Pomme"</span>, <span class="st">"Citron"</span>))</span>
 <span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a>liste[<span class="st">"nombre"</span>] <span class="ot">&lt;-</span> <span class="st">"first"</span></span>
 <span id="cb41-3"><a href="#cb41-3" aria-hidden="true" tabindex="-1"></a>liste</span>
@@ -905,7 +915,7 @@ Note
 <span id="cb41-10"><a href="#cb41-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $vecteur</span></span>
 <span id="cb41-11"><a href="#cb41-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] "Pomme"  "Citron"</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div class="cell" data-hash="16-structures-donnees_cache/html/unnamed-chunk-43_37c0f5684f324a328a33743d0ee26411">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a>liste[<span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">3</span>)] <span class="ot">&lt;-</span> <span class="dv">0</span></span>
 <span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a>liste</span>
 <span id="cb42-3"><a href="#cb42-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $nombre</span></span>
@@ -931,7 +941,7 @@ Avertissement
 </div>
 </div>
 <p>Enfin, on peut supprimer un ou plusieurs éléments d’une liste, en leur attribuant la valeur <code>NULL</code><a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a>.</p>
-<div class="cell" data-hash="16-structures-donnees_cache/html/unnamed-chunk-44_6d117ab9b2849a592d88ec3d30a046b5">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a>liste <span class="ot">&lt;-</span> <span class="fu">list</span>(<span class="at">nombre =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>, <span class="at">char =</span> <span class="st">"foo"</span>, <span class="at">vecteur =</span> <span class="fu">c</span>(<span class="st">"Pomme"</span>, <span class="st">"Citron"</span>))</span>
 <span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a>liste<span class="sc">$</span>char <span class="ot">&lt;-</span> <span class="cn">NULL</span></span>
 <span id="cb43-3"><a href="#cb43-3" aria-hidden="true" tabindex="-1"></a>liste</span>
@@ -946,7 +956,7 @@ Avertissement
 <h3 data-number="16.2.5" class="anchored" data-anchor-id="utilisation"><span class="header-section-number">16.2.5</span> Utilisation</h3>
 <p>En tant que généralisation des vecteurs atomiques, les listes sont utiles dès qu’on souhaite regrouper des éléments complexes ou hétérogènes.</p>
 <p>On les utilisera par exemple pour retourner plusieurs résultats depuis une fonction.</p>
-<div class="cell" data-hash="16-structures-donnees_cache/html/unnamed-chunk-45_9b5f58602914e0d79bb79b02f2c80260">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a>indicateurs <span class="ot">&lt;-</span> <span class="cf">function</span>(x) {</span>
 <span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">list</span>(</span>
 <span id="cb44-3"><a href="#cb44-3" aria-hidden="true" tabindex="-1"></a>        <span class="at">moyenne =</span> <span class="fu">mean</span>(x),</span>
@@ -961,8 +971,8 @@ Avertissement
 <span id="cb44-12"><a href="#cb44-12" aria-hidden="true" tabindex="-1"></a>res<span class="sc">$</span>variance</span>
 <span id="cb44-13"><a href="#cb44-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 9.166667</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>On utilise également les listes pour stocker des objets complexes et leur appliquer des fonctions. Ce fonctionnement sera abordé en détail dans la <a href="18-purrr.html"><span>Chapitre&nbsp;18</span></a>, mais en guise de petit aperçu, l’exemple fictif suivant récupère les noms de tous les fichiers CSV du répertoire courant et les importe tous dans une liste à l’aide de <code>purrr::map()</code> et de <code>read_csv()</code>.</p>
-<div class="cell" data-hash="16-structures-donnees_cache/html/unnamed-chunk-46_55ae45845bf2cf30ee48f745b79db470">
+<p>On utilise également les listes pour stocker des objets complexes et leur appliquer des fonctions. Ce fonctionnement sera abordé en détail dans la <a href="18-purrr.html" class="quarto-xref"><span>Chapitre 18</span></a>, mais en guise de petit aperçu, l’exemple fictif suivant récupère les noms de tous les fichiers CSV du répertoire courant et les importe tous dans une liste à l’aide de <code>purrr::map()</code> et de <code>read_csv()</code>.</p>
+<div class="cell">
 <div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a>files <span class="ot">&lt;-</span> <span class="fu">list.files</span>(<span class="at">pattern =</span> <span class="st">"*.csv"</span>)</span>
 <span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a>dfs <span class="ot">&lt;-</span> purrr<span class="sc">::</span><span class="fu">map</span>(files, read_csv)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
@@ -971,12 +981,12 @@ Avertissement
 </section>
 <section id="sec-data-frame-tibbles" class="level2" data-number="16.3">
 <h2 data-number="16.3" class="anchored" data-anchor-id="sec-data-frame-tibbles"><span class="header-section-number">16.3</span> Tableaux de données (<em>data frame</em> et <em>tibble</em>)</h2>
-<p>On a déjà utilisé les tableaux de données à de nombreux reprises en manipulant des <em>data frames</em> ou des <em>tibbles</em>. Les seconds sont une variante des premiers, les différences entre les deux ayant été abordées <a href="06-tidyverse.html#sec-tibbles"><span>Section&nbsp;6.4</span></a>.</p>
+<p>On a déjà utilisé les tableaux de données à de nombreux reprises en manipulant des <em>data frames</em> ou des <em>tibbles</em>. Les seconds sont une variante des premiers, les différences entre les deux ayant été abordées <a href="06-tidyverse.html#sec-tibbles" class="quarto-xref"><span>Section 6.4</span></a>.</p>
 <p>Un tableau de données est en réalité une liste nommée de vecteurs atomiques avec une contrainte spécifique&nbsp;: ces vecteurs doivent tous être de même longueur, ce qui garantit le format “tabulaire” des données.</p>
 <section id="création-1" class="level3" data-number="16.3.1">
 <h3 data-number="16.3.1" class="anchored" data-anchor-id="création-1"><span class="header-section-number">16.3.1</span> Création</h3>
 <p>Un tableau de données est le plus souvent créé en important des données depuis un fichier au format CSV, tableur ou autre. On peut cependant créer un <em>data frame</em> manuellement via la fonction <code>data.frame()</code> :</p>
-<div class="cell" data-hash="16-structures-donnees_cache/html/unnamed-chunk-47_58c158a183b96fe36a7fb292ee2fe654">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
 <span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a>    <span class="at">fruit =</span> <span class="fu">c</span>(<span class="st">"Pomme"</span>, <span class="st">"Pomme"</span>, <span class="st">"Citron"</span>),</span>
 <span id="cb46-3"><a href="#cb46-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">poids =</span> <span class="fu">c</span>(<span class="dv">154</span>, <span class="dv">167</span>, <span class="dv">92</span>),</span>
@@ -985,7 +995,7 @@ Avertissement
 </div>
 <p>On peut aussi créer un <em>tibble</em> manuellement avec la fonction <code>tibble()</code>. La syntaxe est la même que celle de <code>data.frame()</code>, mais avec un comportement un peu différent : notamment, les noms comportant des espaces ou des caractères spéciaux sont conservés tels quels.</p>
 <p>La fonction <code>tribble()</code> permet de créer un tibble manuellement avec une syntaxe “par ligne” qui peut être un peu plus lisible.</p>
-<div class="cell" data-hash="16-structures-donnees_cache/html/unnamed-chunk-48_ff17ef188367837df5a99fa749ffa765">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb47"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a>df_trib <span class="ot">&lt;-</span> <span class="fu">tribble</span>(</span>
 <span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a>    <span class="sc">~</span>fruit,   <span class="sc">~</span>poids, <span class="sc">~</span>couleur,</span>
 <span id="cb47-3"><a href="#cb47-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Pomme"</span>,  <span class="dv">154</span>,    <span class="st">"vert"</span>,</span>
@@ -994,7 +1004,7 @@ Avertissement
 <span id="cb47-6"><a href="#cb47-6" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>On peut convertir un <em>data frame</em> en <em>tibble</em> avec la fonction <code>as_tibble()</code>.</p>
-<div class="cell" data-hash="16-structures-donnees_cache/html/unnamed-chunk-49_e5d3035d7844035989e62ebc42940947">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb48"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a>df_tib <span class="ot">&lt;-</span> <span class="fu">as_tibble</span>(df)</span>
 <span id="cb48-2"><a href="#cb48-2" aria-hidden="true" tabindex="-1"></a>df_tib</span>
 <span id="cb48-3"><a href="#cb48-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # A tibble: 3 × 3</span></span>
@@ -1008,24 +1018,24 @@ Avertissement
 <section id="noms-de-colonnes-et-de-lignes" class="level3" data-number="16.3.2">
 <h3 data-number="16.3.2" class="anchored" data-anchor-id="noms-de-colonnes-et-de-lignes"><span class="header-section-number">16.3.2</span> Noms de colonnes et de lignes</h3>
 <p>On peut lister et modifier les noms des colonnes d’un tableau avec les fonctions <code>names()</code> ou <code>colnames()</code> (qui sont équivalentes).</p>
-<div class="cell" data-hash="16-structures-donnees_cache/html/unnamed-chunk-50_7ce05cd543c0228322c73120bc053c28">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb49"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(df)</span>
 <span id="cb49-2"><a href="#cb49-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] "fruit"   "poids"   "couleur"</span></span>
 <span id="cb49-3"><a href="#cb49-3" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(df)</span>
 <span id="cb49-4"><a href="#cb49-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] "fruit"   "poids"   "couleur"</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>On peut attribuer des noms aux lignes d’un <em>data frame</em> à l’aide de la fonction <code>rownames()</code>. Attention cependant, les noms de ligne ne sont (volontairement) pas pris en charge par les <em>tibbles</em>.</p>
-<div class="cell" data-hash="16-structures-donnees_cache/html/unnamed-chunk-51_8f65d724b894fe9449a07734588e3a14">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb50"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a><span class="fu">rownames</span>(df) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"fruit1"</span>, <span class="st">"fruit2"</span>, <span class="st">"fruit3"</span>)</span>
 <span id="cb50-2"><a href="#cb50-2" aria-hidden="true" tabindex="-1"></a><span class="fu">rownames</span>(df)</span>
 <span id="cb50-3"><a href="#cb50-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] "fruit1" "fruit2" "fruit3"</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div class="cell" data-hash="16-structures-donnees_cache/html/unnamed-chunk-52_8379baf3a6c20feca138581b35152811">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb51"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a><span class="fu">rownames</span>(df_tib) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"fruit1"</span>, <span class="st">"fruit2"</span>, <span class="st">"fruit3"</span>)</span>
 <span id="cb51-2"><a href="#cb51-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Warning: Setting row names on a tibble is deprecated.</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Si on souhaite conserver des noms de ligne en passant d’un <em>data frame</em> à un <em>tibble</em>, il faut les stocker dans une nouvelle colonne, soit en la créant manuellement soit avec la fonction <code>rownames_to_column()</code> (qui a l’avantage de placer la nouvelle colonne en première position du tableau).</p>
-<div class="cell" data-hash="16-structures-donnees_cache/html/unnamed-chunk-53_764d8b5b3f3a587114fe715e434f23bc">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb52"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a><span class="fu">rownames_to_column</span>(df, <span class="st">"name"</span>)</span>
 <span id="cb52-2"><a href="#cb52-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;     name  fruit poids couleur</span></span>
 <span id="cb52-3"><a href="#cb52-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1 fruit1  Pomme   154    vert</span></span>
@@ -1037,36 +1047,36 @@ Avertissement
 <h3 data-number="16.3.3" class="anchored" data-anchor-id="sec-df-sel"><span class="header-section-number">16.3.3</span> Sélection de lignes et de colonnes</h3>
 <p>On a déjà vu dans les parties précédentes plusieurs manières de sélectionner des éléments dans un tableau de données.</p>
 <p>Ainsi, on peut sélectionner une colonne via l’opérateur <code>$</code>.</p>
-<div class="cell" data-hash="16-structures-donnees_cache/html/unnamed-chunk-54_b856e60ca620eaa89d3b482b67665699">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb53"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a>df<span class="sc">$</span>fruit</span>
 <span id="cb53-2"><a href="#cb53-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] "Pomme"  "Pomme"  "Citron"</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Comme un tableau de données est en réalité une liste de colonnes, on peut aussi utiliser l’opérateur <code>[[]]</code> pour sélectionner l’une de ses colonnes, par position ou par nom<a href="#fn3" class="footnote-ref" id="fnref3" role="doc-noteref"><sup>3</sup></a>.</p>
-<div class="cell" data-hash="16-structures-donnees_cache/html/unnamed-chunk-55_3a7d39938dd95dfd96c29e161ef966ea">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb54"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a>df[[<span class="st">"fruit"</span>]]</span>
 <span id="cb54-2"><a href="#cb54-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] "Pomme"  "Pomme"  "Citron"</span></span>
 <span id="cb54-3"><a href="#cb54-3" aria-hidden="true" tabindex="-1"></a>df[[<span class="dv">2</span>]]</span>
 <span id="cb54-4"><a href="#cb54-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 154 167  92</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>On peut utiliser <code>head()</code> et <code>tail()</code> avec un tableau de données : dans ce cas ces fonctions retourneront les premières ou dernières <em>lignes</em> du tableau.</p>
-<div class="cell" data-df_print="default" data-hash="16-structures-donnees_cache/html/unnamed-chunk-56_70e6163f5270d85c8b27c64c6973bb9b">
+<div class="cell" data-df_print="default">
 <div class="sourceCode cell-code" id="cb55"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(df, <span class="dv">2</span>)</span>
 <span id="cb55-2"><a href="#cb55-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;        fruit poids couleur</span></span>
 <span id="cb55-3"><a href="#cb55-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; fruit1 Pomme   154    vert</span></span>
 <span id="cb55-4"><a href="#cb55-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; fruit2 Pomme   167    vert</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div class="cell" data-hash="16-structures-donnees_cache/html/unnamed-chunk-57_5e2aec549876c5a7bab74943921185f7">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb56"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tail</span>(df, <span class="dv">1</span>)</span>
 <span id="cb56-2"><a href="#cb56-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;         fruit poids couleur</span></span>
 <span id="cb56-3"><a href="#cb56-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; fruit3 Citron    92   jaune</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>On peut également utiliser l’opérateur <code>[,]</code> pour sélectionner à la fois des lignes et des colonnes, en lui passant deux arguments séparés par une virgule : d’abord la sélection des lignes puis celle des colonnes. Dans les deux cas on peut sélectionner par position, nom ou condition. Si on laisse un argument vide, on sélectionne l’intégralité des lignes ou des colonnes.</p>
-<div class="cell" data-hash="16-structures-donnees_cache/html/unnamed-chunk-58_bd98544c1861bb0a0901bc50ffa9efb6">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb57"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Lignes 1 et 3 et colonne "poids"</span></span>
 <span id="cb57-2"><a href="#cb57-2" aria-hidden="true" tabindex="-1"></a>df[<span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">3</span>), <span class="st">"poids"</span>]</span>
 <span id="cb57-3"><a href="#cb57-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 154  92</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div class="cell" data-hash="16-structures-donnees_cache/html/unnamed-chunk-59_20fd44426cbb7ec3273482044239d6c1">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb58"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb58-1"><a href="#cb58-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Toutes les lignes et colonnes "poids" et "fruit"</span></span>
 <span id="cb58-2"><a href="#cb58-2" aria-hidden="true" tabindex="-1"></a>df[, <span class="fu">c</span>(<span class="st">"poids"</span>, <span class="st">"fruit"</span>)]</span>
 <span id="cb58-3"><a href="#cb58-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;        poids  fruit</span></span>
@@ -1074,14 +1084,14 @@ Avertissement
 <span id="cb58-5"><a href="#cb58-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; fruit2   167  Pomme</span></span>
 <span id="cb58-6"><a href="#cb58-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; fruit3    92 Citron</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div class="cell" data-hash="16-structures-donnees_cache/html/unnamed-chunk-60_01de67157df1ab7b5afc6f8be1671721">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb59"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb59-1"><a href="#cb59-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Lignes pour lesquelles poids &gt; 150, et toutes les colonnes</span></span>
 <span id="cb59-2"><a href="#cb59-2" aria-hidden="true" tabindex="-1"></a>df[df<span class="sc">$</span>poids <span class="sc">&gt;</span> <span class="dv">150</span>, ]</span>
 <span id="cb59-3"><a href="#cb59-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;        fruit poids couleur</span></span>
 <span id="cb59-4"><a href="#cb59-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; fruit1 Pomme   154    vert</span></span>
 <span id="cb59-5"><a href="#cb59-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; fruit2 Pomme   167    vert</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div class="cell" data-hash="16-structures-donnees_cache/html/unnamed-chunk-61_0d4aa8a665d3f1f5cd6c199017e4d563">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb60"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb60-1"><a href="#cb60-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(stringr)</span>
 <span id="cb60-2"><a href="#cb60-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Colonnes dont le nom contient un "o", et toutes les lignes</span></span>
 <span id="cb60-3"><a href="#cb60-3" aria-hidden="true" tabindex="-1"></a>df[, <span class="fu">str_detect</span>(<span class="fu">names</span>(df), <span class="st">"o"</span>)]</span>
@@ -1091,11 +1101,11 @@ Avertissement
 <span id="cb60-7"><a href="#cb60-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; fruit3    92   jaune</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Attention, le comportement de <code>[,]</code> est différent entre les <em>tibbles</em> et les <em>data frame</em> lorsqu’on ne sélectionne qu’une seule colonne. Dans le cas d’un <em>data frame</em>, le résultat est un vecteur, dans le cas d’un <em>tibble</em> le résultat est un tableau à une colonne.</p>
-<div class="cell" data-hash="16-structures-donnees_cache/html/unnamed-chunk-62_7de83fee8103f24a4e0e53e9cf09c70a">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb61"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb61-1"><a href="#cb61-1" aria-hidden="true" tabindex="-1"></a>df[, <span class="st">"fruit"</span>]</span>
 <span id="cb61-2"><a href="#cb61-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] "Pomme"  "Pomme"  "Citron"</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div class="cell" data-hash="16-structures-donnees_cache/html/unnamed-chunk-63_41306c690128002fede80d244f3bb240">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb62"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb62-1"><a href="#cb62-1" aria-hidden="true" tabindex="-1"></a>df_tib[, <span class="st">"fruit"</span>]</span>
 <span id="cb62-2"><a href="#cb62-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # A tibble: 3 × 1</span></span>
 <span id="cb62-3"><a href="#cb62-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   fruit </span></span>
@@ -1109,7 +1119,7 @@ Avertissement
 <section id="modification-2" class="level3" data-number="16.3.4">
 <h3 data-number="16.3.4" class="anchored" data-anchor-id="modification-2"><span class="header-section-number">16.3.4</span> Modification</h3>
 <p>On peut utiliser <code>[[]]</code> et <code>[,]</code> avec l’opérateur d’assignation <code>&lt;-</code> pour modifier tout ou partie d’un tableau de données.</p>
-<div class="cell" data-hash="16-structures-donnees_cache/html/unnamed-chunk-64_2777127f409c8fd45971118e8d4721b3">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb63"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb63-1"><a href="#cb63-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Création d'une nouvelle colonne poids_kg</span></span>
 <span id="cb63-2"><a href="#cb63-2" aria-hidden="true" tabindex="-1"></a>df[[<span class="st">"poids_kg"</span>]] <span class="ot">&lt;-</span> df<span class="sc">$</span>poids <span class="sc">/</span> <span class="dv">1000</span></span>
 <span id="cb63-3"><a href="#cb63-3" aria-hidden="true" tabindex="-1"></a>df</span>
@@ -1118,7 +1128,7 @@ Avertissement
 <span id="cb63-6"><a href="#cb63-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; fruit2  Pomme   167    vert    0.167</span></span>
 <span id="cb63-7"><a href="#cb63-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; fruit3 Citron    92   jaune    0.092</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div class="cell" data-hash="16-structures-donnees_cache/html/unnamed-chunk-65_908727fd59dd4e7dfa35e9f13b8ec350">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb64"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb64-1"><a href="#cb64-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Remplacement de la valeur de la colonne "fruit" pour les lignes </span></span>
 <span id="cb64-2"><a href="#cb64-2" aria-hidden="true" tabindex="-1"></a><span class="co"># pour lesquelles "fruit" vaut "Citron"</span></span>
 <span id="cb64-3"><a href="#cb64-3" aria-hidden="true" tabindex="-1"></a>df[df<span class="sc">$</span>fruit <span class="sc">==</span> <span class="st">"Citron"</span>, <span class="st">"fruit"</span>] <span class="ot">&lt;-</span> <span class="st">"Agrume"</span></span>
@@ -1128,7 +1138,7 @@ Avertissement
 <span id="cb64-7"><a href="#cb64-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; fruit2  Pomme   167    vert    0.167</span></span>
 <span id="cb64-8"><a href="#cb64-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; fruit3 Agrume    92   jaune    0.092</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>Pour conclure, on peut noter que l’utilisation des opérateurs <code>[[]]</code> et <code>[,]</code> sur un tableau de données peut sembler redondante et moins pratique que l’utilisation des verbes de <code>dplyr</code> comme <code>select()</code> ou <code>filter()</code>. Ils peuvent cependant être utiles lorsqu’on souhaite éviter les complications liées à l’utilisation du <em>tidyverse</em> à l’intérieur de fonctions, comme indiqué <a href="19-programmer-tidyverse.html"><span>Chapitre&nbsp;19</span></a>. Ils peuvent également être plus rapides, et il est important de les connaître car on les rencontrera très fréquemment dans du code R sur le Web ou dans des packages.</p>
+<p>Pour conclure, on peut noter que l’utilisation des opérateurs <code>[[]]</code> et <code>[,]</code> sur un tableau de données peut sembler redondante et moins pratique que l’utilisation des verbes de <code>dplyr</code> comme <code>select()</code> ou <code>filter()</code>. Ils peuvent cependant être utiles lorsqu’on souhaite éviter les complications liées à l’utilisation du <em>tidyverse</em> à l’intérieur de fonctions, comme indiqué <a href="19-programmer-tidyverse.html" class="quarto-xref"><span>Chapitre 19</span></a>. Ils peuvent également être plus rapides, et il est important de les connaître car on les rencontrera très fréquemment dans du code R sur le Web ou dans des packages.</p>
 </section>
 </section>
 <section id="ressources" class="level2" data-number="16.4">
@@ -1143,30 +1153,30 @@ Avertissement
 <p><strong>Exercice 1.1</strong></p>
 <p>À l’aide de <code>seq()</code>, créer un vecteur <code>v</code> contenant tous les nombres pairs entre 10 et 20.</p>
 <div class="solution-exo">
-<div class="cell" data-hash="16-structures-donnees_cache/html/don11_45857c295dbbe085cc80e345cb5b022b">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb65"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb65-1"><a href="#cb65-1" aria-hidden="true" tabindex="-1"></a>v <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="dv">10</span>, <span class="dv">20</span>, <span class="at">by =</span> <span class="dv">2</span>)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div>
 <p>Sélectionner les 3 premières valeurs de <code>v</code>.</p>
 <div class="solution-exo">
-<div class="cell" data-hash="16-structures-donnees_cache/html/unnamed-chunk-67_d28ed216f91f801c9d141db2c61260e8">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb66"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb66-1"><a href="#cb66-1" aria-hidden="true" tabindex="-1"></a>v[<span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>]</span>
 <span id="cb66-2"><a href="#cb66-2" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(v, <span class="dv">3</span>)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div>
 <p>Sélectionner toutes les valeurs de <code>v</code> strictement inférieures à 15.</p>
 <div class="solution-exo">
-<div class="cell" data-hash="16-structures-donnees_cache/html/unnamed-chunk-68_495253a9a19228914dc96fa201f1c862">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb67"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb67-1"><a href="#cb67-1" aria-hidden="true" tabindex="-1"></a>v[v <span class="sc">&lt;</span> <span class="dv">15</span>]</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div>
 <p>Créer une fonction <code>derniere()</code> qui prend en paramètre un vecteur et retourne son dernier élément (la fonction doit pouvoir s’appliquer à n’importe quel vecteur, quelle que soit sa longueur).</p>
-<div class="cell" data-hash="16-structures-donnees_cache/html/unnamed-chunk-70_15b7c7351321d3d0bc0dca856ca05bfd">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb68"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb68-1"><a href="#cb68-1" aria-hidden="true" tabindex="-1"></a><span class="fu">derniere</span>(v)</span>
 <span id="cb68-2"><a href="#cb68-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 20</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="solution-exo">
-<div class="cell" data-hash="16-structures-donnees_cache/html/don11b_9fc66f539ac5c1b1a8e47f45d8c1abdc">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb69"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb69-1"><a href="#cb69-1" aria-hidden="true" tabindex="-1"></a>derniere <span class="ot">&lt;-</span> <span class="cf">function</span>(v) {</span>
 <span id="cb69-2"><a href="#cb69-2" aria-hidden="true" tabindex="-1"></a>    v[<span class="fu">length</span>(v)]</span>
 <span id="cb69-3"><a href="#cb69-3" aria-hidden="true" tabindex="-1"></a>}</span>
@@ -1179,12 +1189,12 @@ Avertissement
 </div>
 </div>
 <p>Créer une fonction <code>sauf_derniere()</code> qui prend en paramètre un vecteur et retourne ce vecteur sans son dernier élément.</p>
-<div class="cell" data-hash="16-structures-donnees_cache/html/unnamed-chunk-72_0c651518d17ec40fed77c22099e99c01">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb70"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb70-1"><a href="#cb70-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sauf_derniere</span>(v)</span>
 <span id="cb70-2"><a href="#cb70-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 10 12 14 16 18</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="solution-exo">
-<div class="cell" data-hash="16-structures-donnees_cache/html/don11c_ce92eda73d2c594917824b7043e35761">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb71"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb71-1"><a href="#cb71-1" aria-hidden="true" tabindex="-1"></a>sauf_derniere <span class="ot">&lt;-</span> <span class="cf">function</span>(v) {</span>
 <span id="cb71-2"><a href="#cb71-2" aria-hidden="true" tabindex="-1"></a>    v[<span class="sc">-</span><span class="fu">length</span>(v)]</span>
 <span id="cb71-3"><a href="#cb71-3" aria-hidden="true" tabindex="-1"></a>}</span>
@@ -1198,67 +1208,67 @@ Avertissement
 </div>
 <p><strong>Exercice 1.2</strong></p>
 <p>Soit le vecteur <code>vn</code> suivant :</p>
-<div class="cell" data-hash="16-structures-donnees_cache/html/unnamed-chunk-73_2571b61cb4c3dceef9d63ce8af699998">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb72"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb72-1"><a href="#cb72-1" aria-hidden="true" tabindex="-1"></a>vn <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="at">val1 =</span> <span class="dv">10</span>, <span class="at">val2 =</span> <span class="dv">0</span>, <span class="at">val3 =</span> <span class="dv">14</span>)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Sélectionner les valeurs nommées “val1” et “val3”.</p>
 <div class="solution-exo">
-<div class="cell" data-hash="16-structures-donnees_cache/html/unnamed-chunk-74_2070ea27c890e863f6d12f3785e14eb1">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb73"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb73-1"><a href="#cb73-1" aria-hidden="true" tabindex="-1"></a>vn[<span class="fu">c</span>(<span class="st">"val1"</span>, <span class="st">"val3"</span>)]</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div>
 <p>Créer une fonction <code>select_noms()</code> qui prend en argument un vecteur <code>v</code> et un ou plusieurs noms, et retourne uniquement les éléments de <code>v</code> correspondant à ces noms.</p>
-<div class="cell" data-hash="16-structures-donnees_cache/html/unnamed-chunk-76_b51452ceacd4f3d197e4e045e3cad89d">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb74"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb74-1"><a href="#cb74-1" aria-hidden="true" tabindex="-1"></a><span class="fu">select_noms</span>(vn, <span class="fu">c</span>(<span class="st">"val2"</span>, <span class="st">"val3"</span>))</span>
 <span id="cb74-2"><a href="#cb74-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; val2 val3 </span></span>
 <span id="cb74-3"><a href="#cb74-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    0   14</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="solution-exo">
-<div class="cell" data-hash="16-structures-donnees_cache/html/don12a_1550def1402d6aa5bf1d8e35e58ea638">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb75"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb75-1"><a href="#cb75-1" aria-hidden="true" tabindex="-1"></a>select_noms <span class="ot">&lt;-</span> <span class="cf">function</span>(v, noms) {</span>
 <span id="cb75-2"><a href="#cb75-2" aria-hidden="true" tabindex="-1"></a>    v[noms]</span>
 <span id="cb75-3"><a href="#cb75-3" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div>
 <p><em>Facultatif :</em> créer une fonction <code>sauf_nom()</code> qui prend en argument un vecteur <code>v</code> et un nom, et retourne tous les éléments de <code>v</code> sauf celui correspondant à ce nom.</p>
-<div class="cell" data-hash="16-structures-donnees_cache/html/unnamed-chunk-78_143776890b6937af1ea391d83d413ab7">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb76"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb76-1"><a href="#cb76-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sauf_nom</span>(vn, <span class="st">"val2"</span>)</span>
 <span id="cb76-2"><a href="#cb76-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; val1 val3 </span></span>
 <span id="cb76-3"><a href="#cb76-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   10   14</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="solution-exo">
-<div class="cell" data-hash="16-structures-donnees_cache/html/don12b_8cc1d7d160e69ede5b598d34f47cb9d5">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb77"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb77-1"><a href="#cb77-1" aria-hidden="true" tabindex="-1"></a>sauf_nom <span class="ot">&lt;-</span> <span class="cf">function</span>(v, nom) {</span>
 <span id="cb77-2"><a href="#cb77-2" aria-hidden="true" tabindex="-1"></a>    v[<span class="fu">names</span>(v) <span class="sc">!=</span> nom]</span>
 <span id="cb77-3"><a href="#cb77-3" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div>
 <p><em>Facultatif :</em> comparer les résultats des deux instructions suivantes.</p>
-<div class="cell" data-hash="16-structures-donnees_cache/html/unnamed-chunk-79_7e757503ab950b5e5e7a76097f257584">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb78"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb78-1"><a href="#cb78-1" aria-hidden="true" tabindex="-1"></a>vn[<span class="st">"val1"</span>]</span>
 <span id="cb78-2"><a href="#cb78-2" aria-hidden="true" tabindex="-1"></a>vn[[<span class="st">"val1"</span>]]</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p><strong>Exercice 1.3</strong></p>
 <p>Soit les vecteurs <code>x</code> et <code>y</code> suivants :</p>
-<div class="cell" data-hash="16-structures-donnees_cache/html/unnamed-chunk-80_1e39e725e1de3b142b7180615afc22f2">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb79"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb79-1"><a href="#cb79-1" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="cn">NA</span>, <span class="dv">3</span>, <span class="dv">4</span>, <span class="cn">NA</span>)</span>
 <span id="cb79-2"><a href="#cb79-2" aria-hidden="true" tabindex="-1"></a>y <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">10</span>, <span class="dv">20</span>, <span class="dv">30</span>, <span class="dv">40</span>, <span class="dv">50</span>)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>À l’aide de l’opérateur <code>[]</code>, sélectionner uniquement les valeurs <code>NA</code> de <code>x</code>.</p>
 <div class="solution-exo">
-<div class="cell" data-hash="16-structures-donnees_cache/html/unnamed-chunk-81_9ea9630771745c4c9439d3659ba82af3">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb80"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb80-1"><a href="#cb80-1" aria-hidden="true" tabindex="-1"></a>x[<span class="fu">is.na</span>(x)]</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div>
 <p>De la même manière, sélectionner les valeurs de <code>y</code> correspondant aux valeurs <code>NA</code> de <code>x</code> (c’est-à-dire les valeurs 20 et 50).</p>
 <div class="solution-exo">
-<div class="cell" data-hash="16-structures-donnees_cache/html/unnamed-chunk-82_0769ce60c4f9d4123ced755bba3ccf8e">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb81"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb81-1"><a href="#cb81-1" aria-hidden="true" tabindex="-1"></a>y[<span class="fu">is.na</span>(x)]</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div>
 <p>En utilisant les deux instructions précédentes et l’opérateur d’assignation <code>&lt;-</code>, remplacer les valeurs manquantes de <code>x</code> par les valeurs correspondantes de <code>y</code>.</p>
 <div class="solution-exo">
-<div class="cell" data-hash="16-structures-donnees_cache/html/unnamed-chunk-83_61f0d221de9a178335628ba4f8a21e7c">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb82"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb82-1"><a href="#cb82-1" aria-hidden="true" tabindex="-1"></a>x[<span class="fu">is.na</span>(x)] <span class="ot">&lt;-</span> y[<span class="fu">is.na</span>(x)]</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div>
@@ -1270,14 +1280,14 @@ Avertissement
 <li>retourne les valeurs de <code>v</code> qui n’ont pas été converties correctement, c’est-à-dire celles qui ne valaient pas <code>NA</code> dans <code>v</code> mais valent <code>NA</code> après la conversion.</li>
 </ul>
 <p>Vérifier avec :</p>
-<div class="cell" data-hash="16-structures-donnees_cache/html/unnamed-chunk-85_3cf462c6bb8c3b26142b597542134fe8">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb83"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb83-1"><a href="#cb83-1" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"igloo"</span>, <span class="st">"20"</span>, <span class="cn">NA</span>, <span class="st">"3.5"</span>, <span class="st">"4,8"</span>)</span>
 <span id="cb83-2"><a href="#cb83-2" aria-hidden="true" tabindex="-1"></a><span class="fu">problemes_conversion</span>(x)</span>
 <span id="cb83-3"><a href="#cb83-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Warning in problemes_conversion(x): NAs introduced by coercion</span></span>
 <span id="cb83-4"><a href="#cb83-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] "igloo" "4,8"</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="solution-exo">
-<div class="cell" data-hash="16-structures-donnees_cache/html/don14_0d61d8685dfd9c6567d8b1d3efe2e44e">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb84"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb84-1"><a href="#cb84-1" aria-hidden="true" tabindex="-1"></a>problemes_conversion <span class="ot">&lt;-</span> <span class="cf">function</span>(v) {</span>
 <span id="cb84-2"><a href="#cb84-2" aria-hidden="true" tabindex="-1"></a>    conv <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(v)</span>
 <span id="cb84-3"><a href="#cb84-3" aria-hidden="true" tabindex="-1"></a>    v[<span class="sc">!</span><span class="fu">is.na</span>(v) <span class="sc">&amp;</span> <span class="fu">is.na</span>(conv)]</span>
@@ -1289,32 +1299,32 @@ Avertissement
 <h3 data-number="16.5.2" class="anchored" data-anchor-id="listes"><span class="header-section-number">16.5.2</span> Listes</h3>
 <p><strong>Exercice 2.1</strong></p>
 <p>Créer une liste <code>liste</code> ayant la structure suivante :</p>
-<div class="cell" data-hash="16-structures-donnees_cache/html/unnamed-chunk-86_251c68a8125a2151c9cbc2ae2f8f3959">
+<div class="cell">
 <pre><code>#&gt; List of 3
 #&gt;  $ : num 1
 #&gt;  $ : chr "oui"
 #&gt;  $ : int [1:3] 10 11 12</code></pre>
 </div>
 <div class="solution-exo">
-<div class="cell" data-hash="16-structures-donnees_cache/html/unnamed-chunk-87_c695c006a8b8bfaf172437859ca700b1">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb86"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb86-1"><a href="#cb86-1" aria-hidden="true" tabindex="-1"></a>liste <span class="ot">&lt;-</span> <span class="fu">list</span>(<span class="dv">1</span>, <span class="st">"oui"</span>, <span class="dv">10</span><span class="sc">:</span><span class="dv">12</span>)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div>
 <p>Donner les noms suivants aux éléments de la liste : <code>num</code>, <code>reponse</code> et <code>vec</code>.</p>
 <div class="solution-exo">
-<div class="cell" data-hash="16-structures-donnees_cache/html/unnamed-chunk-88_581e0733827adb6a12ede3415d311be5">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb87"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb87-1"><a href="#cb87-1" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(liste) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"num"</span>, <span class="st">"reponse"</span>, <span class="st">"vec"</span>)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div>
 <p>Ajouter un élément nommé <code>chat</code> et ayant pour valeur “Ronron” à la fin de <code>liste</code>.</p>
 <div class="solution-exo">
-<div class="cell" data-hash="16-structures-donnees_cache/html/unnamed-chunk-89_da7f70f420a76a71a447020cd3f32d15">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb88"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb88-1"><a href="#cb88-1" aria-hidden="true" tabindex="-1"></a>liste <span class="ot">&lt;-</span> <span class="fu">c</span>(liste, <span class="at">chat =</span> <span class="st">"Ronron"</span>)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div>
 <p>Modifier l’élément <code>chat</code> pour lui donner la valeur “Ronpchi”.</p>
 <div class="solution-exo">
-<div class="cell" data-hash="16-structures-donnees_cache/html/unnamed-chunk-90_553df56cc8137e74757bbdc7439ec561">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb89"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb89-1"><a href="#cb89-1" aria-hidden="true" tabindex="-1"></a>liste<span class="sc">$</span>chat <span class="ot">&lt;-</span> <span class="st">"Ronpchi"</span></span>
 <span id="cb89-2"><a href="#cb89-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Ou bien</span></span>
 <span id="cb89-3"><a href="#cb89-3" aria-hidden="true" tabindex="-1"></a>liste[<span class="st">"chat"</span>] <span class="ot">&lt;-</span> <span class="st">"Ronpchi"</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -1322,7 +1332,7 @@ Avertissement
 </div>
 <p>Supprimer l’élément <code>vec</code> de <code>liste</code>.</p>
 <div class="solution-exo">
-<div class="cell" data-hash="16-structures-donnees_cache/html/unnamed-chunk-91_2ba95b7f966a26ec1df5090e36962fb7">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb90"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb90-1"><a href="#cb90-1" aria-hidden="true" tabindex="-1"></a>liste<span class="sc">$</span>vec <span class="ot">&lt;-</span> <span class="cn">NULL</span></span>
 <span id="cb90-2"><a href="#cb90-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Ou bien</span></span>
 <span id="cb90-3"><a href="#cb90-3" aria-hidden="true" tabindex="-1"></a>liste[<span class="st">"vec"</span>] <span class="ot">&lt;-</span> <span class="cn">NULL</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -1331,7 +1341,7 @@ Avertissement
 <p><strong>Exercice 2.2</strong></p>
 <p>Créer une fonction nommée <code>extremes</code> qui prend en argument un vecteur et retourne une liste nommée comportant sa valeur minimale et sa valeur maximale.</p>
 <div class="solution-exo">
-<div class="cell" data-hash="16-structures-donnees_cache/html/unnamed-chunk-92_cbef8390f1bfb5e1c0997dd4d41275ac">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb91"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb91-1"><a href="#cb91-1" aria-hidden="true" tabindex="-1"></a>extremes <span class="ot">&lt;-</span> <span class="cf">function</span>(x) {</span>
 <span id="cb91-2"><a href="#cb91-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">list</span>(<span class="at">min =</span> <span class="fu">min</span>(x), <span class="at">max =</span> <span class="fu">max</span>(x))</span>
 <span id="cb91-3"><a href="#cb91-3" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -1339,7 +1349,7 @@ Avertissement
 </div>
 <p>Appliquer cette fonction à un vecteur de votre choix et utiliser le résultat pour calculer l’étendue (soit la différence entre la valeur maximale et la valeur minimale).</p>
 <div class="solution-exo">
-<div class="cell" data-hash="16-structures-donnees_cache/html/unnamed-chunk-93_2cf941d2060707470239d631984fe1a4">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb92"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb92-1"><a href="#cb92-1" aria-hidden="true" tabindex="-1"></a>v <span class="ot">&lt;-</span> <span class="fu">runif</span>(<span class="dv">10</span>)</span>
 <span id="cb92-2"><a href="#cb92-2" aria-hidden="true" tabindex="-1"></a>res <span class="ot">&lt;-</span> <span class="fu">extremes</span>(v)</span>
 <span id="cb92-3"><a href="#cb92-3" aria-hidden="true" tabindex="-1"></a>res<span class="sc">$</span>max <span class="sc">-</span> res<span class="sc">$</span>min</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -1347,30 +1357,30 @@ Avertissement
 </div>
 <p><strong>Exercice 2.3</strong></p>
 <p>Soit la liste suivante :</p>
-<div class="cell" data-hash="16-structures-donnees_cache/html/unnamed-chunk-94_1d2acfcc32fb4af113d68baa1001a79f">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb93"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb93-1"><a href="#cb93-1" aria-hidden="true" tabindex="-1"></a>liste <span class="ot">&lt;-</span> <span class="fu">list</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>, <span class="fu">runif</span>(<span class="dv">5</span>), <span class="st">"youpi"</span>)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Sélectionner la sous liste composée des éléments 1 et 3 de <code>liste</code>.</p>
 <div class="solution-exo">
-<div class="cell" data-hash="16-structures-donnees_cache/html/unnamed-chunk-95_ff8cfee95bfc1f1bf45374a29a68e4a4">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb94"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb94-1"><a href="#cb94-1" aria-hidden="true" tabindex="-1"></a>liste[<span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">3</span>)]</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div>
 <p>Sélectionner la sous-liste composée du premier élément de <code>liste</code>.</p>
 <div class="solution-exo">
-<div class="cell" data-hash="16-structures-donnees_cache/html/unnamed-chunk-96_34a5a24ba8c6fdc4afe2f6ae1412ebdf">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb95"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb95-1"><a href="#cb95-1" aria-hidden="true" tabindex="-1"></a>liste[<span class="dv">1</span>]</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div>
 <p>Sélectionner le contenu du premier élément de <code>liste</code>.</p>
 <div class="solution-exo">
-<div class="cell" data-hash="16-structures-donnees_cache/html/unnamed-chunk-97_27762e72eb33f7402f090e717f02393e">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb96"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb96-1"><a href="#cb96-1" aria-hidden="true" tabindex="-1"></a>liste[[<span class="dv">1</span>]]</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div>
 <p>En enchaînant deux opérations de sélection, sélectionner le deuxième élément du premier élément de <code>liste</code>.</p>
 <div class="solution-exo">
-<div class="cell" data-hash="16-structures-donnees_cache/html/unnamed-chunk-98_86087a81dcdc2ec820c2ece7b67a16de">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb97"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb97-1"><a href="#cb97-1" aria-hidden="true" tabindex="-1"></a>liste[[<span class="dv">1</span>]][<span class="dv">2</span>]</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div>
@@ -1382,7 +1392,7 @@ Avertissement
 <li>le nombre d’éléments qu’elle contient</li>
 </ul>
 <p>Vérifier avec :</p>
-<div class="cell" data-hash="16-structures-donnees_cache/html/unnamed-chunk-100_2f635dcf0f76ee658867c0f00c28095e">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb98"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb98-1"><a href="#cb98-1" aria-hidden="true" tabindex="-1"></a>liste <span class="ot">&lt;-</span> <span class="fu">list</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>, <span class="fu">runif</span>(<span class="dv">5</span>), <span class="st">"youpi"</span>)</span>
 <span id="cb98-2"><a href="#cb98-2" aria-hidden="true" tabindex="-1"></a><span class="fu">description_liste</span>(liste)</span>
 <span id="cb98-3"><a href="#cb98-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $premier_element</span></span>
@@ -1395,7 +1405,7 @@ Avertissement
 <span id="cb98-10"><a href="#cb98-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 3</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="solution-exo">
-<div class="cell" data-hash="16-structures-donnees_cache/html/don24_5ba4398ad4c026c7f15de0a6c5c04dd1">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb99"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb99-1"><a href="#cb99-1" aria-hidden="true" tabindex="-1"></a>description_liste <span class="ot">&lt;-</span> <span class="cf">function</span>(liste) {</span>
 <span id="cb99-2"><a href="#cb99-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">list</span>(</span>
 <span id="cb99-3"><a href="#cb99-3" aria-hidden="true" tabindex="-1"></a>        <span class="at">premier_element =</span> liste[[<span class="dv">1</span>]],</span>
@@ -1410,7 +1420,7 @@ Avertissement
 <h3 data-number="16.5.3" class="anchored" data-anchor-id="tableaux-de-données"><span class="header-section-number">16.5.3</span> Tableaux de données</h3>
 <p><strong>Exercice 3.1</strong></p>
 <p>Créer le tableau <code>df</code> suivant :</p>
-<div class="cell" data-hash="16-structures-donnees_cache/html/unnamed-chunk-101_98bb06487e153a607fddb5044e3ff355">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb100"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb100-1"><a href="#cb100-1" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">tribble</span>(</span>
 <span id="cb100-2"><a href="#cb100-2" aria-hidden="true" tabindex="-1"></a>    <span class="sc">~</span>fruit,   <span class="sc">~</span>poids, <span class="sc">~</span>couleur,</span>
 <span id="cb100-3"><a href="#cb100-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Pomme"</span>,  <span class="dv">154</span>,    <span class="st">"vert"</span>,</span>
@@ -1420,25 +1430,25 @@ Avertissement
 </div>
 <p>À l’aide de l’opérateur <code>$</code>, sélectionner la colonne <code>fruit</code> de <code>df</code>.</p>
 <div class="solution-exo">
-<div class="cell" data-hash="16-structures-donnees_cache/html/unnamed-chunk-102_c708bdf405069d23523a207fe35d2770">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb101"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb101-1"><a href="#cb101-1" aria-hidden="true" tabindex="-1"></a>df<span class="sc">$</span>fruit</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div>
 <p>Faire de même avec l’opérateur <code>[[]]</code>.</p>
 <div class="solution-exo">
-<div class="cell" data-hash="16-structures-donnees_cache/html/unnamed-chunk-103_bb2c48120223bb550ef4f0e03946f85b">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb102"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb102-1"><a href="#cb102-1" aria-hidden="true" tabindex="-1"></a>df[[<span class="st">"fruit"</span>]]</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div>
 <p>À l’aide de l’opérateur <code>[[]]</code> et de la fonction <code>str_to_upper()</code> de <code>stringr</code>, transformer la colonne <code>fruit</code> en passant ses valeurs en majuscules.</p>
 <div class="solution-exo">
-<div class="cell" data-hash="16-structures-donnees_cache/html/unnamed-chunk-104_74d47d4175a91a461dc5c52864e29e93">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb103"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb103-1"><a href="#cb103-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(stringr)</span>
 <span id="cb103-2"><a href="#cb103-2" aria-hidden="true" tabindex="-1"></a>df[[<span class="st">"fruit"</span>]] <span class="ot">&lt;-</span> <span class="fu">str_to_upper</span>(df[[<span class="st">"fruit"</span>]])</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div>
 <p>Créer une fonction <code>colonne_maj</code> qui prend en argument un tableau de données <code>d</code> et un nom de colonne <code>colonne</code>, et retourne le tableau avec la colonne correspondante convertie en majuscules. Vérifier avec :</p>
-<div class="cell" data-hash="16-structures-donnees_cache/html/unnamed-chunk-106_b1873a27cdabe81598892d2fa43f5994">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb104"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb104-1"><a href="#cb104-1" aria-hidden="true" tabindex="-1"></a><span class="fu">colonne_maj</span>(df, <span class="st">"couleur"</span>)</span>
 <span id="cb104-2"><a href="#cb104-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # A tibble: 3 × 3</span></span>
 <span id="cb104-3"><a href="#cb104-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   fruit  poids couleur</span></span>
@@ -1448,7 +1458,7 @@ Avertissement
 <span id="cb104-7"><a href="#cb104-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3 Citron    92 JAUNE</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="solution-exo">
-<div class="cell" data-hash="16-structures-donnees_cache/html/don33_ed0aa4fbb6b02452c18ce7ac266cd569">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb105"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb105-1"><a href="#cb105-1" aria-hidden="true" tabindex="-1"></a>colonne_maj <span class="ot">&lt;-</span> <span class="cf">function</span>(d, colonne) {</span>
 <span id="cb105-2"><a href="#cb105-2" aria-hidden="true" tabindex="-1"></a>    d[[colonne]] <span class="ot">&lt;-</span> <span class="fu">str_to_upper</span>(d[[colonne]])</span>
 <span id="cb105-3"><a href="#cb105-3" aria-hidden="true" tabindex="-1"></a>    d</span>
@@ -1457,7 +1467,7 @@ Avertissement
 </div>
 <p><strong>Exercice 3.2</strong></p>
 <p>Créer le tableau <code>df</code> suivant :</p>
-<div class="cell" data-hash="16-structures-donnees_cache/html/unnamed-chunk-107_6e3758e2b5ac2c8dd7ce744f72c0ddc6">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb106"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb106-1"><a href="#cb106-1" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">tribble</span>(</span>
 <span id="cb106-2"><a href="#cb106-2" aria-hidden="true" tabindex="-1"></a>    <span class="sc">~</span>fruit,   <span class="sc">~</span>poids, <span class="sc">~</span>couleur,</span>
 <span id="cb106-3"><a href="#cb106-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Pomme"</span>,  <span class="dv">154</span>,    <span class="st">"vert"</span>,</span>
@@ -1472,14 +1482,14 @@ Avertissement
 <li>la première colonne des lignes ayant un poids inférieur à 100</li>
 </ul>
 <div class="solution-exo">
-<div class="cell" data-hash="16-structures-donnees_cache/html/unnamed-chunk-108_3f9e1db96230861792a3576fca59bcd9">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb107"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb107-1"><a href="#cb107-1" aria-hidden="true" tabindex="-1"></a>df[df<span class="sc">$</span>fruit <span class="sc">==</span> <span class="st">"Citron"</span>,]</span>
 <span id="cb107-2"><a href="#cb107-2" aria-hidden="true" tabindex="-1"></a>df[df<span class="sc">$</span>fruit <span class="sc">==</span> <span class="st">"Pomme"</span>, <span class="fu">c</span>(<span class="st">"fruit"</span>, <span class="st">"couleur"</span>)]</span>
 <span id="cb107-3"><a href="#cb107-3" aria-hidden="true" tabindex="-1"></a>df[df<span class="sc">$</span>poids <span class="sc">&lt;</span> <span class="dv">100</span>, <span class="dv">1</span>]</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div>
 <p>Créer une fonction <code>filtre_valeur()</code> qui prend un seul argument nommé <code>valeur</code> et retourne les lignes de <code>df</code> pour lesquelles la colonne <code>fruit</code> vaut <code>valeur</code>. Vérifier avec :</p>
-<div class="cell" data-hash="16-structures-donnees_cache/html/unnamed-chunk-110_e7bf35ec6de80638f094ce20b27485b8">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb108"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb108-1"><a href="#cb108-1" aria-hidden="true" tabindex="-1"></a><span class="fu">filtre_valeur</span>(<span class="st">"Pomme"</span>)</span>
 <span id="cb108-2"><a href="#cb108-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # A tibble: 2 × 3</span></span>
 <span id="cb108-3"><a href="#cb108-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   fruit poids couleur</span></span>
@@ -1488,14 +1498,14 @@ Avertissement
 <span id="cb108-6"><a href="#cb108-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2 Pomme   167 vert</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="solution-exo">
-<div class="cell" data-hash="16-structures-donnees_cache/html/don32a_1f96858893511a2dbb909584e9cd5163">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb109"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb109-1"><a href="#cb109-1" aria-hidden="true" tabindex="-1"></a>filtre_valeur <span class="ot">&lt;-</span> <span class="cf">function</span>(valeur) {</span>
 <span id="cb109-2"><a href="#cb109-2" aria-hidden="true" tabindex="-1"></a>    df[df<span class="sc">$</span>fruit <span class="sc">==</span> valeur,]</span>
 <span id="cb109-3"><a href="#cb109-3" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div>
 <p>Modifier la fonction pour qu’elle accepte également un argument <code>d</code> contenant le tableau à filtrer. Vérifier avec :</p>
-<div class="cell" data-hash="16-structures-donnees_cache/html/unnamed-chunk-112_653cb48f6a89c5d7acdd925f7b2ab292">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb110"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb110-1"><a href="#cb110-1" aria-hidden="true" tabindex="-1"></a><span class="fu">filtre_valeur</span>(df, <span class="st">"Pomme"</span>)</span>
 <span id="cb110-2"><a href="#cb110-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # A tibble: 2 × 3</span></span>
 <span id="cb110-3"><a href="#cb110-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   fruit poids couleur</span></span>
@@ -1504,14 +1514,14 @@ Avertissement
 <span id="cb110-6"><a href="#cb110-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2 Pomme   167 vert</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="solution-exo">
-<div class="cell" data-hash="16-structures-donnees_cache/html/don32b_881ccceebb123e86e43d45dfe5f94028">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb111"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb111-1"><a href="#cb111-1" aria-hidden="true" tabindex="-1"></a>filtre_valeur <span class="ot">&lt;-</span> <span class="cf">function</span>(d, valeur) {</span>
 <span id="cb111-2"><a href="#cb111-2" aria-hidden="true" tabindex="-1"></a>    d[d<span class="sc">$</span>fruit <span class="sc">==</span> valeur,]</span>
 <span id="cb111-3"><a href="#cb111-3" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div>
 <p>Modifier à nouveau la fonction pour qu’elle accepte aussi un argument <code>colonne</code> qui contient le nom de la colonne à utiliser pour filtrer les lignes. Vérifier avec :</p>
-<div class="cell" data-hash="16-structures-donnees_cache/html/unnamed-chunk-114_687e149cf7e228352ad2da148583f8d9">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb112"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb112-1"><a href="#cb112-1" aria-hidden="true" tabindex="-1"></a><span class="fu">filtre_valeur</span>(df, <span class="at">colonne =</span> <span class="st">"couleur"</span>, <span class="at">valeur =</span> <span class="st">"jaune"</span>)</span>
 <span id="cb112-2"><a href="#cb112-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # A tibble: 1 × 3</span></span>
 <span id="cb112-3"><a href="#cb112-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   fruit  poids couleur</span></span>
@@ -1519,21 +1529,21 @@ Avertissement
 <span id="cb112-5"><a href="#cb112-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1 Citron    92 jaune</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="solution-exo">
-<div class="cell" data-hash="16-structures-donnees_cache/html/don32c_9172393ba28f90e02eb633ba319ff07e">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb113"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb113-1"><a href="#cb113-1" aria-hidden="true" tabindex="-1"></a>filtre_valeur <span class="ot">&lt;-</span> <span class="cf">function</span>(d, colonne, valeur) {</span>
 <span id="cb113-2"><a href="#cb113-2" aria-hidden="true" tabindex="-1"></a>    d[d[colonne] <span class="sc">==</span> valeur,]</span>
 <span id="cb113-3"><a href="#cb113-3" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div>
 <p>Vérifier que cette fonction marche aussi sur un autre jeu de données :</p>
-<div class="cell" data-hash="16-structures-donnees_cache/html/unnamed-chunk-115_6d4a231220993096d97cefb1ccc9874b">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb114"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb114-1"><a href="#cb114-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(questionr)</span>
 <span id="cb114-2"><a href="#cb114-2" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(hdv2003)</span>
 <span id="cb114-3"><a href="#cb114-3" aria-hidden="true" tabindex="-1"></a><span class="fu">filtre_valeur</span>(hdv2003, <span class="st">"sexe"</span>, <span class="st">"Femme"</span>)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p><strong>Exercice 3.3</strong></p>
 <p>Reprendre le tableau <code>df</code> des exercices précédents :</p>
-<div class="cell" data-hash="16-structures-donnees_cache/html/unnamed-chunk-116_f5ae6980cb5af24125c3f4166ded56cd">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb115"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb115-1"><a href="#cb115-1" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">tribble</span>(</span>
 <span id="cb115-2"><a href="#cb115-2" aria-hidden="true" tabindex="-1"></a>    <span class="sc">~</span>fruit,   <span class="sc">~</span>poids, <span class="sc">~</span>couleur,</span>
 <span id="cb115-3"><a href="#cb115-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Pomme"</span>,  <span class="dv">154</span>,    <span class="st">"vert"</span>,</span>
@@ -1548,7 +1558,7 @@ Avertissement
 <li>Créer une nouvelle colonne <code>poids_rec</code> qui vaut “léger” si <code>poids</code> est inférieur à 100, et “lourd” sinon</li>
 </ul>
 <div class="solution-exo">
-<div class="cell" data-hash="16-structures-donnees_cache/html/unnamed-chunk-117_d6b1eb7b2b34bd742543d38b60657c97">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb116"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb116-1"><a href="#cb116-1" aria-hidden="true" tabindex="-1"></a>df[, <span class="st">"id"</span>] <span class="ot">&lt;-</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">3</span></span>
 <span id="cb116-2"><a href="#cb116-2" aria-hidden="true" tabindex="-1"></a>df[df<span class="sc">$</span>couleur <span class="sc">==</span> <span class="st">"jaune"</span>, <span class="st">"couleur"</span>] <span class="ot">&lt;-</span> <span class="st">"jaune citron"</span></span>
 <span id="cb116-3"><a href="#cb116-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -1560,7 +1570,7 @@ Avertissement
 </div>
 <p><em>Facultatif :</em> effectuer les mêmes opérations en utilisant les verbes de <code>dplyr</code>.</p>
 <div class="solution-exo">
-<div class="cell" data-hash="16-structures-donnees_cache/html/unnamed-chunk-118_738921ac105a55a24153e9f8994e87b3">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb117"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb117-1"><a href="#cb117-1" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> df <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(<span class="at">id =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>)</span>
 <span id="cb117-2"><a href="#cb117-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb117-3"><a href="#cb117-3" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> df <span class="sc">%&gt;%</span></span>
@@ -1637,6 +1647,33 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       }
     }
   }
+  const toggleGiscusIfUsed = (isAlternate, darkModeDefault) => {
+    const baseTheme = document.querySelector('#giscus-base-theme')?.value ?? 'light';
+    const alternateTheme = document.querySelector('#giscus-alt-theme')?.value ?? 'dark';
+    let newTheme = '';
+    if(darkModeDefault) {
+      newTheme = isAlternate ? baseTheme : alternateTheme;
+    } else {
+      newTheme = isAlternate ? alternateTheme : baseTheme;
+    }
+    const changeGiscusTheme = () => {
+      // From: https://github.com/giscus/giscus/issues/336
+      const sendMessage = (message) => {
+        const iframe = document.querySelector('iframe.giscus-frame');
+        if (!iframe) return;
+        iframe.contentWindow.postMessage({ giscus: message }, 'https://giscus.app');
+      }
+      sendMessage({
+        setConfig: {
+          theme: newTheme
+        }
+      });
+    }
+    const isGiscussLoaded = window.document.querySelector('iframe.giscus-frame') !== null;
+    if (isGiscussLoaded) {
+      changeGiscusTheme();
+    }
+  }
   const toggleColorMode = (alternate) => {
     // Switch the stylesheets
     const alternateStylesheets = window.document.querySelectorAll('link.quarto-color-scheme.quarto-color-alternate');
@@ -1703,13 +1740,15 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       return localAlternateSentinel;
     }
   }
-  let localAlternateSentinel = 'default';
+  const darkModeDefault = false;
+  let localAlternateSentinel = darkModeDefault ? 'alternate' : 'default';
   // Dark / light mode switch
   window.quartoToggleColorScheme = () => {
     // Read the current dark / light value 
     let toAlternate = !hasAlternateSentinel();
     toggleColorMode(toAlternate);
     setStyleSentinel(toAlternate);
+    toggleGiscusIfUsed(toAlternate, darkModeDefault);
   };
   // Ensure there is a toggle, if there isn't float one in the top right
   if (window.document.querySelector('.quarto-color-scheme-toggle') === null) {
@@ -1744,18 +1783,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     }
     return false;
   }
-  const clipboard = new window.ClipboardJS('.code-copy-button', {
-    text: function(trigger) {
-      const codeEl = trigger.previousElementSibling.cloneNode(true);
-      for (const childEl of codeEl.children) {
-        if (isCodeAnnotation(childEl)) {
-          childEl.remove();
-        }
-      }
-      return codeEl.innerText;
-    }
-  });
-  clipboard.on('success', function(e) {
+  const onCopySuccess = function(e) {
     // button target
     const button = e.trigger;
     // don't keep focus
@@ -1787,11 +1815,48 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     }, 1000);
     // clear code selection
     e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
   });
-  function tippyHover(el, contentFn) {
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
     const config = {
       allowHTML: true,
-      content: contentFn,
       maxWidth: 500,
       delay: 100,
       arrow: false,
@@ -1801,8 +1866,17 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       interactive: true,
       interactiveBorder: 10,
       theme: 'quarto',
-      placement: 'bottom-start'
+      placement: 'bottom-start',
     };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
     window.tippy(el, config); 
   }
   const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
@@ -1814,7 +1888,129 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       try { href = new URL(href).hash; } catch {}
       const id = href.replace(/^#\/?/, "");
       const note = window.document.getElementById(id);
-      return note.innerHTML;
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
     });
   }
       let selectedAnnoteEl;
@@ -1858,6 +2054,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
             }
             div.style.top = top - 2 + "px";
             div.style.height = height + 4 + "px";
+            div.style.left = 0;
             let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
             if (gutterDiv === null) {
               gutterDiv = window.document.createElement("div");
@@ -1883,6 +2080,32 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
         });
         selectedAnnoteEl = undefined;
       };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
       // Attach click handler to the DT
       const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
       for (const annoteDlNode of annoteDls) {
@@ -1944,18 +2167,19 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="./15-dplyr-avance.html" class="pagination-link">
+      <a href="./15-dplyr-avance.html" class="pagination-link" aria-label="`dplyr` avancé">
         <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title"><code>dplyr</code> avancé</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="./17-if-boucles.html" class="pagination-link">
+      <a href="./17-if-boucles.html" class="pagination-link" aria-label="Exécution conditionnelle et boucles">
         <span class="nav-page-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Exécution conditionnelle et boucles</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>
 </div> <!-- /content -->
-<script src="js/tidyverse.js"></script>
+<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/juba/tidyverse/edit/main/16-structures-donnees.qmd" class="toc-action"><i class="bi bi-github"></i>Modifier cette page</a></li></ul></div></div></div></footer><script src="js/tidyverse.js"></script>
+
 
 
 

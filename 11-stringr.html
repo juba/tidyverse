@@ -2,12 +2,12 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="fr" xml:lang="fr"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.3.340">
+<meta name="generator" content="quarto-1.6.39">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Introduction à R et au tidyverse - 11&nbsp; Manipuler du texte avec stringr</title>
+<title>11&nbsp; Manipuler du texte avec stringr – Introduction à R et au tidyverse</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -22,7 +22,7 @@ ul.task-list li input[type="checkbox"] {
 }
 /* CSS for syntax highlighting */
 pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span { line-height: 1.25; }
 pre > code.sourceCode > span:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
 code.sourceCode > span { color: inherit; text-decoration: inherit; }
@@ -33,7 +33,7 @@ div.sourceCode { overflow: auto; }
 }
 @media print {
 pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
 }
 pre.numberSource code
   { counter-reset: source-line 0; }
@@ -71,12 +71,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="site_libs/quarto-html/anchor.min.js"></script>
 <link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-dark.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-f2ed4b6a00c7d3487a84fd5a50ba4e45.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-dark-ab6496a1a679dc9f3d6952c9737550a4.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
-<link href="site_libs/bootstrap/bootstrap-dark.min.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="site_libs/bootstrap/bootstrap-7841758b2c4697f1bb7dfd28c94c955d.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-dark-122eaf72ed6913f6dbaefd46cb265906.min.css" rel="prefetch" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
 <link href="site_libs/quarto-contrib/bookup_fonts_embed-0.0/fonts-download.css" rel="stylesheet">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
@@ -84,7 +84,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   "collapse-after": 3,
   "panel-placement": "start",
   "type": "textbox",
-  "limit": 20,
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
   "language": {
     "search-no-results-text": "Pas de résultats",
     "search-matching-documents-text": "documents trouvés",
@@ -93,8 +99,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     "search-more-match-text": "correspondance de plus dans ce document",
     "search-more-matches-text": "correspondances de plus dans ce document",
     "search-clear-button-title": "Effacer",
+    "search-text-placeholder": "",
     "search-detached-cancel-button-title": "Annuler",
-    "search-submit-button-title": "Envoyer"
+    "search-submit-button-title": "Envoyer",
+    "search-label": "Recherche"
   }
 }</script>
 
@@ -108,12 +116,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <header id="quarto-header" class="headroom fixed-top">
   <nav class="quarto-secondary-nav">
     <div class="container-fluid d-flex">
-      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Basculer la barre latérale" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Basculer la barre latérale" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./06-tidyverse.html">Introduction au tidyverse</a></li><li class="breadcrumb-item"><a href="./11-stringr.html"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Manipuler du texte avec `stringr`</span></a></li></ol></nav>
-      <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Basculer la barre latérale" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
-      </a>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./06-tidyverse.html">Introduction au tidyverse</a></li><li class="breadcrumb-item"><a href="./11-stringr.html"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Manipuler du texte avec <code>stringr</code></span></a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Basculer la barre latérale" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
       <button type="button" class="btn quarto-search-button" aria-label="Recherche" onclick="window.quartoOpenSearch();">
         <i class="bi bi-search"></i>
       </button>
@@ -123,24 +131,24 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <!-- content -->
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
 <!-- sidebar -->
-  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal sidebar-navigation docked overflow-auto">
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation docked overflow-auto">
     <div class="pt-lg-2 mt-2 text-left sidebar-header">
     <div class="sidebar-title mb-0 py-0">
       <a href="./">Introduction à R et au tidyverse</a> 
         <div class="sidebar-tools-main tools-wide">
-    <a href="https://github.com/juba/tidyverse/" title="Source Code" class="quarto-navigation-tool px-1" aria-label="Source Code"><i class="bi bi-github"></i></a>
+    <a href="https://github.com/juba/tidyverse/" title="Code source" class="quarto-navigation-tool px-1" aria-label="Code source"><i class="bi bi-github"></i></a>
     <div class="dropdown">
-      <a href="" title="Download" id="quarto-navigation-tool-dropdown-0" class="quarto-navigation-tool dropdown-toggle px-1" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download"><i class="bi bi-download"></i></a>
+      <a href="" title="Download" id="quarto-navigation-tool-dropdown-0" class="quarto-navigation-tool dropdown-toggle px-1" data-bs-toggle="dropdown" aria-expanded="false" role="link" aria-label="Download"><i class="bi bi-download"></i></a>
       <ul class="dropdown-menu" aria-labelledby="quarto-navigation-tool-dropdown-0">
           <li>
             <a class="dropdown-item sidebar-tools-main-item" href="./introduction_au_tidyverse.epub">
-              <i class="bi bi-bi-journal pe-1"></i>
+              <i class="bi bi-journal pe-1"></i>
             Download ePub
             </a>
           </li>
           <li>
             <a class="dropdown-item sidebar-tools-main-item" href="./introduction_au_tidyverse.pdf">
-              <i class="bi bi-bi-file-pdf pe-1"></i>
+              <i class="bi bi-file-pdf pe-1"></i>
             Download PDF
             </a>
           </li>
@@ -164,9 +172,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <ul class="list-unstyled mt-1">
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true">
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
  <span class="menu-text">Introduction</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true" aria-label="Basculer la section">
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Basculer la section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
@@ -187,9 +195,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true">
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true">
  <span class="menu-text">Introduction à R</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true" aria-label="Basculer la section">
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Basculer la section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
@@ -222,9 +230,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true">
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true">
  <span class="menu-text">Introduction au tidyverse</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true" aria-label="Basculer la section">
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true" aria-label="Basculer la section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
@@ -281,9 +289,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="true">
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true">
  <span class="menu-text">Aller plus loin</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="true" aria-label="Basculer la section">
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true" aria-label="Basculer la section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
@@ -340,9 +348,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" aria-expanded="true">
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="true">
  <span class="menu-text">Annexes</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" aria-expanded="true" aria-label="Basculer la section">
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="true" aria-label="Basculer la section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
@@ -358,7 +366,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     </ul>
     </div>
 </nav>
-<div id="quarto-sidebar-glass" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass"></div>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
         <nav id="TOC" role="doc-toc" class="toc-active">
@@ -377,12 +385,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#ressources" id="toc-ressources" class="nav-link" data-scroll-target="#ressources"><span class="header-section-number">11.10</span> Ressources</a></li>
   <li><a href="#exercices" id="toc-exercices" class="nav-link" data-scroll-target="#exercices"><span class="header-section-number">11.11</span> Exercices</a></li>
   </ul>
-<div class="toc-actions"><div><i class="bi bi-github"></i></div><div class="action-links"><p><a href="https://github.com/juba/tidyverse/edit/main/11-stringr.qmd" class="toc-action">Modifier cette page</a></p></div></div></nav>
+<div class="toc-actions"><ul><li><a href="https://github.com/juba/tidyverse/edit/main/11-stringr.qmd" class="toc-action"><i class="bi bi-github"></i>Modifier cette page</a></li></ul></div></nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
-<header id="title-block-header" class="quarto-title-block default">
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./06-tidyverse.html">Introduction au tidyverse</a></li><li class="breadcrumb-item"><a href="./11-stringr.html"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Manipuler du texte avec <code>stringr</code></span></a></li></ol></nav>
 <div class="quarto-title">
 <h1 class="title"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Manipuler du texte avec <code>stringr</code></span></h1>
 </div>
@@ -397,11 +405,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </div>
   
 
+
 </header>
+
 
 <p>Les fonctions de <code>forcats</code> vues précédemment permettent de modifier des modalités d’une variables qualitative globalement. Mais parfois on a besoin de manipuler le contenu même du texte d’une variable de type chaîne de caractères&nbsp;: combiner, rechercher, remplacer…</p>
 <p>On va utiliser ici les fonctions de l’extension <code>stringr</code>. Celle-ci fait partie du coeur du <em>tidyverse</em>, elle est donc automatiquement chargée avec&nbsp;:</p>
-<div class="cell" data-hash="11-stringr_cache/html/unnamed-chunk-2_b9ac7e3f051c67c8d920752fb1045880">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="callout callout-style-default callout-note callout-titled">
@@ -418,16 +428,16 @@ Note
 </div>
 </div>
 <p>Dans ce qui suit on va utiliser le court tableau d’exemple <code>d</code> suivant&nbsp;:</p>
-<div class="cell" data-hash="11-stringr_cache/html/unnamed-chunk-3_94f53728df4ab2fa11afa779363189ad">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>d <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">nom =</span> <span class="fu">c</span>(<span class="st">"Mr Félicien Machin"</span>, <span class="st">"Mme Raymonde Bidule"</span>, <span class="st">"M. Martial Truc"</span>, <span class="st">"Mme Huguette Chose"</span>),</span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">adresse =</span> <span class="fu">c</span>(<span class="st">"3 rue des Fleurs"</span>, <span class="st">"47 ave de la Libération"</span>, <span class="st">"12 rue du 17 octobre 1961"</span>, <span class="st">"221 avenue de la Libération"</span>),</span>
 <span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">ville =</span> <span class="fu">c</span>(<span class="st">"Nouméa"</span>, <span class="st">"Marseille"</span>, <span class="st">"Vénissieux"</span>, <span class="st">"Marseille"</span>)</span>
 <span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div class="cell" data-hash="11-stringr_cache/html/unnamed-chunk-4_02d677ee6ec62ac683d1d05a09964e66">
+<div class="cell">
 <div class="cell-output-display">
-<table class="table table-sm table-striped small">
+<table class="caption-top table table-sm table-striped small">
 <thead>
 <tr class="header">
 <th style="text-align: left;">nom</th>
@@ -472,7 +482,7 @@ Note
 <h2 data-number="11.2" class="anchored" data-anchor-id="sec-concat"><span class="header-section-number">11.2</span> Concaténer des chaînes</h2>
 <p>La première opération de base consiste à concaténer des chaînes de caractères entre elles. On peut le faire avec la fonction <code>paste</code>.</p>
 <p>Par exemple, si on veut concaténer l’adresse et la ville&nbsp;:</p>
-<div class="cell" data-hash="11-stringr_cache/html/unnamed-chunk-5_7fe8af04c211be8d49373b6316342af4">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">paste</span>(d<span class="sc">$</span>adresse, d<span class="sc">$</span>ville)</span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] "3 rue des Fleurs Nouméa"              </span></span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [2] "47 ave de la Libération Marseille"    </span></span>
@@ -480,7 +490,7 @@ Note
 <span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [4] "221 avenue de la Libération Marseille"</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Par défaut, <code>paste</code> concatène en ajoutant un espace entre les différentes chaînes. On peut spécifier un autre séparateur avec son argument <code>sep</code>&nbsp;:</p>
-<div class="cell" data-hash="11-stringr_cache/html/unnamed-chunk-6_7b7b8b2266a300b611017c841ce6ad68">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">paste</span>(d<span class="sc">$</span>adresse, d<span class="sc">$</span>ville, <span class="at">sep =</span> <span class="st">" - "</span>)</span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] "3 rue des Fleurs - Nouméa"              </span></span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [2] "47 ave de la Libération - Marseille"    </span></span>
@@ -488,7 +498,7 @@ Note
 <span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [4] "221 avenue de la Libération - Marseille"</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Il existe une variante, <code>paste0</code>, qui concatène sans mettre de séparateur, et qui est légèrement plus rapide&nbsp;:</p>
-<div class="cell" data-hash="11-stringr_cache/html/unnamed-chunk-7_cc3b5c0f68d4578e4220bf46c4fcca90">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">paste0</span>(d<span class="sc">$</span>adresse, d<span class="sc">$</span>ville)</span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] "3 rue des FleursNouméa"              </span></span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [2] "47 ave de la LibérationMarseille"    </span></span>
@@ -509,12 +519,12 @@ Note
 </div>
 </div>
 <p>Parfois on cherche à concaténer les différents éléments d’un vecteur non pas avec ceux d’un autre vecteur, comme on l’a fait précédemment, mais <em>entre eux</em>. Dans ce cas <code>paste</code> seule ne fera rien&nbsp;:</p>
-<div class="cell" data-hash="11-stringr_cache/html/unnamed-chunk-8_dc62d6cc42d65e4c0558e54e79a35e3e">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">paste</span>(d<span class="sc">$</span>ville)</span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] "Nouméa"     "Marseille"  "Vénissieux" "Marseille"</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Il faut lui ajouter un argument <code>collapse</code>, avec comme valeur la chaîne à utiliser pour concaténer les éléments&nbsp;:</p>
-<div class="cell" data-hash="11-stringr_cache/html/unnamed-chunk-9_3aca8990a5bc242cc545db89174733ec">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">paste</span>(d<span class="sc">$</span>ville, <span class="at">collapse =</span> <span class="st">", "</span>)</span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] "Nouméa, Marseille, Vénissieux, Marseille"</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
@@ -522,17 +532,17 @@ Note
 <section id="convertir-en-majuscules-minuscules" class="level2" data-number="11.3">
 <h2 data-number="11.3" class="anchored" data-anchor-id="convertir-en-majuscules-minuscules"><span class="header-section-number">11.3</span> Convertir en majuscules / minuscules</h2>
 <p>Les fonctions <code>str_to_lower</code>, <code>str_to_upper</code> et <code>str_to_title</code> permettent respectivement de mettre en minuscules, mettre en majuscules, ou de capitaliser les éléments d’un vecteur de chaînes de caractères&nbsp;:</p>
-<div class="cell" data-hash="11-stringr_cache/html/unnamed-chunk-10_cf9aa960ceacfb08c0ae619e94b8f08c">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">str_to_lower</span>(d<span class="sc">$</span>nom)</span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] "mr félicien machin"  "mme raymonde bidule" "m. martial truc"    </span></span>
 <span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [4] "mme huguette chose"</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div class="cell" data-hash="11-stringr_cache/html/unnamed-chunk-11_965bce7bd12e81ecb85adb9dfc15fa2d">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">str_to_upper</span>(d<span class="sc">$</span>nom)</span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] "MR FÉLICIEN MACHIN"  "MME RAYMONDE BIDULE" "M. MARTIAL TRUC"    </span></span>
 <span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [4] "MME HUGUETTE CHOSE"</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div class="cell" data-hash="11-stringr_cache/html/unnamed-chunk-12_403322314e6ed0c485161c41a4c8147f">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">str_to_title</span>(d<span class="sc">$</span>nom)</span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] "Mr Félicien Machin"  "Mme Raymonde Bidule" "M. Martial Truc"    </span></span>
 <span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [4] "Mme Huguette Chose"</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -541,13 +551,13 @@ Note
 <section id="découper-des-chaînes" class="level2" data-number="11.4">
 <h2 data-number="11.4" class="anchored" data-anchor-id="découper-des-chaînes"><span class="header-section-number">11.4</span> Découper des chaînes</h2>
 <p>La fonction <code>str_split</code> permet de “découper” une chaîne de caractère en fonction d’un délimiteur. On passe la chaîne en premier argument, et le délimiteur en second&nbsp;:</p>
-<div class="cell" data-hash="11-stringr_cache/html/unnamed-chunk-13_45052c5fb882e07390b6e11e69d79f27">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">str_split</span>(<span class="st">"un-deux-trois"</span>, <span class="st">"-"</span>)</span>
 <span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [[1]]</span></span>
 <span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] "un"    "deux"  "trois"</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>On peut appliquer la fonction à un vecteur, dans ce cas le résultat sera une liste&nbsp;:</p>
-<div class="cell" data-hash="11-stringr_cache/html/unnamed-chunk-14_c4da4138fb4bd337741e7013d2dbcc05">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">str_split</span>(d<span class="sc">$</span>nom, <span class="st">" "</span>)</span>
 <span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [[1]]</span></span>
 <span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] "Mr"       "Félicien" "Machin"  </span></span>
@@ -562,7 +572,7 @@ Note
 <span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] "Mme"      "Huguette" "Chose"</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Ou un tableau (plus précisément une matrice) si on ajoute <code>simplify = TRUE</code>.</p>
-<div class="cell" data-hash="11-stringr_cache/html/unnamed-chunk-15_685cd384632864553e442a379e861635">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">str_split</span>(d<span class="sc">$</span>nom, <span class="st">" "</span>, <span class="at">simplify =</span> <span class="cn">TRUE</span>)</span>
 <span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;      [,1]  [,2]       [,3]    </span></span>
 <span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1,] "Mr"  "Félicien" "Machin"</span></span>
@@ -570,9 +580,9 @@ Note
 <span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [3,] "M."  "Martial"  "Truc"  </span></span>
 <span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [4,] "Mme" "Huguette" "Chose"</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>Si on souhaite créer de nouvelles colonnes dans un tableau de données en découpant une colonne de type texte, on pourra utiliser la fonction <code>separate</code> de l’extension <code>tidyr</code>. Celle-ci est expliquée <a href="12-tidyr.html#sec-separate"><span>Section&nbsp;12.3.3</span></a>.</p>
+<p>Si on souhaite créer de nouvelles colonnes dans un tableau de données en découpant une colonne de type texte, on pourra utiliser la fonction <code>separate</code> de l’extension <code>tidyr</code>. Celle-ci est expliquée <a href="12-tidyr.html#sec-separate" class="quarto-xref"><span>Section 12.3.3</span></a>.</p>
 <p>Voici juste un exemple de son utilisation&nbsp;:</p>
-<div class="cell" data-hash="11-stringr_cache/html/unnamed-chunk-16_7a44ee0d4e6e37d26e0def0b989162cf">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyr)</span>
 <span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>d <span class="sc">%&gt;%</span> <span class="fu">separate</span>(nom, <span class="fu">c</span>(<span class="st">"genre"</span>, <span class="st">"prenom"</span>, <span class="st">"nom"</span>), <span class="at">sep =</span> <span class="st">" "</span>)</span>
 <span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # A tibble: 4 × 5</span></span>
@@ -587,7 +597,7 @@ Note
 <section id="extraire-des-sous-chaînes-par-position" class="level2" data-number="11.5">
 <h2 data-number="11.5" class="anchored" data-anchor-id="extraire-des-sous-chaînes-par-position"><span class="header-section-number">11.5</span> Extraire des sous-chaînes par position</h2>
 <p>La fonction <code>str_sub</code> permet d’extraire des sous-chaînes par position, en indiquant simplement les positions des premier et dernier caractères&nbsp;:</p>
-<div class="cell" data-hash="11-stringr_cache/html/unnamed-chunk-17_b77c8a6bb3b3c13deed5fa8520f9ec00">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">str_sub</span>(d<span class="sc">$</span>ville, <span class="dv">1</span>, <span class="dv">3</span>)</span>
 <span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] "Nou" "Mar" "Vén" "Mar"</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
@@ -595,13 +605,13 @@ Note
 <section id="sec-str-detect" class="level2" data-number="11.6">
 <h2 data-number="11.6" class="anchored" data-anchor-id="sec-str-detect"><span class="header-section-number">11.6</span> Détecter des motifs</h2>
 <p><code>str_detect</code> permet de détecter la présence d’un motif parmi les élements d’un vecteur. Par exemple, si on souhaite identifier toutes les adresses contenant “Libération”&nbsp;:</p>
-<div class="cell" data-hash="11-stringr_cache/html/unnamed-chunk-18_ee9d58fb7595c043b3baa7f645c69a6c">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">str_detect</span>(d<span class="sc">$</span>adresse, <span class="st">"Libération"</span>)</span>
 <span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] FALSE  TRUE FALSE  TRUE</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p><code>str_detect</code> renvoie un vecteur de valeurs logiques et peut donc être utilisée, par exemple, avec le verbe <code>filter</code> de <code>dplyr</code> pour extraire des sous-populations.</p>
 <p>Une variante, <code>str_count</code>, compte le nombre d’occurrences d’une chaîne pour chaque élément d’un vecteur&nbsp;:</p>
-<div class="cell" data-hash="11-stringr_cache/html/unnamed-chunk-19_797f5674adac366502d5f293a3054f3e">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">str_count</span>(d<span class="sc">$</span>ville, <span class="st">"s"</span>)</span>
 <span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 0 1 2 1</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
@@ -620,7 +630,7 @@ Avertissement
 </div>
 </div>
 <p>On peut aussi utiliser <code>str_subset</code> pour ne garder d’un vecteur que les éléments correspondant au motif&nbsp;:</p>
-<div class="cell" data-hash="11-stringr_cache/html/unnamed-chunk-20_67b2749999ea39692e26c2007401ac18">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">str_subset</span>(d<span class="sc">$</span>adresse, <span class="st">"Libération"</span>)</span>
 <span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] "47 ave de la Libération"     "221 avenue de la Libération"</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
@@ -628,17 +638,17 @@ Avertissement
 <section id="extraire-des-motifs" class="level2" data-number="11.7">
 <h2 data-number="11.7" class="anchored" data-anchor-id="extraire-des-motifs"><span class="header-section-number">11.7</span> Extraire des motifs</h2>
 <p><code>str_extract</code> permet d’extraire les valeurs correspondant à un motif. Si on lui passe comme motif une chaîne de caractère, cela aura peu d’intérêt&nbsp;:</p>
-<div class="cell" data-hash="11-stringr_cache/html/unnamed-chunk-21_92db8df373f79302fb212e6e530b1f64">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">str_extract</span>(d<span class="sc">$</span>adresse, <span class="st">"Libération"</span>)</span>
 <span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] NA           "Libération" NA           "Libération"</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>C’est tout de suite plus intéressant si on utilise des expressions régulières. Par exemple la commande suivante permet d’isoler les numéros de rue.</p>
-<div class="cell" data-hash="11-stringr_cache/html/unnamed-chunk-22_9332c09650dc6b39fb1c0c129e06ebe6">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">str_extract</span>(d<span class="sc">$</span>adresse, <span class="st">"^</span><span class="sc">\\</span><span class="st">d+"</span>)</span>
 <span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] "3"   "47"  "12"  "221"</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p><code>str_extract</code> ne récupère que la première occurrence du motif. Si on veut toutes les extraire on peut utiliser <code>str_extract_all</code>. Ainsi, si on veut extraire l’ensemble des nombres présents dans les adresses&nbsp;:</p>
-<div class="cell" data-hash="11-stringr_cache/html/unnamed-chunk-23_b8e6827edfc42bccc06c4554c457710d">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">str_extract_all</span>(d<span class="sc">$</span>adresse, <span class="st">"</span><span class="sc">\\</span><span class="st">d+"</span>)</span>
 <span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [[1]]</span></span>
 <span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] "3"</span></span>
@@ -665,9 +675,9 @@ Note
 <p>Si on veut faire de l’extraction de groupes dans des expressions régulières (identifiés avec des parenthèses), on pourra utiliser <code>str_match</code>.</p>
 </div>
 </div>
-<p>À noter que si on souhaite extraire des valeurs d’une colonne texte d’un tableau de données pour créer de nouvelles variables, on pourra utiliser la fonction <code>extract</code> de l’extension <code>tidyr</code>, décrite <a href="12-tidyr.html#sec-extract"><span>Section&nbsp;12.3.6</span></a>.</p>
+<p>À noter que si on souhaite extraire des valeurs d’une colonne texte d’un tableau de données pour créer de nouvelles variables, on pourra utiliser la fonction <code>extract</code> de l’extension <code>tidyr</code>, décrite <a href="12-tidyr.html#sec-extract" class="quarto-xref"><span>Section 12.3.6</span></a>.</p>
 <p>Par exemple&nbsp;:</p>
-<div class="cell" data-hash="11-stringr_cache/html/unnamed-chunk-24_aa77b868c5395f1962ac8e542dbda8a2">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyr)</span>
 <span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>d <span class="sc">%&gt;%</span> <span class="fu">extract</span>(adresse, <span class="st">"type_rue"</span>, <span class="st">"^</span><span class="sc">\\</span><span class="st">d+ (.*?) "</span>, <span class="at">remove =</span> <span class="cn">FALSE</span>)</span>
 <span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # A tibble: 4 × 4</span></span>
@@ -683,13 +693,13 @@ Note
 <h2 data-number="11.8" class="anchored" data-anchor-id="remplacer-des-motifs"><span class="header-section-number">11.8</span> Remplacer des motifs</h2>
 <p>La fonction <code>str_replace_all</code> permet de remplacer une chaîne ou un motif par une autre.</p>
 <p>Par exemple, on peut remplacer les occurrence de “Mr” par “M.” dans notre variable <code>nom</code>&nbsp;:</p>
-<div class="cell" data-hash="11-stringr_cache/html/unnamed-chunk-25_0fa6cb8865b1e41b8560349c826b8112">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="fu">str_replace_all</span>(d<span class="sc">$</span>nom, <span class="st">"Mr"</span>, <span class="st">"M."</span>)</span>
 <span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] "M. Félicien Machin"  "Mme Raymonde Bidule" "M. Martial Truc"    </span></span>
 <span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [4] "Mme Huguette Chose"</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>On peut également spécifier plusieurs remplacements en une seule fois&nbsp;:</p>
-<div class="cell" data-hash="11-stringr_cache/html/unnamed-chunk-26_fef6bc488c7a544ec76a750843757234">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="fu">str_replace_all</span>(</span>
 <span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>    d<span class="sc">$</span>adresse,</span>
 <span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">c</span>(<span class="st">"avenue"</span> <span class="ot">=</span> <span class="st">"Avenue"</span>, <span class="st">"ave"</span> <span class="ot">=</span> <span class="st">"Avenue"</span>, <span class="st">"rue"</span> <span class="ot">=</span> <span class="st">"Rue"</span>)</span>
@@ -702,21 +712,21 @@ Note
 <h2 data-number="11.9" class="anchored" data-anchor-id="sec-modificateurs"><span class="header-section-number">11.9</span> Modificateurs de motifs</h2>
 <p>Par défaut, les motifs passés aux fonctions comme <code>str_detect</code>, <code>str_extract</code> ou <code>str_replace</code> sont des expressions régulières classiques.</p>
 <p>On peut spécifier qu’un motif n’est pas une expression régulière mais une chaîne de caractères normale en lui appliquant la fonction <code>fixed</code>. Par exemple, si on veut compter le nombre de points dans les noms de notre tableau, le paramétrage par défaut ne fonctionnera pas car dans une expression régulière le <code>.</code> est un symbole signifiant “n’importe quel caractère”&nbsp;:</p>
-<div class="cell" data-hash="11-stringr_cache/html/unnamed-chunk-27_8531b5b43d0e433be8d77833665c13fb">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">str_count</span>(d<span class="sc">$</span>nom, <span class="st">"."</span>)</span>
 <span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 18 19 15 18</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Il faut donc spécifier que notre point est bien un point avec <code>fixed</code>&nbsp;:</p>
-<div class="cell" data-hash="11-stringr_cache/html/unnamed-chunk-28_0450e240b31746d2b8be86b7921a55a4">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="fu">str_count</span>(d<span class="sc">$</span>nom, <span class="fu">fixed</span>(<span class="st">"."</span>))</span>
 <span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 0 0 1 0</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>On peut aussi modifier le comportement des expressions régulières à l’aide de la fonction <code>regex</code>. On peut ainsi rendre les motifs insensibles à la casse avec <code>ignore_case</code>&nbsp;:</p>
-<div class="cell" data-hash="11-stringr_cache/html/unnamed-chunk-29_3d6933224d29c659e63ff0d72de6ab0b">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="fu">str_detect</span>(d<span class="sc">$</span>nom, <span class="st">"mme"</span>)</span>
 <span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] FALSE FALSE FALSE FALSE</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div class="cell" data-hash="11-stringr_cache/html/unnamed-chunk-30_fe1665ff0df47fd24e370f009a688fa8">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="fu">str_detect</span>(d<span class="sc">$</span>nom, <span class="fu">regex</span>(<span class="st">"mme"</span>, <span class="at">ignore_case =</span> <span class="cn">TRUE</span>))</span>
 <span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] FALSE  TRUE FALSE  TRUE</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
@@ -731,16 +741,16 @@ Note
 <section id="exercices" class="level2" data-number="11.11">
 <h2 data-number="11.11" class="anchored" data-anchor-id="exercices"><span class="header-section-number">11.11</span> Exercices</h2>
 <p>Dans ces exercices on utilise un tableau <code>d</code>, généré par le code suivant&nbsp;:</p>
-<div class="cell" data-hash="11-stringr_cache/html/unnamed-chunk-31_77eabc3072598fa9d2cbc9b05c42c96f">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>d <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
 <span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">nom =</span> <span class="fu">c</span>(<span class="st">"M. rené Bézigue"</span>, <span class="st">"Mme Paulette fouchin"</span>, <span class="st">"Mme yvonne duluc"</span>, <span class="st">"M. Jean-Yves Pernoud"</span>),</span>
 <span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">naissance =</span> <span class="fu">c</span>(<span class="st">"18/04/1937 Vesoul"</span>, <span class="st">"En 1947 à Grenoble (38)"</span>, <span class="st">"Le 5 mars 1931 à Bar-le-Duc"</span>, <span class="st">"Marseille, juin 1938"</span>),</span>
 <span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">profession =</span> <span class="fu">c</span>(<span class="st">"Ouvrier agric"</span>, <span class="st">"ouvrière qualifiée"</span>, <span class="st">"Institutrice"</span>, <span class="st">"Exploitant agric"</span>)</span>
 <span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div class="cell" data-hash="11-stringr_cache/html/unnamed-chunk-32_928e92e37df4883b107d5acc9f9b115c">
+<div class="cell">
 <div class="cell-output-display">
-<table class="table table-sm table-striped small">
+<table class="caption-top table table-sm table-striped small">
 <thead>
 <tr class="header">
 <th style="text-align: left;">nom</th>
@@ -775,39 +785,39 @@ Note
 </div>
 <p><strong>Exercice 1</strong></p>
 <p>Capitalisez les noms des personnes avec <code>str_to_title</code>&nbsp;:</p>
-<div class="cell" data-hash="11-stringr_cache/html/unnamed-chunk-33_4464dbf7c31f7b653498329979321458">
+<div class="cell">
 <pre><code>#&gt; [1] "M. René Bézigue"      "Mme Paulette Fouchin" "Mme Yvonne Duluc"    
 #&gt; [4] "M. Jean-Yves Pernoud"</code></pre>
 </div>
 <div class="solution-exo">
-<div class="cell" data-hash="11-stringr_cache/html/str1_f6d986201697a32fc25c3292d5827564">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="fu">str_to_title</span>(d<span class="sc">$</span>nom)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div>
 <p><strong>Exercice 2</strong></p>
 <p>Dans la variable <code>profession</code>, remplacer toutes les occurrences de l’abbréviation “agric” par “agricole”&nbsp;:</p>
-<div class="cell" data-hash="11-stringr_cache/html/unnamed-chunk-34_cf5c621a22ad68c73d59de6c650fe59f">
+<div class="cell">
 <pre><code>#&gt; [1] "Ouvrier agricole"    "ouvrière qualifiée"  "Institutrice"       
 #&gt; [4] "Exploitant agricole"</code></pre>
 </div>
 <div class="solution-exo">
-<div class="cell" data-hash="11-stringr_cache/html/str2_f099ad681ceba00937a654b57a27b90d">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="fu">str_replace</span>(d<span class="sc">$</span>profession, <span class="st">"agric"</span>, <span class="st">"agricole"</span>)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div>
 <p><strong>Exercice 3</strong></p>
 <p>À l’aide de <code>str_detect</code>, identifier les personnes de catégorie professionnelle “Ouvrier”. Indication&nbsp;: pensez au modificateur <code>ignore_case</code>.</p>
-<div class="cell" data-hash="11-stringr_cache/html/unnamed-chunk-35_49600eb1504468dbf316b2f633d266c0">
+<div class="cell">
 <pre><code>#&gt; [1]  TRUE  TRUE FALSE FALSE</code></pre>
 </div>
 <div class="solution-exo">
-<div class="cell" data-hash="11-stringr_cache/html/str3_4f6c463b31a4b027ba21860d86a0ccc5">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="fu">str_detect</span>(d<span class="sc">$</span>profession, <span class="fu">regex</span>(<span class="st">"Ouvr"</span>, <span class="at">ignore_case =</span> <span class="cn">TRUE</span>))</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div>
 <p><strong>Exercice 4</strong></p>
 <p>À l’aide de <code>case_when</code> et de <code>str_detect</code>, créer une nouvelle variable <code>sexe</code> identifiant le sexe de chaque personne en fonction de la présence de <code>M.</code> ou de <code>Mme</code> dans son nom.</p>
-<div class="cell" data-hash="11-stringr_cache/html/unnamed-chunk-36_42bed9b4b03414981e8e1d0e5b0fe200">
+<div class="cell">
 <pre><code>#&gt; # A tibble: 4 × 4
 #&gt;   nom                  naissance                   profession         sexe 
 #&gt;   &lt;chr&gt;                &lt;chr&gt;                       &lt;chr&gt;              &lt;chr&gt;
@@ -817,7 +827,7 @@ Note
 #&gt; 4 M. Jean-Yves Pernoud Marseille, juin 1938        Exploitant agric   Homme</code></pre>
 </div>
 <div class="solution-exo">
-<div class="cell" data-hash="11-stringr_cache/html/str4_99df32065e9174c22acb3a63c55ae748">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>d <span class="sc">%&gt;%</span></span>
 <span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">sexe =</span> <span class="fu">case_when</span>(</span>
 <span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a>          <span class="fu">str_detect</span>(nom, <span class="fu">fixed</span>(<span class="st">"Mme"</span>)) <span class="sc">~</span> <span class="st">"Femme"</span>,</span>
@@ -829,16 +839,16 @@ Note
 <p><strong>Exercice 5</strong></p>
 <p>Extraire l’année de naissance de chaque individu avec <code>str_extract</code>. Vous pouvez utiliser le regex <code>"\\d\\d\\d\\d"</code> qui permet d’identifier les nombres de quatre chiffres.</p>
 <p>Vous devez obtenir le vecteur suivant&nbsp;:</p>
-<div class="cell" data-hash="11-stringr_cache/html/unnamed-chunk-37_4631aa6fc531c81bc2d3847648ffb84d">
+<div class="cell">
 <pre><code>#&gt; [1] "1937" "1947" "1931" "1938"</code></pre>
 </div>
 <div class="solution-exo">
-<div class="cell" data-hash="11-stringr_cache/html/str5_7485465e5bc7e4d66cee0306a6284bb2">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="fu">str_extract</span>(d<span class="sc">$</span>naissance, <span class="st">"</span><span class="sc">\\</span><span class="st">d</span><span class="sc">\\</span><span class="st">d</span><span class="sc">\\</span><span class="st">d</span><span class="sc">\\</span><span class="st">d"</span>)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div>
-<p>À l’aide de la fonction <code>extract</code> de l’extension <code>tidyr</code> et du regex précédent, créez une nouvelle variable <code>annee</code> dans le tableau, qui contient l’année de naissance (pour plus d’informations sur <code>extract</code>, voir <a href="12-tidyr.html#sec-extract"><span>Section&nbsp;12.3.6</span></a>).</p>
-<div class="cell" data-hash="11-stringr_cache/html/unnamed-chunk-38_f75389d5a8e3b94753bc2ea8d1225960">
+<p>À l’aide de la fonction <code>extract</code> de l’extension <code>tidyr</code> et du regex précédent, créez une nouvelle variable <code>annee</code> dans le tableau, qui contient l’année de naissance (pour plus d’informations sur <code>extract</code>, voir <a href="12-tidyr.html#sec-extract" class="quarto-xref"><span>Section 12.3.6</span></a>).</p>
+<div class="cell">
 <pre><code>#&gt; # A tibble: 4 × 4
 #&gt;   nom                  naissance                   annee profession        
 #&gt;   &lt;chr&gt;                &lt;chr&gt;                       &lt;chr&gt; &lt;chr&gt;             
@@ -848,7 +858,7 @@ Note
 #&gt; 4 M. Jean-Yves Pernoud Marseille, juin 1938        1938  Exploitant agric</code></pre>
 </div>
 <div class="solution-exo">
-<div class="cell" data-hash="11-stringr_cache/html/str5b_0fe1e8d3a5bf43cf720629f76dda7c51">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyr)</span>
 <span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a>d <span class="sc">%&gt;%</span></span>
 <span id="cb41-3"><a href="#cb41-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">extract</span>(</span>
@@ -911,6 +921,33 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       } else {
         el.classList.add('notransition');
       }
+    }
+  }
+  const toggleGiscusIfUsed = (isAlternate, darkModeDefault) => {
+    const baseTheme = document.querySelector('#giscus-base-theme')?.value ?? 'light';
+    const alternateTheme = document.querySelector('#giscus-alt-theme')?.value ?? 'dark';
+    let newTheme = '';
+    if(darkModeDefault) {
+      newTheme = isAlternate ? baseTheme : alternateTheme;
+    } else {
+      newTheme = isAlternate ? alternateTheme : baseTheme;
+    }
+    const changeGiscusTheme = () => {
+      // From: https://github.com/giscus/giscus/issues/336
+      const sendMessage = (message) => {
+        const iframe = document.querySelector('iframe.giscus-frame');
+        if (!iframe) return;
+        iframe.contentWindow.postMessage({ giscus: message }, 'https://giscus.app');
+      }
+      sendMessage({
+        setConfig: {
+          theme: newTheme
+        }
+      });
+    }
+    const isGiscussLoaded = window.document.querySelector('iframe.giscus-frame') !== null;
+    if (isGiscussLoaded) {
+      changeGiscusTheme();
     }
   }
   const toggleColorMode = (alternate) => {
@@ -979,13 +1016,15 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       return localAlternateSentinel;
     }
   }
-  let localAlternateSentinel = 'default';
+  const darkModeDefault = false;
+  let localAlternateSentinel = darkModeDefault ? 'alternate' : 'default';
   // Dark / light mode switch
   window.quartoToggleColorScheme = () => {
     // Read the current dark / light value 
     let toAlternate = !hasAlternateSentinel();
     toggleColorMode(toAlternate);
     setStyleSentinel(toAlternate);
+    toggleGiscusIfUsed(toAlternate, darkModeDefault);
   };
   // Ensure there is a toggle, if there isn't float one in the top right
   if (window.document.querySelector('.quarto-color-scheme-toggle') === null) {
@@ -1020,18 +1059,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     }
     return false;
   }
-  const clipboard = new window.ClipboardJS('.code-copy-button', {
-    text: function(trigger) {
-      const codeEl = trigger.previousElementSibling.cloneNode(true);
-      for (const childEl of codeEl.children) {
-        if (isCodeAnnotation(childEl)) {
-          childEl.remove();
-        }
-      }
-      return codeEl.innerText;
-    }
-  });
-  clipboard.on('success', function(e) {
+  const onCopySuccess = function(e) {
     // button target
     const button = e.trigger;
     // don't keep focus
@@ -1063,11 +1091,48 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     }, 1000);
     // clear code selection
     e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
   });
-  function tippyHover(el, contentFn) {
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
     const config = {
       allowHTML: true,
-      content: contentFn,
       maxWidth: 500,
       delay: 100,
       arrow: false,
@@ -1077,8 +1142,17 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       interactive: true,
       interactiveBorder: 10,
       theme: 'quarto',
-      placement: 'bottom-start'
+      placement: 'bottom-start',
     };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
     window.tippy(el, config); 
   }
   const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
@@ -1090,7 +1164,129 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       try { href = new URL(href).hash; } catch {}
       const id = href.replace(/^#\/?/, "");
       const note = window.document.getElementById(id);
-      return note.innerHTML;
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
     });
   }
       let selectedAnnoteEl;
@@ -1134,6 +1330,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
             }
             div.style.top = top - 2 + "px";
             div.style.height = height + 4 + "px";
+            div.style.left = 0;
             let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
             if (gutterDiv === null) {
               gutterDiv = window.document.createElement("div");
@@ -1159,6 +1356,32 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
         });
         selectedAnnoteEl = undefined;
       };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
       // Attach click handler to the DT
       const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
       for (const annoteDlNode of annoteDls) {
@@ -1220,18 +1443,19 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="./10-dplyr.html" class="pagination-link">
+      <a href="./10-dplyr.html" class="pagination-link" aria-label="Manipuler les données avec `dplyr`">
         <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Manipuler les données avec <code>dplyr</code></span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="./12-tidyr.html" class="pagination-link">
+      <a href="./12-tidyr.html" class="pagination-link" aria-label="Mettre en ordre avec `tidyr`">
         <span class="nav-page-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Mettre en ordre avec <code>tidyr</code></span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>
 </div> <!-- /content -->
-<script src="js/tidyverse.js"></script>
+<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/juba/tidyverse/edit/main/11-stringr.qmd" class="toc-action"><i class="bi bi-github"></i>Modifier cette page</a></li></ul></div></div></div></footer><script src="js/tidyverse.js"></script>
+
 
 
 
